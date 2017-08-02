@@ -8,13 +8,13 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ImageRadioButtonOption extends CommonQuestionView {
-    Option mOption;
+    OptionDB mOptionDB;
     OnCheckedChangeListener mOnCheckedChangeListener;
     ImageView mImageView;
     RadioButton mRadioButton;
@@ -32,12 +32,12 @@ public class ImageRadioButtonOption extends CommonQuestionView {
         init(context, bigRadioButton);
     }
 
-    public Option getOption() {
-        return mOption;
+    public OptionDB getOptionDB() {
+        return mOptionDB;
     }
 
-    public void setOption(Option option, Question question) {
-        this.mOption = option;
+    public void setOption(OptionDB optionDB, Question question) {
+        this.mOptionDB = optionDB;
 
         setCounter(question);
     }
@@ -69,7 +69,7 @@ public class ImageRadioButtonOption extends CommonQuestionView {
 
     public void setCounter(Question question) {
 
-        Question optionCounter = question.findCounterByOption(mOption);
+        Question optionCounter = question.findCounterByOption(mOptionDB);
 
         if (optionCounter == null) {
             return;

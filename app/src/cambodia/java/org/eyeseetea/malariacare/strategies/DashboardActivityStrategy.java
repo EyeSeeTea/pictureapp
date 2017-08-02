@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -37,8 +37,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void newSurvey(Activity activity) {
         Program program = new Select().from(Program.class).querySingle();
         // Put new survey in session
-        String orgUnitUid = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
-        OrgUnit orgUnit = OrgUnit.findByUID(orgUnitUid);
+        String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+        OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);
         Survey survey = new Survey(orgUnit, program, Session.getUser());
         survey.save();
         Session.setMalariaSurvey(survey);

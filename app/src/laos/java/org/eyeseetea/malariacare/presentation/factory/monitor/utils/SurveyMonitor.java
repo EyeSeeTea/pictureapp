@@ -19,7 +19,7 @@
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 
@@ -229,35 +229,35 @@ public class SurveyMonitor {
      * Tells if the given survey treatment is act6x4
      */
     public boolean isACT6x4() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X4, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X4, mSurvey);
     }
 
     /**
      * Tells if the given survey treatment is act6x3
      */
     public boolean isACT6x3() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X3, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X3, mSurvey);
     }
 
     /**
      * Tells if the given survey treatment is act6x2
      */
     public boolean isACT6x2() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X2, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X2, mSurvey);
     }
 
     /**
      * Tells if the given survey treatment is act6x1
      */
     public boolean isACT6x1() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X1, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X1, mSurvey);
     }
 
     /**
      * Tells if the given survey is a RDT tested
      */
     public boolean isRDTs() {
-        return Option.findOption(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_YES_TESTED, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_YES_TESTED, mSurvey);
     }
 
     /**

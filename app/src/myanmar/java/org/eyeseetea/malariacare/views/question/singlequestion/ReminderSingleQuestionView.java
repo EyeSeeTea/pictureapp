@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ReminderSingleQuestionView extends AOptionQuestionView implements IQuestionView,
         IImageQuestionView, INavigationQuestionView {
 
-    Option navigationOption;
+    OptionDB navigationOption;
 
     public ReminderSingleQuestionView(Context context) {
         super(context);
@@ -26,7 +26,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
     }
 
     @Override
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> options) {
         setupTextOption(options.get(0));
 
         navigationOption = options.get(1);
@@ -55,14 +55,14 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         inflate(context, R.layout.dynamic_tab_reminder_row, this);
     }
 
-    private void setupTextOption(Option option) {
+    private void setupTextOption(OptionDB option) {
         TextView title = (TextView) findViewById(R.id.questionTextRow);
         title.setText(option.getInternationalizedName());
-        title.setTextSize(option.getOptionAttribute().getText_size());
+        title.setTextSize(option.getOptionAttributeDB().getText_size());
 
         TextView subTitle = (TextView) findViewById(R.id.questionSubText);
         subTitle.setText(option.getInternationalizedCode());
-        subTitle.setTextSize(option.getOptionAttribute().getText_size());
+        subTitle.setTextSize(option.getOptionAttributeDB().getText_size());
     }
 
     @Override
@@ -80,9 +80,9 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
             return 0;
         }
 
-        return navigationOption.getOptionAttribute().getText_size();
+        return navigationOption.getOptionAttributeDB().getText_size();
     }
 
-    public void notifyAnswerChanged(Option option) {
+    public void notifyAnswerChanged(OptionDB option) {
     }
 }

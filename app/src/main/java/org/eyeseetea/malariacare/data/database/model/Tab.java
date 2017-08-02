@@ -55,9 +55,9 @@ public class Tab extends BaseModel {
     Program program;
 
     /**
-     * List of headers that belongs to this tab
+     * List of mHeaderDBs that belongs to this tab
      */
-    List<Header> headers;
+    List<HeaderDB> mHeaderDBs;
 
     public Tab() {
     }
@@ -151,7 +151,7 @@ public class Tab extends BaseModel {
         for (Tab tab : tabs) {
             for (String name : names) {
                 if (tab.getName().equals(name)) {
-                    Header.deleteHeaders(tab.getHeaders());
+                    HeaderDB.deleteHeaders(tab.getHeaderDBs());
                     tab.delete();
                     break;
                 }
@@ -159,14 +159,14 @@ public class Tab extends BaseModel {
         }
     }
 
-    public List<Header> getHeaders() {
-        if (headers == null) {
-            headers = new Select().from(Header.class)
-                    .where(Header_Table.id_tab_fk.eq(this.getId_tab()))
-                    .orderBy(OrderBy.fromProperty(Header_Table.order_pos))
+    public List<HeaderDB> getHeaderDBs() {
+        if (mHeaderDBs == null) {
+            mHeaderDBs = new Select().from(HeaderDB.class)
+                    .where(HeaderDB_Table.id_tab_fk.eq(this.getId_tab()))
+                    .orderBy(OrderBy.fromProperty(HeaderDB_Table.order_pos))
                     .queryList();
         }
-        return headers;
+        return mHeaderDBs;
     }
 
     /**

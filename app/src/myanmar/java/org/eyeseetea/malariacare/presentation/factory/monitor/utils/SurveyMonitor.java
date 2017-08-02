@@ -18,7 +18,7 @@
  */
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 
@@ -220,7 +220,7 @@ public class SurveyMonitor {
      * Tells if the given mSurvey treatment is act6x2
      */
     public boolean isACT12() {
-        return Option.findOption(ID_QUESTION_ACT12_TREATMENT, ID_OPTION_TREATMENT_ACT12, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_ACT12_TREATMENT, ID_OPTION_TREATMENT_ACT12, mSurvey);
     }
 
     /**
@@ -256,7 +256,7 @@ public class SurveyMonitor {
     }
 
     private boolean isInvalid() {
-        return Option.findOption(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_INVALID,mSurvey);
+        return OptionDB.findOption(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_INVALID,mSurvey);
     }
 
     /**
@@ -272,7 +272,7 @@ public class SurveyMonitor {
 
 
     public boolean isPq() {
-        return Option.findOption(ID_QUESTION_PQ_TREATMENT, ID_OPTION_TREATMENT_PQ, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_PQ_TREATMENT, ID_OPTION_TREATMENT_PQ, mSurvey);
     }
 
 

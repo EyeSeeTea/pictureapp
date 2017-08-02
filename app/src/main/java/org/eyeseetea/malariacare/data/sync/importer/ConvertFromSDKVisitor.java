@@ -23,9 +23,9 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -53,7 +53,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     Map<String, Object> appMapObjects;
     List<Survey> surveys;
     List<Value> values;
-    List<OrgUnit> orgUnits;
+    List<OrgUnitDB> mOrgUnitDBs;
 
     private ConvertFromSDKVisitorStrategy mConvertFromSDKVisitorStrategy;
 
@@ -63,7 +63,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         appMapObjects = new HashMap();
         surveys = new ArrayList<>();
         values = new ArrayList<>();
-        orgUnits = new ArrayList<>();
+        mOrgUnitDBs = new ArrayList<>();
 
         mConvertFromSDKVisitorStrategy = new ConvertFromSDKVisitorStrategy(context);
     }
@@ -80,8 +80,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         return surveys;
     }
 
-    public List<OrgUnit> getOrgUnits() {
-        return orgUnits;
+    public List<OrgUnitDB> getOrgUnitDBs() {
+        return mOrgUnitDBs;
     }
 
     public void setSurveys(List<Survey> surveys) {
@@ -97,20 +97,20 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     }
 
     /**
-     * Turns a sdk organisationUnit into an app OrgUnit
+     * Turns a sdk organisationUnit into an app OrgUnitDB
      */
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
-        OrgUnit appOrgUnit = new OrgUnit();
+        OrgUnitDB appOrgUnitDB = new OrgUnitDB();
 
-        appOrgUnit.setName(sdkOrganisationUnitExtended.getLabel());
-        appOrgUnit.setUid(sdkOrganisationUnitExtended.getId());
+        appOrgUnitDB.setName(sdkOrganisationUnitExtended.getLabel());
+        appOrgUnitDB.setUid(sdkOrganisationUnitExtended.getId());
 
-        appOrgUnit.save();
+        appOrgUnitDB.save();
 
-        orgUnits.add(appOrgUnit);
+        mOrgUnitDBs.add(appOrgUnitDB);
 
-        appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnit);
+        appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnitDB);
     }
 
     /**
@@ -130,7 +130,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(EventExtended sdkEventExtended) {
-        OrgUnit orgUnit = (OrgUnit) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
+        OrgUnitDB orgUnitDB = (OrgUnitDB) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
         Program program = Program.getProgram(sdkEventExtended.getProgramUId());
 
         Survey survey = new Survey();
@@ -145,7 +145,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         survey.setScheduledDate(sdkEventExtended.getScheduledDate());
 
         //Set fks
-        survey.setOrgUnit(orgUnit);
+        survey.setOrgUnit(orgUnitDB);
         survey.setProgram(program);
         survey.setEventUid(sdkEventExtended.getUid());
 
@@ -164,7 +164,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         String questionUID = sdkDataValueExtended.getDataElement();
 
         //Data value is a value from compositeScore -> ignore
-        if (appMapObjects.get(questionUID) instanceof CompositeScore) {
+        if (appMapObjects.get(questionUID) instanceof CompositeScoreDB) {
             return;
         }
 
@@ -184,14 +184,14 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         value.setQuestion(question);
         value.setSurvey(survey);
 
-        Option option =
+        OptionDB optionDB =
                 sdkDataValueExtended.findOptionByQuestion(question);
-        value.setOption(option);
-        //No option -> text question (straight value)
-        if (option == null) {
+        value.setOptionDB(optionDB);
+        //No optionDB -> text question (straight value)
+        if (optionDB == null) {
             value.setValue(sdkDataValueExtended.getValue());
         } else {
-            //Option -> extract value from code
+            //OptionDB -> extract value from code
             value.setValue(sdkDataValueExtended.getDataValue().getValue());
         }
         values.add(value);
@@ -201,7 +201,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         ConvertFromSDKVisitorStrategy.visit(categoryOptionGroupExtended);
     }
 
-    public void setOrgUnits(List<OrgUnit> allOrgUnitsInDB) {
-        orgUnits = allOrgUnitsInDB;
+    public void setOrgUnitDBs(List<OrgUnitDB> allOrgUnitsInDBDB) {
+        mOrgUnitDBs = allOrgUnitsInDBDB;
     }
 }

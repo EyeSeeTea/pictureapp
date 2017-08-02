@@ -141,8 +141,8 @@ public class SdkQueries {
         new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(
                 QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
 
-        new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class,
-                Match$Table.ID_QUESTION_RELATION).enable();
+        new Index<MatchDB>(Constants.MATCH_QUESTION_RELATION_IDX).on(MatchDB.class,
+                MatchDB$Table.ID_QUESTION_RELATION).enable();
 
         new Index<QuestionThreshold>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
                 QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();

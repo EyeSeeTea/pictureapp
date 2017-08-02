@@ -4,20 +4,15 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     BanOrgUnitChangeListener mBanOrgUnitChangeListener;
@@ -33,17 +28,17 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
 
             verifyBanChanged(organisationUnit);
 
-            OrgUnit.refresh(organisationUnit);
+            OrgUnitDB.refresh(organisationUnit);
         } else {
-            organisationUnit = OrgUnit.getByName(PreferencesState.getInstance().getOrgUnit());
+            organisationUnit = OrgUnitDB.getByName(PreferencesState.getInstance().getOrgUnit());
         }
 
         return organisationUnit;
     }
 
     private void verifyBanChanged(OrganisationUnit organisationUnit) {
-        OrgUnit cachedOrganisationUnit =
-                OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+        OrgUnitDB cachedOrganisationUnit =
+                OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
 
         if (cachedOrganisationUnit != null
                 && organisationUnit.isBanned() != cachedOrganisationUnit.isBanned()) {
@@ -69,7 +64,7 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     public void saveOrganisationUnit(OrganisationUnit organisationUnit) {
         ServerAPIController.saveOrganisationUnit(organisationUnit);
 
-        OrgUnit.refresh(organisationUnit);
+        OrgUnitDB.refresh(organisationUnit);
     }
 
 

@@ -27,7 +27,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
@@ -230,7 +230,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         ConvertToSdkVisitorStrategy.setAttributeCategoryOptionsInEvent(event);
 
         event.setProgramId(survey.getProgram().getUid());
-        event.setOrganisationUnitId(survey.getOrgUnit().getUid());
+        event.setOrganisationUnitId(survey.getOrgUnitDB().getUid());
         event.setStatus(EventExtended.STATUS_COMPLETED);
         event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
         event.setProgramId(survey.getProgram().getUid());
@@ -243,13 +243,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     private String getSafeOrgUnitUID(Survey survey) {
-        OrgUnit orgUnit = survey.getOrgUnit();
-        if (orgUnit != null) {
-            return orgUnit.getUid();
+        OrgUnitDB orgUnitDB = survey.getOrgUnitDB();
+        if (orgUnitDB != null) {
+            return orgUnitDB.getUid();
         }
 
         //A survey might be created with a 2.20 (no orgunit) but push into a 2.22
-        return OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+        return OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
     }
 
     /**

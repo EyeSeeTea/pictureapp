@@ -55,9 +55,9 @@ public class Program extends BaseModel {
     List<Program> programs;
 
     /**
-     * List of orgUnit authorized for this program
+     * List of mOrgUnitDB authorized for this program
      */
-    List<OrgUnit> orgUnits;
+    List<OrgUnitDB> mOrgUnitDBs;
 
     /**
      * List of tabs that belongs to this program
@@ -91,12 +91,12 @@ public class Program extends BaseModel {
             Question qMax = SQLite.select(Method.max(Question_Table.total_questions),
                     Question_Table.total_questions)
                     .from(Question.class).as(AppDatabase.questionName)
-                    .join(Header.class, Join.JoinType.INNER).as(AppDatabase.headerName)
+                    .join(HeaderDB.class, Join.JoinType.INNER).as(AppDatabase.headerName)
                     .on(Question_Table.id_header_fk.withTable(AppDatabase.questionAlias)
-                            .eq(Header_Table.id_header.withTable(AppDatabase.headerAlias)))
+                            .eq(HeaderDB_Table.id_header.withTable(AppDatabase.headerAlias)))
 
                     .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
-                    .on(Header_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
+                    .on(HeaderDB_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
                             .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
 
                     .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
@@ -155,37 +155,37 @@ public class Program extends BaseModel {
         return this.programs;
     }
 
-    public List<OrgUnit> getOrgUnits() {
-        if (orgUnits == null) {
-            List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
-                    OrgUnitProgramRelation.class)
-                    .where(OrgUnitProgramRelation_Table.id_program_fk.eq(
+    public List<OrgUnitDB> getOrgUnitDBs() {
+        if (mOrgUnitDBs == null) {
+            List<OrgUnitProgramRelationDB> orgUnitProgramRelationDBs = new Select().from(
+                    OrgUnitProgramRelationDB.class)
+                    .where(OrgUnitProgramRelationDB_Table.id_program_fk.eq(
                             this.getId_program()))
                     .queryList();
-            this.orgUnits = new ArrayList<>();
-            for (OrgUnitProgramRelation programRelation : orgUnitProgramRelations) {
-                orgUnits.add(programRelation.getOrgUnit());
+            this.mOrgUnitDBs = new ArrayList<>();
+            for (OrgUnitProgramRelationDB programRelation : orgUnitProgramRelationDBs) {
+                mOrgUnitDBs.add(programRelation.getOrgUnitDB());
             }
         }
-        return orgUnits;
+        return mOrgUnitDBs;
     }
 
     private Context getContext() {
         return PreferencesState.getInstance().getContext();
     }
 
-    public void addOrgUnit(OrgUnit orgUnit) {
+    public void addOrgUnit(OrgUnitDB orgUnitDB) {
         //Null -> nothing
-        if (orgUnit == null) {
+        if (orgUnitDB == null) {
             return;
         }
 
         //Save a new relationship
-        OrgUnitProgramRelation orgUnitProgramRelation = new OrgUnitProgramRelation(orgUnit, this);
-        orgUnitProgramRelation.save();
+        OrgUnitProgramRelationDB orgUnitProgramRelationDB = new OrgUnitProgramRelationDB(orgUnitDB, this);
+        orgUnitProgramRelationDB.save();
 
         //Clear cache to enable reloading
-        orgUnits = null;
+        mOrgUnitDBs = null;
     }
 
     public List<Tab> getTabs() {

@@ -24,9 +24,9 @@ public class TreatmentMatch extends BaseModel {
      */
     Treatment treatment;
     /**
-     * Reference to the match (loaded lazily)
+     * Reference to the mMatchDB (loaded lazily)
      */
-    Match match;
+    MatchDB mMatchDB;
 
 
     public TreatmentMatch() {
@@ -86,27 +86,27 @@ public class TreatmentMatch extends BaseModel {
         treatment = null;
     }
 
-    public Match getMatch() {
-        if (match == null) {
+    public MatchDB getMatchDB() {
+        if (mMatchDB == null) {
             if (id_match_fk == null) {
                 return null;
             }
-            match = new Select()
-                    .from(Match.class)
-                    .where(Match_Table.id_match
+            mMatchDB = new Select()
+                    .from(MatchDB.class)
+                    .where(MatchDB_Table.id_match
                             .is(id_match_fk)).querySingle();
         }
-        return match;
+        return mMatchDB;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        id_match_fk = (match != null) ? match.getId_match() : null;
+    public void setMatchDB(MatchDB matchDB) {
+        this.mMatchDB = matchDB;
+        id_match_fk = (matchDB != null) ? matchDB.getId_match() : null;
     }
 
     public void setMatch(Long id_match) {
         this.id_match_fk = id_match;
-        match = null;
+        mMatchDB = null;
     }
 
 

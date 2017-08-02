@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -86,15 +86,15 @@ public class DataConverterStrategy implements IDataConverterStrategy {
 
         List<QuestionOption> matchedQuestionOptions = question.getQuestionOptionsOfTypeMatch();
 
-        List<Option> optionsWithoutMatch = question.getAnswer().getOptions();
+        List<OptionDB> optionsWithoutMatch = question.getAnswerDB().getOptionDBs();
 
-        Option selectedOption = null;
+        OptionDB selectedOption = null;
 
         for (QuestionOption matchedQuestionOption : matchedQuestionOptions) {
             Question matchedQuestion =
-                    matchedQuestionOption.getMatch().getQuestionRelation().getQuestion();
+                    matchedQuestionOption.getMatchDB().getQuestionRelation().getQuestion();
 
-            Option matchedOption = matchedQuestionOption.getOption();
+            OptionDB matchedOption = matchedQuestionOption.getOptionDB();
 
             if (optionsWithoutMatch.contains(matchedOption)) {
                 optionsWithoutMatch.remove(matchedOption);
@@ -104,10 +104,10 @@ public class DataConverterStrategy implements IDataConverterStrategy {
                     matchedQuestion.getUid());
 
             if (valueFromServer != null) {
-                Option trueHiddenOption = matchedQuestion.getAnswer().getOptions().get(
+                OptionDB trueHiddenOption = matchedQuestion.getAnswerDB().getOptionDBs().get(
                         TRUE_POSITION);
 
-                Option selectedHiddenOption = matchedQuestion.findOptionByValue(
+                OptionDB selectedHiddenOption = matchedQuestion.findOptionByValue(
                         valueFromServer.getValue());
 
                 if (selectedHiddenOption.getCode().equals(trueHiddenOption.getCode())) {

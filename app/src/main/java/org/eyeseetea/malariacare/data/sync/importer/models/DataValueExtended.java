@@ -19,8 +19,8 @@
 
 package org.eyeseetea.malariacare.data.sync.importer.models;
 
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.VisitableFromSDK;
@@ -57,27 +57,27 @@ public class DataValueExtended implements VisitableFromSDK {
         return dataValue;
     }
 
-    public Option findOptionByQuestion(Question question) {
+    public OptionDB findOptionByQuestion(Question question) {
         if (question == null) {
             return null;
         }
 
-        Answer answer = question.getAnswer();
-        if (answer == null) {
+        AnswerDB answerDB = question.getAnswerDB();
+        if (answerDB == null) {
             return null;
         }
 
-        List<Option> options = answer.getOptions();
+        List<OptionDB> optionDBs = answerDB.getOptionDBs();
         List<String> optionCodes = new ArrayList<>();
-        for (Option option : options) {
-            String optionName = option.getCode();
+        for (OptionDB optionDB : optionDBs) {
+            String optionName = optionDB.getCode();
             optionCodes.add(optionName);
             if (optionName == null) {
                 continue;
             }
 
             if (optionName.equals(dataValue.getValue())) {
-                return option;
+                return optionDB;
             }
         }
 

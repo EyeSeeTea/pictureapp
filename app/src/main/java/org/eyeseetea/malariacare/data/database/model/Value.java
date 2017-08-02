@@ -68,23 +68,23 @@ public class Value extends BaseModel {
     @Column
     Long id_option_fk;
     /**
-     * Reference to the option of this value (loaded lazily)
+     * Reference to the mOptionDB of this value (loaded lazily)
      */
-    Option option;
+    OptionDB mOptionDB;
 
     public Value() {
     }
 
     public Value(String value, Question question, Survey survey) {
-        this.option = null;
+        this.mOptionDB = null;
         this.value = value;
         this.setQuestion(question);
         this.setSurvey(survey);
     }
 
-    public Value(Option option, Question question, Survey survey) {
-        this.value = (option != null) ? option.getCode() : null;
-        this.setOption(option);
+    public Value(OptionDB optionDB, Question question, Survey survey) {
+        this.value = (optionDB != null) ? optionDB.getCode() : null;
+        this.setOptionDB(optionDB);
         this.setQuestion(question);
         this.setSurvey(survey);
     }
@@ -127,25 +127,25 @@ public class Value extends BaseModel {
         return this.id_option_fk;
     }
 
-    public Option getOption() {
-        if (option == null) {
+    public OptionDB getOptionDB() {
+        if (mOptionDB == null) {
             if (id_option_fk == null) return null;
-            option = new Select()
-                    .from(Option.class)
-                    .where(Option_Table.id_option
+            mOptionDB = new Select()
+                    .from(OptionDB.class)
+                    .where(OptionDB_Table.id_option
                             .is(id_option_fk)).querySingle();
         }
-        return option;
+        return mOptionDB;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option_fk = (option != null) ? option.getId_option() : null;
+    public void setOptionDB(OptionDB optionDB) {
+        this.mOptionDB = optionDB;
+        this.id_option_fk = (optionDB != null) ? optionDB.getId_option() : null;
     }
 
     public void setOption(Long id_option) {
         this.id_option_fk = id_option;
-        this.option = null;
+        this.mOptionDB = null;
     }
 
     public Question getQuestion() {
@@ -207,7 +207,7 @@ public class Value extends BaseModel {
                 return value;
             }
         }
-        //No matches -> null
+        //No mMatchDBs -> null
         return null;
     }
 
@@ -220,12 +220,12 @@ public class Value extends BaseModel {
                 return value;
             }
         }
-        //No matches -> null
+        //No mMatchDBs -> null
         return null;
     }
 
     /**
-     * Looks for the value with the given question + option
+     * Looks for the value with the given question + mOptionDB
      */
     public static Value findValue(Long idQuestion, Long idOption, Survey survey) {
         for (Value value : survey.getValues()) {
@@ -233,7 +233,7 @@ public class Value extends BaseModel {
                 return value;
             }
         }
-        //No matches -> null
+        //No mMatchDBs -> null
         return null;
     }
 
@@ -243,16 +243,16 @@ public class Value extends BaseModel {
      * @return true|false
      */
     public boolean isAPositive() {
-        return getOption() != null && getOption().getCode().equals("Positive");
+        return getOptionDB() != null && getOptionDB().getCode().equals("Positive");
     }
 
     /**
-     * Checks if the current value contains an answer
+     * Checks if the current value contains an mAnswerDB
      *
      * @return true|false
      */
     public boolean isAnAnswer() {
-        return (getValue() != null && !getValue().equals("")) || getOption() != null;
+        return (getValue() != null && !getValue().equals("")) || getOptionDB() != null;
     }
 
     /**
@@ -268,34 +268,34 @@ public class Value extends BaseModel {
      * @return true|false
      */
     public boolean isAYes() {
-        return getOption() != null && getOption().getCode().equals("Yes");
+        return getOptionDB() != null && getOptionDB().getCode().equals("Yes");
     }
 
     /**
-     * Checks if this value matches the given question and option
+     * Checks if this value mMatchDBs the given question and mOptionDB
      */
     public boolean matchesQuestionOption(Long idQuestion, Long idOption) {
 
-        //No question or option -> no match
+        //No question or mOptionDB -> no mMatchDB
         if (idQuestion == null || idOption == null) {
             return false;
         }
 
-        //Check if both matches
+        //Check if both mMatchDBs
         return idQuestion == this.id_question_fk && idOption == this.id_option_fk;
     }
 
     /**
-     * Checks if this value matches the given question
+     * Checks if this value mMatchDBs the given question
      */
     public boolean matchesQuestion(Long idQuestion) {
 
-        //No question or option -> no match
+        //No question or mOptionDB -> no mMatchDB
         if (idQuestion == null) {
             return false;
         }
 
-        //Check if both matches
+        //Check if both mMatchDBs
         return idQuestion == this.id_question_fk;
     }
 

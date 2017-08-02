@@ -2,8 +2,8 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -176,20 +176,20 @@ public class NavigationBuilder {
         }
 
         Question currentQuestion = currentNode.getQuestion();
-        Answer currentAnswer = currentQuestion.getAnswer();
-        for (Option option : currentAnswer.getOptions()) {
-            Question firstChildrenQuestion = currentQuestion.findFirstChildrenByOption(option);
+        AnswerDB currentAnswerDB = currentQuestion.getAnswerDB();
+        for (OptionDB optionDB : currentAnswerDB.getOptionDBs()) {
+            Question firstChildrenQuestion = currentQuestion.findFirstChildrenByOption(optionDB);
 
-            //No child question for this option -> next
+            //No child question for this optionDB -> next
             if (firstChildrenQuestion == null) {
                 continue;
             }
 
             Log.d(TAG, String.format("'%s' + '%s' --> '%s'", currentQuestion.getCode(),
-                    option.getCode(), firstChildrenQuestion.getCode()));
+                    optionDB.getCode(), firstChildrenQuestion.getCode()));
             //Build navigation from there
             QuestionNode childNode;
-            //Option that references self
+            //OptionDB that references self
             if (currentNode.getQuestion().getId_question()
                     == firstChildrenQuestion.getId_question()) {
                 childNode = currentNode;
@@ -198,8 +198,8 @@ public class NavigationBuilder {
                 childNode = buildNode(firstChildrenQuestion);
             }
 
-            //Add navigation by option to current node
-            currentNode.addNavigation(option, childNode);
+            //Add navigation by optionDB to current node
+            currentNode.addNavigation(optionDB, childNode);
         }
     }
 
@@ -232,15 +232,15 @@ public class NavigationBuilder {
         }
 
         Question currentQuestion = currentNode.getQuestion();
-        Answer currentAnswer = currentQuestion.getAnswer();
-        for (Option option : currentAnswer.getOptions()) {
-            Question optionCounter = currentQuestion.findCounterByOption(option);
-            //no counter -> try next option
+        AnswerDB currentAnswerDB = currentQuestion.getAnswerDB();
+        for (OptionDB optionDB : currentAnswerDB.getOptionDBs()) {
+            Question optionCounter = currentQuestion.findCounterByOption(optionDB);
+            //no counter -> try next optionDB
             if (optionCounter == null) {
                 continue;
             }
             //found a counter -> annotate it
-            currentNode.addCounter(option, optionCounter);
+            currentNode.addCounter(optionDB, optionCounter);
         }
     }
 

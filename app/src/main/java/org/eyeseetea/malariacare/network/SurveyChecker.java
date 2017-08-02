@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -94,19 +94,19 @@ public class SurveyChecker {
     public static void checkAllQuarantineSurveys(){
         List<Program> programs = Program.getAllPrograms();
         for (Program program : programs) {
-            for (OrgUnit orgUnit : Survey.getQuarantineOrgUnits(program.getId_program())) {
+            for (OrgUnitDB orgUnitDB : Survey.getQuarantineOrgUnits(program.getId_program())) {
                 List<Survey> quarantineSurveys = Survey.getAllQuarantineSurveysByProgramAndOrgUnit(
-                        program, orgUnit);
+                        program, orgUnitDB);
                 if (quarantineSurveys.size() == 0) {
                     continue;
                 }
                 Date minDate = Survey.getMinQuarantineCompletionDateByProgramAndOrgUnit(program,
-                        orgUnit);
+                        orgUnitDB);
                 Date maxDate = Survey.getMaxQuarantineEventDateByProgramAndOrgUnit(program,
-                        orgUnit);
+                        orgUnitDB);
                 List<EventExtended> events;
                 try {
-                    events = getEvents(program.getUid(), orgUnit.getUid(),
+                    events = getEvents(program.getUid(), orgUnitDB.getUid(),
                             minDate,
                             maxDate);
                 }catch (ApiCallException e){

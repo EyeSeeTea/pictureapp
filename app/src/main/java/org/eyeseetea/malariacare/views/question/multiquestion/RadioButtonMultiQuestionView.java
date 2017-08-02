@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -49,15 +49,15 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
     @Override
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> optionDBs) {
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        for (Option option : options) {
+        for (OptionDB optionDB : optionDBs) {
             CustomRadioButton radioButton =
                     (CustomRadioButton) lInflater.inflate(
                             R.layout.uncheckeable_radiobutton, null);
-            radioButton.setTag(option);
-            radioButton.setText(option.getInternationalizedName());
+            radioButton.setTag(optionDB);
+            radioButton.setText(optionDB.getInternationalizedName());
             fixRadioButtonWidth(radioButton);
 
             radioButton.setEnabled(radioGroup.isEnabled());
@@ -99,7 +99,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             customRadioButton.setChecked(
-                    ((Option) customRadioButton.getTag()).equals(value.getOption()));
+                    ((OptionDB) customRadioButton.getTag()).equals(value.getOptionDB()));
         }
     }
 
@@ -152,12 +152,12 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
                 return;
             }
 
-            Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION);
+            OptionDB selectedOptionDB = new OptionDB(Constants.DEFAULT_SELECT_OPTION);
             if (checkedId != -1) {
                 CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
-                selectedOption = (Option) customRadioButton.getTag();
+                selectedOptionDB = (OptionDB) customRadioButton.getTag();
             }
-            notifyAnswerChanged(selectedOption);
+            notifyAnswerChanged(selectedOptionDB);
         }
 
         /**

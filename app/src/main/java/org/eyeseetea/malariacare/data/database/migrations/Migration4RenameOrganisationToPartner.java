@@ -28,7 +28,7 @@ public class Migration4RenameOrganisationToPartner extends BaseMigration {
     @Override
     public void migrate(DatabaseWrapper database) {
 
-        String sqlCopy = "INSERT INTO Partner (id_partner, uid_partner, name)"
+        String sqlCopy = "INSERT INTO PartnerDB (id_partner, uid_partner, name)"
                 + " SELECT id_organisation, uid_organisation, name"
                 + " FROM Organisation;";
         database.execSQL(sqlCopy);

@@ -6,7 +6,7 @@ import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSu
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
@@ -78,7 +78,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             }
             ((NumberRadioButtonMultiquestionView) questionView).setQuestion(screenQuestion);
             ((NumberRadioButtonMultiquestionView) questionView).setOptions(
-                    screenQuestion.getAnswer().getOptions());
+                    screenQuestion.getAnswerDB().getOptionDBs());
         }
     }
 
@@ -92,7 +92,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             }
             ((NumberRadioButtonMultiquestionView) questionView).setQuestion(screenQuestion);
             ((NumberRadioButtonMultiquestionView) questionView).setOptions(
-                    screenQuestion.getAnswer().getOptions());
+                    screenQuestion.getAnswerDB().getOptionDBs());
         }
     }
 
@@ -114,10 +114,10 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestion(
                     screenQuestion);
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(
-                    screenQuestion.getAnswer().getOptions());
+                    screenQuestion.getAnswerDB().getOptionDBs());
             //Getting the question to put the correct values on it
             ArrayList<Question> questions = new ArrayList<>();
-            for (Option option : screenQuestion.getAnswer().getOptions()) {
+            for (OptionDB option : screenQuestion.getAnswerDB().getOptionDBs()) {
                 Question question = Question.findByID(option.getId_option());
                 if (question != null) {
                     questions.add(question);

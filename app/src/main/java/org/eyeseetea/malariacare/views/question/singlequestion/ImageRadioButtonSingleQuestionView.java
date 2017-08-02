@@ -8,7 +8,7 @@ import android.util.DisplayMetrics;
 import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
@@ -60,9 +60,9 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @Override
-    public void setOptions(List<Option> options) {
-        for (Option option : options) {
-            ImageRadioButtonOption imageRadioButtonOption = createOptionView(option);
+    public void setOptions(List<OptionDB> optionDBs) {
+        for (OptionDB optionDB : optionDBs) {
+            ImageRadioButtonOption imageRadioButtonOption = createOptionView(optionDB);
             answersContainer.addView(imageRadioButtonOption);
         }
     }
@@ -82,7 +82,7 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
             ImageRadioButtonOption imageRadioButtonOption =
                     (ImageRadioButtonOption) answersContainer.getChildAt(i);
 
-            if (imageRadioButtonOption.getOption().equals(value.getOption())) {
+            if (imageRadioButtonOption.getOptionDB().equals(value.getOptionDB())) {
                 optionSetBySavedValue = true;
                 imageRadioButtonOption.setChecked(true);
             }
@@ -91,13 +91,13 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @NonNull
-    private ImageRadioButtonOption createOptionView(Option option) {
+    private ImageRadioButtonOption createOptionView(OptionDB optionDB) {
         ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
                 getContext());
-        imageRadioButtonOption.setText(option.getInternationalizedName());
-        putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
+        imageRadioButtonOption.setText(optionDB.getInternationalizedName());
+        putImageInImageRadioButton(optionDB.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
-        imageRadioButtonOption.setOption(option, mQuestion);
+        imageRadioButtonOption.setOption(optionDB, mQuestion);
         imageRadioButtonOption.setEnabled(super.isEnabled());
         return imageRadioButtonOption;
     }
@@ -142,7 +142,7 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
             }
         }
         if (!optionSetBySavedValue) {
-            notifyAnswerChanged(imageRadioButton.getOption());
+            notifyAnswerChanged(imageRadioButton.getOptionDB());
         } else {
             optionSetBySavedValue = false;
         }
@@ -151,6 +151,6 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         //This question type not save in database from listeners when is answered because for
         // something
         //is necessary confirm counter for invalid option
-        //notifyAnswerChanged(imageRadioButton.getOption());
+        //notifyAnswerChanged(imageRadioButton.getOptionDB());
     }
 }

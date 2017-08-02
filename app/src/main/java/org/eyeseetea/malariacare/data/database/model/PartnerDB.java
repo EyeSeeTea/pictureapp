@@ -10,8 +10,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Partner extends BaseModel {
+@Table(database = AppDatabase.class, name = "Partner")
+public class PartnerDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_partner;
@@ -20,27 +20,27 @@ public class Partner extends BaseModel {
     @Column
     String name;
 
-    public Partner() {
+    public PartnerDB() {
     }
 
     static final String DEFAULT_PARTNER = "MATRIX";
 
 
-    public static Partner findById(long id) {
+    public static PartnerDB findById(long id) {
         return new Select()
-                .from(Partner.class)
-                .where(Partner_Table.id_partner.is(id))
+                .from(PartnerDB.class)
+                .where(PartnerDB_Table.id_partner.is(id))
                 .querySingle();
     }
 
-    public static List<Partner> getAllOrganisations() {
-        return new Select().from(Partner.class).queryList();
+    public static List<PartnerDB> getAllOrganisations() {
+        return new Select().from(PartnerDB.class).queryList();
     }
 
-    public static Partner getDefaultOrganization() {
+    public static PartnerDB getDefaultOrganization() {
         return new Select()
-                .from(Partner.class)
-                .where(Partner_Table.name.is(DEFAULT_PARTNER))
+                .from(PartnerDB.class)
+                .where(PartnerDB_Table.name.is(DEFAULT_PARTNER))
                 .querySingle();
     }
 
@@ -73,7 +73,7 @@ public class Partner extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Partner that = (Partner) o;
+        PartnerDB that = (PartnerDB) o;
 
         if (id_partner != that.id_partner) return false;
         if (uid_partner != null ? !uid_partner.equals(that.uid_partner)
@@ -94,7 +94,7 @@ public class Partner extends BaseModel {
 
     @Override
     public String toString() {
-        return "Partner{" +
+        return "PartnerDB{" +
                 "id_partner=" + id_partner +
                 ", uid_partner='" + uid_partner + '\'' +
                 ", name='" + name + '\'' +

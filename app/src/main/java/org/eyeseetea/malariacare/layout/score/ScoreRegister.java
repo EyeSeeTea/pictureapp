@@ -21,8 +21,8 @@ package org.eyeseetea.malariacare.layout.score;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
@@ -47,8 +47,8 @@ public class ScoreRegister {
     /**
      * Map of scores for each compositescore
      */
-    private static final Map<CompositeScore, CompositeNumDenRecord> compositeScoreMap =
-            new HashMap<CompositeScore, CompositeNumDenRecord>();
+    private static final Map<CompositeScoreDB, CompositeNumDenRecord> compositeScoreMap =
+            new HashMap<CompositeScoreDB, CompositeNumDenRecord>();
 
     /**
      * Map of scores for each tab
@@ -67,20 +67,20 @@ public class ScoreRegister {
     }
 
     public static void addRecord(Question question, Float num, Float den) {
-        if (question.getCompositeScore() != null) {
-            compositeScoreMap.get(question.getCompositeScore()).addRecord(question, num, den);
+        if (question.getCompositeScoreDB() != null) {
+            compositeScoreMap.get(question.getCompositeScoreDB()).addRecord(question, num, den);
         }
-        tabScoreMap.get(question.getHeader().getTab()).addRecord(question, num, den);
+        tabScoreMap.get(question.getHeaderDB().getTab()).addRecord(question, num, den);
     }
 
     public static void deleteRecord(Question question) {
-        if (question.getCompositeScore() != null) {
-            compositeScoreMap.get(question.getCompositeScore()).deleteRecord(question);
+        if (question.getCompositeScoreDB() != null) {
+            compositeScoreMap.get(question.getCompositeScoreDB()).deleteRecord(question);
         }
-        tabScoreMap.get(question.getHeader().getTab()).deleteRecord(question);
+        tabScoreMap.get(question.getHeaderDB().getTab()).deleteRecord(question);
     }
 
-    private static List<Float> getRecursiveScore(CompositeScore cScore, List<Float> result) {
+    private static List<Float> getRecursiveScore(CompositeScoreDB cScore, List<Float> result) {
 
         if (!cScore.hasChildren()) {
 
@@ -91,7 +91,7 @@ public class ScoreRegister {
                 return Arrays.asList(new Float(0f), new Float(0f));
             }
         } else {
-            for (CompositeScore cScoreChildren : cScore.getCompositeScoreChildren()) {
+            for (CompositeScoreDB cScoreChildren : cScore.getCompositeScoreDBChildren()) {
                 result = getRecursiveScore(cScoreChildren, result);
             }
             return result;
@@ -99,10 +99,10 @@ public class ScoreRegister {
     }
 
     public static List<Float> getNumDenum(Question question) {
-        return tabScoreMap.get(question.getHeader().getTab()).getNumDenRecord().get(question);
+        return tabScoreMap.get(question.getHeaderDB().getTab()).getNumDenRecord().get(question);
     }
 
-    public static Float getCompositeScore(CompositeScore cScore) {
+    public static Float getCompositeScore(CompositeScoreDB cScore) {
 
         List<Float> result = compositeScoreMap.get(cScore).calculateNumDenTotal(
                 new ArrayList<Float>(Arrays.asList(0F, 0F)));
@@ -120,11 +120,11 @@ public class ScoreRegister {
     /**
      * Resets compositescores and initializes a new set of them
      */
-    public static void registerCompositeScores(List<CompositeScore> compositeScores) {
+    public static void registerCompositeScores(List<CompositeScoreDB> compositeScoreDBs) {
         compositeScoreMap.clear();
-        for (CompositeScore compositeScore : compositeScores) {
-            Log.i(TAG, "Register composite score: " + compositeScore.getHierarchical_code());
-            compositeScoreMap.put(compositeScore, new CompositeNumDenRecord());
+        for (CompositeScoreDB compositeScoreDB : compositeScoreDBs) {
+            Log.i(TAG, "Register composite score: " + compositeScoreDB.getHierarchical_code());
+            compositeScoreMap.put(compositeScoreDB, new CompositeNumDenRecord());
         }
     }
 
@@ -163,11 +163,11 @@ public class ScoreRegister {
             return 0;
         }
 
-        Option option = question.getOptionBySurvey(survey);
-        if (option == null) {
+        OptionDB optionDB = question.getOptionBySurvey(survey);
+        if (optionDB == null) {
             return 0;
         }
-        return question.getNumerator_w() * option.getFactor();
+        return question.getNumerator_w() * optionDB.getFactor();
     }
 
     /**
@@ -188,11 +188,11 @@ public class ScoreRegister {
             return 0;
         }
 
-        Option option = question.getOptionBySurvey(survey);
-        if (option == null) {
+        OptionDB optionDB = question.getOptionBySurvey(survey);
+        if (optionDB == null) {
             return calcDenum(0, question);
         }
-        return calcDenum(option.getFactor(), question);
+        return calcDenum(optionDB.getFactor(), question);
     }
 
     private static float calcDenum(float factor, Question question) {
@@ -211,7 +211,7 @@ public class ScoreRegister {
     /**
      * Cleans, prepares, calculates and returns all the scores info for the given survey
      */
-    public static List<CompositeScore> loadCompositeScores(Survey survey) {
+    public static List<CompositeScoreDB> loadCompositeScores(Survey survey) {
         //Cleans score
         ScoreRegister.clear();
 
@@ -220,14 +220,14 @@ public class ScoreRegister {
         ScoreRegister.registerTabScores(tabs);
 
         //Register scores for composites
-        List<CompositeScore> compositeScoreList = CompositeScore.listByProgram(
+        List<CompositeScoreDB> compositeScoreDBList = CompositeScoreDB.listByProgram(
                 survey.getProgram());
-        ScoreRegister.registerCompositeScores(compositeScoreList);
+        ScoreRegister.registerCompositeScores(compositeScoreDBList);
 
         //Initialize scores x question
         ScoreRegister.initScoresForQuestions(Question.listByProgram(survey.getProgram()), survey);
 
-        return compositeScoreList;
+        return compositeScoreDBList;
     }
 
 }

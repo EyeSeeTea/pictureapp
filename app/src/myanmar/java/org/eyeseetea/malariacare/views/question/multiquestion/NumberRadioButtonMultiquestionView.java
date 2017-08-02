@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -76,7 +76,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
         }
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            Option option = (Option) customRadioButton.getTag();
+            OptionDB option = (OptionDB) customRadioButton.getTag();
             if (isOptionIdentifier(option, noOptionIdentifier)
                     && Float.parseFloat(value.getValue()) == 0) {
                 customRadioButton.setChecked(true);
@@ -88,7 +88,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
 
     }
 
-    private boolean isOptionIdentifier(Option option, String optionIdentifier) {
+    private boolean isOptionIdentifier(OptionDB option, String optionIdentifier) {
         return option.getName().equals(optionIdentifier) ||
                 option.getCode().equals(optionIdentifier);
     }
@@ -109,10 +109,10 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
         this.question = question;
     }
 
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> options) {
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        for (Option option : options) {
+        for (OptionDB option : options) {
             CustomRadioButton radioButton =
                     (CustomRadioButton) lInflater.inflate(
                             R.layout.uncheckeable_radiobutton, null);
@@ -163,7 +163,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
         int value = 0;
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            Option option = (Option) customRadioButton.getTag();
+            OptionDB option = (OptionDB) customRadioButton.getTag();
             if (isOptionIdentifier(option, noOptionIdentifier)
                     && checkedId == customRadioButton.getId()) {
                 value = 0;
@@ -174,7 +174,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
             Question question = (Question) this.getTag();
             if (checkedId == customRadioButton.getId()
                     && !TreatmentQueries.isCq(question.getUid())) {
-                notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
+                notifyAnswerOptionChange(this.getTag(), ((OptionDB) customRadioButton.getTag()));
                 changeTotalQuestions();
             }
         }
@@ -183,7 +183,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
         notifyAnswerChanged(String.valueOf(value));
     }
 
-    protected void notifyAnswerOptionChange(Object tag, Option option) {
+    protected void notifyAnswerOptionChange(Object tag, OptionDB option) {
         if (mOnAnswerOptionChangedListener != null) {
             View view = new View(context);
             view.setTag(TreatmentQueries.getTreatmentQuestionForTag(tag));
@@ -231,7 +231,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
                 break;
             }
         }
-        if ((actValue == null || actValue.getOption().getCode().equals(yesOptionIdentifier))
+        if ((actValue == null || actValue.getOptionDB().getCode().equals(yesOptionIdentifier))
                 || (pqValue == null || Float.parseFloat(pqValue.getValue()) > 0)) {
             alternativePqQuestion.setTotalQuestions(8);
         } else {

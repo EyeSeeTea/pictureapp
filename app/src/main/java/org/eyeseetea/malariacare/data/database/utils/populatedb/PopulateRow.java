@@ -2,14 +2,14 @@ package org.eyeseetea.malariacare.data.database.utils.populatedb;
 
 import android.support.annotation.Nullable;
 
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.Partner;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -24,8 +24,8 @@ import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import java.util.HashMap;
 
 public class PopulateRow {
-    static Question populateQuestion(String[] line, HashMap<Long, Header> headerFK,
-            HashMap<Long, Answer> answerFK, @Nullable Question question) {
+    static Question populateQuestion(String[] line, HashMap<Long, HeaderDB> headerFK,
+            HashMap<Long, AnswerDB> answerFK, @Nullable Question question) {
         if (question == null) {
             question = new Question();
         }
@@ -55,24 +55,24 @@ public class PopulateRow {
         return question;
     }
 
-    static Answer populateAnswer(String line[], @Nullable Answer answer) {
-        if (answer == null) {
-            answer = new Answer();
+    static AnswerDB populateAnswer(String line[], @Nullable AnswerDB answerDB) {
+        if (answerDB == null) {
+            answerDB = new AnswerDB();
         }
-        answer.setName(line[1]);
-        return answer;
+        answerDB.setName(line[1]);
+        return answerDB;
     }
 
-    static Header populateHeader(String line[], HashMap<Long, Tab> tabsFK,
-            @Nullable Header header) {
-        if (header == null) {
-            header = new Header();
+    static HeaderDB populateHeader(String line[], HashMap<Long, Tab> tabsFK,
+            @Nullable HeaderDB headerDB) {
+        if (headerDB == null) {
+            headerDB = new HeaderDB();
         }
-        header.setShort_name(line[1]);
-        header.setName(line[2]);
-        header.setOrder_pos(Integer.valueOf(line[3]));
-        header.setTab(tabsFK.get(Long.valueOf(line[4])));
-        return header;
+        headerDB.setShort_name(line[1]);
+        headerDB.setName(line[2]);
+        headerDB.setOrder_pos(Integer.valueOf(line[3]));
+        headerDB.setTab(tabsFK.get(Long.valueOf(line[4])));
+        return headerDB;
     }
 
     static Program populateProgram(String[] line, @Nullable Program program) {
@@ -95,23 +95,23 @@ public class PopulateRow {
         return tab;
     }
 
-    static Match populateMatch(String line[],
-            HashMap<Long, QuestionRelation> questionRelationFK, @Nullable Match match) {
-        if (match == null) {
-            match = new Match();
+    static MatchDB populateMatch(String line[],
+            HashMap<Long, QuestionRelation> questionRelationFK, @Nullable MatchDB matchDB) {
+        if (matchDB == null) {
+            matchDB = new MatchDB();
         }
-        match.setQuestionRelation(questionRelationFK.get(Long.valueOf(line[1])));
-        return match;
+        matchDB.setQuestionRelation(questionRelationFK.get(Long.valueOf(line[1])));
+        return matchDB;
     }
 
 
     static QuestionThreshold populateQuestionThreshold(String[] line,
-            HashMap<Long, Match> matchesFK, HashMap<Long, Question> quetiosnFK,
+            HashMap<Long, MatchDB> matchesFK, HashMap<Long, Question> quetiosnFK,
             @Nullable QuestionThreshold questionThreshold) {
         if (questionThreshold == null) {
             questionThreshold = new QuestionThreshold();
         }
-        questionThreshold.setMatch(matchesFK.get(Long.valueOf(line[1])));
+        questionThreshold.setMatchDB(matchesFK.get(Long.valueOf(line[1])));
         questionThreshold.setQuestion(quetiosnFK.get(Long.valueOf(line[2])));
         if (!line[3].equals("")) {
             questionThreshold.setMinValue(Integer.valueOf(line[3]));
@@ -123,7 +123,7 @@ public class PopulateRow {
     }
 
     static QuestionOption populateQuestionOption(String[] line, HashMap<Long, Question> questionFK,
-            HashMap<Long, Option> optionFK, HashMap<Long, Match> matchFK,
+            HashMap<Long, OptionDB> optionFK, HashMap<Long, MatchDB> matchFK,
             @Nullable QuestionOption questionOption) {
         if (questionOption == null) {
             questionOption = new QuestionOption();
@@ -155,12 +155,12 @@ public class PopulateRow {
      */
     static TreatmentMatch populateTreatmentMatches(String[] line,
             HashMap<Long, Treatment> treatmentIds,
-            HashMap<Long, Match> matchesIds, TreatmentMatch treatmentMatch) {
+            HashMap<Long, MatchDB> matchesIds, TreatmentMatch treatmentMatch) {
         if (treatmentMatch == null) {
             treatmentMatch = new TreatmentMatch();
         }
         treatmentMatch.setTreatment(treatmentIds.get(Long.parseLong(line[1])));
-        treatmentMatch.setMatch(matchesIds.get(Long.parseLong(line[2])));
+        treatmentMatch.setMatchDB(matchesIds.get(Long.parseLong(line[2])));
         return treatmentMatch;
     }
 
@@ -170,15 +170,15 @@ public class PopulateRow {
      *
      * @param line The row of the csv to populate.
      */
-    static DrugCombination populateDrugCombinations(String[] line, HashMap<Long, Drug> drugsFK,
-            HashMap<Long, Treatment> treatmentFK, @Nullable DrugCombination drugCombination) {
-        if (drugCombination == null) {
-            drugCombination = new DrugCombination();
+    static DrugCombinationDB populateDrugCombinations(String[] line, HashMap<Long, DrugDB> drugsFK,
+            HashMap<Long, Treatment> treatmentFK, @Nullable DrugCombinationDB drugCombinationDB) {
+        if (drugCombinationDB == null) {
+            drugCombinationDB = new DrugCombinationDB();
         }
-        drugCombination.setDrug(drugsFK.get(Long.parseLong(line[1])));
-        drugCombination.setTreatment(treatmentFK.get(Long.parseLong(line[2])));
-        drugCombination.setDose(Float.parseFloat(line[3]));
-        return drugCombination;
+        drugCombinationDB.setDrugDB(drugsFK.get(Long.parseLong(line[1])));
+        drugCombinationDB.setTreatment(treatmentFK.get(Long.parseLong(line[2])));
+        drugCombinationDB.setDose(Float.parseFloat(line[3]));
+        return drugCombinationDB;
     }
 
     /**
@@ -187,7 +187,7 @@ public class PopulateRow {
      * @param line The row of the csv to populate.
      * @param stringKeyList
      */
-    static Treatment populateTreatments(String[] line, HashMap<Long, Partner> organisationFK,
+    static Treatment populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
             HashMap<Long, StringKey> stringKeyList, @Nullable Treatment treatment) {
         if (treatment == null) {
             treatment = new Treatment();
@@ -204,13 +204,13 @@ public class PopulateRow {
      *
      * @param line The row of the csv to populate.
      */
-    static Partner populateOrganisations(String[] line, @Nullable Partner partner) {
-        if (partner == null) {
-            partner = new Partner();
+    static PartnerDB populateOrganisations(String[] line, @Nullable PartnerDB partnerDB) {
+        if (partnerDB == null) {
+            partnerDB = new PartnerDB();
         }
-        partner.setUid(line[1]);
-        partner.setName(line[2]);
-        return partner;
+        partnerDB.setUid(line[1]);
+        partnerDB.setName(line[2]);
+        return partnerDB;
     }
 
     /**
@@ -218,29 +218,29 @@ public class PopulateRow {
      *
      * @param line The row of the csv to add to db.
      */
-    static Drug populateDrugs(String line[], @Nullable Drug drug) {
-        if (drug == null) {
-            drug = new Drug();
+    static DrugDB populateDrugs(String line[], @Nullable DrugDB drugDB) {
+        if (drugDB == null) {
+            drugDB = new DrugDB();
         }
-        drug.setName(line[1]);
-        drug.setQuestion_code(line[2]);
-        return drug;
+        drugDB.setName(line[1]);
+        drugDB.setQuestion_code(line[2]);
+        return drugDB;
     }
 
-    public static Option populateOption(String[] line, HashMap<Long, Answer> answerFK,
-            HashMap<Long, OptionAttribute> optionAttributeFK, @Nullable Option option) {
-        if (option == null) {
-            option = new Option();
+    public static OptionDB populateOption(String[] line, HashMap<Long, AnswerDB> answerFK,
+            HashMap<Long, OptionAttributeDB> optionAttributeFK, @Nullable OptionDB optionDB) {
+        if (optionDB == null) {
+            optionDB = new OptionDB();
         }
-        option.setName(line[1]);
-        option.setCode(line[2]);
-        option.setFactor(Float.valueOf(line[3]));
-        option.setAnswer(answerFK.get(Long.valueOf(line[4])));
+        optionDB.setName(line[1]);
+        optionDB.setCode(line[2]);
+        optionDB.setFactor(Float.valueOf(line[3]));
+        optionDB.setAnswerDB(answerFK.get(Long.valueOf(line[4])));
         if (line[5] != null && !line[5].isEmpty()) {
-            option.setOptionAttribute(
+            optionDB.setOptionAttributeDB(
                     optionAttributeFK.get(Long.valueOf(line[5])));
         }
-        return option;
+        return optionDB;
     }
 
     static StringKey populateStringKey(String[] line, @Nullable StringKey stringKey) {

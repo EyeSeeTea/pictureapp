@@ -35,8 +35,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Match extends BaseModel {
+@Table(database = AppDatabase.class, name = "Match")
+public class MatchDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_match;
@@ -49,26 +49,26 @@ public class Match extends BaseModel {
     QuestionRelation questionRelation;
 
     /**
-     * List of questionOptions associated to this match
+     * List of questionOptions associated to this mMatchDB
      */
     List<QuestionOption> questionOptions;
 
-    public Match() {
+    public MatchDB() {
     }
 
-    public Match(QuestionRelation questionRelation) {
+    public MatchDB(QuestionRelation questionRelation) {
         setQuestionRelation(questionRelation);
     }
 
-    public static Match findById(long id) {
+    public static MatchDB findById(long id) {
         return new Select()
-                .from(Match.class)
-                .where(Match_Table.id_match.is(id))
+                .from(MatchDB.class)
+                .where(MatchDB_Table.id_match.is(id))
                 .querySingle();
     }
 
-    public static List<Match> listAll() {
-        return new Select().from(Match.class).queryList();
+    public static List<MatchDB> listAll() {
+        return new Select().from(MatchDB.class).queryList();
     }
 
     public List<QuestionOption> getQuestionOptions() {
@@ -81,30 +81,30 @@ public class Match extends BaseModel {
     }
 
     /**
-     * Get all questionThresholds matches with the match passed.
+     * Get all questionThresholds mMatchDBs with the mMatchDB passed.
      */
-    private static List<QuestionThreshold> getQuestionThreshold(Match match) {
+    private static List<QuestionThreshold> getQuestionThreshold(MatchDB matchDB) {
         return new Select().from(QuestionThreshold.class)
                 .where(QuestionThreshold_Table.id_match_fk.eq(
-                        match.getId_match())).queryList();
+                        matchDB.getId_match())).queryList();
     }
 
     /**
-     * Get all questionOptions matches with the match passed.
+     * Get all questionOptions mMatchDBs with the mMatchDB passed.
      */
-    private static List<QuestionOption> getQuestionOptions(Match match) {
+    private static List<QuestionOption> getQuestionOptions(MatchDB matchDB) {
         return new Select().from(QuestionOption.class)
                 .where(QuestionOption_Table.id_match_fk.eq(
-                        match.getId_match())).queryList();
+                        matchDB.getId_match())).queryList();
     }
 
     /**
-     * Get all treatment matches with the match passed.
+     * Get all treatment mMatchDBs with the mMatchDB passed.
      */
-    private static List<TreatmentMatch> getTreatmentMatches(Match match) {
+    private static List<TreatmentMatch> getTreatmentMatches(MatchDB matchDB) {
         return new Select().from(TreatmentMatch.class)
                 .where(TreatmentMatch_Table.id_match_fk.eq(
-                        match.getId_match())).queryList();
+                        matchDB.getId_match())).queryList();
     }
 
     public Treatment getTreatment() {
@@ -118,14 +118,14 @@ public class Match extends BaseModel {
     }
 
     /**
-     * Method to delete the matches in cascade
+     * Method to delete the mMatchDBs in cascade
      */
-    public static void deleteMatches(List<Match> matches) {
-        for (Match match : matches) {
-            TreatmentMatch.deleteTreatmentMatches(getTreatmentMatches(match));
-            QuestionOption.deleteQuestionOptions(getQuestionOptions(match));
-            QuestionThreshold.deleteQuestionThresholds(getQuestionThreshold(match));
-            match.delete();
+    public static void deleteMatches(List<MatchDB> matchDBs) {
+        for (MatchDB matchDB : matchDBs) {
+            TreatmentMatch.deleteTreatmentMatches(getTreatmentMatches(matchDB));
+            QuestionOption.deleteQuestionOptions(getQuestionOptions(matchDB));
+            QuestionThreshold.deleteQuestionThresholds(getQuestionThreshold(matchDB));
+            matchDB.delete();
         }
     }
 
@@ -163,14 +163,14 @@ public class Match extends BaseModel {
      * Returns the threshold associated with this questionoption
      */
     public QuestionThreshold getQuestionThreshold() {
-        //Find threshold with this match
+        //Find threshold with this mMatchDB
         return new Select().from(QuestionThreshold.class)
                 .where(QuestionThreshold_Table.id_match_fk
                         .is(id_match)).querySingle();
     }
 
     /**
-     * Returns the question from QuestionRelation for this match with the given operationType
+     * Returns the question from QuestionRelation for this mMatchDB with the given operationType
      */
     public Question getQuestionFromRelationWithType(int operationType) {
         QuestionRelation questionRelation = this.getQuestionRelation();
@@ -186,11 +186,11 @@ public class Match extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Match match = (Match) o;
+        MatchDB matchDB = (MatchDB) o;
 
-        if (id_match != match.id_match) return false;
+        if (id_match != matchDB.id_match) return false;
         return !(id_question_relation_fk != null ? !id_question_relation_fk.equals(
-                match.id_question_relation_fk) : match.id_question_relation_fk != null);
+                matchDB.id_question_relation_fk) : matchDB.id_question_relation_fk != null);
 
     }
 

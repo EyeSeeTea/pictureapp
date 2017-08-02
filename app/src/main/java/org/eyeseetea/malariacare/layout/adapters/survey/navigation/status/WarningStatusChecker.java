@@ -33,11 +33,11 @@ public class WarningStatusChecker extends StatusChecker {
         Value intValue = questionThreshold.getQuestion().getValueBySession();
 
         //A question is not answered yet -> false
-        if (optionValue == null || optionValue.getOption() == null || intValue == null) {
+        if (optionValue == null || optionValue.getOptionDB() == null || intValue == null) {
             return false;
         }
         //The option for this warning has not been selected
-        if (optionValue.getId_option() != questionOption.getOption().getId_option()) {
+        if (optionValue.getId_option() != questionOption.getOptionDB().getId_option()) {
             return false;
         }
         //If current int value NOT in threshold -> the warning is activated

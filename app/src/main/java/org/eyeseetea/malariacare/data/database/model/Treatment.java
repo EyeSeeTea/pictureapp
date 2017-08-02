@@ -43,9 +43,9 @@ public class Treatment extends BaseModel {
     @Column
     int type;
     /**
-     * Reference to mPartner (loaded lazily)
+     * Reference to mPartnerDB (loaded lazily)
      */
-    Partner mPartner;
+    PartnerDB mPartnerDB;
 
 
     public Treatment() {
@@ -71,21 +71,21 @@ public class Treatment extends BaseModel {
         return new Select().from(Treatment.class).queryList();
     }
 
-    public List<Drug> getDrugsForTreatment() {
-        return new Select().from(Drug.class).as(drugName)
-                .join(DrugCombination.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
-                .on(Drug_Table.id_drug.withTable(drugAlias)
-                        .eq(DrugCombination_Table.id_drug_fk.withTable(drugCombinationAlias)))
-                .where(DrugCombination_Table.id_treatment_fk.withTable(drugCombinationAlias)
+    public List<DrugDB> getDrugsForTreatment() {
+        return new Select().from(DrugDB.class).as(drugName)
+                .join(DrugCombinationDB.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
+                .on(DrugDB_Table.id_drug.withTable(drugAlias)
+                        .eq(DrugCombinationDB_Table.id_drug_fk.withTable(drugCombinationAlias)))
+                .where(DrugCombinationDB_Table.id_treatment_fk.withTable(drugCombinationAlias)
                         .is(id_treatment)).queryList();
 
     }
 
     public List<Treatment> getAlternativeTreatments() {
-        Match match=new Select()
-                .from(Match.class).as(matchName)
+        MatchDB matchDB =new Select()
+                .from(MatchDB.class).as(matchName)
                 .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
-                .on(Match_Table.id_match.withTable(matchAlias).is(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)))
+                .on(MatchDB_Table.id_match.withTable(matchAlias).is(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)))
                 .where(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(id_treatment))
                 .querySingle();
         List<Treatment> treatments = new Select()
@@ -94,7 +94,7 @@ public class Treatment extends BaseModel {
                 .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
                         .eq(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
                 .where(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)
-                        .is(match.getId_match()))
+                        .is(matchDB.getId_match()))
                 .and(Treatment_Table.type.withTable(treatmentAlias).is(TYPE_NOT_MAIN))
                 .queryList();
         //FIXME: select split in two because DBFLOW bug
@@ -110,27 +110,27 @@ public class Treatment extends BaseModel {
     }
 
 
-    public Partner getPartner() {
-        if (mPartner == null) {
+    public PartnerDB getPartnerDB() {
+        if (mPartnerDB == null) {
             if (id_partner_fk == null) {
                 return null;
             }
-            mPartner = new Select()
-                    .from(Partner.class)
-                    .where(Partner_Table.id_partner
+            mPartnerDB = new Select()
+                    .from(PartnerDB.class)
+                    .where(PartnerDB_Table.id_partner
                             .is(id_partner_fk)).querySingle();
         }
-        return mPartner;
+        return mPartnerDB;
     }
 
-    public void setPartner(Long id_organisation) {
+    public void setPartnerDB(Long id_organisation) {
         this.id_partner_fk = id_organisation;
-        mPartner = null;
+        mPartnerDB = null;
     }
 
-    public void setOrganisation(Partner partner) {
-        this.mPartner = partner;
-        this.id_partner_fk = (partner != null) ? partner.getId_partner() : null;
+    public void setOrganisation(PartnerDB partnerDB) {
+        this.mPartnerDB = partnerDB;
+        this.id_partner_fk = (partnerDB != null) ? partnerDB.getId_partner() : null;
     }
 
     public Long getDiagnosis() {
@@ -197,7 +197,7 @@ public class Treatment extends BaseModel {
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
                 ", type=" + type +
-                ", mPartner=" + mPartner +
+                ", mPartnerDB=" + mPartnerDB +
                 '}';
     }
 

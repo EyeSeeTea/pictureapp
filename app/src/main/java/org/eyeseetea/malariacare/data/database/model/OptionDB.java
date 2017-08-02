@@ -31,11 +31,11 @@ import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Option extends BaseModel {
+@Table(database = AppDatabase.class, name = "Option")
+public class OptionDB extends BaseModel {
 
-    //FIXME A 'Yes' answer shows children questions, this should be configurable by some
-    // additional attribute in Option
+    //FIXME A 'Yes' mAnswerDB shows children questions, this should be configurable by some
+    // additional attribute in OptionDB
     public static final String CHECKBOX_YES_OPTION = "Yes";
 
     public static final int DOESNT_MATCH_POSITION = 0;
@@ -55,58 +55,58 @@ public class Option extends BaseModel {
     Long id_answer_fk;
 
     /**
-     * Reference to parent answer (loaded lazily)
+     * Reference to parent mAnswerDB (loaded lazily)
      */
-    Answer answer;
+    AnswerDB mAnswerDB;
 
     @Column
     long id_option_attribute_fk;
 
     /**
-     * Reference to extended option attributes (loaded lazily)
+     * Reference to extended mOptionDB attributes (loaded lazily)
      */
-    OptionAttribute optionAttribute;
+    OptionAttributeDB mOptionAttributeDB;
 
     /**
-     * List of values that has choosen this option
+     * List of values that has choosen this mOptionDB
      */
     List<Value> values;
 
-    public Option() {
+    public OptionDB() {
     }
 
-    public Option(String code, Float factor, Answer answer) {
+    public OptionDB(String code, Float factor, AnswerDB answerDB) {
         this.code = code;
         this.factor = factor;
-        this.setAnswer(answer);
+        this.setAnswerDB(answerDB);
     }
 
-    public Option(String name, String code, Float factor, Answer answer) {
+    public OptionDB(String name, String code, Float factor, AnswerDB answerDB) {
         this.name = name;
         this.factor = factor;
         this.code = code;
-        this.setAnswer(answer);
+        this.setAnswerDB(answerDB);
     }
 
 
-    public Option(String code) {
+    public OptionDB(String code) {
         this.code = code;
     }
 
-    public static List<Option> getAllOptions() {
-        return new Select().from(Option.class).queryList();
+    public static List<OptionDB> getAllOptions() {
+        return new Select().from(OptionDB.class).queryList();
     }
 
-    public static Option findById(Long id) {
+    public static OptionDB findById(Long id) {
         return new Select()
-                .from(Option.class)
-                .where(Option_Table.id_option.eq(id)).querySingle();
+                .from(OptionDB.class)
+                .where(OptionDB_Table.id_option.eq(id)).querySingle();
     }
 
-    public static Option findByName(String name) {
+    public static OptionDB findByName(String name) {
         return new Select()
-                .from(Option.class)
-                .where(Option_Table.name.eq(name)).querySingle();
+                .from(OptionDB.class)
+                .where(OptionDB_Table.name.eq(name)).querySingle();
     }
 
     public Long getId_option() {
@@ -149,77 +149,77 @@ public class Option extends BaseModel {
         this.factor = factor;
     }
 
-    public Answer getAnswer() {
-        if (answer == null) {
+    public AnswerDB getAnswerDB() {
+        if (mAnswerDB == null) {
             if (id_answer_fk == null) return null;
-            answer = new Select()
-                    .from(Answer.class)
-                    .where(Answer_Table.id_answer
+            mAnswerDB = new Select()
+                    .from(AnswerDB.class)
+                    .where(AnswerDB_Table.id_answer
                             .is(id_answer_fk)).querySingle();
         }
-        return answer;
+        return mAnswerDB;
     }
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
-        this.id_answer_fk = (answer != null) ? answer.getId_answer() : null;
+    public void setAnswerDB(AnswerDB answerDB) {
+        this.mAnswerDB = answerDB;
+        this.id_answer_fk = (answerDB != null) ? answerDB.getId_answer() : null;
     }
 
-    public OptionAttribute getOptionAttribute() {
-        if (optionAttribute == null) {
-            optionAttribute = new Select().from(
-                    OptionAttribute.class)
-                    .where(OptionAttribute_Table.id_option_attribute.eq(
+    public OptionAttributeDB getOptionAttributeDB() {
+        if (mOptionAttributeDB == null) {
+            mOptionAttributeDB = new Select().from(
+                    OptionAttributeDB.class)
+                    .where(OptionAttributeDB_Table.id_option_attribute.eq(
                             id_option_attribute_fk)).querySingle();
         }
-        return optionAttribute;
+        return mOptionAttributeDB;
     }
 
-    public void setOptionAttribute(
-            OptionAttribute optionAttribute) {
-        this.optionAttribute = optionAttribute;
+    public void setOptionAttributeDB(
+            OptionAttributeDB optionAttributeDB) {
+        this.mOptionAttributeDB = optionAttributeDB;
         this.id_option_attribute_fk =
-                (optionAttribute != null) ? optionAttribute.getId_option_attribute() : null;
+                (optionAttributeDB != null) ? optionAttributeDB.getId_option_attribute() : null;
     }
 
     /**
-     * Getter for extended option attribute 'path'
+     * Getter for extended mOptionDB attribute 'path'
      */
     public String getPath() {
-        OptionAttribute optionAttribute = this.getOptionAttribute();
-        if (optionAttribute == null) {
+        OptionAttributeDB optionAttributeDB = this.getOptionAttributeDB();
+        if (optionAttributeDB == null) {
             return null;
         }
 
-        return optionAttribute.getPath();
+        return optionAttributeDB.getPath();
     }
 
     /**
-     * Getter for extended option attribute 'path' translation in paths.xml
+     * Getter for extended mOptionDB attribute 'path' translation in paths.xml
      */
     public String getInternationalizedPath() {
-        OptionAttribute optionAttribute = this.getOptionAttribute();
-        if (optionAttribute == null) {
+        OptionAttributeDB optionAttributeDB = this.getOptionAttributeDB();
+        if (optionAttributeDB == null) {
             return null;
         }
 
-        return optionAttribute.getInternationalizedPath();
+        return optionAttributeDB.getInternationalizedPath();
     }
 
     /**
-     * Getter for extended option attribute 'backgroundColor'
+     * Getter for extended mOptionDB attribute 'backgroundColor'
      */
     public String getBackground_colour() {
-        OptionAttribute optionAttribute = this.getOptionAttribute();
-        if (optionAttribute == null) {
+        OptionAttributeDB optionAttributeDB = this.getOptionAttributeDB();
+        if (optionAttributeDB == null) {
             return null;
         }
 
-        return optionAttribute.getBackground_colour();
+        return optionAttributeDB.getBackground_colour();
     }
 
     /**
-     * Looks for the value with the given question  is the provided option
+     * Looks for the value with the given question  is the provided mOptionDB
      */
     public static boolean findOption(Long idQuestion, Long idOption, Survey survey) {
         Value value = Value.findValue(idQuestion, survey);
@@ -232,14 +232,14 @@ public class Option extends BaseModel {
     }
 
     /**
-     * Gets the Question of this Option in session
+     * Gets the Question of this OptionDB in session
      */
     public Question getQuestionBySession() {
         return getQuestionBySurvey(Session.getMalariaSurvey());
     }
 
     /**
-     * Gets the Question of this Option in the given Survey
+     * Gets the Question of this OptionDB in the given Survey
      */
     public Question getQuestionBySurvey(
             Survey survey) {
@@ -257,7 +257,7 @@ public class Option extends BaseModel {
 
 
     /**
-     * Checks if this option actives the children questions
+     * Checks if this mOptionDB actives the children questions
      *
      * @return true: Children questions should be shown, false: otherwise.
      */
@@ -266,7 +266,7 @@ public class Option extends BaseModel {
     }
 
     /**
-     * Checks if this option name is equals to a given string.
+     * Checks if this mOptionDB name is equals to a given string.
      *
      * @return true|false
      */
@@ -287,15 +287,17 @@ public class Option extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Option option = (Option) o;
+        OptionDB optionDB = (OptionDB) o;
 
-        if (id_option != option.id_option) return false;
-        if (id_option_attribute_fk != option.id_option_attribute_fk) return false;
-        if (code != null ? !code.equals(option.code) : option.code != null) return false;
-        if (name != null ? !name.equals(option.name) : option.name != null) return false;
-        if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
-        return !(id_answer_fk != null ? !id_answer_fk.equals(option.id_answer_fk)
-                : option.id_answer_fk != null);
+        if (id_option != optionDB.id_option) return false;
+        if (id_option_attribute_fk != optionDB.id_option_attribute_fk) return false;
+        if (code != null ? !code.equals(optionDB.code) : optionDB.code != null) return false;
+        if (name != null ? !name.equals(optionDB.name) : optionDB.name != null) return false;
+        if (factor != null ? !factor.equals(optionDB.factor) : optionDB.factor != null) {
+            return false;
+        }
+        return !(id_answer_fk != null ? !id_answer_fk.equals(optionDB.id_answer_fk)
+                : optionDB.id_answer_fk != null);
 
     }
 
@@ -312,7 +314,7 @@ public class Option extends BaseModel {
 
     @Override
     public String toString() {
-        return "Option{" +
+        return "OptionDB{" +
                 "id_option=" + id_option +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +

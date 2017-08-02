@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -30,7 +30,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         this.mDynamicTabAdapter = dynamicTabAdapter;
     }
 
-    public void showConfirmCounter(final View view, final Option selectedOption,
+    public void showConfirmCounter(final View view, final OptionDB selectedOption,
             Question question, Question questionCounter) {
         View rootView = view.getRootView();
 
@@ -53,7 +53,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
     }
 
-    public void configureNavigationButtons(final View view, final Option selectedOption,
+    public void configureNavigationButtons(final View view, final OptionDB selectedOption,
             final Question question, Question questionCounter, View rootView) {
         //cancel
         ImageButton previousButton = (ImageButton) rootView.findViewById(R.id.back_btn);
@@ -96,12 +96,12 @@ public class ConfirmCounterSingleCustomViewStrategy implements
             }
         });
 
-        List<Option> questionOptions = questionCounter.getAnswer().getOptions();
+        List<OptionDB> questionOptions = questionCounter.getAnswerDB().getOptionDBs();
 
         if (questionOptions.get(2) != null) {
             CustomTextView textNextButton = (CustomTextView) rootView.findViewById(R.id.next_txt);
             textNextButton.setText(getInternationalizedName(questionOptions.get(2).getName()));
-            textNextButton.setTextSize(questionOptions.get(2).getOptionAttribute().getText_size());
+            textNextButton.setTextSize(questionOptions.get(2).getOptionAttributeDB().getText_size());
         }
     }
 
@@ -121,15 +121,15 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     }
 
     public void showQuestionText(Question questionCounter, View rootView) {
-        List<Option> questionOptions = questionCounter.getAnswer().getOptions();
+        List<OptionDB> questionOptions = questionCounter.getAnswerDB().getOptionDBs();
         if (questionOptions.get(0) != null) {
             CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
             textCard.setText(getInternationalizedName(questionOptions.get(0).getName()));
-            textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
+            textCard.setTextSize(questionOptions.get(0).getOptionAttributeDB().getText_size());
 
             TextView subTitle = (TextView) rootView.findViewById(R.id.questionSubText);
             subTitle.setText(getInternationalizedName(questionOptions.get(0).getCode()));
-            subTitle.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
+            subTitle.setTextSize(questionOptions.get(0).getOptionAttributeDB().getText_size());
         }
     }
 
@@ -142,7 +142,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         return Utils.getInternationalizedString(name);
     }
 
-    private String getCounterValue(Question question, Option selectedOption) {
+    private String getCounterValue(Question question, OptionDB selectedOption) {
         Question optionCounter = question.findCounterByOption(selectedOption);
 
         if (optionCounter == null) {

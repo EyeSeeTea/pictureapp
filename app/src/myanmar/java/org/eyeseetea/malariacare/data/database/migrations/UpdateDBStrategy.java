@@ -5,10 +5,10 @@ import android.content.Context;
 import com.opencsv.CSVReader;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
@@ -23,10 +23,10 @@ import java.util.List;
 
 public class UpdateDBStrategy {
     public static void updateOptions(Context context) throws IOException {
-        List<Option> optionToDelete = Question.getOptions(
+        List<OptionDB> optionToDelete = Question.getOptions(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.residenceVillageUID));
-        for (Option option : optionToDelete) {
+        for (OptionDB option : optionToDelete) {
             if (!option.getName().equals(PreferencesState.getInstance().getContext().getString(
                     R.string.patientResidenceVillageOtherCode))) {
                 option.delete();
@@ -34,9 +34,9 @@ public class UpdateDBStrategy {
         }
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
-        List<Option> options = Option.getAllOptions();
-        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
-        HashMap<Long, OptionAttribute> optionAttributeIds =
+        List<OptionDB> options = OptionDB.getAllOptions();
+        HashMap<Long, AnswerDB> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
+        HashMap<Long, OptionAttributeDB> optionAttributeIds =
                 RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
@@ -54,14 +54,14 @@ public class UpdateDBStrategy {
             i++;
         }
 
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit : orgUnits) {
-            Option option = new Option();
+        List<OrgUnitDB> orgUnits = OrgUnitDB.getAllOrgUnit();
+        for (OrgUnitDB orgUnit : orgUnits) {
+            OptionDB option = new OptionDB();
             option.setName(orgUnit.getName());
             option.setCode(orgUnit.getUid());
             option.setFactor((float) 0);
             option.setId_option((long) 0);
-            option.setAnswer(Question.getAnswer(
+            option.setAnswerDB(Question.getAnswer(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.residenceVillageUID)));
             option.save();

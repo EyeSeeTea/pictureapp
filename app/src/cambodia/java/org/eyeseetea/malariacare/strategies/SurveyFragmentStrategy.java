@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -32,7 +32,7 @@ public class SurveyFragmentStrategy {
         return Session.getMalariaSurvey();
     }
 
-    public static void saveValueDDlExtraOperations(Value value, Option option, String uid) {
+    public static void saveValueDDlExtraOperations(Value value, OptionDB option, String uid) {
 
     }
 
@@ -50,17 +50,17 @@ public class SurveyFragmentStrategy {
         }
     }
 
-    public static void recursiveRemover(Value value, Option option, Question question,
+    public static void recursiveRemover(Value value, OptionDB option, Question question,
             Survey survey) {
-        if (!value.getOption().equals(option) && question.hasChildren()) {
+        if (!value.getOptionDB().equals(option) && question.hasChildren()) {
             survey.removeChildrenValuesFromQuestionRecursively(question, false);
         }
     }
 
     public static List<Question> getCompulsoryNotAnsweredQuestions(Question question) {
         List<Question> questions = new ArrayList<>();
-        if (question.getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = question.getQuestionsByTab(question.getHeader().getTab());
+        if (question.getHeaderDB().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questions = question.getQuestionsByTab(question.getHeaderDB().getTab());
         } else {
             questions.add(question);
         }

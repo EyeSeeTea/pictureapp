@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.data.database.model;
 
-import static org.eyeseetea.malariacare.data.database.model.Drug_Table.id_drug;
+import static org.eyeseetea.malariacare.data.database.model.DrugDB_Table.id_drug;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -12,8 +12,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class DrugCombination extends BaseModel {
+@Table(database = AppDatabase.class, name = "DrugCombination")
+public class DrugCombinationDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_drug_combination;
@@ -25,25 +25,25 @@ public class DrugCombination extends BaseModel {
     float dose;
 
     /**
-     * Reference to drug (loaded lazily)
+     * Reference to mDrugDB (loaded lazily)
      */
-    Drug drug;
+    DrugDB mDrugDB;
     /**
      * Reference to treatment (loaded lazily)
      */
     Treatment treatment;
 
-    public DrugCombination() {
+    public DrugCombinationDB() {
     }
 
-    public DrugCombination(long id_drug_combination, long id_drug, long id_treatment) {
+    public DrugCombinationDB(long id_drug_combination, long id_drug, long id_treatment) {
         this.id_drug_combination = id_drug_combination;
         this.id_drug_fk = id_drug;
         this.id_treatment_fk = id_treatment;
     }
 
-    public static List<DrugCombination> getAllDrugCombination() {
-        return new Select().from(DrugCombination.class).queryList();
+    public static List<DrugCombinationDB> getAllDrugCombination() {
+        return new Select().from(DrugCombinationDB.class).queryList();
     }
 
     public long getId_drug_combination() {
@@ -54,27 +54,27 @@ public class DrugCombination extends BaseModel {
         this.id_drug_combination = id_drug_combination;
     }
 
-    public Drug getDrug() {
-        if (drug == null) {
+    public DrugDB getDrugDB() {
+        if (mDrugDB == null) {
             if (id_drug_fk == null) {
                 return null;
             }
-            drug = new Select()
-                    .from(Drug.class)
+            mDrugDB = new Select()
+                    .from(DrugDB.class)
                     .where(id_drug
                             .is(id_drug_fk)).querySingle();
         }
-        return drug;
+        return mDrugDB;
     }
 
-    public void setDrug(Drug drug) {
-        this.drug = drug;
-        id_drug_fk = (drug != null) ? drug.getId_drug() : null;
+    public void setDrugDB(DrugDB drugDB) {
+        this.mDrugDB = drugDB;
+        id_drug_fk = (drugDB != null) ? drugDB.getId_drug() : null;
     }
 
     public void setDrug(Long id_drug) {
         this.id_drug_fk = id_drug;
-        drug = null;
+        mDrugDB = null;
     }
 
     public Treatment getTreatment() {
@@ -100,14 +100,14 @@ public class DrugCombination extends BaseModel {
         treatment = null;
     }
 
-    public static float getDose(Treatment treatment, Drug drug) {
-        DrugCombination drugCombination = new Select()
-                .from(DrugCombination.class)
-                .where(DrugCombination_Table.id_treatment_fk.is(treatment.getId_treatment()))
-                .and(DrugCombination_Table.id_drug_fk.is(drug.getId_drug()))
+    public static float getDose(Treatment treatment, DrugDB drugDB) {
+        DrugCombinationDB drugCombinationDB = new Select()
+                .from(DrugCombinationDB.class)
+                .where(DrugCombinationDB_Table.id_treatment_fk.is(treatment.getId_treatment()))
+                .and(DrugCombinationDB_Table.id_drug_fk.is(drugDB.getId_drug()))
                 .querySingle();
-        if (drugCombination != null) {
-            return drugCombination.getDose();
+        if (drugCombinationDB != null) {
+            return drugCombinationDB.getDose();
         }
         return 0f;
     }
@@ -125,7 +125,7 @@ public class DrugCombination extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DrugCombination that = (DrugCombination) o;
+        DrugCombinationDB that = (DrugCombinationDB) o;
 
         if (id_drug_combination != that.id_drug_combination) return false;
         if (Float.compare(that.dose, dose) != 0) return false;
@@ -146,7 +146,7 @@ public class DrugCombination extends BaseModel {
 
     @Override
     public String toString() {
-        return "DrugCombination{" +
+        return "DrugCombinationDB{" +
                 "id_drug_combination=" + id_drug_combination +
                 ", id_drug_fk=" + id_drug_fk +
                 ", id_treatment_fk=" + id_treatment_fk +

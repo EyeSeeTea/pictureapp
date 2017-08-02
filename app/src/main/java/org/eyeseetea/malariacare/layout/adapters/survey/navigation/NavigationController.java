@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Tab;
@@ -79,7 +79,7 @@ public class NavigationController {
 
     public Tab getCurrentTab() {
         if (getCurrentQuestion() == null) return null;
-        return getCurrentQuestion().getHeader().getTab();
+        return getCurrentQuestion().getHeaderDB().getTab();
     }
 
     /**
@@ -108,9 +108,9 @@ public class NavigationController {
             return false;
         }
 
-        Option currentOption = currentValue == null ? null : currentValue.getOption();
+        OptionDB currentOptionDB = currentValue == null ? null : currentValue.getOptionDB();
         //Find next node with current option
-        boolean isAllowed = findNext(currentOption) != null;
+        boolean isAllowed = findNext(currentOptionDB) != null;
         Log.d(TAG, String.format("isNextAllowed()->%b", isAllowed));
         return isAllowed;
     }
@@ -122,24 +122,24 @@ public class NavigationController {
         return this.next(null);
     }
 
-    public void increaseCounterRepetitions(Option option) {
-        getCurrentNode().increaseRepetitions(option);
+    public void increaseCounterRepetitions(OptionDB optionDB) {
+        getCurrentNode().increaseRepetitions(optionDB);
     }
 
-    public Question next(Option option) {
-        Log.d(TAG, String.format("next(%s)...", option == null ? "" : option.getCode()));
+    public Question next(OptionDB optionDB) {
+        Log.d(TAG, String.format("next(%s)...", optionDB == null ? "" : optionDB.getCode()));
         QuestionNode nextNode;
 
         //Trigger counters -> no movement
-        if (!isInitialMove() && existsPendingCounter(option)) {
-            Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getCode(),
+        if (!isInitialMove() && existsPendingCounter(optionDB)) {
+            Log.d(TAG, String.format("next(%s)->%s", optionDB == null ? "" : optionDB.getCode(),
                     getCurrentQuestion().getCode()));
             return getCurrentQuestion();
         }
 
         //First movement -> nothing to check
         if (isInitialMove()) {
-            nextNode = findNext(option);
+            nextNode = findNext(optionDB);
         } else {
             //Check if current values trigger a warning
             nextNode = getCurrentNode().findWarningActivated();
@@ -148,7 +148,7 @@ public class NavigationController {
         //No warning activated -> try normal
         if (nextNode == null) {
             //No trigger -> next as usual
-            nextNode = findNext(option);
+            nextNode = findNext(optionDB);
         }
 
         //No next
@@ -162,20 +162,20 @@ public class NavigationController {
 
 
         //Return next question
-        Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getCode(),
+        Log.d(TAG, String.format("next(%s)->%s", optionDB == null ? "" : optionDB.getCode(),
                 nextQuestion.getCode()));
         return nextNode.getQuestion();
     }
 
-    public boolean existsPendingCounter(Option option) {
+    public boolean existsPendingCounter(OptionDB optionDB) {
         Map<Long, QuestionCounter> counters = getCurrentNode().getCountersMap();
 
         if (counters == null || counters.size() == 0) {
             return false;
         }
 
-        QuestionCounter questionCounter = counters.get(option.getId_option());
-        Integer limit = (int) Math.floor(option.getFactor());
+        QuestionCounter questionCounter = counters.get(optionDB.getId_option());
+        Integer limit = (int) Math.floor(optionDB.getFactor());
 
         if (questionCounter == null) return false;
         return (questionCounter.isMaxCounterLimit(limit)) ? false : true;
@@ -280,8 +280,8 @@ public class NavigationController {
         visited.add(nextNode);
     }
 
-    public boolean hasNext(Option option) {
-        return findNext(option) != null;
+    public boolean hasNext(OptionDB optionDB) {
+        return findNext(optionDB) != null;
     }
 
     public boolean hasPrevious() {
@@ -297,29 +297,29 @@ public class NavigationController {
         next(null);
     }
 
-    private QuestionNode findNext(Option option) {
+    private QuestionNode findNext(OptionDB optionDB) {
         Log.d(TAG, String.format("findNext(%s)...",
-                option == null ? "" : option.getInternationalizedName()));
+                optionDB == null ? "" : optionDB.getInternationalizedName()));
 
         //First movement (entering survey)
         if (isInitialMove()) {
             Log.d(TAG, String.format("findNext(%s)-> Initial movement",
-                    option == null ? "" : option.getInternationalizedName()));
+                    optionDB == null ? "" : optionDB.getInternationalizedName()));
             return this.rootNode;
         }
         Question actualQuestion = getCurrentNode().getQuestion();
         QuestionNode nextNode;
-        nextNode = getCurrentNode().next(option);
+        nextNode = getCurrentNode().next(optionDB);
         if (nextNode != null && (
-                actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION
-                        || actualQuestion.getHeader().getTab().getType()
+                actualQuestion.getHeaderDB().getTab().getType() == Constants.TAB_MULTI_QUESTION
+                        || actualQuestion.getHeaderDB().getTab().getType()
                         == Constants.TAB_DYNAMIC_TREATMENT
                         || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-            while (nextNode != null && (nextNode.getQuestion().getHeader().getTab().equals(
-                    actualQuestion.getHeader().getTab())
+            while (nextNode != null && (nextNode.getQuestion().getHeaderDB().getTab().equals(
+                    actualQuestion.getHeaderDB().getTab())
                     || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-                Option optionNext = nextNode.getQuestion().getOptionBySession();
-                nextNode = nextNode.next(optionNext);
+                OptionDB optionDBNext = nextNode.getQuestion().getOptionBySession();
+                nextNode = nextNode.next(optionDBNext);
             }
         }
 
@@ -328,14 +328,14 @@ public class NavigationController {
             Map<Long, QuestionCounter> counters = getCurrentNode().getCountersMap();
             if (counters == null || counters.size() == 0) {
                 Log.d(TAG, String.format("findNext(%s)-> Survey finished",
-                        option == null ? "" : option.getInternationalizedName()));
+                        optionDB == null ? "" : optionDB.getInternationalizedName()));
                 return null;
             }
-            if (option != null && counters.containsKey(option.getId_option())) {
-                QuestionCounter questionCounter = counters.get(option.getId_option());
-                Integer limit = (int) Math.floor(option.getFactor());
+            if (optionDB != null && counters.containsKey(optionDB.getId_option())) {
+                QuestionCounter questionCounter = counters.get(optionDB.getId_option());
+                Integer limit = (int) Math.floor(optionDB.getFactor());
                 Log.d(TAG, String.format("findNext(%s)-> Survey(%s)finished",
-                        option == null ? "" : option.getInternationalizedName(),
+                        optionDB == null ? "" : optionDB.getInternationalizedName(),
                         (questionCounter.isMaxCounterLimit(limit)) ? " " : " not "));
                 return (questionCounter.isMaxCounterLimit(limit)) ? null
                         : getCurrentNode().getPreviousSibling();
@@ -345,7 +345,7 @@ public class NavigationController {
         //Return next question
         if (nextNode != null && nextNode.getQuestion() != null) {
             Log.d(TAG, String.format("findNext(%s)->%s",
-                    option == null ? "" : option.getInternationalizedName(),
+                    optionDB == null ? "" : optionDB.getInternationalizedName(),
                     nextNode.getQuestion().getCode() + ""));
         }
         return nextNode;

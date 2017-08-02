@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ReminderSingleQuestionView extends AOptionQuestionView implements IQuestionView,
         IImageQuestionView, INavigationQuestionView {
 
-    Option navigationOption;
+    OptionDB mNavigationOptionDB;
 
     public ReminderSingleQuestionView(Context context) {
         super(context);
@@ -26,10 +26,10 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
     }
 
     @Override
-    public void setOptions(List<Option> options) {
-        setupTextOption(options.get(0));
+    public void setOptions(List<OptionDB> optionDBs) {
+        setupTextOption(optionDBs.get(0));
 
-        navigationOption = options.get(1);
+        mNavigationOptionDB = optionDBs.get(1);
     }
 
     @Override
@@ -55,34 +55,34 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         inflate(context, R.layout.dynamic_tab_reminder_row, this);
     }
 
-    private void setupTextOption(Option option) {
+    private void setupTextOption(OptionDB optionDB) {
         TextView title = (TextView) findViewById(R.id.questionTextRow);
-        title.setText(option.getInternationalizedCode());
-        title.setTextSize(option.getOptionAttribute().getText_size());
+        title.setText(optionDB.getInternationalizedCode());
+        title.setTextSize(optionDB.getOptionAttributeDB().getText_size());
 
         TextView subTitle = (TextView) findViewById(R.id.questionSubText);
-        subTitle.setText(option.getInternationalizedName());
-        subTitle.setTextSize(option.getOptionAttribute().getText_size());
+        subTitle.setText(optionDB.getInternationalizedName());
+        subTitle.setTextSize(optionDB.getOptionAttributeDB().getText_size());
     }
 
     @Override
     public String nextText() {
-        if (navigationOption == null) {
+        if (mNavigationOptionDB == null) {
             return "";
         }
 
-        return navigationOption.getInternationalizedCode();
+        return mNavigationOptionDB.getInternationalizedCode();
     }
 
     @Override
     public int nextTextSize() {
-        if (navigationOption == null) {
+        if (mNavigationOptionDB == null) {
             return 0;
         }
 
-        return navigationOption.getOptionAttribute().getText_size();
+        return mNavigationOptionDB.getOptionAttributeDB().getText_size();
     }
 
-    public void notifyAnswerChanged(Option option) {
+    public void notifyAnswerChanged(OptionDB optionDB) {
     }
 }

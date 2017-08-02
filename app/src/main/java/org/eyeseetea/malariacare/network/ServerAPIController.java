@@ -27,16 +27,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -107,18 +104,18 @@ public class ServerAPIController {
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
-     * Endpoint to patch closeDate to an OrgUnit
+     * Endpoint to patch closeDate to an OrgUnitDB
      */
     private static final String DHIS_PATCH_URL_CLOSED_DATE = "/api/organisationUnits/%s/closedDate";
 
     /**
-     * Endpoint to patch description to an OrgUnit
+     * Endpoint to patch description to an OrgUnitDB
      */
     private static final String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE =
             "/api/organisationUnits/%s/description";
 
     /**
-     * New Description to a closed OrgUnit
+     * New Description to a closed OrgUnitDB
      */
     private static final String DHIS_PATCH_DESCRIPTIONCLOSED_DATE =
             "[%s] - Android Surveillance App set the closing date to %s because over 30 surveys "

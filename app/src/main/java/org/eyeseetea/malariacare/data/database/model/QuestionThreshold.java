@@ -54,9 +54,9 @@ public class QuestionThreshold extends BaseModel {
     @Column
     Long id_match_fk;
     /**
-     * Reference to its match (lazy)
+     * Reference to its mMatchDB (lazy)
      */
-    Match match;
+    MatchDB mMatchDB;
 
     @Column
     Integer minValue;
@@ -67,17 +67,17 @@ public class QuestionThreshold extends BaseModel {
     public QuestionThreshold() {
     }
 
-    public QuestionThreshold(Question question, Match match, Integer minValue, Integer maxValue) {
+    public QuestionThreshold(Question question, MatchDB matchDB, Integer minValue, Integer maxValue) {
         setQuestion(question);
-        setMatch(match);
+        setMatchDB(matchDB);
         this.minValue = minValue;
         this.maxValue = maxValue;
     }
 
     public static QuestionThreshold findByQuestionAndOption(Question questionWithOption,
-            Option option) {
+            OptionDB optionDB) {
         List<QuestionOption> questionOptionList = QuestionOption.findByQuestionAndOption(
-                questionWithOption, option);
+                questionWithOption, optionDB);
         //No questionOption no threshold
         if (questionOptionList == null || questionOptionList.isEmpty()) {
             return null;
@@ -85,8 +85,8 @@ public class QuestionThreshold extends BaseModel {
 
         //Look for threshold under questionOption
         for (QuestionOption questionOption : questionOptionList) {
-            Match match = questionOption.getMatch();
-            QuestionThreshold questionThreshold = match.getQuestionThreshold();
+            MatchDB matchDB = questionOption.getMatchDB();
+            QuestionThreshold questionThreshold = matchDB.getQuestionThreshold();
             //Found
             if (questionThreshold != null) {
                 return questionThreshold;
@@ -100,16 +100,16 @@ public class QuestionThreshold extends BaseModel {
     }
 
     /**
-     * Method to get the matches with a question id and a value between or equal min max
+     * Method to get the mMatchDBs with a question id and a value between or equal min max
      * @param id_question The id of the question.
      * @param value The value to check.
-     * @return The list of matches.
+     * @return The list of mMatchDBs.
      */
-    public static List<Match> getMatchesWithQuestionValue(Long id_question,
+    public static List<MatchDB> getMatchesWithQuestionValue(Long id_question,
             int value) {
-        return new Select().from(Match.class).as(matchName)
+        return new Select().from(MatchDB.class).as(matchName)
                 .join(QuestionThreshold.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
-                .on(Match_Table.id_match.withTable(matchAlias)
+                .on(MatchDB_Table.id_match.withTable(matchAlias)
                         .eq(QuestionThreshold_Table.id_match_fk.withTable(questionThresholdAlias)))
                 .where(QuestionThreshold_Table.id_question_fk.withTable(questionThresholdAlias)
                         .is(id_question))
@@ -158,25 +158,25 @@ public class QuestionThreshold extends BaseModel {
         this.question = null;
     }
 
-    public Match getMatch() {
-        if (match == null) {
+    public MatchDB getMatchDB() {
+        if (mMatchDB == null) {
             if (id_match_fk == null) return null;
-            match = new Select()
-                    .from(Match.class)
-                    .where(Match_Table.id_match
+            mMatchDB = new Select()
+                    .from(MatchDB.class)
+                    .where(MatchDB_Table.id_match
                             .is(id_match_fk)).querySingle();
         }
-        return match;
+        return mMatchDB;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        this.id_match_fk = (match != null) ? match.getId_match() : null;
+    public void setMatchDB(MatchDB matchDB) {
+        this.mMatchDB = matchDB;
+        this.id_match_fk = (matchDB != null) ? matchDB.getId_match() : null;
     }
 
     public void setMatch(Long id_match) {
         this.id_match_fk = id_match;
-        this.match = null;
+        this.mMatchDB = null;
     }
 
     public Integer getMinValue() {

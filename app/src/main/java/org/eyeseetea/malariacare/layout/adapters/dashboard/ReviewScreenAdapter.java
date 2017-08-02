@@ -7,15 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TableRow;
 
-import com.google.common.collect.Iterables;
-
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapter {

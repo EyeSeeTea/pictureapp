@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 
 import java.util.List;
@@ -14,29 +14,29 @@ public class OrgUnitToOptionConverter {
             return;
         }
 
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit : orgUnits) {
-            addOUOptionToQuestions(questions, orgUnit);
+        List<OrgUnitDB> orgUnitDBs = OrgUnitDB.getAllOrgUnit();
+        for (OrgUnitDB orgUnitDB : orgUnitDBs) {
+            addOUOptionToQuestions(questions, orgUnitDB);
         }
     }
 
-    public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+    public static void addOUOptionToQuestions(List<Question> questions, OrgUnitDB orgUnitDB) {
         for (Question question : questions) {
-            if (!existsOrgUnitAsOptionInQuestion(orgUnit, question)) {
-                Option option = new Option();
-                option.setAnswer(question.getAnswer());
-                option.setCode(orgUnit.getUid());
-                option.setName(orgUnit.getName());
-                option.save();
+            if (!existsOrgUnitAsOptionInQuestion(orgUnitDB, question)) {
+                OptionDB optionDB = new OptionDB();
+                optionDB.setAnswerDB(question.getAnswerDB());
+                optionDB.setCode(orgUnitDB.getUid());
+                optionDB.setName(orgUnitDB.getName());
+                optionDB.save();
             }
         }
     }
 
-    private static boolean existsOrgUnitAsOptionInQuestion(OrgUnit orgUnit, Question question) {
-        List<Option> options = question.getAnswer().getOptions();
+    private static boolean existsOrgUnitAsOptionInQuestion(OrgUnitDB orgUnitDB, Question question) {
+        List<OptionDB> optionDBs = question.getAnswerDB().getOptionDBs();
 
-        for (Option option : options) {
-            if (option.getCode().equals(orgUnit.getUid())) {
+        for (OptionDB optionDB : optionDBs) {
+            if (optionDB.getCode().equals(orgUnitDB.getUid())) {
                 return true;
             }
         }

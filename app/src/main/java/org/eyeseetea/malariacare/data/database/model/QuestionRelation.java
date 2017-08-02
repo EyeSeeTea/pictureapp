@@ -39,7 +39,7 @@ import java.util.List;
 public class QuestionRelation extends BaseModel {
 
     /**
-     * Constant that reflects a match relationship
+     * Constant that reflects a mMatchDB relationship
      */
     public static final int MATCH = 0;
     /**
@@ -63,7 +63,7 @@ public class QuestionRelation extends BaseModel {
     public static final int TREATMENT_MATCH = 5;
 
     /**
-     * This match propagate the value from questionrelation question to the matched question
+     * This mMatchDB propagate the value from questionrelation question to the matched question
      */
     public static final int MATCH_PROPAGATE = 6;
 
@@ -82,9 +82,9 @@ public class QuestionRelation extends BaseModel {
     int operation;
 
     /**
-     * List of matches associated to this questionRelation
+     * List of mMatchDBs associated to this questionRelation
      */
-    List<Match> matches;
+    List<MatchDB> mMatchDBs;
 
     public QuestionRelation() {
     }
@@ -116,17 +116,17 @@ public class QuestionRelation extends BaseModel {
      */
     public static void deleteQuestionRelations(List<QuestionRelation> questionRelations) {
         for (QuestionRelation questionRelation : questionRelations) {
-            Match.deleteMatches(questionRelation.getAllMatches());
+            MatchDB.deleteMatches(questionRelation.getAllMatches());
             questionRelation.delete();
         }
     }
 
     /**
-     * Method to get the matches with the id of this question relation
+     * Method to get the mMatchDBs with the id of this question relation
      */
-    public List<Match> getAllMatches() {
-        return new Select().from(Match.class)
-                .where(Match_Table.id_question_relation_fk.eq(
+    public List<MatchDB> getAllMatches() {
+        return new Select().from(MatchDB.class)
+                .where(MatchDB_Table.id_question_relation_fk.eq(
                         getId_question_relation())).queryList();
     }
 
@@ -172,34 +172,34 @@ public class QuestionRelation extends BaseModel {
             Log.e(TAG, "createMatchFromQuestions(): children must be 2. Match not created");
             return;
         }
-        Match match;
-        for (Option optionA : children.get(0).getAnswer().getOptions()) {
-            for (Option optionB : children.get(1).getAnswer().getOptions()) {
-                if (optionA.getFactor().equals(optionB.getFactor())) {
-                    //Save all optiona factor optionb factor with the same match
-                    match = new Match(this);
-                    match.save();
-                    new QuestionOption(optionA, children.get(0), match).save();
-                    new QuestionOption(optionB, children.get(1), match).save();
+        MatchDB matchDB;
+        for (OptionDB optionDBA : children.get(0).getAnswerDB().getOptionDBs()) {
+            for (OptionDB optionDBB : children.get(1).getAnswerDB().getOptionDBs()) {
+                if (optionDBA.getFactor().equals(optionDBB.getFactor())) {
+                    //Save all optiona factor optionb factor with the same mMatchDB
+                    matchDB = new MatchDB(this);
+                    matchDB.save();
+                    new QuestionOption(optionDBA, children.get(0), matchDB).save();
+                    new QuestionOption(optionDBB, children.get(1), matchDB).save();
                 }
             }
         }
     }
 
-    public List<Match> getMatches() {
-        if (matches == null) {
-            this.matches = new Select().from(Match.class)
+    public List<MatchDB> getMatchDBs() {
+        if (mMatchDBs == null) {
+            this.mMatchDBs = new Select().from(MatchDB.class)
                     //// FIXME: 29/12/16
                     //.indexedBy(Constants.MATCH_QUESTION_RELATION_IDX)
-                    .where(Match_Table.id_question_relation_fk.eq(
+                    .where(MatchDB_Table.id_question_relation_fk.eq(
                             this.getId_question_relation()))
                     .queryList();
         }
-        return matches;
+        return mMatchDBs;
     }
 
     /**
-     * Returns if this operation is a Match relationship
+     * Returns if this operation is a MatchDB relationship
      */
     public boolean isAMatch() {
         return this.operation == MATCH;

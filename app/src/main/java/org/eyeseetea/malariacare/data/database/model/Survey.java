@@ -97,7 +97,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Reference to the org unit associated to this survey (loaded lazily)
      */
-    OrgUnit orgUnit;
+    OrgUnitDB mOrgUnitDB;
 
     @Column
     Long id_user_fk;
@@ -156,27 +156,27 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.type = Constants.SURVEY_NO_TYPE; //to avoid NullPointerExceptions
     }
 
-    public Survey(OrgUnit orgUnit, Program program, User user) {
+    public Survey(OrgUnitDB orgUnitDB, Program program, User user) {
         this();
 
         // Possibilities [ In progress | Completed | Sent ]
         this.status = Constants.SURVEY_IN_PROGRESS;
 
         //Set context of the survey
-        this.setOrgUnit(orgUnit);
+        this.setOrgUnit(orgUnitDB);
         this.setProgram(program);
         this.setUser(user);
         this.setType(Constants.SURVEY_NO_TYPE);
     }
 
-    public Survey(OrgUnit orgUnit, Program program, User user, int type) {
+    public Survey(OrgUnitDB orgUnitDB, Program program, User user, int type) {
         this();
 
         // Possibilities [ In progress | Completed | Sent ]
         this.status = Constants.SURVEY_IN_PROGRESS;
 
         //Set context of the survey
-        this.setOrgUnit(orgUnit);
+        this.setOrgUnit(orgUnitDB);
         this.setProgram(program);
         this.setUser(user);
         this.type = type;
@@ -191,25 +191,25 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.id_survey = id_survey;
     }
 
-    public OrgUnit getOrgUnit() {
-        if (orgUnit == null) {
+    public OrgUnitDB getOrgUnitDB() {
+        if (mOrgUnitDB == null) {
             if (id_org_unit_fk == null) return null;
-            orgUnit = new Select()
-                    .from(OrgUnit.class)
-                    .where(OrgUnit_Table.id_org_unit
+            mOrgUnitDB = new Select()
+                    .from(OrgUnitDB.class)
+                    .where(OrgUnitDB_Table.id_org_unit
                             .is(id_org_unit_fk)).querySingle();
         }
-        return orgUnit;
+        return mOrgUnitDB;
     }
 
-    public void setOrgUnit(Long id_org_unit) {
+    public void setOrgUnitDB(Long id_org_unit) {
         this.id_org_unit_fk = id_org_unit;
-        this.orgUnit = null;
+        this.mOrgUnitDB = null;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit = orgUnit;
-        this.id_org_unit_fk = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    public void setOrgUnit(OrgUnitDB orgUnitDB) {
+        this.mOrgUnitDB = orgUnitDB;
+        this.id_org_unit_fk = (orgUnitDB != null) ? orgUnitDB.getId_org_unit() : null;
     }
 
     public Program getProgram() {
@@ -316,9 +316,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Returns a concrete survey, if it exists
      */
-    public static List<Survey> getUnsentSurveys(OrgUnit orgUnit, Program program) {
+    public static List<Survey> getUnsentSurveys(OrgUnitDB orgUnitDB, Program program) {
         return new Select().from(Survey.class)
-                .where(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .where(Survey_Table.id_org_unit_fk.eq(orgUnitDB.getId_org_unit()))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
                 .and(Survey_Table.status.isNot(Constants.SURVEY_SENT))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
@@ -675,8 +675,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .queryList();
     }
 
-    public Float getCounterValue(Question question, Option selectedOption) {
-        Question optionCounter = question.findCounterByOption(selectedOption);
+    public Float getCounterValue(Question question, OptionDB selectedOptionDB) {
+        Question optionCounter = question.findCounterByOption(selectedOptionDB);
         if (optionCounter == null) {
             return 0f;
         }
@@ -692,7 +692,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         List<Value> values = getValuesFromDB();
         int tabSize = 0;
         for (Value value : values) {
-            Tab tab = value.getQuestion().getHeader().getTab();
+            Tab tab = value.getQuestion().getHeaderDB().getTab();
             if (!tabs.containsKey(tab)) {
                 tabs.put(tab, tabSize);
                 tabSize++;
@@ -975,13 +975,13 @@ public class Survey extends BaseModel implements VisitableToSDK {
     private long countNumOptionalQuestionsAnswered() {
         long numOptionalQuestions = SQLite.selectCountOf().from(QuestionOption.class).as(
                 questionOptionName)
-                .join(Match.class, Join.JoinType.INNER).as(matchName)
-                .on(Match_Table.id_match.withTable(matchAlias)
+                .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                .on(MatchDB_Table.id_match.withTable(matchAlias)
                         .eq(QuestionOption_Table.id_match_fk.withTable(questionOptionAlias)))
 
                 .join(QuestionRelation.class, Join.JoinType.INNER).as(questionRelationName)
                 .on(QuestionRelation_Table.id_question_relation.withTable(questionRelationAlias)
-                        .eq(Match_Table.id_question_relation_fk.withTable(matchAlias)))
+                        .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
                 .join(Value.class, Join.JoinType.INNER).as(valueName)
                 .on(Value_Table.id_question_fk.withTable(valueAlias)
                         .eq(QuestionRelation_Table.id_question_fk))
@@ -1001,7 +1001,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
-     * Updates ratios, status and completion date depending on the question and answer (text)
+     * Updates ratios, status and completion date depending on the question and mAnswerDB (text)
      */
     public void updateSurveyStatus() {
         //Sent surveys are not updated
@@ -1027,7 +1027,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         save();
     }
     /**
-     * Checks if the answer to the first question is 'Yes'
+     * Checks if the mAnswerDB to the first question is 'Yes'
      *
      * @return true|false
      */
@@ -1060,11 +1060,11 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         if (values.size() > 0) {
             for (Value value : values) {
-                //Find the RTS option
-                if (value.getOption() != null && value.getQuestion() != null
+                //Find the RTS mOptionDB
+                if (value.getOptionDB() != null && value.getQuestion() != null
                         && value.getQuestion().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(R.string.RDT_code))) {
-                    rdtValue = value.getOption().getCode();
+                    rdtValue = value.getOptionDB().getCode();
                 }
             }
 
@@ -1086,12 +1086,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         if (values.size() > 0) {
             for (Value value : values) {
-                //Find the RTS option
-                if (value.getOption() != null && value.getQuestion() != null
+                //Find the RTS mOptionDB
+                if (value.getOptionDB() != null && value.getQuestion() != null
                         && value.getQuestion().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.Result_code))) {
-                    rdtValue = value.getOption().getInternationalizedName();
+                    rdtValue = value.getOptionDB().getInternationalizedName();
                 }
             }
 
@@ -1137,7 +1137,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
             if (codeQuestionFilter.contains(qCode)) {
                 String val =
-                        (value.getOption() != null) ? value.getOption().getInternationalizedName()
+                        (value.getOptionDB() != null) ? value.getOptionDB().getInternationalizedName()
                                 : value.getValue();
                 if (val != null) {
                     map.put(qCode, val);
@@ -1164,8 +1164,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
         if (getValuesFromDB() != null) {
             for (Value value : values) {
                 valuesString += "Value: " + value.getValue();
-                if (value.getOption() != null) {
-                    valuesString += " Option: " + value.getOption().getInternationalizedCode();
+                if (value.getOptionDB() != null) {
+                    valuesString += " OptionDB: " + value.getOptionDB().getInternationalizedCode();
                 }
                 if (value.getQuestion() != null) {
                     valuesString += " Question: " + value.getQuestion().getDe_name() + "\n";
@@ -1181,7 +1181,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @removeCounters is used to prevent to remove the counter when change the some question in
      * the
      * same level
-     * This changed was required because the counter need be child of the question+option who
+     * This changed was required because the counter need be child of the question+mOptionDB who
      * tigger
      * the counter.
      */
@@ -1208,42 +1208,42 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
 
-    public static List<OrgUnit> getQuarantineOrgUnits(long programUid) {
-        return new Select().from(OrgUnit.class) .as(orgUnitName)
+    public static List<OrgUnitDB> getQuarantineOrgUnits(long programUid) {
+        return new Select().from(OrgUnitDB.class) .as(orgUnitName)
         .join(Survey.class, Join.JoinType.LEFT_OUTER).as(surveyName)
                 .on(Survey_Table.id_org_unit_fk.withTable(surveyAlias)
-                        .eq(OrgUnit_Table.id_org_unit.withTable(orgUnitAlias)))
+                        .eq(OrgUnitDB_Table.id_org_unit.withTable(orgUnitAlias)))
             .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(programUid)).queryList();
     }
 
-    public static List<Survey> getAllQuarantineSurveysByProgramAndOrgUnit(Program program, OrgUnit orgUnit) {
+    public static List<Survey> getAllQuarantineSurveysByProgramAndOrgUnit(Program program, OrgUnitDB orgUnitDB) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
-                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnitDB.getId_org_unit()))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending()).queryList();
     }
 
     public static Date getMinQuarantineCompletionDateByProgramAndOrgUnit(Program program,
-            OrgUnit orgUnit) {
+            OrgUnitDB orgUnitDB) {
         Survey survey = new Select()
                 .from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
-                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnitDB.getId_org_unit()))
                 .orderBy(OrderBy.fromProperty(Survey_Table.completion_date).ascending())
                 .querySingle();
         return survey.getCompletionDate();
     }
 
     public static Date getMaxQuarantineEventDateByProgramAndOrgUnit(Program program,
-            OrgUnit orgUnit) {
+            OrgUnitDB orgUnitDB) {
         Survey survey = new Select()
                 .from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
-                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnitDB.getId_org_unit()))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending())
                 .querySingle();
         return survey.getEventDate();

@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.ReminderStatusChecker;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.StatusChecker;
@@ -68,34 +68,34 @@ public class QuestionNode {
     }
 
     /**
-     * From this question given the option you will move to
+     * From this question given the optionDB you will move to
      */
-    public void addNavigation(Option option, QuestionNode nextNode) {
+    public void addNavigation(OptionDB optionDB, QuestionNode nextNode) {
         //something wrong -> nothing to add
-        if (option == null || nextNode == null) {
+        if (optionDB == null || nextNode == null) {
             return;
         }
 
         //Add parentNode to children
         nextNode.setParentNode(this);
         //Annotate navigation
-        this.navigation.put(option.getId_option(), nextNode);
+        this.navigation.put(optionDB.getId_option(), nextNode);
     }
 
     /**
-     * The given option triggers a counter to save the number of times its been answered
+     * The given optionDB triggers a counter to save the number of times its been answered
      */
-    public void addCounter(Option option, Question question) {
+    public void addCounter(OptionDB optionDB, Question question) {
         //something wrong -> nothing to add
-        if (option == null || question == null) {
+        if (optionDB == null || question == null) {
             return;
         }
 
         //Build a counter
         QuestionCounter questionCounter = new QuestionCounter(question);
 
-        //Add counter to option
-        this.counters.put(option.getId_option(), questionCounter);
+        //Add counter to optionDB
+        this.counters.put(optionDB.getId_option(), questionCounter);
     }
 
     /**
@@ -188,11 +188,11 @@ public class QuestionNode {
 
 
     /**
-     * Returns next question given an option
+     * Returns next question given an optionDB
      */
-    public QuestionNode next(Option option) {
-        //Find next (option, sibling, parent)
-        QuestionNode nextNode = nextAnyWay(option);
+    public QuestionNode next(OptionDB optionDB) {
+        //Find next (optionDB, sibling, parent)
+        QuestionNode nextNode = nextAnyWay(optionDB);
         if (nextNode == null) {
             return null;
         }
@@ -215,9 +215,9 @@ public class QuestionNode {
         return this.statusChecker != null && this.statusChecker.isVisibleInReview();
     }
 
-    private QuestionNode nextAnyWay(Option option) {
+    private QuestionNode nextAnyWay(OptionDB optionDB) {
         //Try children
-        QuestionNode nextNode = nextByOption(option);
+        QuestionNode nextNode = nextByOption(optionDB);
         if (nextNode != null) {
             return nextNode;
         }
@@ -263,14 +263,14 @@ public class QuestionNode {
     }
 
     /**
-     * Returns navigation from here with the given option
+     * Returns navigation from here with the given optionDB
      */
-    private QuestionNode nextByOption(Option option) {
-        if (option == null) {
+    private QuestionNode nextByOption(OptionDB optionDB) {
+        if (optionDB == null) {
             return null;
         }
 
-        return this.navigation.get(option.getId_option());
+        return this.navigation.get(optionDB.getId_option());
     }
 
     /**
@@ -285,16 +285,16 @@ public class QuestionNode {
     }
 
     /**
-     * Updates the question counter for the given option
+     * Updates the question counter for the given optionDB
      *
      * @return true when a counter has been incremented
      */
-    public boolean increaseRepetitions(Option option) {
-        if (option == null) {
+    public boolean increaseRepetitions(OptionDB optionDB) {
+        if (optionDB == null) {
             return false;
         }
 
-        QuestionCounter questionCounter = this.counters.get(option.getId_option());
+        QuestionCounter questionCounter = this.counters.get(optionDB.getId_option());
         if (questionCounter == null) {
             return false;
         }

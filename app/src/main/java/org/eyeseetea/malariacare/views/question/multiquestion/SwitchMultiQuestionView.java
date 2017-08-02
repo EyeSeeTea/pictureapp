@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -32,8 +32,8 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     CustomTextView switchTrueTextView;
     CustomTextView switchFalseTextView;
 
-    Option trueOption;
-    Option falseOption;
+    OptionDB mTrueOptionDB;
+    OptionDB mFalseOptionDB;
 
     public SwitchMultiQuestionView(Context context) {
         super(context);
@@ -42,15 +42,15 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     @Override
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> optionDBs) {
         switchTrueTextView = (CustomTextView) findViewById(R.id.row_switch_true);
         switchFalseTextView = (CustomTextView) findViewById(R.id.row_switch_false);
 
-        trueOption = options.get(0);
-        falseOption = options.get(1);
+        mTrueOptionDB = optionDBs.get(0);
+        mFalseOptionDB = optionDBs.get(1);
 
-        switchTrueTextView.setText(Utils.getInternationalizedString(trueOption.getName()));
-        switchFalseTextView.setText(Utils.getInternationalizedString(falseOption.getName()));
+        switchTrueTextView.setText(Utils.getInternationalizedString(mTrueOptionDB.getName()));
+        switchFalseTextView.setText(Utils.getInternationalizedString(mFalseOptionDB.getName()));
     }
 
     @Override
@@ -80,23 +80,23 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         if (value == null || value.getValue() == null) {
             setDefaultValue();
         } else {
-            switchView.setChecked(value.getValue().equals(trueOption.getCode()));
+            switchView.setChecked(value.getValue().equals(mTrueOptionDB.getCode()));
         }
     }
 
     private void setDefaultValue() {
         boolean isDefaultOption = false;
         boolean switchValue = false;
-        if (trueOption.getOptionAttribute().getDefaultOption() == 1) {
+        if (mTrueOptionDB.getOptionAttributeDB().getDefaultOption() == 1) {
             isDefaultOption = true;
             switchValue = true;
-        } else if (falseOption.getOptionAttribute().getDefaultOption() == 1) {
+        } else if (mFalseOptionDB.getOptionAttributeDB().getDefaultOption() == 1) {
             isDefaultOption = true;
             switchValue = false;
         }
         if (isDefaultOption) {
             switchView.setChecked(switchValue);
-            notifyAnswerChanged((switchValue) ? trueOption : falseOption);
+            notifyAnswerChanged((switchValue) ? mTrueOptionDB : mFalseOptionDB);
         }
     }
 
@@ -121,7 +121,7 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                notifyAnswerChanged((isChecked) ? trueOption : falseOption);
+                notifyAnswerChanged((isChecked) ? mTrueOptionDB : mFalseOptionDB);
             }
         });
     }

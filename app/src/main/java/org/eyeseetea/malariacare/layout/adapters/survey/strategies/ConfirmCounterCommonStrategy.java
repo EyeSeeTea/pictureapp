@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
@@ -22,7 +22,7 @@ public class ConfirmCounterCommonStrategy {
         mDynamicTabAdapter = dynamicTabAdapter;
     }
 
-    public void showStandardConfirmCounter(final View view, final Option selectedOption,
+    public void showStandardConfirmCounter(final View view, final OptionDB selectedOptionDB,
             final Question question,
             Question questionCounter) {
         //Change question x confirm message
@@ -47,9 +47,9 @@ public class ConfirmCounterCommonStrategy {
         yesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
+                mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOptionDB);
                 removeConfirmCounter(v);
-                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
+                mDynamicTabAdapter.saveOptionValue(view, selectedOptionDB, question, true);
             }
         });
 
@@ -68,23 +68,23 @@ public class ConfirmCounterCommonStrategy {
         }
 
         //Question "header" is in the first option in Options.csv
-        List<Option> questionOptions = questionCounter.getAnswer().getOptions();
-        if (questionOptions.get(0) != null) {
+        List<OptionDB> questionOptionDBs = questionCounter.getAnswerDB().getOptionDBs();
+        if (questionOptionDBs.get(0) != null) {
             CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
-            textCard.setText(questionOptions.get(0).getInternationalizedName());
+            textCard.setText(questionOptionDBs.get(0).getInternationalizedName());
             DynamicTabAdapter.swipeTouchListener.addTouchableView(textCard);
         }
         //Question "confirm button" is in the second option in Options.csv
-        if (questionOptions.get(1) != null) {
+        if (questionOptionDBs.get(1) != null) {
             CustomTextView confirmTextCard = (CustomTextView) rootView.findViewById(
                     R.id.textcard_confirm_yes);
-            confirmTextCard.setText(questionOptions.get(1).getInternationalizedName());
+            confirmTextCard.setText(questionOptionDBs.get(1).getInternationalizedName());
         }
         //Question "no confirm button" is in the third option in Options.csv
-        if (questionOptions.get(2) != null) {
+        if (questionOptionDBs.get(2) != null) {
             CustomTextView noConfirmTextCard = (CustomTextView) rootView.findViewById(
                     R.id.textcard_confirm_no);
-            noConfirmTextCard.setText(questionOptions.get(2).getInternationalizedName());
+            noConfirmTextCard.setText(questionOptionDBs.get(2).getInternationalizedName());
         }
     }
 

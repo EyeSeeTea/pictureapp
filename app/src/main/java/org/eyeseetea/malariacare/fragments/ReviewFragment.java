@@ -98,8 +98,8 @@ public class ReviewFragment extends Fragment {
             org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(value.getValue());
             if(value.getQuestion()!=null)
             preparedValue.setQuestionUId(value.getQuestion().getUid());
-            if(value.getOption()!=null)
-            preparedValue.setInternationalizedCode(value.getOption().getInternationalizedCode());
+            if(value.getOptionDB()!=null)
+            preparedValue.setInternationalizedCode(value.getOptionDB().getInternationalizedCode());
             if(colorIterator.hasNext()) {
                 preparedValue.setBackgroundColor(colorIterator.next());
             }
@@ -111,8 +111,8 @@ public class ReviewFragment extends Fragment {
     private List<String> createBackgroundColorList() {
         List<String> colorsList = new ArrayList<>();
         for(Value value:values) {
-            if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                String color = "#" + value.getOption().getBackground_colour();
+            if (value.getOptionDB() != null && value.getOptionDB().getBackground_colour() != null) {
+                String color = "#" + value.getOptionDB().getBackground_colour();
                 if (!colorsList.contains(color)) {
                     colorsList.add(color);
                 }

@@ -30,7 +30,7 @@
 //import org.eyeseetea.malariacare.DashboardActivity;
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.data.database.model.Option;
+//import org.eyeseetea.malariacare.data.database.model.OptionDB;
 //import org.eyeseetea.malariacare.data.database.model.Question;
 //import org.eyeseetea.malariacare.data.database.model.Survey;
 //import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -147,7 +147,7 @@
 //    public void org_unit_ok_location_ko_push_ko() {
 //        Log.i(TAG, "------org_unit_ok_location_ko_push_ko------");
 //        //GIVEN
-//        PreferencesState.getInstance().setOrgUnit("KH_Cambodia");
+//        PreferencesState.getInstance().setOrgUnitDB("KH_Cambodia");
 //        onView(withId(R.id.plusButton)).perform(click());
 //        SurveyActivity surveyActivity=(SurveyActivity)getActivityInstance();
 //
@@ -175,7 +175,7 @@
 //    }
 //
 //    private void chooseOptionWithText(SurveyActivity activity,String text){
-//        Option noOption=activity.findOptionByText(text);
+//        OptionDB noOption=activity.findOptionByText(text);
 //        onView(withTagValue(is((Object)noOption))).perform(click());
 //    }
 //

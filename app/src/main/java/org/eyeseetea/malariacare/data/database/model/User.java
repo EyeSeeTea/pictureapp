@@ -258,7 +258,7 @@ public class User extends BaseModel {
                 "id_user_fk=" + id_user +
                 ", uid='" + uid_user + '\'' +
                 ", name='" + name + '\'' +
-                ", mPartner=" + partner_fk +
+                ", mPartnerDB=" + partner_fk +
                 ", supervisor=" + supervisor_fk +
                 ", surveys=" + surveys +
                 ", announcement=" + announcement +

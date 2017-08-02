@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 
@@ -52,6 +52,6 @@ public class Migration2ChangeOptionPfPv extends BaseMigration {
     }
 
     private boolean hasData() {
-        return Option.getAllOptions().size() > 0;
+        return OptionDB.getAllOptions().size() > 0;
     }
 }

@@ -32,7 +32,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
@@ -279,11 +279,11 @@ public class PushClient {
         ScoreRegister.clear();
 
         //Prepare scores info
-        List<CompositeScore> compositeScoreList = ScoreRegister.loadCompositeScores(survey);
+        List<CompositeScoreDB> compositeScoreDBList = ScoreRegister.loadCompositeScores(survey);
 
-        //1 CompositeScore -> 1 dataValue
-        for (CompositeScore compositeScore : compositeScoreList) {
-            values.put(prepareValue(compositeScore));
+        //1 CompositeScoreDB -> 1 dataValue
+        for (CompositeScoreDB compositeScoreDB : compositeScoreDBList) {
+            values.put(prepareValue(compositeScoreDB));
         }
 
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
@@ -323,13 +323,13 @@ public class PushClient {
     }
 
     /**
-     * Adds a pair dataElement|value according to the 'compositeScore' of the value.
+     * Adds a pair dataElement|value according to the 'compositeScoreDB' of the value.
      * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
      */
-    private JSONObject prepareValue(CompositeScore compositeScore) throws JSONException {
+    private JSONObject prepareValue(CompositeScoreDB compositeScoreDB) throws JSONException {
         JSONObject elementObject = new JSONObject();
-        elementObject.put(TAG_DATAELEMENT, compositeScore.getUid());
-        elementObject.put(TAG_VALUE, Utils.round(ScoreRegister.getCompositeScore(compositeScore)));
+        elementObject.put(TAG_DATAELEMENT, compositeScoreDB.getUid());
+        elementObject.put(TAG_VALUE, Utils.round(ScoreRegister.getCompositeScore(compositeScoreDB)));
         return elementObject;
     }
 

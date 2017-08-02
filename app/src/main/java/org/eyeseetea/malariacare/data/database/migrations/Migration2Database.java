@@ -32,11 +32,11 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.database.model.MatchDB;
+import org.eyeseetea.malariacare.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.database.model.OrgUnitLevelDB;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -60,8 +60,8 @@ public class Migration2Database extends BaseMigration {
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
     private final static Class NEW_APP_TABLES[] = {
-            OrgUnitLevel.class,
-            Match.class,
+            OrgUnitLevelDB.class,
+            MatchDB.class,
             QuestionOption.class
     };
     private static String TAG = ".Migration2Database";
@@ -103,7 +103,7 @@ public class Migration2Database extends BaseMigration {
 
         Log.d(TAG, "adding new columns...");
         postMigrationRequired = true;
-        addColumn(database, CompositeScore.class, "hierarchical_code", "text");
+        addColumn(database, CompositeScoreDB.class, "hierarchical_code", "text");
 
         addColumn(database, OrgUnit.class, "id_parent", "integer");
         addColumn(database, OrgUnit.class, "id_org_unit_level", "integer");
@@ -111,7 +111,7 @@ public class Migration2Database extends BaseMigration {
         addColumn(database, Question.class, "feedback", "text");
         addColumn(database, Question.class, "output", "integer");
 
-        addColumn(database, OptionAttribute.class, "path", "text");
+        addColumn(database, OptionAttributeDB.class, "path", "text");
 
         addColumn(database, QuestionRelation.class, "id_question", "integer");
 

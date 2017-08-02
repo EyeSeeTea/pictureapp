@@ -18,7 +18,7 @@
  */
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 
@@ -188,21 +188,21 @@ public class SurveyMonitor {
      * Tells if the given survey has DHA-PIP treatment
      */
     public boolean isDHAPIP() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP, mSurvey);
     }
 
     /**
      * Tells the value by event of the DHAPIP treatment
      */
     public int DHAPIPcount() {
-        if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_4_5, mSurvey)
-                || Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_6,
+        if (OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_4_5, mSurvey)
+                || OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_6,
                 mSurvey)) {
             return 6;
-        } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_9,
+        } else if (OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_9,
                 mSurvey)) {
             return 9;
-        } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_12,
+        } else if (OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_12,
                 mSurvey)) {
             return 12;
         } else {
@@ -214,17 +214,17 @@ public class SurveyMonitor {
      * Tells if the given survey has Eurartesim treatment
      */
     public boolean isASMQ() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ, mSurvey);
     }
 
     /**
      * Tells the value by event of the ASMQ treatment
      */
     public int ASMQcount() {
-        if (Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_1_5, mSurvey)
-                || Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_3, mSurvey)) {
+        if (OptionDB.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_1_5, mSurvey)
+                || OptionDB.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_3, mSurvey)) {
             return 3;
-        } else if (Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_6, mSurvey)) {
+        } else if (OptionDB.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_6, mSurvey)) {
             return 6;
         } else {
             return 0;
@@ -235,8 +235,8 @@ public class SurveyMonitor {
      * Tells if the given survey is a RDT survey (positive or negative)
      */
     public boolean isRDT() {
-        return Option.findOption(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey)
-                || Option.findOption(ID_QUESTION_RDT,
+        return OptionDB.findOption(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey)
+                || OptionDB.findOption(ID_QUESTION_RDT,
                 ID_OPTION_RDT_NEGATIVE, mSurvey);
     }
 }

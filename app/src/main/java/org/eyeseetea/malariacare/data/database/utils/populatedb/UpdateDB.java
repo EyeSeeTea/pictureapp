@@ -13,14 +13,14 @@ import android.content.Context;
 
 import com.opencsv.CSVReader;
 
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.Partner;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -32,7 +32,6 @@ import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,9 +43,9 @@ public class UpdateDB {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTIONS_CSV);
         List<Question> questionsDB = Question.getAllQuestions();
-        HashMap<Long, Header> headerHashMap = RelationsIdCsvDB.getHeaderFKRelationCsvDB(
+        HashMap<Long, HeaderDB> headerHashMap = RelationsIdCsvDB.getHeaderFKRelationCsvDB(
                 context);
-        HashMap<Long, Answer> answerHashMap = RelationsIdCsvDB.getAnswerFKRelationCsvDB(
+        HashMap<Long, AnswerDB> answerHashMap = RelationsIdCsvDB.getAnswerFKRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTIONS_CSV)),
@@ -76,16 +75,16 @@ public class UpdateDB {
     public static void updateAnswers(Context context) throws IOException {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ANSWERS_CSV);
-        List<Answer> answers = Answer.getAllAnswers();
+        List<AnswerDB> answerDBs = AnswerDB.getAllAnswers();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.ANSWERS_CSV)),
                 SEPARATOR, QUOTECHAR);
         String line[];
-        //Save new answers
+        //Save new answerDBs
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < answers.size()) {
-                PopulateRow.populateAnswer(line, answers.get(i)).save();
+            if (i < answerDBs.size()) {
+                PopulateRow.populateAnswer(line, answerDBs.get(i)).save();
             } else {
                 PopulateRow.populateAnswer(line, null).insert();
             }
@@ -103,7 +102,7 @@ public class UpdateDB {
     public static void updateHeaders(Context context) throws IOException {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.HEADERS_CSV);
-        List<Header> headers = Header.getAllHeaders();
+        List<HeaderDB> headerDBs = HeaderDB.getAllHeaders();
         HashMap<Long, Tab> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.HEADERS_CSV)),
@@ -111,8 +110,8 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < headers.size()) {
-                PopulateRow.populateHeader(line, tabIds, headers.get(i)).save();
+            if (i < headerDBs.size()) {
+                PopulateRow.populateHeader(line, tabIds, headerDBs.get(i)).save();
             } else {
                 PopulateRow.populateHeader(line, tabIds, null).insert();
             }
@@ -180,7 +179,7 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.MATCHES);
         }
-        List<Match> matches = Match.listAll();
+        List<MatchDB> matchDBs = MatchDB.listAll();
         HashMap<Long, QuestionRelation> questionsrelationIds =
                 RelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
@@ -189,11 +188,11 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < matches.size()) {
-                populateMatch(line, questionsrelationIds, matches.get(i)).save();
+            if (i < matchDBs.size()) {
+                populateMatch(line, questionsrelationIds, matchDBs.get(i)).save();
             } else {
-                Match match = populateMatch(line, questionsrelationIds, null);
-                match.insert();
+                MatchDB matchDB = populateMatch(line, questionsrelationIds, null);
+                matchDB.insert();
             }
             i++;
         }
@@ -231,11 +230,11 @@ public class UpdateDB {
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_OPTIONS_CSV);
         }
         List<QuestionOption> questionOptions = QuestionOption.listAll();
-        HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
+        HashMap<Long, MatchDB> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
         HashMap<Long, Question> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
                 context);
-        HashMap<Long, Option> optionsIds = RelationsIdCsvDB.getOptionIdRelationCsvDB(
+        HashMap<Long, OptionDB> optionsIds = RelationsIdCsvDB.getOptionIdRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_OPTIONS_CSV)),
@@ -263,7 +262,7 @@ public class UpdateDB {
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_THRESHOLDS_CSV);
         }
         List<QuestionThreshold> questionThresholds = QuestionThreshold.getAllQuestionThresholds();
-        HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
+        HashMap<Long, MatchDB> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
         HashMap<Long, Question> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
                 context);
@@ -295,15 +294,15 @@ public class UpdateDB {
     public static void updateDrugs(Context context) throws IOException {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.DRUGS_CSV);
-        List<Drug> drugs = Drug.getAllDrugs();
+        List<DrugDB> drugDBs = DrugDB.getAllDrugs();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.DRUGS_CSV)),
                 SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < drugs.size()) {
-                PopulateRow.populateDrugs(line, drugs.get(i)).save();
+            if (i < drugDBs.size()) {
+                PopulateRow.populateDrugs(line, drugDBs.get(i)).save();
             } else {
                 PopulateRow.populateDrugs(line, null).insert();
             }
@@ -323,15 +322,15 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.PARTNER_CSV);
         }
-        List<Partner> partners = Partner.getAllOrganisations();
+        List<PartnerDB> partnerDBs = PartnerDB.getAllOrganisations();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
                 SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < partners.size()) {
-                PopulateRow.populateOrganisations(line, partners.get(i)).save();
+            if (i < partnerDBs.size()) {
+                PopulateRow.populateOrganisations(line, partnerDBs.get(i)).save();
             } else {
                 PopulateRow.populateOrganisations(line, null).insert();
             }
@@ -351,7 +350,7 @@ public class UpdateDB {
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
         }
         List<Treatment> treatments = Treatment.getAllTreatments();
-        HashMap<Long, Partner> organisationIds =
+        HashMap<Long, PartnerDB> organisationIds =
                 RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
         HashMap<Long, StringKey> stringKeyIds = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
                 context);
@@ -383,8 +382,8 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.DRUG_COMBINATIONS_CSV);
         }
-        List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
-        HashMap<Long, Drug> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(context);
+        List<DrugCombinationDB> drugCombinationDBs = DrugCombinationDB.getAllDrugCombination();
+        HashMap<Long, DrugDB> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(context);
         HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
@@ -393,9 +392,9 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < drugCombinations.size()) {
+            if (i < drugCombinationDBs.size()) {
                 PopulateRow.populateDrugCombinations(line, drugIds, treatmentIds,
-                        drugCombinations.get(i)).save();
+                        drugCombinationDBs.get(i)).save();
             } else {
                 PopulateRow.populateDrugCombinations(line, drugIds, treatmentIds, null).insert();
             }
@@ -417,7 +416,7 @@ public class UpdateDB {
         List<TreatmentMatch> treatmentMatches = TreatmentMatch.getAllTreatmentMatches();
         HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 context);
-        HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
+        HashMap<Long, MatchDB> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_MATCHES_CSV)),
@@ -484,8 +483,8 @@ public class UpdateDB {
 
     public static void insertLastLines(int numeberLines, Context context)
             throws IOException {
-        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
-        HashMap<Long, OptionAttribute> optionAttributeIds =
+        HashMap<Long, AnswerDB> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
+        HashMap<Long, OptionAttributeDB> optionAttributeIds =
                 RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
@@ -516,13 +515,13 @@ public class UpdateDB {
 
 
     public static void updateOptionAttributes(Context context) throws IOException {
-        List<OptionAttribute> optionsAttributes = OptionAttribute.getAllOptionAttributes();
+        List<OptionAttributeDB> optionsAttributes = OptionAttributeDB.getAllOptionAttributes();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(new PopulateDBStrategy().openFile(context, OPTION_ATTRIBUTES_CSV)),
                 SEPARATOR, QUOTECHAR);
         String line[];
         while ((line = reader.readNext()) != null) {
-            for (OptionAttribute optionsAttribute : optionsAttributes) {
+            for (OptionAttributeDB optionsAttribute : optionsAttributes) {
                 if(optionsAttribute.getId_option_attribute()==Integer.valueOf(line[0])) {
                     optionsAttribute.setBackground_colour(line[1]);
                     optionsAttribute.save();

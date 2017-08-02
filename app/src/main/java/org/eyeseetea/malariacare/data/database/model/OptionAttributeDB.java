@@ -32,8 +32,8 @@ import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class OptionAttribute extends BaseModel {
+@Table(database = AppDatabase.class, name = "OptionAttribute")
+public class OptionAttributeDB extends BaseModel {
 
     /**
      * Constant that reflects a left alignment
@@ -91,22 +91,22 @@ public class OptionAttribute extends BaseModel {
     @Column
     int default_option;
 
-    public OptionAttribute() {
+    public OptionAttributeDB() {
     }
 
-    public OptionAttribute(String background_colour, String path) {
+    public OptionAttributeDB(String background_colour, String path) {
         this.background_colour = background_colour;
         this.path = path;
     }
 
-    public static List<OptionAttribute> getAllOptionAttributes() {
-        return new Select().from(OptionAttribute.class).queryList();
+    public static List<OptionAttributeDB> getAllOptionAttributes() {
+        return new Select().from(OptionAttributeDB.class).queryList();
     }
 
-    public static OptionAttribute findById(Long id) {
+    public static OptionAttributeDB findById(Long id) {
         return new Select()
-                .from(OptionAttribute.class)
-                .where(OptionAttribute_Table.id_option_attribute.eq(
+                .from(OptionAttributeDB.class)
+                .where(OptionAttributeDB_Table.id_option_attribute.eq(
                         id)).querySingle();
     }
 
@@ -203,7 +203,7 @@ public class OptionAttribute extends BaseModel {
     }
 
     /**
-     * The option gravity is the result of the (vertical | horizontal) gravity.
+     * The mOptionDB gravity is the result of the (vertical | horizontal) gravity.
      */
     public int getGravity() {
         int verticalGravity = Gravity.CENTER_HORIZONTAL;
@@ -231,7 +231,7 @@ public class OptionAttribute extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OptionAttribute that = (OptionAttribute) o;
+        OptionAttributeDB that = (OptionAttributeDB) o;
 
         if (id_option_attribute != that.id_option_attribute) return false;
         if (horizontal_alignment != that.horizontal_alignment) return false;
@@ -260,7 +260,7 @@ public class OptionAttribute extends BaseModel {
 
     @Override
     public String toString() {
-        return "OptionAttribute{" +
+        return "OptionAttributeDB{" +
                 "id_option_attribute=" + id_option_attribute +
                 ", background_colour='" + background_colour + '\'' +
                 ", path='" + path + '\'' +

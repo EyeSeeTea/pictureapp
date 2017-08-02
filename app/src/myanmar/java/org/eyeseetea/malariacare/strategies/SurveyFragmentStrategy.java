@@ -5,7 +5,7 @@ import static org.eyeseetea.malariacare.domain.entity.TreatmentQueries.isStockQu
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -80,7 +80,7 @@ public class SurveyFragmentStrategy {
                 : Session.getMalariaSurvey());
     }
 
-    public static void saveValueDDlExtraOperations(Value value, Option option, String uid) {
+    public static void saveValueDDlExtraOperations(Value value, OptionDB option, String uid) {
         if (value != null && TreatmentQueries.isTreatmentQuestion(uid) && TreatmentQueries.isACT(
                 uid)
                 && !option.getId_option().equals(value.getId_option())) {
@@ -125,9 +125,9 @@ public class SurveyFragmentStrategy {
         }
     }
 
-    public static void recursiveRemover(Value value, Option option, Question question,
+    public static void recursiveRemover(Value value, OptionDB option, Question question,
             Survey survey) {
-        if (!value.getOption().equals(option) && question.hasChildren()
+        if (!value.getOptionDB().equals(option) && question.hasChildren()
                 && !TreatmentQueries.isDynamicTreatmentQuestion(question.getUid())) {
             survey.removeChildrenValuesFromQuestionRecursively(question, false);
         }
@@ -135,11 +135,11 @@ public class SurveyFragmentStrategy {
 
     public static List<Question> getCompulsoryNotAnsweredQuestions(Question question) {
         List<Question> questions = new ArrayList<>();
-        if (question.getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = question.getQuestionsByTab(question.getHeader().getTab());
+        if (question.getHeaderDB().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questions = question.getQuestionsByTab(question.getHeaderDB().getTab());
         } else if (TreatmentQueries.isDynamicStockQuestion(question.getUid())) {
-            List<Option> options = question.getAnswer().getOptions();
-            for (Option option : options) {
+            List<OptionDB> options = question.getAnswerDB().getOptionDBs();
+            for (OptionDB option : options) {
                 Question questionNotAnswered = question.findByID(option.getId_option());
                 if (!question.isNotAnswered(questionNotAnswered)) {
                     questions.add(questionNotAnswered);

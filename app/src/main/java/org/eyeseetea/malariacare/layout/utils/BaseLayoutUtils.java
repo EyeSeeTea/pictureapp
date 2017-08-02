@@ -44,8 +44,8 @@ import android.widget.ListView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.ImageNotShowException;
@@ -82,10 +82,10 @@ public abstract class BaseLayoutUtils {
         return rowBackgrounds[index % rowBackgrounds.length];
     }
 
-    public static int getNumberOfQuestionParentsHeader(Header header) {
+    public static int getNumberOfQuestionParentsHeader(HeaderDB headerDB) {
         int result = 0;
 
-        List<Question> list = header.getQuestions();
+        List<Question> list = headerDB.getQuestions();
 
         for (Question question : list) {
             if (question.hasChildren()) {
@@ -153,9 +153,9 @@ public abstract class BaseLayoutUtils {
 
     /**
      * @param view
-     * @param option
+     * @param optionDB
      */
-    public static void highlightSelection(View view, Option option) {
+    public static void highlightSelection(View view, OptionDB optionDB) {
         Drawable selectedBackground = view.getContext().getResources().getDrawable(
                 R.drawable.background_dynamic_clicked_option);
         if (android.os.Build.VERSION.SDK_INT
@@ -165,11 +165,11 @@ public abstract class BaseLayoutUtils {
             view.setBackgroundDrawable(selectedBackground);
         }
 
-        if (option != null) {
+        if (optionDB != null) {
             GradientDrawable bgShape = (GradientDrawable) view.getBackground();
-            String backGColor = option.getOptionAttribute() != null
-                    ? option.getOptionAttribute().getBackground_colour()
-                    : option.getBackground_colour();
+            String backGColor = optionDB.getOptionAttributeDB() != null
+                    ? optionDB.getOptionAttributeDB().getBackground_colour()
+                    : optionDB.getBackground_colour();
             bgShape.setColor(Color.parseColor("#" + backGColor));
             bgShape.setStroke(3, Color.WHITE);
         }

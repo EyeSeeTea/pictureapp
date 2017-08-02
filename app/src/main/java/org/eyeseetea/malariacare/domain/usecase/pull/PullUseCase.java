@@ -55,7 +55,7 @@ public class PullUseCase implements UseCase {
             @Override
             public void onComplete() {
                 //TODO jsanchez create OrgUnitRepository and when pull finish
-                //invoke remove current OrgUnit from here (only laos and cambodia)
+                //invoke remove current OrgUnitDB from here (only laos and cambodia)
 
                 mPullUseCaseStrategy.onPullComplete();
             }

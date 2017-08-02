@@ -6,15 +6,15 @@ import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Partner;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -50,21 +50,21 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             Translation.class,
             Program.class,
             Tab.class,
-            Header.class,
-            Answer.class,
-            OptionAttribute.class,
-            Option.class,
+            HeaderDB.class,
+            AnswerDB.class,
+            OptionAttributeDB.class,
+            OptionDB.class,
             Question.class,
             QuestionRelation.class,
-            Match.class,
+            MatchDB.class,
             QuestionOption.class,
             QuestionThreshold.class,
-            Drug.class,
-            Partner.class,
+            DrugDB.class,
+            PartnerDB.class,
             Treatment.class,
-            DrugCombination.class,
+            DrugCombinationDB.class,
             TreatmentMatch.class,
-            OrgUnit.class
+            OrgUnitDB.class
     );
 
     @Override
@@ -83,10 +83,10 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
 
     public static void updateOptions(Context context) throws IOException {
-        List<Option> optionToDelete = Question.getOptions(
+        List<OptionDB> optionToDelete = Question.getOptions(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.residenceVillageUID));
-        for (Option option : optionToDelete) {
+        for (OptionDB option : optionToDelete) {
             if (!option.getCode().equals(PreferencesState.getInstance().getContext().getString(
                     R.string.patientResidenceVillageOtherCode))) {
                 option.delete();
@@ -94,9 +94,9 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         }
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
-        List<Option> options = Option.getAllOptions();
-        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
-        HashMap<Long, OptionAttribute> optionAttributeIds =
+        List<OptionDB> options = OptionDB.getAllOptions();
+        HashMap<Long, AnswerDB> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
+        HashMap<Long, OptionAttributeDB> optionAttributeIds =
                 RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
@@ -114,14 +114,14 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             i++;
         }
 
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit : orgUnits) {
-            Option option = new Option();
+        List<OrgUnitDB> orgUnits = OrgUnitDB.getAllOrgUnit();
+        for (OrgUnitDB orgUnit : orgUnits) {
+            OptionDB option = new OptionDB();
             option.setCode(orgUnit.getName());
             option.setName(orgUnit.getUid());
             option.setFactor((float) 0);
             option.setId_option((long) 0);
-            option.setAnswer(Question.getAnswer(
+            option.setAnswerDB(Question.getAnswer(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.residenceVillageUID)));
             option.save();
@@ -130,7 +130,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     @Override
     public void createDummyOrganisationInDB() {
-        Partner testOrganisation = new Partner();
+        PartnerDB testOrganisation = new PartnerDB();
         testOrganisation.setName(PreferencesState.getInstance().getContext().getString(
                 R.string.test_partner_name));
         testOrganisation.setUid(PreferencesState.getInstance().getContext().getString(
@@ -142,7 +142,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     @Override
     public void createDummyOrgUnitsDataInDB(Context context) {
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+        List<OrgUnitDB> orgUnits = OrgUnitDB.getAllOrgUnit();
 
         if (orgUnits.size() == 0) {
             try {

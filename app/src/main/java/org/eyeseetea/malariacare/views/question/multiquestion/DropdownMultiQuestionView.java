@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
@@ -37,11 +37,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
-    public void setOptions(List<Option> options) {
-        List<Option> optionList = new ArrayList<>(options);
-        optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
+    public void setOptions(List<OptionDB> optionDBs) {
+        List<OptionDB> optionDBList = new ArrayList<>(optionDBs);
+        optionDBList.add(0, new OptionDB(Constants.DEFAULT_SELECT_OPTION));
 
-        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionList));
+        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionDBList));
     }
 
     @Override
@@ -81,8 +81,8 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         optionSetFromSavedValue = true;
 
         for (int i = 0; i < spinnerOptions.getAdapter().getCount(); i++) {
-            Option option = (Option) spinnerOptions.getItemAtPosition(i);
-            if (option.equals(value.getOption())) {
+            OptionDB optionDB = (OptionDB) spinnerOptions.getItemAtPosition(i);
+            if (optionDB.equals(value.getOptionDB())) {
                 spinnerOptions.setSelection(i);
                 break;
             }
@@ -104,9 +104,9 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                Option option = (Option) parent.getItemAtPosition(position);
+                OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
-                    notifyAnswerChanged(option);
+                    notifyAnswerChanged(optionDB);
                 } else {
                     optionSetFromSavedValue = false;
                 }

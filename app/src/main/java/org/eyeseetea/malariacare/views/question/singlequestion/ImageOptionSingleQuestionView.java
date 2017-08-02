@@ -7,7 +7,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.option.ImageOptionView;
@@ -33,11 +33,11 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     }
 
     @Override
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> optionDBs) {
         TableRow tableRow = null;
 
-        for (int i = 0; i < options.size(); i++) {
-            Option option = options.get(i);
+        for (int i = 0; i < optionDBs.size(); i++) {
+            OptionDB optionDB = optionDBs.get(i);
 
             if (isNewRow(i)) {
                 tableRow = new TableRow(getContext());
@@ -49,7 +49,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
                 mImageOptionsContainer.addView(tableRow);
             }
 
-            ImageOptionView imageOptionView = createOptionView(option);
+            ImageOptionView imageOptionView = createOptionView(optionDB);
 
             tableRow.addView(imageOptionView);
             mImageOptionViews.add(imageOptionView);
@@ -90,7 +90,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
         for (int i = 0; i < mImageOptionViews.size(); i++) {
             ImageOptionView imageOptionView = mImageOptionViews.get(i);
 
-            boolean selected = imageOptionView.getOption().equals(value.getOption());
+            boolean selected = imageOptionView.getOptionDB().equals(value.getOptionDB());
 
             imageOptionView.setSelectedOption(selected);
         }
@@ -101,9 +101,9 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     }
 
     @NonNull
-    private ImageOptionView createOptionView(Option option) {
+    private ImageOptionView createOptionView(OptionDB optionDB) {
         ImageOptionView imageOptionView = new ImageOptionView(getContext());
-        imageOptionView.setOption(option, mQuestion);
+        imageOptionView.setOption(optionDB, mQuestion);
         imageOptionView.setOnOptionSelectedListener(this);
         imageOptionView.setEnabled(isEnabled());
 
@@ -121,7 +121,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     }
 
     @Override
-    public void onOptionSelected(View view, Option option) {
-        notifyAnswerChanged(option);
+    public void onOptionSelected(View view, OptionDB optionDB) {
+        notifyAnswerChanged(optionDB);
     }
 }

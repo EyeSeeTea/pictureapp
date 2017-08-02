@@ -31,8 +31,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Header extends BaseModel {
+@Table(database = AppDatabase.class, name="Header")
+public class HeaderDB extends BaseModel {
 
     /**
      * Required for creating the dynamic treatment question in SCMM
@@ -57,37 +57,37 @@ public class Header extends BaseModel {
     Tab tab;
 
     /**
-     * List of questions that belongs to this header
+     * List of questions that belongs to this mHeaderDB
      */
     List<Question> questions;
 
-    public Header() {
+    public HeaderDB() {
     }
 
-    public Header(String short_name, String name, Integer order_pos, Integer master, Tab tab) {
+    public HeaderDB(String short_name, String name, Integer order_pos, Integer master, Tab tab) {
         this.short_name = short_name;
         this.name = name;
         this.order_pos = order_pos;
         setTab(tab);
     }
 
-    public static List<Header> getAllHeaders() {
-        return new Select().from(Header.class).queryList();
+    public static List<HeaderDB> getAllHeaders() {
+        return new Select().from(HeaderDB.class).queryList();
     }
 
-    public static Header findById(Long id) {
+    public static HeaderDB findById(Long id) {
         return new Select()
-        .from(Header.class)
-        .where(Header_Table.id_header.eq(id)).querySingle();
+        .from(HeaderDB.class)
+        .where(HeaderDB_Table.id_header.eq(id)).querySingle();
     }
 
     /**
-     * Method to delete headers in cascade
+     * Method to delete headerDBs in cascade
      */
-    public static void deleteHeaders(List<Header> headers) {
-        for (Header header : headers) {
-            Question.deleteQuestions(header.getQuestions());
-            header.delete();
+    public static void deleteHeaders(List<HeaderDB> headerDBs) {
+        for (HeaderDB headerDB : headerDBs) {
+            Question.deleteQuestions(headerDB.getQuestions());
+            headerDB.delete();
         }
     }
 
@@ -155,7 +155,7 @@ public class Header extends BaseModel {
     }
 
     /**
-     * getNumber Of Question Parents Header
+     * getNumber Of Question Parents HeaderDB
      */
     public long getNumberOfQuestionParents() {
         return SQLite.selectCountOf().from(Question.class)
@@ -168,18 +168,18 @@ public class Header extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Header header = (Header) o;
+        HeaderDB headerDB = (HeaderDB) o;
 
-        if (id_header != header.id_header) return false;
-        if (short_name != null ? !short_name.equals(header.short_name)
-                : header.short_name != null) {
+        if (id_header != headerDB.id_header) return false;
+        if (short_name != null ? !short_name.equals(headerDB.short_name)
+                : headerDB.short_name != null) {
             return false;
         }
-        if (name != null ? !name.equals(header.name) : header.name != null) return false;
-        if (order_pos != null ? !order_pos.equals(header.order_pos) : header.order_pos != null) {
+        if (name != null ? !name.equals(headerDB.name) : headerDB.name != null) return false;
+        if (order_pos != null ? !order_pos.equals(headerDB.order_pos) : headerDB.order_pos != null) {
             return false;
         }
-        return !(id_tab_fk != null ? !id_tab_fk.equals(header.id_tab_fk) : header.id_tab_fk != null);
+        return !(id_tab_fk != null ? !id_tab_fk.equals(headerDB.id_tab_fk) : headerDB.id_tab_fk != null);
 
     }
 
@@ -195,7 +195,7 @@ public class Header extends BaseModel {
 
     @Override
     public String toString() {
-        return "Header{" +
+        return "HeaderDB{" +
                 "id_header=" + id_header +
                 ", help_text='" + short_name + '\'' +
                 ", name='" + name + '\'' +

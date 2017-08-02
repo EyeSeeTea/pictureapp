@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -20,7 +20,7 @@ public class ImageOptionView extends CommonQuestionView {
     public CustomTextView mOptionTextView;
     public ImageView mOptionImageView;
     public CustomTextView mOptionCounterTextView;
-    Option mOption;
+    OptionDB mOptionDB;
     OnOptionSelectedListener mOnOptionSelectedListener;
     private Boolean mSelectedOption;
     boolean isClicked = false;
@@ -31,23 +31,23 @@ public class ImageOptionView extends CommonQuestionView {
         init(context);
     }
 
-    public Option getOption() {
-        return mOption;
+    public OptionDB getOptionDB() {
+        return mOptionDB;
     }
 
-    public void setOption(Option option, Question question) {
-        this.mOption = option;
+    public void setOption(OptionDB optionDB, Question question) {
+        this.mOptionDB = optionDB;
 
         mOptionContainerView.setBackgroundColor(
-                Color.parseColor("#" + option.getBackground_colour()));
+                Color.parseColor("#" + optionDB.getBackground_colour()));
 
-        BaseLayoutUtils.putImageInImageView(option.getInternationalizedPath(),
+        BaseLayoutUtils.putImageInImageView(optionDB.getInternationalizedPath(),
                 mOptionImageView);
 
-        if (option.getOptionAttribute().hasHorizontalAlignment()
-                && option.getOptionAttribute().hasVerticalAlignment()) {
-            mOptionTextView.setText(Utils.getInternationalizedString(option.getName()));
-            mOptionTextView.setGravity(option.getOptionAttribute().getGravity());
+        if (optionDB.getOptionAttributeDB().hasHorizontalAlignment()
+                && optionDB.getOptionAttributeDB().hasVerticalAlignment()) {
+            mOptionTextView.setText(Utils.getInternationalizedString(optionDB.getName()));
+            mOptionTextView.setGravity(optionDB.getOptionAttributeDB().getGravity());
         } else {
             mOptionTextView.setVisibility(View.GONE);
         }
@@ -59,7 +59,7 @@ public class ImageOptionView extends CommonQuestionView {
         mSelectedOption = selected;
 
         if (mSelectedOption) {
-            LayoutUtils.highlightSelection(mOptionContainerView, mOption);
+            LayoutUtils.highlightSelection(mOptionContainerView, mOptionDB);
         } else {
             LayoutUtils.overshadow(mOptionContainerView);
         }
@@ -71,7 +71,7 @@ public class ImageOptionView extends CommonQuestionView {
 
     public void setCounter(Question question) {
 
-        Question optionCounter = question.findCounterByOption(mOption);
+        Question optionCounter = question.findCounterByOption(mOptionDB);
 
         if (optionCounter == null) {
             return;
@@ -103,7 +103,7 @@ public class ImageOptionView extends CommonQuestionView {
                     isClicked = true;
                     if (mOnOptionSelectedListener != null && isEnabled()) {
                         mSelectedOption = true;
-                        mOnOptionSelectedListener.onOptionSelected(v, mOption);
+                        mOnOptionSelectedListener.onOptionSelected(v, mOptionDB);
                     }
                 }
             }
@@ -111,6 +111,6 @@ public class ImageOptionView extends CommonQuestionView {
     }
 
     public interface OnOptionSelectedListener {
-        void onOptionSelected(View view, Option option);
+        void onOptionSelected(View view, OptionDB optionDB);
     }
 }

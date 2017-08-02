@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.strategies
         .AuthenticationLocalDataSourceStrategy;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.User;
@@ -78,11 +78,11 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
         for (Question question : questions) {
-            if (question.getAnswer() != null) {
-                List<Option> options = question.getAnswer().getOptions();
-                for (Option option : options) {
-                    if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
-                        option.delete();
+            if (question.getAnswerDB() != null) {
+                List<OptionDB> optionDBs = question.getAnswerDB().getOptionDBs();
+                for (OptionDB optionDB : optionDBs) {
+                    if (QuestionOption.findByQuestionAndOption(question, optionDB).size() == 0) {
+                        optionDB.delete();
                     }
                 }
             }

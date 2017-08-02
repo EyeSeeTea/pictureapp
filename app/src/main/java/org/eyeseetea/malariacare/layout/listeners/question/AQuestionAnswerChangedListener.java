@@ -7,7 +7,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -26,12 +26,12 @@ public abstract class AQuestionAnswerChangedListener {
     /**
      * Returns the option selected for the given question and boolean value or by position
      */
-    public static Option findSwitchOption(Question question, boolean isChecked) {
+    public static OptionDB findSwitchOption(Question question, boolean isChecked) {
         //Search option by position
         if (isChecked) {
-            return question.getAnswer().getOptions().get(0);
+            return question.getAnswerDB().getOptionDBs().get(0);
         } else {
-            return question.getAnswer().getOptions().get(1);
+            return question.getAnswerDB().getOptionDBs().get(1);
         }
     }
 
@@ -44,9 +44,9 @@ public abstract class AQuestionAnswerChangedListener {
      */
     public static Boolean findSwitchBoolean(Question question) {
         Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+        if (value.getValue().equals(question.getAnswerDB().getOptionDBs().get(0).getCode())) {
             return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
+        } else if (value.getValue().equals(question.getAnswerDB().getOptionDBs().get(1).getCode())) {
             return false;
         }
         return false;
@@ -60,9 +60,9 @@ public abstract class AQuestionAnswerChangedListener {
     }
 
 
-    protected void saveValue(View view, Option option) {
+    protected void saveValue(View view, OptionDB optionDB) {
         Question question = (Question) view.findViewById(R.id.answer).getTag();
-        question.saveValuesDDL(option, question.getValueBySession());
+        question.saveValuesDDL(optionDB, question.getValueBySession());
 
         showOrHideChildren(question);
     }
@@ -146,8 +146,8 @@ public abstract class AQuestionAnswerChangedListener {
                 //the 0 option is the left option and is false in the switch, the 1 option is the
                 // right option and is true
                 boolean isChecked = false;
-                if (rowQuestion.getAnswer().getOptions().get(
-                        1).getOptionAttribute().getDefaultOption() == 1) {
+                if (rowQuestion.getAnswerDB().getOptionDBs().get(
+                        1).getOptionAttributeDB().getDefaultOption() == 1) {
                     isChecked = true;
                 }
                 saveSwitchOption(rowQuestion, isChecked);
@@ -180,13 +180,13 @@ public abstract class AQuestionAnswerChangedListener {
                 break;
             case Constants.SWITCH_BUTTON:
                 Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
-                Option selectedOption = rowQuestion.getOptionBySession();
-                if (selectedOption == null) {
+                OptionDB selectedOptionDB = rowQuestion.getOptionBySession();
+                if (selectedOptionDB == null) {
                     //the 0 option is the left option and is false in the switch, the 1 option is
                     // the right option and is true
                     boolean isChecked = false;
-                    if (rowQuestion.getAnswer().getOptions().get(
-                            1).getOptionAttribute().getDefaultOption() == 1) {
+                    if (rowQuestion.getAnswerDB().getOptionDBs().get(
+                            1).getOptionAttributeDB().getDefaultOption() == 1) {
                         isChecked = true;
                     }
                     saveSwitchOption(rowQuestion, isChecked);
@@ -206,11 +206,11 @@ public abstract class AQuestionAnswerChangedListener {
      */
     private void saveSwitchOption(Question question, boolean isChecked) {
         //Take option
-        Option selectedOption = findSwitchOption(question, isChecked);
-        if (selectedOption == null) {
+        OptionDB selectedOptionDB = findSwitchOption(question, isChecked);
+        if (selectedOptionDB == null) {
             return;
         }
-        question.saveValuesDDL(selectedOption, question.getValueBySession());
+        question.saveValuesDDL(selectedOptionDB, question.getValueBySession());
         showOrHideChildren(question);
     }
 

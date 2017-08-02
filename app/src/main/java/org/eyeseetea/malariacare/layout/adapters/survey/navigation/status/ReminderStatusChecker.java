@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
@@ -63,9 +63,9 @@ public class ReminderStatusChecker extends StatusChecker {
      * Checks if the given questionOption is activated
      */
     private boolean isSelected(QuestionOption questionOption) {
-        Option currentOption = questionOption.getQuestion().getOptionByValueInSession();
-        return currentOption != null
-                && currentOption.getId_option() == questionOption.getOption().getId_option();
+        OptionDB currentOptionDB = questionOption.getQuestion().getOptionByValueInSession();
+        return currentOptionDB != null
+                && currentOptionDB.getId_option() == questionOption.getOptionDB().getId_option();
     }
 
 

@@ -6,8 +6,8 @@ import android.content.res.Resources;
 import com.opencsv.CSVReader;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Match;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
@@ -97,9 +97,9 @@ public class TreatmentTableOperations {
         for (Treatment treatment : treatments) {
             treatment.delete();
         }
-        List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
-        for (DrugCombination drugCombination : drugCombinations) {
-            drugCombination.delete();
+        List<DrugCombinationDB> drugCombinationDBs = DrugCombinationDB.getAllDrugCombination();
+        for (DrugCombinationDB drugCombinationDB : drugCombinationDBs) {
+            drugCombinationDB.delete();
         }
         List<StringKey> stringKeys = StringKey.getAllStringKeys();
         for (StringKey stringKey : stringKeys) {
@@ -116,19 +116,19 @@ public class TreatmentTableOperations {
      * table.
      */
     private void deleteRelatedTablesLines(TreatmentMatch treatmentMatch) throws IOException {
-        Match match = treatmentMatch.getMatch();
+        MatchDB matchDB = treatmentMatch.getMatchDB();
         List<QuestionOption> questionOptions = QuestionOption.getQuestionOptionsWithMatchId(
-                match.getId_match());
+                matchDB.getId_match());
 
         for (QuestionOption questionOption : questionOptions) {
             questionOption.delete();
         }
         List<QuestionThreshold> questionThresholds =
-                QuestionThreshold.getQuestionThresholdsWithMatch(match.getId_match());
+                QuestionThreshold.getQuestionThresholdsWithMatch(matchDB.getId_match());
         for (QuestionThreshold questionThreshold : questionThresholds) {
             questionThreshold.delete();
         }
-        match.delete();
+        matchDB.delete();
     }
 
     private void splitTreatmentTableToCsvs() throws IOException {

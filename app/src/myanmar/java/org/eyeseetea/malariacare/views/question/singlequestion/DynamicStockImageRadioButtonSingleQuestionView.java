@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -70,15 +70,15 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
     }
 
 
-    public void setOptions(List<Option> options) {
-        for (Option option : options) {
+    public void setOptions(List<OptionDB> options) {
+        for (OptionDB option : options) {
             ImageRadioButtonOption imageRadioButtonOption = createOptionView(option);
             answersContainer.addView(imageRadioButtonOption);
         }
     }
 
     @NonNull
-    private ImageRadioButtonOption createOptionView(Option option) {
+    private ImageRadioButtonOption createOptionView(OptionDB option) {
         ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
                 getContext(), true);
 
@@ -128,8 +128,8 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
                 if (!TreatmentQueries.isOutStockQuestion(question.getUid())) {
                     notifyAnswerChanged(optionView, String.valueOf(-1));
                 } else {
-                    List<Option> options = question.getAnswer().getOptions();
-                    for (Option option : options) {
+                    List<OptionDB> options = question.getAnswerDB().getOptionDBs();
+                    for (OptionDB option : options) {
                         if (option.getName().equals(
                                 PreferencesState.getInstance().getContext().getString(
                                         R.string.false_option_id))) {
@@ -143,10 +143,10 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
         Question question = (Question) imageRadioButton.getTag();
         if (!TreatmentQueries.isOutStockQuestion(question.getUid())) {
             notifyAnswerChanged(imageRadioButton,
-                    String.valueOf(optionDose.get(imageRadioButton.getOption().getId_option())));
+                    String.valueOf(optionDose.get(imageRadioButton.getOptionDB().getId_option())));
         } else {
-            List<Option> options = question.getAnswer().getOptions();
-            for (Option option : options) {
+            List<OptionDB> options = question.getAnswerDB().getOptionDBs();
+            for (OptionDB option : options) {
                 if (option.getName().equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.true_option_id))) {
@@ -158,10 +158,10 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
         View stockHideView = new View(context);
         stockHideView.setTag(TreatmentQueries.getDynamicStockQuestion());
         Question pqHideQuestion = TreatmentQueries.getStockPqQuestion();
-        Option falseOption = Option.findById(41l);
+        OptionDB falseOption = OptionDB.findById(41l);
         Value valuePq = pqHideQuestion.getValueBySession();
         if (valuePq != null) {
-            falseOption = valuePq.getOption();
+            falseOption = valuePq.getOptionDB();
         }
         notifyAnsweOptionChange(stockHideView, falseOption);
     }
@@ -193,8 +193,8 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
                     value.getValue()) > 0) {
                 imageRadioButtonOption.setChecked(true);
             } else if (question.getId_question().equals(value.getQuestion().getId_question())) {
-                List<Option> options = question.getAnswer().getOptions();
-                for (Option option : options) {
+                List<OptionDB> options = question.getAnswerDB().getOptionDBs();
+                for (OptionDB option : options) {
                     if ((option.getName().equals(
                             PreferencesState.getInstance().getContext().getString(
                                     R.string.true_option_id)))
@@ -214,7 +214,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
         }
     }
 
-    protected void notifyAnsweOptionChange(View view, Option option) {
+    protected void notifyAnsweOptionChange(View view, OptionDB option) {
         if (mOnAnswerOptionChangedListener != null) {
             mOnAnswerOptionChangedListener.onAnswerChanged(view, option);
         }

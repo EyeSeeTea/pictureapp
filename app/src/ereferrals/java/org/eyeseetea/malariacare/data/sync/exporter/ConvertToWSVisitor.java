@@ -35,13 +35,13 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         List<AttributeValueWS> valueWSes = new ArrayList<>();
         for (Value value : survey.getValuesFromDB()) {
             if (value.getQuestion() != null) {
-                if (value.getOption() == null) {
+                if (value.getOptionDB() == null) {
                     valueWSes.add(
                             new AttributeValueWS(value.getQuestion().getCode(),
                                     value.getValue()));
                 } else {
                     valueWSes.add(new AttributeValueWS(value.getQuestion().getCode(),
-                            value.getOption().getCode()));
+                            value.getOptionDB().getCode()));
                 }
 
             }

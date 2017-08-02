@@ -30,7 +30,7 @@
 //import org.eyeseetea.malariacare.DashboardActivity;
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.data.database.model.Option;
+//import org.eyeseetea.malariacare.data.database.model.OptionDB;
 //import org.eyeseetea.malariacare.data.database.model.Question;
 //import org.eyeseetea.malariacare.data.database.model.Tab;
 //import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -245,7 +245,7 @@
 //                onChildView(withId(R.id.answer))
 //                .perform(click());
 //        int indexAnswer=answer?1:2;
-//        onData(is(instanceOf(Option.class))).atPosition(indexAnswer).perform(click());
+//        onData(is(instanceOf(OptionDB.class))).atPosition(indexAnswer).perform(click());
 //    }
 //
 //    private void unregisterSurveyReceiver(){

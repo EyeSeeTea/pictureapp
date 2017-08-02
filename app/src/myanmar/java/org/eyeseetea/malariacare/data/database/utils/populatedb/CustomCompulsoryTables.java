@@ -2,13 +2,13 @@ package org.eyeseetea.malariacare.data.database.utils.populatedb;
 
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitLevelDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -26,17 +26,17 @@ public class CustomCompulsoryTables {
             User.class,
             Program.class,
             Tab.class,
-            Header.class,
-            Answer.class,
-            OptionAttribute.class,
-            Option.class,
+            HeaderDB.class,
+            AnswerDB.class,
+            OptionAttributeDB.class,
+            OptionDB.class,
             Question.class,
             QuestionRelation.class,
-            Match.class,
+            MatchDB.class,
             QuestionOption.class,
             QuestionThreshold.class,
-            OrgUnitLevel.class,
-            OrgUnit.class
+            OrgUnitLevelDB.class,
+            OrgUnitDB.class
     );
 
     public static List<Class<? extends BaseModel>> getAllMandatoryTables() {

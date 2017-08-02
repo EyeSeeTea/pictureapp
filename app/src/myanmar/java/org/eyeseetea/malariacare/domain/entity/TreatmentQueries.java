@@ -12,7 +12,7 @@ import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Program_Table;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -139,7 +139,7 @@ public class TreatmentQueries {
 
 
     public static boolean isStockQuestion(Question question) {
-        if (question.getHeader() != null && question.getHeader().getName().equals("Stock")) {
+        if (question.getHeaderDB() != null && question.getHeaderDB().getName().equals("Stock")) {
             return true;
         }
         return false;
@@ -254,8 +254,8 @@ public class TreatmentQueries {
     }
 
 
-    public static Option getOptionTreatmentYesCode() {
-        return Option.findByName(PreferencesState.getInstance().getContext().getString(
+    public static OptionDB getOptionTreatmentYesCode() {
+        return OptionDB.findByName(PreferencesState.getInstance().getContext().getString(
                 R.string.dynamic_treatment_yes_code));
     }
 

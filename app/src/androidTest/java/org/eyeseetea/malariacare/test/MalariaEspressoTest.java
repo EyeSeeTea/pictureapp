@@ -32,11 +32,11 @@
 //import android.support.test.runner.lifecycle.Stage;
 //import android.util.Log;
 //
-//import org.eyeseetea.malariacare.data.database.model.Answer;
-//import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-//import org.eyeseetea.malariacare.data.database.model.Header;
-//import org.eyeseetea.malariacare.data.database.model.Option;
-//import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+//import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+//import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+//import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+//import org.eyeseetea.malariacare.data.database.model.OptionDB;
+//import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 //import org.eyeseetea.malariacare.data.database.model.Program;
 //import org.eyeseetea.malariacare.data.database.model.Question;
 //import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -89,13 +89,13 @@
 //            return;
 //        }
 //        Question.deleteAll(Question.class);
-//        CompositeScore.deleteAll(CompositeScore.class);
-//        Option.deleteAll(Option.class);
-//        Answer.deleteAll(Answer.class);
-//        Header.deleteAll(Header.class);
+//        CompositeScoreDB.deleteAll(CompositeScoreDB.class);
+//        OptionDB.deleteAll(OptionDB.class);
+//        AnswerDB.deleteAll(AnswerDB.class);
+//        HeaderDB.deleteAll(HeaderDB.class);
 //        Tab.deleteAll(Tab.class);
 //        Program.deleteAll(Program.class);
-//        OrgUnit.deleteAll(OrgUnit.class);
+//        OrgUnitDB.deleteAll(OrgUnitDB.class);
 //        User.deleteAll(User.class);
 //        Value.deleteAll(Value.class);
 //        Survey.deleteAll(Survey.class);
@@ -146,7 +146,7 @@
 //    }
 //
 //    public static List<Survey> mockSurveys(int numOrgs, int numPrograms){
-//        List<OrgUnit> orgUnitList=OrgUnit.find(OrgUnit.class, null, null);
+//        List<OrgUnitDB> orgUnitList=OrgUnitDB.find(OrgUnitDB.class, null, null);
 //        List<Program> programList=Program.find(Program.class,null,null);
 //        Program program=programList.get(numPrograms);
 //        User user =getSafeUser();

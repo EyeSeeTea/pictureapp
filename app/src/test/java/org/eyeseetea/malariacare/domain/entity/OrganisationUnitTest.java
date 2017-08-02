@@ -153,28 +153,31 @@ public class OrganisationUnitTest {
     @Test
     public void test_description_when_banning() {
         OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", false);
+
         organisationUnit.ban();
-        String closeDateText = getStringFromDateWithFormat(organisationUnit.getClosedDate(),
-                CLOSE_DATE_FORMAT);
-        String bannedDescription = String.format(CLOSE_DATE_DESCRIPTION,
-                organisationUnit.getClosedDate().getTime(),
-                closeDateText);
+
+        String bannedDescription = getBannedDescription(organisationUnit);
         StringBuilder sb = new StringBuilder();
         sb.append(bannedDescription);
 
         assertThat(organisationUnit.getDescription(), is(sb.toString()));
 
         organisationUnit.ban();
-        closeDateText = getStringFromDateWithFormat(organisationUnit.getClosedDate(),
-                CLOSE_DATE_FORMAT);
-        bannedDescription = String.format(CLOSE_DATE_DESCRIPTION,
-                organisationUnit.getClosedDate().getTime(),
-                closeDateText);
+
+        bannedDescription = getBannedDescription(organisationUnit);
         sb.append("");//next line
         sb.append("");//next line
         sb.append(bannedDescription);
 
         assertThat(organisationUnit.getDescription(), is(sb.toString()));
+    }
+
+    private String getBannedDescription(OrganisationUnit organisationUnit) {
+        String closeDateText = getStringFromDateWithFormat(organisationUnit.getClosedDate(),
+                CLOSE_DATE_FORMAT);
+        return String.format(CLOSE_DATE_DESCRIPTION,
+                organisationUnit.getClosedDate().getTime(),
+                closeDateText);
     }
 
     private String getStringFromDateWithFormat(Date date, String dateFormat) {

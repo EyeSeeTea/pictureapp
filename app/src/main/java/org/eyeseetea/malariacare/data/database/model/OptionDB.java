@@ -34,7 +34,7 @@ import java.util.List;
 @Table(database = AppDatabase.class, name = "Option")
 public class OptionDB extends BaseModel {
 
-    //FIXME A 'Yes' mAnswerDB shows children questions, this should be configurable by some
+    //FIXME A 'Yes' mAnswerDB shows children mQuestionDBs, this should be configurable by some
     // additional attribute in OptionDB
     public static final String CHECKBOX_YES_OPTION = "Yes";
 
@@ -219,10 +219,10 @@ public class OptionDB extends BaseModel {
     }
 
     /**
-     * Looks for the value with the given question  is the provided mOptionDB
+     * Looks for the value with the given mQuestionDB  is the provided mOptionDB
      */
-    public static boolean findOption(Long idQuestion, Long idOption, Survey survey) {
-        Value value = Value.findValue(idQuestion, survey);
+    public static boolean findOption(Long idQuestion, Long idOption, SurveyDB surveyDB) {
+        Value value = Value.findValue(idQuestion, surveyDB);
         if (value == null) {
             return false;
         }
@@ -232,34 +232,34 @@ public class OptionDB extends BaseModel {
     }
 
     /**
-     * Gets the Question of this OptionDB in session
+     * Gets the QuestionDB of this OptionDB in session
      */
-    public Question getQuestionBySession() {
-        return getQuestionBySurvey(Session.getMalariaSurvey());
+    public QuestionDB getQuestionBySession() {
+        return getQuestionBySurvey(Session.getMalariaSurveyDB());
     }
 
     /**
-     * Gets the Question of this OptionDB in the given Survey
+     * Gets the QuestionDB of this OptionDB in the given Survey
      */
-    public Question getQuestionBySurvey(
-            Survey survey) {
-        if (survey == null) {
+    public QuestionDB getQuestionBySurvey(
+            SurveyDB surveyDB) {
+        if (surveyDB == null) {
             return null;
         }
         List<Value> returnValues = new Select().from(Value.class)
                 //// FIXME: 29/12/16  indexed
                 //.indexedBy(Constants.VALUE_IDX)
                 .where(Value_Table.id_option_fk.eq(this.getId_option()))
-                .and(Value_Table.id_survey_fk.eq(survey.getId_survey())).queryList();
+                .and(Value_Table.id_survey_fk.eq(surveyDB.getId_survey())).queryList();
 
-        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
+        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestionDB();
     }
 
 
     /**
-     * Checks if this mOptionDB actives the children questions
+     * Checks if this mOptionDB actives the children mQuestionDBs
      *
-     * @return true: Children questions should be shown, false: otherwise.
+     * @return true: Children mQuestionDBs should be shown, false: otherwise.
      */
     public boolean isActiveChildren() {
         return CHECKBOX_YES_OPTION.equals(name);

@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -35,7 +35,7 @@ public class ImageOptionView extends CommonQuestionView {
         return mOptionDB;
     }
 
-    public void setOption(OptionDB optionDB, Question question) {
+    public void setOption(OptionDB optionDB, QuestionDB questionDB) {
         this.mOptionDB = optionDB;
 
         mOptionContainerView.setBackgroundColor(
@@ -52,7 +52,7 @@ public class ImageOptionView extends CommonQuestionView {
             mOptionTextView.setVisibility(View.GONE);
         }
 
-        setCounter(question);
+        setCounter(questionDB);
     }
 
     public void setSelectedOption(boolean selected) {
@@ -69,9 +69,9 @@ public class ImageOptionView extends CommonQuestionView {
         mOnOptionSelectedListener = onOptionSelectedListener;
     }
 
-    public void setCounter(Question question) {
+    public void setCounter(QuestionDB questionDB) {
 
-        Question optionCounter = question.findCounterByOption(mOptionDB);
+        QuestionDB optionCounter = questionDB.findCounterByOption(mOptionDB);
 
         if (optionCounter == null) {
             return;

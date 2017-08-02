@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
@@ -34,8 +34,9 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         }
     }
 
+
     @Override
-    public void setQuestion(Question question) {
+    public void setQuestionDB(QuestionDB question) {
 
     }
 

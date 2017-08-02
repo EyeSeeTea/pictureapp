@@ -44,7 +44,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -422,9 +422,9 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        Survey survey = Session.getMalariaSurvey();
-        if (!survey.isSent()) {
-            int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete
+        SurveyDB surveyDB = Session.getMalariaSurveyDB();
+        if (!surveyDB.isSent()) {
+            int infoMessage = surveyDB.isInProgress() ? R.string.survey_info_exit_delete
                     : R.string.survey_info_exit;
             new AlertDialog.Builder(this)
                     .setTitle(R.string.survey_info_exit)
@@ -464,8 +464,8 @@ public class DashboardActivity extends BaseActivity {
         LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        if (Session.getMalariaSurvey() != null) {
-            isSent = Session.getMalariaSurvey().isSent();
+        if (Session.getMalariaSurveyDB() != null) {
+            isSent = Session.getMalariaSurveyDB().isSent();
         }
         if (isBackPressed) {
             beforeExit();
@@ -540,8 +540,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToThisUId = (Session.getMalariaSurvey().getValuesFromDB().get(
-                0).getQuestion()).getUid();
+        DashboardActivity.moveToThisUId = (Session.getMalariaSurveyDB().getValuesFromDB().get(
+                0).getQuestionDB()).getUid();
         hideReview();
     }
 
@@ -667,7 +667,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onCreate();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
-        Survey.removeInProgress();
+        SurveyDB.removeInProgress();
         if (savedInstanceState == null) {
             initImprove();
             initMonitor();

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 import java.util.List;
@@ -53,7 +53,7 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
     }
 
     public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView,
-            List<Survey> surveysFromService) {
+            List<SurveyDB> surveysFromService) {
         return;
     }
 }

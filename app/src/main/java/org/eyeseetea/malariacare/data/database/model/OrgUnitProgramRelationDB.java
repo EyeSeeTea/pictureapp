@@ -49,16 +49,16 @@ public class OrgUnitProgramRelationDB extends BaseModel {
     Long id_program_fk;
 
     /**
-     * Reference to lazy program
+     * Reference to lazy mProgramDB
      */
-    Program program;
+    ProgramDB mProgramDB;
 
     public OrgUnitProgramRelationDB() {
     }
 
-    public OrgUnitProgramRelationDB(OrgUnitDB orgUnitDB, Program program) {
+    public OrgUnitProgramRelationDB(OrgUnitDB orgUnitDB, ProgramDB programDB) {
         setOrgUnitDB(orgUnitDB);
-        setProgram(program);
+        setProgramDB(programDB);
     }
 
     public OrgUnitDB getOrgUnitDB() {
@@ -82,25 +82,25 @@ public class OrgUnitProgramRelationDB extends BaseModel {
         this.mOrgUnitDB = null;
     }
 
-    public Program getProgram() {
-        if (program == null) {
+    public ProgramDB getProgramDB() {
+        if (mProgramDB == null) {
             if (id_program_fk == null) return null;
-            program = new Select()
-                    .from(Program.class)
-                    .where(Program_Table.id_program
+            mProgramDB = new Select()
+                    .from(ProgramDB.class)
+                    .where(ProgramDB_Table.id_program
                             .is(id_program_fk)).querySingle();
         }
-        return program;
+        return mProgramDB;
     }
 
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program_fk = (program != null) ? program.getId_program() : null;
+    public void setProgramDB(ProgramDB programDB) {
+        this.mProgramDB = programDB;
+        this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
     public void setProgram(Long id_program) {
         this.id_program_fk = id_program;
-        this.program = null;
+        this.mProgramDB = null;
     }
 
     @Override

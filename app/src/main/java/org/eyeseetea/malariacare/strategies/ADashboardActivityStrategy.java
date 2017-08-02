@@ -11,7 +11,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -20,7 +20,6 @@ import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {
@@ -58,9 +57,9 @@ public abstract class ADashboardActivityStrategy {
         mDashboardActivity = dashboardActivity;
     }
 
-    public void prepareLocationListener(Activity activity, Survey survey) {
+    public void prepareLocationListener(Activity activity, SurveyDB surveyDB) {
 
-        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
+        SurveyLocationListener locationListener = new SurveyLocationListener(surveyDB.getId_survey());
 
         LocationManager locationManager = null;
         try {

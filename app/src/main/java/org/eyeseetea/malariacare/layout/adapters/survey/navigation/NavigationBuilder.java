@@ -4,7 +4,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -36,7 +36,7 @@ public class NavigationBuilder {
     private static NavigationBuilder instance;
     private static int MAX_STEPS = 67;
     /**
-     * Maps that holds the relationships between a Question and the warnings that it might trigger
+     * Maps that holds the relationships between a QuestionDB and the warnings that it might trigger
      */
     private Map<Long, List<QuestionNode>> warningsXQuestion;
     /**
@@ -79,10 +79,10 @@ public class NavigationBuilder {
         warningsXQuestion.clear();
 
         Log.d(TAG, String.format("build(%s)", tab.getName()));
-        final Question rootQuestion = Question.findRootQuestion(tab);
+        final QuestionDB rootQuestionDB = QuestionDB.findRootQuestion(tab);
 
         //NO first question -> nothing to build
-        if (rootQuestion == null) {
+        if (rootQuestionDB == null) {
             Log.w(TAG, "Navigation controller cannot load because root question doesn't exist");
             return;
         }
@@ -90,20 +90,20 @@ public class NavigationBuilder {
         mAsyncExecutor.run(new Runnable() {
             @Override
             public void run() {
-                buildNavigationController(rootQuestion);
+                buildNavigationController(rootQuestionDB);
             }
         });
 
     }
 
-    private void buildNavigationController(Question rootQuestion){
+    private void buildNavigationController(QuestionDB rootQuestionDB){
         Log.d(TAG, "Begin loading navigation controller");
 
         try {
             Session.setIsLoadingNavigationController(true);
             //init steps counter
             step = 0;
-            QuestionNode rootNode = buildNode(rootQuestion);
+            QuestionNode rootNode = buildNode(rootQuestionDB);
 
             Session.setNavigationController(new NavigationController(rootNode));
 
@@ -132,13 +132,13 @@ public class NavigationBuilder {
     /**
      * Builds navigation options from the given question
      */
-    private QuestionNode buildNode(Question currentQuestion) {
+    private QuestionNode buildNode(QuestionDB currentQuestionDB) {
         //No question -> no node
-        if (currentQuestion == null) {
+        if (currentQuestionDB == null) {
             return null;
         }
 
-        QuestionNode currentNode = new QuestionNode(currentQuestion);
+        QuestionNode currentNode = new QuestionNode(currentQuestionDB);
 
         //A warning is added to the map
         annotateWarning(currentNode);
@@ -175,27 +175,27 @@ public class NavigationBuilder {
             return;
         }
 
-        Question currentQuestion = currentNode.getQuestion();
-        AnswerDB currentAnswerDB = currentQuestion.getAnswerDB();
+        QuestionDB currentQuestionDB = currentNode.getQuestionDB();
+        AnswerDB currentAnswerDB = currentQuestionDB.getAnswerDB();
         for (OptionDB optionDB : currentAnswerDB.getOptionDBs()) {
-            Question firstChildrenQuestion = currentQuestion.findFirstChildrenByOption(optionDB);
+            QuestionDB firstChildrenQuestionDB = currentQuestionDB.findFirstChildrenByOption(optionDB);
 
             //No child question for this optionDB -> next
-            if (firstChildrenQuestion == null) {
+            if (firstChildrenQuestionDB == null) {
                 continue;
             }
 
-            Log.d(TAG, String.format("'%s' + '%s' --> '%s'", currentQuestion.getCode(),
-                    optionDB.getCode(), firstChildrenQuestion.getCode()));
+            Log.d(TAG, String.format("'%s' + '%s' --> '%s'", currentQuestionDB.getCode(),
+                    optionDB.getCode(), firstChildrenQuestionDB.getCode()));
             //Build navigation from there
             QuestionNode childNode;
             //OptionDB that references self
-            if (currentNode.getQuestion().getId_question()
-                    == firstChildrenQuestion.getId_question()) {
+            if (currentNode.getQuestionDB().getId_question()
+                    == firstChildrenQuestionDB.getId_question()) {
                 childNode = currentNode;
             } else {
                 //Any other child question
-                childNode = buildNode(firstChildrenQuestion);
+                childNode = buildNode(firstChildrenQuestionDB);
             }
 
             //Add navigation by optionDB to current node
@@ -207,17 +207,17 @@ public class NavigationBuilder {
      * Adds navigation no matter what answer is given (sibling question)
      */
     private void buildSibling(QuestionNode currentNode) {
-        Question currentQuestion = currentNode.getQuestion();
-        Question nextQuestion = currentQuestion.getSibling();
+        QuestionDB currentQuestionDB = currentNode.getQuestionDB();
+        QuestionDB nextQuestionDB = currentQuestionDB.getSibling();
 
         //No next question
-        if (nextQuestion == null) {
-            Log.d(TAG, String.format("'%s' -(sibling)-> null", currentQuestion.getCode()));
+        if (nextQuestionDB == null) {
+            Log.d(TAG, String.format("'%s' -(sibling)-> null", currentQuestionDB.getCode()));
             return;
         }
-        Log.d(TAG, String.format("'%s' -(sibling)-> '%s'", currentQuestion.getCode(),
-                nextQuestion.getCode()));
-        QuestionNode nextNode = buildNode(nextQuestion);
+        Log.d(TAG, String.format("'%s' -(sibling)-> '%s'", currentQuestionDB.getCode(),
+                nextQuestionDB.getCode()));
+        QuestionNode nextNode = buildNode(nextQuestionDB);
         currentNode.setSibling(nextNode);
         nextNode.setPreviousSibling(currentNode);
     }
@@ -231,10 +231,10 @@ public class NavigationBuilder {
             return;
         }
 
-        Question currentQuestion = currentNode.getQuestion();
-        AnswerDB currentAnswerDB = currentQuestion.getAnswerDB();
+        QuestionDB currentQuestionDB = currentNode.getQuestionDB();
+        AnswerDB currentAnswerDB = currentQuestionDB.getAnswerDB();
         for (OptionDB optionDB : currentAnswerDB.getOptionDBs()) {
-            Question optionCounter = currentQuestion.findCounterByOption(optionDB);
+            QuestionDB optionCounter = currentQuestionDB.findCounterByOption(optionDB);
             //no counter -> try next optionDB
             if (optionCounter == null) {
                 continue;
@@ -248,10 +248,10 @@ public class NavigationBuilder {
      * Checks if the currentNode requires knitting children, counters, ...
      */
     private boolean withOptionsAndRelations(QuestionNode currentNode) {
-        Question currentQuestion = currentNode.getQuestion();
+        QuestionDB currentQuestionDB = currentNode.getQuestionDB();
         //No children questions -> no children ||counters to build
-        if (currentQuestion == null || !currentQuestion.hasOutputWithOptions()
-                || currentQuestion.getQuestionOption().size() == 0) {
+        if (currentQuestionDB == null || !currentQuestionDB.hasOutputWithOptions()
+                || currentQuestionDB.getQuestionOption().size() == 0) {
             return false;
         }
 
@@ -264,20 +264,20 @@ public class NavigationBuilder {
      */
     private void annotateWarning(QuestionNode warningNode) {
         //Not a warning -> done
-        if (warningNode.getQuestion().getOutput() != Constants.WARNING) {
+        if (warningNode.getQuestionDB().getOutput() != Constants.WARNING) {
             return;
         }
 
         WarningStatusChecker warningStatusChecker =
                 (WarningStatusChecker) warningNode.getStatusChecker();
-        Question questionWithThreshold = warningStatusChecker.getQuestionToSubscribeFromThreshold();
-        Question questionWithOption = warningStatusChecker.getQuestionToSubscribeFromOption();
+        QuestionDB questionDBWithThreshold = warningStatusChecker.getQuestionToSubscribeFromThreshold();
+        QuestionDB questionDBWithOption = warningStatusChecker.getQuestionToSubscribeFromOption();
 
-        addWarning(questionWithThreshold, warningNode);
-        addWarning(questionWithOption, warningNode);
+        addWarning(questionDBWithThreshold, warningNode);
+        addWarning(questionDBWithOption, warningNode);
     }
 
-    private void addWarning(Question subscriber, QuestionNode warningNode) {
+    private void addWarning(QuestionDB subscriber, QuestionNode warningNode) {
         List<QuestionNode> warnings = this.warningsXQuestion.get(subscriber.getId_question());
         //First warning added
         if (warnings == null) {
@@ -290,7 +290,7 @@ public class NavigationBuilder {
 
     private void subscribeWarnings(QuestionNode subscriberNode) {
         List<QuestionNode> warnings = this.warningsXQuestion.get(
-                subscriberNode.getQuestion().getId_question());
+                subscriberNode.getQuestionDB().getId_question());
         //No warnings attached
         if (warnings == null) {
             return;

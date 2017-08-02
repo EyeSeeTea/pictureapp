@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
@@ -31,16 +31,16 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
                 credentials.getPassword());
     }
 
-    private static List<AttributeValueWS> getValuesWSFromSurvey(Survey survey) {
+    private static List<AttributeValueWS> getValuesWSFromSurvey(SurveyDB survey) {
         List<AttributeValueWS> valueWSes = new ArrayList<>();
         for (Value value : survey.getValuesFromDB()) {
-            if (value.getQuestion() != null) {
+            if (value.getQuestionDB() != null) {
                 if (value.getOptionDB() == null) {
                     valueWSes.add(
-                            new AttributeValueWS(value.getQuestion().getCode(),
+                            new AttributeValueWS(value.getQuestionDB().getCode(),
                                     value.getValue()));
                 } else {
-                    valueWSes.add(new AttributeValueWS(value.getQuestion().getCode(),
+                    valueWSes.add(new AttributeValueWS(value.getQuestionDB().getCode(),
                             value.getOptionDB().getCode()));
                 }
 
@@ -50,7 +50,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     @Override
-    public void visit(Survey survey) throws ConversionException {
+    public void visit(SurveyDB survey) throws ConversionException {
         SurveySendAction surveySendAction = new SurveySendAction();
         surveySendAction.setActionId(CodeGenerator.generateCode());
         surveySendAction.setType(SURVEY_ACTION_ID);

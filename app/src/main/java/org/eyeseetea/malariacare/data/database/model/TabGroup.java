@@ -41,9 +41,9 @@ public class TabGroup extends BaseModel {
     Long id_program;
 
     /**
-     * Reference to parent program (loaded lazily)
+     * Reference to parent mProgramDB (loaded lazily)
      */
-    Program program;
+    ProgramDB mProgramDB;
 
     @Column
     String uid;
@@ -56,7 +56,7 @@ public class TabGroup extends BaseModel {
     /**
      * List of surveys that belongs to this tabgroup
      */
-    List<Survey> surveys;
+    List<SurveyDB> mSurveyDBs;
 
     public TabGroup() {
     }
@@ -65,9 +65,9 @@ public class TabGroup extends BaseModel {
         this.name = name;
     }
 
-    public TabGroup(String name, Program program) {
+    public TabGroup(String name, ProgramDB programDB) {
         this.name = name;
-        setProgram(program);
+        setProgram(programDB);
     }
 
 
@@ -80,15 +80,15 @@ public class TabGroup extends BaseModel {
         this.name = name;
     }
 
-    public void setProgram(Long id_program) {
+    public void setProgramDB(Long id_program) {
         this.id_program = id_program;
-        this.program = null;
+        this.mProgramDB = null;
     }
 
 
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program = (program != null) ? program.getId_program() : null;
+    public void setProgram(ProgramDB programDB) {
+        this.mProgramDB = programDB;
+        this.id_program = (programDB != null) ? programDB.getId_program() : null;
     }
 
 

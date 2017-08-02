@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.WebView;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.AvailableRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.BalanceRowBuilder;
@@ -62,7 +62,7 @@ public class StockTableBuilder {
     /**
      * Updates table info with the survey
      */
-    public void addSurvey(Survey survey) {
+    public void addSurvey(SurveyDB survey) {
         for (StockRowBuilder rowBuilder : rowBuilders) {
             rowBuilder.addSurvey(survey);
         }

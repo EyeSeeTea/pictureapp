@@ -37,8 +37,8 @@
 //import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 //import org.eyeseetea.malariacare.data.database.model.OptionDB;
 //import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
-//import org.eyeseetea.malariacare.data.database.model.Program;
-//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+//import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 //import org.eyeseetea.malariacare.data.database.model.Survey;
 //import org.eyeseetea.malariacare.data.database.model.Tab;
 //import org.eyeseetea.malariacare.data.database.model.User;
@@ -88,13 +88,13 @@
 //        if(!databaseExists()){
 //            return;
 //        }
-//        Question.deleteAll(Question.class);
+//        QuestionDB.deleteAll(QuestionDB.class);
 //        CompositeScoreDB.deleteAll(CompositeScoreDB.class);
 //        OptionDB.deleteAll(OptionDB.class);
 //        AnswerDB.deleteAll(AnswerDB.class);
 //        HeaderDB.deleteAll(HeaderDB.class);
 //        Tab.deleteAll(Tab.class);
-//        Program.deleteAll(Program.class);
+//        ProgramDB.deleteAll(ProgramDB.class);
 //        OrgUnitDB.deleteAll(OrgUnitDB.class);
 //        User.deleteAll(User.class);
 //        Value.deleteAll(Value.class);
@@ -147,8 +147,8 @@
 //
 //    public static List<Survey> mockSurveys(int numOrgs, int numPrograms){
 //        List<OrgUnitDB> orgUnitList=OrgUnitDB.find(OrgUnitDB.class, null, null);
-//        List<Program> programList=Program.find(Program.class,null,null);
-//        Program program=programList.get(numPrograms);
+//        List<ProgramDB> programList=ProgramDB.find(ProgramDB.class,null,null);
+//        ProgramDB program=programList.get(numPrograms);
 //        User user =getSafeUser();
 //
 //        for(int i=0;i<numOrgs;i++){

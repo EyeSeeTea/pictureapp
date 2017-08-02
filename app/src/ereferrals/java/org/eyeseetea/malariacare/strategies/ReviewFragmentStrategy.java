@@ -7,7 +7,7 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -26,7 +26,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
                 R.id.review_title_text);
 
         if ((value.getQuestionUId() != null)) {
-            String rowText = (Question.findByUID(
+            String rowText = (QuestionDB.findByUID(
                     value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR)
                     + ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
                     : value.getValue());
@@ -51,8 +51,8 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         return rowView;
     }
 
-    private Question getCorrectQuestion(String questionUId) {
-        return Question.findByUID(questionUId);
+    private QuestionDB getCorrectQuestion(String questionUId) {
+        return QuestionDB.findByUID(questionUId);
     }
 
 

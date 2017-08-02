@@ -31,7 +31,7 @@
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
 //import org.eyeseetea.malariacare.data.database.model.OptionDB;
-//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 //import org.eyeseetea.malariacare.data.database.model.Tab;
 //import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 //import org.eyeseetea.malariacare.services.SurveyService;
@@ -206,7 +206,7 @@
 //        whenTabSelected(1);
 //
 //        //THEN: Check font size has properly changed
-//        onData(is(instanceOf(Question.class))).inAdapterView(withId(R.id.listView)).atPosition(1)
+//        onData(is(instanceOf(QuestionDB.class))).inAdapterView(withId(R.id.listView)).atPosition(1)
 //                .onChildView(withId(R.id.answer))
 //                .check(matches(hasEditCardScale(res.getString(R.string.font_size_level3))));
 //    }
@@ -239,7 +239,7 @@
 //     * @param answer True (Yes), False (No)
 //     */
 //    private void whenDropDownAnswered(int position,boolean answer){
-//        onData(is(instanceOf(Question.class))).
+//        onData(is(instanceOf(QuestionDB.class))).
 //                inAdapterView(withId(R.id.listView)).
 //                atPosition(position).
 //                onChildView(withId(R.id.answer))

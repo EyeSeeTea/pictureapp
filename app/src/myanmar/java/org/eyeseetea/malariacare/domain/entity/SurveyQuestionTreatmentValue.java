@@ -1,11 +1,11 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 public class SurveyQuestionTreatmentValue {
-    private Survey mSurvey;
+    private SurveyDB mSurvey;
     private static final int RDT = 1,
             ACT6 = 2,
             ACT12 = 3,
@@ -16,7 +16,7 @@ public class SurveyQuestionTreatmentValue {
             OUT_STOCK = 8;
 
 
-    public SurveyQuestionTreatmentValue(Survey survey) {
+    public SurveyQuestionTreatmentValue(SurveyDB survey) {
         mSurvey = survey;
         mSurvey.getValuesFromDB();
     }
@@ -57,12 +57,12 @@ public class SurveyQuestionTreatmentValue {
     public String getValueQuestion(int question) {
         for (Value value : mSurvey.getValues()) {//this values should be get from memory because
             // the treatment options are in memory
-            if (value.getQuestion() == null) {
+            if (value.getQuestionDB() == null) {
                 continue;
             }
             if (!new SurveyFragmentStrategy().isStockSurvey(mSurvey)) {
                 if (question == OUT_STOCK) {
-                    if (TreatmentQueries.isOutStockQuestion(value.getQuestion().getUid())) {
+                    if (TreatmentQueries.isOutStockQuestion(value.getQuestionDB().getUid())) {
                         return value.getValue();
                     }
                 }
@@ -70,37 +70,37 @@ public class SurveyQuestionTreatmentValue {
             } else {
                 switch (question) {
                     case RDT:
-                        if (TreatmentQueries.isStockRDT(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isStockRDT(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;
                     case ACT6:
-                        if (TreatmentQueries.isACT6(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isACT6(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;
                     case ACT12:
-                        if (TreatmentQueries.isACT12(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isACT12(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;
                     case ACT18:
-                        if (TreatmentQueries.isACT18(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isACT18(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;
                     case ACT24:
-                        if (TreatmentQueries.isACT24(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isACT24(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;
                     case PQ:
-                        if (TreatmentQueries.isPq(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isPq(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;
                     case CQ:
-                        if (TreatmentQueries.isCq(value.getQuestion().getUid())) {
+                        if (TreatmentQueries.isCq(value.getQuestionDB().getUid())) {
                             return value.getValue();
                         }
                         break;

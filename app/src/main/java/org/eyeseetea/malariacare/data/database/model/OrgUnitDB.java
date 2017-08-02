@@ -64,7 +64,7 @@ public class OrgUnitDB extends BaseModel {
     /**
      * List of surveys that belong to this orgunit
      */
-    List<Survey> surveys;
+    List<SurveyDB> mSurveyDBs;
 
     /**
      * List of mOrgUnitDBs that belong to this one
@@ -72,9 +72,9 @@ public class OrgUnitDB extends BaseModel {
     List<OrgUnitDB> children;
 
     /**
-     * List of program authorized for this orgunit
+     * List of mProgramDB authorized for this orgunit
      */
-    List<Program> programs;
+    List<ProgramDB> mProgramDBs;
 
     public OrgUnitDB() {
     }
@@ -224,42 +224,43 @@ public class OrgUnitDB extends BaseModel {
         return children;
     }
 
-    public List<Survey> getSurveys() {
-        if (this.surveys == null) {
-            this.surveys = new Select().from(Survey.class)
-                    .where(Survey_Table.id_org_unit_fk.eq(
+    public List<SurveyDB> getSurveyDBs() {
+        if (this.mSurveyDBs == null) {
+            this.mSurveyDBs = new Select().from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_org_unit_fk.eq(
                             this.getId_org_unit())).queryList();
         }
-        return surveys;
+        return mSurveyDBs;
     }
 
-    public List<Program> getPrograms() {
-        if (programs == null) {
+    public List<ProgramDB> getProgramDBs() {
+        if (mProgramDBs == null) {
             List<OrgUnitProgramRelationDB> orgUnitProgramRelationDBs = new Select().from(
                     OrgUnitProgramRelationDB.class)
                     .where(OrgUnitProgramRelationDB_Table.id_org_unit_fk.eq(
                             this.getId_org_unit()))
                     .queryList();
-            this.programs = new ArrayList<>();
+            this.mProgramDBs = new ArrayList<>();
             for (OrgUnitProgramRelationDB programRelation : orgUnitProgramRelationDBs) {
-                programs.add(programRelation.getProgram());
+                mProgramDBs.add(programRelation.getProgramDB());
             }
         }
-        return programs;
+        return mProgramDBs;
     }
 
-    public void addProgram(Program program) {
+    public void addProgram(ProgramDB programDB) {
         //Null -> nothing
-        if (program == null) {
+        if (programDB == null) {
             return;
         }
 
         //Save a new relationship
-        OrgUnitProgramRelationDB orgUnitProgramRelationDB = new OrgUnitProgramRelationDB(this, program);
+        OrgUnitProgramRelationDB orgUnitProgramRelationDB = new OrgUnitProgramRelationDB(this,
+                programDB);
         orgUnitProgramRelationDB.save();
 
         //Clear cache to enable reloading
-        programs = null;
+        mProgramDBs = null;
     }
 
     public static void refresh(OrganisationUnit organisationUnit) {

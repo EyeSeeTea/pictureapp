@@ -26,9 +26,9 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -51,7 +51,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     private Context mContext;
 
     Map<String, Object> appMapObjects;
-    List<Survey> surveys;
+    List<SurveyDB> mSurveyDBs;
     List<Value> values;
     List<OrgUnitDB> mOrgUnitDBs;
 
@@ -61,7 +61,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     public ConvertFromSDKVisitor(Context context) {
         mContext = context;
         appMapObjects = new HashMap();
-        surveys = new ArrayList<>();
+        mSurveyDBs = new ArrayList<>();
         values = new ArrayList<>();
         mOrgUnitDBs = new ArrayList<>();
 
@@ -76,16 +76,16 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         this.appMapObjects = appMapObjects;
     }
 
-    public List<Survey> getSurveys() {
-        return surveys;
+    public List<SurveyDB> getSurveyDBs() {
+        return mSurveyDBs;
     }
 
     public List<OrgUnitDB> getOrgUnitDBs() {
         return mOrgUnitDBs;
     }
 
-    public void setSurveys(List<Survey> surveys) {
-        this.surveys = surveys;
+    public void setSurveyDBs(List<SurveyDB> surveyDBs) {
+        this.mSurveyDBs = surveyDBs;
     }
 
     public List<Value> getValues() {
@@ -131,36 +131,36 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     @Override
     public void visit(EventExtended sdkEventExtended) {
         OrgUnitDB orgUnitDB = (OrgUnitDB) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
-        Program program = Program.getProgram(sdkEventExtended.getProgramUId());
+        ProgramDB programDB = ProgramDB.getProgram(sdkEventExtended.getProgramUId());
 
-        Survey survey = new Survey();
+        SurveyDB surveyDB = new SurveyDB();
 
         //Any survey that comes from the pull has been sent
-        survey.setStatus(Constants.SURVEY_SENT);
+        surveyDB.setStatus(Constants.SURVEY_SENT);
 
         //Set dates
-        survey.setCreationDate(sdkEventExtended.getCreationDate());
-        survey.setCompletionDate(sdkEventExtended.getEventDate());
-        survey.setEventDate(sdkEventExtended.getEventDate());
-        survey.setScheduledDate(sdkEventExtended.getScheduledDate());
+        surveyDB.setCreationDate(sdkEventExtended.getCreationDate());
+        surveyDB.setCompletionDate(sdkEventExtended.getEventDate());
+        surveyDB.setEventDate(sdkEventExtended.getEventDate());
+        surveyDB.setScheduledDate(sdkEventExtended.getScheduledDate());
 
         //Set fks
-        survey.setOrgUnit(orgUnitDB);
-        survey.setProgram(program);
-        survey.setEventUid(sdkEventExtended.getUid());
+        surveyDB.setOrgUnit(orgUnitDB);
+        surveyDB.setProgram(programDB);
+        surveyDB.setEventUid(sdkEventExtended.getUid());
 
-        mConvertFromSDKVisitorStrategy.visit(sdkEventExtended, survey);
+        mConvertFromSDKVisitorStrategy.visit(sdkEventExtended, surveyDB);
 
-        surveys.add(survey);
+        mSurveyDBs.add(surveyDB);
 
         //Annotate object in map
-        appMapObjects.put(sdkEventExtended.getUid(), survey);
+        appMapObjects.put(sdkEventExtended.getUid(), surveyDB);
     }
 
 
     @Override
     public void visit(DataValueExtended sdkDataValueExtended) {
-        Survey survey = (Survey) appMapObjects.get(sdkDataValueExtended.getEvent());
+        SurveyDB surveyDB = (SurveyDB) appMapObjects.get(sdkDataValueExtended.getEvent());
         String questionUID = sdkDataValueExtended.getDataElement();
 
         //Data value is a value from compositeScore -> ignore
@@ -173,21 +173,21 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
             return;
         }
 
-        //Datavalue is a value from a question
-        Question question = Question.findByUID(questionUID);
+        //Datavalue is a value from a questionDB
+        QuestionDB questionDB = QuestionDB.findByUID(questionUID);
 
-        if (question == null) {
+        if (questionDB == null) {
             Log.e(TAG, "Question not found with dataelement uid " + questionUID);
         }
 
         Value value = new Value();
-        value.setQuestion(question);
-        value.setSurvey(survey);
+        value.setQuestionDB(questionDB);
+        value.setSurveyDB(surveyDB);
 
         OptionDB optionDB =
-                sdkDataValueExtended.findOptionByQuestion(question);
+                sdkDataValueExtended.findOptionByQuestion(questionDB);
         value.setOptionDB(optionDB);
-        //No optionDB -> text question (straight value)
+        //No optionDB -> text questionDB (straight value)
         if (optionDB == null) {
             value.setValue(sdkDataValueExtended.getValue());
         } else {

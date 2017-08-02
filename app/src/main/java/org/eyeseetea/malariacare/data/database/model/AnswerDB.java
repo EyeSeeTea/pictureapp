@@ -38,7 +38,7 @@ public class AnswerDB extends BaseModel {
     public static final Integer DEFAULT_ANSWER_OUTPUT = -1;
 
     /**
-     * Required for creating the dynamic stock question in SCMM
+     * Required for creating the dynamic stock mQuestionDB in SCMM
      */
     public final static Long DYNAMIC_STOCK_ANSWER_ID = 204l;
 
@@ -56,7 +56,7 @@ public class AnswerDB extends BaseModel {
     /**
      * List of mOptionDBs that have this mAnswerDB type
      */
-    List<Question> questions;
+    List<QuestionDB> mQuestionDBs;
 
     public AnswerDB() {
     }
@@ -105,14 +105,14 @@ public class AnswerDB extends BaseModel {
         this.mOptionDBs = optionDBs;
     }
 
-    public List<Question> getQuestions() {
-        if (questions == null) {
-            questions = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_answer_fk
+    public List<QuestionDB> getQuestionDBs() {
+        if (mQuestionDBs == null) {
+            mQuestionDBs = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_answer_fk
                             .eq(this.getId_answer())).queryList();
         }
-        return questions;
+        return mQuestionDBs;
     }
 
     @Override

@@ -41,15 +41,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.ExportDataException;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -93,11 +90,11 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         initView(savedInstanceState);
         PreferencesState.getInstance().setPushInProgress(false);
-        List<Survey> surveys = Survey.getAllSendingSurveys();
-        Log.d(TAG, "Surveys sending: " + surveys.size());
-        for (Survey survey : surveys) {
-            survey.setStatus(Constants.SURVEY_QUARANTINE);
-            survey.save();
+        List<SurveyDB> surveyDBs = SurveyDB.getAllSendingSurveys();
+        Log.d(TAG, "Surveys sending: " + surveyDBs.size());
+        for (SurveyDB surveyDB : surveyDBs) {
+            surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
+            surveyDB.save();
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
@@ -161,9 +158,9 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Adds actionbar to the activity
      */
     public void createActionBar() {
-        Program program = Program.getFirstProgram();
+        ProgramDB programDB = ProgramDB.getFirstProgram();
 
-        if (program != null) {
+        if (programDB != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
             LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),

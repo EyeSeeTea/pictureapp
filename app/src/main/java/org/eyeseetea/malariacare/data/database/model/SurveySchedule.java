@@ -44,7 +44,7 @@ public class SurveySchedule extends BaseModel {
     /**
      * Reference to the survey associated to this score (loaded lazily)
      */
-    Survey survey;
+    SurveyDB mSurveyDB;
 
     @Column
     String comment;
@@ -55,10 +55,10 @@ public class SurveySchedule extends BaseModel {
     public SurveySchedule() {
     }
 
-    public SurveySchedule(Survey survey, Date previous_date, String comment) {
+    public SurveySchedule(SurveyDB surveyDB, Date previous_date, String comment) {
         this.previous_date = previous_date;
         this.comment = comment;
-        this.setSurvey(survey);
+        this.setSurveyDB(surveyDB);
     }
 
     public long getId_survey_schedule() {
@@ -85,25 +85,25 @@ public class SurveySchedule extends BaseModel {
         this.previous_date = previous_date;
     }
 
-    public Survey getSurvey() {
-        if (survey == null) {
+    public SurveyDB getSurveyDB() {
+        if (mSurveyDB == null) {
             if (id_survey_fk == null) return null;
-            survey = new Select()
-                    .from(Survey.class)
-                    .where(Survey_Table.id_survey
+            mSurveyDB = new Select()
+                    .from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_survey
                             .is(id_survey_fk)).querySingle();
         }
-        return survey;
+        return mSurveyDB;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey_fk = (survey != null) ? survey.getId_survey() : null;
+    public void setSurveyDB(SurveyDB surveyDB) {
+        this.mSurveyDB = surveyDB;
+        this.id_survey_fk = (surveyDB != null) ? surveyDB.getId_survey() : null;
     }
 
     public void setSurvey(Long id_survey) {
         this.id_survey_fk = id_survey;
-        this.survey = null;
+        this.mSurveyDB = null;
     }
 
     @Override

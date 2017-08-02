@@ -15,12 +15,12 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
@@ -46,19 +46,19 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
             User.class,
-            StringKey.class,
+            StringKeyDB.class,
             Translation.class,
-            Program.class,
+            ProgramDB.class,
             Tab.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,
             OptionDB.class,
-            Question.class,
-            QuestionRelation.class,
+            QuestionDB.class,
+            QuestionRelationDB.class,
             MatchDB.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
+            QuestionOptionDB.class,
+            QuestionThresholdDB.class,
             DrugDB.class,
             PartnerDB.class,
             Treatment.class,
@@ -83,7 +83,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
 
     public static void updateOptions(Context context) throws IOException {
-        List<OptionDB> optionToDelete = Question.getOptions(
+        List<OptionDB> optionToDelete = QuestionDB.getOptions(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.residenceVillageUID));
         for (OptionDB option : optionToDelete) {
@@ -121,7 +121,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             option.setName(orgUnit.getUid());
             option.setFactor((float) 0);
             option.setId_option((long) 0);
-            option.setAnswerDB(Question.getAnswer(
+            option.setAnswerDB(QuestionDB.getAnswer(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.residenceVillageUID)));
             option.save();

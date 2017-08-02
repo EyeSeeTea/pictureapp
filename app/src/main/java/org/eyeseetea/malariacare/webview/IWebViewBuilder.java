@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.webview;
 
 import android.webkit.WebView;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface IWebViewBuilder {
     /**
      * Adds surveys info into its tables
      */
-    void addSurveys(List<Survey> surveys);
+    void addSurveys(List<SurveyDB> surveyDBs);
 
     /**
      * Updates the given webview with the data provided by its tables

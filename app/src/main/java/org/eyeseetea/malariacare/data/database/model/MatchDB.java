@@ -44,20 +44,20 @@ public class MatchDB extends BaseModel {
     @Column
     Long id_question_relation_fk;
     /**
-     * Reference to the associated questionRelation (loaded lazily)
+     * Reference to the associated mQuestionRelationDB (loaded lazily)
      */
-    QuestionRelation questionRelation;
+    QuestionRelationDB mQuestionRelationDB;
 
     /**
-     * List of questionOptions associated to this mMatchDB
+     * List of mQuestionOptionDBs associated to this mMatchDB
      */
-    List<QuestionOption> questionOptions;
+    List<QuestionOptionDB> mQuestionOptionDBs;
 
     public MatchDB() {
     }
 
-    public MatchDB(QuestionRelation questionRelation) {
-        setQuestionRelation(questionRelation);
+    public MatchDB(QuestionRelationDB questionRelationDB) {
+        setQuestionRelationDB(questionRelationDB);
     }
 
     public static MatchDB findById(long id) {
@@ -71,30 +71,30 @@ public class MatchDB extends BaseModel {
         return new Select().from(MatchDB.class).queryList();
     }
 
-    public List<QuestionOption> getQuestionOptions() {
-        if (questionOptions == null) {
-            this.questionOptions = new Select().from(QuestionOption.class)
-                    .where(QuestionOption_Table.id_match_fk.eq(this.getId_match()))
+    public List<QuestionOptionDB> getQuestionOptionDBs() {
+        if (mQuestionOptionDBs == null) {
+            this.mQuestionOptionDBs = new Select().from(QuestionOptionDB.class)
+                    .where(QuestionOptionDB_Table.id_match_fk.eq(this.getId_match()))
                     .queryList();
         }
-        return this.questionOptions;
+        return this.mQuestionOptionDBs;
     }
 
     /**
      * Get all questionThresholds mMatchDBs with the mMatchDB passed.
      */
-    private static List<QuestionThreshold> getQuestionThreshold(MatchDB matchDB) {
-        return new Select().from(QuestionThreshold.class)
-                .where(QuestionThreshold_Table.id_match_fk.eq(
+    private static List<QuestionThresholdDB> getQuestionThreshold(MatchDB matchDB) {
+        return new Select().from(QuestionThresholdDB.class)
+                .where(QuestionThresholdDB_Table.id_match_fk.eq(
                         matchDB.getId_match())).queryList();
     }
 
     /**
-     * Get all questionOptions mMatchDBs with the mMatchDB passed.
+     * Get all mQuestionOptionDBs mMatchDBs with the mMatchDB passed.
      */
-    private static List<QuestionOption> getQuestionOptions(MatchDB matchDB) {
-        return new Select().from(QuestionOption.class)
-                .where(QuestionOption_Table.id_match_fk.eq(
+    private static List<QuestionOptionDB> getQuestionOptions(MatchDB matchDB) {
+        return new Select().from(QuestionOptionDB.class)
+                .where(QuestionOptionDB_Table.id_match_fk.eq(
                         matchDB.getId_match())).queryList();
     }
 
@@ -123,8 +123,8 @@ public class MatchDB extends BaseModel {
     public static void deleteMatches(List<MatchDB> matchDBs) {
         for (MatchDB matchDB : matchDBs) {
             TreatmentMatch.deleteTreatmentMatches(getTreatmentMatches(matchDB));
-            QuestionOption.deleteQuestionOptions(getQuestionOptions(matchDB));
-            QuestionThreshold.deleteQuestionThresholds(getQuestionThreshold(matchDB));
+            QuestionOptionDB.deleteQuestionOptions(getQuestionOptions(matchDB));
+            QuestionThresholdDB.deleteQuestionThresholds(getQuestionThreshold(matchDB));
             matchDB.delete();
         }
     }
@@ -137,48 +137,48 @@ public class MatchDB extends BaseModel {
         this.id_match = id_match;
     }
 
-    public QuestionRelation getQuestionRelation() {
-        if (questionRelation == null) {
+    public QuestionRelationDB getQuestionRelationDB() {
+        if (mQuestionRelationDB == null) {
             if (id_question_relation_fk == null) return null;
-            questionRelation = new Select()
-                    .from(QuestionRelation.class)
-                    .where(QuestionRelation_Table.id_question_relation
+            mQuestionRelationDB = new Select()
+                    .from(QuestionRelationDB.class)
+                    .where(QuestionRelationDB_Table.id_question_relation
                             .is(id_question_relation_fk)).querySingle();
         }
-        return questionRelation;
+        return mQuestionRelationDB;
     }
 
-    public void setQuestionRelation(QuestionRelation questionRelation) {
-        this.questionRelation = questionRelation;
+    public void setQuestionRelationDB(QuestionRelationDB questionRelationDB) {
+        this.mQuestionRelationDB = questionRelationDB;
         this.id_question_relation_fk =
-                (questionRelation != null) ? questionRelation.getId_question_relation() : null;
+                (questionRelationDB != null) ? questionRelationDB.getId_question_relation() : null;
     }
 
     public void setQuestionRelation(Long id_question_relation) {
         this.id_question_relation_fk = id_question_relation;
-        this.questionRelation = null;
+        this.mQuestionRelationDB = null;
     }
 
     /**
      * Returns the threshold associated with this questionoption
      */
-    public QuestionThreshold getQuestionThreshold() {
+    public QuestionThresholdDB getQuestionThreshold() {
         //Find threshold with this mMatchDB
-        return new Select().from(QuestionThreshold.class)
-                .where(QuestionThreshold_Table.id_match_fk
+        return new Select().from(QuestionThresholdDB.class)
+                .where(QuestionThresholdDB_Table.id_match_fk
                         .is(id_match)).querySingle();
     }
 
     /**
-     * Returns the question from QuestionRelation for this mMatchDB with the given operationType
+     * Returns the mQuestionDB from QuestionRelationDB for this mMatchDB with the given operationType
      */
-    public Question getQuestionFromRelationWithType(int operationType) {
-        QuestionRelation questionRelation = this.getQuestionRelation();
-        if (questionRelation == null || questionRelation.getOperation() != operationType) {
+    public QuestionDB getQuestionFromRelationWithType(int operationType) {
+        QuestionRelationDB questionRelationDB = this.getQuestionRelationDB();
+        if (questionRelationDB == null || questionRelationDB.getOperation() != operationType) {
             return null;
         }
 
-        return questionRelation.getQuestion();
+        return questionRelationDB.getQuestionDB();
     }
 
     @Override

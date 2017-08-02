@@ -26,7 +26,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -52,11 +52,11 @@ public class Session {
     /**
      * The current selected malariaSurvey
      */
-    private static Survey malariaSurvey;
+    private static SurveyDB sMalariaSurveyDB;
     /**
      * The current stock malariaSurvey
      */
-    private static Survey stockSurvey;
+    private static SurveyDB sStockSurveyDB;
     /**
      * The current user
      */
@@ -92,20 +92,20 @@ public class Session {
      */
     private static Map<String, Object> serviceValues = new HashMap<>();
 
-    public static Survey getMalariaSurvey() {
-        return malariaSurvey;
+    public static SurveyDB getMalariaSurveyDB() {
+        return sMalariaSurveyDB;
     }
 
-    public static synchronized void setMalariaSurvey(Survey malariaSurvey) {
-        Session.malariaSurvey = malariaSurvey;
+    public static synchronized void setMalariaSurveyDB(SurveyDB malariaSurveyDB) {
+        Session.sMalariaSurveyDB = malariaSurveyDB;
     }
 
-    public static Survey getStockSurvey() {
-        return stockSurvey;
+    public static SurveyDB getStockSurveyDB() {
+        return sStockSurveyDB;
     }
 
-    public static synchronized void setStockSurvey(Survey stockSurvey) {
-        Session.stockSurvey = stockSurvey;
+    public static synchronized void setStockSurveyDB(SurveyDB stockSurveyDB) {
+        Session.sStockSurveyDB = stockSurveyDB;
     }
 
     public static Credentials getCredentials() {
@@ -155,7 +155,7 @@ public class Session {
      */
     public static void logout() {
         Session.setUser(null);
-        Session.setMalariaSurvey(null);
+        Session.setMalariaSurveyDB(null);
         Session.serviceValues.clear();
     }
 

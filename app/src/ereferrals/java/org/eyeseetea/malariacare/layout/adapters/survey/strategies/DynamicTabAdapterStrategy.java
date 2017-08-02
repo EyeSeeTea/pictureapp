@@ -7,8 +7,8 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import android.view.View;
 
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -38,23 +38,23 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     }
 
     @Override
-    public List<Question> addAdditionalQuestions(int tabType, List<Question> screenQuestions) {
+    public List<QuestionDB> addAdditionalQuestions(int tabType, List<QuestionDB> screenQuestions) {
         return null;
     }
 
 
     @Override
-    public void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion) {
+    public void instanceOfSingleQuestion(IQuestionView questionView, QuestionDB screenQuestion) {
         return;
     }
 
     @Override
-    public void instanceOfMultiQuestion(IQuestionView questionView, Question screenQuestion) {
+    public void instanceOfMultiQuestion(IQuestionView questionView, QuestionDB screenQuestion) {
         return;
     }
 
     @Override
-    public void renderParticularSurvey(Question screenQuestion, Survey survey,
+    public void renderParticularSurvey(QuestionDB screenQuestion, SurveyDB survey,
             IQuestionView questionView) {
         return;
     }
@@ -79,8 +79,8 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     @Override
     public void finishOrNext() {
         try {
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
+            System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
+            System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());
         } catch (Exception e) {
         }
         if (Validation.hasErrors()) {

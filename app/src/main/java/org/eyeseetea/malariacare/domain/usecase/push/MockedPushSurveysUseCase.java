@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
@@ -16,11 +16,11 @@ public class MockedPushSurveysUseCase {
     }
 
     public void execute(Callback callback) {
-        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent(
+        List<SurveyDB> surveyDBs = SurveyDB.getAllMalariaSurveysToBeSent(
                 mProgramLocalDataSource.getUserProgram().getId());
 
-        for (Survey survey : surveys) {
-            SurveyFragmentStrategy.setSurveyAsSent(survey);
+        for (SurveyDB surveyDB : surveyDBs) {
+            SurveyFragmentStrategy.setSurveyAsSent(surveyDB);
         }
         callback.onPushFinished();
     }

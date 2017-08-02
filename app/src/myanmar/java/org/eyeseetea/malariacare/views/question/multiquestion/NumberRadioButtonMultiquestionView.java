@@ -9,7 +9,7 @@ import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -32,7 +32,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
     ImageView image;
     RadioGroup radioGroup;
     Context context;
-    Question question;
+    QuestionDB mQuestionDB;
 
     String yesOptionIdentifier;
     String noOptionIdentifier;
@@ -58,7 +58,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
 
     @Override
     public boolean hasError() {
-        if (question.isCompulsory() && radioGroup.getCheckedRadioButtonId() == -1) {
+        if (mQuestionDB.isCompulsory() && radioGroup.getCheckedRadioButtonId() == -1) {
             return true;
         }
         return false;
@@ -105,8 +105,8 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
         radioGroup.setEnabled(enabled);
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
     }
 
     public void setOptions(List<OptionDB> options) {
@@ -171,9 +171,9 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
-            Question question = (Question) this.getTag();
+            QuestionDB questionDB = (QuestionDB) this.getTag();
             if (checkedId == customRadioButton.getId()
-                    && !TreatmentQueries.isCq(question.getUid())) {
+                    && !TreatmentQueries.isCq(questionDB.getUid())) {
                 notifyAnswerOptionChange(this.getTag(), ((OptionDB) customRadioButton.getTag()));
                 changeTotalQuestions();
             }
@@ -211,32 +211,32 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
      * Changing the total questions of the alternative pq questions depending on the answer provided
      */
     private void changeTotalQuestions() {
-        Question pqQuestion = TreatmentQueries.getPqQuestion();
-        Question actQuestion =
+        QuestionDB pqQuestionDB = TreatmentQueries.getPqQuestion();
+        QuestionDB actQuestionDB =
                 TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
-        Question alternativePqQuestion = TreatmentQueries.getAlternativePqQuestion();
+        QuestionDB alternativePqQuestionDB = TreatmentQueries.getAlternativePqQuestion();
         Value actValue = null;
         Value pqValue = null;
-        List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
+        List<Value> values = Session.getMalariaSurveyDB().getValuesFromDB();
         for (Value sValue : values) {
-            if (sValue.getQuestion() == null) {
+            if (sValue.getQuestionDB() == null) {
                 continue;
             }
-            if (sValue.getQuestion().equals(actQuestion)) {
+            if (sValue.getQuestionDB().equals(actQuestionDB)) {
                 actValue = sValue;
                 break;
             }
-            if (sValue.getQuestion().getUid().equals(pqQuestion.getUid())) {
+            if (sValue.getQuestionDB().getUid().equals(pqQuestionDB.getUid())) {
                 pqValue = sValue;
                 break;
             }
         }
         if ((actValue == null || actValue.getOptionDB().getCode().equals(yesOptionIdentifier))
                 || (pqValue == null || Float.parseFloat(pqValue.getValue()) > 0)) {
-            alternativePqQuestion.setTotalQuestions(8);
+            alternativePqQuestionDB.setTotalQuestions(8);
         } else {
-            alternativePqQuestion.setTotalQuestions(9);
+            alternativePqQuestionDB.setTotalQuestions(9);
         }
-        alternativePqQuestion.save();
+        alternativePqQuestionDB.save();
     }
 }

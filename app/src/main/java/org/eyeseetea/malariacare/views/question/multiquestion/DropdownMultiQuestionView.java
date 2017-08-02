@@ -8,7 +8,7 @@ import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -27,7 +27,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     CustomTextView header;
     Spinner spinnerOptions;
     ImageView imageView;
-    Question question;
+    QuestionDB mQuestionDB;
     private boolean optionSetFromSavedValue = false;
 
     public DropdownMultiQuestionView(Context context) {
@@ -44,9 +44,8 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionDBList));
     }
 
-    @Override
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
     }
 
     @Override

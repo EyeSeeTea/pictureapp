@@ -1,9 +1,9 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 
 /**
@@ -13,35 +13,35 @@ import org.eyeseetea.malariacare.data.database.model.Value;
  */
 public class WarningStatusChecker extends StatusChecker {
 
-    QuestionThreshold questionThreshold;
-    QuestionOption questionOption;
+    QuestionThresholdDB mQuestionThresholdDB;
+    QuestionOptionDB mQuestionOptionDB;
 
-    public WarningStatusChecker(Question warningQuestion) {
-        initWarningTrigger(warningQuestion);
+    public WarningStatusChecker(QuestionDB warningQuestionDB) {
+        initWarningTrigger(warningQuestionDB);
     }
 
     @Override
     public boolean isEnabled() {
         //Warning not built yet -> false
-        if (questionThreshold == null || questionOption == null) {
+        if (mQuestionThresholdDB == null || mQuestionOptionDB == null) {
             return false;
         }
 
         //Get current values in DB
-        Question questionWithOption = questionOption.getQuestion();
-        Value optionValue = questionWithOption.getValueBySession();
-        Value intValue = questionThreshold.getQuestion().getValueBySession();
+        QuestionDB questionDBWithOption = mQuestionOptionDB.getQuestionDB();
+        Value optionValue = questionDBWithOption.getValueBySession();
+        Value intValue = mQuestionThresholdDB.getQuestionDB().getValueBySession();
 
         //A question is not answered yet -> false
         if (optionValue == null || optionValue.getOptionDB() == null || intValue == null) {
             return false;
         }
         //The option for this warning has not been selected
-        if (optionValue.getId_option() != questionOption.getOptionDB().getId_option()) {
+        if (optionValue.getId_option() != mQuestionOptionDB.getOptionDB().getId_option()) {
             return false;
         }
         //If current int value NOT in threshold -> the warning is activated
-        return !questionThreshold.isInThreshold(intValue.getValue());
+        return !mQuestionThresholdDB.isInThreshold(intValue.getValue());
     }
 
     @Override
@@ -49,41 +49,41 @@ public class WarningStatusChecker extends StatusChecker {
         return false;
     }
 
-    private void initWarningTrigger(Question reminderQuestion) {
+    private void initWarningTrigger(QuestionDB reminderQuestionDB) {
 
-        //Look for a WARNING relation which origin questionOption + questionThreshold activates this
-        for (QuestionRelation questionRelation : reminderQuestion.getQuestionRelations()) {
-            if (!questionRelation.isAWarning()) {
+        //Look for a WARNING relation which origin mQuestionOptionDB + mQuestionThresholdDB activates this
+        for (QuestionRelationDB questionRelationDB : reminderQuestionDB.getQuestionRelationDBs()) {
+            if (!questionRelationDB.isAWarning()) {
                 continue;
             }
 
-            //Find QuestionOption for this relation
-            QuestionOption questionOption = findQuestionOption(questionRelation);
-            if (questionOption == null) {
+            //Find QuestionOptionDB for this relation
+            QuestionOptionDB questionOptionDB = findQuestionOption(questionRelationDB);
+            if (questionOptionDB == null) {
                 continue;
             }
 
-            //Annotate questionOption and threshold to check
-            this.questionOption = questionOption;
-            this.questionThreshold = questionOption.getQuestionThreshold();
+            //Annotate mQuestionOptionDB and threshold to check
+            this.mQuestionOptionDB = questionOptionDB;
+            this.mQuestionThresholdDB = questionOptionDB.getQuestionThreshold();
             return;
         }
     }
 
-    public Question getQuestionToSubscribeFromThreshold() {
-        if (questionThreshold == null) {
+    public QuestionDB getQuestionToSubscribeFromThreshold() {
+        if (mQuestionThresholdDB == null) {
             return null;
         }
 
-        return questionThreshold.getQuestion();
+        return mQuestionThresholdDB.getQuestionDB();
     }
 
-    public Question getQuestionToSubscribeFromOption() {
-        if (questionOption == null) {
+    public QuestionDB getQuestionToSubscribeFromOption() {
+        if (mQuestionOptionDB == null) {
             return null;
         }
 
-        return questionOption.getQuestion();
+        return mQuestionOptionDB.getQuestionDB();
     }
 
 }

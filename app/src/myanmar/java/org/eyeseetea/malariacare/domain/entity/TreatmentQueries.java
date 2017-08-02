@@ -13,10 +13,11 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Program_Table;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey_Table;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB_Table;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB_Table;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.util.Date;
@@ -108,87 +109,87 @@ public class TreatmentQueries {
                         R.string.dynamicTreatmentHideQuestionUID));
     }
 
-    public static Question getACT6Question() {
+    public static QuestionDB getACT6Question() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.act6QuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.act6QuestionUID));
     }
 
 
-    public static Question getACT12Question() {
+    public static QuestionDB getACT12Question() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.act12QuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.act12QuestionUID));
     }
 
 
-    public static Question getACT18Question() {
+    public static QuestionDB getACT18Question() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.act18QuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.act18QuestionUID));
     }
 
 
-    public static Question getACT24Question() {
+    public static QuestionDB getACT24Question() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.act24QuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.act24QuestionUID));
     }
 
 
-    public static Question getOutOfStockQuestion() {
+    public static QuestionDB getOutOfStockQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.outOfStockQuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.outOfStockQuestionUID));
     }
 
 
-    public static boolean isStockQuestion(Question question) {
-        if (question.getHeaderDB() != null && question.getHeaderDB().getName().equals("Stock")) {
+    public static boolean isStockQuestion(QuestionDB questionDB) {
+        if (questionDB.getHeaderDB() != null && questionDB.getHeaderDB().getName().equals("Stock")) {
             return true;
         }
         return false;
     }
 
 
-    public static Question getDynamicTreatmentQuestion() {
-        return Question.findByUID(
+    public static QuestionDB getDynamicTreatmentQuestion() {
+        return QuestionDB.findByUID(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.dynamicTreatmentQuestionUID));
     }
 
 
-    public static Question getTreatmentDiagnosisVisibleQuestion() {
-        return Question.findByUID(
+    public static QuestionDB getTreatmentDiagnosisVisibleQuestion() {
+        return QuestionDB.findByUID(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.treatmentDiagnosisVisibleQuestion));
     }
 
 
-    public static Question getStockPqQuestion() {
-        return Question.findByUID(
+    public static QuestionDB getStockPqQuestion() {
+        return QuestionDB.findByUID(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.stockPqQuestionUID));
     }
 
 
-    public static Question getPqQuestion() {
-        return Question.findByUID(
+    public static QuestionDB getPqQuestion() {
+        return QuestionDB.findByUID(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.pqQuestionUID));
     }
 
 
-    public static Question getAlternativePqQuestion() {
-        return Question.findByUID(
+    public static QuestionDB getAlternativePqQuestion() {
+        return QuestionDB.findByUID(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.alternativePqQuestionUID));
     }
 
 
-    public static boolean isAgeQuestion(Question question) {
-        return question.getUid().equals(
+    public static boolean isAgeQuestion(QuestionDB questionDB) {
+        return questionDB.getUid().equals(
                 PreferencesState.getInstance().getContext().getString(R.string.ageQuestionUID));
     }
 
 
-    public static boolean isACT6Question(Question question) {
-        if (question != null && question.getUid().equals(
+    public static boolean isACT6Question(QuestionDB questionDB) {
+        if (questionDB != null && questionDB.getUid().equals(
                 PreferencesState.getInstance().getContext().getString(R.string.act6QuestionUID))) {
             return true;
         }
@@ -196,8 +197,8 @@ public class TreatmentQueries {
     }
 
 
-    public static boolean isACT12Question(Question question) {
-        if (question != null && question.getUid().equals(
+    public static boolean isACT12Question(QuestionDB questionDB) {
+        if (questionDB != null && questionDB.getUid().equals(
                 PreferencesState.getInstance().getContext().getString(R.string.act12QuestionUID))) {
             return true;
         }
@@ -205,15 +206,15 @@ public class TreatmentQueries {
     }
 
 
-    public static Question getDynamicTreatmentHideQuestion() {
-        return Question.findByUID(
+    public static QuestionDB getDynamicTreatmentHideQuestion() {
+        return QuestionDB.findByUID(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.dynamicTreatmentHideQuestionUID));
     }
 
 
-    public static boolean isACT18Question(Question question) {
-        if (question != null && question.getUid().equals(
+    public static boolean isACT18Question(QuestionDB questionDB) {
+        if (questionDB != null && questionDB.getUid().equals(
                 PreferencesState.getInstance().getContext().getString(R.string.act18QuestionUID))) {
             return true;
         }
@@ -221,8 +222,8 @@ public class TreatmentQueries {
     }
 
 
-    public static boolean isACT24Question(Question question) {
-        if (question != null && question.getUid().equals(
+    public static boolean isACT24Question(QuestionDB questionDB) {
+        if (questionDB != null && questionDB.getUid().equals(
                 PreferencesState.getInstance().getContext().getString(R.string.act24QuestionUID))) {
             return true;
         }
@@ -230,18 +231,18 @@ public class TreatmentQueries {
     }
 
 
-    public static Question getDynamicStockQuestion() {
+    public static QuestionDB getDynamicStockQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.dynamicStockQuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.dynamicStockQuestionUID));
     }
 
 
-    public static Question getTreatmentQuestionForTag(Object tag) {
+    public static QuestionDB getTreatmentQuestionForTag(Object tag) {
         Resources resources = PreferencesState.getInstance().getContext().getResources();
-        if (isPq(((Question) tag).getUid())) {
-            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
+        if (isPq(((QuestionDB) tag).getUid())) {
+            return QuestionDB.findByUID(resources.getString(R.string.stockPqQuestionUID));
         } else {
-            return Question.findByUID(
+            return QuestionDB.findByUID(
                     resources.getString(R.string.dynamicTreatmentHideQuestionUID));
         }
     }
@@ -264,24 +265,24 @@ public class TreatmentQueries {
                 .stockRDTQuestionUID));
     }
 
-    public static Question getRDTQuestion() {
+    public static QuestionDB getRDTQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.rdtQuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.rdtQuestionUID));
     }
 
-    public static Question getStockRDTQuestion() {
+    public static QuestionDB getStockRDTQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.stockRDTQuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.stockRDTQuestionUID));
     }
 
-    public static Question getInvalidCounterQuestion() {
+    public static QuestionDB getInvalidCounterQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.confirmInvalidQuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.confirmInvalidQuestionUID));
     }
 
-    public static Question getCqQuestion() {
+    public static QuestionDB getCqQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.cqQuestionUID));
+        return QuestionDB.findByUID(context.getString(R.string.cqQuestionUID));
     }
 
     public static boolean isACT24(String uid_question) {
@@ -309,18 +310,18 @@ public class TreatmentQueries {
                 uid_question);
     }
 
-    public static org.eyeseetea.malariacare.data.database.model.Survey getStockSurveyWithEventDate(
+    public static SurveyDB getStockSurveyWithEventDate(
             Date eventDate) {
         Context context = PreferencesState.getInstance().getContext();
 
-        return new Select().from(org.eyeseetea.malariacare.data.database.model.Survey.class).as(
+        return new Select().from(SurveyDB.class).as(
                 surveyName)
-                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
-                .on(Survey_Table.id_program_fk.withTable(surveyAlias)
-                        .eq(Program_Table.id_program.withTable(programAlias)))
-                .where(Survey_Table.event_date.withTable(surveyAlias)
+                .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+                .where(SurveyDB_Table.event_date.withTable(surveyAlias)
                         .eq(eventDate))
-                .and(Program_Table.uid_program.withTable(programAlias).is(
+                .and(ProgramDB_Table.uid_program.withTable(programAlias).is(
                         context.getString(R.string.stockProgramUID))).querySingle();
 
     }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
@@ -19,16 +19,16 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     }
 
     @Override
-    public void renderSurveySummary(View rowView, Survey survey) {
-        mAssessmentAdapter.showDate(rowView, R.id.completionDate, survey.getEventDate());
+    public void renderSurveySummary(View rowView, SurveyDB surveyDB) {
+        mAssessmentAdapter.showDate(rowView, R.id.completionDate, surveyDB.getEventDate());
 
         mAssessmentAdapter.showRDT(rowView, R.id.rdt,
-                SurveyInfoUtils.getRDTSymbol(mContext, survey));
+                SurveyInfoUtils.getRDTSymbol(mContext, surveyDB));
 
-        mAssessmentAdapter.showInfo(rowView, R.id.info, survey.getValuesToString());
+        mAssessmentAdapter.showInfo(rowView, R.id.info, surveyDB.getValuesToString());
     }
     @Override
-    public boolean hasAllComplementarySurveys(Survey malariaSurvey) {
+    public boolean hasAllComplementarySurveys(SurveyDB malariaSurveyDB) {
         return true;
     }
 }

@@ -1,14 +1,14 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
+import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 import static org.eyeseetea.malariacare.domain.entity.TreatmentQueries.isStockQuestion;
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -20,35 +20,35 @@ import java.util.List;
 
 public class SurveyFragmentStrategy {
 
-    public Survey getRenderSurvey(Question screenQuestion) {
-        return (isStockQuestion(screenQuestion) || TreatmentQueries.isDynamicStockQuestion(
-                screenQuestion.getUid()))
-                ? Session.getStockSurvey()
-                : getMalariaSurvey();
+    public SurveyDB getRenderSurvey(QuestionDB screenQuestionDB) {
+        return (isStockQuestion(screenQuestionDB) || TreatmentQueries.isDynamicStockQuestion(
+                screenQuestionDB.getUid()))
+                ? Session.getStockSurveyDB()
+                : getMalariaSurveyDB();
     }
 
 
-    public boolean isStockSurvey(Survey survey) {
-        return survey.getProgram().getUid().equals(
+    public boolean isStockSurvey(SurveyDB survey) {
+        return survey.getProgramDB().getUid().equals(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.stockProgramUID));
     }
 
     public String getMalariaProgram() {
-        return Program.findByUID(PreferencesState.getInstance().getContext().getString(
+        return ProgramDB.findByUID(PreferencesState.getInstance().getContext().getString(
                 R.string.malariaProgramUID)).getUid();
     }
 
 
-    public static void setSurveyAsSent(Survey survey) {
+    public static void setSurveyAsSent(SurveyDB survey) {
         //Check surveys not in progress
         survey.setStatus(SURVEY_SENT);
         survey.save();
         setStockSurveyAsSent(survey);
     }
 
-    public static void setStockSurveyAsSent(Survey survey) {
-        Survey stockSurvey = TreatmentQueries.getStockSurveyWithEventDate(
+    public static void setStockSurveyAsSent(SurveyDB survey) {
+        SurveyDB stockSurvey = TreatmentQueries.getStockSurveyWithEventDate(
                 survey.getEventDate());
         if (stockSurvey != null) {
             stockSurvey.setStatus(SURVEY_SENT);
@@ -58,133 +58,133 @@ public class SurveyFragmentStrategy {
 
 
     public void removeSurveysInSession() {
-        Session.setMalariaSurvey(null);
-        Session.setStockSurvey(null);
+        Session.setMalariaSurveyDB(null);
+        Session.setStockSurveyDB(null);
     }
 
-    public static Survey getValueBySession() {
+    public static SurveyDB getValueBySession() {
         //return  (!isStockQuestion(this)) ? Session.getMalariaSurvey() : Session.getStockSurvey();
         return null;
     }
 
-    public static Survey getValueBySessionWithConditions(Question question) {
-        if (isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
-                || TreatmentQueries.isACT(question.getUid())) {
-            return Session.getStockSurvey();
+    public static SurveyDB getValueBySessionWithConditions(QuestionDB questionDB) {
+        if (isStockQuestion(questionDB) || TreatmentQueries.isPq(questionDB.getUid())
+                || TreatmentQueries.isACT(questionDB.getUid())) {
+            return Session.getStockSurveyDB();
         }
-        return Session.getMalariaSurvey();
+        return Session.getMalariaSurveyDB();
     }
 
-    public static Survey getSessionSurveyByStock(Question question) {
-        return (TreatmentQueries.isStockQuestion(question) ? Session.getStockSurvey()
-                : Session.getMalariaSurvey());
+    public static SurveyDB getSessionSurveyByStock(QuestionDB questionDB) {
+        return (TreatmentQueries.isStockQuestion(questionDB) ? Session.getStockSurveyDB()
+                : Session.getMalariaSurveyDB());
     }
 
     public static void saveValueDDlExtraOperations(Value value, OptionDB option, String uid) {
         if (value != null && TreatmentQueries.isTreatmentQuestion(uid) && TreatmentQueries.isACT(
                 uid)
                 && !option.getId_option().equals(value.getId_option())) {
-            List<Survey> surveys = new ArrayList<>();
-            surveys.add(Session.getStockSurvey());
-            surveys.add(Session.getMalariaSurvey());
-            for (Survey survey : surveys) {
+            List<SurveyDB> surveys = new ArrayList<>();
+            surveys.add(Session.getStockSurveyDB());
+            surveys.add(Session.getMalariaSurveyDB());
+            for (SurveyDB survey : surveys) {
                 deleteStockValues(survey);
             }
         }
     }
 
-    public static Survey getSaveValuesDDLSurvey(Question question) {
-        return ((isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
-                || TreatmentQueries.isACT(question.getUid()))
-                ? Session.getStockSurvey()
-                : Session.getMalariaSurvey());
+    public static SurveyDB getSaveValuesDDLSurvey(QuestionDB questionDB) {
+        return ((isStockQuestion(questionDB) || TreatmentQueries.isPq(questionDB.getUid())
+                || TreatmentQueries.isACT(questionDB.getUid()))
+                ? Session.getStockSurveyDB()
+                : Session.getMalariaSurveyDB());
     }
 
-    public static void saveValuesText(Value value, String answer, Question question,
-            Survey survey) {
-        if ((TreatmentQueries.isTreatmentQuestion(question.getUid()) || TreatmentQueries.isPq(
-                question.getUid())
-                || TreatmentQueries.isACT(question.getUid())) && value != null
+    public static void saveValuesText(Value value, String answer, QuestionDB questionDB,
+            SurveyDB survey) {
+        if ((TreatmentQueries.isTreatmentQuestion(questionDB.getUid()) || TreatmentQueries.isPq(
+                questionDB.getUid())
+                || TreatmentQueries.isACT(questionDB.getUid())) && value != null
                 && !value.getValue().equals(answer)) {
-            List<Survey> surveys = new ArrayList<>();
-            surveys.add(Session.getStockSurvey());
-            surveys.add(Session.getMalariaSurvey());
-            for (Survey surveyToClean : surveys) {
+            List<SurveyDB> surveys = new ArrayList<>();
+            surveys.add(Session.getStockSurveyDB());
+            surveys.add(Session.getMalariaSurveyDB());
+            for (SurveyDB surveyToClean : surveys) {
                 deleteStockValues(surveyToClean);
             }
         }
-        if (isStockQuestion(question) && value != null && answer.equals("-1")) {
-            question.deleteValues(value);
+        if (isStockQuestion(questionDB) && value != null && answer.equals("-1")) {
+            questionDB.deleteValues(value);
         } else {
-            question.createOrSaveValue(answer, value, survey);
-            for (Question propagateQuestion : question.getPropagationQuestions()) {
-                propagateQuestion.createOrSaveValue(answer,
-                        Value.findValueFromDatabase(propagateQuestion.getId_question(),
-                                Session.getMalariaSurvey()), Session.getMalariaSurvey());
+            questionDB.createOrSaveValue(answer, value, survey);
+            for (QuestionDB propagateQuestionDB : questionDB.getPropagationQuestions()) {
+                propagateQuestionDB.createOrSaveValue(answer,
+                        Value.findValueFromDatabase(propagateQuestionDB.getId_question(),
+                                Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
             }
         }
     }
 
-    public static void recursiveRemover(Value value, OptionDB option, Question question,
-            Survey survey) {
-        if (!value.getOptionDB().equals(option) && question.hasChildren()
-                && !TreatmentQueries.isDynamicTreatmentQuestion(question.getUid())) {
-            survey.removeChildrenValuesFromQuestionRecursively(question, false);
+    public static void recursiveRemover(Value value, OptionDB option, QuestionDB questionDB,
+            SurveyDB survey) {
+        if (!value.getOptionDB().equals(option) && questionDB.hasChildren()
+                && !TreatmentQueries.isDynamicTreatmentQuestion(questionDB.getUid())) {
+            survey.removeChildrenValuesFromQuestionRecursively(questionDB, false);
         }
     }
 
-    public static List<Question> getCompulsoryNotAnsweredQuestions(Question question) {
-        List<Question> questions = new ArrayList<>();
-        if (question.getHeaderDB().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = question.getQuestionsByTab(question.getHeaderDB().getTab());
-        } else if (TreatmentQueries.isDynamicStockQuestion(question.getUid())) {
-            List<OptionDB> options = question.getAnswerDB().getOptionDBs();
+    public static List<QuestionDB> getCompulsoryNotAnsweredQuestions(QuestionDB questionDB) {
+        List<QuestionDB> questionDBs = new ArrayList<>();
+        if (questionDB.getHeaderDB().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questionDBs = questionDB.getQuestionsByTab(questionDB.getHeaderDB().getTab());
+        } else if (TreatmentQueries.isDynamicStockQuestion(questionDB.getUid())) {
+            List<OptionDB> options = questionDB.getAnswerDB().getOptionDBs();
             for (OptionDB option : options) {
-                Question questionNotAnswered = question.findByID(option.getId_option());
-                if (!question.isNotAnswered(questionNotAnswered)) {
-                    questions.add(questionNotAnswered);
+                QuestionDB questionDBNotAnswered = questionDB.findByID(option.getId_option());
+                if (!questionDB.isNotAnswered(questionDBNotAnswered)) {
+                    questionDBs.add(questionDBNotAnswered);
                 }
             }
         } else {
-            questions.add(question);
+            questionDBs.add(questionDB);
         }
-        return questions;
+        return questionDBs;
     }
 
-    public static int getNumRequired(int numRequired, Question localQuestion) {
-        while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory() && !isStockQuestion(localQuestion)) {
+    public static int getNumRequired(int numRequired, QuestionDB localQuestionDB) {
+        while (localQuestionDB.getSibling() != null) {
+            if (localQuestionDB.isCompulsory() && !isStockQuestion(localQuestionDB)) {
                 numRequired++;
             }
-            localQuestion = localQuestion.getSibling();
+            localQuestionDB = localQuestionDB.getSibling();
         }
-        if (isStockQuestion(localQuestion) || !localQuestion.isCompulsory()) {
+        if (isStockQuestion(localQuestionDB) || !localQuestionDB.isCompulsory()) {
             numRequired--;
         }
         return numRequired;
 
     }
 
-    public static void deleteStockValues(Survey survey) {
+    public static void deleteStockValues(SurveyDB survey) {
         List<Value> values = survey.getValuesFromDB();
         for (Value value : values) {
-            if (value.getQuestion() == null) {
+            if (value.getQuestionDB() == null) {
                 continue;
             }
-            if ((TreatmentQueries.isACT(value.getQuestion().getUid()) && !value.getValue().equals(
+            if ((TreatmentQueries.isACT(value.getQuestionDB().getUid()) && !value.getValue().equals(
                     "0"))
-                    || TreatmentQueries.isOutStockQuestion(value.getQuestion().getUid())) {
-                for (Question questionPropagated : value.getQuestion().getPropagationQuestions()) {
+                    || TreatmentQueries.isOutStockQuestion(value.getQuestionDB().getUid())) {
+                for (QuestionDB questionDBPropagated : value.getQuestionDB().getPropagationQuestions()) {
                     survey.removeValue(
-                            questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
+                            questionDBPropagated.getValueBySurvey(Session.getMalariaSurveyDB()));
                 }
                 value.delete();
             }
         }
     }
 
-    public static Survey getSessionSurveyByQuestion(Question question) {
-        return (TreatmentQueries.isStockQuestion(question)) ? Session.getStockSurvey()
-                : Session.getMalariaSurvey();
+    public static SurveyDB getSessionSurveyByQuestion(QuestionDB questionDB) {
+        return (TreatmentQueries.isStockQuestion(questionDB)) ? Session.getStockSurveyDB()
+                : Session.getMalariaSurveyDB();
     }
 }

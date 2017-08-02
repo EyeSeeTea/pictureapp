@@ -3,8 +3,8 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -68,13 +68,13 @@ public class NavigationController {
         return this.currentPosition;
     }
 
-    public Question getCurrentQuestion() {
+    public QuestionDB getCurrentQuestion() {
         QuestionNode currentNode = getCurrentNode();
         if (currentNode == null) {
             Log.w(TAG, "getCurrentQuestion()->Nothing here (have you made the first 'next'?");
             return null;
         }
-        return currentNode.getQuestion();
+        return currentNode.getQuestionDB();
     }
 
     public Tab getCurrentTab() {
@@ -99,8 +99,8 @@ public class NavigationController {
         }
 
         //Get value for current
-        Question currentQuestion = getCurrentQuestion();
-        Value currentValue = currentQuestion.getValueBySession();
+        QuestionDB currentQuestionDB = getCurrentQuestion();
+        Value currentValue = currentQuestionDB.getValueBySession();
 
         //Cannot move without answer
         if (currentValue == null) {
@@ -118,7 +118,7 @@ public class NavigationController {
     /**
      * Asks for next question no matter what answer has been given (just sibling)
      */
-    public Question next() {
+    public QuestionDB next() {
         return this.next(null);
     }
 
@@ -126,7 +126,7 @@ public class NavigationController {
         getCurrentNode().increaseRepetitions(optionDB);
     }
 
-    public Question next(OptionDB optionDB) {
+    public QuestionDB next(OptionDB optionDB) {
         Log.d(TAG, String.format("next(%s)...", optionDB == null ? "" : optionDB.getCode()));
         QuestionNode nextNode;
 
@@ -158,13 +158,13 @@ public class NavigationController {
 
         //Found
         visit(nextNode);
-        Question nextQuestion = nextNode.getQuestion();
+        QuestionDB nextQuestionDB = nextNode.getQuestionDB();
 
 
         //Return next question
         Log.d(TAG, String.format("next(%s)->%s", optionDB == null ? "" : optionDB.getCode(),
-                nextQuestion.getCode()));
-        return nextNode.getQuestion();
+                nextQuestionDB.getCode()));
+        return nextNode.getQuestionDB();
     }
 
     public boolean existsPendingCounter(OptionDB optionDB) {
@@ -184,7 +184,7 @@ public class NavigationController {
     /**
      * Returns the previous question
      */
-    public Question previous() {
+    public QuestionDB previous() {
 
         Log.d(TAG, "previous()...");
         //First position -> cannot move
@@ -203,9 +203,9 @@ public class NavigationController {
         }
 
         //Return the 'new' last question
-        Question previousQuestion = getCurrentNode().getQuestion();
-        Log.d(TAG, String.format("previous()->%s", previousQuestion.getCode()));
-        return previousQuestion;
+        QuestionDB previousQuestionDB = getCurrentNode().getQuestionDB();
+        Log.d(TAG, String.format("previous()->%s", previousQuestionDB.getCode()));
+        return previousQuestionDB;
     }
 
     /**
@@ -240,17 +240,17 @@ public class NavigationController {
         //Self references are neither moving the counter nor adding a new position
         if (isALoop(nextNode)) {
             Log.d(TAG,
-                    String.format("visit(%s) -> Not advancing", nextNode.getQuestion().getCode()));
+                    String.format("visit(%s) -> Not advancing", nextNode.getQuestionDB().getCode()));
             return;
         }
 
         //This node wont be shown in previous move (warnings)
         if (!nextNode.isVisibleInReview()) {
             //If the survey is sent we need hide the reminder question.
-            if (Session.getMalariaSurvey() != null && !Session.getMalariaSurvey().isInProgress()) {
-                for (QuestionRelation questionRelation : nextNode.getQuestion()
-                        .getQuestionRelations()) {
-                    if (questionRelation.isAReminder()) {
+            if (Session.getMalariaSurveyDB() != null && !Session.getMalariaSurveyDB().isInProgress()) {
+                for (QuestionRelationDB questionRelationDB : nextNode.getQuestionDB()
+                        .getQuestionRelationDBs()) {
+                    if (questionRelationDB.isAReminder()) {
                         //is a reminder -> next
                         nonVisibleNode = nextNode;
 
@@ -263,7 +263,7 @@ public class NavigationController {
                 }
             }
             Log.d(TAG,
-                    String.format("visit(%s) -> In position %d", nextNode.getQuestion().getCode(),
+                    String.format("visit(%s) -> In position %d", nextNode.getQuestionDB().getCode(),
                             currentPosition));
             //Requires a rewind leaving its parent as last visited
             rewindVisited(nextNode);
@@ -275,7 +275,7 @@ public class NavigationController {
         //annotate new current node and advance counter
         nonVisibleNode = null;
         currentPosition++;
-        Log.d(TAG, String.format("visit(%s) -> In position %d", nextNode.getQuestion().getCode(),
+        Log.d(TAG, String.format("visit(%s) -> In position %d", nextNode.getQuestionDB().getCode(),
                 currentPosition));
         visited.add(nextNode);
     }
@@ -307,18 +307,18 @@ public class NavigationController {
                     optionDB == null ? "" : optionDB.getInternationalizedName()));
             return this.rootNode;
         }
-        Question actualQuestion = getCurrentNode().getQuestion();
+        QuestionDB actualQuestionDB = getCurrentNode().getQuestionDB();
         QuestionNode nextNode;
         nextNode = getCurrentNode().next(optionDB);
         if (nextNode != null && (
-                actualQuestion.getHeaderDB().getTab().getType() == Constants.TAB_MULTI_QUESTION
-                        || actualQuestion.getHeaderDB().getTab().getType()
+                actualQuestionDB.getHeaderDB().getTab().getType() == Constants.TAB_MULTI_QUESTION
+                        || actualQuestionDB.getHeaderDB().getTab().getType()
                         == Constants.TAB_DYNAMIC_TREATMENT
-                        || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-            while (nextNode != null && (nextNode.getQuestion().getHeaderDB().getTab().equals(
-                    actualQuestion.getHeaderDB().getTab())
-                    || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-                OptionDB optionDBNext = nextNode.getQuestion().getOptionBySession();
+                        || nextNode.getQuestionDB().getOutput() == Constants.HIDDEN)) {
+            while (nextNode != null && (nextNode.getQuestionDB().getHeaderDB().getTab().equals(
+                    actualQuestionDB.getHeaderDB().getTab())
+                    || nextNode.getQuestionDB().getOutput() == Constants.HIDDEN)) {
+                OptionDB optionDBNext = nextNode.getQuestionDB().getOptionBySession();
                 nextNode = nextNode.next(optionDBNext);
             }
         }
@@ -343,10 +343,10 @@ public class NavigationController {
         }
 
         //Return next question
-        if (nextNode != null && nextNode.getQuestion() != null) {
+        if (nextNode != null && nextNode.getQuestionDB() != null) {
             Log.d(TAG, String.format("findNext(%s)->%s",
                     optionDB == null ? "" : optionDB.getInternationalizedName(),
-                    nextNode.getQuestion().getCode() + ""));
+                    nextNode.getQuestionDB().getCode() + ""));
         }
         return nextNode;
     }
@@ -358,8 +358,8 @@ public class NavigationController {
         if (nextNode == null || getCurrentNode() == null) {
             return false;
         }
-        return nextNode.getQuestion().getId_question()
-                == this.getCurrentNode().getQuestion().getId_question();
+        return nextNode.getQuestionDB().getId_question()
+                == this.getCurrentNode().getQuestionDB().getId_question();
     }
 
     /**

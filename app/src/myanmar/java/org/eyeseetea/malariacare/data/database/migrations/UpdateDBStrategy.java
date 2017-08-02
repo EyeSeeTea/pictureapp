@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class UpdateDBStrategy {
     public static void updateOptions(Context context) throws IOException {
-        List<OptionDB> optionToDelete = Question.getOptions(
+        List<OptionDB> optionToDelete = QuestionDB.getOptions(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.residenceVillageUID));
         for (OptionDB option : optionToDelete) {
@@ -61,7 +61,7 @@ public class UpdateDBStrategy {
             option.setCode(orgUnit.getUid());
             option.setFactor((float) 0);
             option.setId_option((long) 0);
-            option.setAnswerDB(Question.getAnswer(
+            option.setAnswerDB(QuestionDB.getAnswer(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.residenceVillageUID)));
             option.save();

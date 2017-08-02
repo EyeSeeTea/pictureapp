@@ -35,7 +35,7 @@ import java.util.List;
 public class HeaderDB extends BaseModel {
 
     /**
-     * Required for creating the dynamic treatment question in SCMM
+     * Required for creating the dynamic treatment mQuestionDB in SCMM
      */
     public final static Long DYNAMIC_TREATMENT_HEADER_ID = 7l;
 
@@ -57,9 +57,9 @@ public class HeaderDB extends BaseModel {
     Tab tab;
 
     /**
-     * List of questions that belongs to this mHeaderDB
+     * List of mQuestionDBs that belongs to this mHeaderDB
      */
-    List<Question> questions;
+    List<QuestionDB> mQuestionDBs;
 
     public HeaderDB() {
     }
@@ -86,7 +86,7 @@ public class HeaderDB extends BaseModel {
      */
     public static void deleteHeaders(List<HeaderDB> headerDBs) {
         for (HeaderDB headerDB : headerDBs) {
-            Question.deleteQuestions(headerDB.getQuestions());
+            QuestionDB.deleteQuestions(headerDB.getQuestionDBs());
             headerDB.delete();
         }
     }
@@ -145,22 +145,22 @@ public class HeaderDB extends BaseModel {
         this.tab = null;
     }
 
-    public List<Question> getQuestions() {
-        if (this.questions == null){
-            this.questions = new Select().from(Question.class)
-                    .where(Question_Table.id_header_fk.eq(this.getId_header()))
-                    .orderBy(OrderBy.fromProperty(Question_Table.order_pos)).queryList();
+    public List<QuestionDB> getQuestionDBs() {
+        if (this.mQuestionDBs == null){
+            this.mQuestionDBs = new Select().from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_header_fk.eq(this.getId_header()))
+                    .orderBy(OrderBy.fromProperty(QuestionDB_Table.order_pos)).queryList();
         }
-        return questions;
+        return mQuestionDBs;
     }
 
     /**
-     * getNumber Of Question Parents HeaderDB
+     * getNumber Of QuestionDB Parents HeaderDB
      */
     public long getNumberOfQuestionParents() {
-        return SQLite.selectCountOf().from(Question.class)
-                .where(Question_Table.id_header_fk.eq(getId_header()))
-                .and(Question_Table.id_question_parent.isNull()).count();
+        return SQLite.selectCountOf().from(QuestionDB.class)
+                .where(QuestionDB_Table.id_header_fk.eq(getId_header()))
+                .and(QuestionDB_Table.id_question_parent.isNull()).count();
     }
 
     @Override

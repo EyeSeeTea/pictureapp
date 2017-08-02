@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
@@ -21,8 +21,8 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
         mContext = context;
     }
 
-    public void visit(EventExtended sdkEventExtended, Survey convertingSurvey) {
-        if (convertingSurvey.getProgram().getUid().equals(mContext.getString(
+    public void visit(EventExtended sdkEventExtended, SurveyDB convertingSurvey) {
+        if (convertingSurvey.getProgramDB().getUid().equals(mContext.getString(
                 R.string.stockProgramUID))) {
             convertingSurvey.setType(Constants.SURVEY_ISSUE);
         } else {

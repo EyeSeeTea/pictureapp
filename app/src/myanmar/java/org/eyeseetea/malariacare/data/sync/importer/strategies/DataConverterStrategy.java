@@ -5,8 +5,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -52,18 +52,18 @@ public class DataConverterStrategy implements IDataConverterStrategy {
     private void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
-        Question orgUnitQuestion = Question.findByUID(ORG_UNIT_QUESTION_UID);
+        QuestionDB orgUnitQuestionDB = QuestionDB.findByUID(ORG_UNIT_QUESTION_UID);
 
-        if (orgUnitQuestion == null) {
+        if (orgUnitQuestionDB == null) {
             throw new QuestionNotFoundException(
                     String.format("Question with uid %s not found", ORG_UNIT_QUESTION_UID));
         }
 
-        createDataValueExtended(event, orgUnitQuestion.getUid(), event.getOrganisationUnitId(),
+        createDataValueExtended(event, orgUnitQuestionDB.getUid(), event.getOrganisationUnitId(),
                 converter);
         DataValueExtended OrgUnitDataValue = new DataValueExtended();
         OrgUnitDataValue.setEvent(event.getEvent());
-        OrgUnitDataValue.setDataElement(orgUnitQuestion.getUid());
+        OrgUnitDataValue.setDataElement(orgUnitQuestionDB.getUid());
         OrgUnitDataValue.setValue(event.getOrganisationUnitId());
         OrgUnitDataValue.accept(converter);
 
@@ -71,28 +71,28 @@ public class DataConverterStrategy implements IDataConverterStrategy {
 
     private void convertNoDataElementMatchQuestions(ConvertFromSDKVisitor converter,
             EventExtended event) {
-        List<Question> questionsWithMatch = Question.getAllQuestionsWithMatch();
+        List<QuestionDB> questionsWithMatch = QuestionDB.getAllQuestionsWithMatch();
 
         List<DataValueExtended> dataValues = DataValueExtended.getExtendedList(
                 SdkQueries.getDataValues(event.getUid()));
 
-        for (Question question : questionsWithMatch) {
-            createValueForQuestion(question, event, dataValues, converter);
+        for (QuestionDB questionDB : questionsWithMatch) {
+            createValueForQuestion(questionDB, event, dataValues, converter);
         }
     }
 
-    private void createValueForQuestion(Question question, EventExtended event,
+    private void createValueForQuestion(QuestionDB questionDB, EventExtended event,
             List<DataValueExtended> dataValues, ConvertFromSDKVisitor converter) {
 
-        List<QuestionOption> matchedQuestionOptions = question.getQuestionOptionsOfTypeMatch();
+        List<QuestionOptionDB> matchedQuestionOptions = questionDB.getQuestionOptionsOfTypeMatch();
 
-        List<OptionDB> optionsWithoutMatch = question.getAnswerDB().getOptionDBs();
+        List<OptionDB> optionsWithoutMatch = questionDB.getAnswerDB().getOptionDBs();
 
         OptionDB selectedOption = null;
 
-        for (QuestionOption matchedQuestionOption : matchedQuestionOptions) {
-            Question matchedQuestion =
-                    matchedQuestionOption.getMatchDB().getQuestionRelation().getQuestion();
+        for (QuestionOptionDB matchedQuestionOption : matchedQuestionOptions) {
+            QuestionDB matchedQuestionDB =
+                    matchedQuestionOption.getMatchDB().getQuestionRelationDB().getQuestionDB();
 
             OptionDB matchedOption = matchedQuestionOption.getOptionDB();
 
@@ -101,13 +101,13 @@ public class DataConverterStrategy implements IDataConverterStrategy {
             }
 
             DataValueExtended valueFromServer = getValueFromServer(dataValues,
-                    matchedQuestion.getUid());
+                    matchedQuestionDB.getUid());
 
             if (valueFromServer != null) {
-                OptionDB trueHiddenOption = matchedQuestion.getAnswerDB().getOptionDBs().get(
+                OptionDB trueHiddenOption = matchedQuestionDB.getAnswerDB().getOptionDBs().get(
                         TRUE_POSITION);
 
-                OptionDB selectedHiddenOption = matchedQuestion.findOptionByValue(
+                OptionDB selectedHiddenOption = matchedQuestionDB.findOptionByValue(
                         valueFromServer.getValue());
 
                 if (selectedHiddenOption.getCode().equals(trueHiddenOption.getCode())) {
@@ -116,7 +116,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
                 }
             } else {
                 Log.e(this.getClass().getSimpleName(),
-                        "Value not create for question " + question.getUid());
+                        "Value not create for questionDB " + questionDB.getUid());
                 return;
             }
         }
@@ -128,10 +128,10 @@ public class DataConverterStrategy implements IDataConverterStrategy {
         }
 
         if (selectedOption != null) {
-            createDataValueExtended(event, question.getUid(), selectedOption.getCode(), converter);
+            createDataValueExtended(event, questionDB.getUid(), selectedOption.getCode(), converter);
         } else {
             Log.e(this.getClass().getSimpleName(),
-                    "Value not create for question " + question.getUid());
+                    "Value not create for questionDB " + questionDB.getUid());
         }
 
     }

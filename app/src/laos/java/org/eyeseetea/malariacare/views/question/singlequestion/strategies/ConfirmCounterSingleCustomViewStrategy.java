@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 import android.view.View;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ConfirmCounterCommonStrategy;
 
@@ -16,7 +16,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     }
 
     public void showConfirmCounter(final View view, final OptionDB selectedOption,
-            Question question, Question questionCounter) {
+            QuestionDB question, QuestionDB questionCounter) {
 
         ConfirmCounterCommonStrategy confirmCounterCommonStrategy =
                 new ConfirmCounterCommonStrategy(mDynamicTabAdapter);

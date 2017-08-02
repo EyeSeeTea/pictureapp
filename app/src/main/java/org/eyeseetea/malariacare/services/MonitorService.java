@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.TimePeriodCalculator;
@@ -83,7 +83,7 @@ public class MonitorService extends IntentService {
         Log.i(TAG, "Preparing monitor data...");
 
         //Take last 6 months sent surveys in order to create monitor stats on top of them.
-        List<Survey> sentSurveysForMonitor = Survey.findSentSurveysAfterDate(
+        List<SurveyDB> sentSurveysForMonitor = SurveyDB.findSentSurveysAfterDate(
                 TimePeriodCalculator.getInstance().getMinDateForMonitor());
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",

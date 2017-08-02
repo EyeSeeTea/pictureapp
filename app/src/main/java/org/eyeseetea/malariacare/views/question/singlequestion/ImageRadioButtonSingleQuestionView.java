@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView implements
         IQuestionView, ImageRadioButtonOption.OnCheckedChangeListener {
-    Question mQuestion;
+    QuestionDB mQuestionDB;
 
     LinearLayout answersContainer;
     private boolean optionSetBySavedValue = false;
@@ -67,9 +67,8 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         }
     }
 
-    @Override
-    public void setQuestion(Question question) {
-        this.mQuestion = question;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
     }
 
     @Override
@@ -97,7 +96,7 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         imageRadioButtonOption.setText(optionDB.getInternationalizedName());
         putImageInImageRadioButton(optionDB.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
-        imageRadioButtonOption.setOption(optionDB, mQuestion);
+        imageRadioButtonOption.setOption(optionDB, mQuestionDB);
         imageRadioButtonOption.setEnabled(super.isEnabled());
         return imageRadioButtonOption;
     }

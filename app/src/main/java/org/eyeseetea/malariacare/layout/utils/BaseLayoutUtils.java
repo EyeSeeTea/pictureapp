@@ -46,7 +46,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.ImageNotShowException;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -85,10 +85,10 @@ public abstract class BaseLayoutUtils {
     public static int getNumberOfQuestionParentsHeader(HeaderDB headerDB) {
         int result = 0;
 
-        List<Question> list = headerDB.getQuestions();
+        List<QuestionDB> list = headerDB.getQuestionDBs();
 
-        for (Question question : list) {
-            if (question.hasChildren()) {
+        for (QuestionDB questionDB : list) {
+            if (questionDB.hasChildren()) {
                 result = result + 1;
             }
         }

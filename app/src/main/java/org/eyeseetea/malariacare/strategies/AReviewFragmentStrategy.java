@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
+import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 
 import android.widget.TableRow;
 
@@ -14,7 +14,7 @@ public abstract class AReviewFragmentStrategy {
     public abstract TableRow createViewRow(TableRow rowView, Value value);
 
     public static boolean shouldShowReviewScreen() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
+        return getMalariaSurveyDB().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
     public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(

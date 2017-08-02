@@ -79,7 +79,7 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
  *//*
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return ProgramDB.getFirstProgram() != null;
     }
 
 

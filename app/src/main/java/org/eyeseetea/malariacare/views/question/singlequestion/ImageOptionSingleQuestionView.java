@@ -8,7 +8,7 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.option.ImageOptionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -21,7 +21,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
         IQuestionView, ImageOptionView.OnOptionSelectedListener {
 
     TableLayout mImageOptionsContainer;
-    Question mQuestion;
+    QuestionDB mQuestionDB;
 
     List<ImageOptionView> mImageOptionViews = new ArrayList<>();
     private int mColumnsCount = 1;
@@ -60,9 +60,8 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
         mColumnsCount = columnsCount;
     }
 
-    @Override
-    public void setQuestion(Question question) {
-        mQuestion = question;
+    public void setQuestionDB(QuestionDB questionDB) {
+        mQuestionDB = questionDB;
     }
 
     @Override
@@ -103,7 +102,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     @NonNull
     private ImageOptionView createOptionView(OptionDB optionDB) {
         ImageOptionView imageOptionView = new ImageOptionView(getContext());
-        imageOptionView.setOption(optionDB, mQuestion);
+        imageOptionView.setOption(optionDB, mQuestionDB);
         imageOptionView.setOnOptionSelectedListener(this);
         imageOptionView.setEnabled(isEnabled());
 

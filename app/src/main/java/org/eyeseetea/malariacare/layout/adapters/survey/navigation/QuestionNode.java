@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.ReminderStatusChecker;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.StatusChecker;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
@@ -22,19 +22,19 @@ public class QuestionNode {
      */
     QuestionNode parentNode;
     /**
-     * Question here
+     * QuestionDB here
      */
-    private Question question;
+    private QuestionDB mQuestionDB;
     /**
      * Where to go given an option (children questions)
      */
     private Map<Long, QuestionNode> navigation;
     /**
-     * Question counters associated to each option of the question
+     * QuestionDB counters associated to each option of the mQuestionDB
      */
     private Map<Long, QuestionCounter> counters;
     /**
-     * List of warning that can be triggered once this question is answer
+     * List of warning that can be triggered once this mQuestionDB is answer
      */
     private List<QuestionNode> warnings;
     /**
@@ -42,33 +42,33 @@ public class QuestionNode {
      */
     private StatusChecker statusChecker;
     /**
-     * Next question (sibling)
+     * Next mQuestionDB (sibling)
      */
     private QuestionNode sibling;
 
     /**
-     * Previous question (sibling). Required to rewind to warnings
+     * Previous mQuestionDB (sibling). Required to rewind to warnings
      */
     private QuestionNode previousSibling;
 
-    public QuestionNode(Question question) {
-        this.question = question;
+    public QuestionNode(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
         this.navigation = new HashMap<>();
         this.counters = new HashMap<>();
         this.statusChecker = buildStatusChecker();
         this.warnings = new ArrayList<>();
     }
 
-    public Question getQuestion() {
-        return this.question;
+    public QuestionDB getQuestionDB() {
+        return this.mQuestionDB;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
     }
 
     /**
-     * From this question given the optionDB you will move to
+     * From this mQuestionDB given the optionDB you will move to
      */
     public void addNavigation(OptionDB optionDB, QuestionNode nextNode) {
         //something wrong -> nothing to add
@@ -85,14 +85,14 @@ public class QuestionNode {
     /**
      * The given optionDB triggers a counter to save the number of times its been answered
      */
-    public void addCounter(OptionDB optionDB, Question question) {
+    public void addCounter(OptionDB optionDB, QuestionDB questionDB) {
         //something wrong -> nothing to add
-        if (optionDB == null || question == null) {
+        if (optionDB == null || questionDB == null) {
             return;
         }
 
         //Build a counter
-        QuestionCounter questionCounter = new QuestionCounter(question);
+        QuestionCounter questionCounter = new QuestionCounter(questionDB);
 
         //Add counter to optionDB
         this.counters.put(optionDB.getId_option(), questionCounter);
@@ -105,7 +105,7 @@ public class QuestionNode {
      */
     public void addWarning(QuestionNode warningNode) {
         //Only nodes with type warning allows here
-        if (warningNode == null || warningNode.getQuestion().getOutput() != Constants.WARNING) {
+        if (warningNode == null || warningNode.getQuestionDB().getOutput() != Constants.WARNING) {
             return;
         }
 
@@ -132,14 +132,14 @@ public class QuestionNode {
     }
 
     /**
-     * gets the next sibling (same parent question)
+     * gets the next sibling (same parent mQuestionDB)
      */
     public QuestionNode getSibling() {
         return this.sibling;
     }
 
     /**
-     * Sets the next sibling (same parent question)
+     * Sets the next sibling (same parent mQuestionDB)
      */
     public void setSibling(QuestionNode sibling) {
         this.sibling = sibling;
@@ -188,7 +188,7 @@ public class QuestionNode {
 
 
     /**
-     * Returns next question given an optionDB
+     * Returns next mQuestionDB given an optionDB
      */
     public QuestionNode next(OptionDB optionDB) {
         //Find next (optionDB, sibling, parent)
@@ -245,18 +245,18 @@ public class QuestionNode {
     }
 
     /**
-     * Builds a statusChecker according to the type of question
+     * Builds a statusChecker according to the type of mQuestionDB
      */
     private StatusChecker buildStatusChecker() {
-        if (this.question == null) {
+        if (this.mQuestionDB == null) {
             return null;
         }
 
-        switch (this.getQuestion().getOutput()) {
+        switch (this.getQuestionDB().getOutput()) {
             case Constants.WARNING:
-                return new WarningStatusChecker(this.question);
+                return new WarningStatusChecker(this.mQuestionDB);
             case Constants.REMINDER:
-                return new ReminderStatusChecker(this.question);
+                return new ReminderStatusChecker(this.mQuestionDB);
             default:
                 return new StatusChecker();
         }
@@ -274,7 +274,7 @@ public class QuestionNode {
     }
 
     /**
-     * Returns next question no matter what (moves to sibling)
+     * Returns next mQuestionDB no matter what (moves to sibling)
      */
     private QuestionNode nextBySibling() {
         //NO sibling ->nowhere to go
@@ -285,7 +285,7 @@ public class QuestionNode {
     }
 
     /**
-     * Updates the question counter for the given optionDB
+     * Updates the mQuestionDB counter for the given optionDB
      *
      * @return true when a counter has been incremented
      */

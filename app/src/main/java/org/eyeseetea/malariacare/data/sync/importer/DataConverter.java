@@ -7,8 +7,8 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -44,11 +44,11 @@ public class DataConverter {
                 continue;
             }
 
-            List<Program> programs = Program.getAllPrograms();
+            List<ProgramDB> programDBs = ProgramDB.getAllPrograms();
 
-            for (Program program : programs) {
+            for (ProgramDB programDB : programDBs) {
                 List<EventExtended> events = EventExtended.getExtendedList(
-                        SdkQueries.getEvents(orgUnitDB.getUid(), program.getUid()));
+                        SdkQueries.getEvents(orgUnitDB.getUid(), programDB.getUid()));
 
                 callback.onStep(BUILDING_SURVEYS);
 
@@ -83,9 +83,9 @@ public class DataConverter {
     private static void saveConvertedSurveys(final IPullController.Callback callback,
             final ConvertFromSDKVisitor converter) {
 
-        List<Survey> surveys = converter.getSurveys();
+        List<SurveyDB> surveyDBs = converter.getSurveyDBs();
 
-        Survey.saveAll(surveys, new IDataSourceCallback<Void>() {
+        SurveyDB.saveAll(surveyDBs, new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 saveConvertedValues(callback, converter);

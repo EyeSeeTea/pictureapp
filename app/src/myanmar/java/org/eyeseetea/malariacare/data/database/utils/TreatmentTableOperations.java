@@ -8,10 +8,10 @@ import com.opencsv.CSVReader;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
@@ -101,9 +101,9 @@ public class TreatmentTableOperations {
         for (DrugCombinationDB drugCombinationDB : drugCombinationDBs) {
             drugCombinationDB.delete();
         }
-        List<StringKey> stringKeys = StringKey.getAllStringKeys();
-        for (StringKey stringKey : stringKeys) {
-            stringKey.delete();
+        List<StringKeyDB> stringKeyDBs = StringKeyDB.getAllStringKeys();
+        for (StringKeyDB stringKeyDB : stringKeyDBs) {
+            stringKeyDB.delete();
         }
         List<Translation> translations = Translation.getAllTranslations();
         for (Translation translation : translations) {
@@ -117,15 +117,15 @@ public class TreatmentTableOperations {
      */
     private void deleteRelatedTablesLines(TreatmentMatch treatmentMatch) throws IOException {
         MatchDB matchDB = treatmentMatch.getMatchDB();
-        List<QuestionOption> questionOptions = QuestionOption.getQuestionOptionsWithMatchId(
+        List<QuestionOptionDB> questionOptions = QuestionOptionDB.getQuestionOptionsWithMatchId(
                 matchDB.getId_match());
 
-        for (QuestionOption questionOption : questionOptions) {
+        for (QuestionOptionDB questionOption : questionOptions) {
             questionOption.delete();
         }
-        List<QuestionThreshold> questionThresholds =
-                QuestionThreshold.getQuestionThresholdsWithMatch(matchDB.getId_match());
-        for (QuestionThreshold questionThreshold : questionThresholds) {
+        List<QuestionThresholdDB> questionThresholds =
+                QuestionThresholdDB.getQuestionThresholdsWithMatch(matchDB.getId_match());
+        for (QuestionThresholdDB questionThreshold : questionThresholds) {
             questionThreshold.delete();
         }
         matchDB.delete();
@@ -190,7 +190,7 @@ public class TreatmentTableOperations {
                 mContext.getResources().getString(R.string.dynamicTreatmentHideQuestionUID), 5,
                 PopulateDB.QUESTIONS_CSV);
         treatmentQuestionRelationId = getCsvId(treatmentQuestionId, 2,
-                QuestionRelation.TREATMENT_MATCH + "", 1, PopulateDB.QUESTION_RELATIONS_CSV);
+                QuestionRelationDB.TREATMENT_MATCH + "", 1, PopulateDB.QUESTION_RELATIONS_CSV);
         ageQuestionId = getCsvId(mContext.getResources().getString(R.string.ageQuestionUID),
                 5, PopulateDB.QUESTIONS_CSV);
         pregnantQuestionId = getCsvId(

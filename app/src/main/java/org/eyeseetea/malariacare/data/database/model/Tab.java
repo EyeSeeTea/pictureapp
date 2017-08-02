@@ -50,9 +50,9 @@ public class Tab extends BaseModel {
     Long id_program_fk;
 
     /**
-     * Reference to parent program (loaded lazily)
+     * Reference to parent mProgramDB (loaded lazily)
      */
-    Program program;
+    ProgramDB mProgramDB;
 
     /**
      * List of mHeaderDBs that belongs to this tab
@@ -62,11 +62,11 @@ public class Tab extends BaseModel {
     public Tab() {
     }
 
-    public Tab(String name, Integer order_pos, Integer type, Program program) {
+    public Tab(String name, Integer order_pos, Integer type, ProgramDB programDB) {
         this.name = name;
         this.order_pos = order_pos;
         this.type = type;
-        setProgram(program);
+        setProgram(programDB);
     }
 
     public Long getId_tab() {
@@ -105,26 +105,26 @@ public class Tab extends BaseModel {
         this.type = type;
     }
 
-    public Program getProgram() {
-        if (program == null) {
+    public ProgramDB getProgramDB() {
+        if (mProgramDB == null) {
             if (id_program_fk == null) return null;
 
-            program = new Select()
-                    .from(Program.class)
-                    .where((Program_Table.id_program)
+            mProgramDB = new Select()
+                    .from(ProgramDB.class)
+                    .where((ProgramDB_Table.id_program)
                             .is(id_program_fk)).querySingle();
         }
-        return program;
+        return mProgramDB;
     }
 
-    public void setProgram(Long id_program) {
+    public void setProgramDB(Long id_program) {
         this.id_program_fk = id_program;
-        this.program = null;
+        this.mProgramDB = null;
     }
 
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program_fk = (program != null) ? program.getId_program() : null;
+    public void setProgram(ProgramDB programDB) {
+        this.mProgramDB = programDB;
+        this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
     public static List<Tab> getAllTabs() {
@@ -132,12 +132,12 @@ public class Tab extends BaseModel {
     }
 
     /*
-     * Return tabs filter by program and order by orderpos field
+     * Return tabs filter by mProgramDB and order by orderpos field
      */
     public static List<Tab> getTabsBySession() {
         return new Select().from(Tab.class)
                 .where(Tab_Table.id_program_fk.eq(
-                        Session.getMalariaSurvey().getProgram().getId_program()))
+                        Session.getMalariaSurveyDB().getProgramDB().getId_program()))
                 .orderBy(OrderBy.fromProperty(Tab_Table.order_pos))
                 .queryList();
     }

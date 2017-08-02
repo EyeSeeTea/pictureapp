@@ -33,7 +33,7 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -85,7 +85,7 @@ public class PushClient {
      * Current server url
      */
     private static String DHIS_SERVER = "https://www.psi-mis.org";
-    Survey survey;
+    SurveyDB mSurveyDB;
     Activity activity;
     Context applicationContext;
 
@@ -100,13 +100,13 @@ public class PushClient {
         this.activity = activity;
     }
 
-    public PushClient(Survey survey, Activity activity) {
+    public PushClient(SurveyDB surveyDB, Activity activity) {
         this((Activity) activity);
-        this.survey = survey;
+        this.mSurveyDB = surveyDB;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
+    public void setSurveyDB(SurveyDB surveyDB) {
+        this.mSurveyDB = surveyDB;
     }
 
     /**
@@ -147,8 +147,8 @@ public class PushClient {
             PushResult result = new PushResult(pushData(data));
             if (result.isSuccessful()) {
                 //Survey -> Sent
-                this.survey.setStatus(Constants.SURVEY_SENT);
-                this.survey.save();
+                this.mSurveyDB.setStatus(Constants.SURVEY_SENT);
+                this.mSurveyDB.save();
 
                 //check if the user was sent more than the limit
                 //ServerAPIController.banOrgUnitIfRequired();
@@ -207,19 +207,19 @@ public class PushClient {
      * @return JSONObject with progra, orgunit, eventdate and so on...
      */
     private JSONObject prepareMetadata() throws EmptyLocationException, JSONException, ApiCallException {
-        Log.d(TAG, "prepareMetadata for survey: " + survey.getId_survey());
+        Log.d(TAG, "prepareMetadata for survey: " + mSurveyDB.getId_survey());
 
         JSONObject object = new JSONObject();
-        object.put(TAG_PROGRAM, survey.getProgram().getUid());
+        object.put(TAG_PROGRAM, mSurveyDB.getProgramDB().getUid());
         object.put(TAG_ORG_UNIT, ServerAPIController.getOrgUnitUID());
         object.put(TAG_EVENTDATE,
                 android.text.format.DateFormat.format("yyyy-MM-dd",
-                        survey.getCompletionDate()));
+                        mSurveyDB.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
-        object.put(TAG_STOREDBY, survey.getUser().getName());
+        object.put(TAG_STOREDBY, mSurveyDB.getUser().getName());
         //TODO: put it in the object.
 
-        Location lastLocation = LocationMemory.get(survey.getId_survey());
+        Location lastLocation = LocationMemory.get(mSurveyDB.getId_survey());
         //If there is no location (location is required) -> exception
         if (lastLocation == null) {
             throw new EmptyLocationException(activity.getString(R.string.dialog_error_push_no_location));
@@ -250,7 +250,7 @@ public class PushClient {
      * @param data JSON object to update
      */
     private JSONObject prepareDataElements(JSONObject data) throws JSONException {
-        Log.d(TAG, "prepareDataElements for survey: " + survey.getId_survey());
+        Log.d(TAG, "prepareDataElements for survey: " + mSurveyDB.getId_survey());
 
         //Add dataElement per values
         JSONArray values = prepareValues(new JSONArray());
@@ -267,7 +267,7 @@ public class PushClient {
      * Add a dataElement per value (answer)
      */
     private JSONArray prepareValues(JSONArray values) throws JSONException {
-        for (Value value : survey.getValuesFromDB()) {
+        for (Value value : mSurveyDB.getValuesFromDB()) {
             values.put(prepareValue(value));
         }
         return values;
@@ -279,7 +279,7 @@ public class PushClient {
         ScoreRegister.clear();
 
         //Prepare scores info
-        List<CompositeScoreDB> compositeScoreDBList = ScoreRegister.loadCompositeScores(survey);
+        List<CompositeScoreDB> compositeScoreDBList = ScoreRegister.loadCompositeScores(mSurveyDB);
 
         //1 CompositeScoreDB -> 1 dataValue
         for (CompositeScoreDB compositeScoreDB : compositeScoreDBList) {
@@ -290,7 +290,7 @@ public class PushClient {
         values.put(prepareDataElementValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData()));
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals("")) {
             values.put(prepareDataElementValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
-                    EventExtended.format(survey.getCompletionDate(),
+                    EventExtended.format(mSurveyDB.getCompletionDate(),
                             EventExtended.AMERICAN_DATE_FORMAT)));
         }
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent).equals("")) {
@@ -306,7 +306,7 @@ public class PushClient {
      */
     private JSONObject prepareValue(Value value) throws JSONException {
         JSONObject elementObject = new JSONObject();
-        elementObject.put(TAG_DATAELEMENT, value.getQuestion().getUid());
+        elementObject.put(TAG_DATAELEMENT, value.getQuestionDB().getUid());
         elementObject.put(TAG_VALUE, value.getValue());
         return elementObject;
     }

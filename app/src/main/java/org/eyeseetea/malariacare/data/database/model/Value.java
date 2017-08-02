@@ -54,16 +54,16 @@ public class Value extends BaseModel {
     @Column
     Long id_question_fk;
     /**
-     * Reference to the question for this value (loaded lazily)
+     * Reference to the mQuestionDB for this value (loaded lazily)
      */
-    Question question;
+    QuestionDB mQuestionDB;
 
     @Column
     Long id_survey_fk;
     /**
      * Reference to the survey of this value (loaded lazily)
      */
-    Survey survey;
+    SurveyDB mSurveyDB;
 
     @Column
     Long id_option_fk;
@@ -75,44 +75,44 @@ public class Value extends BaseModel {
     public Value() {
     }
 
-    public Value(String value, Question question, Survey survey) {
+    public Value(String value, QuestionDB questionDB, SurveyDB surveyDB) {
         this.mOptionDB = null;
         this.value = value;
-        this.setQuestion(question);
-        this.setSurvey(survey);
+        this.setQuestionDB(questionDB);
+        this.setSurveyDB(surveyDB);
     }
 
-    public Value(OptionDB optionDB, Question question, Survey survey) {
+    public Value(OptionDB optionDB, QuestionDB questionDB, SurveyDB surveyDB) {
         this.value = (optionDB != null) ? optionDB.getCode() : null;
         this.setOptionDB(optionDB);
-        this.setQuestion(question);
-        this.setSurvey(survey);
+        this.setQuestionDB(questionDB);
+        this.setSurveyDB(surveyDB);
     }
 
-    public static int countBySurvey(Survey survey) {
-        if (survey == null || survey.getId_survey() == null) {
+    public static int countBySurvey(SurveyDB surveyDB) {
+        if (surveyDB == null || surveyDB.getId_survey() == null) {
             return 0;
         }
         return (int) SQLite.selectCountOf()
                 .from(Value.class)
-                .where(Value_Table.id_survey_fk.eq(survey.getId_survey())).count();
+                .where(Value_Table.id_survey_fk.eq(surveyDB.getId_survey())).count();
     }
 
     /**
      * List ordered values of the survey
      */
-    public static List<Value> listAllBySurvey(Survey survey) {
-        if (survey == null || survey.getId_survey() == null) {
+    public static List<Value> listAllBySurvey(SurveyDB surveyDB) {
+        if (surveyDB == null || surveyDB.getId_survey() == null) {
             return new ArrayList<>();
         }
 
         return new Select().from(Value.class).as(valueName)
-                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .join(QuestionDB.class, Join.JoinType.LEFT_OUTER).as(questionName)
                 .on(Value_Table.id_question_fk.withTable(valueAlias)
-                        .eq(Question_Table.id_question.withTable(questionAlias)))
+                        .eq(QuestionDB_Table.id_question.withTable(questionAlias)))
                 .where(Value_Table.id_survey_fk.withTable(valueAlias)
-                        .eq(survey.getId_survey()))
-                .orderBy(OrderBy.fromProperty(Question_Table.order_pos).ascending()).queryList();
+                        .eq(surveyDB.getId_survey()))
+                .orderBy(OrderBy.fromProperty(QuestionDB_Table.order_pos).ascending()).queryList();
     }
 
     public Long getId_value() {
@@ -148,26 +148,26 @@ public class Value extends BaseModel {
         this.mOptionDB = null;
     }
 
-    public Question getQuestion() {
-        if (question == null) {
+    public QuestionDB getQuestionDB() {
+        if (mQuestionDB == null) {
             if (id_question_fk == null) return null;
-            question = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_question
+            mQuestionDB = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_question
                             .is(id_question_fk)).querySingle();
         }
 
-        return question;
+        return mQuestionDB;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question_fk = (question != null) ? question.getId_question() : null;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
+        this.id_question_fk = (questionDB != null) ? questionDB.getId_question() : null;
     }
 
     public void setQuestion(Long id_question) {
         this.id_question_fk = id_question;
-        this.question = null;
+        this.mQuestionDB = null;
     }
 
     public String getValue() {
@@ -178,31 +178,31 @@ public class Value extends BaseModel {
         this.value = value;
     }
 
-    public Survey getSurvey() {
-        if (survey == null) {
+    public SurveyDB getSurveyDB() {
+        if (mSurveyDB == null) {
             if (id_survey_fk == null) return null;
-            survey = new Select()
-                    .from(Survey.class)
-                    .where(Survey_Table.id_survey
+            mSurveyDB = new Select()
+                    .from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_survey
                             .is(id_survey_fk)).querySingle();
         }
-        return survey;
+        return mSurveyDB;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey_fk = (survey != null) ? survey.getId_survey() : null;
+    public void setSurveyDB(SurveyDB surveyDB) {
+        this.mSurveyDB = surveyDB;
+        this.id_survey_fk = (surveyDB != null) ? surveyDB.getId_survey() : null;
     }
 
     public void setSurvey(Long id_survey) {
         this.id_survey_fk = id_survey;
-        this.survey = null;
+        this.mSurveyDB = null;
     }
     /**
-     * Looks for the value with the given question
+     * Looks for the value with the given mQuestionDB
      */
-    public static Value findValueFromDatabase(Long idQuestion, Survey survey) {
-        for (Value value : survey.getValuesFromDBWithoutSave()) {
+    public static Value findValueFromDatabase(Long idQuestion, SurveyDB surveyDB) {
+        for (Value value : surveyDB.getValuesFromDBWithoutSave()) {
             if (value.matchesQuestion(idQuestion)) {
                 return value;
             }
@@ -212,10 +212,10 @@ public class Value extends BaseModel {
     }
 
     /**
-     * Looks for the value with the given question
+     * Looks for the value with the given mQuestionDB
      */
-    public static Value findValue(Long idQuestion, Survey survey) {
-        for (Value value : survey.getValues()) {
+    public static Value findValue(Long idQuestion, SurveyDB surveyDB) {
+        for (Value value : surveyDB.getValues()) {
             if (value.matchesQuestion(idQuestion)) {
                 return value;
             }
@@ -225,10 +225,10 @@ public class Value extends BaseModel {
     }
 
     /**
-     * Looks for the value with the given question + mOptionDB
+     * Looks for the value with the given mQuestionDB + mOptionDB
      */
-    public static Value findValue(Long idQuestion, Long idOption, Survey survey) {
-        for (Value value : survey.getValues()) {
+    public static Value findValue(Long idQuestion, Long idOption, SurveyDB surveyDB) {
+        for (Value value : surveyDB.getValues()) {
             if (value.matchesQuestionOption(idQuestion, idOption)) {
                 return value;
             }
@@ -256,10 +256,10 @@ public class Value extends BaseModel {
     }
 
     /**
-     * Checks if the current value belongs to a 'required' question
+     * Checks if the current value belongs to a 'required' mQuestionDB
      */
     public boolean belongsToAParentQuestion() {
-        return !getQuestion().hasParent();
+        return !getQuestionDB().hasParent();
     }
 
     /**
@@ -272,11 +272,11 @@ public class Value extends BaseModel {
     }
 
     /**
-     * Checks if this value mMatchDBs the given question and mOptionDB
+     * Checks if this value mMatchDBs the given mQuestionDB and mOptionDB
      */
     public boolean matchesQuestionOption(Long idQuestion, Long idOption) {
 
-        //No question or mOptionDB -> no mMatchDB
+        //No mQuestionDB or mOptionDB -> no mMatchDB
         if (idQuestion == null || idOption == null) {
             return false;
         }
@@ -286,11 +286,11 @@ public class Value extends BaseModel {
     }
 
     /**
-     * Checks if this value mMatchDBs the given question
+     * Checks if this value mMatchDBs the given mQuestionDB
      */
     public boolean matchesQuestion(Long idQuestion) {
 
-        //No question or mOptionDB -> no mMatchDB
+        //No mQuestionDB or mOptionDB -> no mMatchDB
         if (idQuestion == null) {
             return false;
         }
@@ -303,7 +303,7 @@ public class Value extends BaseModel {
 
         //Refresh survey for assign SurveyId
         for (Value value : values) {
-            value.setSurvey(value.getSurvey());
+            value.setSurveyDB(value.getSurveyDB());
         }
 
         FlowManager.getDatabase(AppDatabase.class)

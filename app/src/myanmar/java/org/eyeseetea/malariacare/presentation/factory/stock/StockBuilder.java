@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.WebView;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.stock.tables.StockTableBuilder;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
@@ -38,8 +38,8 @@ public class StockBuilder implements IWebViewBuilder {
      * Adds surveys info into its tables
      */
     @Override
-    public void addSurveys(List<Survey> surveys) {
-        for (Survey survey : surveys) {
+    public void addSurveys(List<SurveyDB> surveys) {
+        for (SurveyDB survey : surveys) {
             mStockTableBuilder.addSurvey(survey);
         }
 

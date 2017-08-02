@@ -32,10 +32,9 @@ import android.widget.RelativeLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.LoadingSurveyException;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -110,11 +109,11 @@ public class SurveyFragment extends Fragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-        if (Session.getMalariaSurvey() != null) {
-            Session.getMalariaSurvey().getValuesFromDB();
+        if (Session.getMalariaSurveyDB() != null) {
+            Session.getMalariaSurveyDB().getValuesFromDB();
         }
-        if (Session.getStockSurvey() != null) {
-            Session.getStockSurvey().getValuesFromDB();
+        if (Session.getStockSurveyDB() != null) {
+            Session.getStockSurveyDB().getValuesFromDB();
         }
     }
 
@@ -129,12 +128,12 @@ public class SurveyFragment extends Fragment {
     }
 
     private boolean areActiveSurveysInQuarantine() {
-        Survey survey = Session.getMalariaSurvey();
-        if (survey != null && survey.isQuarantine()) {
+        SurveyDB surveyDB = Session.getMalariaSurveyDB();
+        if (surveyDB != null && surveyDB.isQuarantine()) {
             return true;
         }
-        survey = Session.getStockSurvey();
-        if (survey != null && survey.isQuarantine()) {
+        surveyDB = Session.getStockSurveyDB();
+        if (surveyDB != null && surveyDB.isQuarantine()) {
             return true;
         }
 

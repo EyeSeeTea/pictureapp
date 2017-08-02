@@ -8,8 +8,8 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.strategies
         .AuthenticationLocalDataSourceStrategy;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -75,13 +75,13 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
 
     public void deleteOrgUnitQuestionOptions() {
-        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
-        for (Question question : questions) {
-            if (question.getAnswerDB() != null) {
-                List<OptionDB> optionDBs = question.getAnswerDB().getOptionDBs();
+        for (QuestionDB questionDB : questionDBs) {
+            if (questionDB.getAnswerDB() != null) {
+                List<OptionDB> optionDBs = questionDB.getAnswerDB().getOptionDBs();
                 for (OptionDB optionDB : optionDBs) {
-                    if (QuestionOption.findByQuestionAndOption(question, optionDB).size() == 0) {
+                    if (QuestionOptionDB.findByQuestionAndOption(questionDB, optionDB).size() == 0) {
                         optionDB.delete();
                     }
                 }

@@ -21,7 +21,7 @@ package org.eyeseetea.malariacare.data.sync.importer.models;
 
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.VisitableFromSDK;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
@@ -57,12 +57,12 @@ public class DataValueExtended implements VisitableFromSDK {
         return dataValue;
     }
 
-    public OptionDB findOptionByQuestion(Question question) {
-        if (question == null) {
+    public OptionDB findOptionByQuestion(QuestionDB questionDB) {
+        if (questionDB == null) {
             return null;
         }
 
-        AnswerDB answerDB = question.getAnswerDB();
+        AnswerDB answerDB = questionDB.getAnswerDB();
         if (answerDB == null) {
             return null;
         }

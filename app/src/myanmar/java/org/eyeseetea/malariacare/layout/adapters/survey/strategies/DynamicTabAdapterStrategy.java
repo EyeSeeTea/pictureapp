@@ -1,14 +1,14 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
+import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -47,93 +47,93 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     @Override
     public void initSurveys(boolean readOnly) {
         if (readOnly) {
-            Survey malariaSurvey = Session.getMalariaSurvey();
-            Session.setStockSurvey(
+            SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+            Session.setStockSurveyDB(
                     TreatmentQueries.getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
         }
     }
 
-    public List<Question> addAdditionalQuestions(int tabType, List<Question> screenQuestions) {
+    public List<QuestionDB> addAdditionalQuestions(int tabType, List<QuestionDB> screenQuestionDBs) {
         if (tabType == Constants.TAB_DYNAMIC_TREATMENT) {
-            Treatment treatment = new Treatment(Session.getMalariaSurvey(),
-                    Session.getStockSurvey());
+            Treatment treatment = new Treatment(Session.getMalariaSurveyDB(),
+                    Session.getStockSurveyDB());
             if (treatment.hasTreatment()) {
-                screenQuestions = treatment.getQuestions();
+                screenQuestionDBs = treatment.getQuestionDBs();
                 doseByQuestion = treatment.getDoseByQuestion();
             } else {
-                screenQuestions = treatment.getNoTreatmentQuestions();
+                screenQuestionDBs = treatment.getNoTreatmentQuestions();
             }
 
         }
-        return screenQuestions;
+        return screenQuestionDBs;
     }
 
     @Override
-    public void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion) {
+    public void instanceOfSingleQuestion(IQuestionView questionView, QuestionDB screenQuestionDB) {
 
         if (questionView instanceof NumberRadioButtonMultiquestionView) {
             if (doseByQuestion != null) {
                 ((NumberRadioButtonMultiquestionView) questionView).setDose(
-                        doseByQuestion.get(screenQuestion.getId_question()));
+                        doseByQuestion.get(screenQuestionDB.getId_question()));
             }
-            ((NumberRadioButtonMultiquestionView) questionView).setQuestion(screenQuestion);
+            ((NumberRadioButtonMultiquestionView) questionView).setQuestionDB(screenQuestionDB);
             ((NumberRadioButtonMultiquestionView) questionView).setOptions(
-                    screenQuestion.getAnswerDB().getOptionDBs());
+                    screenQuestionDB.getAnswerDB().getOptionDBs());
         }
     }
 
     @Override
-    public void instanceOfMultiQuestion(IQuestionView questionView, Question screenQuestion) {
+    public void instanceOfMultiQuestion(IQuestionView questionView, QuestionDB screenQuestionDB) {
 
         if (questionView instanceof NumberRadioButtonMultiquestionView) {
             if (doseByQuestion != null) {
                 ((NumberRadioButtonMultiquestionView) questionView).setDose(
-                        doseByQuestion.get(screenQuestion.getId_question()));
+                        doseByQuestion.get(screenQuestionDB.getId_question()));
             }
-            ((NumberRadioButtonMultiquestionView) questionView).setQuestion(screenQuestion);
+            ((NumberRadioButtonMultiquestionView) questionView).setQuestionDB(screenQuestionDB);
             ((NumberRadioButtonMultiquestionView) questionView).setOptions(
-                    screenQuestion.getAnswerDB().getOptionDBs());
+                    screenQuestionDB.getAnswerDB().getOptionDBs());
         }
     }
 
     @Override
-    public void renderParticularSurvey(Question screenQuestion, Survey survey,
+    public void renderParticularSurvey(QuestionDB screenQuestionDB, SurveyDB survey,
             IQuestionView questionView) {
 
-        if (isDynamicStockQuestion(screenQuestion)) {
-            Treatment treatment = new Treatment(getMalariaSurvey(),
-                    Session.getStockSurvey());
+        if (isDynamicStockQuestion(screenQuestionDB)) {
+            Treatment treatment = new Treatment(getMalariaSurveyDB(),
+                    Session.getStockSurveyDB());
             if (treatment.hasTreatment()) {
                 org.eyeseetea.malariacare.data.database.model.Treatment dbTreatment =
                         treatment.getTreatment();
-                Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
-                screenQuestion.setAnswer(treatment.getACTOptions(dbTreatment));
+                QuestionDB actAnsweredNo = treatment.getACTQuestionAnsweredNo();
+                screenQuestionDB.setAnswer(treatment.getACTOptions(dbTreatment));
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
                         treatment.getOptionDose(dbTreatment));
             }
-            ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestion(
-                    screenQuestion);
+            ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestionDB(
+                    screenQuestionDB);
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(
-                    screenQuestion.getAnswerDB().getOptionDBs());
+                    screenQuestionDB.getAnswerDB().getOptionDBs());
             //Getting the question to put the correct values on it
-            ArrayList<Question> questions = new ArrayList<>();
-            for (OptionDB option : screenQuestion.getAnswerDB().getOptionDBs()) {
-                Question question = Question.findByID(option.getId_option());
-                if (question != null) {
-                    questions.add(question);
+            ArrayList<QuestionDB> questionDBs = new ArrayList<>();
+            for (OptionDB option : screenQuestionDB.getAnswerDB().getOptionDBs()) {
+                QuestionDB questionDB = QuestionDB.findByID(option.getId_option());
+                if (questionDB != null) {
+                    questionDBs.add(questionDB);
                 }
             }
             survey.getValuesFromDB();
-            for (Question question : questions) {
-                Value valueStock = question.getValueBySession();
+            for (QuestionDB questionDB : questionDBs) {
+                Value valueStock = questionDB.getValueBySession();
                 questionView.setValue(valueStock);
             }
         }
     }
 
-    public boolean isDynamicStockQuestion(Question screenQuestion) {
-        if (screenQuestion.getUid() != null) {
-            return screenQuestion.getUid().equals(
+    public boolean isDynamicStockQuestion(QuestionDB screenQuestionDB) {
+        if (screenQuestionDB.getUid() != null) {
+            return screenQuestionDB.getUid().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.dynamicStockQuestionUID));
         }

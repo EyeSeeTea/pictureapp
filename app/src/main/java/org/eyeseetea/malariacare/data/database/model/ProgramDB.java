@@ -36,8 +36,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Program extends BaseModel {
+@Table(database = AppDatabase.class, name ="Program")
+public class ProgramDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -50,60 +50,60 @@ public class Program extends BaseModel {
     String stage_uid;
 
     /**
-     * List of programs for this program
+     * List of mProgramDBs for this mProgramDB
      */
-    List<Program> programs;
+    List<ProgramDB> mProgramDBs;
 
     /**
-     * List of mOrgUnitDB authorized for this program
+     * List of mOrgUnitDB authorized for this mProgramDB
      */
     List<OrgUnitDB> mOrgUnitDBs;
 
     /**
-     * List of tabs that belongs to this program
+     * List of tabs that belongs to this mProgramDB
      */
     List<Tab> tabs;
 
-    public Program() {
+    public ProgramDB() {
     }
 
-    public Program(String name) {
+    public ProgramDB(String name) {
         this.name = name;
     }
 
-    public Program(String uid, String name) {
+    public ProgramDB(String uid, String name) {
         this.uid_program = uid;
         this.name = name;
     }
 
-    public static List<Program> getAllPrograms() {
-        return new Select().from(Program.class).queryList();
+    public static List<ProgramDB> getAllPrograms() {
+        return new Select().from(ProgramDB.class).queryList();
     }
 
-    public static Program getFirstProgram() {
-        return new Select().from(Program.class).querySingle();
+    public static ProgramDB getFirstProgram() {
+        return new Select().from(ProgramDB.class).querySingle();
     }
 
     public static int getMaxTotalQuestions() {
         int maxTotalQuestions = 0;
-        Program p = Program.getFirstProgram();
+        ProgramDB p = ProgramDB.getFirstProgram();
         if (p != null) {
-            Question qMax = SQLite.select(Method.max(Question_Table.total_questions),
-                    Question_Table.total_questions)
-                    .from(Question.class).as(AppDatabase.questionName)
+            QuestionDB qMax = SQLite.select(Method.max(QuestionDB_Table.total_questions),
+                    QuestionDB_Table.total_questions)
+                    .from(QuestionDB.class).as(AppDatabase.questionName)
                     .join(HeaderDB.class, Join.JoinType.INNER).as(AppDatabase.headerName)
-                    .on(Question_Table.id_header_fk.withTable(AppDatabase.questionAlias)
+                    .on(QuestionDB_Table.id_header_fk.withTable(AppDatabase.questionAlias)
                             .eq(HeaderDB_Table.id_header.withTable(AppDatabase.headerAlias)))
 
                     .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
                     .on(HeaderDB_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
                             .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
 
-                    .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
+                    .join(ProgramDB.class, Join.JoinType.INNER).as(AppDatabase.programName)
                     .on(Tab_Table.id_program_fk.withTable(AppDatabase.tabAlias)
-                            .eq(Program_Table.id_program.withTable(AppDatabase.programAlias)))
+                            .eq(ProgramDB_Table.id_program.withTable(AppDatabase.programAlias)))
 
-                    .where(Program_Table.uid_program.withTable(AppDatabase.programAlias).eq(
+                    .where(ProgramDB_Table.uid_program.withTable(AppDatabase.programAlias).eq(
                             p.getUid()))
                     .querySingle();
 
@@ -146,13 +146,13 @@ public class Program extends BaseModel {
         this.stage_uid = stage_uid;
     }
 
-    public List<Program> getPrograms() {
-        if (programs == null) {
-            this.programs = new Select().from(Program.class)
-                    .where(Program_Table.id_program.eq(this.getId_program()))
+    public List<ProgramDB> getProgramDBs() {
+        if (mProgramDBs == null) {
+            this.mProgramDBs = new Select().from(ProgramDB.class)
+                    .where(ProgramDB_Table.id_program.eq(this.getId_program()))
                     .queryList();
         }
-        return this.programs;
+        return this.mProgramDBs;
     }
 
     public List<OrgUnitDB> getOrgUnitDBs() {
@@ -198,36 +198,36 @@ public class Program extends BaseModel {
         return tabs;
     }
 
-    public static Program findById(Long id_program) {
+    public static ProgramDB findById(Long id_program) {
         return new Select()
-                .from(Program.class)
-                .where(Program_Table.id_program
+                .from(ProgramDB.class)
+                .where(ProgramDB_Table.id_program
                         .is(id_program)).querySingle();
     }
-    public static Program findByUID(String UID) {
+    public static ProgramDB findByUID(String UID) {
         return new Select()
-                .from(Program.class)
-                .where(Program_Table.uid_program
+                .from(ProgramDB.class)
+                .where(ProgramDB_Table.uid_program
                         .is(UID)).querySingle();
     }
 
-    public static Program findByName(String name) {
+    public static ProgramDB findByName(String name) {
         return new Select()
-                .from(Program.class)
-                .where(Program_Table.name
+                .from(ProgramDB.class)
+                .where(ProgramDB_Table.name
                         .is(name)).querySingle();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Program)) return false;
+        if (!(o instanceof ProgramDB)) return false;
 
-        Program program = (Program) o;
+        ProgramDB programDB = (ProgramDB) o;
 
-        if (id_program != program.id_program) return false;
-        if (uid_program != null ? !uid_program.equals(program.uid_program) : program.uid_program != null) return false;
-        return name.equals(program.name);
+        if (id_program != programDB.id_program) return false;
+        if (uid_program != null ? !uid_program.equals(programDB.uid_program) : programDB.uid_program != null) return false;
+        return name.equals(programDB.name);
 
     }
 
@@ -241,20 +241,20 @@ public class Program extends BaseModel {
 
     @Override
     public String toString() {
-        return "Program{" +
+        return "ProgramDB{" +
                 "id=" + id_program +
                 ", uid_program='" + uid_program + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
 
-    public static Program getProgram(String uid) {
-        return new Select().from(Program.class)
-                .where(Program_Table.uid_program.eq(uid)).querySingle();
+    public static ProgramDB getProgram(String uid) {
+        return new Select().from(ProgramDB.class)
+                .where(ProgramDB_Table.uid_program.eq(uid)).querySingle();
     }
 
-    public static Program getProgram(long id) {
-        return new Select().from(Program.class)
-                .where(Program_Table.id_program.is(id)).querySingle();
+    public static ProgramDB getProgram(long id) {
+        return new Select().from(ProgramDB.class)
+                .where(ProgramDB_Table.id_program.is(id)).querySingle();
     }
 }

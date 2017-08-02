@@ -19,7 +19,7 @@
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 
 /**
@@ -104,13 +104,13 @@ public class SurveyMonitor {
     /**
      * Reference to inner mSurvey
      */
-    private Survey mSurvey;
+    private SurveyDB mSurvey;
 
-    public SurveyMonitor(Survey survey) {
+    public SurveyMonitor(SurveyDB survey) {
         this.mSurvey = survey;
     }
 
-    public Survey getSurvey() {
+    public SurveyDB getSurveyDB() {
         return mSurvey;
     }
 

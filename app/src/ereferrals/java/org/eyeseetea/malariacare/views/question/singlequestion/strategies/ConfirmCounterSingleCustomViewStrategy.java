@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
@@ -31,7 +31,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     }
 
     public void showConfirmCounter(final View view, final OptionDB selectedOptionDB,
-            Question question, Question questionCounter) {
+            QuestionDB question, QuestionDB questionCounter) {
         View rootView = view.getRootView();
 
         currentCounterValue = getCounterValue(question, selectedOptionDB);
@@ -54,7 +54,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     }
 
     public void configureNavigationButtons(final View view, final OptionDB selectedOptionDB,
-            final Question question, Question questionCounter, View rootView) {
+            final QuestionDB question, QuestionDB questionCounter, View rootView) {
         //cancel
         ImageButton previousButton = (ImageButton) rootView.findViewById(R.id.back_btn);
 
@@ -105,12 +105,12 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         }
     }
 
-    private void showQuestionHeader(Question questionCounter, View rootView) {
+    private void showQuestionHeader(QuestionDB questionCounter, View rootView) {
         final CustomTextView questionView = (CustomTextView) rootView.findViewById(question);
         questionView.setText(getInternationalizedName(questionCounter.getForm_name()));
     }
 
-    public void showQuestionImage(Question questionCounter, View rootView) {
+    public void showQuestionImage(QuestionDB questionCounter, View rootView) {
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
             BaseLayoutUtils.putImageInImageViewDensityHigh(
@@ -120,7 +120,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         }
     }
 
-    public void showQuestionText(Question questionCounter, View rootView) {
+    public void showQuestionText(QuestionDB questionCounter, View rootView) {
         List<OptionDB> questionOptionDBs = questionCounter.getAnswerDB().getOptionDBs();
         if (questionOptionDBs.get(0) != null) {
             CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
@@ -142,8 +142,8 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         return Utils.getInternationalizedString(name);
     }
 
-    private String getCounterValue(Question question, OptionDB selectedOptionDB) {
-        Question optionCounter = question.findCounterByOption(selectedOptionDB);
+    private String getCounterValue(QuestionDB question, OptionDB selectedOptionDB) {
+        QuestionDB optionCounter = question.findCounterByOption(selectedOptionDB);
 
         if (optionCounter == null) {
             return "";

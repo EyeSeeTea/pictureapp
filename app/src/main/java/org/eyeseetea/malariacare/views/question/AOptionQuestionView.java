@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public abstract class AOptionQuestionView extends CommonQuestionView {
 
     public abstract void setOptions(List<OptionDB> optionDBs);
 
-    public abstract void setQuestion(Question question);
+    public abstract void setQuestionDB(QuestionDB questionDB);
 
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;

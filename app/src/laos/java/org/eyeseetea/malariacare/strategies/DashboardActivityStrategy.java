@@ -7,8 +7,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -29,15 +29,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        Program program = new Select().from(Program.class).querySingle();
+        ProgramDB program = new Select().from(ProgramDB.class).querySingle();
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnitDB = OrgUnitDB.findByUID(orgUnitUid);
-        Survey survey = new Survey(orgUnitDB, program, Session.getUser());
-        survey.save();
-        Session.setMalariaSurvey(survey);
+        SurveyDB surveyDB = new SurveyDB(orgUnitDB, program, Session.getUser());
+        surveyDB.save();
+        Session.setMalariaSurveyDB(surveyDB);
         //Look for coordinates
-        prepareLocationListener(activity, survey);
+        prepareLocationListener(activity, surveyDB);
     }
 
     @Override
@@ -48,25 +48,25 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getMalariaSurveyDB().updateSurveyStatus();
     }
 
     @Override
     public void completeSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getMalariaSurveyDB().updateSurveyStatus();
     }
 
     @Override
     public boolean beforeExit(boolean isBackPressed) {
-        Survey malariaSurvey = Session.getMalariaSurvey();
-        if (malariaSurvey != null) {
-            boolean isMalariaInProgress = malariaSurvey.isInProgress();
-            malariaSurvey.getValuesFromDB();
+        SurveyDB malariaSurveyDB = Session.getMalariaSurveyDB();
+        if (malariaSurveyDB != null) {
+            boolean isMalariaInProgress = malariaSurveyDB.isInProgress();
+            malariaSurveyDB.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isMalariaInProgress) {
                 if (isMalariaInProgress) {
-                    Session.setMalariaSurvey(null);
-                    malariaSurvey.delete();
+                    Session.setMalariaSurveyDB(null);
+                    malariaSurveyDB.delete();
                 }
                 isBackPressed = false;
             }

@@ -59,7 +59,7 @@ public class User extends BaseModel {
     /**
      * List of surveys of this user
      */
-    List<Survey> surveys;
+    List<SurveyDB> mSurveyDBs;
 
     public User() {
     }
@@ -70,13 +70,13 @@ public class User extends BaseModel {
     }
 
     public User(long id_user, String uid, String name, long organisation, long supervisor,
-            List<Survey> surveys) {
+            List<SurveyDB> surveyDBs) {
         this.id_user = id_user;
         this.uid_user = uid;
         this.name = name;
         this.partner_fk = organisation;
         this.supervisor_fk = supervisor;
-        this.surveys = surveys;
+        this.mSurveyDBs = surveyDBs;
     }
 
     public static User getLoggedUser() {
@@ -175,14 +175,14 @@ public class User extends BaseModel {
         this.last_updated = last_updated;
     }
 
-    public List<Survey> getSurveys() {
-        if (surveys == null) {
-            surveys = new Select()
-                    .from(Survey.class)
-                    .where(Survey_Table.id_user_fk
+    public List<SurveyDB> getSurveyDBs() {
+        if (mSurveyDBs == null) {
+            mSurveyDBs = new Select()
+                    .from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_user_fk
                             .eq(this.getId_user())).queryList();
         }
-        return surveys;
+        return mSurveyDBs;
     }
 
     public Long getOrganisationId() {
@@ -260,7 +260,7 @@ public class User extends BaseModel {
                 ", name='" + name + '\'' +
                 ", mPartnerDB=" + partner_fk +
                 ", supervisor=" + supervisor_fk +
-                ", surveys=" + surveys +
+                ", surveys=" + mSurveyDBs +
                 ", announcement=" + announcement +
                 ", close_date=" + close_date +
                 ", last_updated=" + last_updated +
@@ -270,7 +270,7 @@ public class User extends BaseModel {
     public User(long id_user, String uid_user, String name, long organisation_fk,
             long supervisor_fk,
             String announcement, Date close_date, Date last_updated,
-            List<Survey> surveys) {
+            List<SurveyDB> surveyDBs) {
         this.id_user = id_user;
         this.uid_user = uid_user;
         this.name = name;
@@ -279,6 +279,6 @@ public class User extends BaseModel {
         this.announcement = announcement;
         this.close_date = close_date;
         this.last_updated = last_updated;
-        this.surveys = surveys;
+        this.mSurveyDBs = surveyDBs;
     }
 }

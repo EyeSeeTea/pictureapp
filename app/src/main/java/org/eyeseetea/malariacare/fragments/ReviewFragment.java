@@ -13,8 +13,8 @@ import android.widget.ListView;
 import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
@@ -96,8 +96,8 @@ public class ReviewFragment extends Fragment {
         colorIterator = Iterables.cycle(createBackgroundColorList()).iterator();
         for(Value value:values) {
             org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(value.getValue());
-            if(value.getQuestion()!=null)
-            preparedValue.setQuestionUId(value.getQuestion().getUid());
+            if(value.getQuestionDB()!=null)
+            preparedValue.setQuestionUId(value.getQuestionDB().getUid());
             if(value.getOptionDB()!=null)
             preparedValue.setInternationalizedCode(value.getOptionDB().getInternationalizedCode());
             if(colorIterator.hasNext()) {
@@ -135,26 +135,26 @@ public class ReviewFragment extends Fragment {
 
     private List<Value> getReviewValues() {
         List<Value> reviewValues = new ArrayList<>();
-        Survey survey = Session.getMalariaSurvey();
-        List<Value> allValues = survey.getValuesFromDB();
+        SurveyDB surveyDB = Session.getMalariaSurveyDB();
+        List<Value> allValues = surveyDB.getValuesFromDB();
         for (Value value : allValues) {
             boolean isReviewValue = true;
-            if (value.getQuestion() == null) {
+            if (value.getQuestionDB() == null) {
                 continue;
             }
-            for (QuestionRelation questionRelation : value.getQuestion().getQuestionRelations()) {
-                if (questionRelation.isACounter() || questionRelation.isAReminder()
-                        || questionRelation.isAWarning() || questionRelation.isAMatch()) {
+            for (QuestionRelationDB questionRelationDB : value.getQuestionDB().getQuestionRelationDBs()) {
+                if (questionRelationDB.isACounter() || questionRelationDB.isAReminder()
+                        || questionRelationDB.isAWarning() || questionRelationDB.isAMatch()) {
                     isReviewValue = false;
                 }
             }
-            int output = value.getQuestion().getOutput();
+            int output = value.getQuestionDB().getOutput();
             if (output == Constants.HIDDEN
                     || output == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON) {
                 isReviewValue = false;
             }
             if (isReviewValue) {
-                if (value.getQuestion()!=null) {
+                if (value.getQuestionDB()!=null) {
                     reviewValues.add(value);
                 }
             }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.StatusRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -120,7 +120,7 @@ public abstract class StockRowBuilder {
     /**
      * Updates row info with the survey
      */
-    public void addSurvey(Survey survey) {
+    public void addSurvey(SurveyDB survey) {
         //Null or not sent surveys are not evaluated or surveys with a date from the future
         if (survey == null || survey.getEventDate() == null || survey.getEventDate().after(
                 new Date())) {

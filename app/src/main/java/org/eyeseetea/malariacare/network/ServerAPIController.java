@@ -26,8 +26,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
-import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -160,7 +159,7 @@ public class ServerAPIController {
      */
     public static String getProgramUID() {
         if (programUID == null) {
-            programUID = Program.getFirstProgram().getUid();
+            programUID = ProgramDB.getFirstProgram().getUid();
         }
         return programUID;
     }

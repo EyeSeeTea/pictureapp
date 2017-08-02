@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -118,7 +118,7 @@ public class NewReceiptBalanceFragment extends Fragment {
 
 
     private void createNewSurvey() {
-        Survey survey = new Survey(null, Program.findByUID(
+        SurveyDB survey = new SurveyDB(null, ProgramDB.findByUID(
                 PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)),
                 Session.getUser(), type);
         Calendar surveyDate;

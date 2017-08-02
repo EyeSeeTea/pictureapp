@@ -12,12 +12,12 @@ import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 
@@ -86,10 +86,10 @@ public class RelationsIdCsvDB {
         return tabFK;
     }
 
-    static HashMap<Long, Program> getProgramIdRelationCsvDB(Context context)
+    static HashMap<Long, ProgramDB> getProgramIdRelationCsvDB(Context context)
             throws IOException {
-        HashMap<Long, Program> programFK = new HashMap<>();
-        List<Program> programs = Program.getAllPrograms();
+        HashMap<Long, ProgramDB> programFK = new HashMap<>();
+        List<ProgramDB> programDBs = ProgramDB.getAllPrograms();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.PROGRAMS_CSV)),
@@ -98,17 +98,17 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < programs.size() && i < csvIds.size(); i++) {
-            programFK.put(csvIds.get(i), programs.get(i));
+        for (int i = 0; i < programDBs.size() && i < csvIds.size(); i++) {
+            programFK.put(csvIds.get(i), programDBs.get(i));
         }
         return programFK;
     }
 
-    static HashMap<Long, QuestionRelation> getQuestionRelationIdRelationCsvDB(
+    static HashMap<Long, QuestionRelationDB> getQuestionRelationIdRelationCsvDB(
             Context context)
             throws IOException {
-        HashMap<Long, QuestionRelation> questionRelationsFK = new HashMap<>();
-        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
+        HashMap<Long, QuestionRelationDB> questionRelationsFK = new HashMap<>();
+        List<QuestionRelationDB> questionRelationDBs = QuestionRelationDB.listAll();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_RELATIONS_CSV)),
@@ -117,16 +117,16 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < questionRelations.size() && i < csvIds.size(); i++) {
-            questionRelationsFK.put(csvIds.get(i), questionRelations.get(i));
+        for (int i = 0; i < questionRelationDBs.size() && i < csvIds.size(); i++) {
+            questionRelationsFK.put(csvIds.get(i), questionRelationDBs.get(i));
         }
         return questionRelationsFK;
     }
 
-    static HashMap<Long, Question> getQuestionIdRelationCsvDB(Context context)
+    static HashMap<Long, QuestionDB> getQuestionIdRelationCsvDB(Context context)
             throws IOException {
-        HashMap<Long, Question> questionFK = new HashMap<>();
-        List<Question> questions = Question.getAllQuestions();
+        HashMap<Long, QuestionDB> questionFK = new HashMap<>();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestions();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTIONS_CSV)),
@@ -135,8 +135,8 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < questions.size() && i < csvIds.size(); i++) {
-            questionFK.put(csvIds.get(i), questions.get(i));
+        for (int i = 0; i < questionDBs.size() && i < csvIds.size(); i++) {
+            questionFK.put(csvIds.get(i), questionDBs.get(i));
         }
         return questionFK;
     }
@@ -198,7 +198,7 @@ public class RelationsIdCsvDB {
     static HashMap<Long, Long> getQuestionOptionIdRelationDBCsv(Context context)
             throws IOException {
         HashMap<Long, Long> questionOptionFK = new HashMap<>();
-        List<QuestionOption> questionOptions = QuestionOption.listAll();
+        List<QuestionOptionDB> questionOptionDBs = QuestionOptionDB.listAll();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_OPTIONS_CSV)),
@@ -207,8 +207,8 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < questionOptions.size() && i < csvIds.size(); i++) {
-            questionOptionFK.put(questionOptions.get(i).getId_question_option(), csvIds.get(i));
+        for (int i = 0; i < questionOptionDBs.size() && i < csvIds.size(); i++) {
+            questionOptionFK.put(questionOptionDBs.get(i).getId_question_option(), csvIds.get(i));
         }
         return questionOptionFK;
     }
@@ -216,7 +216,7 @@ public class RelationsIdCsvDB {
     static HashMap<Long, Long> getQuestionThresholdIdRelationDBCsv(Context context)
             throws IOException {
         HashMap<Long, Long> questionThresholdFK = new HashMap<>();
-        List<QuestionThreshold> matches = QuestionThreshold.getAllQuestionThresholds();
+        List<QuestionThresholdDB> matches = QuestionThresholdDB.getAllQuestionThresholds();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_THRESHOLDS_CSV)),
@@ -249,10 +249,10 @@ public class RelationsIdCsvDB {
         return organisationFK;
     }
 
-    static HashMap<Long, StringKey> getStringKeyIdRelationCsvDB(Context context)
+    static HashMap<Long, StringKeyDB> getStringKeyIdRelationCsvDB(Context context)
             throws IOException {
-        HashMap<Long, StringKey> stringKeyFK = new HashMap<>();
-        List<StringKey> stringKeys = StringKey.getAllStringKeys();
+        HashMap<Long, StringKeyDB> stringKeyFK = new HashMap<>();
+        List<StringKeyDB> stringKeyDBs = StringKeyDB.getAllStringKeys();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.STRING_KEY_CSV)),
@@ -261,8 +261,8 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < stringKeys.size() && i < csvIds.size(); i++) {
-            stringKeyFK.put(csvIds.get(i), stringKeys.get(i));
+        for (int i = 0; i < stringKeyDBs.size() && i < csvIds.size(); i++) {
+            stringKeyFK.put(csvIds.get(i), stringKeyDBs.get(i));
         }
         return stringKeyFK;
     }

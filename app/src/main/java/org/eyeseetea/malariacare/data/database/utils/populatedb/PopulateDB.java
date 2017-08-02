@@ -44,14 +44,14 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitLevelDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.Score;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.ScoreDB;
+import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.SurveySchedule;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.TabGroup;
@@ -103,25 +103,25 @@ public class PopulateDB {
     public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScoreDB.class,
             OrgUnitProgramRelationDB.class,
-            Score.class,
+            ScoreDB.class,
             SurveySchedule.class,
             TabGroup.class,
-            Survey.class,
+            SurveyDB.class,
             Value.class,
             User.class,
-            StringKey.class,
+            StringKeyDB.class,
             Translation.class,
-            Program.class,
+            ProgramDB.class,
             Tab.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,
             OptionDB.class,
-            Question.class,
-            QuestionRelation.class,
+            QuestionDB.class,
+            QuestionRelationDB.class,
             MatchDB.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
+            QuestionOptionDB.class,
+            QuestionThresholdDB.class,
             DrugDB.class,
             PartnerDB.class,
             Treatment.class,
@@ -162,15 +162,15 @@ public class PopulateDB {
             ORG_UNIT_CSV);
     private static final String TAG = "PopulateDB";
 
-    static Map<Integer, Program> programList = new LinkedHashMap<Integer, Program>();
+    static Map<Integer, ProgramDB> programList = new LinkedHashMap<Integer, ProgramDB>();
     static Map<Integer, Tab> tabList = new LinkedHashMap<Integer, Tab>();
     static Map<Integer, HeaderDB> headerList = new LinkedHashMap<Integer, HeaderDB>();
-    static Map<Integer, Question> questionList = new LinkedHashMap<Integer, Question>();
+    static Map<Integer, QuestionDB> questionList = new LinkedHashMap<Integer, QuestionDB>();
     static Map<Integer, OptionAttributeDB> optionAttributeList =
             new LinkedHashMap<Integer, OptionAttributeDB>();
     static Map<Integer, OptionDB> optionList = new LinkedHashMap<Integer, OptionDB>();
     static Map<Integer, AnswerDB> answerList = new LinkedHashMap<Integer, AnswerDB>();
-    static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
+    static Map<Integer, QuestionRelationDB> questionRelationList = new LinkedHashMap();
     static HashMap<Long, MatchDB> matchList = new HashMap();
 
     static Map<Integer, OrgUnitLevelDB> orgUnitLevelList = new LinkedHashMap();
@@ -178,7 +178,7 @@ public class PopulateDB {
     static HashMap<Long, DrugDB> drugList = new HashMap<>();
     static HashMap<Long, PartnerDB> organisationList = new HashMap<>();
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
-    static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
+    static HashMap<Long, StringKeyDB> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
         if (PopulateDB.hasMandatoryTables()) {
@@ -191,7 +191,7 @@ public class PopulateDB {
 
         PopulateDB.populateDB(context);
         //Get maximum total of questions
-        Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
+        Session.setMaxTotalQuestions(ProgramDB.getMaxTotalQuestions());
 
         Log.i(TAG, "DB Loaded ...DONE");
     }
@@ -228,12 +228,12 @@ public class PopulateDB {
             while ((line = reader.readNext()) != null && !line[0].isEmpty()) {
                 switch (table) {
                     case PROGRAMS_CSV:
-                        Program program = new Program();
-                        program.setUid(line[1]);
-                        program.setName(line[2]);
-                        program.setStageUid(line[3]);
-                        program.save();
-                        programList.put(Integer.valueOf(line[0]), program);
+                        ProgramDB programDB = new ProgramDB();
+                        programDB.setUid(line[1]);
+                        programDB.setName(line[2]);
+                        programDB.setStageUid(line[3]);
+                        programDB.save();
+                        programList.put(Integer.valueOf(line[0]), programDB);
                         break;
                     case TABS_CSV:
                         Tab tab = new Tab();
@@ -305,72 +305,72 @@ public class PopulateDB {
                         optionList.put(Integer.valueOf(line[0]), optionDB);
                         break;
                     case QUESTIONS_CSV:
-                        Question question = new Question();
-                        question.setCode(line[1]);
-                        question.setDe_name(line[2]);
-                        question.setHelp_text(line[3]);
-                        question.setForm_name(line[4]);
-                        question.setUid(line[5]);
-                        question.setOrder_pos(Integer.valueOf(line[6]));
-                        question.setNumerator_w(Float.valueOf(line[7]));
-                        question.setDenominator_w(Float.valueOf(line[8]));
-                        question.setHeader(headerList.get(Integer.valueOf(line[9])));
+                        QuestionDB questionDB = new QuestionDB();
+                        questionDB.setCode(line[1]);
+                        questionDB.setDe_name(line[2]);
+                        questionDB.setHelp_text(line[3]);
+                        questionDB.setForm_name(line[4]);
+                        questionDB.setUid(line[5]);
+                        questionDB.setOrder_pos(Integer.valueOf(line[6]));
+                        questionDB.setNumerator_w(Float.valueOf(line[7]));
+                        questionDB.setDenominator_w(Float.valueOf(line[8]));
+                        questionDB.setHeader(headerList.get(Integer.valueOf(line[9])));
                         if (!line[10].equals("")) {
-                            question.setAnswer(answerList.get(Integer.valueOf(line[10])));
+                            questionDB.setAnswer(answerList.get(Integer.valueOf(line[10])));
                         }
                         if (!line[11].equals("")) {
-                            question.setQuestion(questionList.get(Integer.valueOf(line[11])));
+                            questionDB.setQuestion(questionList.get(Integer.valueOf(line[11])));
                         }
-                        question.setOutput(Integer.valueOf(line[12]));
-                        question.setTotalQuestions(Integer.valueOf(line[13]));
-                        question.setVisible(Integer.valueOf(line[14]));
+                        questionDB.setOutput(Integer.valueOf(line[12]));
+                        questionDB.setTotalQuestions(Integer.valueOf(line[13]));
+                        questionDB.setVisible(Integer.valueOf(line[14]));
                         if (line.length > 15 && !line[15].equals("")) {
-                            question.setPath((line[15]));
+                            questionDB.setPath((line[15]));
                         }
                         if (line.length > 16 && !line[16].equals("")) {
-                            question.setCompulsory(Integer.valueOf(line[16]));
+                            questionDB.setCompulsory(Integer.valueOf(line[16]));
                         } else {
-                            question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+                            questionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
                         }
-                        question.save();
-                        questionList.put(Integer.valueOf(line[0]), question);
+                        questionDB.save();
+                        questionList.put(Integer.valueOf(line[0]), questionDB);
                         break;
                     case QUESTION_RELATIONS_CSV:
-                        QuestionRelation questionRelation = new QuestionRelation();
-                        questionRelation.setOperation(Integer.valueOf(line[1]));
-                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
-                        questionRelation.save();
-                        questionRelationList.put(Integer.valueOf(line[0]), questionRelation);
+                        QuestionRelationDB questionRelationDB = new QuestionRelationDB();
+                        questionRelationDB.setOperation(Integer.valueOf(line[1]));
+                        questionRelationDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionRelationDB.save();
+                        questionRelationList.put(Integer.valueOf(line[0]), questionRelationDB);
                         break;
                     case MATCHES:
                         MatchDB matchDB = new MatchDB();
-                        matchDB.setQuestionRelation(
+                        matchDB.setQuestionRelationDB(
                                 questionRelationList.get(Integer.valueOf(line[1])));
                         matchDB.save();
                         matchList.put(Long.valueOf(line[0]), matchDB);
                         break;
                     case QUESTION_OPTIONS_CSV:
-                        QuestionOption questionOption = new QuestionOption();
-                        questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
+                        QuestionOptionDB questionOptionDB = new QuestionOptionDB();
+                        questionOptionDB.setQuestion(questionList.get(Integer.valueOf(line[1])));
                         if (!line[2].equals("")) {
-                            questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                            questionOptionDB.setOption(optionList.get(Integer.valueOf(line[2])));
                         }
                         if (!line[3].equals("")) {
-                            questionOption.setMatch(matchList.get(Long.valueOf(line[3])));
+                            questionOptionDB.setMatch(matchList.get(Long.valueOf(line[3])));
                         }
-                        questionOption.save();
+                        questionOptionDB.save();
                         break;
                     case QUESTION_THRESHOLDS_CSV:
-                        QuestionThreshold questionThreshold = new QuestionThreshold();
-                        questionThreshold.setMatchDB(matchList.get(Long.valueOf(line[1])));
-                        questionThreshold.setQuestion(questionList.get(Integer.valueOf(line[2])));
+                        QuestionThresholdDB questionThresholdDB = new QuestionThresholdDB();
+                        questionThresholdDB.setMatchDB(matchList.get(Long.valueOf(line[1])));
+                        questionThresholdDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
-                            questionThreshold.setMinValue(Integer.valueOf(line[3]));
+                            questionThresholdDB.setMinValue(Integer.valueOf(line[3]));
                         }
                         if (!line[4].equals("")) {
-                            questionThreshold.setMaxValue(Integer.valueOf(line[4]));
+                            questionThresholdDB.setMaxValue(Integer.valueOf(line[4]));
                         }
-                        questionThreshold.save();
+                        questionThresholdDB.save();
                         break;
                     case DRUGS_CSV:
                         DrugDB drugDB = PopulateRow.populateDrugs(line, null);
@@ -397,9 +397,9 @@ public class PopulateDB {
                                 null).insert();
                         break;
                     case STRING_KEY_CSV:
-                        StringKey stringKey = PopulateRow.populateStringKey(line, null);
-                        stringKey.insert();
-                        stringKeyList.put(Long.valueOf(line[0]), stringKey);
+                        StringKeyDB stringKeyDB = PopulateRow.populateStringKey(line, null);
+                        stringKeyDB.insert();
+                        stringKeyList.put(Long.valueOf(line[0]), stringKeyDB);
                         break;
                     case TRANSLATION_CSV:
                         PopulateRow.populateTranslation(line, stringKeyList, null).insert();
@@ -505,12 +505,12 @@ public class PopulateDB {
     public static void wipeSurveys() {
         Delete.tables(
                 Value.class,
-                Score.class,
-                Survey.class
+                ScoreDB.class,
+                SurveyDB.class
         );
     }
 
-    public static void addTotalQuestions(Context context, List<Question> questions)
+    public static void addTotalQuestions(Context context, List<QuestionDB> questionDBs)
             throws IOException {
         //Reset inner references
         CSVReader reader = new CSVReader(
@@ -519,10 +519,10 @@ public class PopulateDB {
 
         String[] line;
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
-                    question.setTotalQuestions(Integer.valueOf(line[13]));
-                    question.save();
+            for (QuestionDB questionDB : questionDBs) {
+                if (questionDB.getUid().equals(line[5])) {
+                    questionDB.setTotalQuestions(Integer.valueOf(line[13]));
+                    questionDB.save();
                     break;
                 }
             }
@@ -532,18 +532,18 @@ public class PopulateDB {
 
     public static void addImagePathQuestions(Context context) throws IOException {
         //Reset inner references,
-        List<Question> questions = Question.getAllQuestions();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestions();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(QUESTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String[] line;
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
+            for (QuestionDB questionDB : questionDBs) {
+                if (questionDB.getUid().equals(line[5])) {
                     if (line.length > 15 && !line[15].equals("")) {
-                        question.setPath(line[15]);
-                        question.save();
+                        questionDB.setPath(line[15]);
+                        questionDB.save();
                     }
                     break;
                 }
@@ -552,7 +552,7 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addVisibleQuestions(Context context, List<Question> questions)
+    public static void addVisibleQuestions(Context context, List<QuestionDB> questionDBs)
             throws IOException {
         //Reset inner references
         CSVReader reader = new CSVReader(
@@ -561,10 +561,10 @@ public class PopulateDB {
 
         String[] line;
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
-                    question.setVisible(Integer.valueOf(line[14]));
-                    question.save();
+            for (QuestionDB questionDB : questionDBs) {
+                if (questionDB.getUid().equals(line[5])) {
+                    questionDB.setVisible(Integer.valueOf(line[14]));
+                    questionDB.save();
                     break;
                 }
             }
@@ -724,7 +724,7 @@ public class PopulateDB {
     }
 
     public static void updateQuestions(Context context) throws IOException {
-        List<Question> questions = Question.getAllQuestions();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(
@@ -734,28 +734,28 @@ public class PopulateDB {
         String line[];
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (String.valueOf(question.getId_question()).equals((line[0]))) {
-                    question.setCode(line[1]);
-                    question.setDe_name(line[2]);
-                    question.setHelp_text(line[3]);
-                    question.setForm_name(line[4]);
+            for (QuestionDB questionDB : questionDBs) {
+                if (String.valueOf(questionDB.getId_question()).equals((line[0]))) {
+                    questionDB.setCode(line[1]);
+                    questionDB.setDe_name(line[2]);
+                    questionDB.setHelp_text(line[3]);
+                    questionDB.setForm_name(line[4]);
                     //Update necessary from migration22 in myanmar
-                    question.setOutput(Integer.valueOf(line[12]));
+                    questionDB.setOutput(Integer.valueOf(line[12]));
                     //Update necessary from migration3
-                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    questionDB.setTotalQuestions(Integer.valueOf(line[13]));
                     //Update necessary from migration4
-                    question.setVisible(Integer.valueOf(line[14]));
+                    questionDB.setVisible(Integer.valueOf(line[14]));
                     //Update necessary from migration7
                     if (line.length > 15 && !line[15].equals("")) {
-                        question.setPath(line[15]);
+                        questionDB.setPath(line[15]);
                     }
                     if (line.length > 16 && !line[16].equals("")) {
-                        question.setCompulsory(Integer.valueOf(line[16]));
+                        questionDB.setCompulsory(Integer.valueOf(line[16]));
                     } else {
-                        question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+                        questionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
                     }
-                    question.save();
+                    questionDB.save();
                     break;
                 }
             }
@@ -768,9 +768,9 @@ public class PopulateDB {
         //Reset inner references
         cleanInnerLists();
         List<OptionDB> actualOptionDBs = OptionDB.getAllOptions();
-        List<Question> actualQuestions = Question.getAllQuestions();
+        List<QuestionDB> actualQuestionDBs = QuestionDB.getAllQuestions();
 
-        questionList = new LinkedHashMap<Integer, Question>();
+        questionList = new LinkedHashMap<Integer, QuestionDB>();
         optionAttributeList = new LinkedHashMap<Integer, OptionAttributeDB>();
         optionList = new LinkedHashMap<Integer, OptionDB>();
         questionRelationList = new LinkedHashMap();
@@ -852,47 +852,47 @@ public class PopulateDB {
                         optionList.put(Integer.valueOf(line[0]), optionDB);
                         break;
                     case QUESTIONS_CSV:
-                        //Ignore if the question already exists.
-                        for (Question question : actualQuestions) {
-                            if (String.valueOf(question.getId_question()).equals(line[0])) {
+                        //Ignore if the questionDB already exists.
+                        for (QuestionDB questionDB : actualQuestionDBs) {
+                            if (String.valueOf(questionDB.getId_question()).equals(line[0])) {
                                 isNew = false;
                             }
                         }
-                        Question question;
+                        QuestionDB questionDB;
                         if (isNew) {
-                            question = new Question();
-                            question.setCode(line[1]);
-                            question.setDe_name(line[2]);
-                            question.setHelp_text(line[3]);
-                            question.setForm_name(line[4]);
-                            question.setUid(line[5]);
-                            question.setOrder_pos(Integer.valueOf(line[6]));
-                            question.setNumerator_w(Float.valueOf(line[7]));
-                            question.setDenominator_w(Float.valueOf(line[8]));
-                            question.setHeader(HeaderDB.findById(Long.valueOf(line[9])));
+                            questionDB = new QuestionDB();
+                            questionDB.setCode(line[1]);
+                            questionDB.setDe_name(line[2]);
+                            questionDB.setHelp_text(line[3]);
+                            questionDB.setForm_name(line[4]);
+                            questionDB.setUid(line[5]);
+                            questionDB.setOrder_pos(Integer.valueOf(line[6]));
+                            questionDB.setNumerator_w(Float.valueOf(line[7]));
+                            questionDB.setDenominator_w(Float.valueOf(line[8]));
+                            questionDB.setHeader(HeaderDB.findById(Long.valueOf(line[9])));
                             if (!line[10].equals("")) {
-                                question.setAnswer(AnswerDB.findById(Long.valueOf(line[10])));
+                                questionDB.setAnswer(AnswerDB.findById(Long.valueOf(line[10])));
                             }
                             if (!line[11].equals("")) {
-                                question.setQuestion(questionList.get(Integer.valueOf(line[11])));
+                                questionDB.setQuestion(questionList.get(Integer.valueOf(line[11])));
                             }
-                            question.setOutput(Integer.valueOf(line[12]));
-                            question.setTotalQuestions(Integer.valueOf(line[13]));
-                            question.setVisible(Integer.valueOf(line[14]));
+                            questionDB.setOutput(Integer.valueOf(line[12]));
+                            questionDB.setTotalQuestions(Integer.valueOf(line[13]));
+                            questionDB.setVisible(Integer.valueOf(line[14]));
                             if (line.length > 15 && !line[15].equals("")) {
-                                question.setPath((line[15]));
+                                questionDB.setPath((line[15]));
                             }
                             if (line.length > 16 && !line[16].equals("")) {
-                                question.setCompulsory(Integer.valueOf(line[16]));
+                                questionDB.setCompulsory(Integer.valueOf(line[16]));
                             } else {
-                                question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+                                questionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
                             }
-                            question.save();
+                            questionDB.save();
                         } else {
-                            question = Question.findByUID(line[5]);
+                            questionDB = QuestionDB.findByUID(line[5]);
                         }
 
-                        questionList.put(Integer.valueOf(line[0]), question);
+                        questionList.put(Integer.valueOf(line[0]), questionDB);
                         break;
                     case QUESTION_RELATIONS_CSV:
                         //Ignore if the optionDB already exists.
@@ -900,11 +900,11 @@ public class PopulateDB {
                         if (updateQRFromPosition > QRRow) {
                             break;
                         }
-                        QuestionRelation questionRelation = new QuestionRelation();
-                        questionRelation.setOperation(Integer.valueOf(line[1]));
-                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
-                        questionRelation.save();
-                        questionRelationList.put(Integer.valueOf(line[0]), questionRelation);
+                        QuestionRelationDB questionRelationDB = new QuestionRelationDB();
+                        questionRelationDB.setOperation(Integer.valueOf(line[1]));
+                        questionRelationDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionRelationDB.save();
+                        questionRelationList.put(Integer.valueOf(line[0]), questionRelationDB);
                         break;
                     case MATCHES:
                         //Ignore if the matchDB already exists.
@@ -913,24 +913,24 @@ public class PopulateDB {
                             break;
                         }
                         MatchDB matchDB = new MatchDB();
-                        matchDB.setQuestionRelation(
+                        matchDB.setQuestionRelationDB(
                                 questionRelationList.get(Integer.valueOf(line[1])));
                         matchDB.save();
                         matchList.put(Long.valueOf(line[0]), matchDB);
                         break;
                     case QUESTION_OPTIONS_CSV:
-                        //Ignore if the question optionDB already exists.
+                        //Ignore if the questionDB optionDB already exists.
                         QORow++;
                         if (updateQOFromPosition > QORow) {
                             break;
                         }
-                        QuestionOption questionOption = new QuestionOption();
-                        questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
-                        questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                        QuestionOptionDB questionOptionDB = new QuestionOptionDB();
+                        questionOptionDB.setQuestion(questionList.get(Integer.valueOf(line[1])));
+                        questionOptionDB.setOption(optionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
-                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                            questionOptionDB.setMatch(matchList.get(Integer.valueOf(line[3])));
                         }
-                        questionOption.save();
+                        questionOptionDB.save();
                         break;
                 }
             }
@@ -944,22 +944,22 @@ public class PopulateDB {
     public static void createMissingRelationInLao() {
         //new matchDB relation in csv
         //29;29
-        //new QuestionOption in csv
+        //new QuestionOptionDB in csv
         //45;5;13;29
         //new QuestionRelation in csv
         //29;1;6
         Long childId = 6l;
         Long parentId = 5l;
         Long optionId = 13l;
-        QuestionRelation questionRelation = new QuestionRelation(Question.findByID(childId),
-                QuestionRelation.PARENT_CHILD);
-        questionRelation.save();
-        MatchDB matchDB = new MatchDB(questionRelation);
+        QuestionRelationDB questionRelationDB = new QuestionRelationDB(QuestionDB.findByID(childId),
+                QuestionRelationDB.PARENT_CHILD);
+        questionRelationDB.save();
+        MatchDB matchDB = new MatchDB(questionRelationDB);
         matchDB.save();
-        QuestionOption questionOption
-                = new QuestionOption(OptionDB.findById(optionId), Question.findByID(parentId),
+        QuestionOptionDB questionOptionDB
+                = new QuestionOptionDB(OptionDB.findById(optionId), QuestionDB.findByID(parentId),
                 matchDB);
-        questionOption.save();
+        questionOptionDB.save();
     }
 
     public static void initDBQuery() {
@@ -969,9 +969,9 @@ public class PopulateDB {
     public static void wipeOrgUnitsAndEvents() {
         wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
                 OrgUnitDB.class,
-                Survey.class,
+                SurveyDB.class,
                 Value.class,
-                Score.class,
+                ScoreDB.class,
                 SurveySchedule.class,
                 User.class).toArray());
     }

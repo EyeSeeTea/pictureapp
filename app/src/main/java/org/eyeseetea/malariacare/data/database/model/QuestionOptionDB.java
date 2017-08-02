@@ -33,8 +33,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class QuestionOption extends BaseModel {
+@Table(database = AppDatabase.class, name = "QuestionOption")
+public class QuestionOptionDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question_option;
@@ -49,9 +49,9 @@ public class QuestionOption extends BaseModel {
     @Column
     Long id_question_fk;
     /**
-     * Reference to its question (lazy)
+     * Reference to its mQuestionDB (lazy)
      */
-    Question question;
+    QuestionDB mQuestionDB;
 
     @Column
     Long id_match_fk;
@@ -60,62 +60,62 @@ public class QuestionOption extends BaseModel {
      */
     MatchDB mMatchDB;
 
-    public QuestionOption() {
+    public QuestionOptionDB() {
     }
 
-    public QuestionOption(OptionDB optionDB, Question question, MatchDB matchDB) {
-        setQuestion(question);
+    public QuestionOptionDB(OptionDB optionDB, QuestionDB questionDB, MatchDB matchDB) {
+        setQuestion(questionDB);
         setOption(optionDB);
         setMatch(matchDB);
     }
 
     /**
-     * Returns the QuestionOptions for the given question and mOptionDB
+     * Returns the QuestionOptions for the given mQuestionDB and mOptionDB
      */
-    public static List<QuestionOption> findByQuestionAndOption(Question questionWithOption,
+    public static List<QuestionOptionDB> findByQuestionAndOption(QuestionDB questionDBWithOption,
             OptionDB optionDB) {
-        if (questionWithOption == null || optionDB == null) {
+        if (questionDBWithOption == null || optionDB == null) {
             return null;
         }
 
-        return new Select().from(QuestionOption.class)
-                .where(QuestionOption_Table.id_question_fk
-                        .is(questionWithOption.getId_question()))
-                .and(QuestionOption_Table.id_option_fk
+        return new Select().from(QuestionOptionDB.class)
+                .where(QuestionOptionDB_Table.id_question_fk
+                        .is(questionDBWithOption.getId_question()))
+                .and(QuestionOptionDB_Table.id_option_fk
                         .is(optionDB.getId_option()))
                 .queryList();
     }
 
     /**
-     * Find questionOptions related with the given questionRelation by its mMatchDB
+     * Find mQuestionOptionDBs related with the given mQuestionRelationDB by its mMatchDB
      */
-    public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation) {
-        return new Select().from(QuestionOption.class).as(AppDatabase.questionOptionName)
+    public static List<QuestionOptionDB> findByQuestionRelation(QuestionRelationDB questionRelationDB) {
+        return new Select().from(QuestionOptionDB.class).as(AppDatabase.questionOptionName)
                 .join(MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName)
-                .on(QuestionOption_Table.id_match_fk.withTable(AppDatabase.questionOptionAlias)
+                .on(QuestionOptionDB_Table.id_match_fk.withTable(AppDatabase.questionOptionAlias)
                         .eq(MatchDB_Table.id_match.withTable(AppDatabase.matchAlias)))
                 .where(MatchDB_Table.id_question_relation_fk.withTable(AppDatabase.matchAlias).eq(
-                        questionRelation.getId_question_relation())).queryList();
+                        questionRelationDB.getId_question_relation())).queryList();
     }
 
     /**
-     * Method to get the mMatchDBs in questionOption with a question id and a a mOptionDB
+     * Method to get the mMatchDBs in questionOption with a mQuestionDB id and a a mOptionDB
      *
-     * @param id_question the id of the question
+     * @param id_question the id of the mQuestionDB
      * @param id_option   the id of the mOptionDB
      * @return The list of mMatchDBs
      */
     public static List<MatchDB> getMatchesWithQuestionOption(Long id_question, Long id_option) {
-        List<QuestionOption> questionOptions = new Select()
-                .from(QuestionOption.class)
-                .where(QuestionOption_Table.id_question_fk.is(id_question))
-                .and(QuestionOption_Table.id_option_fk.is(id_option))
+        List<QuestionOptionDB> questionOptionDBs = new Select()
+                .from(QuestionOptionDB.class)
+                .where(QuestionOptionDB_Table.id_question_fk.is(id_question))
+                .and(QuestionOptionDB_Table.id_option_fk.is(id_option))
                 .queryList();
         List<MatchDB> matchDBs = new ArrayList<>();
-        for (QuestionOption questionOption : questionOptions) {
+        for (QuestionOptionDB questionOptionDB : questionOptionDBs) {
             matchDBs.add(new Select()
                     .from(MatchDB.class)
-                    .where(MatchDB_Table.id_match.is(questionOption.getMatchDB().getId_match()))
+                    .where(MatchDB_Table.id_match.is(questionOptionDB.getMatchDB().getId_match()))
                     .querySingle());
         }
         return matchDBs;
@@ -123,18 +123,18 @@ public class QuestionOption extends BaseModel {
     }
 
     /**
-     * Method to delete in cascade the questionOptions passed.
+     * Method to delete in cascade the mQuestionOptionDBs passed.
      *
-     * @param questionsOptions The question mOptionDB to delete.
+     * @param questionsOptions The mQuestionDB mOptionDB to delete.
      */
-    public static void deleteQuestionOptions(List<QuestionOption> questionsOptions) {
-        for (QuestionOption questionOption : questionsOptions) {
-            questionOption.delete();
+    public static void deleteQuestionOptions(List<QuestionOptionDB> questionsOptions) {
+        for (QuestionOptionDB questionOptionDB : questionsOptions) {
+            questionOptionDB.delete();
         }
     }
 
-    public static List<QuestionOption> listAll() {
-        return new Select().from(QuestionOption.class).queryList();
+    public static List<QuestionOptionDB> listAll() {
+        return new Select().from(QuestionOptionDB.class).queryList();
     }
 
     public long getId_question_option() {
@@ -166,25 +166,25 @@ public class QuestionOption extends BaseModel {
         this.id_option_fk = (optionDB != null) ? optionDB.getId_option() : null;
     }
 
-    public Question getQuestion() {
-        if (question == null) {
+    public QuestionDB getQuestionDB() {
+        if (mQuestionDB == null) {
             if (id_question_fk == null) return null;
-            question = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_question
+            mQuestionDB = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_question
                             .is(id_question_fk)).querySingle();
         }
-        return question;
+        return mQuestionDB;
     }
 
-    public void setQuestion(Long id_question) {
+    public void setQuestionDB(Long id_question) {
         this.id_question_fk = id_question;
-        this.question = null;
+        this.mQuestionDB = null;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question_fk = (question != null) ? question.getId_question() : null;
+    public void setQuestion(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
+        this.id_question_fk = (questionDB != null) ? questionDB.getId_question() : null;
     }
 
     public MatchDB getMatchDB() {
@@ -211,7 +211,7 @@ public class QuestionOption extends BaseModel {
     /**
      * Returns the threshold associated with this questionoption
      */
-    public QuestionThreshold getQuestionThreshold() {
+    public QuestionThresholdDB getQuestionThreshold() {
         MatchDB matchDB = getMatchDB();
 
         //No mMatchDB -> no threshold
@@ -222,10 +222,10 @@ public class QuestionOption extends BaseModel {
         return matchDB.getQuestionThreshold();
     }
 
-    public static List<QuestionOption> getQuestionOptionsWithMatchId(Long id_match) {
+    public static List<QuestionOptionDB> getQuestionOptionsWithMatchId(Long id_match) {
         return new Select()
-                .from(QuestionOption.class)
-                .where(QuestionOption_Table.id_match_fk.is(id_match))
+                .from(QuestionOptionDB.class)
+                .where(QuestionOptionDB_Table.id_match_fk.is(id_match))
                 .queryList();
     }
 
@@ -234,7 +234,7 @@ public class QuestionOption extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        QuestionOption that = (QuestionOption) o;
+        QuestionOptionDB that = (QuestionOptionDB) o;
 
         if (id_question_option != that.id_question_option) return false;
         if (id_option_fk != null ? !id_option_fk.equals(that.id_option_fk) : that.id_option_fk != null) {

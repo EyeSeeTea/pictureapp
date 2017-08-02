@@ -7,7 +7,7 @@ import android.widget.Switch;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -53,8 +53,7 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         switchFalseTextView.setText(Utils.getInternationalizedString(mFalseOptionDB.getName()));
     }
 
-    @Override
-    public void setQuestion(Question question) {
+    public void setQuestionDB(QuestionDB questionDB) {
 
     }
 

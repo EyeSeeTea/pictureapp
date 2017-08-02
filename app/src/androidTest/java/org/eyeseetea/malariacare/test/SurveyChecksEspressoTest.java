@@ -29,7 +29,7 @@
 //
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 //import org.eyeseetea.malariacare.data.database.model.Survey;
 //import org.eyeseetea.malariacare.data.database.model.Tab;
 //import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -112,7 +112,7 @@
 //        whenTabSelected(1);
 //
 //        //THEN: Check font size has properly changed
-//        onData(is(instanceOf(Question.class))).inAdapterView(withId(R.id.listView)).atPosition(5)
+//        onData(is(instanceOf(QuestionDB.class))).inAdapterView(withId(R.id.listView)).atPosition(5)
 //                .onChildView(withId(R.id.answer))
 //                .onChildView(withText(res.getString(R.string.yes)))
 //                .check(matches(hasRadioButtonScale(res.getString(R.string.font_size_level3))));
@@ -128,7 +128,7 @@
 //        whenTabSelected(1);
 //
 //        //THEN
-//        onData(is(instanceOf(Question.class))).inAdapterView(withId(R.id.listView)).atPosition(1)
+//        onData(is(instanceOf(QuestionDB.class))).inAdapterView(withId(R.id.listView)).atPosition(1)
 //                .onChildView(withId(R.id.statement))
 //                .check(matches(hasTextCardScale(res.getString(R.string.font_size_level3))));
 //    }

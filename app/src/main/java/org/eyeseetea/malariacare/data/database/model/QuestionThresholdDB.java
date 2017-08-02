@@ -37,9 +37,9 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class QuestionThreshold extends BaseModel {
-    private static final String TAG = ".QuestionThreshold";
+@Table(database = AppDatabase.class, name = "QuestionThreshold")
+public class QuestionThresholdDB extends BaseModel {
+    private static final String TAG = ".QuestionThresholdDB";
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question_threshold;
@@ -47,9 +47,9 @@ public class QuestionThreshold extends BaseModel {
     @Column
     Long id_question_fk;
     /**
-     * Reference to its question (lazy)
+     * Reference to its mQuestionDB (lazy)
      */
-    Question question;
+    QuestionDB mQuestionDB;
 
     @Column
     Long id_match_fk;
@@ -64,68 +64,70 @@ public class QuestionThreshold extends BaseModel {
     @Column
     Integer maxValue;
 
-    public QuestionThreshold() {
+    public QuestionThresholdDB() {
     }
 
-    public QuestionThreshold(Question question, MatchDB matchDB, Integer minValue, Integer maxValue) {
-        setQuestion(question);
+    public QuestionThresholdDB(QuestionDB questionDB, MatchDB matchDB, Integer minValue,
+            Integer maxValue) {
+        setQuestionDB(questionDB);
         setMatchDB(matchDB);
         this.minValue = minValue;
         this.maxValue = maxValue;
     }
 
-    public static QuestionThreshold findByQuestionAndOption(Question questionWithOption,
+    public static QuestionThresholdDB findByQuestionAndOption(QuestionDB questionDBWithOption,
             OptionDB optionDB) {
-        List<QuestionOption> questionOptionList = QuestionOption.findByQuestionAndOption(
-                questionWithOption, optionDB);
+        List<QuestionOptionDB> questionOptionDBList = QuestionOptionDB.findByQuestionAndOption(
+                questionDBWithOption, optionDB);
         //No questionOption no threshold
-        if (questionOptionList == null || questionOptionList.isEmpty()) {
+        if (questionOptionDBList == null || questionOptionDBList.isEmpty()) {
             return null;
         }
 
         //Look for threshold under questionOption
-        for (QuestionOption questionOption : questionOptionList) {
-            MatchDB matchDB = questionOption.getMatchDB();
-            QuestionThreshold questionThreshold = matchDB.getQuestionThreshold();
+        for (QuestionOptionDB questionOptionDB : questionOptionDBList) {
+            MatchDB matchDB = questionOptionDB.getMatchDB();
+            QuestionThresholdDB questionThresholdDB = matchDB.getQuestionThreshold();
             //Found
-            if (questionThreshold != null) {
-                return questionThreshold;
+            if (questionThresholdDB != null) {
+                return questionThresholdDB;
             }
         }
         return null;
     }
 
-    public static List<QuestionThreshold> getAllQuestionThresholds() {
-        return new Select().from(QuestionThreshold.class).queryList();
+    public static List<QuestionThresholdDB> getAllQuestionThresholds() {
+        return new Select().from(QuestionThresholdDB.class).queryList();
     }
 
     /**
-     * Method to get the mMatchDBs with a question id and a value between or equal min max
-     * @param id_question The id of the question.
+     * Method to get the mMatchDBs with a mQuestionDB id and a value between or equal min max
+     * @param id_question The id of the mQuestionDB.
      * @param value The value to check.
      * @return The list of mMatchDBs.
      */
     public static List<MatchDB> getMatchesWithQuestionValue(Long id_question,
             int value) {
         return new Select().from(MatchDB.class).as(matchName)
-                .join(QuestionThreshold.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
+                .join(QuestionThresholdDB.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
                 .on(MatchDB_Table.id_match.withTable(matchAlias)
-                        .eq(QuestionThreshold_Table.id_match_fk.withTable(questionThresholdAlias)))
-                .where(QuestionThreshold_Table.id_question_fk.withTable(questionThresholdAlias)
+                        .eq(QuestionThresholdDB_Table.id_match_fk.withTable(
+                                questionThresholdAlias)))
+                .where(QuestionThresholdDB_Table.id_question_fk.withTable(questionThresholdAlias)
                         .is(id_question))
-                .and(QuestionThreshold_Table.minValue.withTable(questionThresholdAlias)
+                .and(QuestionThresholdDB_Table.minValue.withTable(questionThresholdAlias)
                         .lessThanOrEq(value))
-                .and(QuestionThreshold_Table.maxValue.withTable(questionThresholdAlias)
+                .and(QuestionThresholdDB_Table.maxValue.withTable(questionThresholdAlias)
                         .greaterThanOrEq(value))
                 .queryList();
     }
 
     /**
-     * Method to delete the questionThresholds passed
+     * Method to delete the questionThresholdDBs passed
      */
-    public static void deleteQuestionThresholds(List<QuestionThreshold> questionThresholds) {
-        for (QuestionThreshold questionThreshold : questionThresholds) {
-            questionThreshold.delete();
+    public static void deleteQuestionThresholds(List<QuestionThresholdDB> questionThresholdDBs) {
+        for (QuestionThresholdDB questionThresholdDB : questionThresholdDBs) {
+            questionThresholdDB.delete();
         }
     }
 
@@ -137,25 +139,25 @@ public class QuestionThreshold extends BaseModel {
         this.id_question_threshold = id_question_threshold;
     }
 
-    public Question getQuestion() {
-        if (question == null) {
+    public QuestionDB getQuestionDB() {
+        if (mQuestionDB == null) {
             if (id_question_fk == null) return null;
-            question = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_question
+            mQuestionDB = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_question
                             .is(id_question_fk)).querySingle();
         }
-        return question;
+        return mQuestionDB;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question_fk = (question != null) ? question.getId_question() : null;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
+        this.id_question_fk = (questionDB != null) ? questionDB.getId_question() : null;
     }
 
     public void setQuestion(Long id_question) {
         this.id_question_fk = id_question;
-        this.question = null;
+        this.mQuestionDB = null;
     }
 
     public MatchDB getMatchDB() {
@@ -220,10 +222,10 @@ public class QuestionThreshold extends BaseModel {
     }
 
 
-    public static List<QuestionThreshold> getQuestionThresholdsWithMatch(Long matchId) {
+    public static List<QuestionThresholdDB> getQuestionThresholdsWithMatch(Long matchId) {
         return new Select()
-                .from(QuestionThreshold.class)
-                .where(QuestionThreshold_Table.id_match_fk.is(matchId))
+                .from(QuestionThresholdDB.class)
+                .where(QuestionThresholdDB_Table.id_match_fk.is(matchId))
                 .queryList();
     }
 
@@ -233,7 +235,7 @@ public class QuestionThreshold extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        QuestionThreshold that = (QuestionThreshold) o;
+        QuestionThresholdDB that = (QuestionThresholdDB) o;
 
         if (id_question_threshold != that.id_question_threshold) return false;
         if (minValue != that.minValue) return false;
@@ -255,7 +257,7 @@ public class QuestionThreshold extends BaseModel {
 
     @Override
     public String toString() {
-        return "QuestionThreshold{" +
+        return "QuestionThresholdDB{" +
                 "id_question_threshold=" + id_question_threshold +
                 ", id_question=" + id_question_fk +
                 ", id_match=" + id_match_fk +

@@ -6,7 +6,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
-    Function<Value, QuestionDB> valuesToQuestions = new Function<Value, QuestionDB>() {
+    Function<ValueDB, QuestionDB> valuesToQuestions = new Function<ValueDB, QuestionDB>() {
         @Nullable
         @Override
-        public QuestionDB apply(Value value) {
+        public QuestionDB apply(ValueDB value) {
             return value.getQuestionDB();
         }
     };
@@ -48,13 +48,13 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
             org.eyeseetea.malariacare.data.database.model.SurveyDB surveyDBMalaria =
                     org.eyeseetea.malariacare.data
                             .database.model.SurveyDB.findById(survey.getId());
-            List<Value> surveyValues = surveyDBMalaria.getValuesFromDB();
+            List<ValueDB> surveyValues = surveyDBMalaria.getValuesFromDB();
 
             org.eyeseetea.malariacare.data.database.model.SurveyDB surveyDBStock =
                     org.eyeseetea.malariacare.data
                             .database.model.SurveyDB.getLastSurveyWithType(Constants.SURVEY_ISSUE);
 
-            Value rdtStockValue = TreatmentQueries.getStockRDTQuestion().insertValue("1",
+            ValueDB rdtStockValue = TreatmentQueries.getStockRDTQuestion().insertValue("1",
                     surveyDBStock);
 
             rdtStockValue.setValue(Integer.toString(rdtUsed(surveyValues)));
@@ -69,9 +69,9 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
         }
     }
 
-    private int rdtUsed(List<Value> surveyValues) {
+    private int rdtUsed(List<ValueDB> surveyValues) {
         int rdtUsed = 1;
-        Map<QuestionDB, Value> answersMap = Maps.uniqueIndex(surveyValues, valuesToQuestions);
+        Map<QuestionDB, ValueDB> answersMap = Maps.uniqueIndex(surveyValues, valuesToQuestions);
         QuestionDB rdtQuestionDB = TreatmentQueries.getRDTQuestion();
         QuestionDB confirmInvalid = TreatmentQueries.getInvalidCounterQuestion();
         if (answersMap.keySet().contains(confirmInvalid)) {

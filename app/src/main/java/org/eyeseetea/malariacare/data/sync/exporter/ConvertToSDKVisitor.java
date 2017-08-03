@@ -29,7 +29,7 @@ import com.crashlytics.android.Crashlytics;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -113,9 +113,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             surveyDB.save();
             //Turn question values into dataValues
             Log.d(TAG, "Creating datavalues from questions...");
-            for (Value value : surveyDB.getValuesFromDB()) {
-                if (value.getQuestionDB().hasDataElement()) {
-                    buildAndSaveDataValue(value.getQuestionDB().getUid(), value.getValue(), event);
+            for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
+                if (valueDB.getQuestionDB().hasDataElement()) {
+                    buildAndSaveDataValue(valueDB.getQuestionDB().getUid(), valueDB.getValue(), event);
                 }
             }
 
@@ -161,8 +161,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             return true;
         }
 
-        List<Value> values = surveyDB.getValuesFromDB();
-        if (values == null || values.isEmpty()) {
+        List<ValueDB> valueDBs = surveyDB.getValuesFromDB();
+        if (valueDBs == null || valueDBs.isEmpty()) {
             logEmptySurveyException(surveyDB);
             return true;
         }
@@ -214,8 +214,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         dataValue.setDataElement(UID);
         dataValue.setEvent(event.getEvent());
         dataValue.setProvidedElsewhere(false);
-        if (Session.getUser() != null) {
-            dataValue.setStoredBy(Session.getUser().getName());
+        if (Session.getUserDB() != null) {
+            dataValue.setStoredBy(Session.getUserDB().getName());
         }
         dataValue.setValue(value);
         dataValue.save();

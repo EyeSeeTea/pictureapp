@@ -147,7 +147,7 @@ public class SdkQueries {
         new Index<QuestionThresholdDB>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
                 QuestionThresholdDB.class, QuestionThresholdDB$Table.ID_QUESTION).enable();
 
-        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
+        new Index<ValueDB>(Constants.VALUE_IDX).on(ValueDB.class, ValueDB$Table.ID_SURVEY).enable();
         */
     }
 

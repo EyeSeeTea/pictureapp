@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
@@ -50,7 +50,7 @@ public class LabelMultiQuestionView extends CommonQuestionView implements IQuest
     }
 
     @Override
-    public void setValue(Value value) {
+    public void setValue(ValueDB valueDB) {
     }
 
     @Override

@@ -35,7 +35,7 @@ import java.util.List;
 public class HeaderDB extends BaseModel {
 
     /**
-     * Required for creating the dynamic treatment mQuestionDB in SCMM
+     * Required for creating the dynamic mTreatmentDB mQuestionDB in SCMM
      */
     public final static Long DYNAMIC_TREATMENT_HEADER_ID = 7l;
 
@@ -52,9 +52,9 @@ public class HeaderDB extends BaseModel {
     Long id_tab_fk;
 
     /**
-     * Reference to parent tab (loaded lazily)
+     * Reference to parent mTabDB (loaded lazily)
      */
-    Tab tab;
+    TabDB mTabDB;
 
     /**
      * List of mQuestionDBs that belongs to this mHeaderDB
@@ -64,11 +64,11 @@ public class HeaderDB extends BaseModel {
     public HeaderDB() {
     }
 
-    public HeaderDB(String short_name, String name, Integer order_pos, Integer master, Tab tab) {
+    public HeaderDB(String short_name, String name, Integer order_pos, Integer master, TabDB tabDB) {
         this.short_name = short_name;
         this.name = name;
         this.order_pos = order_pos;
-        setTab(tab);
+        setTabDB(tabDB);
     }
 
     public static List<HeaderDB> getAllHeaders() {
@@ -124,25 +124,25 @@ public class HeaderDB extends BaseModel {
         this.order_pos = order_pos;
     }
 
-    public Tab getTab() {
-        if(tab==null){
+    public TabDB getTabDB() {
+        if(mTabDB ==null){
             if(id_tab_fk==null) return null;
-            tab = new Select()
-                    .from(Tab.class)
-                    .where((Tab_Table.id_tab)
+            mTabDB = new Select()
+                    .from(TabDB.class)
+                    .where((TabDB_Table.id_tab)
                             .is(id_tab_fk)).querySingle();
         }
-        return tab;
+        return mTabDB;
     }
 
-    public void setTab(Tab tab) {
-        this.tab = tab;
-        this.id_tab_fk = (tab != null) ? tab.getId_tab() : null;
+    public void setTabDB(TabDB tabDB) {
+        this.mTabDB = tabDB;
+        this.id_tab_fk = (tabDB != null) ? tabDB.getId_tab() : null;
     }
 
     public void setTab(Long id_tab) {
         this.id_tab_fk = id_tab;
-        this.tab = null;
+        this.mTabDB = null;
     }
 
     public List<QuestionDB> getQuestionDBs() {

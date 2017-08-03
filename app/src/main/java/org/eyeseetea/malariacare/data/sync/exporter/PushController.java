@@ -24,7 +24,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
@@ -73,10 +73,10 @@ public class PushController implements IPushController {
             List<SurveyDB> surveyDBs = SurveyDB.getAllCompletedSurveysNoReceiptReset();
             Boolean isUserClosed = false;
 
-            User loggedUser = User.getLoggedUser();
-            if (loggedUser != null && loggedUser.getUid() != null) {
+            UserDB loggedUserDB = UserDB.getLoggedUser();
+            if (loggedUserDB != null && loggedUserDB.getUid() != null) {
                 try {
-                isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                isUserClosed = ServerAPIController.isUserClosed(UserDB.getLoggedUser().getUid());
                 } catch (ApiCallException e) {
                     isUserClosed = null;
             }

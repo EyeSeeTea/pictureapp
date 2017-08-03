@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -101,9 +101,9 @@ public class DataConverter {
     private static void saveConvertedValues(final IPullController.Callback callback,
             ConvertFromSDKVisitor converter) {
 
-        List<Value> values = converter.getValues();
+        List<ValueDB> valueDBs = converter.getValueDBs();
 
-        Value.saveAll(values, new IDataSourceCallback<Void>() {
+        ValueDB.saveAll(valueDBs, new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 callback.onComplete();

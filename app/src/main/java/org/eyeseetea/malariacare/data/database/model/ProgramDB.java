@@ -60,9 +60,9 @@ public class ProgramDB extends BaseModel {
     List<OrgUnitDB> mOrgUnitDBs;
 
     /**
-     * List of tabs that belongs to this mProgramDB
+     * List of mTabDBs that belongs to this mProgramDB
      */
-    List<Tab> tabs;
+    List<TabDB> mTabDBs;
 
     public ProgramDB() {
     }
@@ -95,12 +95,12 @@ public class ProgramDB extends BaseModel {
                     .on(QuestionDB_Table.id_header_fk.withTable(AppDatabase.questionAlias)
                             .eq(HeaderDB_Table.id_header.withTable(AppDatabase.headerAlias)))
 
-                    .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
+                    .join(TabDB.class, Join.JoinType.INNER).as(AppDatabase.tabName)
                     .on(HeaderDB_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
-                            .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
+                            .eq(TabDB_Table.id_tab.withTable(AppDatabase.tabAlias)))
 
                     .join(ProgramDB.class, Join.JoinType.INNER).as(AppDatabase.programName)
-                    .on(Tab_Table.id_program_fk.withTable(AppDatabase.tabAlias)
+                    .on(TabDB_Table.id_program_fk.withTable(AppDatabase.tabAlias)
                             .eq(ProgramDB_Table.id_program.withTable(AppDatabase.programAlias)))
 
                     .where(ProgramDB_Table.uid_program.withTable(AppDatabase.programAlias).eq(
@@ -188,14 +188,14 @@ public class ProgramDB extends BaseModel {
         mOrgUnitDBs = null;
     }
 
-    public List<Tab> getTabs() {
-        if (tabs == null) {
-            tabs = new Select().from(Tab.class)
-                    .where(Tab_Table.id_program_fk.eq(this.getId_program()))
-                    .orderBy(Tab_Table.order_pos, true)
+    public List<TabDB> getTabDBs() {
+        if (mTabDBs == null) {
+            mTabDBs = new Select().from(TabDB.class)
+                    .where(TabDB_Table.id_program_fk.eq(this.getId_program()))
+                    .orderBy(TabDB_Table.order_pos, true)
                     .queryList();
         }
-        return tabs;
+        return mTabDBs;
     }
 
     public static ProgramDB findById(Long id_program) {

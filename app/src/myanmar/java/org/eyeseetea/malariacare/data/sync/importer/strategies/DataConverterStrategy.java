@@ -116,7 +116,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
                 }
             } else {
                 Log.e(this.getClass().getSimpleName(),
-                        "Value not create for questionDB " + questionDB.getUid());
+                        "ValueDB not create for questionDB " + questionDB.getUid());
                 return;
             }
         }
@@ -131,7 +131,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
             createDataValueExtended(event, questionDB.getUid(), selectedOption.getCode(), converter);
         } else {
             Log.e(this.getClass().getSimpleName(),
-                    "Value not create for questionDB " + questionDB.getUid());
+                    "ValueDB not create for questionDB " + questionDB.getUid());
         }
 
     }

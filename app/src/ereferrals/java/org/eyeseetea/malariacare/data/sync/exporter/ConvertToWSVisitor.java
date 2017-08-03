@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
@@ -33,7 +33,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private static List<AttributeValueWS> getValuesWSFromSurvey(SurveyDB survey) {
         List<AttributeValueWS> valueWSes = new ArrayList<>();
-        for (Value value : survey.getValuesFromDB()) {
+        for (ValueDB value : survey.getValuesFromDB()) {
             if (value.getQuestionDB() != null) {
                 if (value.getOptionDB() == null) {
                     valueWSes.add(

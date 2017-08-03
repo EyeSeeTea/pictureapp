@@ -33,7 +33,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnitDB = OrgUnitDB.findByUID(orgUnitUid);
-        SurveyDB surveyDB = new SurveyDB(orgUnitDB, program, Session.getUser());
+        SurveyDB surveyDB = new SurveyDB(orgUnitDB, program, Session.getUserDB());
         surveyDB.save();
         Session.setMalariaSurveyDB(surveyDB);
         //Look for coordinates

@@ -29,7 +29,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -303,12 +303,12 @@ public class SurveyService extends IntentService {
         ScoreRegister.registerCompositeScores(compositeScoreDBs);
 
         //Get tabs for current program & register them (scores)
-        List<Tab> tabs = new Select().from(Tab.class).queryList();
-        ScoreRegister.registerTabScores(tabs);
+        List<TabDB> tabDBs = new Select().from(TabDB.class).queryList();
+        ScoreRegister.registerTabScores(tabDBs);
 
         //Since intents does NOT admit NON serializable as values we use Session instead
         Session.putServiceValue(PREPARE_SURVEY_ACTION_COMPOSITE_SCORES, compositeScoreDBs);
-        Session.putServiceValue(PREPARE_SURVEY_ACTION_TABS, tabs);
+        Session.putServiceValue(PREPARE_SURVEY_ACTION_TABS, tabDBs);
 
         //Returning result to anyone listening
         Intent resultIntent = new Intent(PREPARE_SURVEY_ACTION);

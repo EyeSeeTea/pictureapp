@@ -6,7 +6,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -26,7 +26,7 @@ public class SurveyFragmentStrategy {
         return Session.getMalariaSurveyDB();
     }
 
-    public static void saveValueDDlExtraOperations(Value value, OptionDB option, String uid) {
+    public static void saveValueDDlExtraOperations(ValueDB valueDB, OptionDB option, String uid) {
 
     }
 
@@ -34,27 +34,27 @@ public class SurveyFragmentStrategy {
         return Session.getMalariaSurveyDB();
     }
 
-    public static void saveValuesText(Value value, String answer,
+    public static void saveValuesText(ValueDB valueDB, String answer,
             QuestionDB question, SurveyDB surveyDB) {
-        question.createOrSaveValue(answer, value, surveyDB);
+        question.createOrSaveValue(answer, valueDB, surveyDB);
         for (QuestionDB propagateQuestion : question.getPropagationQuestions()) {
             propagateQuestion.createOrSaveValue(answer,
-                    Value.findValueFromDatabase(propagateQuestion.getId_question(),
+                    ValueDB.findValueFromDatabase(propagateQuestion.getId_question(),
                             Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
         }
     }
 
-    public static void recursiveRemover(Value value, OptionDB option, QuestionDB question,
+    public static void recursiveRemover(ValueDB valueDB, OptionDB option, QuestionDB question,
             SurveyDB surveyDB) {
-        if (!value.getOptionDB().equals(option) && question.hasChildren()) {
+        if (!valueDB.getOptionDB().equals(option) && question.hasChildren()) {
             surveyDB.removeChildrenValuesFromQuestionRecursively(question, false);
         }
     }
 
     public static List<QuestionDB> getCompulsoryNotAnsweredQuestions(QuestionDB question) {
         List<QuestionDB> questions = new ArrayList<>();
-        if (question.getHeaderDB().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = question.getQuestionsByTab(question.getHeaderDB().getTab());
+        if (question.getHeaderDB().getTabDB().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questions = question.getQuestionsByTab(question.getHeaderDB().getTabDB());
         } else {
             questions.add(question);
         }

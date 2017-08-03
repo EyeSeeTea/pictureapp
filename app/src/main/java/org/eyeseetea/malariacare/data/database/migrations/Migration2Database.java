@@ -43,7 +43,7 @@ import org.eyeseetea.malariacare.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.database.model.ScoreDB;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -122,7 +122,7 @@ public class Migration2Database extends BaseMigration {
         addColumn(database, Survey.class, "creationDate", "integer");
         addColumn(database, Survey.class, "scheduledDate", "integer");
 
-        addColumn(database, Tab.class, "id_tab_group", "integer");
+        addColumn(database, TabDB.class, "id_tab_group", "integer");
     }
 
     @Override
@@ -162,7 +162,7 @@ public class Migration2Database extends BaseMigration {
         }
 
         //Add program to current tabs
-        Tab tab = new Select().from(Tab.class).querySingle();
+        TabDB tab = new Select().from(TabDB.class).querySingle();
         tab.setProgramDB(program);
         tab.setType(Constants.TAB_DYNAMIC_AUTOMATIC_TAB);
         tab.save();

@@ -45,7 +45,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -765,14 +765,14 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
-        User loggedUser;
+        UserDB mLoggedUserDB;
 
         @Override
         protected Void doInBackground(Void... params) {
-            loggedUser = User.getLoggedUser();
-            if (loggedUser != null) {
+            mLoggedUserDB = UserDB.getLoggedUser();
+            if (mLoggedUserDB != null) {
                 try {
-                    loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                    mLoggedUserDB = ServerAPIController.pullUserAttributes(mLoggedUserDB);
                 }catch (ApiCallException e){
                     return null;
                 }
@@ -783,16 +783,16 @@ public class DashboardActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (loggedUser != null) {
-                if (loggedUser.getAnnouncement() != null
-                        && !loggedUser.getAnnouncement().equals("")
+            if (mLoggedUserDB != null) {
+                if (mLoggedUserDB.getAnnouncement() != null
+                        && !mLoggedUserDB.getAnnouncement().equals("")
                         && !PreferencesState.getInstance().isUserAccept()) {
                     Log.d(TAG, "show logged announcement");
                     AnnouncementMessageDialog.showAnnouncement(R.string.admin_announcement,
-                            loggedUser.getAnnouncement(),
+                            mLoggedUserDB.getAnnouncement(),
                             DashboardActivity.this);
                 } else {
-                    AnnouncementMessageDialog.checkUserClosed(loggedUser, DashboardActivity.this);
+                    AnnouncementMessageDialog.checkUserClosed(mLoggedUserDB, DashboardActivity.this);
                 }
             }
         }

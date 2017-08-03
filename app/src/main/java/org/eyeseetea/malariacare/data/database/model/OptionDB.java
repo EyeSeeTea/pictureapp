@@ -70,7 +70,7 @@ public class OptionDB extends BaseModel {
     /**
      * List of values that has choosen this mOptionDB
      */
-    List<Value> values;
+    List<ValueDB> mValueDBs;
 
     public OptionDB() {
     }
@@ -222,12 +222,12 @@ public class OptionDB extends BaseModel {
      * Looks for the value with the given mQuestionDB  is the provided mOptionDB
      */
     public static boolean findOption(Long idQuestion, Long idOption, SurveyDB surveyDB) {
-        Value value = Value.findValue(idQuestion, surveyDB);
-        if (value == null) {
+        ValueDB valueDB = ValueDB.findValue(idQuestion, surveyDB);
+        if (valueDB == null) {
             return false;
         }
 
-        Long valueIdOption = value.getId_option();
+        Long valueIdOption = valueDB.getId_option();
         return idOption.equals(valueIdOption);
     }
 
@@ -246,13 +246,13 @@ public class OptionDB extends BaseModel {
         if (surveyDB == null) {
             return null;
         }
-        List<Value> returnValues = new Select().from(Value.class)
+        List<ValueDB> returnValueDBs = new Select().from(ValueDB.class)
                 //// FIXME: 29/12/16  indexed
                 //.indexedBy(Constants.VALUE_IDX)
-                .where(Value_Table.id_option_fk.eq(this.getId_option()))
-                .and(Value_Table.id_survey_fk.eq(surveyDB.getId_survey())).queryList();
+                .where(ValueDB_Table.id_option_fk.eq(this.getId_option()))
+                .and(ValueDB_Table.id_survey_fk.eq(surveyDB.getId_survey())).queryList();
 
-        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestionDB();
+        return (returnValueDBs.size() == 0) ? null : returnValueDBs.get(0).getQuestionDB();
     }
 
 
@@ -274,12 +274,12 @@ public class OptionDB extends BaseModel {
         return given.equals(name);
     }
 
-    public List<Value> getValues() {
-        if (values == null) {
-            values = new Select().from(Value.class)
-                    .where(Value_Table.id_option_fk.eq(this.getId_option())).queryList();
+    public List<ValueDB> getValueDBs() {
+        if (mValueDBs == null) {
+            mValueDBs = new Select().from(ValueDB.class)
+                    .where(ValueDB_Table.id_option_fk.eq(this.getId_option())).queryList();
         }
-        return values;
+        return mValueDBs;
     }
 
     @Override

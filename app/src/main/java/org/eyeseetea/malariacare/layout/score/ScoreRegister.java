@@ -25,7 +25,7 @@ import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.ArrayList;
@@ -53,8 +53,8 @@ public class ScoreRegister {
     /**
      * Map of scores for each tab
      */
-    private static final Map<Tab, TabNumDenRecord> tabScoreMap =
-            new HashMap<Tab, TabNumDenRecord>();
+    private static final Map<TabDB, TabNumDenRecord> tabScoreMap =
+            new HashMap<TabDB, TabNumDenRecord>();
 
     public static void initScoresForQuestions(List<QuestionDB> questionDBs, SurveyDB surveyDB) {
         for (QuestionDB questionDB : questionDBs) {
@@ -70,14 +70,14 @@ public class ScoreRegister {
         if (questionDB.getCompositeScoreDB() != null) {
             compositeScoreMap.get(questionDB.getCompositeScoreDB()).addRecord(questionDB, num, den);
         }
-        tabScoreMap.get(questionDB.getHeaderDB().getTab()).addRecord(questionDB, num, den);
+        tabScoreMap.get(questionDB.getHeaderDB().getTabDB()).addRecord(questionDB, num, den);
     }
 
     public static void deleteRecord(QuestionDB questionDB) {
         if (questionDB.getCompositeScoreDB() != null) {
             compositeScoreMap.get(questionDB.getCompositeScoreDB()).deleteRecord(questionDB);
         }
-        tabScoreMap.get(questionDB.getHeaderDB().getTab()).deleteRecord(questionDB);
+        tabScoreMap.get(questionDB.getHeaderDB().getTabDB()).deleteRecord(questionDB);
     }
 
     private static List<Float> getRecursiveScore(CompositeScoreDB cScore, List<Float> result) {
@@ -99,7 +99,7 @@ public class ScoreRegister {
     }
 
     public static List<Float> getNumDenum(QuestionDB questionDB) {
-        return tabScoreMap.get(questionDB.getHeaderDB().getTab()).getNumDenRecord().get(questionDB);
+        return tabScoreMap.get(questionDB.getHeaderDB().getTabDB()).getNumDenRecord().get(questionDB);
     }
 
     public static Float getCompositeScore(CompositeScoreDB cScore) {
@@ -113,8 +113,8 @@ public class ScoreRegister {
     }
 
 
-    public static List<Float> calculateGeneralScore(Tab tab) {
-        return tabScoreMap.get(tab).calculateTotal();
+    public static List<Float> calculateGeneralScore(TabDB tabDB) {
+        return tabScoreMap.get(tabDB).calculateTotal();
     }
 
     /**
@@ -131,11 +131,11 @@ public class ScoreRegister {
     /**
      * Resets generalScores and initializes a new set ot them
      */
-    public static void registerTabScores(List<Tab> tabs) {
+    public static void registerTabScores(List<TabDB> tabDBs) {
         tabScoreMap.clear();
-        for (Tab tab : tabs) {
-            Log.i(TAG, "Register tab score: " + tab.getName());
-            tabScoreMap.put(tab, new TabNumDenRecord());
+        for (TabDB tabDB : tabDBs) {
+            Log.i(TAG, "Register tabDB score: " + tabDB.getName());
+            tabScoreMap.put(tabDB, new TabNumDenRecord());
         }
     }
 
@@ -216,8 +216,8 @@ public class ScoreRegister {
         ScoreRegister.clear();
 
         //Register scores for tabs
-        List<Tab> tabs = surveyDB.getProgramDB().getTabs();
-        ScoreRegister.registerTabScores(tabs);
+        List<TabDB> tabDBs = surveyDB.getProgramDB().getTabDBs();
+        ScoreRegister.registerTabScores(tabDBs);
 
         //Register scores for composites
         List<CompositeScoreDB> compositeScoreDBList = CompositeScoreDB.listByProgram(

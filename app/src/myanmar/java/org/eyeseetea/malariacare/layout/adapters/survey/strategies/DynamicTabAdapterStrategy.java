@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
@@ -104,7 +104,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             Treatment treatment = new Treatment(getMalariaSurveyDB(),
                     Session.getStockSurveyDB());
             if (treatment.hasTreatment()) {
-                org.eyeseetea.malariacare.data.database.model.Treatment dbTreatment =
+                org.eyeseetea.malariacare.data.database.model.TreatmentDB dbTreatment =
                         treatment.getTreatment();
                 QuestionDB actAnsweredNo = treatment.getACTQuestionAnsweredNo();
                 screenQuestionDB.setAnswer(treatment.getACTOptions(dbTreatment));
@@ -125,7 +125,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             }
             survey.getValuesFromDB();
             for (QuestionDB questionDB : questionDBs) {
-                Value valueStock = questionDB.getValueBySession();
+                ValueDB valueStock = questionDB.getValueBySession();
                 questionView.setValue(valueStock);
             }
         }

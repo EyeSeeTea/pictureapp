@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.domain.exception.ImageNotShowException;
@@ -159,7 +159,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
         stockHideView.setTag(TreatmentQueries.getDynamicStockQuestion());
         QuestionDB pqHideQuestionDB = TreatmentQueries.getStockPqQuestion();
         OptionDB falseOption = OptionDB.findById(41l);
-        Value valuePq = pqHideQuestionDB.getValueBySession();
+        ValueDB valuePq = pqHideQuestionDB.getValueBySession();
         if (valuePq != null) {
             falseOption = valuePq.getOptionDB();
         }
@@ -178,7 +178,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuesti
     }
 
     @Override
-    public void setValue(Value value) {
+    public void setValue(ValueDB value) {
         if (value == null || value.getValue() == null) {
             return;
         }

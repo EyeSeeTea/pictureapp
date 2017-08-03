@@ -8,7 +8,7 @@ import android.widget.Switch;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -75,11 +75,11 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value == null || value.getValue() == null) {
+    public void setValue(ValueDB valueDB) {
+        if (valueDB == null || valueDB.getValue() == null) {
             setDefaultValue();
         } else {
-            switchView.setChecked(value.getValue().equals(mTrueOptionDB.getCode()));
+            switchView.setChecked(valueDB.getValue().equals(mTrueOptionDB.getCode()));
         }
     }
 

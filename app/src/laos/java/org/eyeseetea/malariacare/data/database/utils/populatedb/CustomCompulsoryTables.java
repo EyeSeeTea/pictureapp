@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,7 @@ public class CustomCompulsoryTables {
 
     public static List<Class<? extends BaseModel>> allMandatoryTables= Arrays.asList(
             ProgramDB.class,
-            Tab.class,
+            TabDB.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,

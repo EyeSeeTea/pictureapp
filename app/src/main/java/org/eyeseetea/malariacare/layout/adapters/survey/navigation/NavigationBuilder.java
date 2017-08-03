@@ -5,7 +5,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -63,7 +63,7 @@ public class NavigationBuilder {
     /**
      * Returns a navigation controller so you can navigate through questions according to answers
      */
-    public void buildController(Tab tab) throws LoadingNavigationControllerException{
+    public void buildController(TabDB tabDB) throws LoadingNavigationControllerException{
 
         if (Session.isIsLoadingNavigationController()) {
             Log.d(TAG, "Navigation controller cannot load because it is already loading");
@@ -71,15 +71,15 @@ public class NavigationBuilder {
         }
 
         //No tab -> nothing to build
-        if (tab == null) {
-            Log.w(TAG, "Navigation controller cannot load because first tab doesn't exist");
+        if (tabDB == null) {
+            Log.w(TAG, "Navigation controller cannot load because first tabDB doesn't exist");
             return;
         }
 
         warningsXQuestion.clear();
 
-        Log.d(TAG, String.format("build(%s)", tab.getName()));
-        final QuestionDB rootQuestionDB = QuestionDB.findRootQuestion(tab);
+        Log.d(TAG, String.format("build(%s)", tabDB.getName()));
+        final QuestionDB rootQuestionDB = QuestionDB.findRootQuestion(tabDB);
 
         //NO first question -> nothing to build
         if (rootQuestionDB == null) {

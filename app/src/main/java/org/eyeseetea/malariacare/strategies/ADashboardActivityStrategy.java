@@ -12,7 +12,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -182,7 +182,7 @@ public abstract class ADashboardActivityStrategy {
 
 
     public void initNavigationController() throws LoadingNavigationControllerException {
-        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+        NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
     }
 
     public void onUnsentTabSelected(DashboardActivity dashboardActivity) {

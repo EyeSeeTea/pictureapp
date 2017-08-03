@@ -29,9 +29,9 @@ public class DrugCombinationDB extends BaseModel {
      */
     DrugDB mDrugDB;
     /**
-     * Reference to treatment (loaded lazily)
+     * Reference to mTreatmentDB (loaded lazily)
      */
-    Treatment treatment;
+    TreatmentDB mTreatmentDB;
 
     public DrugCombinationDB() {
     }
@@ -77,33 +77,33 @@ public class DrugCombinationDB extends BaseModel {
         mDrugDB = null;
     }
 
-    public Treatment getTreatment() {
-        if (treatment == null) {
+    public TreatmentDB getTreatmentDB() {
+        if (mTreatmentDB == null) {
             if (id_treatment_fk == null) {
                 return null;
             }
-            treatment = new Select()
-                    .from(Treatment.class)
-                    .where(Treatment_Table.id_treatment
+            mTreatmentDB = new Select()
+                    .from(TreatmentDB.class)
+                    .where(TreatmentDB_Table.id_treatment
                             .is(id_treatment_fk)).querySingle();
         }
-        return treatment;
+        return mTreatmentDB;
     }
 
-    public void setTreatment(Treatment treatment) {
-        this.treatment = treatment;
-        id_treatment_fk = (treatment != null) ? treatment.id_treatment : null;
+    public void setTreatmentDB(TreatmentDB treatmentDB) {
+        this.mTreatmentDB = treatmentDB;
+        id_treatment_fk = (treatmentDB != null) ? treatmentDB.id_treatment : null;
     }
 
     public void setTreatment(Long id_treatment) {
         this.id_treatment_fk = id_treatment;
-        treatment = null;
+        mTreatmentDB = null;
     }
 
-    public static float getDose(Treatment treatment, DrugDB drugDB) {
+    public static float getDose(TreatmentDB treatmentDB, DrugDB drugDB) {
         DrugCombinationDB drugCombinationDB = new Select()
                 .from(DrugCombinationDB.class)
-                .where(DrugCombinationDB_Table.id_treatment_fk.is(treatment.getId_treatment()))
+                .where(DrugCombinationDB_Table.id_treatment_fk.is(treatmentDB.getId_treatment()))
                 .and(DrugCombinationDB_Table.id_drug_fk.is(drugDB.getId_drug()))
                 .querySingle();
         if (drugCombinationDB != null) {

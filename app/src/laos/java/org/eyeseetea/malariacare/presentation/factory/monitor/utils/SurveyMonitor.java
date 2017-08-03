@@ -21,7 +21,7 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 
 /**
  * Decorator that tells if a survey has specific info
@@ -120,7 +120,7 @@ public class SurveyMonitor {
      * Tells if the given survey is not tested
      */
     public boolean isNotTested() {
-        return Value.findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_NOT_TESTED, mSurveyDB)
+        return ValueDB.findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_NOT_TESTED, mSurveyDB)
                 != null;
     }
 
@@ -128,7 +128,7 @@ public class SurveyMonitor {
      * Tells if the given survey is tested
      */
     public boolean isTested() {
-        return Value.findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_YES_TESTED, mSurveyDB)
+        return ValueDB.findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_YES_TESTED, mSurveyDB)
                 != null;
     }
 
@@ -143,7 +143,7 @@ public class SurveyMonitor {
      * Tells if the given survey test is negative
      */
     public boolean isNegative() {
-        return Value.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_TEST_NEGATIVE, mSurveyDB)
+        return ValueDB.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_TEST_NEGATIVE, mSurveyDB)
                 != null;
     }
 
@@ -151,10 +151,10 @@ public class SurveyMonitor {
      * Tells if the given survey rdt is tested but test is not negative
      */
     public boolean isPositive() {
-        return (Value.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PF, mSurveyDB) != null
-                || Value.findValue(
+        return (ValueDB.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PF, mSurveyDB) != null
+                || ValueDB.findValue(
                 ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV, mSurveyDB) != null
-                || Value.findValue(
+                || ValueDB.findValue(
                 ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV, mSurveyDB) != null);
     }
 
@@ -162,29 +162,29 @@ public class SurveyMonitor {
      * Tells if the given survey has Pf specie
      */
     public boolean isPf() {
-        return Value.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PF, mSurveyDB) != null;
+        return ValueDB.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PF, mSurveyDB) != null;
     }
 
     /**
      * Tells if the given survey has Pv specie
      */
     public boolean isPv() {
-        return Value.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV, mSurveyDB) != null;
+        return ValueDB.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV, mSurveyDB) != null;
     }
 
     /**
      * Tells if the given survey has Pf/Pv (mixed)  specie
      */
     public boolean isPfPv() {
-        return Value.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV, mSurveyDB) != null;
+        return ValueDB.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV, mSurveyDB) != null;
     }
 
     /**
      * Tells if the given survey has Pf/Pv (mixed) or Pv  specie
      */
     public boolean isReferral() {
-        return (Value.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV, mSurveyDB) != null
-                || Value.findValue(
+        return (ValueDB.findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV, mSurveyDB) != null
+                || ValueDB.findValue(
                 ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV, mSurveyDB) != null);
     }
 
@@ -192,7 +192,7 @@ public class SurveyMonitor {
      * Tells if the given survey is not tested number of referrals(RDT testing)
      */
     public boolean isRDTTesting() {
-        return Value.findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_NOT_TESTED, mSurveyDB)
+        return ValueDB.findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_NOT_TESTED, mSurveyDB)
                 != null;
     }
 
@@ -200,7 +200,7 @@ public class SurveyMonitor {
      * Tells if the given survey is PV or PV+PF or referred to hospital
      */
     public boolean isTreatment() {
-        if (isReferral() || Value.findValue(ID_QUESTION_TREATMENT,
+        if (isReferral() || ValueDB.findValue(ID_QUESTION_TREATMENT,
                 ID_OPTION_TREATMENT_REFERER_HOSPITAL, mSurveyDB)
                 != null) {
             return true;
@@ -214,7 +214,7 @@ public class SurveyMonitor {
      * Tells if the given survey is referred to hospital
      */
     public boolean isACTStockout() {
-        return Value.findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL,
+        return ValueDB.findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL,
                 mSurveyDB)
                 != null;
     }
@@ -223,7 +223,7 @@ public class SurveyMonitor {
      * Tells if the given survey not tested by stockout
      */
     public boolean isRDTStockout() {
-        return Value.findValue(ID_QUESTION_REASON, ID_OPTION_RDT_STOCKOUT, mSurveyDB) != null;
+        return ValueDB.findValue(ID_QUESTION_REASON, ID_OPTION_RDT_STOCKOUT, mSurveyDB) != null;
     }
 
     /**
@@ -276,11 +276,11 @@ public class SurveyMonitor {
      * Returns the invalid count rdts for each survey
      */
     public int testCounter() {
-        Value value = Value.findValue(ID_QUESTION_COUNTER, mSurveyDB);
-        if (value == null || value.getValue() == null) {
+        ValueDB valueDB = ValueDB.findValue(ID_QUESTION_COUNTER, mSurveyDB);
+        if (valueDB == null || valueDB.getValue() == null) {
             return 0;
         }
-        return Integer.parseInt(value.getValue());
+        return Integer.parseInt(valueDB.getValue());
     }
 
 

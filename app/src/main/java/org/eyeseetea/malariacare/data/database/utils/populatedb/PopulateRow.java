@@ -16,10 +16,10 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 
 import java.util.HashMap;
 
@@ -63,7 +63,7 @@ public class PopulateRow {
         return answerDB;
     }
 
-    static HeaderDB populateHeader(String line[], HashMap<Long, Tab> tabsFK,
+    static HeaderDB populateHeader(String line[], HashMap<Long, TabDB> tabsFK,
             @Nullable HeaderDB headerDB) {
         if (headerDB == null) {
             headerDB = new HeaderDB();
@@ -71,7 +71,7 @@ public class PopulateRow {
         headerDB.setShort_name(line[1]);
         headerDB.setName(line[2]);
         headerDB.setOrder_pos(Integer.valueOf(line[3]));
-        headerDB.setTab(tabsFK.get(Long.valueOf(line[4])));
+        headerDB.setTabDB(tabsFK.get(Long.valueOf(line[4])));
         return headerDB;
     }
 
@@ -84,15 +84,15 @@ public class PopulateRow {
         return programDB;
     }
 
-    static Tab populateTab(String[] line, HashMap<Long, ProgramDB> programFK, @Nullable Tab tab) {
-        if (tab == null) {
-            tab = new Tab();
+    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK, @Nullable TabDB tabDB) {
+        if (tabDB == null) {
+            tabDB = new TabDB();
         }
-        tab.setName(line[1]);
-        tab.setOrder_pos(Integer.valueOf(line[2]));
-        tab.setProgram(programFK.get(Long.valueOf(line[3])));
-        tab.setType(Integer.valueOf(line[4]));
-        return tab;
+        tabDB.setName(line[1]);
+        tabDB.setOrder_pos(Integer.valueOf(line[2]));
+        tabDB.setProgram(programFK.get(Long.valueOf(line[3])));
+        tabDB.setType(Integer.valueOf(line[4]));
+        return tabDB;
     }
 
     static MatchDB populateMatch(String line[],
@@ -153,15 +153,15 @@ public class PopulateRow {
      *
      * @param line The row of the csv to populate.
      */
-    static TreatmentMatch populateTreatmentMatches(String[] line,
-            HashMap<Long, Treatment> treatmentIds,
-            HashMap<Long, MatchDB> matchesIds, TreatmentMatch treatmentMatch) {
-        if (treatmentMatch == null) {
-            treatmentMatch = new TreatmentMatch();
+    static TreatmentMatchDB populateTreatmentMatches(String[] line,
+            HashMap<Long, TreatmentDB> treatmentIds,
+            HashMap<Long, MatchDB> matchesIds, TreatmentMatchDB treatmentMatchDB) {
+        if (treatmentMatchDB == null) {
+            treatmentMatchDB = new TreatmentMatchDB();
         }
-        treatmentMatch.setTreatment(treatmentIds.get(Long.parseLong(line[1])));
-        treatmentMatch.setMatchDB(matchesIds.get(Long.parseLong(line[2])));
-        return treatmentMatch;
+        treatmentMatchDB.setTreatmentDB(treatmentIds.get(Long.parseLong(line[1])));
+        treatmentMatchDB.setMatchDB(matchesIds.get(Long.parseLong(line[2])));
+        return treatmentMatchDB;
     }
 
     /**
@@ -171,32 +171,32 @@ public class PopulateRow {
      * @param line The row of the csv to populate.
      */
     static DrugCombinationDB populateDrugCombinations(String[] line, HashMap<Long, DrugDB> drugsFK,
-            HashMap<Long, Treatment> treatmentFK, @Nullable DrugCombinationDB drugCombinationDB) {
+            HashMap<Long, TreatmentDB> treatmentFK, @Nullable DrugCombinationDB drugCombinationDB) {
         if (drugCombinationDB == null) {
             drugCombinationDB = new DrugCombinationDB();
         }
         drugCombinationDB.setDrugDB(drugsFK.get(Long.parseLong(line[1])));
-        drugCombinationDB.setTreatment(treatmentFK.get(Long.parseLong(line[2])));
+        drugCombinationDB.setTreatmentDB(treatmentFK.get(Long.parseLong(line[2])));
         drugCombinationDB.setDose(Float.parseFloat(line[3]));
         return drugCombinationDB;
     }
 
     /**
-     * Method to populate each row of Treatment.csv, execute after populateOrganisations.
+     * Method to populate each row of TreatmentDB.csv, execute after populateOrganisations.
      *
      * @param line The row of the csv to populate.
      * @param stringKeyList
      */
-    static Treatment populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
-            HashMap<Long, StringKeyDB> stringKeyList, @Nullable Treatment treatment) {
-        if (treatment == null) {
-            treatment = new Treatment();
+    static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
+            HashMap<Long, StringKeyDB> stringKeyList, @Nullable TreatmentDB treatmentDB) {
+        if (treatmentDB == null) {
+            treatmentDB = new TreatmentDB();
         }
-        treatment.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
-        treatment.setDiagnosis(stringKeyList.get(Long.valueOf(line[2])).getId_string_key());
-        treatment.setMessage(stringKeyList.get(Long.valueOf(line[3])).getId_string_key());
-        treatment.setType(Integer.parseInt(line[4]));
-        return treatment;
+        treatmentDB.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
+        treatmentDB.setDiagnosis(stringKeyList.get(Long.valueOf(line[2])).getId_string_key());
+        treatmentDB.setMessage(stringKeyList.get(Long.valueOf(line[3])).getId_string_key());
+        treatmentDB.setType(Integer.parseInt(line[4]));
+        return treatmentDB;
     }
 
     /**
@@ -251,15 +251,15 @@ public class PopulateRow {
         return stringKeyDB;
     }
 
-    public static Translation populateTranslation(String[] line,
+    public static TranslationDB populateTranslation(String[] line,
             HashMap<Long, StringKeyDB> stringKeyFK,
-            Translation translation) {
-        if (translation == null) {
-            translation = new Translation();
+            TranslationDB translationDB) {
+        if (translationDB == null) {
+            translationDB = new TranslationDB();
         }
-        translation.setId_string_key(stringKeyFK.get(Long.valueOf(line[1])).getId_string_key());
-        translation.setTranslation(line[2]);
-        translation.setLanguage(line[3]);
-        return translation;
+        translationDB.setId_string_key(stringKeyFK.get(Long.valueOf(line[1])).getId_string_key());
+        translationDB.setTranslation(line[2]);
+        translationDB.setLanguage(line[3]);
+        return translationDB;
     }
 }

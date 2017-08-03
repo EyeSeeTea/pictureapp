@@ -14,8 +14,8 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,9 +23,9 @@ import java.util.List;
 public class CustomCompulsoryTables {
 
     public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
-            User.class,
+            UserDB.class,
             ProgramDB.class,
-            Tab.class,
+            TabDB.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
@@ -48,7 +48,7 @@ public class WSPushController implements IPushController {
             }
             for (SurveyDB srv : mSurveys) {
                 Log.d("DpBlank", "Survey to push " + srv.toString());
-                for (Value dv : srv.getValuesFromDB()) {
+                for (ValueDB dv : srv.getValuesFromDB()) {
                     Log.d("DpBlank", "Values to push " + dv.toString());
                 }
             }

@@ -27,10 +27,10 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 
 import java.io.IOException;
@@ -103,7 +103,7 @@ public class UpdateDB {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.HEADERS_CSV);
         List<HeaderDB> headerDBs = HeaderDB.getAllHeaders();
-        HashMap<Long, Tab> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(context);
+        HashMap<Long, TabDB> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.HEADERS_CSV)),
                 SEPARATOR, QUOTECHAR);
@@ -156,7 +156,7 @@ public class UpdateDB {
     public static void updateTabs(Context context) throws IOException {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TABS_CSV);
-        List<Tab> tabs = Tab.getAllTabs();
+        List<TabDB> tabDBs = TabDB.getAllTabs();
         HashMap<Long, ProgramDB> programIds = RelationsIdCsvDB.getProgramIdRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
@@ -165,8 +165,8 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < tabs.size()) {
-                PopulateRow.populateTab(line, programIds, tabs.get(i)).save();
+            if (i < tabDBs.size()) {
+                PopulateRow.populateTab(line, programIds, tabDBs.get(i)).save();
             } else {
                 PopulateRow.populateTab(line, programIds, null).insert();
             }
@@ -349,7 +349,7 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
         }
-        List<Treatment> treatments = Treatment.getAllTreatments();
+        List<TreatmentDB> treatmentDBs = TreatmentDB.getAllTreatments();
         HashMap<Long, PartnerDB> organisationIds =
                 RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
         HashMap<Long, StringKeyDB> stringKeyIds = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
@@ -360,9 +360,9 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < treatments.size()) {
+            if (i < treatmentDBs.size()) {
                 PopulateRow.populateTreatments(line, organisationIds, stringKeyIds,
-                        treatments.get(i)).save();
+                        treatmentDBs.get(i)).save();
             } else {
                 PopulateRow.populateTreatments(line, organisationIds, stringKeyIds, null).insert();
             }
@@ -384,7 +384,7 @@ public class UpdateDB {
         }
         List<DrugCombinationDB> drugCombinationDBs = DrugCombinationDB.getAllDrugCombination();
         HashMap<Long, DrugDB> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(context);
-        HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
+        HashMap<Long, TreatmentDB> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.DRUG_COMBINATIONS_CSV)),
@@ -413,8 +413,8 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_MATCHES_CSV);
         }
-        List<TreatmentMatch> treatmentMatches = TreatmentMatch.getAllTreatmentMatches();
-        HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
+        List<TreatmentMatchDB> treatmentMatchDBs = TreatmentMatchDB.getAllTreatmentMatches();
+        HashMap<Long, TreatmentDB> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 context);
         HashMap<Long, MatchDB> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
@@ -424,9 +424,9 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < treatmentMatches.size()) {
+            if (i < treatmentMatchDBs.size()) {
                 PopulateRow.populateTreatmentMatches(line, treatmentIds, matchIds,
-                        treatmentMatches.get(i)).save();
+                        treatmentMatchDBs.get(i)).save();
             } else {
                 PopulateRow.populateTreatmentMatches(line, treatmentIds, matchIds, null).insert();
             }
@@ -460,7 +460,7 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TRANSLATION_CSV);
         }
-        List<Translation> translations = Translation.getAllTranslations();
+        List<TranslationDB> translationDBs = TranslationDB.getAllTranslations();
         HashMap<Long, StringKeyDB> stringKeyFK = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
                 context);
         CSVReader reader = new CSVReader(
@@ -469,8 +469,8 @@ public class UpdateDB {
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < translations.size()) {
-                PopulateRow.populateTranslation(line, stringKeyFK, translations.get(i)).save();
+            if (i < translationDBs.size()) {
+                PopulateRow.populateTranslation(line, stringKeyFK, translationDBs.get(i)).save();
             } else {
                 PopulateRow.populateTranslation(line, stringKeyFK, null).insert();
             }

@@ -34,7 +34,7 @@ import com.squareup.okhttp.Response;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -216,7 +216,7 @@ public class PushClient {
                 android.text.format.DateFormat.format("yyyy-MM-dd",
                         mSurveyDB.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
-        object.put(TAG_STOREDBY, mSurveyDB.getUser().getName());
+        object.put(TAG_STOREDBY, mSurveyDB.getUserDB().getName());
         //TODO: put it in the object.
 
         Location lastLocation = LocationMemory.get(mSurveyDB.getId_survey());
@@ -267,8 +267,8 @@ public class PushClient {
      * Add a dataElement per value (answer)
      */
     private JSONArray prepareValues(JSONArray values) throws JSONException {
-        for (Value value : mSurveyDB.getValuesFromDB()) {
-            values.put(prepareValue(value));
+        for (ValueDB valueDB : mSurveyDB.getValuesFromDB()) {
+            values.put(prepareValue(valueDB));
         }
         return values;
     }
@@ -304,10 +304,10 @@ public class PushClient {
      * Adds a pair dataElement|value according to the passed value.
      * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
      */
-    private JSONObject prepareValue(Value value) throws JSONException {
+    private JSONObject prepareValue(ValueDB valueDB) throws JSONException {
         JSONObject elementObject = new JSONObject();
-        elementObject.put(TAG_DATAELEMENT, value.getQuestionDB().getUid());
-        elementObject.put(TAG_VALUE, value.getValue());
+        elementObject.put(TAG_DATAELEMENT, valueDB.getQuestionDB().getUid());
+        elementObject.put(TAG_VALUE, valueDB.getValue());
         return elementObject;
     }
 

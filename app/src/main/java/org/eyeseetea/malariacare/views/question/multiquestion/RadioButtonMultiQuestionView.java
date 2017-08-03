@@ -11,7 +11,7 @@ import android.widget.RadioGroup;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -90,15 +90,15 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value == null || value.getValue() == null) {
+    public void setValue(ValueDB valueDB) {
+        if (valueDB == null || valueDB.getValue() == null) {
             return;
         }
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             customRadioButton.setChecked(
-                    ((OptionDB) customRadioButton.getTag()).equals(value.getOptionDB()));
+                    ((OptionDB) customRadioButton.getTag()).equals(valueDB.getOptionDB()));
         }
     }
 

@@ -21,11 +21,11 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -45,11 +45,11 @@ import java.util.List;
 public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
-            User.class,
+            UserDB.class,
             StringKeyDB.class,
-            Translation.class,
+            TranslationDB.class,
             ProgramDB.class,
-            Tab.class,
+            TabDB.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,
@@ -61,9 +61,9 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             QuestionThresholdDB.class,
             DrugDB.class,
             PartnerDB.class,
-            Treatment.class,
+            TreatmentDB.class,
             DrugCombinationDB.class,
-            TreatmentMatch.class,
+            TreatmentMatchDB.class,
             OrgUnitDB.class
     );
 

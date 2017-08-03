@@ -55,18 +55,18 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
     }
 
     @Override
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        List<org.eyeseetea.malariacare.data.database.model.Value> orderedList = new ArrayList<>();
+    public List<org.eyeseetea.malariacare.data.database.model.ValueDB> orderValues(
+            List<org.eyeseetea.malariacare.data.database.model.ValueDB> values) {
+        List<org.eyeseetea.malariacare.data.database.model.ValueDB> orderedList = new ArrayList<>();
         NavigationController navigationController = Session.getNavigationController();
         navigationController.first();
-        Question nextQuestion = null;
+        QuestionDB nextQuestion = null;
         do {
-            for (org.eyeseetea.malariacare.data.database.model.Value value : values) {
-                if (value.getQuestion() != null) {
-                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
+            for (org.eyeseetea.malariacare.data.database.model.ValueDB value : values) {
+                if (value.getQuestionDB() != null) {
+                    if (value.getQuestionDB().equals(navigationController.getCurrentQuestion())) {
                         orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOption());
+                        nextQuestion = navigationController.next(value.getOptionDB());
                     }
                 }
             }

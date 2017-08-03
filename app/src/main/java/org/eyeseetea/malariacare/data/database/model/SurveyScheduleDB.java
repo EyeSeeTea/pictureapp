@@ -32,8 +32,8 @@ import java.util.Date;
 /**
  * Created by ivan.arrizabalaga on 14/02/15.
  */
-@Table(database = AppDatabase.class)
-public class SurveySchedule extends BaseModel {
+@Table(database = AppDatabase.class, name = "SurveySchedule")
+public class SurveyScheduleDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -52,10 +52,10 @@ public class SurveySchedule extends BaseModel {
     @Column
     Date previous_date;
 
-    public SurveySchedule() {
+    public SurveyScheduleDB() {
     }
 
-    public SurveySchedule(SurveyDB surveyDB, Date previous_date, String comment) {
+    public SurveyScheduleDB(SurveyDB surveyDB, Date previous_date, String comment) {
         this.previous_date = previous_date;
         this.comment = comment;
         this.setSurveyDB(surveyDB);
@@ -111,7 +111,7 @@ public class SurveySchedule extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SurveySchedule that = (SurveySchedule) o;
+        SurveyScheduleDB that = (SurveyScheduleDB) o;
 
         if (id_survey_schedule != that.id_survey_schedule) return false;
         if (id_survey_fk != null ? !id_survey_fk.equals(that.id_survey_fk) : that.id_survey_fk != null) {
@@ -134,7 +134,7 @@ public class SurveySchedule extends BaseModel {
 
     @Override
     public String toString() {
-        return "SurveySchedule{" +
+        return "SurveyScheduleDB{" +
                 "id_survey_schedule=" + id_survey_schedule +
                 ", id_survey_fk=" + id_survey_fk +
                 ", comment='" + comment + '\'' +

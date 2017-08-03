@@ -30,10 +30,10 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import java.util.Date;
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class User extends BaseModel {
+@Table(database = AppDatabase.class, name = "User")
+public class UserDB extends BaseModel {
 
-    private static final String DUMMY_USER = "user";
+    private static final String DUMMY_USER = "mUserDB";
     public static final String ATTRIBUTE_USER_CLOSE_DATE = "USER_CLOSE_DATE";
     public static final String ATTRIBUTE_USER_ANNOUNCEMENT = "USER_ANNOUNCEMENT";
 
@@ -57,19 +57,19 @@ public class User extends BaseModel {
 
 
     /**
-     * List of surveys of this user
+     * List of surveys of this mUserDB
      */
     List<SurveyDB> mSurveyDBs;
 
-    public User() {
+    public UserDB() {
     }
 
-    public User(String uid, String name) {
+    public UserDB(String uid, String name) {
         this.uid_user = uid;
         this.name = name;
     }
 
-    public User(long id_user, String uid, String name, long organisation, long supervisor,
+    public UserDB(long id_user, String uid, String name, long organisation, long supervisor,
             List<SurveyDB> surveyDBs) {
         this.id_user = id_user;
         this.uid_user = uid;
@@ -79,52 +79,53 @@ public class User extends BaseModel {
         this.mSurveyDBs = surveyDBs;
     }
 
-    public static User getLoggedUser() {
+    public static UserDB getLoggedUser() {
         // for the moment we return just the first entry assuming there will be only one entry,
-        // but in the future we will have to tag the logged user
-        List<User> users = new Select().from(User.class).queryList();
-        if (users != null && users.size() != 0) {
-            return users.get(0);
+        // but in the future we will have to tag the logged mUserDB
+        List<UserDB> userDBs = new Select().from(UserDB.class).queryList();
+        if (userDBs != null && userDBs.size() != 0) {
+            return userDBs.get(0);
         }
         return null;
     }
 
-    public static void insertLoggedUser(User user) {
-        User userDB = User.getUserFromDB(user);
+    public static void insertLoggedUser(UserDB user) {
+        UserDB userDBDB = UserDB.getUserFromDB(user);
 
-        if (userDB == null) {
+        if (userDBDB == null) {
             user.save();
         } else {
-            System.out.println("User already saved" + user.toString());
+            System.out.println("UserDB already saved" + user.toString());
         }
     }
 
-    public static User getUserFromDB(User user) {
-        if(user.getUid() == null){
+    public static UserDB getUserFromDB(UserDB userDB) {
+        if (userDB.getUid() == null) {
             return  null;
         }
-        List<User> userdb = new Select().from(User.class).queryList();
+        List<UserDB> userdb = new Select().from(UserDB.class).queryList();
         for (int i = userdb.size() - 1; i >= 0; i--) {
-            if (userdb.get(i).getUid()!=null && userdb.get(i).getUid().equals(user.getUid()) && userdb.get(i).getName().equals(
-                    user.getName())) {
+            if (userdb.get(i).getUid() != null && userdb.get(i).getUid().equals(userDB.getUid())
+                    && userdb.get(i).getName().equals(
+                    userDB.getName())) {
                 return userdb.get(i);
             }
         }
         return null;
     }
 
-    public static User createDummyUser() {
-        User dummyUser = new User(DUMMY_USER, DUMMY_USER);
+    public static UserDB createDummyUser() {
+        UserDB dummyUserDB = new UserDB(DUMMY_USER, DUMMY_USER);
 
-        User userdb = User.getUserFromDB(dummyUser);
+        UserDB userdb = UserDB.getUserFromDB(dummyUserDB);
 
         if (userdb != null) {
-            dummyUser = userdb;
+            dummyUserDB = userdb;
         } else {
-            dummyUser.save();
+            dummyUserDB.save();
         }
 
-        return dummyUser;
+        return dummyUserDB;
     }
 
     public Long getId_user() {
@@ -191,11 +192,11 @@ public class User extends BaseModel {
 
     public long getOrganisation() {
         if (partner_fk == 0) {
-            User user = new Select()
-                    .from(User.class)
-                    .where(User_Table.name.is(name))
+            UserDB userDB = new Select()
+                    .from(UserDB.class)
+                    .where(UserDB_Table.name.is(name))
                     .querySingle();
-            partner_fk = user.getOrganisation();
+            partner_fk = userDB.getOrganisation();
         }
 
         return partner_fk;
@@ -218,24 +219,25 @@ public class User extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        UserDB userDB = (UserDB) o;
 
-        if (id_user != user.id_user) return false;
-        if (partner_fk != user.partner_fk) return false;
-        if (supervisor_fk != user.supervisor_fk) return false;
-        if (uid_user != null ? !uid_user.equals(user.uid_user) : user.uid_user != null) {
+        if (id_user != userDB.id_user) return false;
+        if (partner_fk != userDB.partner_fk) return false;
+        if (supervisor_fk != userDB.supervisor_fk) return false;
+        if (uid_user != null ? !uid_user.equals(userDB.uid_user) : userDB.uid_user != null) {
             return false;
         }
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (announcement != null ? !announcement.equals(user.announcement)
-                : user.announcement != null) {
+        if (name != null ? !name.equals(userDB.name) : userDB.name != null) return false;
+        if (announcement != null ? !announcement.equals(userDB.announcement)
+                : userDB.announcement != null) {
             return false;
         }
-        if (close_date != null ? !close_date.equals(user.close_date) : user.close_date != null) {
+        if (close_date != null ? !close_date.equals(userDB.close_date)
+                : userDB.close_date != null) {
             return false;
         }
-        return last_updated != null ? last_updated.equals(user.last_updated)
-                : user.last_updated == null;
+        return last_updated != null ? last_updated.equals(userDB.last_updated)
+                : userDB.last_updated == null;
 
     }
 
@@ -254,7 +256,7 @@ public class User extends BaseModel {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDB{" +
                 "id_user_fk=" + id_user +
                 ", uid='" + uid_user + '\'' +
                 ", name='" + name + '\'' +
@@ -267,7 +269,7 @@ public class User extends BaseModel {
                 '}';
     }
 
-    public User(long id_user, String uid_user, String name, long organisation_fk,
+    public UserDB(long id_user, String uid_user, String name, long organisation_fk,
             long supervisor_fk,
             String announcement, Date close_date, Date last_updated,
             List<SurveyDB> surveyDBs) {

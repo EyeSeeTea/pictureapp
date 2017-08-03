@@ -5,8 +5,8 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -77,9 +77,9 @@ public class NavigationController {
         return currentNode.getQuestionDB();
     }
 
-    public Tab getCurrentTab() {
+    public TabDB getCurrentTab() {
         if (getCurrentQuestion() == null) return null;
-        return getCurrentQuestion().getHeaderDB().getTab();
+        return getCurrentQuestion().getHeaderDB().getTabDB();
     }
 
     /**
@@ -100,15 +100,15 @@ public class NavigationController {
 
         //Get value for current
         QuestionDB currentQuestionDB = getCurrentQuestion();
-        Value currentValue = currentQuestionDB.getValueBySession();
+        ValueDB currentValueDB = currentQuestionDB.getValueBySession();
 
         //Cannot move without answer
-        if (currentValue == null) {
+        if (currentValueDB == null) {
             Log.d(TAG, "isNextAllowed()->You must answer first");
             return false;
         }
 
-        OptionDB currentOptionDB = currentValue == null ? null : currentValue.getOptionDB();
+        OptionDB currentOptionDB = currentValueDB == null ? null : currentValueDB.getOptionDB();
         //Find next node with current option
         boolean isAllowed = findNext(currentOptionDB) != null;
         Log.d(TAG, String.format("isNextAllowed()->%b", isAllowed));
@@ -311,12 +311,12 @@ public class NavigationController {
         QuestionNode nextNode;
         nextNode = getCurrentNode().next(optionDB);
         if (nextNode != null && (
-                actualQuestionDB.getHeaderDB().getTab().getType() == Constants.TAB_MULTI_QUESTION
-                        || actualQuestionDB.getHeaderDB().getTab().getType()
+                actualQuestionDB.getHeaderDB().getTabDB().getType() == Constants.TAB_MULTI_QUESTION
+                        || actualQuestionDB.getHeaderDB().getTabDB().getType()
                         == Constants.TAB_DYNAMIC_TREATMENT
                         || nextNode.getQuestionDB().getOutput() == Constants.HIDDEN)) {
-            while (nextNode != null && (nextNode.getQuestionDB().getHeaderDB().getTab().equals(
-                    actualQuestionDB.getHeaderDB().getTab())
+            while (nextNode != null && (nextNode.getQuestionDB().getHeaderDB().getTabDB().equals(
+                    actualQuestionDB.getHeaderDB().getTabDB())
                     || nextNode.getQuestionDB().getOutput() == Constants.HIDDEN)) {
                 OptionDB optionDBNext = nextNode.getQuestionDB().getOptionBySession();
                 nextNode = nextNode.next(optionDBNext);

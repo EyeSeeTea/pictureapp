@@ -15,7 +15,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
 
 import java.io.FileNotFoundException;
@@ -27,7 +27,7 @@ import java.util.List;
 public class PopulateDBStrategy implements IPopulateDBStrategy {
     public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
             ProgramDB.class,
-            Tab.class,
+            TabDB.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,

@@ -26,7 +26,7 @@ import android.util.DisplayMetrics;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Translation;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.BufferedReader;
@@ -76,7 +76,7 @@ public class Utils {
                 name = getLocateString(activeLocale, identifier);
             } catch (Resources.NotFoundException notFoundException) {
                 if (StringUtils.isNumeric(name)) {
-                    name = Translation.getLocalizedString(Long.valueOf(name),
+                    name = TranslationDB.getLocalizedString(Long.valueOf(name),
                             context.getResources().getConfiguration().locale.toString());
                 }
             }

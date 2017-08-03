@@ -10,7 +10,7 @@ import android.widget.RadioGroup;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
@@ -70,7 +70,7 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
     }
 
     @Override
-    public void setValue(Value value) {
+    public void setValue(ValueDB value) {
         if (value == null || value.getValue() == null) {
             return;
         }
@@ -215,10 +215,10 @@ public class NumberRadioButtonMultiquestionView extends CommonQuestionView imple
         QuestionDB actQuestionDB =
                 TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
         QuestionDB alternativePqQuestionDB = TreatmentQueries.getAlternativePqQuestion();
-        Value actValue = null;
-        Value pqValue = null;
-        List<Value> values = Session.getMalariaSurveyDB().getValuesFromDB();
-        for (Value sValue : values) {
+        ValueDB actValue = null;
+        ValueDB pqValue = null;
+        List<ValueDB> values = Session.getMalariaSurveyDB().getValuesFromDB();
+        for (ValueDB sValue : values) {
             if (sValue.getQuestionDB() == null) {
                 continue;
             }

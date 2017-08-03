@@ -42,11 +42,11 @@ public class Migration4RenameOrganisationToPartner extends BaseMigration {
         String sqlCopyUser =
                 "INSERT INTO UserTemp (id_user, uid_user, name, partner_fk, supervisor_fk)"
                         + " SELECT id_user, uid_user, name ,organisation_fk ,supervisor_fk"
-                        + " FROM User;";
+                        + " FROM UserDB;";
         database.execSQL(sqlCopyUser);
-        String sqlDeleteUser = "DROP TABLE IF EXISTS User;";
+        String sqlDeleteUser = "DROP TABLE IF EXISTS UserDB;";
         database.execSQL(sqlDeleteUser);
-        String renameUser = "ALTER TABLE UserTemp RENAME TO User";
+        String renameUser = "ALTER TABLE UserTemp RENAME TO UserDB";
         database.execSQL(renameUser);
 
         String sqlTreatmentTemp =

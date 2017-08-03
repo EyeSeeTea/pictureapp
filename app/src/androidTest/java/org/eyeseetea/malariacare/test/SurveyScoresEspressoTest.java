@@ -32,7 +32,7 @@
 //import org.eyeseetea.malariacare.SurveyActivity;
 //import org.eyeseetea.malariacare.data.database.model.OptionDB;
 //import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-//import org.eyeseetea.malariacare.data.database.model.Tab;
+//import org.eyeseetea.malariacare.data.database.model.TabDB;
 //import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 //import org.eyeseetea.malariacare.services.SurveyService;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;
@@ -230,7 +230,7 @@
 //     */
 //    private void whenTabSelected(int num){
 //        onView(withId(R.id.tabSpinner)).perform(click());
-//        onData(is(instanceOf(Tab.class))).atPosition(num).perform(click());
+//        onData(is(instanceOf(TabDB.class))).atPosition(num).perform(click());
 //    }
 //
 //    /**

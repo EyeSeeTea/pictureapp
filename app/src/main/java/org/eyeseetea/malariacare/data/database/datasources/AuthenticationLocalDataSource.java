@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.data.database.datasources.strategies
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -37,14 +37,14 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
     @Override
     public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
-        User loggedUser = User.getLoggedUser();
-        String userUid = loggedUser != null ? loggedUser.getUid() : null;
+        UserDB loggedUserDB = UserDB.getLoggedUser();
+        String userUid = loggedUserDB != null ? loggedUserDB.getUid() : null;
 
-        User user = new User(userUid, credentials.getUsername());
+        UserDB userDB = new UserDB(userUid, credentials.getUsername());
 
-        User.insertLoggedUser(user);
+        UserDB.insertLoggedUser(userDB);
 
-        Session.setUser(user);
+        Session.setUserDB(userDB);
 
         Session.setCredentials(credentials);
 

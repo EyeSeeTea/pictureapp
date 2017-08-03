@@ -9,7 +9,7 @@ import android.widget.TableRow;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
@@ -43,10 +43,10 @@ public abstract class AQuestionAnswerChangedListener {
      * position 1=true 0=false)
      */
     public static Boolean findSwitchBoolean(QuestionDB questionDB) {
-        Value value = questionDB.getValueBySession();
-        if (value.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(0).getCode())) {
+        ValueDB valueDB = questionDB.getValueBySession();
+        if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(0).getCode())) {
             return true;
-        } else if (value.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(1).getCode())) {
+        } else if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(1).getCode())) {
             return false;
         }
         return false;

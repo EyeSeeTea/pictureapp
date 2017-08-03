@@ -49,7 +49,7 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
             try {
                 List<String> tabsToDelete = new ArrayList<>();
                 tabsToDelete.add("drugs_referral");
-                Tab.deleteTab(tabsToDelete);
+                TabDB.deleteTab(tabsToDelete);
                 Context context = PreferencesState.getInstance().getContext();
                 UpdateDB.updateTabs(context);
                 UpdateDB.updateHeaders(context);

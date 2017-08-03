@@ -18,8 +18,8 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -68,10 +68,10 @@ public class RelationsIdCsvDB {
         return answerFK;
     }
 
-    static HashMap<Long, Tab> getTabsIdRelationsCsvDB(Context context)
+    static HashMap<Long, TabDB> getTabsIdRelationsCsvDB(Context context)
             throws IOException {
-        HashMap<Long, Tab> tabFK = new HashMap<>();
-        List<Tab> tabs = Tab.getAllTabs();
+        HashMap<Long, TabDB> tabFK = new HashMap<>();
+        List<TabDB> tabDBs = TabDB.getAllTabs();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TABS_CSV)),
@@ -80,8 +80,8 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < tabs.size() && i < csvIds.size(); i++) {
-            tabFK.put(csvIds.get(i), tabs.get(i));
+        for (int i = 0; i < tabDBs.size() && i < csvIds.size(); i++) {
+            tabFK.put(csvIds.get(i), tabDBs.get(i));
         }
         return tabFK;
     }
@@ -304,10 +304,10 @@ public class RelationsIdCsvDB {
         return drugFK;
     }
 
-    static HashMap<Long, Treatment> getTreatmentIdRelationCsvDB(Context context)
+    static HashMap<Long, TreatmentDB> getTreatmentIdRelationCsvDB(Context context)
             throws IOException {
-        HashMap<Long, Treatment> treatmentFK = new HashMap<>();
-        List<Treatment> treatments = Treatment.getAllTreatments();
+        HashMap<Long, TreatmentDB> treatmentFK = new HashMap<>();
+        List<TreatmentDB> treatmentDBs = TreatmentDB.getAllTreatments();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_CSV)),
@@ -316,8 +316,8 @@ public class RelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < treatments.size() && i < csvIds.size(); i++) {
-            treatmentFK.put(csvIds.get(i), treatments.get(i));
+        for (int i = 0; i < treatmentDBs.size() && i < csvIds.size(); i++) {
+            treatmentFK.put(csvIds.get(i), treatmentDBs.get(i));
         }
         return treatmentFK;
     }

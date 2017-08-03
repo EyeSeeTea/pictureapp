@@ -5,6 +5,7 @@ import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSu
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Value;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public abstract class AReviewFragmentStrategy {
         return getMalariaSurveyDB().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        return values;
+    public List<ValueDB> orderValues(
+            List<ValueDB> valueDBs) {
+        return valueDBs;
     }
 }

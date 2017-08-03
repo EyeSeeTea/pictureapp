@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.presentation.factory.stock.utils;
 
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 
 import java.util.List;
@@ -38,8 +38,8 @@ public class SurveyStock {
     }
 
     private void createSurveyValues() {
-        List<Value> values = mSurvey.getValuesFromDB();
-        for (Value value : values) {
+        List<ValueDB> values = mSurvey.getValuesFromDB();
+        for (ValueDB value : values) {
             if(value.getQuestionDB()==null) {
                 continue;//ignore values without question for example control dataelements
             }

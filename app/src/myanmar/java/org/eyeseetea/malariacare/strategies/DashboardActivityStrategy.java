@@ -76,10 +76,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ProgramDB myanmarProgram = ProgramDB.findByUID(activity.getString(R.string.malariaProgramUID));
         ProgramDB stockProgram = ProgramDB.findByUID(activity.getString(R.string.stockProgramUID));
         // Put new survey in session
-        SurveyDB survey = new SurveyDB(null, myanmarProgram, Session.getUser());
+        SurveyDB survey = new SurveyDB(null, myanmarProgram, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
-        SurveyDB stockSurvey = new SurveyDB(null, stockProgram, Session.getUser(),
+        SurveyDB stockSurvey = new SurveyDB(null, stockProgram, Session.getUserDB(),
                 Constants.SURVEY_ISSUE);
         stockSurvey.setEventDate(
                 survey.getEventDate());//asociate the malaria survey to the stock survey

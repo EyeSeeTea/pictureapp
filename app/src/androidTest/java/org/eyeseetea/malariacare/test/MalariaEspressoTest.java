@@ -40,9 +40,9 @@
 //import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 //import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 //import org.eyeseetea.malariacare.data.database.model.Survey;
-//import org.eyeseetea.malariacare.data.database.model.Tab;
-//import org.eyeseetea.malariacare.data.database.model.User;
-//import org.eyeseetea.malariacare.data.database.model.Value;
+//import org.eyeseetea.malariacare.data.database.model.TabDB;
+//import org.eyeseetea.malariacare.data.database.model.UserDB;
+//import org.eyeseetea.malariacare.data.database.model.ValueDB;
 //import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 //import org.eyeseetea.malariacare.data.database.utils.Session;
 //import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentUnsentAdapter;
@@ -79,7 +79,7 @@
 //    }
 //
 //    public static void cleanSession(){
-//        Session.setUser(null);
+//        Session.setUserDB(null);
 //        Session.setSurvey(null);
 //        Session.setAdapterUncompleted(null);
 //    }
@@ -93,11 +93,11 @@
 //        OptionDB.deleteAll(OptionDB.class);
 //        AnswerDB.deleteAll(AnswerDB.class);
 //        HeaderDB.deleteAll(HeaderDB.class);
-//        Tab.deleteAll(Tab.class);
+//        TabDB.deleteAll(TabDB.class);
 //        ProgramDB.deleteAll(ProgramDB.class);
 //        OrgUnitDB.deleteAll(OrgUnitDB.class);
-//        User.deleteAll(User.class);
-//        Value.deleteAll(Value.class);
+//        UserDB.deleteAll(UserDB.class);
+//        ValueDB.deleteAll(ValueDB.class);
 //        Survey.deleteAll(Survey.class);
 //    }
 //
@@ -149,7 +149,7 @@
 //        List<OrgUnitDB> orgUnitList=OrgUnitDB.find(OrgUnitDB.class, null, null);
 //        List<ProgramDB> programList=ProgramDB.find(ProgramDB.class,null,null);
 //        ProgramDB program=programList.get(numPrograms);
-//        User user =getSafeUser();
+//        UserDB user =getSafeUser();
 //
 //        for(int i=0;i<numOrgs;i++){
 //            Survey survey=new Survey(orgUnitList.get(i%numOrgs),program,user);
@@ -165,14 +165,14 @@
 //        return mockSurveys(num, 0);
 //    }
 //
-//    private static User getSafeUser(){
-//        User user=Session.getUser();
+//    private static UserDB getSafeUser(){
+//        UserDB user=Session.getUserDB();
 //        if(user!=null){
 //            return user;
 //        }
-//        user = new User("user", "user");
+//        user = new UserDB("user", "user");
 //        user.save();
-//        Session.setUser(user);
+//        Session.setUserDB(user);
 //        return user;
 //    }
 //

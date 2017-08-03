@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -73,7 +73,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void newSurvey(Activity activity) {
         ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
         // Put new survey in session
-        SurveyDB survey = new SurveyDB(null, programDB, Session.getUser());
+        SurveyDB survey = new SurveyDB(null, programDB, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
         //Look for coordinates
@@ -211,7 +211,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void initNavigationController() throws LoadingNavigationControllerException {
         NavigationBuilder.getInstance().buildController(
-                Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
+                TabDB.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }
 
     @Override

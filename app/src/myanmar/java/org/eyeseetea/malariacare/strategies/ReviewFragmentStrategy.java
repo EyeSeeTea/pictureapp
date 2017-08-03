@@ -73,7 +73,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         if (Session.getStockSurveyDB()==null || value.getQuestionUId() == null) {
             return false;
         }
-        for (org.eyeseetea.malariacare.data.database.model.Value stockValue : Session.getStockSurveyDB().getValuesFromDB()) {
+        for (org.eyeseetea.malariacare.data.database.model.ValueDB stockValue : Session.getStockSurveyDB().getValuesFromDB()) {
             if (stockValue.getQuestionDB() != null) {
                 if (stockValue.getQuestionDB().getUid().equals(value.getQuestionUId())) {
                     return true;

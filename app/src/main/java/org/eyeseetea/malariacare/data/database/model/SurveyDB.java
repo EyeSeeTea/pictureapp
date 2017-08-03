@@ -102,9 +102,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     @Column
     Long id_user_fk;
     /**
-     * Reference to the user that has created this survey (loaded lazily)
+     * Reference to the mUserDB that has created this survey (loaded lazily)
      */
-    User user;
+    UserDB mUserDB;
 
     @Column
     Date creation_date;
@@ -130,12 +130,12 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     /**
      * List of values for this survey
      */
-    List<Value> values;
+    List<ValueDB> mValueDBs;
 
     /**
      * List of historic previous schedules
      */
-    List<SurveySchedule> surveySchedules;
+    List<SurveyScheduleDB> mSurveyScheduleDBs;
 
     /**
      * Calculated answered ratio for this survey according to its values
@@ -156,7 +156,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.type = Constants.SURVEY_NO_TYPE; //to avoid NullPointerExceptions
     }
 
-    public SurveyDB(OrgUnitDB orgUnitDB, ProgramDB programDB, User user) {
+    public SurveyDB(OrgUnitDB orgUnitDB, ProgramDB programDB, UserDB userDB) {
         this();
 
         // Possibilities [ In progress | Completed | Sent ]
@@ -165,11 +165,11 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         //Set context of the survey
         this.setOrgUnit(orgUnitDB);
         this.setProgram(programDB);
-        this.setUser(user);
+        this.setUser(userDB);
         this.setType(Constants.SURVEY_NO_TYPE);
     }
 
-    public SurveyDB(OrgUnitDB orgUnitDB, ProgramDB programDB, User user, int type) {
+    public SurveyDB(OrgUnitDB orgUnitDB, ProgramDB programDB, UserDB userDB, int type) {
         this();
 
         // Possibilities [ In progress | Completed | Sent ]
@@ -178,7 +178,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         //Set context of the survey
         this.setOrgUnit(orgUnitDB);
         this.setProgram(programDB);
-        this.setUser(user);
+        this.setUser(userDB);
         this.type = type;
     }
 
@@ -233,25 +233,25 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
-    public User getUser() {
-        if (user == null) {
+    public UserDB getUserDB() {
+        if (mUserDB == null) {
             if (id_user_fk == null) return null;
-            user = new Select()
-                    .from(User.class)
-                    .where(User_Table.id_user
+            mUserDB = new Select()
+                    .from(UserDB.class)
+                    .where(UserDB_Table.id_user
                             .is(id_user_fk)).querySingle();
         }
-        return user;
+        return mUserDB;
     }
 
-    public void setUser(Long id_user) {
+    public void setUserDB(Long id_user) {
         this.id_user_fk = id_user;
-        this.user = null;
+        this.mUserDB = null;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-        this.id_user_fk = (user != null) ? user.getId_user() : null;
+    public void setUser(UserDB userDB) {
+        this.mUserDB = userDB;
+        this.id_user_fk = (userDB != null) ? userDB.getId_user() : null;
     }
     public Date getCreationDate() {
         return creation_date;
@@ -639,8 +639,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .querySingle();
     }
 
-    public static void removeValue(Value value) {
-        value.delete();
+    public static void removeValue(ValueDB valueDB) {
+        valueDB.delete();
     }
 
     public static int countSurveysByCompletiondate(Date completion_date) {
@@ -688,14 +688,14 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         return Float.parseFloat(counterValue);
     }
 
-    public HashMap<Tab, Integer> getAnsweredTabs() {
-        HashMap<Tab, Integer> tabs = new HashMap<Tab, Integer>();
-        List<Value> values = getValuesFromDB();
+    public HashMap<TabDB, Integer> getAnsweredTabs() {
+        HashMap<TabDB, Integer> tabs = new HashMap<TabDB, Integer>();
+        List<ValueDB> valueDBs = getValuesFromDB();
         int tabSize = 0;
-        for (Value value : values) {
-            Tab tab = value.getQuestionDB().getHeaderDB().getTab();
-            if (!tabs.containsKey(tab)) {
-                tabs.put(tab, tabSize);
+        for (ValueDB valueDB : valueDBs) {
+            TabDB tabDB = valueDB.getQuestionDB().getHeaderDB().getTabDB();
+            if (!tabs.containsKey(tabDB)) {
+                tabs.put(tabDB, tabSize);
                 tabSize++;
             }
         }
@@ -804,8 +804,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         if (scoreDB != null) {
             scoreDB.delete();
         }
-        for (Value value : getValuesFromDB()) {
-            value.delete();
+        for (ValueDB valueDB : getValuesFromDB()) {
+            valueDB.delete();
         }
         super.delete();
     }
@@ -834,35 +834,35 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     /**
      * Returns the list of answered values from this survey
      */
-    public List<Value> getValues() {
-        if (values == null) {
-            values = new Select()
-                    .from(Value.class)
-                    .where(Value_Table.id_survey_fk
+    public List<ValueDB> getValueDBs() {
+        if (mValueDBs == null) {
+            mValueDBs = new Select()
+                    .from(ValueDB.class)
+                    .where(ValueDB_Table.id_survey_fk
                             .eq(this.getId_survey())).queryList();
         }
-        return values;
+        return mValueDBs;
     }
 
     /**
      * Returns the list of answered values from this survey
      */
-    public List<Value> getValuesFromDB() {
-        values = new Select()
-                .from(Value.class)
-                .where(Value_Table.id_survey_fk
+    public List<ValueDB> getValuesFromDB() {
+        mValueDBs = new Select()
+                .from(ValueDB.class)
+                .where(ValueDB_Table.id_survey_fk
                         .eq(this.getId_survey())).queryList();
-        return values;
+        return mValueDBs;
     }
 
 
     /**
      * Returns the list of answered values from this survey
      */
-    public List<Value> getValuesFromDBWithoutSave() {
+    public List<ValueDB> getValuesFromDBWithoutSave() {
         return new Select()
-                .from(Value.class)
-                .where(Value_Table.id_survey_fk
+                .from(ValueDB.class)
+                .where(ValueDB_Table.id_survey_fk
                         .eq(this.getId_survey())).queryList();
     }
     /**
@@ -871,10 +871,10 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     public List<QuestionDB> getQuestionsFromValues() {
         List<QuestionDB> questionDBs = new Select()
                 .from(QuestionDB.class).as(questionName)
-                .join(Value.class, Join.JoinType.LEFT_OUTER).as(valueName)
-                .on(Value_Table.id_question_fk.withTable(valueAlias)
+                .join(ValueDB.class, Join.JoinType.LEFT_OUTER).as(valueName)
+                .on(ValueDB_Table.id_question_fk.withTable(valueAlias)
                         .eq(QuestionDB_Table.id_question.withTable(questionAlias)))
-                .where(Value_Table.id_survey_fk.withTable(valueAlias)
+                .where(ValueDB_Table.id_survey_fk.withTable(valueAlias)
                         .eq(this.getId_survey()))
                 .orderBy(OrderBy.fromProperty(QuestionDB_Table.order_pos).ascending()).queryList();
         return questionDBs;
@@ -883,33 +883,33 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     /**
      * Returns the list of previous schedules for this survey
      */
-    public List<SurveySchedule> getSurveySchedules() {
-        if (surveySchedules == null) {
-            surveySchedules = new Select()
-                    .from(SurveySchedule.class)
-                    .where(SurveySchedule_Table.id_survey_fk
+    public List<SurveyScheduleDB> getSurveyScheduleDBs() {
+        if (mSurveyScheduleDBs == null) {
+            mSurveyScheduleDBs = new Select()
+                    .from(SurveyScheduleDB.class)
+                    .where(SurveyScheduleDB_Table.id_survey_fk
                             .eq(this.getId_survey())).queryList();
         }
-        return surveySchedules;
+        return mSurveyScheduleDBs;
     }
 
     /**
      * Returns the list of answered values from this survey that belong to a parent mQuestionDB
      */
-    public List<Value> getValuesFromParentQuestions() {
-        List<Value> values = new Select().from(Value.class).as(valueName)
+    public List<ValueDB> getValuesFromParentQuestions() {
+        List<ValueDB> valueDBs = new Select().from(ValueDB.class).as(valueName)
                 .join(QuestionDB.class, Join.JoinType.LEFT_OUTER).as(questionName)
-                .on(Value_Table.id_question_fk.withTable(valueAlias)
+                .on(ValueDB_Table.id_question_fk.withTable(valueAlias)
                         .eq(QuestionDB_Table.id_question.withTable(questionAlias)))
-                .where(Value_Table.id_survey_fk.withTable(valueAlias)
+                .where(ValueDB_Table.id_survey_fk.withTable(valueAlias)
                         .eq(this.getId_survey()))
                 .and(QuestionDB_Table.id_question_parent.withTable(questionAlias).isNull())
-                .and(Value_Table.value.withTable(valueAlias).isNotNull())
-                .and(Value_Table.value.withTable(valueAlias).isNot(
+                .and(ValueDB_Table.value.withTable(valueAlias).isNotNull())
+                .and(ValueDB_Table.value.withTable(valueAlias).isNot(
                         "")).queryList();
-        //List<Value> values = Value.findWithQuery(Value.class, LIST_VALUES_PARENT_QUESTION, this
+        //List<ValueDB> values = ValueDB.findWithQuery(ValueDB.class, LIST_VALUES_PARENT_QUESTION, this
         // .getId().toString());
-        return values;
+        return valueDBs;
     }
 
     /**
@@ -938,16 +938,16 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
         IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
         ProgramDB programDB = ProgramDB.findByUID(programLocalDataSource.getUserProgram().getId());
-        Tab tab = programDB.getTabs().get(0);
-        QuestionDB rootQuestionDB = QuestionDB.findRootQuestion(tab);
+        TabDB tabDB = programDB.getTabDBs().get(0);
+        QuestionDB rootQuestionDB = QuestionDB.findRootQuestion(tabDB);
         QuestionDB localQuestionDB = rootQuestionDB;
         numRequired = SurveyFragmentStrategy.getNumRequired(numRequired, localQuestionDB);
 
         //Add children required by each parent (value+mQuestionDB)
         SurveyDB surveyDB = SurveyDB.findById(id_survey);
-        for (Value value : surveyDB.getValuesFromDB()) {
-            if (value.getQuestionDB().isCompulsory() && value.getId_option() != null) {
-                numRequired += QuestionDB.countChildrenByOptionValue(value.getId_option());
+        for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
+            if (valueDB.getQuestionDB().isCompulsory() && valueDB.getId_option() != null) {
+                numRequired += QuestionDB.countChildrenByOptionValue(valueDB.getId_option());
             }
         }
         numAnswered += countCompulsoryBySurvey(this);
@@ -983,8 +983,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .join(QuestionRelationDB.class, Join.JoinType.INNER).as(questionRelationName)
                 .on(QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias)
                         .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
-                .join(Value.class, Join.JoinType.INNER).as(valueName)
-                .on(Value_Table.id_question_fk.withTable(valueAlias)
+                .join(ValueDB.class, Join.JoinType.INNER).as(valueName)
+                .on(ValueDB_Table.id_question_fk.withTable(valueAlias)
                         .eq(QuestionRelationDB_Table.id_question_fk))
                 .join(QuestionDB.class, Join.JoinType.INNER).as(questionName)
                 .on(QuestionDB_Table.id_question.withTable(questionAlias)
@@ -994,7 +994,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .where(QuestionDB_Table.output.eq(
                         Constants.COUNTER))
                 //For the given survey
-                .and(Value_Table.id_survey_fk.eq(
+                .and(ValueDB_Table.id_survey_fk.eq(
                         this.getId_survey()))
                 .count();
 
@@ -1056,17 +1056,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      */
     public String getRDTName() {
         String rdtValue = "";
-        if (values == null) {
-            values = Value.listAllBySurvey(this);
+        if (mValueDBs == null) {
+            mValueDBs = ValueDB.listAllBySurvey(this);
         }
 
-        if (values.size() > 0) {
-            for (Value value : values) {
+        if (mValueDBs.size() > 0) {
+            for (ValueDB valueDB : mValueDBs) {
                 //Find the RTS mOptionDB
-                if (value.getOptionDB() != null && value.getQuestionDB() != null
-                        && value.getQuestionDB().getCode().equals(
+                if (valueDB.getOptionDB() != null && valueDB.getQuestionDB() != null
+                        && valueDB.getQuestionDB().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(R.string.RDT_code))) {
-                    rdtValue = value.getOptionDB().getCode();
+                    rdtValue = valueDB.getOptionDB().getCode();
                 }
             }
 
@@ -1082,18 +1082,18 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      */
     public String getResultCode() {
         String rdtValue = "";
-        if (values == null) {
-            values = Value.listAllBySurvey(this);
+        if (mValueDBs == null) {
+            mValueDBs = ValueDB.listAllBySurvey(this);
         }
 
-        if (values.size() > 0) {
-            for (Value value : values) {
+        if (mValueDBs.size() > 0) {
+            for (ValueDB valueDB : mValueDBs) {
                 //Find the RTS mOptionDB
-                if (value.getOptionDB() != null && value.getQuestionDB() != null
-                        && value.getQuestionDB().getCode().equals(
+                if (valueDB.getOptionDB() != null && valueDB.getQuestionDB() != null
+                        && valueDB.getQuestionDB().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.Result_code))) {
-                    rdtValue = value.getOptionDB().getInternationalizedName();
+                    rdtValue = valueDB.getOptionDB().getInternationalizedName();
                 }
             }
 
@@ -1107,18 +1107,18 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * @return String
      */
     public String getValuesToString() {
-        if (values == null) {
-            values = Value.listAllBySurvey(this);
+        if (mValueDBs == null) {
+            mValueDBs = ValueDB.listAllBySurvey(this);
         }
 
-        Iterator<Value> iterator = values.iterator();
+        Iterator<ValueDB> iterator = mValueDBs.iterator();
 
         String valuesStr = "";
 
         //Define a filter to select which values will be turned into string by code_question
         List<QuestionDB> questionDBs = new ArrayList<>();
-        for (Value value : values) {
-            questionDBs.add(value.getQuestionDB());
+        for (ValueDB valueDB : mValueDBs) {
+            questionDBs.add(valueDB.getQuestionDB());
         }
         List<String> codeQuestionFilter = new ArrayList<String>();
 
@@ -1130,17 +1130,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
         Map map = new HashMap();
         while (iterator.hasNext()) {
-            Value value = iterator.next();
+            ValueDB valueDB = iterator.next();
             //The control dataelements not have mQuestionDBs and its should be ignored
-            if (value.getQuestionDB() == null || value.getValue() == null) {
+            if (valueDB.getQuestionDB() == null || valueDB.getValue() == null) {
                 continue;
             }
-            String qCode = value.getQuestionDB().getCode();
+            String qCode = valueDB.getQuestionDB().getCode();
 
             if (codeQuestionFilter.contains(qCode)) {
                 String val =
-                        (value.getOptionDB() != null) ? value.getOptionDB().getInternationalizedName()
-                                : value.getValue();
+                        (valueDB.getOptionDB() != null) ? valueDB.getOptionDB().getInternationalizedName()
+                                : valueDB.getValue();
                 if (val != null) {
                     map.put(qCode, val);
                 }
@@ -1164,13 +1164,13 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     public String printValues() {
         String valuesString = "Survey values: ";
         if (getValuesFromDB() != null) {
-            for (Value value : values) {
-                valuesString += "Value: " + value.getValue();
-                if (value.getOptionDB() != null) {
-                    valuesString += " OptionDB: " + value.getOptionDB().getInternationalizedCode();
+            for (ValueDB valueDB : mValueDBs) {
+                valuesString += "ValueDB: " + valueDB.getValue();
+                if (valueDB.getOptionDB() != null) {
+                    valuesString += " OptionDB: " + valueDB.getOptionDB().getInternationalizedCode();
                 }
-                if (value.getQuestionDB() != null) {
-                    valuesString += " Question: " + value.getQuestionDB().getDe_name() + "\n";
+                if (valueDB.getQuestionDB() != null) {
+                    valuesString += " Question: " + valueDB.getQuestionDB().getDe_name() + "\n";
                 }
             }
         }
@@ -1189,20 +1189,20 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      */
     public void removeChildrenValuesFromQuestionRecursively(QuestionDB questionDB,
             boolean removeCounters) {
-        List<Value> values = getValuesFromDB();
+        List<ValueDB> valueDBs = getValuesFromDB();
         List<QuestionDB> questionDBChildren = questionDB.getChildren();
-        for (int i = values.size() - 1; i > 0; i--) {
+        for (int i = valueDBs.size() - 1; i > 0; i--) {
             //This loop removes recursively the values on the children mQuestionDB
-            if (questionDBChildren.contains(values.get(i).getQuestionDB())) {
+            if (questionDBChildren.contains(valueDBs.get(i).getQuestionDB())) {
                 //Remove the children values but if the child value is a counter is not removed
                 // in the first level
-                if (!values.get(i).getQuestionDB().isACounter() || removeCounters) {
-                    for (QuestionDB questionDBPropagated : values.get(
+                if (!valueDBs.get(i).getQuestionDB().isACounter() || removeCounters) {
+                    for (QuestionDB questionDBPropagated : valueDBs.get(
                             i).getQuestionDB().getPropagationQuestions()) {
                         removeValue(questionDBPropagated.getValueBySurvey(
                                 Session.getMalariaSurveyDB()));
                     }
-                    removeValue(values.get(i));
+                    removeValue(valueDBs.get(i));
                 }
                 for (QuestionDB child : questionDBChildren) {
                     removeChildrenValuesFromQuestionRecursively(child, true);
@@ -1257,12 +1257,12 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * This method get the return the highest number of total pages in the survey mQuestionDB values.
      */
     public int getMaxTotalPages() {
-        List<Value> values = getValuesFromDB();
+        List<ValueDB> valueDBs = getValuesFromDB();
         int totalPages = 0;
-        for (Value value : values) {
-            if (value.getQuestionDB() != null
-                    && value.getQuestionDB().getTotalQuestions() > totalPages) {
-                totalPages = value.getQuestionDB().getTotalQuestions();
+        for (ValueDB valueDB : valueDBs) {
+            if (valueDB.getQuestionDB() != null
+                    && valueDB.getQuestionDB().getTotalQuestions() > totalPages) {
+                totalPages = valueDB.getQuestionDB().getTotalQuestions();
             }
         }
         return totalPages;

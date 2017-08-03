@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
@@ -80,7 +80,7 @@ public class SurveyFragmentStrategy {
                 : Session.getMalariaSurveyDB());
     }
 
-    public static void saveValueDDlExtraOperations(Value value, OptionDB option, String uid) {
+    public static void saveValueDDlExtraOperations(ValueDB value, OptionDB option, String uid) {
         if (value != null && TreatmentQueries.isTreatmentQuestion(uid) && TreatmentQueries.isACT(
                 uid)
                 && !option.getId_option().equals(value.getId_option())) {
@@ -100,7 +100,7 @@ public class SurveyFragmentStrategy {
                 : Session.getMalariaSurveyDB());
     }
 
-    public static void saveValuesText(Value value, String answer, QuestionDB questionDB,
+    public static void saveValuesText(ValueDB value, String answer, QuestionDB questionDB,
             SurveyDB survey) {
         if ((TreatmentQueries.isTreatmentQuestion(questionDB.getUid()) || TreatmentQueries.isPq(
                 questionDB.getUid())
@@ -119,13 +119,13 @@ public class SurveyFragmentStrategy {
             questionDB.createOrSaveValue(answer, value, survey);
             for (QuestionDB propagateQuestionDB : questionDB.getPropagationQuestions()) {
                 propagateQuestionDB.createOrSaveValue(answer,
-                        Value.findValueFromDatabase(propagateQuestionDB.getId_question(),
+                        ValueDB.findValueFromDatabase(propagateQuestionDB.getId_question(),
                                 Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
             }
         }
     }
 
-    public static void recursiveRemover(Value value, OptionDB option, QuestionDB questionDB,
+    public static void recursiveRemover(ValueDB value, OptionDB option, QuestionDB questionDB,
             SurveyDB survey) {
         if (!value.getOptionDB().equals(option) && questionDB.hasChildren()
                 && !TreatmentQueries.isDynamicTreatmentQuestion(questionDB.getUid())) {
@@ -135,8 +135,8 @@ public class SurveyFragmentStrategy {
 
     public static List<QuestionDB> getCompulsoryNotAnsweredQuestions(QuestionDB questionDB) {
         List<QuestionDB> questionDBs = new ArrayList<>();
-        if (questionDB.getHeaderDB().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questionDBs = questionDB.getQuestionsByTab(questionDB.getHeaderDB().getTab());
+        if (questionDB.getHeaderDB().getTabDB().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questionDBs = questionDB.getQuestionsByTab(questionDB.getHeaderDB().getTabDB());
         } else if (TreatmentQueries.isDynamicStockQuestion(questionDB.getUid())) {
             List<OptionDB> options = questionDB.getAnswerDB().getOptionDBs();
             for (OptionDB option : options) {
@@ -166,8 +166,8 @@ public class SurveyFragmentStrategy {
     }
 
     public static void deleteStockValues(SurveyDB survey) {
-        List<Value> values = survey.getValuesFromDB();
-        for (Value value : values) {
+        List<ValueDB> values = survey.getValuesFromDB();
+        for (ValueDB value : values) {
             if (value.getQuestionDB() == null) {
                 continue;
             }

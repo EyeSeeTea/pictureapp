@@ -4,7 +4,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 
 /**
  * Checker that helps to decide if a node is visible or not according to the current survey values.
@@ -29,19 +29,19 @@ public class WarningStatusChecker extends StatusChecker {
 
         //Get current values in DB
         QuestionDB questionDBWithOption = mQuestionOptionDB.getQuestionDB();
-        Value optionValue = questionDBWithOption.getValueBySession();
-        Value intValue = mQuestionThresholdDB.getQuestionDB().getValueBySession();
+        ValueDB optionValueDB = questionDBWithOption.getValueBySession();
+        ValueDB intValueDB = mQuestionThresholdDB.getQuestionDB().getValueBySession();
 
         //A question is not answered yet -> false
-        if (optionValue == null || optionValue.getOptionDB() == null || intValue == null) {
+        if (optionValueDB == null || optionValueDB.getOptionDB() == null || intValueDB == null) {
             return false;
         }
         //The option for this warning has not been selected
-        if (optionValue.getId_option() != mQuestionOptionDB.getOptionDB().getId_option()) {
+        if (optionValueDB.getId_option() != mQuestionOptionDB.getOptionDB().getId_option()) {
             return false;
         }
         //If current int value NOT in threshold -> the warning is activated
-        return !mQuestionThresholdDB.isInThreshold(intValue.getValue());
+        return !mQuestionThresholdDB.isInThreshold(intValueDB.getValue());
     }
 
     @Override

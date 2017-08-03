@@ -52,14 +52,14 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.ScoreDB;
 import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.SurveySchedule;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.TabGroup;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.SurveyScheduleDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TabGroupDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -104,15 +104,15 @@ public class PopulateDB {
             CompositeScoreDB.class,
             OrgUnitProgramRelationDB.class,
             ScoreDB.class,
-            SurveySchedule.class,
-            TabGroup.class,
+            SurveyScheduleDB.class,
+            TabGroupDB.class,
             SurveyDB.class,
-            Value.class,
-            User.class,
+            ValueDB.class,
+            UserDB.class,
             StringKeyDB.class,
-            Translation.class,
+            TranslationDB.class,
             ProgramDB.class,
-            Tab.class,
+            TabDB.class,
             HeaderDB.class,
             AnswerDB.class,
             OptionAttributeDB.class,
@@ -124,9 +124,9 @@ public class PopulateDB {
             QuestionThresholdDB.class,
             DrugDB.class,
             PartnerDB.class,
-            Treatment.class,
+            TreatmentDB.class,
             DrugCombinationDB.class,
-            TreatmentMatch.class,
+            TreatmentMatchDB.class,
             OrgUnitLevelDB.class,
             OrgUnitDB.class
     );
@@ -163,7 +163,7 @@ public class PopulateDB {
     private static final String TAG = "PopulateDB";
 
     static Map<Integer, ProgramDB> programList = new LinkedHashMap<Integer, ProgramDB>();
-    static Map<Integer, Tab> tabList = new LinkedHashMap<Integer, Tab>();
+    static Map<Integer, TabDB> tabList = new LinkedHashMap<Integer, TabDB>();
     static Map<Integer, HeaderDB> headerList = new LinkedHashMap<Integer, HeaderDB>();
     static Map<Integer, QuestionDB> questionList = new LinkedHashMap<Integer, QuestionDB>();
     static Map<Integer, OptionAttributeDB> optionAttributeList =
@@ -177,7 +177,7 @@ public class PopulateDB {
     static Map<Integer, OrgUnitDB> orgUnitList = new LinkedHashMap();
     static HashMap<Long, DrugDB> drugList = new HashMap<>();
     static HashMap<Long, PartnerDB> organisationList = new HashMap<>();
-    static HashMap<Long, Treatment> treatmentList = new HashMap<>();
+    static HashMap<Long, TreatmentDB> treatmentList = new HashMap<>();
     static HashMap<Long, StringKeyDB> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
@@ -236,20 +236,20 @@ public class PopulateDB {
                         programList.put(Integer.valueOf(line[0]), programDB);
                         break;
                     case TABS_CSV:
-                        Tab tab = new Tab();
-                        tab.setName(line[1]);
-                        tab.setOrder_pos(Integer.valueOf(line[2]));
-                        tab.setProgram(programList.get(Integer.valueOf(line[3])));
-                        tab.setType(Integer.valueOf(line[4]));
-                        tab.save();
-                        tabList.put(Integer.valueOf(line[0]), tab);
+                        TabDB tabDB = new TabDB();
+                        tabDB.setName(line[1]);
+                        tabDB.setOrder_pos(Integer.valueOf(line[2]));
+                        tabDB.setProgram(programList.get(Integer.valueOf(line[3])));
+                        tabDB.setType(Integer.valueOf(line[4]));
+                        tabDB.save();
+                        tabList.put(Integer.valueOf(line[0]), tabDB);
                         break;
                     case HEADERS_CSV:
                         HeaderDB headerDB = new HeaderDB();
                         headerDB.setShort_name(line[1]);
                         headerDB.setName(line[2]);
                         headerDB.setOrder_pos(Integer.valueOf(line[3]));
-                        headerDB.setTab(tabList.get(Integer.valueOf(line[4])));
+                        headerDB.setTabDB(tabList.get(Integer.valueOf(line[4])));
                         headerDB.save();
                         headerList.put(Integer.valueOf(line[0]), headerDB);
                         break;
@@ -383,10 +383,10 @@ public class PopulateDB {
                         organisationList.put(Long.parseLong(line[0]), partnerDB);
                         break;
                     case TREATMENT_CSV:
-                        Treatment treatment = PopulateRow.populateTreatments(line, organisationList,
+                        TreatmentDB treatmentDB = PopulateRow.populateTreatments(line, organisationList,
                                 stringKeyList, null);
-                        treatment.insert();
-                        treatmentList.put(Long.parseLong(line[0]), treatment);
+                        treatmentDB.insert();
+                        treatmentList.put(Long.parseLong(line[0]), treatmentDB);
                         break;
                     case DRUG_COMBINATIONS_CSV:
                         PopulateRow.populateDrugCombinations(line, drugList, treatmentList,
@@ -504,7 +504,7 @@ public class PopulateDB {
      */
     public static void wipeSurveys() {
         Delete.tables(
-                Value.class,
+                ValueDB.class,
                 ScoreDB.class,
                 SurveyDB.class
         );
@@ -963,16 +963,16 @@ public class PopulateDB {
     }
 
     public static void initDBQuery() {
-        Tab.getAllTabs();
+        TabDB.getAllTabs();
     }
 
     public static void wipeOrgUnitsAndEvents() {
         wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
                 OrgUnitDB.class,
                 SurveyDB.class,
-                Value.class,
+                ValueDB.class,
                 ScoreDB.class,
-                SurveySchedule.class,
-                User.class).toArray());
+                SurveyScheduleDB.class,
+                UserDB.class).toArray());
     }
 }

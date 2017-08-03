@@ -15,7 +15,7 @@ import com.google.common.collect.Iterables;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
@@ -33,7 +33,7 @@ public class ReviewFragment extends Fragment {
     public static boolean mLoadingReviewOfSurveyWithMaxCounter;
     protected IDashboardAdapter adapter;
     LayoutInflater lInflater;
-    private List<Value> values;
+    private List<ValueDB> mValueDBs;
     private OnEndReviewListener mOnEndReviewListener;
 
     @Override
@@ -91,15 +91,16 @@ public class ReviewFragment extends Fragment {
     private List<org.eyeseetea.malariacare.domain.entity.Value> prepareValues() {
         Iterator<String> colorIterator;
         List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues = new ArrayList<>();
-        values = getReviewValues();
-        values = orderValues(values);
+        mValueDBs = getReviewValues();
+        mValueDBs = orderValues(mValueDBs);
         colorIterator = Iterables.cycle(createBackgroundColorList()).iterator();
-        for(Value value:values) {
-            org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(value.getValue());
-            if(value.getQuestionDB()!=null)
-            preparedValue.setQuestionUId(value.getQuestionDB().getUid());
-            if(value.getOptionDB()!=null)
-            preparedValue.setInternationalizedCode(value.getOptionDB().getInternationalizedCode());
+        for(ValueDB valueDB : mValueDBs) {
+            org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(
+                    valueDB.getValue());
+            if(valueDB.getQuestionDB()!=null)
+            preparedValue.setQuestionUId(valueDB.getQuestionDB().getUid());
+            if(valueDB.getOptionDB()!=null)
+            preparedValue.setInternationalizedCode(valueDB.getOptionDB().getInternationalizedCode());
             if(colorIterator.hasNext()) {
                 preparedValue.setBackgroundColor(colorIterator.next());
             }
@@ -110,9 +111,9 @@ public class ReviewFragment extends Fragment {
 
     private List<String> createBackgroundColorList() {
         List<String> colorsList = new ArrayList<>();
-        for(Value value:values) {
-            if (value.getOptionDB() != null && value.getOptionDB().getBackground_colour() != null) {
-                String color = "#" + value.getOptionDB().getBackground_colour();
+        for(ValueDB valueDB : mValueDBs) {
+            if (valueDB.getOptionDB() != null && valueDB.getOptionDB().getBackground_colour() != null) {
+                String color = "#" + valueDB.getOptionDB().getBackground_colour();
                 if (!colorsList.contains(color)) {
                     colorsList.add(color);
                 }
@@ -122,44 +123,44 @@ public class ReviewFragment extends Fragment {
         if (colorsList.size() == 0) {
             colorsList.add("#4d3a4b");
         }
-        if (colorsList.size() == 1 && values.size() > 1) {
+        if (colorsList.size() == 1 && mValueDBs.size() > 1) {
             colorsList.add("#9c7f9b");
         }
         return colorsList;
     }
 
-    private List<Value> orderValues(List<Value> values) {
+    private List<ValueDB> orderValues(List<ValueDB> valueDBs) {
         ReviewFragmentStrategy reviewFragmentStrategy = new ReviewFragmentStrategy();
-        return reviewFragmentStrategy.orderValues(values);
+        return reviewFragmentStrategy.orderValues(valueDBs);
     }
 
-    private List<Value> getReviewValues() {
-        List<Value> reviewValues = new ArrayList<>();
+    private List<ValueDB> getReviewValues() {
+        List<ValueDB> reviewValueDBs = new ArrayList<>();
         SurveyDB surveyDB = Session.getMalariaSurveyDB();
-        List<Value> allValues = surveyDB.getValuesFromDB();
-        for (Value value : allValues) {
+        List<ValueDB> allValueDBs = surveyDB.getValuesFromDB();
+        for (ValueDB valueDB : allValueDBs) {
             boolean isReviewValue = true;
-            if (value.getQuestionDB() == null) {
+            if (valueDB.getQuestionDB() == null) {
                 continue;
             }
-            for (QuestionRelationDB questionRelationDB : value.getQuestionDB().getQuestionRelationDBs()) {
+            for (QuestionRelationDB questionRelationDB : valueDB.getQuestionDB().getQuestionRelationDBs()) {
                 if (questionRelationDB.isACounter() || questionRelationDB.isAReminder()
                         || questionRelationDB.isAWarning() || questionRelationDB.isAMatch()) {
                     isReviewValue = false;
                 }
             }
-            int output = value.getQuestionDB().getOutput();
+            int output = valueDB.getQuestionDB().getOutput();
             if (output == Constants.HIDDEN
                     || output == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON) {
                 isReviewValue = false;
             }
             if (isReviewValue) {
-                if (value.getQuestionDB()!=null) {
-                    reviewValues.add(value);
+                if (valueDB.getQuestionDB()!=null) {
+                    reviewValueDBs.add(valueDB);
                 }
             }
         }
-        return reviewValues;
+        return reviewValueDBs;
     }
 
     /**

@@ -9,7 +9,7 @@ import android.widget.TableRow;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.views.option.ImageOptionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -81,15 +81,15 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value == null || value.getValue() == null) {
+    public void setValue(ValueDB valueDB) {
+        if (valueDB == null || valueDB.getValue() == null) {
             return;
         }
 
         for (int i = 0; i < mImageOptionViews.size(); i++) {
             ImageOptionView imageOptionView = mImageOptionViews.get(i);
 
-            boolean selected = imageOptionView.getOptionDB().equals(value.getOptionDB());
+            boolean selected = imageOptionView.getOptionDB().equals(valueDB.getOptionDB());
 
             imageOptionView.setSelectedOption(selected);
         }

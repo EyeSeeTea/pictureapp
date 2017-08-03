@@ -29,8 +29,8 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -52,7 +52,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     Map<String, Object> appMapObjects;
     List<SurveyDB> mSurveyDBs;
-    List<Value> values;
+    List<ValueDB> mValueDBs;
     List<OrgUnitDB> mOrgUnitDBs;
 
     private ConvertFromSDKVisitorStrategy mConvertFromSDKVisitorStrategy;
@@ -62,7 +62,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         mContext = context;
         appMapObjects = new HashMap();
         mSurveyDBs = new ArrayList<>();
-        values = new ArrayList<>();
+        mValueDBs = new ArrayList<>();
         mOrgUnitDBs = new ArrayList<>();
 
         mConvertFromSDKVisitorStrategy = new ConvertFromSDKVisitorStrategy(context);
@@ -88,12 +88,12 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         this.mSurveyDBs = surveyDBs;
     }
 
-    public List<Value> getValues() {
-        return values;
+    public List<ValueDB> getValueDBs() {
+        return mValueDBs;
     }
 
-    public void setValues(List<Value> values) {
-        this.values = values;
+    public void setValueDBs(List<ValueDB> valueDBs) {
+        this.mValueDBs = valueDBs;
     }
 
     /**
@@ -118,11 +118,11 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(UserAccountExtended sdkUserAccountExtended) {
-        User appUser = new User();
-        appUser.setUid(sdkUserAccountExtended.getUid());
-        appUser.setName(sdkUserAccountExtended.getName());
-        appUser.setLastUpdated(null);
-        appUser.save();
+        UserDB appUserDB = new UserDB();
+        appUserDB.setUid(sdkUserAccountExtended.getUid());
+        appUserDB.setName(sdkUserAccountExtended.getName());
+        appUserDB.setLastUpdated(null);
+        appUserDB.save();
     }
 
     /**
@@ -163,7 +163,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         SurveyDB surveyDB = (SurveyDB) appMapObjects.get(sdkDataValueExtended.getEvent());
         String questionUID = sdkDataValueExtended.getDataElement();
 
-        //Data value is a value from compositeScore -> ignore
+        //Data valueDB is a valueDB from compositeScore -> ignore
         if (appMapObjects.get(questionUID) instanceof CompositeScoreDB) {
             return;
         }
@@ -173,28 +173,28 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
             return;
         }
 
-        //Datavalue is a value from a questionDB
+        //Datavalue is a valueDB from a questionDB
         QuestionDB questionDB = QuestionDB.findByUID(questionUID);
 
         if (questionDB == null) {
             Log.e(TAG, "Question not found with dataelement uid " + questionUID);
         }
 
-        Value value = new Value();
-        value.setQuestionDB(questionDB);
-        value.setSurveyDB(surveyDB);
+        ValueDB valueDB = new ValueDB();
+        valueDB.setQuestionDB(questionDB);
+        valueDB.setSurveyDB(surveyDB);
 
         OptionDB optionDB =
                 sdkDataValueExtended.findOptionByQuestion(questionDB);
-        value.setOptionDB(optionDB);
-        //No optionDB -> text questionDB (straight value)
+        valueDB.setOptionDB(optionDB);
+        //No optionDB -> text questionDB (straight valueDB)
         if (optionDB == null) {
-            value.setValue(sdkDataValueExtended.getValue());
+            valueDB.setValue(sdkDataValueExtended.getValue());
         } else {
-            //OptionDB -> extract value from code
-            value.setValue(sdkDataValueExtended.getDataValue().getValue());
+            //OptionDB -> extract valueDB from code
+            valueDB.setValue(sdkDataValueExtended.getDataValue().getValue());
         }
-        values.add(value);
+        mValueDBs.add(valueDB);
     }
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {

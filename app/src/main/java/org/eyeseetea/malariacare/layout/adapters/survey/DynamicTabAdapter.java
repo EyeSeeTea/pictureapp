@@ -52,8 +52,8 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -108,7 +108,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private final Context context;
     public NavigationController navigationController;
     public boolean reloadingQuestionFromInvalidOption;
-    Tab tab;
+    TabDB mTabDB;
     LayoutInflater lInflater;
     TableLayout tableLayout = null;
     int id_layout;
@@ -181,10 +181,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * position 1=true 0=false)
      */
     public static Boolean findSwitchBoolean(QuestionDB questionDB) {
-        Value value = questionDB.getValueBySession();
-        if (value.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(0).getCode())) {
+        ValueDB valueDB = questionDB.getValueBySession();
+        if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(0).getCode())) {
             return true;
-        } else if (value.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(1).getCode())) {
+        } else if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(1).getCode())) {
             return false;
         }
         return false;
@@ -287,14 +287,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void saveOptionValue(View view, OptionDB selectedOptionDB, QuestionDB questionDB,
             boolean moveToNextQuestion) {
         OptionDB answeredOptionDB = (questionDB != null) ? questionDB.getAnsweredOption() : null;
-        Value value = questionDB.getValueBySession();
+        ValueDB valueDB = questionDB.getValueBySession();
 
-        if (goingBackwardAndModifiedValues(value, answeredOptionDB, selectedOptionDB)) {
+        if (goingBackwardAndModifiedValues(valueDB, answeredOptionDB, selectedOptionDB)) {
             navigationController.setTotalPages(questionDB.getTotalQuestions());
             isBackward = false;
         }
 
-        questionDB.saveValuesDDL(selectedOptionDB, value);
+        questionDB.saveValuesDDL(selectedOptionDB, valueDB);
 
 
         if (questionDB.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
@@ -310,9 +310,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    private boolean goingBackwardAndModifiedValues(Value value, OptionDB answeredOptionDB,
+    private boolean goingBackwardAndModifiedValues(ValueDB valueDB, OptionDB answeredOptionDB,
             OptionDB selectedOptionDB) {
-        return isBackward && value != null && !readOnly && (answeredOptionDB == null
+        return isBackward && valueDB != null && !readOnly && (answeredOptionDB == null
                 || !answeredOptionDB.getId_option().equals(selectedOptionDB.getId_option()));
     }
 
@@ -364,8 +364,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
 
-    public Tab getTab() {
-        return this.tab;
+    public TabDB getTabDB() {
+        return this.mTabDB;
     }
 
     @Override
@@ -385,7 +385,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     @Override
     public String getName() {
-        return tab.getName();
+        return mTabDB.getName();
     }
 
     @Override
@@ -435,10 +435,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
                 "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
-        int tabType = questionDBItem.getHeaderDB().getTab().getType();
-        if (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(
+        int tabType = questionDBItem.getHeaderDB().getTabDB().getType();
+        if (TabDB.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(
                 tabType)) {
-            headerView.setText(questionDBItem.getHeaderDB().getTab().getInternationalizedName());
+            headerView.setText(questionDBItem.getHeaderDB().getTabDB().getInternationalizedName());
         } else {
             headerView.setText(questionDBItem.getInternationalizedForm_name());
         }
@@ -467,9 +467,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             screenQuestionDBs = mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType,
                     screenQuestionDBs);
 
-            if (Tab.isMultiQuestionTab(tabType)) {
+            if (TabDB.isMultiQuestionTab(tabType)) {
                 screenQuestionDBs = questionDBItem.getQuestionsByTab(questionDBItem.getHeaderDB()
-                        .getTab());
+                        .getTabDB());
             } else if (screenQuestionDBs.size() == 0) {
                 //not have additionalQuestions(variant dependent) and is not multi question tab
                 screenQuestionDBs.add(questionDBItem);
@@ -492,7 +492,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             isClicked = false;
         }
 
-        Log.d(TAG, "Questions in actual tab: " + screenQuestionDBs.size());
+        Log.d(TAG, "Questions in actual mTabDB: " + screenQuestionDBs.size());
 
         swipeTouchListener.clearClickableViews();
         for (QuestionDB screenQuestionDB : screenQuestionDBs) {
@@ -509,20 +509,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableRow tableRow;
         IQuestionViewFactory questionViewFactory;
 
-        questionViewFactory = (Tab.isMultiQuestionTab(tabType)
+        questionViewFactory = (TabDB.isMultiQuestionTab(tabType)
                 || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) ?
                 new MultiQuestionViewFactory() : new SingleQuestionViewFactory();
 
-        // Se get the value from Session
+        // Se get the valueDB from Session
         int visibility = View.GONE;
 
         SurveyDB surveyDB = new SurveyFragmentStrategy().getRenderSurvey(screenQuestionDB);
 
         if (!screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB)
-                || !Tab.isMultiQuestionTab(tabType)) {
+                || !TabDB.isMultiQuestionTab(tabType)) {
             visibility = View.VISIBLE;
         }
-        Value value = screenQuestionDB.getValueBySession();
+        ValueDB valueDB = screenQuestionDB.getValueBySession();
 
         tableRow = new TableRow(context);
 
@@ -568,7 +568,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
-                questionView.setValue(value);
+                questionView.setValue(valueDB);
             }
 
             setupNavigationByQuestionView(rowView.getRootView(), questionView);
@@ -612,7 +612,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private boolean isTabScrollable(QuestionDB questionDBItem, int tabType) {
-        return Tab.isMultiQuestionTab(tabType)
+        return TabDB.isMultiQuestionTab(tabType)
                 || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)
                 || questionDBItem.getOutput() == Constants.IMAGE_RADIO_GROUP
                 || questionDBItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT
@@ -637,7 +637,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void configureLayoutParams(int tabType, TableRow tableRow, LinearLayout questionView) {
-        if (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(
+        if (TabDB.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(
                 tabType)) {
 
             tableRow.setLayoutParams(
@@ -958,10 +958,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Checks if there are more questions to answer according to the given value + current status.
+     * Checks if there are more questions to answer according to the given valueDB + current status.
      */
-    public boolean isDone(Value value) {
-        return !navigationController.hasNext(value != null ? value.getOptionDB() : null);
+    public boolean isDone(ValueDB valueDB) {
+        return !navigationController.hasNext(valueDB != null ? valueDB.getOptionDB() : null);
     }
 
     /**
@@ -1002,10 +1002,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             currentQuestionDB = navigationController.getCurrentQuestion();
 
-            int tabType = currentQuestionDB.getHeaderDB().getTab().getType();
-            if (Tab.isMultiQuestionTab(tabType)) {
+            int tabType = currentQuestionDB.getHeaderDB().getTabDB().getType();
+            if (TabDB.isMultiQuestionTab(tabType)) {
                 List<QuestionDB> screenQuestionDBs = currentQuestionDB.getQuestionsByTab(
-                        currentQuestionDB.getHeaderDB().getTab());
+                        currentQuestionDB.getHeaderDB().getTabDB());
 
                 for (QuestionDB questionDB : screenQuestionDBs) {
                     if (questionUid.equals(questionDB.getUid())) {
@@ -1030,13 +1030,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void goToLastQuestion() {
         navigationController.first();
-        Value value = null;
+        ValueDB valueDB = null;
         do {
             next();
             QuestionDB questionDB = navigationController.getCurrentQuestion();
-            value = questionDB.getValueBySession();
+            valueDB = questionDB.getValueBySession();
             skipReminder();
-        } while (value != null && !isDone(value));
+        } while (valueDB != null && !isDone(valueDB));
         notifyDataSetChanged();
     }
 
@@ -1055,20 +1055,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void next() {
         QuestionDB questionDB = navigationController.getCurrentQuestion();
 
-        Value value = questionDB.getValueBySession();
+        ValueDB valueDB = questionDB.getValueBySession();
 
-        if (isDone(value)) {
+        if (isDone(valueDB)) {
             navigationController.isMovingToForward = false;
             return;
         }
-        navigationController.next(value != null ? value.getOptionDB() : null);
+        navigationController.next(valueDB != null ? valueDB.getOptionDB() : null);
 
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());
 
         questionDB = navigationController.getCurrentQuestion();
 
-        if (value != null && !readOnly
+        if (valueDB != null && !readOnly
                 && navigationController.getCurrentTotalPages() < questionDB.getTotalQuestions()) {
             navigationController.setTotalPages(questionDB.getTotalQuestions());
         }

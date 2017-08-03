@@ -5,7 +5,7 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
@@ -33,7 +33,7 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
     public static void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
         PartnerDB organisationUser = null;
         List<PartnerDB> partnerDBs = PartnerDB.getAllOrganisations();
-        User me = User.getLoggedUser();
+        UserDB me = UserDB.getLoggedUser();
         for (PartnerDB partnerDB : partnerDBs) {
             if (partnerDB.getName().equals(categoryOptionGroupExtended.getName())) {
                 organisationUser = partnerDB;

@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 public class SurveyQuestionTreatmentValue {
@@ -55,7 +55,7 @@ public class SurveyQuestionTreatmentValue {
 
 
     public String getValueQuestion(int question) {
-        for (Value value : mSurvey.getValues()) {//this values should be get from memory because
+        for (ValueDB value : mSurvey.getValueDBs()) {//this values should be get from memory because
             // the treatment options are in memory
             if (value.getQuestionDB() == null) {
                 continue;

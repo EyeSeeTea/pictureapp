@@ -99,20 +99,20 @@ public class MatchDB extends BaseModel {
     }
 
     /**
-     * Get all treatment mMatchDBs with the mMatchDB passed.
+     * Get all mTreatmentDB mMatchDBs with the mMatchDB passed.
      */
-    private static List<TreatmentMatch> getTreatmentMatches(MatchDB matchDB) {
-        return new Select().from(TreatmentMatch.class)
-                .where(TreatmentMatch_Table.id_match_fk.eq(
+    private static List<TreatmentMatchDB> getTreatmentMatches(MatchDB matchDB) {
+        return new Select().from(TreatmentMatchDB.class)
+                .where(TreatmentMatchDB_Table.id_match_fk.eq(
                         matchDB.getId_match())).queryList();
     }
 
-    public Treatment getTreatment() {
-        return new Select().from(Treatment.class).as(treatmentName)
-                .join(TreatmentMatch.class, Join.JoinType.LEFT_OUTER).as(treatmentMatchName)
-                .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
-                        .eq(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)
+    public TreatmentDB getTreatment() {
+        return new Select().from(TreatmentDB.class).as(treatmentName)
+                .join(TreatmentMatchDB.class, Join.JoinType.LEFT_OUTER).as(treatmentMatchName)
+                .on(TreatmentDB_Table.id_treatment.withTable(treatmentAlias)
+                        .eq(TreatmentMatchDB_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatchDB_Table.id_match_fk.withTable(treatmentMatchAlias)
                         .eq(id_match))
                 .querySingle();
     }
@@ -122,7 +122,7 @@ public class MatchDB extends BaseModel {
      */
     public static void deleteMatches(List<MatchDB> matchDBs) {
         for (MatchDB matchDB : matchDBs) {
-            TreatmentMatch.deleteTreatmentMatches(getTreatmentMatches(matchDB));
+            TreatmentMatchDB.deleteTreatmentMatches(getTreatmentMatches(matchDB));
             QuestionOptionDB.deleteQuestionOptions(getQuestionOptions(matchDB));
             QuestionThresholdDB.deleteQuestionThresholds(getQuestionThreshold(matchDB));
             matchDB.delete();

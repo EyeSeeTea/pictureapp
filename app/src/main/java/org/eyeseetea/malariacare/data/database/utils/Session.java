@@ -27,7 +27,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
@@ -60,7 +60,7 @@ public class Session {
     /**
      * The current user
      */
-    private static User user;
+    private static UserDB sUserDB;
     /**
      * The current credentials
      */
@@ -119,12 +119,12 @@ public class Session {
         sCredentials = credentials;
     }
 
-    public static User getUser() {
-        return user;
+    public static UserDB getUserDB() {
+        return sUserDB;
     }
 
-    public static synchronized void setUser(User user) {
-        Session.user = user;
+    public static synchronized void setUserDB(UserDB userDB) {
+        Session.sUserDB = userDB;
     }
 
     public static synchronized void setFullOfUnsent(Context context) {
@@ -154,7 +154,7 @@ public class Session {
      * Closes the current session when the user logs out
      */
     public static void logout() {
-        Session.setUser(null);
+        Session.setUserDB(null);
         Session.setMalariaSurveyDB(null);
         Session.serviceValues.clear();
     }

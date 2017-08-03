@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -68,8 +68,8 @@ public abstract class ADynamicTabAdapterStrategy {
             @Override
             public void run() {
                 QuestionDB questionDB = mDynamicTabAdapter.navigationController.getCurrentQuestion();
-                Value value = questionDB.getValueBySession();
-                if (mDynamicTabAdapter.isDone(value)) {
+                ValueDB valueDB = questionDB.getValueBySession();
+                if (mDynamicTabAdapter.isDone(valueDB)) {
                     mDynamicTabAdapter.navigationController.isMovingToForward = false;
                     if (!ReviewFragmentStrategy.shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                         mDynamicTabAdapter.surveyShowDone();

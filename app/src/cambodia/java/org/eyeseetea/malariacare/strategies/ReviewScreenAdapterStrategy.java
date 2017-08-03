@@ -6,11 +6,17 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
     ReviewScreenAdapter.onClickListener onClickListener;
@@ -54,18 +60,18 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
     }
 
     @Override
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        List<org.eyeseetea.malariacare.data.database.model.Value> orderedList = new ArrayList<>();
+    public List<org.eyeseetea.malariacare.data.database.model.ValueDB> orderValues(
+            List<org.eyeseetea.malariacare.data.database.model.ValueDB> values) {
+        List<ValueDB> orderedList = new ArrayList<>();
         NavigationController navigationController = Session.getNavigationController();
         navigationController.first();
-        Question nextQuestion = null;
+        QuestionDB nextQuestion = null;
         do {
-            for (org.eyeseetea.malariacare.data.database.model.Value value : values) {
-                if (value.getQuestion() != null) {
-                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
+            for (org.eyeseetea.malariacare.data.database.model.ValueDB value : values) {
+                if (value.getQuestionDB() != null) {
+                    if (value.getQuestionDB().equals(navigationController.getCurrentQuestion())) {
                         orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOption());
+                        nextQuestion = navigationController.next(value.getOptionDB());
                     }
                 }
             }

@@ -129,7 +129,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
                 new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
                         valueLocalDataSource);
         mReviewPresenter = new ReviewPresenter(getReviewValuesBySurveyIdUseCase);
-        mReviewPresenter.attachView(this, Session.getMalariaSurvey().getId_survey());
+        mReviewPresenter.attachView(this, Session.getMalariaSurveyDB().getId_survey());
     }
 
     @Override

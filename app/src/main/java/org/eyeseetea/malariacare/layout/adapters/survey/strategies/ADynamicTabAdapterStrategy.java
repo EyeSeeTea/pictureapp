@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
+import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 
 import android.os.Handler;
 import android.view.View;
@@ -89,6 +89,6 @@ public abstract class ADynamicTabAdapterStrategy {
     public abstract void addScrollToSwipeTouchListener(View rowView);
 
     protected boolean shouldShowReviewScreen() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
+        return getMalariaSurveyDB().isRDT() || BuildConfig.patientTestedByDefault;
     }
 }

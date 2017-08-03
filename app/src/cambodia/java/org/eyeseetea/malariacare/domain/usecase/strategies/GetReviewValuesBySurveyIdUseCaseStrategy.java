@@ -15,7 +15,7 @@ public class GetReviewValuesBySurveyIdUseCaseStrategy extends
     @Override
     public List<Value> orderValues(List<Value> values) {
         List<Value> orderedList = new ArrayList<>();
-        //TODO refactor navigation controller to be in domain layer
+        //TODO refactor navigation controller to be in domain layer (issue 1354)
         NavigationController navigationController = Session.getNavigationController();
         navigationController.first();
         String uidNextQuestion = null;

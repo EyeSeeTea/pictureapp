@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.presenter;
 
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
 
@@ -24,16 +23,22 @@ public class ReviewPresenter {
         mGetReviewValuesBySurveyIdUseCase = getReviewValuesBySurveyIdUseCase;
     }
 
-    public void attachView(ReviewView reviewView) {
+    public void attachView(ReviewView reviewView, Long surveyId) {
         this.view = reviewView;
         mGetReviewValuesBySurveyIdUseCase.execute(
                 new GetReviewValuesBySurveyIdUseCase.Callback() {
             @Override
             public void onGetValues(List<Value> values) {
-                view.showValues(values);
-                view.initListView();
+                if (view != null) {
+                    view.showValues(values);
+                    view.initListView();
+                }
             }
-        }, Session.getMalariaSurvey().getId_survey());
+                }, surveyId);
+    }
+
+    public void detachView() {
+        view = null;
     }
 
     public void onClickOnValue(String UId) {

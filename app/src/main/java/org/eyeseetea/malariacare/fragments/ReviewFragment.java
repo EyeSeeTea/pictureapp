@@ -15,6 +15,7 @@ import com.google.common.collect.Iterables;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
@@ -85,6 +86,17 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         super.onStop();
     }
 
+
+    @Override
+    public void onDestroy() {
+
+        if (mReviewPresenter != null) {
+            mReviewPresenter.detachView();
+        }
+
+        super.onDestroy();
+    }
+
     /**
      * Initializes the listview component, adding a listener for swiping right
      */
@@ -117,7 +129,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
                 new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
                         valueLocalDataSource);
         mReviewPresenter = new ReviewPresenter(getReviewValuesBySurveyIdUseCase);
-        mReviewPresenter.attachView(this);
+        mReviewPresenter.attachView(this, Session.getMalariaSurvey().getId_survey());
     }
 
     @Override

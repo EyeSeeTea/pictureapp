@@ -12,28 +12,35 @@ import android.widget.ListView;
 
 import com.google.common.collect.Iterables;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
-import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
+import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.presenter.ReviewPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
-import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ReviewFragment extends Fragment {
+public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewView {
 
     public static final String TAG = ".ReviewFragment";
     public static boolean mLoadingReviewOfSurveyWithMaxCounter;
     protected IDashboardAdapter adapter;
     LayoutInflater lInflater;
-    private List<ValueDB> mValueDBs;
+    View mView;
+    ListView listView;
+    ReviewPresenter mReviewPresenter;
     private OnEndReviewListener mOnEndReviewListener;
 
     @Override
@@ -47,12 +54,12 @@ public class ReviewFragment extends Fragment {
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         this.lInflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.review_layout,
+        mView = inflater.inflate(R.layout.review_layout,
                 container, false);
-        initAdapter();
-        initListView(view);
-        initReviewButton(view);
-        return view;
+        listView = (ListView) mView.findViewById(R.id.review_list);
+        initializePresenter();
+        initReviewButton(mView);
+        return mView;
     }
 
     private void initReviewButton(View view) {
@@ -79,100 +86,26 @@ public class ReviewFragment extends Fragment {
         super.onStop();
     }
 
-    /**
-     * Inits reviewfragment adapter.
-     */
-    private void initAdapter() {
-        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(prepareValues(), lInflater,
-                getActivity());
-        this.adapter = adapterInSession;
-    }
 
-    private List<org.eyeseetea.malariacare.domain.entity.Value> prepareValues() {
-        Iterator<String> colorIterator;
-        List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues = new ArrayList<>();
-        mValueDBs = getReviewValues();
-        mValueDBs = orderValues(mValueDBs);
-        colorIterator = Iterables.cycle(createBackgroundColorList()).iterator();
-        for(ValueDB valueDB : mValueDBs) {
-            org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(
-                    valueDB.getValue());
-            if(valueDB.getQuestionDB()!=null)
-            preparedValue.setQuestionUId(valueDB.getQuestionDB().getUid());
-            if(valueDB.getOptionDB()!=null)
-            preparedValue.setInternationalizedCode(valueDB.getOptionDB().getInternationalizedCode());
-            if(colorIterator.hasNext()) {
-                preparedValue.setBackgroundColor(colorIterator.next());
-            }
-            preparedValues.add(preparedValue);
-        }
-        return preparedValues;
-    }
+    @Override
+    public void onDestroy() {
 
-    private List<String> createBackgroundColorList() {
-        List<String> colorsList = new ArrayList<>();
-        for(ValueDB valueDB : mValueDBs) {
-            if (valueDB.getOptionDB() != null && valueDB.getOptionDB().getBackground_colour() != null) {
-                String color = "#" + valueDB.getOptionDB().getBackground_colour();
-                if (!colorsList.contains(color)) {
-                    colorsList.add(color);
-                }
-            }
+        if (mReviewPresenter != null) {
+            mReviewPresenter.detachView();
         }
-        //Hardcoded colors for a colorList without colors.
-        if (colorsList.size() == 0) {
-            colorsList.add("#4d3a4b");
-        }
-        if (colorsList.size() == 1 && mValueDBs.size() > 1) {
-            colorsList.add("#9c7f9b");
-        }
-        return colorsList;
-    }
 
-    private List<ValueDB> orderValues(List<ValueDB> valueDBs) {
-        ReviewFragmentStrategy reviewFragmentStrategy = new ReviewFragmentStrategy();
-        return reviewFragmentStrategy.orderValues(valueDBs);
-    }
-
-    private List<ValueDB> getReviewValues() {
-        List<ValueDB> reviewValueDBs = new ArrayList<>();
-        SurveyDB surveyDB = Session.getMalariaSurveyDB();
-        List<ValueDB> allValueDBs = surveyDB.getValuesFromDB();
-        for (ValueDB valueDB : allValueDBs) {
-            boolean isReviewValue = true;
-            if (valueDB.getQuestionDB() == null) {
-                continue;
-            }
-            for (QuestionRelationDB questionRelationDB : valueDB.getQuestionDB().getQuestionRelationDBs()) {
-                if (questionRelationDB.isACounter() || questionRelationDB.isAReminder()
-                        || questionRelationDB.isAWarning() || questionRelationDB.isAMatch()) {
-                    isReviewValue = false;
-                }
-            }
-            int output = valueDB.getQuestionDB().getOutput();
-            if (output == Constants.HIDDEN
-                    || output == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON) {
-                isReviewValue = false;
-            }
-            if (isReviewValue) {
-                if (valueDB.getQuestionDB()!=null) {
-                    reviewValueDBs.add(valueDB);
-                }
-            }
-        }
-        return reviewValueDBs;
+        super.onDestroy();
     }
 
     /**
      * Initializes the listview component, adding a listener for swiping right
      */
-    private void initListView(View view) {
+    @Override
+    public void initListView() {
         //inflate headers
         View header = lInflater.inflate(this.adapter.getHeaderLayout(), null, false);
         View subHeader = lInflater.inflate(
                 ((ReviewScreenAdapter) this.adapter).getSubHeaderLayout(), null, false);
-
-        ListView listView = (ListView) view.findViewById(R.id.review_list);
 
         //set headers and list in the listview
         listView.addHeaderView(header);
@@ -183,9 +116,60 @@ public class ReviewFragment extends Fragment {
         listView.setDividerHeight(0);
     }
 
+
     public void reloadHeader(Activity activity) {
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
+
+    private void initializePresenter() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IValueRepository valueLocalDataSource = new ValueLocalDataSource();
+        GetReviewValuesBySurveyIdUseCase getReviewValuesBySurveyIdUseCase =
+                new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
+                        valueLocalDataSource);
+        mReviewPresenter = new ReviewPresenter(getReviewValuesBySurveyIdUseCase);
+        mReviewPresenter.attachView(this, Session.getMalariaSurvey().getId_survey());
+    }
+
+    @Override
+    public void showValues(List<org.eyeseetea.malariacare.domain.entity.Value> values) {
+        Iterator<String> colorIterator = Iterables.cycle(
+                createBackgroundColorList(values)).iterator();
+        for (Value value : values) {
+            value.setBackgroundColor(colorIterator.next());
+        }
+        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(values, lInflater,
+                getActivity(), new ReviewScreenAdapter.onClickListener() {
+            @Override
+            public void onClickOnValue(String UId) {
+                mReviewPresenter.onClickOnValue(UId);
+            }
+        });
+        this.adapter = adapterInSession;
+    }
+
+    private List<String> createBackgroundColorList(
+            List<Value> values) {
+        List<java.lang.String> colorsList = new ArrayList<>();
+        for (Value value : values) {
+            if (value.getBackgroundColor() != null) {
+                java.lang.String color = value.getBackgroundColor();
+                if (!colorsList.contains(color)) {
+                    colorsList.add(color);
+                }
+            }
+        }
+        //Hardcoded colors for a colorList without colors.
+        if (colorsList.size() == 0) {
+            colorsList.add("#4d3a4b");
+        }
+        if (colorsList.size() == 1 && values.size() > 1) {
+            colorsList.add("#9c7f9b");
+        }
+        return colorsList;
+    }
+
 
     public void setOnEndReviewListener(
             OnEndReviewListener onEndReviewListener) {
@@ -194,5 +178,10 @@ public class ReviewFragment extends Fragment {
 
     public interface OnEndReviewListener {
         void onEndReview();
+    }
+
+    @Override
+    public void navigateToQuestion(String uId) {
+        DashboardActivity.dashboardActivity.hideReview(uId);
     }
 }

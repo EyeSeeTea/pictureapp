@@ -67,4 +67,9 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
         DynamicTabAdapter.swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                 R.id.scrolled_table)).findViewById(R.id.table_scroll));
     }
+
+    @Override
+    protected boolean shouldShowReviewScreen() {
+        return true;
+    }
 }

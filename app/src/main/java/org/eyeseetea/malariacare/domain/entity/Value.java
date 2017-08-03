@@ -5,6 +5,7 @@ public class Value {
     String internationalizatedCode;
     String backgroundColor;
     String questionUId;
+    String optionCode;
 
     public Value(String value) {
         this.value = value;
@@ -40,5 +41,13 @@ public class Value {
 
     public void setInternationalizedCode(String internationalizatedCode) {
         this.internationalizatedCode = internationalizatedCode;
+    }
+
+    public String getOptionCode() {
+        return optionCode;
+    }
+
+    public void setOptionCode(String optionCode) {
+        this.optionCode = optionCode;
     }
 }

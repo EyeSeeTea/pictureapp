@@ -109,6 +109,13 @@ public class OptionDB extends BaseModel {
                 .where(OptionDB_Table.name.eq(name)).querySingle();
     }
 
+    public static Option findByCode(String code) {
+        return new Select()
+                .from(Option.class)
+                .where(Option_Table.code.eq(code)).querySingle();
+    }
+
+
     public Long getId_option() {
         return id_option;
     }

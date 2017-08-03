@@ -3,11 +3,10 @@ package org.eyeseetea.malariacare.presenter;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 
 import java.util.List;
 
-public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
+public class ReviewPresenter {
 
     public interface ReviewView {
         void showValues(List<Value> values);
@@ -37,8 +36,6 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
         }, Session.getMalariaSurvey().getId_survey());
     }
 
-
-    @Override
     public void onClickOnValue(String UId) {
         view.navigateToQuestion(UId);
     }

@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TableRow;
 
-import com.google.common.collect.Iterables;
-
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
+import org.eyeseetea.malariacare.strategies.ReviewScreenAdapterStrategy;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapter {
 
+    public interface onClickListener {
+        void onClickOnValue(String UId);
+    }
+    ReviewScreenAdapter.onClickListener onClickListener;
     List<Value> items;
     private LayoutInflater lInflater;
     private Context context;
@@ -29,13 +28,14 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     private String title;
     private Integer subHeaderLayout;
 
-    public ReviewScreenAdapter(List<Value> items, LayoutInflater inflater, Context context) {
+    public ReviewScreenAdapter(List<Value> items, LayoutInflater inflater, Context context,ReviewScreenAdapter.onClickListener onClickListener) {
         this.items = items;
         this.context = context;
         this.lInflater = inflater;
         this.headerLayout = R.layout.review_header;
         this.subHeaderLayout = R.layout.review_sub_header;
         this.recordLayout = R.layout.review_item_row;
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -112,7 +112,13 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
 
         TableRow rowView = (TableRow) this.lInflater.inflate(getRecordLayout(), parent, false);
 
-        ReviewFragmentStrategy reviewFragmentStrategy = new ReviewFragmentStrategy();
+        ReviewScreenAdapterStrategy reviewFragmentStrategy =
+                new ReviewScreenAdapterStrategy(new ReviewScreenAdapter.onClickListener() {
+                    @Override
+                    public void onClickOnValue(String UId) {
+                        onClickListener.onClickOnValue(UId);
+                    }
+                });
 
         return reviewFragmentStrategy.createViewRow(rowView, value);
     }

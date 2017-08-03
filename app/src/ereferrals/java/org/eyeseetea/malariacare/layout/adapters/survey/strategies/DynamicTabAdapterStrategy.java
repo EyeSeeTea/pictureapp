@@ -2,18 +2,16 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
 import android.os.Handler;
+import android.view.View;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
-import android.view.View;
-
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -100,7 +98,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             @Override
             public void run() {
                 mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                if (!ReviewFragmentStrategy.shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
+                if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                     mDynamicTabAdapter.surveyShowDone();
                 } else {
                     DashboardActivity.dashboardActivity.showReviewFragment();

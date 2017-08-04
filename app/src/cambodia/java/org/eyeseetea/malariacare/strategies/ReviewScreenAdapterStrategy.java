@@ -59,23 +59,4 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
         return true;
     }
 
-    @Override
-    public List<org.eyeseetea.malariacare.data.database.model.ValueDB> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.ValueDB> values) {
-        List<ValueDB> orderedList = new ArrayList<>();
-        NavigationController navigationController = Session.getNavigationController();
-        navigationController.first();
-        QuestionDB nextQuestion = null;
-        do {
-            for (org.eyeseetea.malariacare.data.database.model.ValueDB value : values) {
-                if (value.getQuestionDB() != null) {
-                    if (value.getQuestionDB().equals(navigationController.getCurrentQuestion())) {
-                        orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOptionDB());
-                    }
-                }
-            }
-        } while (nextQuestion != null);
-        return orderedList;
-    }
 }

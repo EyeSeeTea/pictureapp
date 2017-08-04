@@ -119,7 +119,7 @@ public class SurveyMonitor {
         mSurvey = survey;
     }
 
-    public SurveyDB getSurvey() {
+    public SurveyDB getSurveyDB() {
         return mSurvey;
     }
 

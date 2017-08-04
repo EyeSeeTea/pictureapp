@@ -6,6 +6,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 
 public class PushServiceStrategy extends APushServiceStrategy {
     public static final String TAG = ".PushServiceStrategy";
@@ -26,7 +27,9 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     protected void executeMockedPush() {
-        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase();
+        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase(
+                programLocalDataSource);
 
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override

@@ -13,8 +13,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Drug extends BaseModel {
+@Table(database = AppDatabase.class, name="Drug")
+public class DrugDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_drug;
@@ -23,24 +23,24 @@ public class Drug extends BaseModel {
     @Column
     String question_code;
 
-    public Drug() {
+    public DrugDB() {
     }
 
-    public Drug(long id_drug, String name, String question_code) {
+    public DrugDB(long id_drug, String name, String question_code) {
         this.id_drug = id_drug;
         this.name = name;
         this.question_code = question_code;
     }
 
-    public static Drug findById(long id) {
+    public static DrugDB findById(long id) {
         return new Select()
-                .from(Drug.class)
-                .where(Drug_Table.id_drug.is(id))
+                .from(DrugDB.class)
+                .where(DrugDB_Table.id_drug.is(id))
                 .querySingle();
     }
 
-    public static List<Drug> getAllDrugs() {
-        return new Select().from(Drug.class).queryList();
+    public static List<DrugDB> getAllDrugs() {
+        return new Select().from(DrugDB.class).queryList();
     }
 
     public long getId_drug() {
@@ -77,12 +77,12 @@ public class Drug extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Drug drug = (Drug) o;
+        DrugDB drugDB = (DrugDB) o;
 
-        if (id_drug != drug.id_drug) return false;
-        if (name != null ? !name.equals(drug.name) : drug.name != null) return false;
-        return question_code != null ? question_code.equals(drug.question_code)
-                : drug.question_code == null;
+        if (id_drug != drugDB.id_drug) return false;
+        if (name != null ? !name.equals(drugDB.name) : drugDB.name != null) return false;
+        return question_code != null ? question_code.equals(drugDB.question_code)
+                : drugDB.question_code == null;
 
     }
 
@@ -96,7 +96,7 @@ public class Drug extends BaseModel {
 
     @Override
     public String toString() {
-        return "Drug{" +
+        return "DrugDB{" +
                 "id_drug=" + id_drug +
                 ", name='" + name + '\'' +
                 ", question_code='" + question_code + '\'' +

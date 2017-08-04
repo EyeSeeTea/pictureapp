@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.entity.SurveyQuestionTreatmentValue;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -15,13 +15,13 @@ import org.eyeseetea.malariacare.utils.Utils;
 import java.util.List;
 
 public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Survey> mSurveys;
+    private List<SurveyDB> mSurveys;
     private int mType;
 
     private static final int HEADER_VIEW_TYPE = 0;
     private static final int ROW_VIEW_TYPE = 1;
 
-    public HistoricReceiptBalanceAdapter(List<Survey> surveys, int type) {
+    public HistoricReceiptBalanceAdapter(List<SurveyDB> surveys, int type) {
         mSurveys = surveys;
         mType = type;
     }
@@ -67,7 +67,7 @@ public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RowViewHolder) {
             RowViewHolder rowViewHolder = (RowViewHolder) holder;
-            Survey survey = mSurveys.get(position - 1);
+            SurveyDB survey = mSurveys.get(position - 1);
             putValuesToRow(rowViewHolder, survey);
         }
         if (holder instanceof HeaderViewHolder) {
@@ -85,7 +85,7 @@ public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    private void putValuesToRow(RowViewHolder holder, Survey survey) {
+    private void putValuesToRow(RowViewHolder holder, SurveyDB survey) {
         SurveyQuestionTreatmentValue surveyQuestionValue = new SurveyQuestionTreatmentValue(survey);
         holder.rdt.setText(surveyQuestionValue.getRDTValue());
         holder.act6.setText(surveyQuestionValue.getACT6Value());

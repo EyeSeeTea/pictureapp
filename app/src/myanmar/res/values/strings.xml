@@ -86,7 +86,7 @@
 <string name="follow_up_travelling_yes">"Yes"</string>
 <string name="follow_up_travelling_no">"No"</string>
 
-<!-- follow_up_travelling_question2? (as this is not occupation question) -->
+<!-- follow_up_travelling_question2? (as this is not occupation questionDB) -->
 <string name="follow_up_occupation_question">"Where did you travel?"</string>
 <string name="follow_up_occupation_option_worksites">"Worksite"</string>
 <string name="follow_up_occupation_option_forest">"Forest"</string>

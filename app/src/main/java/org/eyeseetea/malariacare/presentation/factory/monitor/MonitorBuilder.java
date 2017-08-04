@@ -23,7 +23,7 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.monitor.tables.ConsumptionTableBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.tables.SuspectedPositiveTableBuilder;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
@@ -82,12 +82,12 @@ public class MonitorBuilder implements IWebViewBuilder {
     /**
      * Adds surveys info into its tables
      */
-    public void addSurveys(List<Survey> surveys) {
+    public void addSurveys(List<SurveyDB> surveyDBs) {
         //Each survey updates...
-        for (Survey survey : surveys) {
+        for (SurveyDB surveyDB : surveyDBs) {
             //Each table
             for (MonitorTableBuilder tableBuilder : tableBuilders) {
-                tableBuilder.addSurvey(survey);
+                tableBuilder.addSurvey(surveyDB);
             }
         }
     }

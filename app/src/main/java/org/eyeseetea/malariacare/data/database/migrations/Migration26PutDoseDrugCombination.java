@@ -71,7 +71,7 @@ public class Migration26PutDoseDrugCombination extends BaseMigration {
      *//*
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return ProgramDB.getFirstProgram() != null;
     }
 }
 */

@@ -18,9 +18,9 @@
  */
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 
 /**
  * Decorator that tells if a survey has specific info
@@ -113,13 +113,13 @@ public class SurveyMonitor {
      */
     private final static Long ID_OPTION_TREATMENT_DHA_PIP_12 = 18l;
 
-    private Survey mSurvey;
+    private SurveyDB mSurvey;
 
-    public SurveyMonitor(Survey survey) {
+    public SurveyMonitor(SurveyDB survey) {
         mSurvey = survey;
     }
 
-    public Survey getSurvey() {
+    public SurveyDB getSurveyDB() {
         return mSurvey;
     }
 
@@ -127,21 +127,21 @@ public class SurveyMonitor {
      * Tells if the given survey has Pf specie
      */
     public boolean isPf() {
-        return Value.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PF, mSurvey) != null;
+        return ValueDB.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PF, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey has Pv specie
      */
     public boolean isPv() {
-        return Value.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PV, mSurvey) != null;
+        return ValueDB.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PV, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey has Pf/Pv (mixed)  specie
      */
     public boolean isPfPv() {
-        return Value.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV, mSurvey) != null;
+        return ValueDB.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV, mSurvey) != null;
     }
 
     public boolean isRated() {
@@ -152,14 +152,14 @@ public class SurveyMonitor {
      * Tells if the given survey test  is positive
      */
     public boolean isPositive() {
-        return Value.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey) != null;
+        return ValueDB.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey is negative
      */
     public boolean isNegative() {
-        return Value.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NEGATIVE, mSurvey) != null;
+        return ValueDB.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NEGATIVE, mSurvey) != null;
     }
 
     /**
@@ -173,14 +173,14 @@ public class SurveyMonitor {
      * Tells if the given survey is not tested
      */
     public boolean isNotTested() {
-        return Value.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED, mSurvey) != null;
+        return ValueDB.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey is referral
      */
     public boolean isReferral() {
-        return Value.findValue(SurveyMonitor.ID_QUESTION_TREATMENT,
+        return ValueDB.findValue(SurveyMonitor.ID_QUESTION_TREATMENT,
                 SurveyMonitor.ID_OPTION_TREATMENT_REFERRAL, mSurvey) != null;
     }
 
@@ -188,21 +188,21 @@ public class SurveyMonitor {
      * Tells if the given survey has DHA-PIP treatment
      */
     public boolean isDHAPIP() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP, mSurvey);
     }
 
     /**
      * Tells the value by event of the DHAPIP treatment
      */
     public int DHAPIPcount() {
-        if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_4_5, mSurvey)
-                || Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_6,
+        if (OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_4_5, mSurvey)
+                || OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_6,
                 mSurvey)) {
             return 6;
-        } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_9,
+        } else if (OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_9,
                 mSurvey)) {
             return 9;
-        } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_12,
+        } else if (OptionDB.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_12,
                 mSurvey)) {
             return 12;
         } else {
@@ -214,17 +214,17 @@ public class SurveyMonitor {
      * Tells if the given survey has Eurartesim treatment
      */
     public boolean isASMQ() {
-        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ, mSurvey);
+        return OptionDB.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ, mSurvey);
     }
 
     /**
      * Tells the value by event of the ASMQ treatment
      */
     public int ASMQcount() {
-        if (Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_1_5, mSurvey)
-                || Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_3, mSurvey)) {
+        if (OptionDB.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_1_5, mSurvey)
+                || OptionDB.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_3, mSurvey)) {
             return 3;
-        } else if (Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_6, mSurvey)) {
+        } else if (OptionDB.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_6, mSurvey)) {
             return 6;
         } else {
             return 0;
@@ -235,8 +235,8 @@ public class SurveyMonitor {
      * Tells if the given survey is a RDT survey (positive or negative)
      */
     public boolean isRDT() {
-        return Option.findOption(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey)
-                || Option.findOption(ID_QUESTION_RDT,
+        return OptionDB.findOption(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey)
+                || OptionDB.findOption(ID_QUESTION_RDT,
                 ID_OPTION_RDT_NEGATIVE, mSurvey);
     }
 }

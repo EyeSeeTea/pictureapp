@@ -21,21 +21,21 @@ package org.eyeseetea.malariacare.layout.adapters.general;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-public class OptionArrayAdapter extends AddlArrayAdapter<Option> {
+public class OptionArrayAdapter extends AddlArrayAdapter<OptionDB> {
 
-    public OptionArrayAdapter(Context context, List<Option> options) {
-        super(context, options);
+    public OptionArrayAdapter(Context context, List<OptionDB> optionDBs) {
+        super(context, optionDBs);
     }
 
     @Override
-    public void drawText(CustomTextView customTextView, Option option) {
-        customTextView.setText(Utils.getInternationalizedString(option.getName()));
+    public void drawText(CustomTextView customTextView, OptionDB optionDB) {
+        customTextView.setText(Utils.getInternationalizedString(optionDB.getName()));
     }
 
 }

@@ -32,18 +32,18 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.database.model.MatchDB;
+import org.eyeseetea.malariacare.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.Score;
+import org.eyeseetea.malariacare.database.model.OrgUnitLevelDB;
+import org.eyeseetea.malariacare.database.model.ProgramDB;
+import org.eyeseetea.malariacare.database.model.QuestionDB;
+import org.eyeseetea.malariacare.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.database.model.ScoreDB;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -60,9 +60,9 @@ public class Migration2Database extends BaseMigration {
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
     private final static Class NEW_APP_TABLES[] = {
-            OrgUnitLevel.class,
-            Match.class,
-            QuestionOption.class
+            OrgUnitLevelDB.class,
+            MatchDB.class,
+            QuestionOptionDB.class
     };
     private static String TAG = ".Migration2Database";
     private static Migration2Database instance;
@@ -103,26 +103,26 @@ public class Migration2Database extends BaseMigration {
 
         Log.d(TAG, "adding new columns...");
         postMigrationRequired = true;
-        addColumn(database, CompositeScore.class, "hierarchical_code", "text");
+        addColumn(database, CompositeScoreDB.class, "hierarchical_code", "text");
 
         addColumn(database, OrgUnit.class, "id_parent", "integer");
         addColumn(database, OrgUnit.class, "id_org_unit_level", "integer");
 
-        addColumn(database, Question.class, "feedback", "text");
-        addColumn(database, Question.class, "output", "integer");
+        addColumn(database, QuestionDB.class, "feedback", "text");
+        addColumn(database, QuestionDB.class, "output", "integer");
 
-        addColumn(database, OptionAttribute.class, "path", "text");
+        addColumn(database, OptionAttributeDB.class, "path", "text");
 
-        addColumn(database, QuestionRelation.class, "id_question", "integer");
+        addColumn(database, QuestionRelationDB.class, "id_question", "integer");
 
-        addColumn(database, Score.class, "id_survey", "integer");
-        addColumn(database, Score.class, "score", "real");
+        addColumn(database, ScoreDB.class, "id_survey", "integer");
+        addColumn(database, ScoreDB.class, "score", "real");
 
         addColumn(database, Survey.class, "id_tab_group", "integer");
         addColumn(database, Survey.class, "creationDate", "integer");
         addColumn(database, Survey.class, "scheduledDate", "integer");
 
-        addColumn(database, Tab.class, "id_tab_group", "integer");
+        addColumn(database, TabDB.class, "id_tab_group", "integer");
     }
 
     @Override
@@ -141,7 +141,7 @@ public class Migration2Database extends BaseMigration {
  *//*
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return ProgramDB.getFirstProgram() != null;
     }
 
     */
@@ -152,18 +152,18 @@ public class Migration2Database extends BaseMigration {
     private void linkProgram() {
         Log.d(TAG, "linking default program to surveys and tabs...");
 
-        Program program = Program.getFirstProgram();
+        ProgramDB program = ProgramDB.getFirstProgram();
 
         //Add program to current surveys
         List<Survey> surveyList = new Select().from(Survey.class).queryList();
         for (Survey survey : surveyList) {
-            survey.setProgram(program);
+            survey.setProgramDB(program);
             survey.save();
         }
 
         //Add program to current tabs
-        Tab tab = new Select().from(Tab.class).querySingle();
-        tab.setProgram(program);
+        TabDB tab = new Select().from(TabDB.class).querySingle();
+        tab.setProgramDB(program);
         tab.setType(Constants.TAB_DYNAMIC_AUTOMATIC_TAB);
         tab.save();
     }
@@ -178,8 +178,8 @@ public class Migration2Database extends BaseMigration {
 
         Map<String, Integer> mapQuestionOutputs = loadAnswerOutputs(
                 PreferencesState.getInstance().getContext().getAssets());
-        List<Question> questions = new Select().from(Question.class).queryList();
-        for (Question question : questions) {
+        List<QuestionDB> questions = new Select().from(QuestionDB.class).queryList();
+        for (QuestionDB question : questions) {
             question.setOutput(mapQuestionOutputs.get(question.getName()));
             question.save();
         }

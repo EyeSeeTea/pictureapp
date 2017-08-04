@@ -22,7 +22,7 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.WebView;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 
 import java.util.List;
 
@@ -72,10 +72,10 @@ public abstract class MonitorTableBuilder {
     /**
      * Updates table info with the survey
      */
-    public void addSurvey(Survey survey) {
+    public void addSurvey(SurveyDB surveyDB) {
         if (rowBuilders != null) {
             for (MonitorRowBuilder rowBuilder : rowBuilders) {
-                rowBuilder.addSurvey(survey);
+                rowBuilder.addSurvey(surveyDB);
             }
         }
     }

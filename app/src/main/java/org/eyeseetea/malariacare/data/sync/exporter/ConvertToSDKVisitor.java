@@ -27,9 +27,9 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -67,7 +67,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * List of surveys that are going to be pushed
      */
-    List<Survey> surveys;
+    List<SurveyDB> mSurveyDBs;
 
     /**
      * Map app surveys with sdk events (N to 1)
@@ -76,14 +76,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     ConvertToSDKVisitor(Context context) {
         this.context = context;
-        surveys = new ArrayList<>();
+        mSurveyDBs = new ArrayList<>();
         events = new HashMap<>();
     }
 
-    public static void logEmptySurveyException(Survey survey) {
+    public static void logEmptySurveyException(SurveyDB surveyDB) {
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
         String info = String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
-                survey.toString(),
+                surveyDB.toString(),
                 phoneMetaData == null ? "" : phoneMetaData.getPhone_metaData(),
                 Build.VERSION.RELEASE
         );
@@ -91,79 +91,79 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     @Override
-    public void visit(Survey survey) throws ConversionException {
+    public void visit(SurveyDB surveyDB) throws ConversionException {
         EventExtended event = null;
         try {
             //Precondition
-            if (isEmpty(survey)) {
-                survey.delete();
+            if (isEmpty(surveyDB)) {
+                surveyDB.delete();
                 return;
             }
 
-            if (Survey.countSurveysByCompletiondate(survey.getCompletionDate()) > 1) {
-                Log.d(TAG, String.format("Delete repeated survey", survey.toString()));
-                survey.delete();
+            if (SurveyDB.countSurveysByCompletiondate(surveyDB.getCompletionDate()) > 1) {
+                Log.d(TAG, String.format("Delete repeated survey", surveyDB.toString()));
+                surveyDB.delete();
                 return;
             }
 
-            Log.d(TAG, String.format("Creating event for survey (%d) ...", survey.getId_survey()));
-            event = buildEvent(survey);
+            Log.d(TAG, String.format("Creating event for survey (%d) ...", surveyDB.getId_survey()));
+            event = buildEvent(surveyDB);
 
-            survey.setEventUid(event.getUid());
-            survey.save();
+            surveyDB.setEventUid(event.getUid());
+            surveyDB.save();
             //Turn question values into dataValues
             Log.d(TAG, "Creating datavalues from questions...");
-            for (Value value : survey.getValuesFromDB()) {
-                if (value.getQuestion().hasDataElement()) {
-                    buildAndSaveDataValue(value.getQuestion().getUid(), value.getValue(), event);
+            for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
+                if (valueDB.getQuestionDB().hasDataElement()) {
+                    buildAndSaveDataValue(valueDB.getQuestionDB().getUid(), valueDB.getValue(), event);
                 }
             }
 
             Log.d(TAG, "Saving control dataelements");
-            buildControlDataElements(survey, event);
+            buildControlDataElements(surveyDB, event);
 
 
-            if (Survey.countSurveysByCompletiondate(survey.getCompletionDate()) > 1) {
-                Log.d(TAG, String.format("Delete repeated survey", survey.toString()));
-                survey.delete();
+            if (SurveyDB.countSurveysByCompletiondate(surveyDB.getCompletionDate()) > 1) {
+                Log.d(TAG, String.format("Delete repeated survey", surveyDB.toString()));
+                surveyDB.delete();
                 event.delete();
                 return;
             }
 
             //Annotate both objects to update its state once the process is over
-            annotateSurveyAndEvent(survey, event);
+            annotateSurveyAndEvent(surveyDB, event);
         } catch (NullPointerException e) {
             //If the conversion fails the survey is wrong and will be delete.
-            removeSurveyAndEvent(survey, event);
+            removeSurveyAndEvent(surveyDB, event);
             throw new ConversionException(e);
         }
     }
 
-    private void removeSurveyAndEvent(Survey survey, EventExtended eventExtended) {
+    private void removeSurveyAndEvent(SurveyDB surveyDB, EventExtended eventExtended) {
         if (eventExtended != null) {
             //remove event from annotated event list and from db
-            if (events.containsKey(survey.getId_survey())) {
-                events.remove(survey.getId_survey());
+            if (events.containsKey(surveyDB.getId_survey())) {
+                events.remove(surveyDB.getId_survey());
             }
             eventExtended.delete();
         }
-        if (survey != null) {
+        if (surveyDB != null) {
             //remove survey from list and from db
-            if (surveys.contains(survey)) {
-                surveys.remove(survey);
+            if (mSurveyDBs.contains(surveyDB)) {
+                mSurveyDBs.remove(surveyDB);
             }
-            survey.delete();
+            surveyDB.delete();
         }
     }
 
-    private boolean isEmpty(Survey survey) {
-        if (survey == null) {
+    private boolean isEmpty(SurveyDB surveyDB) {
+        if (surveyDB == null) {
             return true;
         }
 
-        List<Value> values = survey.getValuesFromDB();
-        if (values == null || values.isEmpty()) {
-            logEmptySurveyException(survey);
+        List<ValueDB> valueDBs = surveyDB.getValuesFromDB();
+        if (valueDBs == null || valueDBs.isEmpty()) {
+            logEmptySurveyException(surveyDB);
             return true;
         }
         return false;
@@ -172,7 +172,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds several datavalues from the mainScore of the survey
      */
-    private void buildControlDataElements(Survey survey, EventExtended event) {
+    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event) {
         //save phonemetadata
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
         buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(
@@ -187,7 +187,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 "")) {
             buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
                     R.string.control_data_element_datetime_capture),
-                    EventExtended.format(survey.getCompletionDate(),
+                    EventExtended.format(surveyDB.getCompletionDate(),
                             EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
 
@@ -214,8 +214,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         dataValue.setDataElement(UID);
         dataValue.setEvent(event.getEvent());
         dataValue.setProvidedElsewhere(false);
-        if (Session.getUser() != null) {
-            dataValue.setStoredBy(Session.getUser().getName());
+        if (Session.getUserDB() != null) {
+            dataValue.setStoredBy(Session.getUserDB().getName());
         }
         dataValue.setValue(value);
         dataValue.save();
@@ -224,47 +224,47 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds an event from a survey
      */
-    private EventExtended buildEvent(Survey survey) {
+    private EventExtended buildEvent(SurveyDB surveyDB) {
         EventExtended event = new EventExtended();
 
         ConvertToSdkVisitorStrategy.setAttributeCategoryOptionsInEvent(event);
 
-        event.setProgramId(survey.getProgram().getUid());
-        event.setOrganisationUnitId(survey.getOrgUnit().getUid());
+        event.setProgramId(surveyDB.getProgramDB().getUid());
+        event.setOrganisationUnitId(surveyDB.getOrgUnitDB().getUid());
         event.setStatus(EventExtended.STATUS_COMPLETED);
-        event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
-        event.setProgramId(survey.getProgram().getUid());
-        event.setProgramStageId(survey.getProgram().getStageUid());
-        event = updateEventLocation(survey, event);
-        event = updateEventDates(survey, event);
+        event.setOrganisationUnitId(getSafeOrgUnitUID(surveyDB));
+        event.setProgramId(surveyDB.getProgramDB().getUid());
+        event.setProgramStageId(surveyDB.getProgramDB().getStageUid());
+        event = updateEventLocation(surveyDB, event);
+        event = updateEventDates(surveyDB, event);
         Log.d(TAG, "Saving event " + event.toString());
         event.save();
         return event;
     }
 
-    private String getSafeOrgUnitUID(Survey survey) {
-        OrgUnit orgUnit = survey.getOrgUnit();
-        if (orgUnit != null) {
-            return orgUnit.getUid();
+    private String getSafeOrgUnitUID(SurveyDB surveyDB) {
+        OrgUnitDB orgUnitDB = surveyDB.getOrgUnitDB();
+        if (orgUnitDB != null) {
+            return orgUnitDB.getUid();
         }
 
         //A survey might be created with a 2.20 (no orgunit) but push into a 2.22
-        return OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+        return OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
     }
 
     /**
      * Fulfills the dates of the event
      */
-    private EventExtended updateEventDates(Survey survey, EventExtended event) {
+    private EventExtended updateEventDates(SurveyDB surveyDB, EventExtended event) {
 
         //Sent date 'now' (this change will be saves after successful push)
         //currentSurvey.setEventDate(new Date());
 
         //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
-        event.setLastUpdated(new DateTime(survey.getCompletionDate().getTime()));
-        event.setEventDate(new DateTime(survey.getEventDate().getTime()));
-        if (survey.getScheduledDate() != null) {
-            event.setDueDate(new DateTime(survey.getScheduledDate().getTime()));
+        event.setLastUpdated(new DateTime(surveyDB.getCompletionDate().getTime()));
+        event.setEventDate(new DateTime(surveyDB.getEventDate().getTime()));
+        if (surveyDB.getScheduledDate() != null) {
+            event.setDueDate(new DateTime(surveyDB.getScheduledDate().getTime()));
         }
         return event;
     }
@@ -272,8 +272,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Updates the location of the current event that it is being processed
      */
-    private EventExtended updateEventLocation(Survey survey, EventExtended event) {
-        Location lastLocation = LocationMemory.get(survey.getId_survey());
+    private EventExtended updateEventLocation(SurveyDB surveyDB, EventExtended event) {
+        Location lastLocation = LocationMemory.get(surveyDB.getId_survey());
 
         //No location + not required -> done
         if (lastLocation == null) {
@@ -289,11 +289,11 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Annotates the survey and event that has been processed
      */
-    private void annotateSurveyAndEvent(Survey survey, EventExtended event) {
-        surveys.add(survey);
-        events.put(survey.getId_survey(), event);
+    private void annotateSurveyAndEvent(SurveyDB surveyDB, EventExtended event) {
+        mSurveyDBs.add(surveyDB);
+        events.put(surveyDB.getId_survey(), event);
 
-        Log.d(TAG, String.format("%d surveys converted so far", surveys.size()));
+        Log.d(TAG, String.format("%d surveys converted so far", mSurveyDBs.size()));
     }
 
     /**
@@ -301,22 +301,22 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      */
     public void saveSurveyStatus(Map<String, PushReport> pushReportMap, final
     IPushController.IPushControllerCallback callback) {
-        Log.d(TAG, String.format("pushReportMap %d surveys savedSurveyStatus", surveys.size()));
-        for (int i = 0; i < surveys.size(); i++) {
-            Survey iSurvey = surveys.get(i);
+        Log.d(TAG, String.format("pushReportMap %d surveys savedSurveyStatus", mSurveyDBs.size()));
+        for (int i = 0; i < mSurveyDBs.size(); i++) {
+            SurveyDB iSurveyDB = mSurveyDBs.get(i);
             //Sets the survey status as quarantine to prevent wrong reports on unexpected exception.
             //F.E. if the app crash unexpected this survey will be checked again in the future push to prevent the duplicates
             // in the server.
-            iSurvey.setStatus(Constants.SURVEY_QUARANTINE);
-            iSurvey.save();
+            iSurveyDB.setStatus(Constants.SURVEY_QUARANTINE);
+            iSurveyDB.save();
             Log.d(TAG, "saveSurveyStatus: Starting saving survey Set Survey status as QUARANTINE"
-                    + iSurvey.getId_survey() + " eventuid: " + iSurvey.getEventUid());
-            EventExtended iEvent = new EventExtended(events.get(iSurvey.getId_survey()));
+                    + iSurveyDB.getId_survey() + " eventuid: " + iSurveyDB.getEventUid());
+            EventExtended iEvent = new EventExtended(events.get(iSurveyDB.getId_survey()));
             PushReport pushReport = pushReportMap.get(iEvent.getEvent().getUId());
             if (pushReport == null) {
                 //the survey was saved as quarantine.
                 new PushReportException(
-                        "Error saving survey: report is null for this survey: " + iSurvey.getId_survey());
+                        "Error saving survey: report is null for this survey: " + iSurveyDB.getId_survey());
                 //The loop should continue without throw the Exception.
                 continue;
             }
@@ -326,16 +326,16 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             // never resend, the survey is saved as survey in conflict.
             if (pushConflicts != null && pushConflicts.size() > 0) {
                 Log.d(TAG, "saveSurveyStatus: survey conflicts not null "
-                        + iSurvey.getId_survey());
+                        + iSurveyDB.getId_survey());
                 for (PushConflict pushConflict : pushConflicts) {
-                    iSurvey.setStatus(Constants.SURVEY_CONFLICT);
-                    iSurvey.save();
+                    iSurveyDB.setStatus(Constants.SURVEY_CONFLICT);
+                    iSurveyDB.save();
                     if (pushConflict.getUid() != null) {
                         Log.d(TAG, "saveSurveyStatus: PUSH process...Conflict in "
                                 + pushConflict.getUid() +
                                 " with error " + pushConflict.getValue()
                                 + " dataElement pushing survey: "
-                                + iSurvey.getId_survey());
+                                + iSurveyDB.getId_survey());
                         callback.onInformativeError(new PushValueException(
                                 String.format(context.getString(R.string.error_conflict_message),
                                         iEvent.getEvent().getUId(), pushConflict.getUid(),
@@ -348,7 +348,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             //No errors -> Save and next
             if (pushReport!=null && !pushReport.hasPushErrors()) {
                 Log.d(TAG, "saveSurveyStatus: report without errors and status ok "
-                        + iSurvey.getId_survey());
+                        + iSurveyDB.getId_survey());
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
                     //If eventDate is null the event is invalid. The event is sent but we need
                     // inform to the user.
@@ -356,26 +356,26 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                             String.format(context.getString(R.string.error_message_push),
                                     iEvent.getEvent())));
                 }
-                saveSurveyFromImportSummary(iSurvey);
+                saveSurveyFromImportSummary(iSurveyDB);
             }
         }
     }
 
-    private void saveSurveyFromImportSummary(Survey iSurvey) {
-        iSurvey.setStatus(Constants.SURVEY_SENT);
-        iSurvey.saveMainScore();
-        iSurvey.save();
-        Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event "
-                + iSurvey.getEventUid());
+    private void saveSurveyFromImportSummary(SurveyDB iSurveyDB) {
+        iSurveyDB.setStatus(Constants.SURVEY_SENT);
+        iSurveyDB.saveMainScore();
+        iSurveyDB.save();
+        Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurveyDB + " event "
+                + iSurveyDB.getEventUid());
         Log.d(TAG, "PUSH process...OK. Survey saved");
     }
 
     public void setSurveysAsQuarantine() {
-        for (Survey survey : surveys) {
-            Log.d(TAG, "Set Survey status as QUARANTINE" + survey.getId_survey());
-            Log.d(TAG, "Set Survey status as QUARANTINE" + survey.toString());
-            survey.setStatus(Constants.SURVEY_QUARANTINE);
-            survey.save();
+        for (SurveyDB surveyDB : mSurveyDBs) {
+            Log.d(TAG, "Set Survey status as QUARANTINE" + surveyDB.getId_survey());
+            Log.d(TAG, "Set Survey status as QUARANTINE" + surveyDB.toString());
+            surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
+            surveyDB.save();
         }
     }
 }

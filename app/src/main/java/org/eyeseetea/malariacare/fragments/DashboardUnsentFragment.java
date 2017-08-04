@@ -38,7 +38,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
@@ -61,11 +61,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     public static final String TAG = ".UnsentFragment";
     protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
-    private List<Survey> surveys;
+    private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
 
     public DashboardUnsentFragment() {
-        this.surveys = new ArrayList();
+        this.mSurveyDBs = new ArrayList();
     }
 
     @Override
@@ -113,14 +113,14 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
      */
     private void initAdapter() {
         this.adapter = new AssessmentAdapter(getString(R.string.unsent_data),
-                this.surveys, getActivity());
+                this.mSurveyDBs, getActivity());
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
-        adapter.onClick(l, position, surveys);
+        adapter.onClick(l, position, mSurveyDBs);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                         new SwipeDismissListViewTouchListener.DismissCallbacks() {
                             @Override
                             public boolean canDismiss(int position) {
-                                return position > 0 && position <= surveys.size();
+                                return position > 0 && position <= mSurveyDBs.size();
                             }
 
                             @Override
@@ -178,7 +178,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface arg0,
                                                                 int arg1) {
-                                                            ((Survey) adapter.getItem(
+                                                            ((SurveyDB) adapter.getItem(
                                                                     position - 1)).delete();
                                                             //Reload data using service
                                                             Intent surveysIntent = new Intent(
@@ -253,11 +253,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 surveysIntent);
     }
 
-    public void reloadSurveys(List<Survey> newListSurveys) {
+    public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
         Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): "
-                + newListSurveys.size());
-        this.surveys.clear();
-        this.surveys.addAll(newListSurveys);
+                + newListSurveyDBs.size());
+        this.mSurveyDBs.clear();
+        this.mSurveyDBs.addAll(newListSurveyDBs);
 
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
@@ -279,10 +279,10 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if (SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysUnsentFromService;
+                List<SurveyDB> surveysUnsentFromService;
                 Session.valuesLock.readLock().lock();
                 try {
-                    surveysUnsentFromService = (List<Survey>) Session.popServiceValue(
+                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
                             SurveyService.ALL_UNSENT_SURVEYS_ACTION);
                 } finally {
                     Session.valuesLock.readLock().unlock();
@@ -307,11 +307,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
     public class AsyncPush extends AsyncTask<Void, Integer, PushResult> {
 
-        private Survey survey;
+        private SurveyDB mSurveyDB;
 
 
-        public AsyncPush(Survey survey) {
-            this.survey = survey;
+        public AsyncPush(SurveyDB surveyDB) {
+            this.mSurveyDB = surveyDB;
         }
 
         @Override
@@ -323,7 +323,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         @Override
         protected PushResult doInBackground(Void... params) {
-            PushClient pushClient = new PushClient(survey, getActivity());
+            PushClient pushClient = new PushClient(mSurveyDB, getActivity());
             return pushClient.push();
         }
 

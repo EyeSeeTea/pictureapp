@@ -5,7 +5,7 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 
 @Migration(version = 6, database = AppDatabase.class)
 public class Migration6AddOrgUnitColumn extends BaseMigration {
@@ -15,7 +15,7 @@ public class Migration6AddOrgUnitColumn extends BaseMigration {
 
     @Override
     public void migrate(DatabaseWrapper database) {
-        MigrationTools.addColumn(database, OrgUnit.class, "is_banned", "boolean");
+        MigrationTools.addColumn(database, OrgUnitDB.class, "is_banned", "boolean");
     }
 
     public static void postMigrate() {

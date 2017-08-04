@@ -26,14 +26,8 @@ import android.util.DisplayMetrics;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Translation;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,10 +38,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class Utils {
@@ -84,7 +76,7 @@ public class Utils {
                 name = getLocateString(activeLocale, identifier);
             } catch (Resources.NotFoundException notFoundException) {
                 if (StringUtils.isNumeric(name)) {
-                    name = Translation.getLocalizedString(Long.valueOf(name),
+                    name = TranslationDB.getLocalizedString(Long.valueOf(name),
                             context.getResources().getConfiguration().locale.toString());
                 }
             }

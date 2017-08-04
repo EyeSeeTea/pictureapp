@@ -3,8 +3,8 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
@@ -23,7 +23,7 @@ public class WSPushController implements IPushController {
     private static final String TAG = "WSPushController";
 
     private ConvertToWSVisitor mConvertToWSVisitor;
-    private List<Survey> mSurveys;
+    private List<SurveyDB> mSurveys;
     private WSClient mWSClient;
     private IPushControllerCallback mCallback;
 
@@ -41,14 +41,14 @@ public class WSPushController implements IPushController {
             Log.d(TAG, "No network");
             callback.onError(new NetworkException());
         } else {
-            mSurveys = Survey.getAllCompletedSurveys();
+            mSurveys = SurveyDB.getAllCompletedSurveys();
             if (mSurveys == null || mSurveys.size() == 0) {
                 callback.onError(new SurveysToPushNotFoundException("Null surveys"));
                 return;
             }
-            for (Survey srv : mSurveys) {
+            for (SurveyDB srv : mSurveys) {
                 Log.d("DpBlank", "Survey to push " + srv.toString());
-                for (Value dv : srv.getValuesFromDB()) {
+                for (ValueDB dv : srv.getValuesFromDB()) {
                     Log.d("DpBlank", "Values to push " + dv.toString());
                 }
             }
@@ -75,7 +75,7 @@ public class WSPushController implements IPushController {
     }
 
     private void convertToWSSurveys() throws Exception {
-        for (Survey survey : mSurveys) {
+        for (SurveyDB survey : mSurveys) {
             survey.setStatus(Constants.SURVEY_SENDING);
             survey.save();
             Log.d(TAG, "Status of survey to be push is = " + survey.getStatus());
@@ -109,7 +109,7 @@ public class WSPushController implements IPushController {
                 mCallback.onInformativeError(new PushValueException(message));
             }
         }
-        for (Survey survey : mSurveys) {
+        for (SurveyDB survey : mSurveys) {
             survey.setStatus(Constants.SURVEY_SENT);
             survey.save();
         }
@@ -118,7 +118,7 @@ public class WSPushController implements IPushController {
 
 
     private void putSurveysAsCompleted() {
-        for (Survey survey : mSurveys) {
+        for (SurveyDB survey : mSurveys) {
             survey.setStatus(Constants.SURVEY_COMPLETED);
             survey.save();
         }

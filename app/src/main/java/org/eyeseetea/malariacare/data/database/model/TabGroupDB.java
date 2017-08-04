@@ -28,8 +28,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class TabGroup extends BaseModel {
+@Table(database = AppDatabase.class, name = "TabGroup")
+public class TabGroupDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -41,33 +41,33 @@ public class TabGroup extends BaseModel {
     Long id_program;
 
     /**
-     * Reference to parent program (loaded lazily)
+     * Reference to parent mProgramDB (loaded lazily)
      */
-    Program program;
+    ProgramDB mProgramDB;
 
     @Column
     String uid;
 
     /**
-     * List of tabs that belongs to this tabgroup
+     * List of mTabDBs that belongs to this tabgroup
      */
-    List<Tab> tabs;
+    List<TabDB> mTabDBs;
 
     /**
      * List of surveys that belongs to this tabgroup
      */
-    List<Survey> surveys;
+    List<SurveyDB> mSurveyDBs;
 
-    public TabGroup() {
+    public TabGroupDB() {
     }
 
-    public TabGroup(String name) {
+    public TabGroupDB(String name) {
         this.name = name;
     }
 
-    public TabGroup(String name, Program program) {
+    public TabGroupDB(String name, ProgramDB programDB) {
         this.name = name;
-        setProgram(program);
+        setProgram(programDB);
     }
 
 
@@ -80,15 +80,15 @@ public class TabGroup extends BaseModel {
         this.name = name;
     }
 
-    public void setProgram(Long id_program) {
+    public void setProgramDB(Long id_program) {
         this.id_program = id_program;
-        this.program = null;
+        this.mProgramDB = null;
     }
 
 
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program = (program != null) ? program.getId_program() : null;
+    public void setProgram(ProgramDB programDB) {
+        this.mProgramDB = programDB;
+        this.id_program = (programDB != null) ? programDB.getId_program() : null;
     }
 
 
@@ -102,15 +102,15 @@ public class TabGroup extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TabGroup tabGroup = (TabGroup) o;
+        TabGroupDB tabGroupDB = (TabGroupDB) o;
 
-        if (id_tab_group != tabGroup.id_tab_group) return false;
-        if (name != null ? !name.equals(tabGroup.name) : tabGroup.name != null) return false;
-        if (id_program != null ? !id_program.equals(tabGroup.id_program)
-                : tabGroup.id_program != null) {
+        if (id_tab_group != tabGroupDB.id_tab_group) return false;
+        if (name != null ? !name.equals(tabGroupDB.name) : tabGroupDB.name != null) return false;
+        if (id_program != null ? !id_program.equals(tabGroupDB.id_program)
+                : tabGroupDB.id_program != null) {
             return false;
         }
-        return !(uid != null ? !uid.equals(tabGroup.uid) : tabGroup.uid != null);
+        return !(uid != null ? !uid.equals(tabGroupDB.uid) : tabGroupDB.uid != null);
 
     }
 
@@ -125,7 +125,7 @@ public class TabGroup extends BaseModel {
 
     @Override
     public String toString() {
-        return "TabGroup{" +
+        return "TabGroupDB{" +
                 "id_tab_group=" + id_tab_group +
                 ", name='" + name + '\'' +
                 ", id_program_fk=" + id_program +

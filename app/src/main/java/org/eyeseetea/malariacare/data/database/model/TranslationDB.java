@@ -7,14 +7,13 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
 
-@Table(database = AppDatabase.class)
-public class Translation extends BaseModel {
+@Table(database = AppDatabase.class, name = "Translation")
+public class TranslationDB extends BaseModel {
 
     public static String DEFAULT_LANGUAGE = "default";
 
@@ -28,10 +27,10 @@ public class Translation extends BaseModel {
     @Column
     String language;
 
-    public Translation() {
+    public TranslationDB() {
     }
 
-    public Translation(Long id_translation, Long id_string_key,
+    public TranslationDB(Long id_translation, Long id_string_key,
             String translation, String language) {
         this.id_translation = id_translation;
         this.id_string_key = id_string_key;
@@ -39,9 +38,9 @@ public class Translation extends BaseModel {
         this.language = language;
     }
 
-    public static List<Translation> getAllTranslations() {
+    public static List<TranslationDB> getAllTranslations() {
         return new Select()
-                .from(Translation.class)
+                .from(TranslationDB.class)
                 .queryList();
     }
 
@@ -78,31 +77,31 @@ public class Translation extends BaseModel {
     }
 
     public static String getLocalizedString(Long id_string, String language) {
-        Translation translation = new Select()
-                .from(Translation.class)
-                .where(Translation_Table.id_string_key.is(id_string))
-                .and(Translation_Table.language.is(language))
+        TranslationDB translationDB = new Select()
+                .from(TranslationDB.class)
+                .where(TranslationDB_Table.id_string_key.is(id_string))
+                .and(TranslationDB_Table.language.is(language))
                 .querySingle();
-        if (translation == null || translation.getTranslation() == null
-                || translation.getTranslation().isEmpty()) {
+        if (translationDB == null || translationDB.getTranslation() == null
+                || translationDB.getTranslation().isEmpty()) {
             String generalLanguage = language.split("_")[0];
-            translation = new Select()
-                    .from(Translation.class)
-                    .where(Translation_Table.id_string_key.is(id_string))
-                    .and(Translation_Table.language.is(generalLanguage))
+            translationDB = new Select()
+                    .from(TranslationDB.class)
+                    .where(TranslationDB_Table.id_string_key.is(id_string))
+                    .and(TranslationDB_Table.language.is(generalLanguage))
                     .querySingle();
         }
-        if (translation == null || translation.getTranslation() == null
-                || translation.getTranslation().isEmpty()) {
-            translation = new Select()
-                    .from(Translation.class)
-                    .where(Translation_Table.id_string_key.is(id_string))
-                    .and(Translation_Table.language.is(DEFAULT_LANGUAGE))
+        if (translationDB == null || translationDB.getTranslation() == null
+                || translationDB.getTranslation().isEmpty()) {
+            translationDB = new Select()
+                    .from(TranslationDB.class)
+                    .where(TranslationDB_Table.id_string_key.is(id_string))
+                    .and(TranslationDB_Table.language.is(DEFAULT_LANGUAGE))
                     .querySingle();
         }
 
-        return translation != null && translation.getTranslation() != null
-                ? translation.getTranslation() : id_string + "";
+        return translationDB != null && translationDB.getTranslation() != null
+                ? translationDB.getTranslation() : id_string + "";
     }
 
     @Override
@@ -110,7 +109,7 @@ public class Translation extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Translation that = (Translation) o;
+        TranslationDB that = (TranslationDB) o;
 
         if (id_translation != null ? !id_translation.equals(that.id_translation)
                 : that.id_translation != null) {
@@ -139,7 +138,7 @@ public class Translation extends BaseModel {
 
     @Override
     public String toString() {
-        return "Translation{" +
+        return "TranslationDB{" +
                 "id_translation=" + id_translation +
                 ", id_string=" + id_string_key +
                 ", translation=" + translation +

@@ -18,6 +18,6 @@ public class ACT12RowBuilder extends CounterRowBuilder {
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return Math.round(Float.parseFloat(
-                new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getACT12Value()));
+                new SurveyQuestionTreatmentValue(surveyMonitor.getSurveyDB()).getACT12Value()));
     }
 }

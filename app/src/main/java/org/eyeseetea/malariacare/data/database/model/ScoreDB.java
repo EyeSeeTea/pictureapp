@@ -30,8 +30,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 /**
  * Created by adrian on 14/02/15.
  */
-@Table(database = AppDatabase.class)
-public class Score extends BaseModel {
+@Table(database = AppDatabase.class, name = "Score")
+public class ScoreDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -42,7 +42,7 @@ public class Score extends BaseModel {
     /**
      * Reference to the survey associated to this score (loaded lazily)
      */
-    Survey survey;
+    SurveyDB mSurveyDB;
 
     @Column
     String uid_score;
@@ -50,13 +50,13 @@ public class Score extends BaseModel {
     @Column
     Float score;
 
-    public Score() {
+    public ScoreDB() {
     }
 
-    public Score(Survey survey, String uid, Float score) {
+    public ScoreDB(SurveyDB surveyDB, String uid, Float score) {
         this.uid_score = uid;
         this.score = score;
-        this.setSurvey(survey);
+        this.setSurveyDB(surveyDB);
     }
 
     public Long getId_score() {
@@ -67,25 +67,25 @@ public class Score extends BaseModel {
         this.id_score = id_score;
     }
 
-    public Survey getSurvey() {
-        if (survey == null) {
+    public SurveyDB getSurveyDB() {
+        if (mSurveyDB == null) {
             if (id_survey_fk == null) return null;
-            survey = new Select()
-                    .from(Survey.class)
-                    .where(Survey_Table.id_survey
+            mSurveyDB = new Select()
+                    .from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_survey
                             .is(id_survey_fk)).querySingle();
         }
-        return survey;
+        return mSurveyDB;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey_fk = (survey != null) ? survey.getId_survey() : null;
+    public void setSurveyDB(SurveyDB surveyDB) {
+        this.mSurveyDB = surveyDB;
+        this.id_survey_fk = (surveyDB != null) ? surveyDB.getId_survey() : null;
     }
 
     public void setSurvey(Long id_survey) {
         this.id_survey_fk = id_survey;
-        this.survey = null;
+        this.mSurveyDB = null;
     }
 
     public String getUid() {
@@ -109,14 +109,18 @@ public class Score extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Score score1 = (Score) o;
+        ScoreDB scoreDB1 = (ScoreDB) o;
 
-        if (id_score != score1.id_score) return false;
-        if (id_survey_fk != null ? !id_survey_fk.equals(score1.id_survey_fk) : score1.id_survey_fk != null) {
+        if (id_score != scoreDB1.id_score) return false;
+        if (id_survey_fk != null ? !id_survey_fk.equals(scoreDB1.id_survey_fk)
+                : scoreDB1.id_survey_fk != null) {
             return false;
         }
-        if (uid_score != null ? !uid_score.equals(score1.uid_score) : score1.uid_score != null) return false;
-        return !(score != null ? !score.equals(score1.score) : score1.score != null);
+        if (uid_score != null ? !uid_score.equals(scoreDB1.uid_score)
+                : scoreDB1.uid_score != null) {
+            return false;
+        }
+        return !(score != null ? !score.equals(scoreDB1.score) : scoreDB1.score != null);
 
     }
 
@@ -131,7 +135,7 @@ public class Score extends BaseModel {
 
     @Override
     public String toString() {
-        return "Score{" +
+        return "ScoreDB{" +
                 "id_score=" + id_score +
                 ", id_survey_fk=" + id_survey_fk +
                 ", uid_score='" + uid_score + '\'' +

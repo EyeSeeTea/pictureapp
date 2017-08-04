@@ -6,7 +6,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -35,9 +35,9 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value != null) {
-            mCustomEditText.setText(value.getValue());
+    public void setValue(ValueDB valueDB) {
+        if (valueDB != null) {
+            mCustomEditText.setText(valueDB.getValue());
         }
     }
 

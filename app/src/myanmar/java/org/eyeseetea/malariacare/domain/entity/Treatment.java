@@ -3,19 +3,19 @@ package org.eyeseetea.malariacare.domain.entity;
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -28,47 +28,47 @@ import java.util.List;
 public class Treatment {
 
     private static final String TAG = ".Treatment";
-    private Survey mMalariaSurvey;
-    private Survey mStockSurvey;
-    private List<Question> mQuestions;
-    private org.eyeseetea.malariacare.data.database.model.Treatment mTreatment;
+    private SurveyDB mMalariaSurvey;
+    private SurveyDB mStockSurvey;
+    private List<QuestionDB> mQuestionDBs;
+    private org.eyeseetea.malariacare.data.database.model.TreatmentDB mTreatment;
     private HashMap<Long, Float> doseByQuestion;
 
-    public Treatment(Survey malariaSurvey, Survey stockSurvey) {
+    public Treatment(SurveyDB malariaSurvey, SurveyDB stockSurvey) {
         mMalariaSurvey = malariaSurvey;
         mStockSurvey = stockSurvey;
         doseByQuestion = new HashMap<>();
     }
 
 
-    public List<Question> getQuestions() {
-        return mQuestions;
+    public List<QuestionDB> getQuestionDBs() {
+        return mQuestionDBs;
     }
 
     public HashMap<Long, Float> getDoseByQuestion() {
         return doseByQuestion;
     }
 
-    public org.eyeseetea.malariacare.data.database.model.Treatment getTreatment() {
+    public org.eyeseetea.malariacare.data.database.model.TreatmentDB getTreatment() {
         return mTreatment;
     }
 
-    public Question getACTQuestionAnsweredNo() {
-        List<Question> questions = mStockSurvey.getQuestionsFromValues();
-        Question actQuestion = null;
-        for (Question question : questions) {
-            if (TreatmentQueries.isACT24Question(question) || TreatmentQueries.isACT18Question(
-                    question) || TreatmentQueries.isACT12Question(question)
-                    || TreatmentQueries.isACT6Question(question)) {
-                actQuestion = question;
-                List<Value> values = mStockSurvey.getValuesFromDB();
-                for (Value value : values) {
-                    if(value.getQuestion()==null){
+    public QuestionDB getACTQuestionAnsweredNo() {
+        List<QuestionDB> questionDBs = mStockSurvey.getQuestionsFromValues();
+        QuestionDB actQuestionDB = null;
+        for (QuestionDB questionDB : questionDBs) {
+            if (TreatmentQueries.isACT24Question(questionDB) || TreatmentQueries.isACT18Question(
+                    questionDB) || TreatmentQueries.isACT12Question(questionDB)
+                    || TreatmentQueries.isACT6Question(questionDB)) {
+                actQuestionDB = questionDB;
+                List<ValueDB> values = mStockSurvey.getValuesFromDB();
+                for (ValueDB value : values) {
+                    if(value.getQuestionDB()==null){
                         continue;
                     }
-                    if (value.getQuestion().getId_question().equals(actQuestion.getId_question())) {
+                    if (value.getQuestionDB().getId_question().equals(actQuestionDB.getId_question())) {
                         if (Float.parseFloat(value.getValue()) == 0) {
-                            return actQuestion;
+                            return actQuestionDB;
                         }
                     }
                 }
@@ -78,59 +78,59 @@ public class Treatment {
         return null;
     }
 
-    private org.eyeseetea.malariacare.data.database.model.Treatment getTreatmentFromSurvey() {
+    private org.eyeseetea.malariacare.data.database.model.TreatmentDB getTreatmentFromSurvey() {
 
-        List<Value> values = mMalariaSurvey.getValuesFromDB();
+        List<ValueDB> values = mMalariaSurvey.getValuesFromDB();
 
-        List<Match> ageMatches = new ArrayList<>();
-        List<Match> pregnantMatches = new ArrayList<>();
-        List<Match> severeMatches = new ArrayList<>();
-        List<Match> rdtMatches = new ArrayList<>();
-        for (Value value : values) {
-            Question question = value.getQuestion();
+        List<MatchDB> ageMatchDBs = new ArrayList<>();
+        List<MatchDB> pregnantMatchDBs = new ArrayList<>();
+        List<MatchDB> severeMatchDBs = new ArrayList<>();
+        List<MatchDB> rdtMatchDBs = new ArrayList<>();
+        for (ValueDB value : values) {
+            QuestionDB questionDB = value.getQuestionDB();
             //Getting matches for questions of age, pregnant, severe and rdt.
-            if (question == null) {
+            if (questionDB == null) {
                 continue;
             }
-            if (TreatmentQueries.isAgeQuestion(question)) {
-                ageMatches =
-                        QuestionThreshold.getMatchesWithQuestionValue(
-                                question.getId_question(), Integer.parseInt(value.getValue()));
-                Log.d(TAG, "age size: " + ageMatches.size());
-            } else if (TreatmentQueries.isSexPregnantQuestion(question.getUid())) {
-                pregnantMatches = QuestionOption.getMatchesWithQuestionOption(
-                        question.getId_question(),
+            if (TreatmentQueries.isAgeQuestion(questionDB)) {
+                ageMatchDBs =
+                        QuestionThresholdDB.getMatchesWithQuestionValue(
+                                questionDB.getId_question(), Integer.parseInt(value.getValue()));
+                Log.d(TAG, "age size: " + ageMatchDBs.size());
+            } else if (TreatmentQueries.isSexPregnantQuestion(questionDB.getUid())) {
+                pregnantMatchDBs = QuestionOptionDB.getMatchesWithQuestionOption(
+                        questionDB.getId_question(),
                         value.getId_option());
-                Log.d(TAG, "pregnant size: " + pregnantMatches.size());
-            } else if (TreatmentQueries.isSevereSymtomsQuestion(question.getUid())) {
-                severeMatches = QuestionOption.getMatchesWithQuestionOption(
-                        question.getId_question(),
+                Log.d(TAG, "pregnant size: " + pregnantMatchDBs.size());
+            } else if (TreatmentQueries.isSevereSymtomsQuestion(questionDB.getUid())) {
+                severeMatchDBs = QuestionOptionDB.getMatchesWithQuestionOption(
+                        questionDB.getId_question(),
                         value.getId_option());
-                Log.d(TAG, "severe size: " + severeMatches.size());
-            } else if (TreatmentQueries.isRdtQuestion(question.getUid())) {
-                rdtMatches = QuestionOption.getMatchesWithQuestionOption(question.getId_question(),
+                Log.d(TAG, "severe size: " + severeMatchDBs.size());
+            } else if (TreatmentQueries.isRdtQuestion(questionDB.getUid())) {
+                rdtMatchDBs = QuestionOptionDB.getMatchesWithQuestionOption(questionDB.getId_question(),
                         value.getId_option());
-                Log.d(TAG, "rdt size: " + rdtMatches.size());
+                Log.d(TAG, "rdt size: " + rdtMatchDBs.size());
             }
         }
         Log.d(TAG, "matches obtained");
-        List<Match> treatmentMatches = new ArrayList<>();
-        for (Match match : ageMatches) {
-            if (pregnantMatches.contains(match) && severeMatches.contains(match)
-                    && rdtMatches.contains(match)) {
-                treatmentMatches.add(match);
+        List<MatchDB> treatmentMatchDBs = new ArrayList<>();
+        for (MatchDB matchDB : ageMatchDBs) {
+            if (pregnantMatchDBs.contains(matchDB) && severeMatchDBs.contains(matchDB)
+                    && rdtMatchDBs.contains(matchDB)) {
+                treatmentMatchDBs.add(matchDB);
 
             }
         }
-        org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
-        for (Match treatmentMatch : treatmentMatches) {
+        org.eyeseetea.malariacare.data.database.model.TreatmentDB treatment = null;
+        for (MatchDB treatmentMatchDB : treatmentMatchDBs) {
             if (Session.getCredentials().isDemoCredentials()) {
-                return treatmentMatch.getTreatment();
+                return treatmentMatchDB.getTreatment();
             }
-            if (treatmentMatch.getTreatment().getPartner().getId_partner() ==
-                    Session.getUser().getOrganisation()) {
-                Log.d(TAG, "match: " + treatmentMatch.toString());
-                treatment = treatmentMatch.getTreatment();
+            if (treatmentMatchDB.getTreatment().getPartnerDB().getId_partner() ==
+                    Session.getUserDB().getOrganisation()) {
+                Log.d(TAG, "match: " + treatmentMatchDB.toString());
+                treatment = treatmentMatchDB.getTreatment();
                 Log.d(TAG, "treatment: " + treatment.toString());
                 break;
             }
@@ -142,125 +142,125 @@ public class Treatment {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
             putACTDefaultYes();
-            mQuestions = getQuestionsForTreatment(mTreatment);
+            mQuestionDBs = getQuestionsForTreatment(mTreatment);
             saveTreatmentInTreatmentQuestion(mTreatment);
         }
         return mTreatment != null;
     }
 
     private void putACTDefaultYes() {
-        Question actHiddenQuestion = TreatmentQueries.getDynamicTreatmentHideQuestion();
-        List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
-        Value actValue = null;
-        for (Value value : values) {
-            if (value.getQuestion().equals(actHiddenQuestion)) {
+        QuestionDB actHiddenQuestionDB = TreatmentQueries.getDynamicTreatmentHideQuestion();
+        List<ValueDB> values = Session.getMalariaSurveyDB().getValuesFromDB();
+        ValueDB actValue = null;
+        for (ValueDB value : values) {
+            if (value.getQuestionDB().equals(actHiddenQuestionDB)) {
                 actValue = value;
             }
         }
         if (actValue == null) {
-            actValue = new Value(TreatmentQueries.getOptionTreatmentYesCode(),
-                    actHiddenQuestion, Session.getMalariaSurvey());
+            actValue = new ValueDB(TreatmentQueries.getOptionTreatmentYesCode(),
+                    actHiddenQuestionDB, Session.getMalariaSurveyDB());
         } else {
-            actValue.setOption(TreatmentQueries.getOptionTreatmentYesCode());
+            actValue.setOptionDB(TreatmentQueries.getOptionTreatmentYesCode());
         }
         actValue.save();
     }
 
-    private List<Question> getQuestionsForTreatment(
-            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
-        List<Question> questions = new ArrayList<>();
-        List<Drug> drugs = treatment.getDrugsForTreatment();
+    private List<QuestionDB> getQuestionsForTreatment(
+            org.eyeseetea.malariacare.data.database.model.TreatmentDB treatment) {
+        List<QuestionDB> questionDBs = new ArrayList<>();
+        List<DrugDB> drugs = treatment.getDrugsForTreatment();
 
-        Question treatmentQuestion = new Question();
-        treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
-        treatmentQuestion.setForm_name(treatment.getDiagnosis().toString());
-        treatmentQuestion.setHelp_text(treatment.getMessage().toString());
-        treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
-        treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
-        questions.add(treatmentQuestion);
+        QuestionDB treatmentQuestionDB = new QuestionDB();
+        treatmentQuestionDB.setOutput(Constants.QUESTION_LABEL);
+        treatmentQuestionDB.setForm_name(treatment.getDiagnosis().toString());
+        treatmentQuestionDB.setHelp_text(treatment.getMessage().toString());
+        treatmentQuestionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
+        treatmentQuestionDB.setHeaderDB(HeaderDB.DYNAMIC_TREATMENT_HEADER_ID);
+        questionDBs.add(treatmentQuestionDB);
 
-        for (Drug drug : drugs) {
-            Question question = Question.findByUID(drug.getQuestion_code());
-            if (question != null) {
-                if (TreatmentQueries.isPq(question.getUid())) {
-                    question.setForm_name(TreatmentQueries.getPqTitleDose(
-                            DrugCombination.getDose(treatment, drug)));
-                } else if (TreatmentQueries.isCq(question.getUid())) {
-                    question.setForm_name(TreatmentQueries.getCqTitleDose(
-                            DrugCombination.getDose(treatment, drug)));
+        for (DrugDB drug : drugs) {
+            QuestionDB questionDB = QuestionDB.findByUID(drug.getQuestion_code());
+            if (questionDB != null) {
+                if (TreatmentQueries.isPq(questionDB.getUid())) {
+                    questionDB.setForm_name(TreatmentQueries.getPqTitleDose(
+                            DrugCombinationDB.getDose(treatment, drug)));
+                } else if (TreatmentQueries.isCq(questionDB.getUid())) {
+                    questionDB.setForm_name(TreatmentQueries.getCqTitleDose(
+                            DrugCombinationDB.getDose(treatment, drug)));
                 }
-                doseByQuestion.put(question.getId_question(),
-                        DrugCombination.getDose(treatment, drug));
-                questions.add(question);
+                doseByQuestion.put(questionDB.getId_question(),
+                        DrugCombinationDB.getDose(treatment, drug));
+                questionDBs.add(questionDB);
             }
-            if (!questions.isEmpty()) {
-                Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
+            if (!questionDBs.isEmpty()) {
+                Log.d(TAG, "Question: " + questionDBs.get(questionDBs.size() - 1) + "\n");
             }
         }
 
-        return questions;
+        return questionDBs;
     }
 
     public HashMap<Long, Float> getOptionDose(
-            org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
-        List<org.eyeseetea.malariacare.data.database.model.Treatment> treatments =
+            org.eyeseetea.malariacare.data.database.model.TreatmentDB mainTreatment) {
+        List<org.eyeseetea.malariacare.data.database.model.TreatmentDB> treatments =
                 mainTreatment.getAlternativeTreatments();
         HashMap<Long, Float> optionDose = new HashMap<>();
-        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : treatments) {
-            List<Drug> drugs = treatment.getDrugsForTreatment();
-            for (Drug drug : drugs) {
+        for (org.eyeseetea.malariacare.data.database.model.TreatmentDB treatment : treatments) {
+            List<DrugDB> drugs = treatment.getDrugsForTreatment();
+            for (DrugDB drug : drugs) {
                 if (TreatmentQueries.isACT24(drug.getQuestion_code())) {
                     optionDose.put(TreatmentQueries.getACT24Question().getId_question(),
-                            DrugCombination.getDose(treatment, drug));
+                            DrugCombinationDB.getDose(treatment, drug));
                 } else if (TreatmentQueries.isACT18(drug.getQuestion_code())) {
                     optionDose.put(TreatmentQueries.getACT18Question().getId_question(),
-                            DrugCombination.getDose(treatment, drug));
+                            DrugCombinationDB.getDose(treatment, drug));
                 } else if (TreatmentQueries.isACT12(drug.getQuestion_code())) {
                     optionDose.put(TreatmentQueries.getACT12Question().getId_question(),
-                            DrugCombination.getDose(treatment, drug));
+                            DrugCombinationDB.getDose(treatment, drug));
                 } else if (TreatmentQueries.isACT6(drug.getQuestion_code())) {
                     optionDose.put(TreatmentQueries.getACT6Question().getId_question(),
-                            DrugCombination.getDose(treatment, drug));
+                            DrugCombinationDB.getDose(treatment, drug));
                 }
             }
         }
         return optionDose;
     }
 
-    public Answer getACTOptions(
-            org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
-        List<Option> options = new ArrayList<>();
-        Answer answer = new Answer("stock");
-        answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
+    public AnswerDB getACTOptions(
+            org.eyeseetea.malariacare.data.database.model.TreatmentDB mainTreatment) {
+        List<OptionDB> options = new ArrayList<>();
+        AnswerDB answer = new AnswerDB("stock");
+        answer.setId_answer(AnswerDB.DYNAMIC_STOCK_ANSWER_ID);
         //this options are never saved
-        Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", 0f, answer);
+        OptionDB optionACT24 = new OptionDB("ACT_x_24", "ACT_x_24", 0f, answer);
         optionACT24.setId_option(TreatmentQueries.getACT24Question().getId_question());
-        optionACT24.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx24.png"));
-        Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", 0f, answer);
+        optionACT24.setOptionAttributeDB(
+                new OptionAttributeDB("c8b8c7", "question_images/p5_actx24.png"));
+        OptionDB optionACT12 = new OptionDB("ACT_x_12", "ACT_x_12", 0f, answer);
         optionACT12.setId_option(TreatmentQueries.getACT12Question().getId_question());
-        optionACT12.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx12.png"));
-        Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", 0f, answer);
+        optionACT12.setOptionAttributeDB(
+                new OptionAttributeDB("c8b8c7", "question_images/p5_actx12.png"));
+        OptionDB optionACT6 = new OptionDB("ACT_x_6", "ACT_x_6", 0f, answer);
         optionACT6.setId_option(TreatmentQueries.getACT6Question().getId_question());
-        optionACT6.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx6.png"));
-        Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", 0f, answer);
+        optionACT6.setOptionAttributeDB(
+                new OptionAttributeDB("c8b8c7", "question_images/p5_actx6.png"));
+        OptionDB optionACT18 = new OptionDB("ACT_x_18", "ACT_x_18", 0f, answer);
         optionACT18.setId_option(TreatmentQueries.getACT18Question().getId_question());
-        optionACT18.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
-        Question outStockQuestion = TreatmentQueries.getOutOfStockQuestion();
-        Option optionOutStock = new Option("out_stock_option", "out_stock_option", 0f,
-                outStockQuestion.getAnswer());
-        optionOutStock.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p6_stockout.png"));
-        optionOutStock.setId_option(outStockQuestion.getId_question());
+        optionACT18.setOptionAttributeDB(
+                new OptionAttributeDB("c8b8c7", "question_images/p5_actx18.png"));
+        QuestionDB outStockQuestionDB = TreatmentQueries.getOutOfStockQuestion();
+        OptionDB optionOutStock = new OptionDB("out_stock_option", "out_stock_option", 0f,
+                outStockQuestionDB.getAnswerDB());
+        optionOutStock.setOptionAttributeDB(
+                new OptionAttributeDB("c8b8c7", "question_images/p6_stockout.png"));
+        optionOutStock.setId_option(outStockQuestionDB.getId_question());
 
-        List<org.eyeseetea.malariacare.data.database.model.Treatment> treatments =
+        List<org.eyeseetea.malariacare.data.database.model.TreatmentDB> treatments =
                 mainTreatment.getAlternativeTreatments();
-        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : treatments) {
-            List<Drug> alternativeDrugs = treatment.getDrugsForTreatment();
-            for (Drug drug : alternativeDrugs) {
+        for (org.eyeseetea.malariacare.data.database.model.TreatmentDB treatment : treatments) {
+            List<DrugDB> alternativeDrugs = treatment.getDrugsForTreatment();
+            for (DrugDB drug : alternativeDrugs) {
                 if (TreatmentQueries.isACT24(drug.getQuestion_code())) {
                     optionACT24.setName(treatment.getMessage().toString());
                     options.add(optionACT24);
@@ -278,17 +278,17 @@ public class Treatment {
         }
         options.add(optionOutStock);
 
-        answer.setOptions(options);
+        answer.setOptionDBs(options);
 
         return answer;
     }
 
-    private List<Drug> getAlternativeDrugsForTreatment(
-            org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
-        List<org.eyeseetea.malariacare.data.database.model.Treatment> alternativeTreatments =
+    private List<DrugDB> getAlternativeDrugsForTreatment(
+            org.eyeseetea.malariacare.data.database.model.TreatmentDB mainTreatment) {
+        List<org.eyeseetea.malariacare.data.database.model.TreatmentDB> alternativeTreatments =
                 mainTreatment.getAlternativeTreatments();
-        List<Drug> alternativeDrugs = new ArrayList<>();
-        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment :
+        List<DrugDB> alternativeDrugs = new ArrayList<>();
+        for (org.eyeseetea.malariacare.data.database.model.TreatmentDB treatment :
                 alternativeTreatments) {
             alternativeDrugs.addAll(treatment.getDrugsForTreatment());
         }
@@ -305,57 +305,57 @@ public class Treatment {
             //TODO: set value to hide question is realized without match relation
             // because is a question of type label. This is unique and isolated case
             // when exists one more case we should refactor this to more generic code
-            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
-        Question treatmentQuestionSend = TreatmentQueries.getDynamicTreatmentQuestion();
-        Question treatmentQuestionShow = TreatmentQueries.getTreatmentDiagnosisVisibleQuestion();
-        Survey malariaSurvey = Session.getMalariaSurvey();
-        List<Value> values =
-                malariaSurvey.getValues();//this values should be get from memory because the
+            org.eyeseetea.malariacare.data.database.model.TreatmentDB treatment) {
+        QuestionDB treatmentQuestionDBSend = TreatmentQueries.getDynamicTreatmentQuestion();
+        QuestionDB treatmentQuestionDBShow = TreatmentQueries.getTreatmentDiagnosisVisibleQuestion();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        List<ValueDB> values =
+                malariaSurvey.getValueDBs();//this values should be get from memory because the
         // treatment options are in memory
         boolean questionInSurvey = false;
         boolean questionShowInSurvey = false;
         String diagnosisMessage = Utils.getInternationalizedString(
                 String.valueOf(treatment.getDiagnosis()));
-        String defaultDiagnosisMessage = Translation.getLocalizedString(treatment.getDiagnosis(),
-                Translation.DEFAULT_LANGUAGE);
-        for (Value value : values) {
-            if (value.getQuestion() == null) {
+        String defaultDiagnosisMessage = TranslationDB.getLocalizedString(treatment.getDiagnosis(),
+                TranslationDB.DEFAULT_LANGUAGE);
+        for (ValueDB value : values) {
+            if (value.getQuestionDB() == null) {
                 continue;
             }
-            if (value.getQuestion().equals(treatmentQuestionSend)) {
+            if (value.getQuestionDB().equals(treatmentQuestionDBSend)) {
                 value.setValue(defaultDiagnosisMessage);
                 questionInSurvey = true;
                 value.save();
             }
-            if (value.getQuestion().equals(treatmentQuestionShow)) {
+            if (value.getQuestionDB().equals(treatmentQuestionDBShow)) {
                 value.setValue(diagnosisMessage);
                 questionShowInSurvey = true;
                 value.save();
             }
         }
         if (!questionShowInSurvey) {
-            Value value = new Value(diagnosisMessage, treatmentQuestionShow,
+            ValueDB value = new ValueDB(diagnosisMessage, treatmentQuestionDBShow,
                     malariaSurvey);
             value.insert();
         }
         if (!questionInSurvey) {
-            Value value = new Value(defaultDiagnosisMessage, treatmentQuestionSend,
+            ValueDB value = new ValueDB(defaultDiagnosisMessage, treatmentQuestionDBSend,
                     malariaSurvey);
             value.insert();
         }
     }
 
-    public List<Question> getNoTreatmentQuestions() {
-        List<Question> questions = new ArrayList<>();
+    public List<QuestionDB> getNoTreatmentQuestions() {
+        List<QuestionDB> questionDBs = new ArrayList<>();
 
-        Question treatmentQuestion = new Question();
-        treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
-        treatmentQuestion.setForm_name("");
-        treatmentQuestion.setHelp_text(TreatmentQueries.getTreatmentError());
-        treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
-        treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
-        questions.add(treatmentQuestion);
+        QuestionDB treatmentQuestionDB = new QuestionDB();
+        treatmentQuestionDB.setOutput(Constants.QUESTION_LABEL);
+        treatmentQuestionDB.setForm_name("");
+        treatmentQuestionDB.setHelp_text(TreatmentQueries.getTreatmentError());
+        treatmentQuestionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
+        treatmentQuestionDB.setHeaderDB(HeaderDB.DYNAMIC_TREATMENT_HEADER_ID);
+        questionDBs.add(treatmentQuestionDB);
 
-        return questions;
+        return questionDBs;
     }
 }

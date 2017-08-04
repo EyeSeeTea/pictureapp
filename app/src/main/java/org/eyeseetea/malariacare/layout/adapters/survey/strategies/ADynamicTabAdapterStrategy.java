@@ -1,16 +1,16 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
+import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 
 import android.os.Handler;
 import android.view.View;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -32,13 +32,14 @@ public abstract class ADynamicTabAdapterStrategy {
 
     public abstract void initSurveys(boolean readOnly);
 
-    public abstract List<Question> addAdditionalQuestions(int tabType, List<Question> screenQuestions);
+    public abstract List<QuestionDB> addAdditionalQuestions(int tabType, List<QuestionDB>
+            screenQuestionDBs);
 
-    public abstract void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion);
+    public abstract void instanceOfSingleQuestion(IQuestionView questionView, QuestionDB screenQuestionDB);
 
-    public abstract void instanceOfMultiQuestion(IQuestionView questionView, Question screenQuestion);
+    public abstract void instanceOfMultiQuestion(IQuestionView questionView, QuestionDB screenQuestionDB);
 
-    public abstract void renderParticularSurvey(Question screenQuestion, Survey survey, IQuestionView questionView);
+    public abstract void renderParticularSurvey(QuestionDB screenQuestionDB, SurveyDB surveyDB, IQuestionView questionView);
 
     public abstract boolean isMultiQuestionByVariant(int tabType);
 
@@ -47,8 +48,8 @@ public abstract class ADynamicTabAdapterStrategy {
 
     public void finishOrNext() {
         try {
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
+            System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
+            System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());
         } catch (Exception e) {
         }
         if (Validation.hasErrors()) {
@@ -67,9 +68,9 @@ public abstract class ADynamicTabAdapterStrategy {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Question question = mDynamicTabAdapter.navigationController.getCurrentQuestion();
-                Value value = question.getValueBySession();
-                if (mDynamicTabAdapter.isDone(value)) {
+                QuestionDB questionDB = mDynamicTabAdapter.navigationController.getCurrentQuestion();
+                ValueDB valueDB = questionDB.getValueBySession();
+                if (mDynamicTabAdapter.isDone(valueDB)) {
                     mDynamicTabAdapter.navigationController.isMovingToForward = false;
                     if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                         mDynamicTabAdapter.surveyShowDone();
@@ -88,6 +89,6 @@ public abstract class ADynamicTabAdapterStrategy {
     public abstract void addScrollToSwipeTouchListener(View rowView);
 
     protected boolean shouldShowReviewScreen() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
+        return getMalariaSurveyDB().isRDT() || BuildConfig.patientTestedByDefault;
     }
 }

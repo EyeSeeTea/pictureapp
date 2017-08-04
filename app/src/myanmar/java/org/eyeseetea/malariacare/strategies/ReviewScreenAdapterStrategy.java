@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
@@ -36,7 +36,7 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
                         : value.getValue()));
         if ((value.getQuestionUId() != null)) {
             questionTextView.setText(
-                    Question.findByUID(value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
+                    QuestionDB.findByUID(value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
             //Adds click listener to hide the fragment and go to the clicked question.
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -55,7 +55,7 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
         return rowView;
     }
 
-    private Question getCorrectQuestion(String questionUId) {
+    private QuestionDB getCorrectQuestion(String questionUId) {
         if (questionUId.equals(PreferencesState.getInstance().getContext().getString(
                 R.string.dynamicTreatmentQuestionUID)) || questionUId.equals(
                 PreferencesState.getInstance().getContext().getString(
@@ -63,24 +63,24 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
                 || questionUId.equals(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.treatmentDiagnosisVisibleQuestion))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
+            return QuestionDB.findByUID(PreferencesState.getInstance().getContext().getString(
                     R.string.dynamicTreatmentHideQuestionUID));
         }
         if (questionUId.equals(PreferencesState.getInstance().getContext().getString(
                 R.string.outOfStockQuestionUID))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
+            return QuestionDB.findByUID(PreferencesState.getInstance().getContext().getString(
                     R.string.dynamicStockQuestionUID));
         }
-        return Question.findByUID(questionUId);
+        return QuestionDB.findByUID(questionUId);
     }
 
     public static boolean isValidValue(Value value) {
-        if (Session.getStockSurvey()==null || value.getQuestionUId() == null) {
+        if (Session.getStockSurveyDB()==null || value.getQuestionUId() == null) {
             return false;
         }
-        for (org.eyeseetea.malariacare.data.database.model.Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
-            if (stockValue.getQuestion() != null) {
-                if (stockValue.getQuestion().getUid().equals(value.getQuestionUId())) {
+        for (org.eyeseetea.malariacare.data.database.model.ValueDB stockValue : Session.getStockSurveyDB().getValuesFromDB()) {
+            if (stockValue.getQuestionDB() != null) {
+                if (stockValue.getQuestionDB().getUid().equals(value.getQuestionUId())) {
                     return true;
                 }
             }

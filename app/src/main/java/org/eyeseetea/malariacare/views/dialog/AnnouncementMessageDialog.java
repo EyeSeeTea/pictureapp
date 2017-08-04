@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.util.Date;
@@ -21,7 +21,7 @@ public class AnnouncementMessageDialog {
         final SpannableString linkedMessage = new SpannableString(Html.fromHtml(message));
         Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
 
-        final User loggedUser = User.getLoggedUser();
+        final UserDB loggedUserDB = UserDB.getLoggedUser();
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(context.getString(titleId))
                 .setMessage(linkedMessage)
@@ -30,13 +30,13 @@ public class AnnouncementMessageDialog {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         PreferencesState.getInstance().setUserAccept(true);
-                        checkUserClosed(loggedUser, context);
+                        checkUserClosed(loggedUserDB, context);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        checkUserClosed(loggedUser, context);
+                        checkUserClosed(loggedUserDB, context);
                     }
                 }).create();
         dialog.show();
@@ -44,8 +44,8 @@ public class AnnouncementMessageDialog {
                 LinkMovementMethod.getInstance());
     }
 
-    public static void checkUserClosed(User user, Context context) {
-        if (user.getCloseDate() != null && user.getCloseDate().before(new Date())) {
+    public static void checkUserClosed(UserDB userDB, Context context) {
+        if (userDB.getCloseDate() != null && userDB.getCloseDate().before(new Date())) {
             closeUser(R.string.admin_announcement,
                     PreferencesState.getInstance().getContext().getString(R.string.user_close),
                     context);

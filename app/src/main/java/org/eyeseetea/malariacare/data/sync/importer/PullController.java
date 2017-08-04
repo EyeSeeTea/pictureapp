@@ -23,7 +23,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -32,7 +32,6 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExten
 import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
-import org.eyeseetea.malariacare.domain.exception.PopulateCsvException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -173,7 +172,7 @@ public class PullController implements IPullController {
         callback.onStep(PullStep.CONVERT_DATA);
 
         try {
-            mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
+            mConverter.setOrgUnitDBs(OrgUnitDB.getAllOrgUnit());
             mDataConverter.convert(callback, mConverter);
         } catch (NullPointerException ex) {
             callback.onError(new PullConversionException(ex));

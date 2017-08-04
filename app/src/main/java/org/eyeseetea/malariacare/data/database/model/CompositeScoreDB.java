@@ -50,8 +50,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Table(database = AppDatabase.class)
-public class CompositeScore extends BaseModel {
+@Table(database = AppDatabase.class, name = "CompositeScore")
+public class CompositeScoreDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_composite_score;
@@ -67,100 +67,101 @@ public class CompositeScore extends BaseModel {
     Long id_composite_score_parent;
 
     /**
-     * Reference to parent compositeScore (loaded lazily)
+     * Reference to parent mCompositeScoreDB (loaded lazily)
      */
-    CompositeScore compositeScore;
+    CompositeScoreDB mCompositeScoreDB;
 
     /**
      * List of compositeScores that belongs to this one
      */
-    List<CompositeScore> compositeScoreChildren;
+    List<CompositeScoreDB> mCompositeScoreDBChildren;
 
     /**
-     * List of questions associated to this compositeScore
+     * List of mQuestionDBs associated to this mCompositeScoreDB
      */
-    List<Question> questions;
+    List<QuestionDB> mQuestionDBs;
 
-    public CompositeScore() {
+    public CompositeScoreDB() {
     }
 
-    public CompositeScore(String hierarchical_code, String label, CompositeScore compositeScore,
+    public CompositeScoreDB(String hierarchical_code, String label,
+            CompositeScoreDB compositeScoreDB,
             Integer order_pos) {
         this.hierarchical_code = hierarchical_code;
         this.label = label;
         this.order_pos = order_pos;
-        this.setCompositeScore(compositeScore);
+        this.setCompositeScoreDB(compositeScoreDB);
     }
 
-    public CompositeScore(String hierarchical_code, String label, String uid,
-            CompositeScore compositeScore, Integer order_pos) {
+    public CompositeScoreDB(String hierarchical_code, String label, String uid,
+            CompositeScoreDB compositeScoreDB, Integer order_pos) {
         this.hierarchical_code = hierarchical_code;
         this.label = label;
         this.uid_composite_score = uid;
         this.order_pos = order_pos;
-        this.setCompositeScore(compositeScore);
+        this.setCompositeScoreDB(compositeScoreDB);
     }
 
     /**
-     * Select all composite score that belongs to a program
+     * Select all composite score that belongs to a mProgramDB
      *
-     * @param program Program whose composite scores are searched.
+     * @param programDB ProgramDB whose composite scores are searched.
      */
-    public static List<CompositeScore> listByProgram(Program program) {
-        if (program == null || program.getId_program() == null) {
+    public static List<CompositeScoreDB> listByProgram(ProgramDB programDB) {
+        if (programDB == null || programDB.getId_program() == null) {
             return new ArrayList<>();
         }
 
-        //FIXME: Apparently there is a bug in DBFlow joins that affects here. Question has a
-        // column 'uid', and so do CompositeScore, so results are having Questions one, and
-        // should keep CompositeScore one. To solve it, we've introduced a last join with
-        // CompositeScore again and a HashSet to remove resulting duplicates
-        //Take scores associated to questions of the program ('leaves')
+        //FIXME: Apparently there is a bug in DBFlow joins that affects here. QuestionDB has a
+        // column 'uid', and so do CompositeScoreDB, so results are having Questions one, and
+        // should keep CompositeScoreDB one. To solve it, we've introduced a last join with
+        // CompositeScoreDB again and a HashSet to remove resulting duplicates
+        //Take scores associated to mQuestionDBs of the mProgramDB ('leaves')
 
-        List<CompositeScore> compositeScoresByProgram = new Select().distinct().from(
-                CompositeScore.class).as(compositeScoreName)
-                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
-                .on(CompositeScore_Table.id_composite_score.withTable(compositeScoreAlias)
-                        .eq(Question_Table.id_composite_score_fk.withTable(questionAlias)))
-                .join(Header.class, Join.JoinType.LEFT_OUTER).as(headerName)
-                .on(Question_Table.id_header_fk.withTable(questionAlias)
-                        .eq(Header_Table.id_header.withTable(headerAlias)))
-                .join(Tab.class, Join.JoinType.LEFT_OUTER).as(tabName)
-                .on(Header_Table.id_tab_fk.withTable(headerAlias)
-                        .eq(Tab_Table.id_tab.withTable(tabAlias)))
-                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
-                .on(Tab_Table.id_program_fk.withTable(tabAlias)
-                        .eq(Program_Table.id_program.withTable(programAlias)))
-                .join(CompositeScore.class, Join.JoinType.LEFT_OUTER).as(compositeScoreTwoName)
-                .on(CompositeScore_Table.id_composite_score.withTable(compositeScoreAlias)
-                        .eq(CompositeScore_Table.id_composite_score.withTable(
+        List<CompositeScoreDB> compositeScoresByProgramDB = new Select().distinct().from(
+                CompositeScoreDB.class).as(compositeScoreName)
+                .join(QuestionDB.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(CompositeScoreDB_Table.id_composite_score.withTable(compositeScoreAlias)
+                        .eq(QuestionDB_Table.id_composite_score_fk.withTable(questionAlias)))
+                .join(HeaderDB.class, Join.JoinType.LEFT_OUTER).as(headerName)
+                .on(QuestionDB_Table.id_header_fk.withTable(questionAlias)
+                        .eq(HeaderDB_Table.id_header.withTable(headerAlias)))
+                .join(TabDB.class, Join.JoinType.LEFT_OUTER).as(tabName)
+                .on(HeaderDB_Table.id_tab_fk.withTable(headerAlias)
+                        .eq(TabDB_Table.id_tab.withTable(tabAlias)))
+                .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(TabDB_Table.id_program_fk.withTable(tabAlias)
+                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+                .join(CompositeScoreDB.class, Join.JoinType.LEFT_OUTER).as(compositeScoreTwoName)
+                .on(CompositeScoreDB_Table.id_composite_score.withTable(compositeScoreAlias)
+                        .eq(CompositeScoreDB_Table.id_composite_score.withTable(
                                 compositeScoreTwoAlias)))
-                .where(Program_Table.id_program.withTable(programAlias)
-                        .eq(program.getId_program()))
-                .orderBy(CompositeScore_Table.order_pos, true)
+                .where(ProgramDB_Table.id_program.withTable(programAlias)
+                        .eq(programDB.getId_program()))
+                .orderBy(CompositeScoreDB_Table.order_pos, true)
                 .queryList();
 
         // remove duplicates
-        Set<CompositeScore> uniqueCompositeScoresByProgram = new HashSet<>();
-        uniqueCompositeScoresByProgram.addAll(compositeScoresByProgram);
-        compositeScoresByProgram.clear();
-        compositeScoresByProgram.addAll(uniqueCompositeScoresByProgram);
+        Set<CompositeScoreDB> uniqueCompositeScoresByProgramDB = new HashSet<>();
+        uniqueCompositeScoresByProgramDB.addAll(compositeScoresByProgramDB);
+        compositeScoresByProgramDB.clear();
+        compositeScoresByProgramDB.addAll(uniqueCompositeScoresByProgramDB);
 
         //Find parent scores from 'leaves'
-        Set<CompositeScore> parentCompositeScores = new HashSet<>();
-        for (CompositeScore compositeScore : compositeScoresByProgram) {
-            parentCompositeScores.addAll(listParentCompositeScores(compositeScore));
+        Set<CompositeScoreDB> parentCompositeScoreDBs = new HashSet<>();
+        for (CompositeScoreDB compositeScoreDB : compositeScoresByProgramDB) {
+            parentCompositeScoreDBs.addAll(listParentCompositeScores(compositeScoreDB));
         }
-        compositeScoresByProgram.addAll(parentCompositeScores);
+        compositeScoresByProgramDB.addAll(parentCompositeScoreDBs);
 
 
-        Collections.sort(compositeScoresByProgram, new Comparator() {
+        Collections.sort(compositeScoresByProgramDB, new Comparator() {
 
             @Override
             public int compare(Object o1, Object o2) {
 
-                CompositeScore cs1 = (CompositeScore) o1;
-                CompositeScore cs2 = (CompositeScore) o2;
+                CompositeScoreDB cs1 = (CompositeScoreDB) o1;
+                CompositeScoreDB cs2 = (CompositeScoreDB) o2;
 
                 return new Integer(cs1.getOrder_pos().compareTo(new Integer(cs2.getOrder_pos())));
             }
@@ -168,15 +169,16 @@ public class CompositeScore extends BaseModel {
 
 
         //return all scores
-        return compositeScoresByProgram;
+        return compositeScoresByProgramDB;
     }
 
-    public static List<CompositeScore> listParentCompositeScores(CompositeScore compositeScore) {
-        List<CompositeScore> parentScores = new ArrayList<>();
-        if (compositeScore == null || !compositeScore.hasParent()) {
+    public static List<CompositeScoreDB> listParentCompositeScores(
+            CompositeScoreDB compositeScoreDB) {
+        List<CompositeScoreDB> parentScores = new ArrayList<>();
+        if (compositeScoreDB == null || !compositeScoreDB.hasParent()) {
             return parentScores;
         }
-        CompositeScore currentScore = compositeScore;
+        CompositeScoreDB currentScore = compositeScoreDB;
         while (currentScore != null && currentScore.hasParent()) {
             currentScore = currentScore.getComposite_score();
             parentScores.add(currentScore);
@@ -208,25 +210,26 @@ public class CompositeScore extends BaseModel {
         this.label = label;
     }
 
-    public CompositeScore getComposite_score() {
-        if (compositeScore == null) {
+    public CompositeScoreDB getComposite_score() {
+        if (mCompositeScoreDB == null) {
             if (id_composite_score_parent == null) return null;
-            compositeScore = new Select()
-                    .from(CompositeScore.class)
-                    .where(CompositeScore_Table.id_composite_score
+            mCompositeScoreDB = new Select()
+                    .from(CompositeScoreDB.class)
+                    .where(CompositeScoreDB_Table.id_composite_score
                             .is(id_composite_score_parent)).querySingle();
         }
-        return compositeScore;
+        return mCompositeScoreDB;
     }
 
-    public void setCompositeScore(CompositeScore compositeScore) {
-        this.compositeScore = compositeScore;
-        this.id_composite_score_parent = (compositeScore != null) ? compositeScore.getId_composite_score() : null;
+    public void setCompositeScoreDB(CompositeScoreDB compositeScoreDB) {
+        this.mCompositeScoreDB = compositeScoreDB;
+        this.id_composite_score_parent =
+                (compositeScoreDB != null) ? compositeScoreDB.getId_composite_score() : null;
     }
 
     public void setCompositeScore(Long id_parent) {
         this.id_composite_score_parent = id_parent;
-        this.compositeScore = null;
+        this.mCompositeScoreDB = null;
     }
 
     public String getUid() {
@@ -249,30 +252,31 @@ public class CompositeScore extends BaseModel {
         return getComposite_score() != null;
     }
 
-    public List<CompositeScore> getCompositeScoreChildren() {
-        if (this.compositeScoreChildren == null) {
-            this.compositeScoreChildren = new Select()
-                    .from(CompositeScore.class)
-                    .where(CompositeScore_Table.id_composite_score_parent.eq(this.getId_composite_score()))
-                    .orderBy(OrderBy.fromProperty(CompositeScore_Table.order_pos))
+    public List<CompositeScoreDB> getCompositeScoreDBChildren() {
+        if (this.mCompositeScoreDBChildren == null) {
+            this.mCompositeScoreDBChildren = new Select()
+                    .from(CompositeScoreDB.class)
+                    .where(CompositeScoreDB_Table.id_composite_score_parent.eq(
+                            this.getId_composite_score()))
+                    .orderBy(OrderBy.fromProperty(CompositeScoreDB_Table.order_pos))
                     .queryList();
         }
-        return this.compositeScoreChildren;
+        return this.mCompositeScoreDBChildren;
     }
 
-    public List<Question> getQuestions() {
-        if (questions == null) {
-            questions = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_composite_score_fk.eq(this.getId_composite_score()))
-                    .orderBy(Question_Table.order_pos, true)
+    public List<QuestionDB> getQuestionDBs() {
+        if (mQuestionDBs == null) {
+            mQuestionDBs = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_composite_score_fk.eq(this.getId_composite_score()))
+                    .orderBy(QuestionDB_Table.order_pos, true)
                     .queryList();
         }
-        return questions;
+        return mQuestionDBs;
     }
 
     public boolean hasChildren() {
-        return !getCompositeScoreChildren().isEmpty();
+        return !getCompositeScoreDBChildren().isEmpty();
     }
 
     @Override
@@ -280,7 +284,7 @@ public class CompositeScore extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CompositeScore that = (CompositeScore) o;
+        CompositeScoreDB that = (CompositeScoreDB) o;
 
         if (id_composite_score != that.id_composite_score) return false;
         if (hierarchical_code != null ? !hierarchical_code.equals(that.hierarchical_code)
@@ -309,7 +313,7 @@ public class CompositeScore extends BaseModel {
 
     @Override
     public String toString() {
-        return "CompositeScore{" +
+        return "CompositeScoreDB{" +
                 "id_composite_score=" + id_composite_score +
                 ", hierarchical_code='" + hierarchical_code + '\'' +
                 ", label='" + label + '\'' +

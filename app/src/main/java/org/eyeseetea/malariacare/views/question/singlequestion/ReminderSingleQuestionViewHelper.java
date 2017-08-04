@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 
@@ -20,13 +20,13 @@ public class ReminderSingleQuestionViewHelper {
         }
     }
 
-    public static void setWarningText(View rootView, Option option) {
+    public static void setWarningText(View rootView, OptionDB optionDB) {
         TextView okText = (TextView) rootView.findViewById(R.id.questionTextRow);
-        okText.setText(option.getInternationalizedName());
+        okText.setText(optionDB.getInternationalizedName());
         DynamicTabAdapter.swipeTouchListener.addTouchableView(okText);
     }
 
-    public static void setWarningValue(View rootView, final Option option,
+    public static void setWarningValue(View rootView, final OptionDB optionDB,
             final ReminderSingleQuestionView reminderSingleQuestionView) {
         ImageView imageOK = (ImageView) rootView.findViewById(R.id.confirm_yes);
         imageOK.setImageResource(R.drawable.option_button);
@@ -36,12 +36,12 @@ public class ReminderSingleQuestionViewHelper {
             public void onClick(View v) {
                 if (!DynamicTabAdapter.isClicked) {
                     DynamicTabAdapter.isClicked = true;
-                    reminderSingleQuestionView.notifyAnswerChanged(option);
+                    reminderSingleQuestionView.notifyAnswerChanged(optionDB);
                 }
             }
         });
 
         TextView okText = (TextView) rootView.findViewById(R.id.textcard_confirm_yes);
-        okText.setText(option.getInternationalizedName());
+        okText.setText(optionDB.getInternationalizedName());
     }
 }

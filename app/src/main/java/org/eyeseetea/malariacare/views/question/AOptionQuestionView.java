@@ -3,8 +3,8 @@ package org.eyeseetea.malariacare.views.question;
 import android.content.Context;
 import android.view.View;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 import java.util.List;
 
@@ -15,21 +15,21 @@ public abstract class AOptionQuestionView extends CommonQuestionView {
         super(context);
     }
 
-    public abstract void setOptions(List<Option> options);
+    public abstract void setOptions(List<OptionDB> optionDBs);
 
-    public abstract void setQuestion(Question question);
+    public abstract void setQuestionDB(QuestionDB questionDB);
 
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
     }
 
-    protected void notifyAnswerChanged(Option option) {
+    protected void notifyAnswerChanged(OptionDB optionDB) {
         if (mOnAnswerChangedListener != null) {
-            mOnAnswerChangedListener.onAnswerChanged(this, option);
+            mOnAnswerChangedListener.onAnswerChanged(this, optionDB);
         }
     }
 
     public interface onAnswerChangedListener {
-        void onAnswerChanged(View view, Option option);
+        void onAnswerChanged(View view, OptionDB optionDB);
     }
 }

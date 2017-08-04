@@ -7,7 +7,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberException;
@@ -44,9 +44,9 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value != null) {
-            numberPicker.setText(value.getValue());
+    public void setValue(ValueDB valueDB) {
+        if (valueDB != null) {
+            numberPicker.setText(valueDB.getValue());
         }
     }
 

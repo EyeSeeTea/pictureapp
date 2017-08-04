@@ -1,17 +1,17 @@
 package org.eyeseetea.malariacare.strategies;
 
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 
 public abstract class ASurveyFragmentStrategy {
 
-    abstract Survey getRenderSurvey(Question screenQuestion);
+    abstract SurveyDB getRenderSurvey(QuestionDB screenQuestionDB);
 
     public boolean isDynamicStockQuestion(String uid) {
         return false;
     }
 
-    abstract boolean isStockSurvey(Survey survey);
+    abstract boolean isStockSurvey(SurveyDB surveyDB);
 
     abstract String getMalariaProgram();
 }

@@ -3,12 +3,11 @@ package org.eyeseetea.malariacare.domain.entity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
-import org.eyeseetea.sdk.presentation.fileio.SizeCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,12 @@ public class Media {
 
     public static Media fromModel(MediaDB mediaDB){
         return new Media(mediaDB.getFilename(), mediaDB.getResourceUrl(), mediaDB.getMediaType(),
-                SizeCalculator.getSizeInMB(mediaDB.getFilename()));
+                getSizeInMB(mediaDB.getFilename()));
+    }
+
+    private static String getSizeInMB(String filename) {
+        //Todo fix this method using for example SizeCalculator.getSizeInMB(mediaDB.getFilename()) from eyeseetesdk
+        return "0mb";
     }
 
     public static List<Media> fromModel(List<MediaDB> mediaDBs){

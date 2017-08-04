@@ -43,7 +43,6 @@ import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVDetailedAdapter;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +88,6 @@ public class AVFragment extends Fragment implements IDashboardFragment {
         Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        FileIOUtils.init(mAVFragment.getActivity().getApplicationContext(), mAVFragment.getActivity().getApplicationContext().getPackageName(), AppDatabase.NAME);
         initAdapters();
         initCardViewRecyclerViewList();
         initDetailedRecyclerViewList();

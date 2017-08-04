@@ -20,27 +20,30 @@
 package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AVDetailedAdapter;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,18 +51,21 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class AVFragment extends ListFragment implements IDashboardFragment {
+public class AVFragment extends Fragment implements IDashboardFragment {
 
 
     public static final String TAG = ".SentFragment";
-    protected AssessmentAdapter adapter;
-    private List<SurveyDB> mSurveyDBs;
-    private ListView mListView;
+    protected AVAdapter cardViewAdapter;
+    protected AVDetailedAdapter detailedAdapter;
+    private List<Media> mMedias;
+    private RecyclerView mCardViewRecyclerView;
+    private RecyclerView mDetailedRecyclerView;
+    private AVFragment.SurveyReceiver surveyReceiver;
     AVFragment mAVFragment;
 
     public AVFragment() {
         mAVFragment = this;
-        this.mSurveyDBs = new ArrayList();
+        this.mMedias = new ArrayList();
     }
 
     @Override
@@ -75,8 +81,7 @@ public class AVFragment extends ListFragment implements IDashboardFragment {
         if (container == null) {
             return null;
         }
-
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.av_fragment, container, false);
     }
 
     @Override
@@ -84,9 +89,27 @@ public class AVFragment extends ListFragment implements IDashboardFragment {
         Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        initAdapter();
-        initListView();
+        FileIOUtils.init(mAVFragment.getActivity().getApplicationContext(), mAVFragment.getActivity().getApplicationContext().getPackageName(), AppDatabase.NAME);
+        initAdapters();
+        initCardViewRecyclerViewList();
+        initDetailedRecyclerViewList();
     }
+
+    private void initCardViewRecyclerViewList() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mAVFragment.getActivity().getApplicationContext());
+        mCardViewRecyclerView = (RecyclerView) getView().findViewById(R.id.av_recycler);
+        mCardViewRecyclerView.setHasFixedSize(true);
+        mCardViewRecyclerView.setLayoutManager(linearLayoutManager);
+        mCardViewRecyclerView.setAdapter(cardViewAdapter);
+    }
+
+    private void initDetailedRecyclerViewList() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mAVFragment.getActivity().getApplicationContext());
+        mDetailedRecyclerView = (RecyclerView)  getView().findViewById(R.id.detailed_media_list);
+        mDetailedRecyclerView.setHasFixedSize(true);
+        mDetailedRecyclerView.setLayoutManager(linearLayoutManager);
+        mDetailedRecyclerView.setAdapter(detailedAdapter);
+}
 
     @Override
     public void onResume() {
@@ -97,20 +120,10 @@ public class AVFragment extends ListFragment implements IDashboardFragment {
 
     /**
      * Inits adapter.
-     * Most of times is just an AssessmentAdapter.
-     * In a version with several adapters in dashboard (like in 'mock' branch) a new one like the
-     * one in session is created.
      */
-    private void initAdapter() {
-        this.adapter = new AssessmentAdapter(getString(R.string.sent_data),
-                this.mSurveyDBs, getActivity());
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d(TAG, "onListItemClick");
-        super.onListItemClick(l, v, position, id);
-        adapter.onClick(l, position, mSurveyDBs);
+    private void initAdapters() {
+        this.cardViewAdapter = new AVAdapter(this.mMedias);
+        this.detailedAdapter = new AVDetailedAdapter(this.mMedias, mAVFragment.getActivity().getApplicationContext());
     }
 
     @Override
@@ -121,55 +134,90 @@ public class AVFragment extends ListFragment implements IDashboardFragment {
         super.onStop();
     }
 
-    /**
-     * Initializes the listview component, adding a listener for swiping right
-     */
-    private void initListView() {
-        if (Session.isNotFullOfUnsent(getActivity())) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-
-            mListView = getListView();
-            View button = footer.findViewById(R.id.plusButton);
-            if (button != null) {
-                button.setVisibility(View.GONE);
-            }
-            mListView.addFooterView(footer);
-            LayoutUtils.setRowDivider(mListView);
-            setListAdapter((BaseAdapter) adapter);
-            setListShown(false);
-        }
-    }
-
-    public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
-        Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): "
-                + newListSurveyDBs.size());
-        this.mSurveyDBs.clear();
-        this.mSurveyDBs.addAll(newListSurveyDBs);
-        this.adapter.notifyDataSetChanged();
-        setListShown(true);
+    public void reloadMedia(List<MediaDB> newListMediaDBs) {
+        Log.d(TAG, "reloadMedia (Thread: " + Thread.currentThread().getId() + "): "
+                + newListMediaDBs.size());
+        this.mMedias.clear();
+        this.mMedias.addAll(Media.fromModel(newListMediaDBs));
+        this.cardViewAdapter.notifyDataSetChanged();
+        this.detailedAdapter.notifyDataSetChanged();
     }
 
     public void reloadHeader(Activity activity) {
     }
 
-    @Override
+    /**
+     * Register a survey receiver to load surveys into the listadapter
+     */
     public void registerFragmentReceiver() {
+        Log.d(TAG, "registerSurveysReceiver");
 
+        if (surveyReceiver == null) {
+            surveyReceiver = new AVFragment.SurveyReceiver();
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
+                    new IntentFilter(SurveyService.ALL_MEDIA_ACTION));
+        }
     }
 
-    @Override
-    public void unregisterFragmentReceiver() {
 
+    /**
+     * Unregisters the survey receiver.
+     * It really important to do this, otherwise each receiver will invoke its code.
+     */
+    public void unregisterFragmentReceiver() {
+        Log.d(TAG, "unregisterFragmentReceiver");
+        if (surveyReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
+            surveyReceiver = null;
+        }
     }
 
     public void reloadData() {
         //Reload data using service
-        Intent surveysIntent = new Intent(
+        Intent mediaIntent = new Intent(
                 PreferencesState.getInstance().getContext().getApplicationContext(),
                 SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.ALL_SENT_SURVEYS_ACTION);
+        mediaIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.ALL_MEDIA_ACTION);
         PreferencesState.getInstance().getContext().getApplicationContext().startService(
-                surveysIntent);
+                mediaIntent);
+    }
+
+    public void changeList() {
+        toggleLists();
+    }
+
+    private void toggleLists() {
+        if(mCardViewRecyclerView.getVisibility()==View.VISIBLE){
+            mCardViewRecyclerView.setVisibility(View.GONE);
+            mDetailedRecyclerView.setVisibility(View.VISIBLE);
+        }else{
+            mCardViewRecyclerView.setVisibility(View.VISIBLE);
+            mDetailedRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Inner private class that receives the result from the service
+     */
+    private class SurveyReceiver extends BroadcastReceiver {
+        private SurveyReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive");
+            //Listening only intents from this method
+            if (SurveyService.ALL_MEDIA_ACTION.equals(intent.getAction())) {
+                List<MediaDB> mediaFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    mediaFromService = (List<MediaDB>) Session.popServiceValue(
+                            SurveyService.ALL_MEDIA_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
+                reloadMedia(mediaFromService);
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ public abstract class ADashboardActivityStrategy {
     protected DashboardActivity mDashboardActivity;
     protected DashboardUnsentFragment unsentFragment;
     protected DashboardSentFragment sentFragment;
-    protected AVFragment avFragment;
+    public AVFragment avFragment;
     protected MonitorFragment monitorFragment;
 
     public void onCreate() {
@@ -174,10 +174,10 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public void showAVFragment() {
-        avFragment = new AVFragment();
-        avFragment.setArguments(mDashboardActivity.getIntent().getExtras());
-        avFragment.reloadData();
-        mDashboardActivity.replaceListFragment(R.id.dashboard_av_container, avFragment);
+        if (avFragment == null) {
+            avFragment = new AVFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_av_container, avFragment);
     }
 
     public void reloadAVFragment(){

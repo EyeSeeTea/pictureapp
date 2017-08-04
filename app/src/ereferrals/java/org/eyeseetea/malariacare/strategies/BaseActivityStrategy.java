@@ -20,9 +20,25 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
@@ -35,9 +51,23 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     LogoutUseCase mLogoutUseCase;
     private IAuthenticationManager mAuthenticationManager;
     private int notConnectedText = R.string.offline_status;
+    LoginUseCase mLoginUseCase;
+    private Menu mMenu;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
+        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
+        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
+        IInvalidLoginAttemptsRepository
+                iInvalidLoginAttemptsRepository =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
+        mLoginUseCase = new LoginUseCase(mAuthenticationManager, mainExecutor,
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
+                iInvalidLoginAttemptsRepository);
     }
 
     private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
@@ -75,6 +105,38 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_ITEM_LOGOUT, MENU_ITEM_LOGOUT_ORDER,
                 mBaseActivity.getResources().getString(R.string.app_logout));
+        mMenu = menu;
+        MenuItem item = mMenu.findItem(R.id.demo_mode);
+        item.setVisible(PreferencesState.getInstance().isDevelopOptionActive());
+        changeDemoModeText();
+    }
+
+    private void changeDemoModeText() {
+        MenuItem demoModeMenuItem = mMenu.findItem(R.id.demo_mode);
+        if (isDemoModeActivated()) {
+            demoModeMenuItem.setTitle(R.string.clean_demo_db);
+        } else {
+            demoModeMenuItem.setTitle(R.string.run_in_demo_mode);
+        }
+    }
+
+    private boolean isDemoModeActivated() {
+        return Session.getCredentials().isDemoCredentials();
+    }
+
+    public void runDemoMode() {
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                PreferencesState.getInstance().reloadPreferences();
+                loginDemoMode();
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e(TAG, message);
+            }
+        });
     }
 
     @Override
@@ -103,10 +165,64 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                                     }
                                 }).create().show();
                 break;
+            case R.id.demo_mode:
+                runDemoMode();
+                break;
             default:
                 return false;
         }
         return true;
+    }
+
+    private void updateActionBarTitleAfterLogout() {
+        android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
+
+        LayoutUtils.setActionBarAppAndUser(actionBar);
+    }
+
+    private void loginDemoMode() {
+        mLoginUseCase.execute(Credentials.createDemoCredentials(),
+                new LoginUseCase.Callback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        changeDemoModeText();
+                        updateActionBarTitleAfterLogout();
+                        reloadDashboard();
+                        Log.d(TAG, "login successful");
+                    }
+
+                    @Override
+                    public void onServerURLNotValid() {
+                        Log.d(TAG, "onServerURLNotValid");
+                    }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.d(TAG, "onInvalidCredentials");
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        Log.d(TAG, "onNetworkError");
+                    }
+
+                    @Override
+                    public void onConfigJsonInvalid() {
+                        Log.d(TAG, "onConfigJsonInvalid");
+                    }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
+                    }
+
+                    @Override
+                    public void onMaxLoginAttemptsReachedError() {
+                        Log.e(this.getClass().getSimpleName(),
+                                "Max Login Attempts Reached Error");
+                    }
+                }
+        );
     }
 
     @Override
@@ -125,6 +241,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             EyeSeeTeaApplication.getInstance().setIsWindowFocused(true);
         }
     }
+
     private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
 
         @Override
@@ -203,8 +320,13 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void hideMenuItems(Menu menu) {
         super.hideMenuItems(menu);
+    }
 
-        MenuItem item = menu.findItem(R.id.demo_mode);
-        item.setVisible(false);
+
+    public static void reloadDashboard() {
+        Intent surveysIntent = new Intent(PreferencesState.getInstance().getContext(),
+                SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+        PreferencesState.getInstance().getContext().startService(surveysIntent);
     }
 }

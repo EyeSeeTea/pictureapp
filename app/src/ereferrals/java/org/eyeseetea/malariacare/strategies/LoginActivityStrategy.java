@@ -69,6 +69,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
+        if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
+            finishAndGo();
+        }
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {

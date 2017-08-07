@@ -10,4 +10,8 @@ import retrofit2.http.POST;
 public interface SurveyApiClientRetrofit {
     @POST("eRefWSDev/api")
     Call<SurveyWSResult> pushSurveys(@Body SurveyContainerWSObject surveyContainerWSObject);
+
+    //TODO change with the correct way to do query, not available yet
+    @POST("eRefWSDev/api/forgot")
+    Call<String> forgotPassword(@Body String username);
 }

@@ -27,6 +27,7 @@ public class WSClient {
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
 
+
     public WSClient() throws IllegalArgumentException{
         mContext = PreferencesState.getInstance().getContext();
 
@@ -75,8 +76,25 @@ public class WSClient {
 
     }
 
-    public interface WSClientCallBack {
-        void onSuccess(SurveyWSResult surveyWSResult);
+    public void getForgotPassword(String username, WSClientCallBack wsClientCallBack) {
+        Response<String> response = null;
+        try {
+            response = mSurveyApiClientRetrofit.forgotPassword(username).execute();
+
+        } catch (UnrecognizedPropertyException e) {
+            ConversionException conversionException = new ConversionException(e);
+            wsClientCallBack.onError(conversionException);
+        } catch (IOException e) {
+            wsClientCallBack.onError(e);
+        }
+        if (response.isSuccessful()) {
+            wsClientCallBack.onSuccess(response.body());
+        }
+        wsClientCallBack.onError(new InvalidCredentialsException());
+    }
+
+    public interface WSClientCallBack<T> {
+        void onSuccess(T result);
 
         void onError(Exception e);
     }

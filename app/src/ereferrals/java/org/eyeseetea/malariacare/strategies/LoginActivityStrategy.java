@@ -6,8 +6,12 @@ import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -16,6 +20,7 @@ import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.ForgotPasswordRepository;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -23,9 +28,11 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IForgotPasswordRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -42,6 +49,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public static final String EXIT = "exit";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
+    private EditText username;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -95,6 +103,50 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
         passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
+
+        username = (EditText) loginActivity.findViewById(R.id.edittext_username);
+
+        LinearLayout loginViewsContainer =
+                (LinearLayout) loginActivity.findViewById(R.id.login_views_container);
+        LayoutInflater inflater = LayoutInflater.from(loginActivity);
+        Button forgotPassword = (Button) inflater.inflate(R.layout.forgot_password_button, null,
+                false);
+        loginViewsContainer.addView(forgotPassword);
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onForgotPassword();
+            }
+        });
+    }
+
+    private void onForgotPassword() {
+        loginActivity.onStartLoading();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IForgotPasswordRepository forgotPasswordRepository = new ForgotPasswordRepository(
+                loginActivity);
+        ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
+                asyncExecutor, forgotPasswordRepository);
+        forgotPasswordUseCase.execute(username.getText().toString(),
+                new ForgotPasswordUseCase.Callback() {
+                    @Override
+                    public void onGetForgotPasswordSuccess() {
+                        loginActivity.onFinishLoading(null);
+                    }
+
+                    @Override
+                    public void onInvalidUsername() {
+                        loginActivity.onFinishLoading(null);
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        loginActivity.onFinishLoading(null);
+                    }
+                });
+
+
     }
 
     @Override

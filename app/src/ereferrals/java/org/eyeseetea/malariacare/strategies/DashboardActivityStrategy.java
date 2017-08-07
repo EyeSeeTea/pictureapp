@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -84,7 +85,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        malariaSurvey.updateSurveyStatus();
+        if (malariaSurvey.isCompleted()) {
+            malariaSurvey.setEventUid(String.valueOf(UIDGenerator.generateUID()));
+            malariaSurvey.save();
+        }
     }
 
     @Override

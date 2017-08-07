@@ -34,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -224,7 +226,12 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysFromService);
-                new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView, surveysFromService);
+                if(mListView==null) {
+                    mListView = getListView();
+                    Log.d(TAG, "error null listView");
+                }
+                new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView,
+                            surveysFromService);
             }
         }
     }

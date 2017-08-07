@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -30,7 +30,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     ImageView image;
     RadioGroup radioGroup;
     Context context;
-    Question question;
+    QuestionDB mQuestionDB;
 
     public RadioButtonMultiQuestionView(Context context) {
         super(context);
@@ -38,33 +38,32 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         init(context);
     }
 
-    @Override
-    public void setQuestion(Question question) {
-        if (question.getOutput() == Constants.RADIO_GROUP_HORIZONTAL) {
+    public void setQuestionDB(QuestionDB questionDB) {
+        if (questionDB.getOutput() == Constants.RADIO_GROUP_HORIZONTAL) {
             radioGroup.setOrientation(HORIZONTAL);
         } else {
             radioGroup.setOrientation(VERTICAL);
         }
-        this.question = question;
+        this.mQuestionDB = questionDB;
     }
 
     @Override
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> optionDBs) {
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        for (Option option : options) {
+        for (OptionDB optionDB : optionDBs) {
             CustomRadioButton radioButton =
                     (CustomRadioButton) lInflater.inflate(
                             R.layout.uncheckeable_radiobutton, null);
-            radioButton.setTag(option);
-            radioButton.setText(option.getInternationalizedName());
+            radioButton.setTag(optionDB);
+            radioButton.setText(optionDB.getInternationalizedName());
             fixRadioButtonWidth(radioButton);
 
             radioButton.setEnabled(radioGroup.isEnabled());
 
             radioGroup.addView(radioButton);
             radioGroup.setOnCheckedChangeListener(
-                    new RadioGroupListener((View) radioGroup.getParent(), question));
+                    new RadioGroupListener((View) radioGroup.getParent(), mQuestionDB));
         }
     }
 
@@ -91,21 +90,21 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value == null || value.getValue() == null) {
+    public void setValue(ValueDB valueDB) {
+        if (valueDB == null || valueDB.getValue() == null) {
             return;
         }
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             customRadioButton.setChecked(
-                    ((Option) customRadioButton.getTag()).equals(value.getOption()));
+                    ((OptionDB) customRadioButton.getTag()).equals(valueDB.getOptionDB()));
         }
     }
 
     @Override
     public boolean hasError() {
-        if (question.isCompulsory() && radioGroup.getCheckedRadioButtonId() == -1) {
+        if (mQuestionDB.isCompulsory() && radioGroup.getCheckedRadioButtonId() == -1) {
             return true;
         }
         return false;
@@ -139,10 +138,10 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     public class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
         private View viewHolder;
-        private Question question;
+        private QuestionDB mQuestionDB;
 
-        public RadioGroupListener(View viewHolder, Question question) {
-            this.question = question;
+        public RadioGroupListener(View viewHolder, QuestionDB questionDB) {
+            this.mQuestionDB = questionDB;
             this.viewHolder = viewHolder;
         }
 
@@ -152,12 +151,12 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
                 return;
             }
 
-            Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION);
+            OptionDB selectedOptionDB = new OptionDB(Constants.DEFAULT_SELECT_OPTION);
             if (checkedId != -1) {
                 CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
-                selectedOption = (Option) customRadioButton.getTag();
+                selectedOptionDB = (OptionDB) customRadioButton.getTag();
             }
-            notifyAnswerChanged(selectedOption);
+            notifyAnswerChanged(selectedOptionDB);
         }
 
         /**

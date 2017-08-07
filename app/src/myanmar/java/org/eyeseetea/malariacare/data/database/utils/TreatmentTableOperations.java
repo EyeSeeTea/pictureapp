@@ -6,15 +6,15 @@ import android.content.res.Resources;
 import com.opencsv.CSVReader;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.File;
@@ -88,26 +88,26 @@ public class TreatmentTableOperations {
 
 
     private void deleteOldTreatmentTable() throws IOException {
-        List<TreatmentMatch> treatmentMatches = TreatmentMatch.getAllTreatmentMatches();
-        for (TreatmentMatch treatmentMatch : treatmentMatches) {
-            deleteRelatedTablesLines(treatmentMatch);
-            treatmentMatch.delete();
+        List<TreatmentMatchDB> treatmentMatchDBs = TreatmentMatchDB.getAllTreatmentMatches();
+        for (TreatmentMatchDB treatmentMatchDB : treatmentMatchDBs) {
+            deleteRelatedTablesLines(treatmentMatchDB);
+            treatmentMatchDB.delete();
         }
-        List<Treatment> treatments = Treatment.getAllTreatments();
-        for (Treatment treatment : treatments) {
+        List<TreatmentDB> treatments = TreatmentDB.getAllTreatments();
+        for (TreatmentDB treatment : treatments) {
             treatment.delete();
         }
-        List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
-        for (DrugCombination drugCombination : drugCombinations) {
-            drugCombination.delete();
+        List<DrugCombinationDB> drugCombinationDBs = DrugCombinationDB.getAllDrugCombination();
+        for (DrugCombinationDB drugCombinationDB : drugCombinationDBs) {
+            drugCombinationDB.delete();
         }
-        List<StringKey> stringKeys = StringKey.getAllStringKeys();
-        for (StringKey stringKey : stringKeys) {
-            stringKey.delete();
+        List<StringKeyDB> stringKeyDBs = StringKeyDB.getAllStringKeys();
+        for (StringKeyDB stringKeyDB : stringKeyDBs) {
+            stringKeyDB.delete();
         }
-        List<Translation> translations = Translation.getAllTranslations();
-        for (Translation translation : translations) {
-            translation.delete();
+        List<TranslationDB> translationDBs = TranslationDB.getAllTranslations();
+        for (TranslationDB translationDB : translationDBs) {
+            translationDB.delete();
         }
     }
 
@@ -115,20 +115,20 @@ public class TreatmentTableOperations {
      * Deleting the matches, questionOption and questionThresholds related with the treatment
      * table.
      */
-    private void deleteRelatedTablesLines(TreatmentMatch treatmentMatch) throws IOException {
-        Match match = treatmentMatch.getMatch();
-        List<QuestionOption> questionOptions = QuestionOption.getQuestionOptionsWithMatchId(
-                match.getId_match());
+    private void deleteRelatedTablesLines(TreatmentMatchDB treatmentMatchDB) throws IOException {
+        MatchDB matchDB = treatmentMatchDB.getMatchDB();
+        List<QuestionOptionDB> questionOptions = QuestionOptionDB.getQuestionOptionsWithMatchId(
+                matchDB.getId_match());
 
-        for (QuestionOption questionOption : questionOptions) {
+        for (QuestionOptionDB questionOption : questionOptions) {
             questionOption.delete();
         }
-        List<QuestionThreshold> questionThresholds =
-                QuestionThreshold.getQuestionThresholdsWithMatch(match.getId_match());
-        for (QuestionThreshold questionThreshold : questionThresholds) {
+        List<QuestionThresholdDB> questionThresholds =
+                QuestionThresholdDB.getQuestionThresholdsWithMatch(matchDB.getId_match());
+        for (QuestionThresholdDB questionThreshold : questionThresholds) {
             questionThreshold.delete();
         }
-        match.delete();
+        matchDB.delete();
     }
 
     private void splitTreatmentTableToCsvs() throws IOException {
@@ -190,7 +190,7 @@ public class TreatmentTableOperations {
                 mContext.getResources().getString(R.string.dynamicTreatmentHideQuestionUID), 5,
                 PopulateDB.QUESTIONS_CSV);
         treatmentQuestionRelationId = getCsvId(treatmentQuestionId, 2,
-                QuestionRelation.TREATMENT_MATCH + "", 1, PopulateDB.QUESTION_RELATIONS_CSV);
+                QuestionRelationDB.TREATMENT_MATCH + "", 1, PopulateDB.QUESTION_RELATIONS_CSV);
         ageQuestionId = getCsvId(mContext.getResources().getString(R.string.ageQuestionUID),
                 5, PopulateDB.QUESTIONS_CSV);
         pregnantQuestionId = getCsvId(
@@ -229,7 +229,7 @@ public class TreatmentTableOperations {
         addStringKeyLine(stringKeyLines, R.string.treatment_diagnosis, treatmentPosition,
                 diagnosisLines);
         addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[6],
-                Translation.DEFAULT_LANGUAGE);
+                TranslationDB.DEFAULT_LANGUAGE);
         addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[7],
                 res.getString(R.string.myanmar_locale));
         addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[8],
@@ -238,7 +238,7 @@ public class TreatmentTableOperations {
         addStringKeyLine(stringKeyLines, R.string.treatment_message, treatmentPosition,
                 messageLines);
         addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[9],
-                Translation.DEFAULT_LANGUAGE);
+                TranslationDB.DEFAULT_LANGUAGE);
         addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[10],
                 res.getString(R.string.myanmar_locale));
         addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[11],
@@ -253,7 +253,7 @@ public class TreatmentTableOperations {
         String[] treatmentLine = {getNextIdToInsert(treatmentLines), organisationLine[0],
                 getLastIdInserted(
                 diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
-                ? Treatment.TYPE_MAIN : Treatment.TYPE_NOT_MAIN) + ""};
+                ? TreatmentDB.TYPE_MAIN : TreatmentDB.TYPE_NOT_MAIN) + ""};
         mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_CSV, treatmentLine);
         treatmentLines.add(treatmentLine);
         if (line[5].equals("N")) {
@@ -457,12 +457,12 @@ public class TreatmentTableOperations {
 
 
     /**
-     * Method to get the last Main Treatment inserted
+     * Method to get the last Main TreatmentDB inserted
      */
     private String getPreviousMainTreatmentId(List<String[]> lines) {
         if (!(lines == null || lines.isEmpty())) {
             for (int i = lines.size() - 1; i >= 0; i--) {
-                if (lines.get(i)[4].equals(Treatment.TYPE_MAIN + "")) {
+                if (lines.get(i)[4].equals(TreatmentDB.TYPE_MAIN + "")) {
                     return lines.get(i)[0];
                 }
             }

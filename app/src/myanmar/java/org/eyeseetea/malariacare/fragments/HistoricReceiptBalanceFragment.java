@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.adapters.HistoricReceiptBalanceAdapter;
 
@@ -27,7 +27,7 @@ public class HistoricReceiptBalanceFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private HistoricReceiptBalanceAdapter mHistoricReceiptBalanceAdapter;
 
-    private List<Survey> mSurveys;
+    private List<SurveyDB> mSurveys;
     private int type;
 
 
@@ -51,7 +51,7 @@ public class HistoricReceiptBalanceFragment extends Fragment {
     }
 
     private void initData() {
-        mSurveys = Survey.getSurveysWithProgramType(Program.findByUID(
+        mSurveys = SurveyDB.getSurveysWithProgramType(ProgramDB.findByUID(
                 PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)),
                 type);
     }

@@ -15,8 +15,8 @@ public class ProgramLocalDataSource implements IProgramRepository {
 
     @Override
     public Program getUserProgram() {
-        org.eyeseetea.malariacare.data.database.model.Program programDB =
-                org.eyeseetea.malariacare.data.database.model.Program.getFirstProgram();
+        org.eyeseetea.malariacare.data.database.model.ProgramDB programDB =
+                org.eyeseetea.malariacare.data.database.model.ProgramDB.getFirstProgram();
         if (programDB == null) {
             return null;
         }

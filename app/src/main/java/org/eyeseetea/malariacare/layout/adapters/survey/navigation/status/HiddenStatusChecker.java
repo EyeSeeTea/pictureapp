@@ -1,13 +1,13 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 public class HiddenStatusChecker extends StatusChecker {
 
-    private Question hiddenQuestion;
+    private QuestionDB mHiddenQuestionDB;
 
-    public HiddenStatusChecker(Question hiddenQuestion) {
-        this.hiddenQuestion = hiddenQuestion;
+    public HiddenStatusChecker(QuestionDB hiddenQuestionDB) {
+        this.mHiddenQuestionDB = hiddenQuestionDB;
     }
 
     @Override

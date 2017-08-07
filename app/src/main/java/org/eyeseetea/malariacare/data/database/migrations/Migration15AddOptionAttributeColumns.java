@@ -78,7 +78,7 @@ public class Migration15AddOptionAttributeColumns extends BaseMigration {
  *//*
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return ProgramDB.getFirstProgram() != null;
     }
 
 }*/

@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
@@ -118,9 +118,9 @@ public class NewReceiptBalanceFragment extends Fragment {
 
 
     private void createNewSurvey() {
-        Survey survey = new Survey(null, Program.findByUID(
+        SurveyDB survey = new SurveyDB(null, ProgramDB.findByUID(
                 PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)),
-                Session.getUser(), type);
+                Session.getUserDB(), type);
         Calendar surveyDate;
         if (date.getText().toString().isEmpty()) {
             surveyDate = Calendar.getInstance();
@@ -130,19 +130,19 @@ public class NewReceiptBalanceFragment extends Fragment {
         survey.setEventDate(surveyDate.getTime());
         survey.setStatus(Constants.SURVEY_COMPLETED);
         survey.save();
-        new Value(rdt.getText().toString().isEmpty() ? rdt.getHint().toString()
+        new ValueDB(rdt.getText().toString().isEmpty() ? rdt.getHint().toString()
                 : rdt.getText().toString(), TreatmentQueries.getStockRDTQuestion(), survey).save();
-        new Value(act6.getText().toString().isEmpty() ? act6.getHint().toString()
+        new ValueDB(act6.getText().toString().isEmpty() ? act6.getHint().toString()
                 : act6.getText().toString(), TreatmentQueries.getACT6Question(), survey).save();
-        new Value(act12.getText().toString().isEmpty() ? act12.getHint().toString()
+        new ValueDB(act12.getText().toString().isEmpty() ? act12.getHint().toString()
                 : act12.getText().toString(), TreatmentQueries.getACT12Question(), survey).save();
-        new Value(act18.getText().toString().isEmpty() ? act18.getHint().toString()
+        new ValueDB(act18.getText().toString().isEmpty() ? act18.getHint().toString()
                 : act18.getText().toString(), TreatmentQueries.getACT18Question(), survey).save();
-        new Value(act24.getText().toString().isEmpty() ? act24.getHint().toString()
+        new ValueDB(act24.getText().toString().isEmpty() ? act24.getHint().toString()
                 : act24.getText().toString(), TreatmentQueries.getACT24Question(), survey).save();
-        new Value(pq.getText().toString().isEmpty() ? pq.getHint().toString()
+        new ValueDB(pq.getText().toString().isEmpty() ? pq.getHint().toString()
                 : pq.getText().toString(), TreatmentQueries.getPqQuestion(), survey).save();
-        new Value(cq.getText().toString().isEmpty() ? cq.getHint().toString()
+        new ValueDB(cq.getText().toString().isEmpty() ? cq.getHint().toString()
                 : cq.getText().toString(), TreatmentQueries.getCqQuestion(), survey).save();
     }
 }

@@ -22,7 +22,7 @@ package org.eyeseetea.malariacare.presentation.factory.monitor;
 import android.content.Context;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.TimePeriodCalculator;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -134,14 +134,14 @@ public abstract class MonitorRowBuilder {
     /**
      * Updates row info with the survey
      */
-    public void addSurvey(Survey survey) {
+    public void addSurvey(SurveyDB surveyDB) {
         //Null or not sent surveys are not evaluated or surveys with a date from the future
-        if (survey == null || survey.getEventDate() == null || survey.getEventDate().after(
+        if (surveyDB == null || surveyDB.getEventDate() == null || surveyDB.getEventDate().after(
                 new Date())) {
             return;
         }
         //Update data for each time dimension
-        SurveyMonitor surveyMonitor = new SurveyMonitor(survey);
+        SurveyMonitor surveyMonitor = new SurveyMonitor(surveyDB);
         addSurveyToMonthsData(surveyMonitor);
         addSurveyToWeeksData(surveyMonitor);
         addSurveyToDaysData(surveyMonitor);
@@ -216,7 +216,7 @@ public abstract class MonitorRowBuilder {
      */
     private void addSurveyToMonthsData(SurveyMonitor surveyMonitor) {
         int columnIndex = TimePeriodCalculator.getInstance().findIndexInMonths(
-                surveyMonitor.getSurvey().getEventDate());
+                surveyMonitor.getSurveyDB().getEventDate());
         //This survey is not relevant to the monitor (too old)
         if (columnIndex == TimePeriodCalculator.COLUMN_NOT_FOUND) {
             return;
@@ -232,7 +232,7 @@ public abstract class MonitorRowBuilder {
      */
     private void addSurveyToWeeksData(SurveyMonitor surveyMonitor) {
         int columnIndex = TimePeriodCalculator.getInstance().findIndexInWeeks(
-                surveyMonitor.getSurvey().getEventDate());
+                surveyMonitor.getSurveyDB().getEventDate());
         //This survey is not relevant to the monitor (too old)
         if (columnIndex == TimePeriodCalculator.COLUMN_NOT_FOUND) {
             return;
@@ -248,7 +248,7 @@ public abstract class MonitorRowBuilder {
      */
     private void addSurveyToDaysData(SurveyMonitor surveyMonitor) {
         int columnIndex = TimePeriodCalculator.getInstance().findIndexInDays(
-                surveyMonitor.getSurvey().getEventDate());
+                surveyMonitor.getSurveyDB().getEventDate());
         //This survey is not relevant to the monitor (too old)
         if (columnIndex == TimePeriodCalculator.COLUMN_NOT_FOUND) {
             return;

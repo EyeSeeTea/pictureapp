@@ -32,8 +32,8 @@ import java.util.Date;
 /**
  * Created by ivan.arrizabalaga on 14/02/15.
  */
-@Table(database = AppDatabase.class)
-public class SurveySchedule extends BaseModel {
+@Table(database = AppDatabase.class, name = "SurveySchedule")
+public class SurveyScheduleDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -44,7 +44,7 @@ public class SurveySchedule extends BaseModel {
     /**
      * Reference to the survey associated to this score (loaded lazily)
      */
-    Survey survey;
+    SurveyDB mSurveyDB;
 
     @Column
     String comment;
@@ -52,13 +52,13 @@ public class SurveySchedule extends BaseModel {
     @Column
     Date previous_date;
 
-    public SurveySchedule() {
+    public SurveyScheduleDB() {
     }
 
-    public SurveySchedule(Survey survey, Date previous_date, String comment) {
+    public SurveyScheduleDB(SurveyDB surveyDB, Date previous_date, String comment) {
         this.previous_date = previous_date;
         this.comment = comment;
-        this.setSurvey(survey);
+        this.setSurveyDB(surveyDB);
     }
 
     public long getId_survey_schedule() {
@@ -85,25 +85,25 @@ public class SurveySchedule extends BaseModel {
         this.previous_date = previous_date;
     }
 
-    public Survey getSurvey() {
-        if (survey == null) {
+    public SurveyDB getSurveyDB() {
+        if (mSurveyDB == null) {
             if (id_survey_fk == null) return null;
-            survey = new Select()
-                    .from(Survey.class)
-                    .where(Survey_Table.id_survey
+            mSurveyDB = new Select()
+                    .from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_survey
                             .is(id_survey_fk)).querySingle();
         }
-        return survey;
+        return mSurveyDB;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey_fk = (survey != null) ? survey.getId_survey() : null;
+    public void setSurveyDB(SurveyDB surveyDB) {
+        this.mSurveyDB = surveyDB;
+        this.id_survey_fk = (surveyDB != null) ? surveyDB.getId_survey() : null;
     }
 
     public void setSurvey(Long id_survey) {
         this.id_survey_fk = id_survey;
-        this.survey = null;
+        this.mSurveyDB = null;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class SurveySchedule extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SurveySchedule that = (SurveySchedule) o;
+        SurveyScheduleDB that = (SurveyScheduleDB) o;
 
         if (id_survey_schedule != that.id_survey_schedule) return false;
         if (id_survey_fk != null ? !id_survey_fk.equals(that.id_survey_fk) : that.id_survey_fk != null) {
@@ -134,7 +134,7 @@ public class SurveySchedule extends BaseModel {
 
     @Override
     public String toString() {
-        return "SurveySchedule{" +
+        return "SurveyScheduleDB{" +
                 "id_survey_schedule=" + id_survey_schedule +
                 ", id_survey_fk=" + id_survey_fk +
                 ", comment='" + comment + '\'' +

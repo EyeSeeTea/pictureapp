@@ -35,7 +35,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
@@ -55,13 +55,13 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     public static final String TAG = ".SentFragment";
     protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
-    private List<Survey> surveys;
+    private List<SurveyDB> mSurveyDBs;
     private ListView mListView;
     DashboardSentFragment mDashboardSentFragment;
 
     public DashboardSentFragment() {
         mDashboardSentFragment = this;
-        this.surveys = new ArrayList();
+        this.mSurveyDBs = new ArrayList();
     }
 
     @Override
@@ -105,14 +105,14 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
      */
     private void initAdapter() {
         this.adapter = new AssessmentAdapter(getString(R.string.sent_data),
-                this.surveys, getActivity());
+                this.mSurveyDBs, getActivity());
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
-        adapter.onClick(l, position, surveys);
+        adapter.onClick(l, position, mSurveyDBs);
     }
 
     @Override
@@ -180,11 +180,11 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
         }
     }
 
-    public void reloadSurveys(List<Survey> newListSurveys) {
+    public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
         Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): "
-                + newListSurveys.size());
-        this.surveys.clear();
-        this.surveys.addAll(newListSurveys);
+                + newListSurveyDBs.size());
+        this.mSurveyDBs.clear();
+        this.mSurveyDBs.addAll(newListSurveyDBs);
         this.adapter.notifyDataSetChanged();
         setListShown(true);
     }
@@ -215,10 +215,10 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if (SurveyService.ALL_SENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysFromService;
+                List<SurveyDB> surveysFromService;
                 Session.valuesLock.readLock().lock();
                 try {
-                    surveysFromService = (List<Survey>) Session.popServiceValue(
+                    surveysFromService = (List<SurveyDB>) Session.popServiceValue(
                             SurveyService.ALL_SENT_SURVEYS_ACTION);
                 } finally {
                     Session.valuesLock.readLock().unlock();

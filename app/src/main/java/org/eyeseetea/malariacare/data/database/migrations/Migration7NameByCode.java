@@ -22,13 +22,13 @@ public class Migration7NameByCode extends BaseMigration {
                         + "id_option_attribute_fk) "
                         + "SELECT id_option, name, code, factor, id_answer_fk, "
                         + "id_option_attribute_fk "
-                        + "FROM Option;";
+                        + "FROM OptionDB;";
         database.execSQL(sqlCopyOption);
 
-        String sqlDeleteOption = "DROP TABLE Option";
+        String sqlDeleteOption = "DROP TABLE OptionDB";
         database.execSQL(sqlDeleteOption);
 
-        String sqlRenameOptionTemp = "ALTER TABLE OptionTemp RENAME TO Option";
+        String sqlRenameOptionTemp = "ALTER TABLE OptionTemp RENAME TO OptionDB";
         database.execSQL(sqlRenameOptionTemp);
     }
 }

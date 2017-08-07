@@ -100,7 +100,7 @@
 //
 //        //THEN
 //        intended(anyIntent());
-//        assertNotNull(Session.getUser());
+//        assertNotNull(Session.getUserDB());
 //    }
 //
 //}

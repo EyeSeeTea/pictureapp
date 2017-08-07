@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
 public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
@@ -19,7 +19,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     }
 
     @Override
-    public void renderSurveySummary(View rowView, Survey survey) {
+    public void renderSurveySummary(View rowView, SurveyDB survey) {
         String firstRowBuilder = mContext.getString(R.string.uid) +
                 ":" +
                 survey.getEventUid();
@@ -30,7 +30,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         mAssessmentAdapter.showInfo(rowView, R.id.info, survey.getValuesToString());
     }
     @Override
-    public boolean hasAllComplementarySurveys(Survey malariaSurvey) {
+    public boolean hasAllComplementarySurveys(SurveyDB malariaSurvey) {
         return true;
     }
 }

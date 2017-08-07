@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 /**
@@ -47,7 +47,7 @@ public class LayoutUtils extends BaseLayoutUtils {
                         context.getString(R.string.malaria_case_based_reporting)));
         color = ContextCompat.getColor(context, R.color.text_second_color);
         colorString = String.format("%X", color).substring(2);
-        User user = User.getLoggedUser();
+        UserDB user = UserDB.getLoggedUser();
         String userName;
         userName = (user == null) ? "" : user.getName();
 

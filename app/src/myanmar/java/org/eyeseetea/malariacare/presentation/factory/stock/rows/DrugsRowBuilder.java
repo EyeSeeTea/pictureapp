@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.presentation.factory.stock.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -39,7 +39,7 @@ public class DrugsRowBuilder extends StockRowBuilder {
     }
 
     @Override
-    public void addSurvey(Survey survey) {
+    public void addSurvey(SurveyDB survey) {
         // //Nothing to calculate
     }
 

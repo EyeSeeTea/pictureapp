@@ -6,10 +6,10 @@ import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_VA
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -33,22 +33,22 @@ public class DataConverter {
     public void convert(IPullController.Callback callback, ConvertFromSDKVisitor converter) {
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
 
-        List<OrgUnit> orgUnits = converter.getOrgUnits();
+        List<OrgUnitDB> orgUnitDBs = converter.getOrgUnitDBs();
 
-        for (OrgUnit orgUnit : orgUnits) {
+        for (OrgUnitDB orgUnitDB : orgUnitDBs) {
 
             //Only events for the right ORGUNIT are loaded
             if (!orgUnitName.isEmpty() &&
-                    orgUnit.getName() != null && !orgUnit.getName().equals(
+                    orgUnitDB.getName() != null && !orgUnitDB.getName().equals(
                     orgUnitName)) {
                 continue;
             }
 
-            List<Program> programs = Program.getAllPrograms();
+            List<ProgramDB> programDBs = ProgramDB.getAllPrograms();
 
-            for (Program program : programs) {
+            for (ProgramDB programDB : programDBs) {
                 List<EventExtended> events = EventExtended.getExtendedList(
-                        SdkQueries.getEvents(orgUnit.getUid(), program.getUid()));
+                        SdkQueries.getEvents(orgUnitDB.getUid(), programDB.getUid()));
 
                 callback.onStep(BUILDING_SURVEYS);
 
@@ -83,9 +83,9 @@ public class DataConverter {
     private static void saveConvertedSurveys(final IPullController.Callback callback,
             final ConvertFromSDKVisitor converter) {
 
-        List<Survey> surveys = converter.getSurveys();
+        List<SurveyDB> surveyDBs = converter.getSurveyDBs();
 
-        Survey.saveAll(surveys, new IDataSourceCallback<Void>() {
+        SurveyDB.saveAll(surveyDBs, new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 saveConvertedValues(callback, converter);
@@ -101,9 +101,9 @@ public class DataConverter {
     private static void saveConvertedValues(final IPullController.Callback callback,
             ConvertFromSDKVisitor converter) {
 
-        List<Value> values = converter.getValues();
+        List<ValueDB> valueDBs = converter.getValueDBs();
 
-        Value.saveAll(values, new IDataSourceCallback<Void>() {
+        ValueDB.saveAll(valueDBs, new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 callback.onComplete();

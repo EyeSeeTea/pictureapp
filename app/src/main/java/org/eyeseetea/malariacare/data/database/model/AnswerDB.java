@@ -29,16 +29,16 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Answer extends BaseModel {
+@Table(database = AppDatabase.class, name="Answer")
+public class AnswerDB extends BaseModel {
 
     /**
-     * Default mock answer.output value
+     * Default mock mAnswerDB.output value
      */
     public static final Integer DEFAULT_ANSWER_OUTPUT = -1;
 
     /**
-     * Required for creating the dynamic stock question in SCMM
+     * Required for creating the dynamic stock mQuestionDB in SCMM
      */
     public final static Long DYNAMIC_STOCK_ANSWER_ID = 204l;
 
@@ -49,30 +49,30 @@ public class Answer extends BaseModel {
     String name;
 
     /**
-     * List of options that belongs to this answer type
+     * List of mOptionDBs that belongs to this mAnswerDB type
      */
-    List<Option> options;
+    List<OptionDB> mOptionDBs;
 
     /**
-     * List of options that have this answer type
+     * List of mOptionDBs that have this mAnswerDB type
      */
-    List<Question> questions;
+    List<QuestionDB> mQuestionDBs;
 
-    public Answer() {
+    public AnswerDB() {
     }
 
-    public Answer(String name) {
+    public AnswerDB(String name) {
         this.name = name;
     }
 
-    public static List<Answer> getAllAnswers() {
-        return new Select().from(Answer.class).queryList();
+    public static List<AnswerDB> getAllAnswers() {
+        return new Select().from(AnswerDB.class).queryList();
     }
 
-    public static Answer findById(Long id) {
+    public static AnswerDB findById(Long id) {
         return new Select()
-                .from(Answer.class)
-                .where(Answer_Table.id_answer.eq(id)).querySingle();
+                .from(AnswerDB.class)
+                .where(AnswerDB_Table.id_answer.eq(id)).querySingle();
     }
 
     public Long getId_answer() {
@@ -91,28 +91,28 @@ public class Answer extends BaseModel {
         this.name = name;
     }
 
-    public List<Option> getOptions() {
-        if (options == null) {
-            options = new Select()
-                    .from(Option.class)
-                    .where(Option_Table.id_answer_fk
+    public List<OptionDB> getOptionDBs() {
+        if (mOptionDBs == null) {
+            mOptionDBs = new Select()
+                    .from(OptionDB.class)
+                    .where(OptionDB_Table.id_answer_fk
                             .eq(this.getId_answer())).queryList();
         }
-        return options;
+        return mOptionDBs;
     }
 
-    public void setOptions(List<Option> options) {
-        this.options = options;
+    public void setOptionDBs(List<OptionDB> optionDBs) {
+        this.mOptionDBs = optionDBs;
     }
 
-    public List<Question> getQuestions() {
-        if (questions == null) {
-            questions = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_answer_fk
+    public List<QuestionDB> getQuestionDBs() {
+        if (mQuestionDBs == null) {
+            mQuestionDBs = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_answer_fk
                             .eq(this.getId_answer())).queryList();
         }
-        return questions;
+        return mQuestionDBs;
     }
 
     @Override
@@ -120,10 +120,10 @@ public class Answer extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Answer answer = (Answer) o;
+        AnswerDB answerDB = (AnswerDB) o;
 
-        if (id_answer != answer.id_answer) return false;
-        return !(name != null ? !name.equals(answer.name) : answer.name != null);
+        if (id_answer != answerDB.id_answer) return false;
+        return !(name != null ? !name.equals(answerDB.name) : answerDB.name != null);
 
     }
 
@@ -136,7 +136,7 @@ public class Answer extends BaseModel {
 
     @Override
     public String toString() {
-        return "Answer{" +
+        return "AnswerDB{" +
                 "id_answer=" + id_answer +
                 ", name='" + name + '\'' +
                 '}';

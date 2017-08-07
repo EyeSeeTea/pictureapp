@@ -23,8 +23,8 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
@@ -70,13 +70,13 @@ public class PushController implements IPushController {
         } else {
             Log.d(TAG, "Network connected");
 
-            List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
+            List<SurveyDB> surveyDBs = SurveyDB.getAllCompletedSurveysNoReceiptReset();
             Boolean isUserClosed = false;
 
-            User loggedUser = User.getLoggedUser();
-            if (loggedUser != null && loggedUser.getUid() != null) {
+            UserDB loggedUserDB = UserDB.getLoggedUser();
+            if (loggedUserDB != null && loggedUserDB.getUid() != null) {
                 try {
-                isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                isUserClosed = ServerAPIController.isUserClosed(UserDB.getLoggedUser().getUid());
                 } catch (ApiCallException e) {
                     isUserClosed = null;
             }
@@ -90,7 +90,7 @@ public class PushController implements IPushController {
                 Log.d(TAG, "The user is closed, Surveys not sent");
                 callback.onError(new ClosedUserPushException());
             } else {
-                if (surveys == null || surveys.size() == 0) {
+                if (surveyDBs == null || surveyDBs.size() == 0) {
                     callback.onError(new SurveysToPushNotFoundException("Null surveys"));
                     return;
                 }
@@ -99,7 +99,7 @@ public class PushController implements IPushController {
                 mPushDhisSDKDataSource.wipeEvents();
                 try {
                     Log.d(TAG, "convert surveys to sdk");
-                    convertToSDK(surveys);
+                    convertToSDK(surveyDBs);
                 } catch (Exception ex) {
                     callback.onError(new ConversionException(ex));
                     return;
@@ -158,13 +158,13 @@ public class PushController implements IPushController {
     /**
      * Launches visitor that turns an APP survey into a SDK event
      */
-    private void convertToSDK(List<Survey> surveys) throws ConversionException {
+    private void convertToSDK(List<SurveyDB> surveyDBs) throws ConversionException {
         Log.d(TAG, "Converting APP survey into a SDK event");
-        for (Survey survey : surveys) {
-            survey.setStatus(Constants.SURVEY_SENDING);
-            survey.save();
-            Log.d(TAG, "Status of survey to be push is = " + survey.getStatus());
-            survey.accept(mConvertToSDKVisitor);
+        for (SurveyDB surveyDB : surveyDBs) {
+            surveyDB.setStatus(Constants.SURVEY_SENDING);
+            surveyDB.save();
+            Log.d(TAG, "Status of survey to be push is = " + surveyDB.getStatus());
+            surveyDB.accept(mConvertToSDKVisitor);
         }
     }
 }

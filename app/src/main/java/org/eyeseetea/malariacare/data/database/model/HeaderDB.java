@@ -31,11 +31,11 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Header extends BaseModel {
+@Table(database = AppDatabase.class, name="Header")
+public class HeaderDB extends BaseModel {
 
     /**
-     * Required for creating the dynamic treatment question in SCMM
+     * Required for creating the dynamic mTreatmentDB mQuestionDB in SCMM
      */
     public final static Long DYNAMIC_TREATMENT_HEADER_ID = 7l;
 
@@ -52,42 +52,42 @@ public class Header extends BaseModel {
     Long id_tab_fk;
 
     /**
-     * Reference to parent tab (loaded lazily)
+     * Reference to parent mTabDB (loaded lazily)
      */
-    Tab tab;
+    TabDB mTabDB;
 
     /**
-     * List of questions that belongs to this header
+     * List of mQuestionDBs that belongs to this mHeaderDB
      */
-    List<Question> questions;
+    List<QuestionDB> mQuestionDBs;
 
-    public Header() {
+    public HeaderDB() {
     }
 
-    public Header(String short_name, String name, Integer order_pos, Integer master, Tab tab) {
+    public HeaderDB(String short_name, String name, Integer order_pos, Integer master, TabDB tabDB) {
         this.short_name = short_name;
         this.name = name;
         this.order_pos = order_pos;
-        setTab(tab);
+        setTabDB(tabDB);
     }
 
-    public static List<Header> getAllHeaders() {
-        return new Select().from(Header.class).queryList();
+    public static List<HeaderDB> getAllHeaders() {
+        return new Select().from(HeaderDB.class).queryList();
     }
 
-    public static Header findById(Long id) {
+    public static HeaderDB findById(Long id) {
         return new Select()
-        .from(Header.class)
-        .where(Header_Table.id_header.eq(id)).querySingle();
+        .from(HeaderDB.class)
+        .where(HeaderDB_Table.id_header.eq(id)).querySingle();
     }
 
     /**
-     * Method to delete headers in cascade
+     * Method to delete headerDBs in cascade
      */
-    public static void deleteHeaders(List<Header> headers) {
-        for (Header header : headers) {
-            Question.deleteQuestions(header.getQuestions());
-            header.delete();
+    public static void deleteHeaders(List<HeaderDB> headerDBs) {
+        for (HeaderDB headerDB : headerDBs) {
+            QuestionDB.deleteQuestions(headerDB.getQuestionDBs());
+            headerDB.delete();
         }
     }
 
@@ -124,43 +124,43 @@ public class Header extends BaseModel {
         this.order_pos = order_pos;
     }
 
-    public Tab getTab() {
-        if(tab==null){
+    public TabDB getTabDB() {
+        if(mTabDB ==null){
             if(id_tab_fk==null) return null;
-            tab = new Select()
-                    .from(Tab.class)
-                    .where((Tab_Table.id_tab)
+            mTabDB = new Select()
+                    .from(TabDB.class)
+                    .where((TabDB_Table.id_tab)
                             .is(id_tab_fk)).querySingle();
         }
-        return tab;
+        return mTabDB;
     }
 
-    public void setTab(Tab tab) {
-        this.tab = tab;
-        this.id_tab_fk = (tab != null) ? tab.getId_tab() : null;
+    public void setTabDB(TabDB tabDB) {
+        this.mTabDB = tabDB;
+        this.id_tab_fk = (tabDB != null) ? tabDB.getId_tab() : null;
     }
 
     public void setTab(Long id_tab) {
         this.id_tab_fk = id_tab;
-        this.tab = null;
+        this.mTabDB = null;
     }
 
-    public List<Question> getQuestions() {
-        if (this.questions == null){
-            this.questions = new Select().from(Question.class)
-                    .where(Question_Table.id_header_fk.eq(this.getId_header()))
-                    .orderBy(OrderBy.fromProperty(Question_Table.order_pos)).queryList();
+    public List<QuestionDB> getQuestionDBs() {
+        if (this.mQuestionDBs == null){
+            this.mQuestionDBs = new Select().from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_header_fk.eq(this.getId_header()))
+                    .orderBy(OrderBy.fromProperty(QuestionDB_Table.order_pos)).queryList();
         }
-        return questions;
+        return mQuestionDBs;
     }
 
     /**
-     * getNumber Of Question Parents Header
+     * getNumber Of QuestionDB Parents HeaderDB
      */
     public long getNumberOfQuestionParents() {
-        return SQLite.selectCountOf().from(Question.class)
-                .where(Question_Table.id_header_fk.eq(getId_header()))
-                .and(Question_Table.id_question_parent.isNull()).count();
+        return SQLite.selectCountOf().from(QuestionDB.class)
+                .where(QuestionDB_Table.id_header_fk.eq(getId_header()))
+                .and(QuestionDB_Table.id_question_parent.isNull()).count();
     }
 
     @Override
@@ -168,18 +168,18 @@ public class Header extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Header header = (Header) o;
+        HeaderDB headerDB = (HeaderDB) o;
 
-        if (id_header != header.id_header) return false;
-        if (short_name != null ? !short_name.equals(header.short_name)
-                : header.short_name != null) {
+        if (id_header != headerDB.id_header) return false;
+        if (short_name != null ? !short_name.equals(headerDB.short_name)
+                : headerDB.short_name != null) {
             return false;
         }
-        if (name != null ? !name.equals(header.name) : header.name != null) return false;
-        if (order_pos != null ? !order_pos.equals(header.order_pos) : header.order_pos != null) {
+        if (name != null ? !name.equals(headerDB.name) : headerDB.name != null) return false;
+        if (order_pos != null ? !order_pos.equals(headerDB.order_pos) : headerDB.order_pos != null) {
             return false;
         }
-        return !(id_tab_fk != null ? !id_tab_fk.equals(header.id_tab_fk) : header.id_tab_fk != null);
+        return !(id_tab_fk != null ? !id_tab_fk.equals(headerDB.id_tab_fk) : headerDB.id_tab_fk != null);
 
     }
 
@@ -195,7 +195,7 @@ public class Header extends BaseModel {
 
     @Override
     public String toString() {
-        return "Header{" +
+        return "HeaderDB{" +
                 "id_header=" + id_header +
                 ", help_text='" + short_name + '\'' +
                 ", name='" + name + '\'' +

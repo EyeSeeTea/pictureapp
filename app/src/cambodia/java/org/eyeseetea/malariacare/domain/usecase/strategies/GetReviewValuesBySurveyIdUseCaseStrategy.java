@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase.strategies;
 
-import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -26,7 +26,7 @@ public class GetReviewValuesBySurveyIdUseCaseStrategy extends
                             navigationController.getCurrentQuestion().getUid())) {
                         orderedList.add(value);
                         uidNextQuestion = navigationController.next(
-                                Option.findByCode(value.getOptionCode())).getUid();
+                                OptionDB.findByCode(value.getOptionCode())).getUid();
                     }
                 }
             }

@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.data.database.migrations;
 
 /*
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.model.UserDB;
 
 */
 /**
@@ -24,8 +24,8 @@ public class Migration22TreatmentMatrix extends BaseMigration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        addColumn(database, User.class, "organisation", "Integer");
-        addColumn(database, User.class, "supervisor", "Integer");
+        addColumn(database, UserDB.class, "organisation", "Integer");
+        addColumn(database, UserDB.class, "supervisor", "Integer");
     }
 
 }

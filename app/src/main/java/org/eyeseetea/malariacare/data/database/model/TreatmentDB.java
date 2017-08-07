@@ -19,8 +19,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Treatment extends BaseModel {
+@Table(database = AppDatabase.class, name = "Treatment")
+public class TreatmentDB extends BaseModel {
 
     public static final int TYPE_MAIN = 0;
     public static final int TYPE_NOT_MAIN = 1;
@@ -43,15 +43,15 @@ public class Treatment extends BaseModel {
     @Column
     int type;
     /**
-     * Reference to mPartner (loaded lazily)
+     * Reference to mPartnerDB (loaded lazily)
      */
-    Partner mPartner;
+    PartnerDB mPartnerDB;
 
 
-    public Treatment() {
+    public TreatmentDB() {
     }
 
-    public Treatment(long id_treatment, long id_organisation, Long diagnosis, Long message,
+    public TreatmentDB(long id_treatment, long id_organisation, Long diagnosis, Long message,
             int type) {
         this.id_treatment = id_treatment;
         this.id_partner_fk = id_organisation;
@@ -59,46 +59,46 @@ public class Treatment extends BaseModel {
         this.message = message;
     }
 
-    public static Treatment findById(long id) {
+    public static TreatmentDB findById(long id) {
         return new Select()
-                .from(Treatment.class)
-                .where(Treatment_Table.id_treatment.is(id))
+                .from(TreatmentDB.class)
+                .where(TreatmentDB_Table.id_treatment.is(id))
                 .querySingle();
 
     }
 
-    public static List<Treatment> getAllTreatments() {
-        return new Select().from(Treatment.class).queryList();
+    public static List<TreatmentDB> getAllTreatments() {
+        return new Select().from(TreatmentDB.class).queryList();
     }
 
-    public List<Drug> getDrugsForTreatment() {
-        return new Select().from(Drug.class).as(drugName)
-                .join(DrugCombination.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
-                .on(Drug_Table.id_drug.withTable(drugAlias)
-                        .eq(DrugCombination_Table.id_drug_fk.withTable(drugCombinationAlias)))
-                .where(DrugCombination_Table.id_treatment_fk.withTable(drugCombinationAlias)
+    public List<DrugDB> getDrugsForTreatment() {
+        return new Select().from(DrugDB.class).as(drugName)
+                .join(DrugCombinationDB.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
+                .on(DrugDB_Table.id_drug.withTable(drugAlias)
+                        .eq(DrugCombinationDB_Table.id_drug_fk.withTable(drugCombinationAlias)))
+                .where(DrugCombinationDB_Table.id_treatment_fk.withTable(drugCombinationAlias)
                         .is(id_treatment)).queryList();
 
     }
 
-    public List<Treatment> getAlternativeTreatments() {
-        Match match=new Select()
-                .from(Match.class).as(matchName)
-                .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
-                .on(Match_Table.id_match.withTable(matchAlias).is(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(id_treatment))
+    public List<TreatmentDB> getAlternativeTreatments() {
+        MatchDB matchDB =new Select()
+                .from(MatchDB.class).as(matchName)
+                .join(TreatmentMatchDB.class, Join.JoinType.INNER).as(treatmentMatchName)
+                .on(MatchDB_Table.id_match.withTable(matchAlias).is(TreatmentMatchDB_Table.id_match_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatchDB_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(id_treatment))
                 .querySingle();
-        List<Treatment> treatments = new Select()
-                .from(Treatment.class).as(treatmentName)
-                .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
-                .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
-                        .eq(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)
-                        .is(match.getId_match()))
-                .and(Treatment_Table.type.withTable(treatmentAlias).is(TYPE_NOT_MAIN))
+        List<TreatmentDB> treatmentDBs = new Select()
+                .from(TreatmentDB.class).as(treatmentName)
+                .join(TreatmentMatchDB.class, Join.JoinType.INNER).as(treatmentMatchName)
+                .on(TreatmentDB_Table.id_treatment.withTable(treatmentAlias)
+                        .eq(TreatmentMatchDB_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatchDB_Table.id_match_fk.withTable(treatmentMatchAlias)
+                        .is(matchDB.getId_match()))
+                .and(TreatmentDB_Table.type.withTable(treatmentAlias).is(TYPE_NOT_MAIN))
                 .queryList();
         //FIXME: select split in two because DBFLOW bug
-        return treatments;
+        return treatmentDBs;
     }
 
     public long getId_treatment() {
@@ -110,27 +110,27 @@ public class Treatment extends BaseModel {
     }
 
 
-    public Partner getPartner() {
-        if (mPartner == null) {
+    public PartnerDB getPartnerDB() {
+        if (mPartnerDB == null) {
             if (id_partner_fk == null) {
                 return null;
             }
-            mPartner = new Select()
-                    .from(Partner.class)
-                    .where(Partner_Table.id_partner
+            mPartnerDB = new Select()
+                    .from(PartnerDB.class)
+                    .where(PartnerDB_Table.id_partner
                             .is(id_partner_fk)).querySingle();
         }
-        return mPartner;
+        return mPartnerDB;
     }
 
-    public void setPartner(Long id_organisation) {
+    public void setPartnerDB(Long id_organisation) {
         this.id_partner_fk = id_organisation;
-        mPartner = null;
+        mPartnerDB = null;
     }
 
-    public void setOrganisation(Partner partner) {
-        this.mPartner = partner;
-        this.id_partner_fk = (partner != null) ? partner.getId_partner() : null;
+    public void setOrganisation(PartnerDB partnerDB) {
+        this.mPartnerDB = partnerDB;
+        this.id_partner_fk = (partnerDB != null) ? partnerDB.getId_partner() : null;
     }
 
     public Long getDiagnosis() {
@@ -162,19 +162,19 @@ public class Treatment extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Treatment treatment = (Treatment) o;
+        TreatmentDB treatmentDB = (TreatmentDB) o;
 
-        if (id_treatment != treatment.id_treatment) return false;
-        if (type != treatment.type) return false;
-        if (id_partner_fk != null ? !id_partner_fk.equals(treatment.id_partner_fk)
-                : treatment.id_partner_fk != null) {
+        if (id_treatment != treatmentDB.id_treatment) return false;
+        if (type != treatmentDB.type) return false;
+        if (id_partner_fk != null ? !id_partner_fk.equals(treatmentDB.id_partner_fk)
+                : treatmentDB.id_partner_fk != null) {
             return false;
         }
-        if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
-                : treatment.diagnosis != null) {
+        if (diagnosis != null ? !diagnosis.equals(treatmentDB.diagnosis)
+                : treatmentDB.diagnosis != null) {
             return false;
         }
-        return message != null ? message.equals(treatment.message) : treatment.message == null;
+        return message != null ? message.equals(treatmentDB.message) : treatmentDB.message == null;
 
     }
 
@@ -191,13 +191,13 @@ public class Treatment extends BaseModel {
 
     @Override
     public String toString() {
-        return "Treatment{" +
+        return "TreatmentDB{" +
                 "id_treatment=" + id_treatment +
                 ", id_partner_fk=" + id_partner_fk +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
                 ", type=" + type +
-                ", mPartner=" + mPartner +
+                ", mPartnerDB=" + mPartnerDB +
                 '}';
     }
 

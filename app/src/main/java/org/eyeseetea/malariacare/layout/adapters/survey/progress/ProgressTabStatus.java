@@ -20,7 +20,7 @@
 
 package org.eyeseetea.malariacare.layout.adapters.survey.progress;
 
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ProgressTabStatus {
     /**
      * Ordered list of questions of a tab
      */
-    List<Question> questions;
+    List<QuestionDB> mQuestionDBs;
 
     /**
      * List of flags that indicates if a question has been visited or not
@@ -46,11 +46,11 @@ public class ProgressTabStatus {
      */
     int currentPage;
 
-    public ProgressTabStatus(List<Question> questions) {
-        this.questions = questions;
+    public ProgressTabStatus(List<QuestionDB> questionDBs) {
+        this.mQuestionDBs = questionDBs;
         this.currentPage = 0;
-        if (questions != null && questions.size() > 0) {
-            this.visited = new boolean[questions.size()];
+        if (questionDBs != null && questionDBs.size() > 0) {
+            this.visited = new boolean[questionDBs.size()];
             this.visited[0] = true;
         }
     }
@@ -66,10 +66,10 @@ public class ProgressTabStatus {
      * Total number of pages to show (equals number of questions)
      */
     public int getTotalPages() {
-        if (questions == null) {
+        if (mQuestionDBs == null) {
             return 0;
         }
-        return questions.size();
+        return mQuestionDBs.size();
     }
 
     /**
@@ -97,49 +97,49 @@ public class ProgressTabStatus {
     /**
      * Gets the question in the current position
      */
-    public Question getCurrentQuestion() {
+    public QuestionDB getCurrentQuestion() {
         if (getTotalPages() == 0) {
             return null;
         }
 
-        return questions.get(currentPage);
+        return mQuestionDBs.get(currentPage);
     }
 
     /**
      * Gets the next question in the list whenever is possible
      */
-    public Question getNextQuestion() {
+    public QuestionDB getNextQuestion() {
         if (getTotalPages() == 0 || !hasNextQuestion()) {
             return null;
         }
 
         currentPage++;
         visited[currentPage] = true;
-        return questions.get(currentPage);
+        return mQuestionDBs.get(currentPage);
     }
 
     /**
      * Gets the previous question in the list whenever is possible
      */
-    public Question getPreviousQuestion() {
+    public QuestionDB getPreviousQuestion() {
         if (getTotalPages() == 0 || !hasPreviousQuestion()) {
             return null;
         }
 
         currentPage--;
-        return questions.get(currentPage);
+        return mQuestionDBs.get(currentPage);
     }
 
     /**
      * Gets the first question in the list
      */
-    public Question getFirstQuestion() {
+    public QuestionDB getFirstQuestion() {
         if (getTotalPages() == 0) {
             return null;
         }
 
         currentPage = 0;
-        return questions.get(currentPage);
+        return mQuestionDBs.get(currentPage);
     }
 
     /**
@@ -148,12 +148,12 @@ public class ProgressTabStatus {
      * @return true|false
      */
     public boolean isFirstQuestion() {
-        Question currentQuestion = getCurrentQuestion();
-        if (currentQuestion == null) {
+        QuestionDB currentQuestionDB = getCurrentQuestion();
+        if (currentQuestionDB == null) {
             return false;
         }
 
-        return currentQuestion.equals(questions.get(0));
+        return currentQuestionDB.equals(mQuestionDBs.get(0));
     }
 
     /**
@@ -174,14 +174,14 @@ public class ProgressTabStatus {
         ProgressTabStatus that = (ProgressTabStatus) o;
 
         if (currentPage != that.currentPage) return false;
-        if (!questions.equals(that.questions)) return false;
+        if (!mQuestionDBs.equals(that.mQuestionDBs)) return false;
         return Arrays.equals(visited, that.visited);
 
     }
 
     @Override
     public int hashCode() {
-        int result = questions.hashCode();
+        int result = mQuestionDBs.hashCode();
         result = 31 * result + Arrays.hashCode(visited);
         result = 31 * result + currentPage;
         return result;

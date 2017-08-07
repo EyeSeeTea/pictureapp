@@ -35,7 +35,7 @@ import android.widget.AutoCompleteTextView;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
 
@@ -81,7 +81,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
     }
 
     private String[] findOrgUnitsFromDB() {
-        return OrgUnit.listAllNames();
+        return OrgUnitDB.listAllNames();
     }
 
     @Override

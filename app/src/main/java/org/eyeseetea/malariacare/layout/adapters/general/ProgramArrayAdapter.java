@@ -21,20 +21,20 @@ package org.eyeseetea.malariacare.layout.adapters.general;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-public class ProgramArrayAdapter extends AddlArrayAdapter<Program> {
+public class ProgramArrayAdapter extends AddlArrayAdapter<ProgramDB> {
 
-    public ProgramArrayAdapter(Context context, List<Program> programs) {
-        super(context, programs);
+    public ProgramArrayAdapter(Context context, List<ProgramDB> programDBs) {
+        super(context, programDBs);
     }
 
     @Override
-    public void drawText(CustomTextView customTextView, Program program) {
-        customTextView.setText(program.getName());
+    public void drawText(CustomTextView customTextView, ProgramDB programDB) {
+        customTextView.setText(programDB.getName());
     }
 
 }

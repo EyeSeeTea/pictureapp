@@ -6,30 +6,29 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class StringKey extends BaseModel {
+@Table(database = AppDatabase.class, name = "StringKey")
+public class StringKeyDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_string_key;
     @Column
     String key;
 
-    public StringKey() {
+    public StringKeyDB() {
     }
 
-    public StringKey(long id_string_key, String key) {
+    public StringKeyDB(long id_string_key, String key) {
         this.id_string_key = id_string_key;
         this.key = key;
     }
 
-    public static List<StringKey> getAllStringKeys() {
+    public static List<StringKeyDB> getAllStringKeys() {
         return new Select()
-                .from(StringKey.class)
+                .from(StringKeyDB.class)
                 .queryList();
     }
 
@@ -54,7 +53,7 @@ public class StringKey extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        StringKey string = (StringKey) o;
+        StringKeyDB string = (StringKeyDB) o;
 
         if (id_string_key != string.id_string_key) return false;
         return key != null ? key.equals(string.key) : string.key == null;

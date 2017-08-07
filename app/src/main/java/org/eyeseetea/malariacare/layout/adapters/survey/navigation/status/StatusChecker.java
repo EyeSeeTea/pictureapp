@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 
 import java.util.List;
 
@@ -26,18 +26,18 @@ public class StatusChecker {
     }
 
     /**
-     * Navigates from questionRelation -> match -> questionOption
+     * Navigates from questionRelationDB -> match -> mQuestionOptionDB
      */
-    protected QuestionOption findQuestionOption(QuestionRelation questionRelation) {
-        if (questionRelation == null) {
+    protected QuestionOptionDB findQuestionOption(QuestionRelationDB questionRelationDB) {
+        if (questionRelationDB == null) {
             return null;
         }
-        List<QuestionOption> questionOptions = QuestionOption.findByQuestionRelation(
-                questionRelation);
-        if (questionOptions.isEmpty()) {
+        List<QuestionOptionDB> questionOptionDBs = QuestionOptionDB.findByQuestionRelation(
+                questionRelationDB);
+        if (questionOptionDBs.isEmpty()) {
             return null;
         }
 
-        return questionOptions.get(0);
+        return questionOptionDBs.get(0);
     }
 }

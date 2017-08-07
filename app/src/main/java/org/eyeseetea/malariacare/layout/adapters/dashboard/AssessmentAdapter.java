@@ -30,7 +30,7 @@ import android.widget.ListView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.DashboardAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IAssessmentAdapterStrategy;
@@ -49,11 +49,11 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
     protected Integer footerLayout;
     protected Integer recordLayout;
     protected String title;
-    List<Survey> items;
+    List<SurveyDB> items;
 
     private IAssessmentAdapterStrategy mDashboardAdapterStrategy;
 
-    public AssessmentAdapter(String title, List<Survey> items, Context context) {
+    public AssessmentAdapter(String title, List<SurveyDB> items, Context context) {
         this.items = items;
         this.context = context;
         this.lInflater = LayoutInflater.from(context);
@@ -82,7 +82,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
 
     @Override
     public void setItems(List items) {
-        this.items = (List<Survey>) items;
+        this.items = (List<SurveyDB>) items;
     }
 
     @Override
@@ -127,11 +127,11 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Survey survey = (Survey) getItem(position);
+        SurveyDB surveyDB = (SurveyDB) getItem(position);
 
         View rowView = this.lInflater.inflate(getRecordLayout(), parent, false);
 
-        mDashboardAdapterStrategy.renderSurveySummary(rowView, survey);
+        mDashboardAdapterStrategy.renderSurveySummary(rowView, surveyDB);
 
         LayoutUtils.fixRowViewBackground(rowView, position);
 
@@ -177,21 +177,21 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
     /**
      * Checks if the given position points to a real survey and open it.
      */
-    public void onClick(ListView l, int position, List<Survey> surveys) {
+    public void onClick(ListView l, int position, List<SurveyDB> surveyDBs) {
         //Discard clicks on header|footer (which is attended on newSurvey via super)
-        if (!isPositionASurvey(l, surveys, position)) {
+        if (!isPositionASurvey(l, surveyDBs, position)) {
             return;
         }
         //fixed the position in the list if the adapter have a header.
         int fixedPosition = getFixedPosition(l);
         //Put selected survey in session
         position = position - fixedPosition;
-        if(position < 0 || position >= surveys.size()) {
+        if(position < 0 || position >= surveyDBs.size()) {
             return;
         }
-        Survey malariaSurvey = surveys.get(position);
-        Session.setMalariaSurvey(malariaSurvey);
-        if (mDashboardAdapterStrategy.hasAllComplementarySurveys(malariaSurvey)) {
+        SurveyDB malariaSurveyDB = surveyDBs.get(position);
+        Session.setMalariaSurveyDB(malariaSurveyDB);
+        if (mDashboardAdapterStrategy.hasAllComplementarySurveys(malariaSurveyDB)) {
             // Go to SurveyActivity
             DashboardActivity.dashboardActivity.openSentSurvey();
         }
@@ -216,7 +216,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      *
      * @return true|false
      */
-    public boolean isPositionASurvey(ListView l, List<Survey> surveys, int position) {
+    public boolean isPositionASurvey(ListView l, List<SurveyDB> surveyDBs, int position) {
         int headerSize = l.getHeaderViewsCount();
         if (headerSize > 0) {
             if (isPositionHeader(position)) {
@@ -224,7 +224,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
             }
         }
         if (l.getFooterViewsCount() > 0) {
-            if (isPositionFooter(surveys, position, headerSize)) {
+            if (isPositionFooter(surveyDBs, position, headerSize)) {
                 return false;
             }
         }
@@ -245,7 +245,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      *
      * @return true|false
      */
-    public boolean isPositionFooter(List<Survey> surveys, int position, int headerSize) {
-        return position >= (surveys.size() + headerSize);
+    public boolean isPositionFooter(List<SurveyDB> surveyDBs, int position, int headerSize) {
+        return position >= (surveyDBs.size() + headerSize);
     }
 }

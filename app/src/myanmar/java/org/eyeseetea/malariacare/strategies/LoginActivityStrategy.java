@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -70,7 +70,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private boolean existsLoggedUser() {
-        return User.getLoggedUser() != null;
+        return UserDB.getLoggedUser() != null;
     }
 
     private void addDemoButton() {

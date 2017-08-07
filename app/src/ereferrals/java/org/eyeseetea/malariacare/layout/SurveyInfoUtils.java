@@ -3,14 +3,14 @@ package org.eyeseetea.malariacare.layout;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 
 /**
  * Created by idelcano on 01/09/2016.
  */
 public class SurveyInfoUtils {
 
-    public static String getRDTSymbol(Context context, Survey survey) {
+    public static String getRDTSymbol(Context context, SurveyDB survey) {
         String rdtName = survey.getRDTName();
         String rdtResultCode = survey.getResultCode();
         String rdtValue = (rdtName.equals("")) ? context.getResources().getString(

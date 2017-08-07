@@ -581,12 +581,12 @@ public class LoginActivity extends Activity {
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            if(Session.getUser()==null){
+            if(Session.getUserDB()==null){
                 isUserClosed = null;
                 return null;
             }
             try {
-                isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+                isUserClosed = ServerAPIController.isUserClosed(Session.getUserDB().getUid());
             }catch (ApiCallException e){
                 isUserClosed = null;
             }

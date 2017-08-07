@@ -30,8 +30,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 /**
  * Created by ivan.arrizabalaga on 14/02/15.
  */
-@Table(database = AppDatabase.class)
-public class OrgUnitProgramRelation extends BaseModel {
+@Table(database = AppDatabase.class, name="OrgUnitProgramRelation")
+public class OrgUnitProgramRelationDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -41,66 +41,66 @@ public class OrgUnitProgramRelation extends BaseModel {
     Long id_org_unit_fk;
 
     /**
-     * Reference to lazy orgUnit
+     * Reference to lazy mOrgUnitDB
      */
-    OrgUnit orgUnit;
+    OrgUnitDB mOrgUnitDB;
 
     @Column
     Long id_program_fk;
 
     /**
-     * Reference to lazy program
+     * Reference to lazy mProgramDB
      */
-    Program program;
+    ProgramDB mProgramDB;
 
-    public OrgUnitProgramRelation() {
+    public OrgUnitProgramRelationDB() {
     }
 
-    public OrgUnitProgramRelation(OrgUnit orgUnit, Program program) {
-        setOrgUnit(orgUnit);
-        setProgram(program);
+    public OrgUnitProgramRelationDB(OrgUnitDB orgUnitDB, ProgramDB programDB) {
+        setOrgUnitDB(orgUnitDB);
+        setProgramDB(programDB);
     }
 
-    public OrgUnit getOrgUnit() {
-        if (orgUnit == null) {
+    public OrgUnitDB getOrgUnitDB() {
+        if (mOrgUnitDB == null) {
             if (id_org_unit_fk == null) return null;
-            orgUnit = new Select()
-                    .from(OrgUnit.class)
-                    .where(OrgUnit_Table.id_org_unit
+            mOrgUnitDB = new Select()
+                    .from(OrgUnitDB.class)
+                    .where(OrgUnitDB_Table.id_org_unit
                             .is(id_org_unit_fk)).querySingle();
         }
-        return orgUnit;
+        return mOrgUnitDB;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit = orgUnit;
-        this.id_org_unit_fk = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    public void setOrgUnitDB(OrgUnitDB orgUnitDB) {
+        this.mOrgUnitDB = orgUnitDB;
+        this.id_org_unit_fk = (orgUnitDB != null) ? orgUnitDB.getId_org_unit() : null;
     }
 
     public void setOrgUnit(Long id_org_unit) {
         this.id_org_unit_fk = id_org_unit;
-        this.orgUnit = null;
+        this.mOrgUnitDB = null;
     }
 
-    public Program getProgram() {
-        if (program == null) {
+    public ProgramDB getProgramDB() {
+        if (mProgramDB == null) {
             if (id_program_fk == null) return null;
-            program = new Select()
-                    .from(Program.class)
-                    .where(Program_Table.id_program
+            mProgramDB = new Select()
+                    .from(ProgramDB.class)
+                    .where(ProgramDB_Table.id_program
                             .is(id_program_fk)).querySingle();
         }
-        return program;
+        return mProgramDB;
     }
 
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program_fk = (program != null) ? program.getId_program() : null;
+    public void setProgramDB(ProgramDB programDB) {
+        this.mProgramDB = programDB;
+        this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
     public void setProgram(Long id_program) {
         this.id_program_fk = id_program;
-        this.program = null;
+        this.mProgramDB = null;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class OrgUnitProgramRelation extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrgUnitProgramRelation that = (OrgUnitProgramRelation) o;
+        OrgUnitProgramRelationDB that = (OrgUnitProgramRelationDB) o;
 
         if (id_orgunit_program_relation != that.id_orgunit_program_relation) return false;
         if (id_org_unit_fk != null ? !id_org_unit_fk.equals(that.id_org_unit_fk)
@@ -130,7 +130,7 @@ public class OrgUnitProgramRelation extends BaseModel {
 
     @Override
     public String toString() {
-        return "OrgUnitProgramRelation{" +
+        return "OrgUnitProgramRelationDB{" +
                 "id_orgunit_program_relation=" + id_orgunit_program_relation +
                 ", id_org_unit_fk=" + id_org_unit_fk +
                 ", id_program_fk=" + id_program_fk +

@@ -21,7 +21,7 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
@@ -84,7 +84,7 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
      * Override default addSurvey since this row is static
      */
     @Override
-    public void addSurvey(Survey survey) {
+    public void addSurvey(SurveyDB survey) {
         //Nothing to calculate
     }
 

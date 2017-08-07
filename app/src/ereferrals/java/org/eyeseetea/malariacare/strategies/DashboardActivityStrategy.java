@@ -9,9 +9,9 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -21,8 +21,6 @@ import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
-import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 
 
@@ -74,18 +72,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        Program program = Program.findById(PreferencesEReferral.getUserProgramId());
+        ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
         // Put new survey in session
-        Survey survey = new Survey(null, program, Session.getUser());
+        SurveyDB survey = new SurveyDB(null, programDB, Session.getUserDB());
         survey.save();
-        Session.setMalariaSurvey(survey);
+        Session.setMalariaSurveyDB(survey);
         //Look for coordinates
         prepareLocationListener(activity, survey);
     }
 
     @Override
     public void sendSurvey() {
-        Survey malariaSurvey = Session.getMalariaSurvey();
+        Survey malariaSurvey = Session.getMalariaSurveyDB();
         malariaSurvey.updateSurveyStatus();
         if (malariaSurvey.isCompleted()) {
             malariaSurvey.setEventUid(String.valueOf(UIDGenerator.generateUID()));
@@ -95,14 +93,14 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean beforeExit(boolean isBackPressed) {
-        Survey malariaSurvey = Session.getMalariaSurvey();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
             malariaSurvey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isMalariaInProgress) {
                 if (isMalariaInProgress) {
-                    Session.setMalariaSurvey(null);
+                    Session.setMalariaSurveyDB(null);
                     malariaSurvey.delete();
                 }
                 isBackPressed = false;
@@ -117,7 +115,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void completeSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getMalariaSurveyDB().updateSurveyStatus();
     }
 
     @Override
@@ -219,7 +217,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void initNavigationController() throws LoadingNavigationControllerException {
         NavigationBuilder.getInstance().buildController(
-                Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
+                TabDB.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }
 
     @Override

@@ -7,9 +7,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -27,7 +27,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     CustomTextView header;
     Spinner spinnerOptions;
     ImageView imageView;
-    Question question;
+    QuestionDB mQuestionDB;
     private boolean optionSetFromSavedValue = false;
 
     public DropdownMultiQuestionView(Context context) {
@@ -37,16 +37,15 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
-    public void setOptions(List<Option> options) {
-        List<Option> optionList = new ArrayList<>(options);
-        optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
+    public void setOptions(List<OptionDB> optionDBs) {
+        List<OptionDB> optionDBList = new ArrayList<>(optionDBs);
+        optionDBList.add(0, new OptionDB(Constants.DEFAULT_SELECT_OPTION));
 
-        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionList));
+        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionDBList));
     }
 
-    @Override
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
     }
 
     @Override
@@ -74,15 +73,15 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value == null || value.getValue() == null) {
+    public void setValue(ValueDB valueDB) {
+        if (valueDB == null || valueDB.getValue() == null) {
             return;
         }
         optionSetFromSavedValue = true;
 
         for (int i = 0; i < spinnerOptions.getAdapter().getCount(); i++) {
-            Option option = (Option) spinnerOptions.getItemAtPosition(i);
-            if (option.equals(value.getOption())) {
+            OptionDB optionDB = (OptionDB) spinnerOptions.getItemAtPosition(i);
+            if (optionDB.equals(valueDB.getOptionDB())) {
                 spinnerOptions.setSelection(i);
                 break;
             }
@@ -104,9 +103,9 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                Option option = (Option) parent.getItemAtPosition(position);
+                OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
-                    notifyAnswerChanged(option);
+                    notifyAnswerChanged(optionDB);
                 } else {
                     optionSetFromSavedValue = false;
                 }

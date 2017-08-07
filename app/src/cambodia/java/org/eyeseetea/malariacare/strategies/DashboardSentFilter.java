@@ -7,7 +7,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.usecase.DateFilter;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -22,7 +22,7 @@ import java.util.List;
 public class DashboardSentFilter {
 
     //surveysList contains the list of all surveys without filters
-    List<Survey> surveysList;
+    List<SurveyDB> surveysList;
     Spinner filterSpinnerSurveys;
     String lastFilterSelection;
     DateFilter surveyFilter;
@@ -33,7 +33,7 @@ public class DashboardSentFilter {
      */
     boolean initiatingFilters = true;
 
-    public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView, List<Survey> surveyList) {
+    public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView, List<SurveyDB> surveyList) {
         this.surveysList = surveyList;
         this.dashboardSentFragment = dashboardSentFragment;
         surveyFilter = new DateFilter();
@@ -100,19 +100,19 @@ public class DashboardSentFilter {
     }
 
     private void reloadSentSurveys() {
-        List <Survey> filteredSurveyList = filterSurveys();
+        List <SurveyDB> filteredSurveyList = filterSurveys();
         dashboardSentFragment.reloadSurveys(filteredSurveyList);
         surveyCases.setText(String.format(PreferencesState.getInstance().getContext().getString(R.string.unsent_survey_filter_number_of_cases), filteredSurveyList.size()));
     }
 
-    private List<Survey> filterSurveys() {
-        List<Survey> surveysFilteredList = new ArrayList<>();
+    private List<SurveyDB> filterSurveys() {
+        List<SurveyDB> surveysFilteredList = new ArrayList<>();
         if(surveyFilter.isAll()) {
             surveysFilteredList = surveysList;
         }else {
             Date startDate = surveyFilter.getStartFilterDate(Calendar.getInstance());
             Date endDate = surveyFilter.getEndFilterDate(Calendar.getInstance());
-            for(Survey survey: surveysList){
+            for(SurveyDB survey: surveysList){
                 if(surveyFilter.isDateBetweenDates(survey.getCompletionDate(), startDate, endDate)){
                     surveysFilteredList.add(survey);
                 }

@@ -10,8 +10,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class TreatmentMatch extends BaseModel {
+@Table(database = AppDatabase.class, name = "TreatmentMatch")
+public class TreatmentMatchDB extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_treatment_match;
@@ -20,36 +20,36 @@ public class TreatmentMatch extends BaseModel {
     @Column
     Long id_match_fk;
     /**
-     * Reference to the treatment (loaded lazily)
+     * Reference to the mTreatmentDB (loaded lazily)
      */
-    Treatment treatment;
+    TreatmentDB mTreatmentDB;
     /**
-     * Reference to the match (loaded lazily)
+     * Reference to the mMatchDB (loaded lazily)
      */
-    Match match;
+    MatchDB mMatchDB;
 
 
-    public TreatmentMatch() {
+    public TreatmentMatchDB() {
     }
 
-    public TreatmentMatch(long id_treatment_match, long id_treatment, long id_match) {
+    public TreatmentMatchDB(long id_treatment_match, long id_treatment, long id_match) {
         this.id_treatment_match = id_treatment_match;
         this.id_treatment_fk = id_treatment;
         this.id_match_fk = id_match;
     }
 
-    public static List<TreatmentMatch> getAllTreatmentMatches() {
-        return new Select().from(TreatmentMatch.class).queryList();
+    public static List<TreatmentMatchDB> getAllTreatmentMatches() {
+        return new Select().from(TreatmentMatchDB.class).queryList();
     }
 
     /**
-     * Method to delete a list of treatmentMatches.
+     * Method to delete a list of treatmentMatchDBs.
      *
-     * @param treatmentMatches The list to delete.
+     * @param treatmentMatchDBs The list to delete.
      */
-    public static void deleteTreatmentMatches(List<TreatmentMatch> treatmentMatches) {
-        for (TreatmentMatch treatmentMatch : treatmentMatches) {
-            treatmentMatch.delete();
+    public static void deleteTreatmentMatches(List<TreatmentMatchDB> treatmentMatchDBs) {
+        for (TreatmentMatchDB treatmentMatchDB : treatmentMatchDBs) {
+            treatmentMatchDB.delete();
         }
     }
 
@@ -62,51 +62,51 @@ public class TreatmentMatch extends BaseModel {
         this.id_treatment_match = id_treatment_match;
     }
 
-    public Treatment getTreatment() {
-        if (treatment == null) {
+    public TreatmentDB getTreatmentDB() {
+        if (mTreatmentDB == null) {
             if (id_treatment_fk == null) {
                 return null;
             }
-            treatment = new Select()
-                    .from(Treatment.class)
-                    .where(Treatment_Table.id_treatment
+            mTreatmentDB = new Select()
+                    .from(TreatmentDB.class)
+                    .where(TreatmentDB_Table.id_treatment
                             .is(id_treatment_fk)).querySingle();
 
         }
-        return treatment;
+        return mTreatmentDB;
     }
 
-    public void setTreatment(Treatment treatment) {
-        this.treatment = treatment;
-        id_treatment_fk = (treatment != null) ? treatment.id_treatment : null;
+    public void setTreatmentDB(TreatmentDB treatmentDB) {
+        this.mTreatmentDB = treatmentDB;
+        id_treatment_fk = (treatmentDB != null) ? treatmentDB.id_treatment : null;
     }
 
     public void setTreatment(long id_treatment) {
         this.id_treatment_fk = id_treatment;
-        treatment = null;
+        mTreatmentDB = null;
     }
 
-    public Match getMatch() {
-        if (match == null) {
+    public MatchDB getMatchDB() {
+        if (mMatchDB == null) {
             if (id_match_fk == null) {
                 return null;
             }
-            match = new Select()
-                    .from(Match.class)
-                    .where(Match_Table.id_match
+            mMatchDB = new Select()
+                    .from(MatchDB.class)
+                    .where(MatchDB_Table.id_match
                             .is(id_match_fk)).querySingle();
         }
-        return match;
+        return mMatchDB;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        id_match_fk = (match != null) ? match.getId_match() : null;
+    public void setMatchDB(MatchDB matchDB) {
+        this.mMatchDB = matchDB;
+        id_match_fk = (matchDB != null) ? matchDB.getId_match() : null;
     }
 
     public void setMatch(Long id_match) {
         this.id_match_fk = id_match;
-        match = null;
+        mMatchDB = null;
     }
 
 
@@ -115,7 +115,7 @@ public class TreatmentMatch extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TreatmentMatch that = (TreatmentMatch) o;
+        TreatmentMatchDB that = (TreatmentMatchDB) o;
 
         if (id_treatment_match != that.id_treatment_match) return false;
         if (id_treatment_fk != that.id_treatment_fk) return false;
@@ -133,7 +133,7 @@ public class TreatmentMatch extends BaseModel {
 
     @Override
     public String toString() {
-        return "TreatmentMatch{" +
+        return "TreatmentMatchDB{" +
                 "id_treatment_match=" + id_treatment_match +
                 ", id_treatment_fk=" + id_treatment_fk +
                 ", id_match_fk=" + id_match_fk +

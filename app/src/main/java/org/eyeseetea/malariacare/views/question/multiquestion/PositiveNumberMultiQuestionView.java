@@ -5,7 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
@@ -44,9 +44,9 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value != null) {
-            numberPicker.setText(value.getValue());
+    public void setValue(ValueDB valueDB) {
+        if (valueDB != null) {
+            numberPicker.setText(valueDB.getValue());
         }
     }
 

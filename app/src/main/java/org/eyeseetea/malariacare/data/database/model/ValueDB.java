@@ -42,8 +42,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Value extends BaseModel {
+@Table(database = AppDatabase.class, name = "Value")
+public class ValueDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -54,65 +54,65 @@ public class Value extends BaseModel {
     @Column
     Long id_question_fk;
     /**
-     * Reference to the question for this value (loaded lazily)
+     * Reference to the mQuestionDB for this value (loaded lazily)
      */
-    Question question;
+    QuestionDB mQuestionDB;
 
     @Column
     Long id_survey_fk;
     /**
      * Reference to the survey of this value (loaded lazily)
      */
-    Survey survey;
+    SurveyDB mSurveyDB;
 
     @Column
     Long id_option_fk;
     /**
-     * Reference to the option of this value (loaded lazily)
+     * Reference to the mOptionDB of this value (loaded lazily)
      */
-    Option option;
+    OptionDB mOptionDB;
 
-    public Value() {
+    public ValueDB() {
     }
 
-    public Value(String value, Question question, Survey survey) {
-        this.option = null;
+    public ValueDB(String value, QuestionDB questionDB, SurveyDB surveyDB) {
+        this.mOptionDB = null;
         this.value = value;
-        this.setQuestion(question);
-        this.setSurvey(survey);
+        this.setQuestionDB(questionDB);
+        this.setSurveyDB(surveyDB);
     }
 
-    public Value(Option option, Question question, Survey survey) {
-        this.value = (option != null) ? option.getCode() : null;
-        this.setOption(option);
-        this.setQuestion(question);
-        this.setSurvey(survey);
+    public ValueDB(OptionDB optionDB, QuestionDB questionDB, SurveyDB surveyDB) {
+        this.value = (optionDB != null) ? optionDB.getCode() : null;
+        this.setOptionDB(optionDB);
+        this.setQuestionDB(questionDB);
+        this.setSurveyDB(surveyDB);
     }
 
-    public static int countBySurvey(Survey survey) {
-        if (survey == null || survey.getId_survey() == null) {
+    public static int countBySurvey(SurveyDB surveyDB) {
+        if (surveyDB == null || surveyDB.getId_survey() == null) {
             return 0;
         }
         return (int) SQLite.selectCountOf()
-                .from(Value.class)
-                .where(Value_Table.id_survey_fk.eq(survey.getId_survey())).count();
+                .from(ValueDB.class)
+                .where(ValueDB_Table.id_survey_fk.eq(surveyDB.getId_survey())).count();
     }
 
     /**
      * List ordered values of the survey
      */
-    public static List<Value> listAllBySurvey(Survey survey) {
-        if (survey == null || survey.getId_survey() == null) {
+    public static List<ValueDB> listAllBySurvey(SurveyDB surveyDB) {
+        if (surveyDB == null || surveyDB.getId_survey() == null) {
             return new ArrayList<>();
         }
 
-        return new Select().from(Value.class).as(valueName)
-                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
-                .on(Value_Table.id_question_fk.withTable(valueAlias)
-                        .eq(Question_Table.id_question.withTable(questionAlias)))
-                .where(Value_Table.id_survey_fk.withTable(valueAlias)
-                        .eq(survey.getId_survey()))
-                .orderBy(OrderBy.fromProperty(Question_Table.order_pos).ascending()).queryList();
+        return new Select().from(ValueDB.class).as(valueName)
+                .join(QuestionDB.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(ValueDB_Table.id_question_fk.withTable(valueAlias)
+                        .eq(QuestionDB_Table.id_question.withTable(questionAlias)))
+                .where(ValueDB_Table.id_survey_fk.withTable(valueAlias)
+                        .eq(surveyDB.getId_survey()))
+                .orderBy(OrderBy.fromProperty(QuestionDB_Table.order_pos).ascending()).queryList();
     }
 
     public Long getId_value() {
@@ -127,47 +127,47 @@ public class Value extends BaseModel {
         return this.id_option_fk;
     }
 
-    public Option getOption() {
-        if (option == null) {
+    public OptionDB getOptionDB() {
+        if (mOptionDB == null) {
             if (id_option_fk == null) return null;
-            option = new Select()
-                    .from(Option.class)
-                    .where(Option_Table.id_option
+            mOptionDB = new Select()
+                    .from(OptionDB.class)
+                    .where(OptionDB_Table.id_option
                             .is(id_option_fk)).querySingle();
         }
-        return option;
+        return mOptionDB;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option_fk = (option != null) ? option.getId_option() : null;
+    public void setOptionDB(OptionDB optionDB) {
+        this.mOptionDB = optionDB;
+        this.id_option_fk = (optionDB != null) ? optionDB.getId_option() : null;
     }
 
     public void setOption(Long id_option) {
         this.id_option_fk = id_option;
-        this.option = null;
+        this.mOptionDB = null;
     }
 
-    public Question getQuestion() {
-        if (question == null) {
+    public QuestionDB getQuestionDB() {
+        if (mQuestionDB == null) {
             if (id_question_fk == null) return null;
-            question = new Select()
-                    .from(Question.class)
-                    .where(Question_Table.id_question
+            mQuestionDB = new Select()
+                    .from(QuestionDB.class)
+                    .where(QuestionDB_Table.id_question
                             .is(id_question_fk)).querySingle();
         }
 
-        return question;
+        return mQuestionDB;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question_fk = (question != null) ? question.getId_question() : null;
+    public void setQuestionDB(QuestionDB questionDB) {
+        this.mQuestionDB = questionDB;
+        this.id_question_fk = (questionDB != null) ? questionDB.getId_question() : null;
     }
 
     public void setQuestion(Long id_question) {
         this.id_question_fk = id_question;
-        this.question = null;
+        this.mQuestionDB = null;
     }
 
     public String getValue() {
@@ -178,62 +178,62 @@ public class Value extends BaseModel {
         this.value = value;
     }
 
-    public Survey getSurvey() {
-        if (survey == null) {
+    public SurveyDB getSurveyDB() {
+        if (mSurveyDB == null) {
             if (id_survey_fk == null) return null;
-            survey = new Select()
-                    .from(Survey.class)
-                    .where(Survey_Table.id_survey
+            mSurveyDB = new Select()
+                    .from(SurveyDB.class)
+                    .where(SurveyDB_Table.id_survey
                             .is(id_survey_fk)).querySingle();
         }
-        return survey;
+        return mSurveyDB;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey_fk = (survey != null) ? survey.getId_survey() : null;
+    public void setSurveyDB(SurveyDB surveyDB) {
+        this.mSurveyDB = surveyDB;
+        this.id_survey_fk = (surveyDB != null) ? surveyDB.getId_survey() : null;
     }
 
     public void setSurvey(Long id_survey) {
         this.id_survey_fk = id_survey;
-        this.survey = null;
+        this.mSurveyDB = null;
     }
     /**
-     * Looks for the value with the given question
+     * Looks for the value with the given mQuestionDB
      */
-    public static Value findValueFromDatabase(Long idQuestion, Survey survey) {
-        for (Value value : survey.getValuesFromDBWithoutSave()) {
-            if (value.matchesQuestion(idQuestion)) {
-                return value;
+    public static ValueDB findValueFromDatabase(Long idQuestion, SurveyDB surveyDB) {
+        for (ValueDB valueDB : surveyDB.getValuesFromDBWithoutSave()) {
+            if (valueDB.matchesQuestion(idQuestion)) {
+                return valueDB;
             }
         }
-        //No matches -> null
+        //No mMatchDBs -> null
         return null;
     }
 
     /**
-     * Looks for the value with the given question
+     * Looks for the value with the given mQuestionDB
      */
-    public static Value findValue(Long idQuestion, Survey survey) {
-        for (Value value : survey.getValues()) {
-            if (value.matchesQuestion(idQuestion)) {
-                return value;
+    public static ValueDB findValue(Long idQuestion, SurveyDB surveyDB) {
+        for (ValueDB valueDB : surveyDB.getValueDBs()) {
+            if (valueDB.matchesQuestion(idQuestion)) {
+                return valueDB;
             }
         }
-        //No matches -> null
+        //No mMatchDBs -> null
         return null;
     }
 
     /**
-     * Looks for the value with the given question + option
+     * Looks for the value with the given mQuestionDB + mOptionDB
      */
-    public static Value findValue(Long idQuestion, Long idOption, Survey survey) {
-        for (Value value : survey.getValues()) {
-            if (value.matchesQuestionOption(idQuestion, idOption)) {
-                return value;
+    public static ValueDB findValue(Long idQuestion, Long idOption, SurveyDB surveyDB) {
+        for (ValueDB valueDB : surveyDB.getValueDBs()) {
+            if (valueDB.matchesQuestionOption(idQuestion, idOption)) {
+                return valueDB;
             }
         }
-        //No matches -> null
+        //No mMatchDBs -> null
         return null;
     }
 
@@ -243,23 +243,23 @@ public class Value extends BaseModel {
      * @return true|false
      */
     public boolean isAPositive() {
-        return getOption() != null && getOption().getCode().equals("Positive");
+        return getOptionDB() != null && getOptionDB().getCode().equals("Positive");
     }
 
     /**
-     * Checks if the current value contains an answer
+     * Checks if the current value contains an mAnswerDB
      *
      * @return true|false
      */
     public boolean isAnAnswer() {
-        return (getValue() != null && !getValue().equals("")) || getOption() != null;
+        return (getValue() != null && !getValue().equals("")) || getOptionDB() != null;
     }
 
     /**
-     * Checks if the current value belongs to a 'required' question
+     * Checks if the current value belongs to a 'required' mQuestionDB
      */
     public boolean belongsToAParentQuestion() {
-        return !getQuestion().hasParent();
+        return !getQuestionDB().hasParent();
     }
 
     /**
@@ -268,52 +268,52 @@ public class Value extends BaseModel {
      * @return true|false
      */
     public boolean isAYes() {
-        return getOption() != null && getOption().getCode().equals("Yes");
+        return getOptionDB() != null && getOptionDB().getCode().equals("Yes");
     }
 
     /**
-     * Checks if this value matches the given question and option
+     * Checks if this value mMatchDBs the given mQuestionDB and mOptionDB
      */
     public boolean matchesQuestionOption(Long idQuestion, Long idOption) {
 
-        //No question or option -> no match
+        //No mQuestionDB or mOptionDB -> no mMatchDB
         if (idQuestion == null || idOption == null) {
             return false;
         }
 
-        //Check if both matches
+        //Check if both mMatchDBs
         return idQuestion == this.id_question_fk && idOption == this.id_option_fk;
     }
 
     /**
-     * Checks if this value matches the given question
+     * Checks if this value mMatchDBs the given mQuestionDB
      */
     public boolean matchesQuestion(Long idQuestion) {
 
-        //No question or option -> no match
+        //No mQuestionDB or mOptionDB -> no mMatchDB
         if (idQuestion == null) {
             return false;
         }
 
-        //Check if both matches
+        //Check if both mMatchDBs
         return idQuestion == this.id_question_fk;
     }
 
-    public static void saveAll(List<Value> values, final IDataSourceCallback<Void> callback) {
+    public static void saveAll(List<ValueDB> valueDBs, final IDataSourceCallback<Void> callback) {
 
         //Refresh survey for assign SurveyId
-        for (Value value : values) {
-            value.setSurvey(value.getSurvey());
+        for (ValueDB valueDB : valueDBs) {
+            valueDB.setSurveyDB(valueDB.getSurveyDB());
         }
 
         FlowManager.getDatabase(AppDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
-                        new ProcessModelTransaction.ProcessModel<Value>() {
+                        new ProcessModelTransaction.ProcessModel<ValueDB>() {
                             @Override
-                            public void processModel(Value value) {
-                                value.save();
+                            public void processModel(ValueDB valueDB) {
+                                valueDB.save();
                             }
-                        }).addAll(values).build())
+                        }).addAll(valueDBs).build())
                 .error(new Transaction.Error() {
                     @Override
                     public void onError(Transaction transaction, Throwable error) {
@@ -333,19 +333,20 @@ public class Value extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Value value1 = (Value) o;
+        ValueDB valueDB1 = (ValueDB) o;
 
-        if (id_value != value1.id_value) return false;
-        if (value != null ? !value.equals(value1.value) : value1.value != null) return false;
-        if (id_question_fk != null ? !id_question_fk.equals(value1.id_question_fk)
-                : value1.id_question_fk != null) {
+        if (id_value != valueDB1.id_value) return false;
+        if (value != null ? !value.equals(valueDB1.value) : valueDB1.value != null) return false;
+        if (id_question_fk != null ? !id_question_fk.equals(valueDB1.id_question_fk)
+                : valueDB1.id_question_fk != null) {
             return false;
         }
-        if (id_survey_fk != null ? !id_survey_fk.equals(value1.id_survey_fk) : value1.id_survey_fk != null) {
+        if (id_survey_fk != null ? !id_survey_fk.equals(valueDB1.id_survey_fk)
+                : valueDB1.id_survey_fk != null) {
             return false;
         }
-        return !(id_option_fk != null ? !id_option_fk.equals(value1.id_option_fk)
-                : value1.id_option_fk != null);
+        return !(id_option_fk != null ? !id_option_fk.equals(valueDB1.id_option_fk)
+                : valueDB1.id_option_fk != null);
 
     }
 
@@ -361,7 +362,7 @@ public class Value extends BaseModel {
 
     @Override
     public String toString() {
-        return "Value{" +
+        return "ValueDB{" +
                 "id_value=" + id_value +
                 ", value='" + value + '\'' +
                 ", id_question_fk=" + id_question_fk +

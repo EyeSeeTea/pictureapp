@@ -34,8 +34,8 @@ import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
-@Table(database = AppDatabase.class)
-public class Tab extends BaseModel {
+@Table(database = AppDatabase.class, name = "Tab")
+public class TabDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -50,23 +50,23 @@ public class Tab extends BaseModel {
     Long id_program_fk;
 
     /**
-     * Reference to parent program (loaded lazily)
+     * Reference to parent mProgramDB (loaded lazily)
      */
-    Program program;
+    ProgramDB mProgramDB;
 
     /**
-     * List of headers that belongs to this tab
+     * List of mHeaderDBs that belongs to this mTabDB
      */
-    List<Header> headers;
+    List<HeaderDB> mHeaderDBs;
 
-    public Tab() {
+    public TabDB() {
     }
 
-    public Tab(String name, Integer order_pos, Integer type, Program program) {
+    public TabDB(String name, Integer order_pos, Integer type, ProgramDB programDB) {
         this.name = name;
         this.order_pos = order_pos;
         this.type = type;
-        setProgram(program);
+        setProgram(programDB);
     }
 
     public Long getId_tab() {
@@ -105,93 +105,93 @@ public class Tab extends BaseModel {
         this.type = type;
     }
 
-    public Program getProgram() {
-        if (program == null) {
+    public ProgramDB getProgramDB() {
+        if (mProgramDB == null) {
             if (id_program_fk == null) return null;
 
-            program = new Select()
-                    .from(Program.class)
-                    .where((Program_Table.id_program)
+            mProgramDB = new Select()
+                    .from(ProgramDB.class)
+                    .where((ProgramDB_Table.id_program)
                             .is(id_program_fk)).querySingle();
         }
-        return program;
+        return mProgramDB;
     }
 
-    public void setProgram(Long id_program) {
+    public void setProgramDB(Long id_program) {
         this.id_program_fk = id_program;
-        this.program = null;
+        this.mProgramDB = null;
     }
 
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program_fk = (program != null) ? program.getId_program() : null;
+    public void setProgram(ProgramDB programDB) {
+        this.mProgramDB = programDB;
+        this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
-    public static List<Tab> getAllTabs() {
-        return new Select().from(Tab.class).queryList();
+    public static List<TabDB> getAllTabs() {
+        return new Select().from(TabDB.class).queryList();
     }
 
     /*
-     * Return tabs filter by program and order by orderpos field
+     * Return mTabDBs filter by mProgramDB and order by orderpos field
      */
-    public static List<Tab> getTabsBySession() {
-        return new Select().from(Tab.class)
-                .where(Tab_Table.id_program_fk.eq(
-                        Session.getMalariaSurvey().getProgram().getId_program()))
-                .orderBy(OrderBy.fromProperty(Tab_Table.order_pos))
+    public static List<TabDB> getTabsBySession() {
+        return new Select().from(TabDB.class)
+                .where(TabDB_Table.id_program_fk.eq(
+                        Session.getMalariaSurveyDB().getProgramDB().getId_program()))
+                .orderBy(OrderBy.fromProperty(TabDB_Table.order_pos))
                 .queryList();
     }
     /**
-     * Method to delete tabs in cascade.
+     * Method to delete mTabDBs in cascade.
      *
      * @param names The list of names to delete.
      */
     public static void deleteTab(List<String> names) {
-        List<Tab> tabs = getAllTabs();
-        for (Tab tab : tabs) {
+        List<TabDB> tabDBs = getAllTabs();
+        for (TabDB tabDB : tabDBs) {
             for (String name : names) {
-                if (tab.getName().equals(name)) {
-                    Header.deleteHeaders(tab.getHeaders());
-                    tab.delete();
+                if (tabDB.getName().equals(name)) {
+                    HeaderDB.deleteHeaders(tabDB.getHeaderDBs());
+                    tabDB.delete();
                     break;
                 }
             }
         }
     }
 
-    public List<Header> getHeaders() {
-        if (headers == null) {
-            headers = new Select().from(Header.class)
-                    .where(Header_Table.id_tab_fk.eq(this.getId_tab()))
-                    .orderBy(OrderBy.fromProperty(Header_Table.order_pos))
+    public List<HeaderDB> getHeaderDBs() {
+        if (mHeaderDBs == null) {
+            mHeaderDBs = new Select().from(HeaderDB.class)
+                    .where(HeaderDB_Table.id_tab_fk.eq(this.getId_tab()))
+                    .orderBy(OrderBy.fromProperty(HeaderDB_Table.order_pos))
                     .queryList();
         }
-        return headers;
+        return mHeaderDBs;
     }
 
     /**
      * Checks if TAB table is empty or has no data
      */
     public static boolean isEmpty() {
-        return SQLite.selectCountOf().from(Tab.class).count() == 0;
+        return SQLite.selectCountOf().from(TabDB.class).count() == 0;
     }
 
     /**
-     * Checks if this tab is a general score tab.
+     * Checks if this mTabDB is a general score mTabDB.
      */
     public boolean isGeneralScore() {
         return getType() == Constants.TAB_SCORE_SUMMARY && !isCompositeScore();
     }
 
     /**
-     * Checks if this tab is the composite score tab
+     * Checks if this mTabDB is the composite score mTabDB
      */
     public boolean isCompositeScore() {
         return getType().equals(Constants.TAB_COMPOSITE_SCORE);
     }
 
     /**
-     * Checks if this tab is a custom tab
+     * Checks if this mTabDB is a custom mTabDB
      */
     public boolean isACustomTab() {
         return getType().equals(Constants.TAB_ADHERENCE) || getType().equals(Constants.TAB_IQATAB)
@@ -200,28 +200,28 @@ public class Tab extends BaseModel {
     }
 
     /**
-     * Checks if this tab is the adherence tab
+     * Checks if this mTabDB is the adherence mTabDB
      */
     public boolean isAdherenceTab() {
         return getType() == Constants.TAB_ADHERENCE;
     }
 
     /**
-     * Checks if this tab is the IQA tab
+     * Checks if this mTabDB is the IQA mTabDB
      */
     public boolean isIQATab() {
         return getType() == Constants.TAB_IQATAB;
     }
 
     /**
-     * Checks if this tab is a dynamic tab (sort of a wizard)
+     * Checks if this mTabDB is a dynamic mTabDB (sort of a wizard)
      */
     public boolean isDynamicTab() {
         return getType() == Constants.TAB_DYNAMIC_AUTOMATIC_TAB;
     }
 
     /**
-     * Checks if this tab is a dynamic tab (sort of a wizard)
+     * Checks if this mTabDB is a dynamic mTabDB (sort of a wizard)
      */
     public boolean isMultiQuestionTab() {
         return isMultiQuestionTab(getType());
@@ -231,20 +231,20 @@ public class Tab extends BaseModel {
         return tabType == Constants.TAB_MULTI_QUESTION;
     }
 
-    public static Tab findById(Long id) {
+    public static TabDB findById(Long id) {
         return new Select()
-                .from(Tab.class)
-                .where(Tab_Table.id_tab.eq(id)).querySingle();
+                .from(TabDB.class)
+                .where(TabDB_Table.id_tab.eq(id)).querySingle();
     }
 
-    public static Tab getFirstTab() {
-        return new Select().from(Tab.class).querySingle();
+    public static TabDB getFirstTab() {
+        return new Select().from(TabDB.class).querySingle();
     }
 
-    public static Tab getFirstTabWithProgram(Long programId) {
+    public static TabDB getFirstTabWithProgram(Long programId) {
         return new Select()
-                .from(Tab.class)
-                .where(Tab_Table.id_program_fk.is(programId)).querySingle();
+                .from(TabDB.class)
+                .where(TabDB_Table.id_program_fk.is(programId)).querySingle();
     }
 
     @Override
@@ -252,16 +252,16 @@ public class Tab extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Tab tab = (Tab) o;
+        TabDB tabDB = (TabDB) o;
 
-        if (id_tab != tab.id_tab) return false;
-        if (name != null ? !name.equals(tab.name) : tab.name != null) return false;
-        if (order_pos != null ? !order_pos.equals(tab.order_pos) : tab.order_pos != null) {
+        if (id_tab != tabDB.id_tab) return false;
+        if (name != null ? !name.equals(tabDB.name) : tabDB.name != null) return false;
+        if (order_pos != null ? !order_pos.equals(tabDB.order_pos) : tabDB.order_pos != null) {
             return false;
         }
-        if (type != null ? !type.equals(tab.type) : tab.type != null) return false;
-        return !(id_program_fk != null ? !id_program_fk.equals(tab.id_program_fk)
-                : tab.id_program_fk != null);
+        if (type != null ? !type.equals(tabDB.type) : tabDB.type != null) return false;
+        return !(id_program_fk != null ? !id_program_fk.equals(tabDB.id_program_fk)
+                : tabDB.id_program_fk != null);
 
     }
 
@@ -277,7 +277,7 @@ public class Tab extends BaseModel {
 
     @Override
     public String toString() {
-        return "Tab{" +
+        return "TabDB{" +
                 "id_tab=" + id_tab +
                 ", name='" + name + '\'' +
                 ", order_pos=" + order_pos +

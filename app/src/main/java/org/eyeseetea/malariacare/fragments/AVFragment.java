@@ -39,6 +39,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVDetailedAdapter;
@@ -136,7 +137,7 @@ public class AVFragment extends Fragment implements IDashboardFragment {
         Log.d(TAG, "reloadMedia (Thread: " + Thread.currentThread().getId() + "): "
                 + newListMediaDBs.size());
         this.mMedias.clear();
-        this.mMedias.addAll(Media.fromModel(newListMediaDBs));
+        this.mMedias.addAll(MediaRepository.fromModel(newListMediaDBs));
         this.cardViewAdapter.notifyDataSetChanged();
         this.detailedAdapter.notifyDataSetChanged();
     }

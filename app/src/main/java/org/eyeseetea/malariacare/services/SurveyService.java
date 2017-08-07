@@ -32,6 +32,7 @@ import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -247,7 +248,7 @@ public class SurveyService extends IntentService {
             @Override
             public void onSuccess(String uid) {
                 //Select surveys from sql
-                List<MediaDB> mediaDBs = MediaDB.getAllMedia();
+                List<MediaDB> mediaDBs = MediaRepository.getAllMedia();
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
                 Session.putServiceValue(ALL_MEDIA_ACTION, mediaDBs);

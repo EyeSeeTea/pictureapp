@@ -9,27 +9,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-import java.io.File;
-import java.text.DecimalFormat;
 import java.util.List;
-
-/**
- * Created by ignac on 04/08/2017.
- */
 
 public class AVDetailedAdapter extends
         RecyclerView.Adapter<AVDetailedAdapter.MediaViewHolder> {
-    List<Media> items;
+    List<Media> medias;
     Context context;
     LayoutInflater lInflater;
     protected Integer rowLayout;
 
-    public AVDetailedAdapter(List<Media> items, Context context) {
-        this.items = items;
+    public AVDetailedAdapter(List<Media> medias, Context context) {
+        this.medias = medias;
         this.context = context;
         this.lInflater = LayoutInflater.from(context);
         this.rowLayout = R.layout.av_detailed_row;
@@ -45,7 +38,7 @@ public class AVDetailedAdapter extends
 
     @Override
     public void onBindViewHolder(MediaViewHolder holder, int position) {
-        Media media = items.get(position);
+        Media media = medias.get(position);
         if (media.getName() != null) {
             holder.fileName.setText(media.getName());
         }
@@ -68,7 +61,7 @@ public class AVDetailedAdapter extends
     }
 
     public int getItemCount() {
-        return items.size();
+        return medias.size();
     }
 
     public class MediaViewHolder extends RecyclerView.ViewHolder {

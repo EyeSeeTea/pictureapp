@@ -61,22 +61,9 @@ public class Media {
         this.type = type;
     }
 
-    public static Media fromModel(MediaDB mediaDB){
-        return new Media(mediaDB.getFilename(), mediaDB.getResourceUrl(), mediaDB.getMediaType(),
-                getSizeInMB(mediaDB.getFilename()));
-    }
-
-    private static String getSizeInMB(String filename) {
+    public static String getSizeInMB(String filename) {
         //Todo fix this method using for example SizeCalculator.getSizeInMB(mediaDB.getFilename()) from eyeseetesdk
         return "0mb";
-    }
-
-    public static List<Media> fromModel(List<MediaDB> mediaDBs){
-        List<Media> medias = new ArrayList<>();
-        for(MediaDB mediaDB:mediaDBs){
-            medias.add(fromModel(mediaDB));
-        }
-        return medias;
     }
 
     public static String getFileSize(){

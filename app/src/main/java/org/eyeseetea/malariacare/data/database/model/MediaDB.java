@@ -22,20 +22,16 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.utils.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Table(database = AppDatabase.class, name = "Media")
 public class MediaDB extends BaseModel {
 
     /**
-     * Null media value to express that a question has NO media without using querys
+     * Null media value to express that a question has NO media without using queries
      */
     private static MediaDB noMedia = new MediaDB(Constants.NO_MEDIA_ID, null, null);
 
@@ -71,13 +67,11 @@ public class MediaDB extends BaseModel {
         this.setQuestion(question);
     }
 
-    public QuestionDB getQuestion(){
-        if(question==null){
-            if(id_question_fk==null) return null;
-            question = new Select()
-                    .from(QuestionDB.class)
-                    .where(QuestionDB_Table.id_question
-                        .is(id_question_fk)).querySingle();
+    public QuestionDB getQuestion() {
+        if (question == null) {
+
+            if (id_question_fk == null) return null;
+            question = QuestionDB.findByID(id_question_fk);
         }
         return question;
     }
@@ -106,48 +100,12 @@ public class MediaDB extends BaseModel {
         this.filename = filename;
     }
 
-    public static List<MediaDB> getAllNotInLocal() {
-        return new Select().
-                from(MediaDB.class).
-                where(MediaDB_Table.filename.isNull()).
-                and(MediaDB_Table.resource_url.isNotNull()).
-                orderBy(MediaDB_Table.id_media, true).
-                queryList();
-    }
-
-    public static List<MediaDB> getAllInLocal() {
-        return new Select().
-                from(MediaDB.class).
-                where(MediaDB_Table.filename.isNotNull()).
-                and(MediaDB_Table.resource_url.isNotNull()).
-                orderBy(MediaDB_Table.id_media, true).
-                queryList();
-    }
-
-    public static List<MediaDB> getAllMedia() {
-        return new Select().
-                from(MediaDB.class).
-                orderBy(MediaDB_Table.id_media, true).
-                queryList();
-    }
-    public static List<MediaDB> findByQuestion(QuestionDB question) {
-        if (question == null) {
-            return new ArrayList<>();
-        }
-
-        return new Select().
-                from(MediaDB.class).
-                where(MediaDB_Table.id_question_fk.eq(question.id_question)).
-                orderBy(MediaDB_Table.id_media, true).
-                queryList();
-    }
-
     public void setQuestion(QuestionDB question) {
         this.question = question;
-        this.id_question_fk = (question!=null)?question.getId_question():null;
+        this.id_question_fk = (question != null) ? question.getId_question() : null;
     }
 
-    public void setQuestion(Long id_question){
+    public void setQuestion(Long id_question) {
         this.id_question_fk = id_question;
         this.question = null;
     }
@@ -168,23 +126,12 @@ public class MediaDB extends BaseModel {
     }
 
     /**
-     * Returns a media that holds a reference to the same resource with an already downloaded copy
-     * of the file.
-     */
-    public MediaDB findLocalCopy() {
-        return new Select().from(MediaDB.class)
-                .where(MediaDB_Table.filename.isNotNull())
-                .and(MediaDB_Table.id_media.isNot(this.id_media))
-                .and(MediaDB_Table.resource_url.is(this.resource_url))
-                .querySingle();
-    }
-
-    /**
      * Returns if is a picture
      */
     public boolean isPicture() {
         return (media_type == Constants.MEDIA_TYPE_IMAGE);
     }
+
     /**
      * Returns if is video
      */
@@ -206,7 +153,8 @@ public class MediaDB extends BaseModel {
                 : media.resource_url != null) {
             return false;
         }
-        return id_question_fk != null ? id_question_fk.equals(media.id_question_fk) : media.id_question_fk == null;
+        return id_question_fk != null ? id_question_fk.equals(media.id_question_fk)
+                : media.id_question_fk == null;
 
     }
 

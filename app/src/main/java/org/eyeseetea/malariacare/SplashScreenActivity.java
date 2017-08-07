@@ -32,6 +32,11 @@ public class SplashScreenActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
         asyncInitApplication.execute((Void) null);
     }

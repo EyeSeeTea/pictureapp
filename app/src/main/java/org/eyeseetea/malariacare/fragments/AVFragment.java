@@ -21,12 +21,7 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,12 +31,14 @@ import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
-import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,17 +50,15 @@ public class AVFragment extends Fragment implements IDashboardFragment {
 
 
     public static final String TAG = ".SentFragment";
-    protected AVAdapter reciclerAdapter;
+    protected AVAdapter recyclerAdapter;
     private List<Media> mMedias;
     private RecyclerView recyclerViewList;
-    private AVFragment.SurveyReceiver surveyReceiver;
     private AVAdapter.ViewType activeViewType = AVAdapter.ViewType.cardview;
     AVFragment mAVFragment;
 
     public AVFragment() {
         mAVFragment = this;
         this.mMedias = new ArrayList();
-        this.mMedias.add(new Media("newfile","path", 1, "30mb")); this.mMedias.add(new Media("newfile2","path", 1, "530mb")); this.mMedias.add(new Media("newfile3","path", 1, "320mb")); this.mMedias.add(new Media("newfile4","path", 1, "310mb")); this.mMedias.add(new Media("newfile5","path", 1, "330mb")); this.mMedias.add(new Media("newfile6","path", 1, "340mb"));
     }
 
     @Override
@@ -88,7 +83,27 @@ public class AVFragment extends Fragment implements IDashboardFragment {
         super.onActivityCreated(savedInstanceState);
 
         initDetailedRecyclerViewList();
-        initAdapters();
+
+        loadMediaListAndAdapter();
+    }
+
+    private void loadMediaListAndAdapter() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+
+        GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor);
+        getMediaUseCase.execute(new GetMediaUseCase.Callback() {
+            @Override
+            public void onSuccess(List<Media> medias) {
+                mMedias=medias;
+                initAdapters();
+            }
+
+            @Override
+            public void onError() {
+                Log.e(TAG, "error getting user program");
+            }
+        });
     }
 
     private void initDetailedRecyclerViewList() {
@@ -96,29 +111,14 @@ public class AVFragment extends Fragment implements IDashboardFragment {
         recyclerViewList = (RecyclerView)  getView().findViewById(R.id.av_recycler);
         recyclerViewList.setHasFixedSize(true);
         recyclerViewList.setLayoutManager(linearLayoutManager);
-}
-
-    @Override
-    public void onResume() {
-        Log.d(TAG, "onResume");
-        registerFragmentReceiver();
-        super.onResume();
     }
 
     /**
      * Inits adapter.
      */
     private void initAdapters() {
-        this.reciclerAdapter = new AVAdapter(this.mMedias, activeViewType, mAVFragment.getActivity().getApplicationContext());
-        recyclerViewList.setAdapter(reciclerAdapter);
-    }
-
-    @Override
-    public void onStop() {
-        Log.d(TAG, "onStop");
-        unregisterFragmentReceiver();
-
-        super.onStop();
+        this.recyclerAdapter = new AVAdapter(this.mMedias, activeViewType, mAVFragment.getActivity().getApplicationContext());
+        recyclerViewList.setAdapter(recyclerAdapter);
     }
 
     public void reloadMedia(List<MediaDB> newListMediaDBs) {
@@ -126,46 +126,25 @@ public class AVFragment extends Fragment implements IDashboardFragment {
                 + newListMediaDBs.size());
         this.mMedias.clear();
         this.mMedias.addAll(MediaRepository.fromModel(newListMediaDBs));
-        this.reciclerAdapter.notifyDataSetChanged();
+        this.recyclerAdapter.notifyDataSetChanged();
     }
 
     public void reloadHeader(Activity activity) {
+
     }
 
-    /**
-     * Register a survey receiver to load surveys into the listadapter
-     */
+    @Override
     public void registerFragmentReceiver() {
-        Log.d(TAG, "registerSurveysReceiver");
 
-        if (surveyReceiver == null) {
-            surveyReceiver = new AVFragment.SurveyReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
-                    new IntentFilter(SurveyService.ALL_MEDIA_ACTION));
-        }
     }
 
-
-    /**
-     * Unregisters the survey receiver.
-     * It really important to do this, otherwise each receiver will invoke its code.
-     */
+    @Override
     public void unregisterFragmentReceiver() {
-        Log.d(TAG, "unregisterFragmentReceiver");
-        if (surveyReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
-            surveyReceiver = null;
-        }
+
     }
 
     public void reloadData() {
-        //Reload data using service
-        Intent mediaIntent = new Intent(
-                PreferencesState.getInstance().getContext().getApplicationContext(),
-                SurveyService.class);
-        mediaIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.ALL_MEDIA_ACTION);
-        PreferencesState.getInstance().getContext().getApplicationContext().startService(
-                mediaIntent);
+        loadMediaListAndAdapter();
     }
 
     public void toggleLists() {
@@ -175,30 +154,5 @@ public class AVFragment extends Fragment implements IDashboardFragment {
             activeViewType=AVAdapter.ViewType.cardview;
         }
         initAdapters();
-    }
-
-    /**
-     * Inner private class that receives the result from the service
-     */
-    private class SurveyReceiver extends BroadcastReceiver {
-        private SurveyReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive");
-            //Listening only intents from this method
-            if (SurveyService.ALL_MEDIA_ACTION.equals(intent.getAction())) {
-                List<MediaDB> mediaFromService;
-                Session.valuesLock.readLock().lock();
-                try {
-                    mediaFromService = (List<MediaDB>) Session.popServiceValue(
-                            SurveyService.ALL_MEDIA_ACTION);
-                } finally {
-                    Session.valuesLock.readLock().unlock();
-                }
-                reloadMedia(mediaFromService);
-            }
-        }
     }
 }

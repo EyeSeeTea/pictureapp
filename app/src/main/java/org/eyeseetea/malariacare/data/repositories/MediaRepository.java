@@ -34,12 +34,17 @@ public class MediaRepository {
                 queryList();
     }
 
-    public static List<MediaDB> getAllMedia() {
+    public static List<MediaDB> getAllMediaDB() {
         return new Select().
                 from(MediaDB.class).
                 orderBy(MediaDB_Table.id_media, true).
                 queryList();
     }
+
+    public static List<Media> getAllMedia() {
+        return fromModel(getAllMediaDB());
+    }
+
     public static List<MediaDB> findByQuestion(QuestionDB question) {
         if (question == null) {
             return new ArrayList<>();

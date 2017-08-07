@@ -76,12 +76,6 @@ public class SurveyService extends IntentService {
             "org.eyeseetea.malariacare.services.SurveyService.ALL_SENT_SURVEYS_ACTION";
 
     /**
-     * Name of 'list completed' action
-     */
-    public static final String ALL_MEDIA_ACTION =
-            "org.eyeseetea.malariacare.services.SurveyService.ALL_MEDIA_ACTION";
-
-    /**
      * Name of 'remove list completed' action
      */
     public static final String REMOVE_SENT_SURVEYS_ACTION =
@@ -152,9 +146,6 @@ public class SurveyService extends IntentService {
                 break;
             case ALL_SENT_SURVEYS_ACTION:
                 getAllSentSurveys();
-                break;
-            case ALL_MEDIA_ACTION:
-                getAllMedia();
                 break;
             case REMOVE_SENT_SURVEYS_ACTION:
                 removeAllSentSurveys();
@@ -233,28 +224,6 @@ public class SurveyService extends IntentService {
 
                 //Returning result to anyone listening
                 Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
-                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
-            }
-        });
-    }
-
-
-    /**
-     * Selects all media from database
-     */
-    public void getAllMedia() {
-        Log.d(TAG, "getAllSentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
-        getProgramUID(new Callback() {
-            @Override
-            public void onSuccess(String uid) {
-                //Select surveys from sql
-                List<MediaDB> mediaDBs = MediaRepository.getAllMedia();
-
-                //Since intents does NOT admit NON serializable as values we use Session instead
-                Session.putServiceValue(ALL_MEDIA_ACTION, mediaDBs);
-
-                //Returning result to anyone listening
-                Intent resultIntent = new Intent(ALL_MEDIA_ACTION);
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
             }
         });

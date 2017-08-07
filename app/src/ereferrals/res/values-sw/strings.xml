@@ -207,4 +207,6 @@
     <string name="webservice_url_error_title">"Kosa webservice"</string>
     <string name="webservice_url_error">"Hitilafu kujenga huduma ya mtandao: %s"</string>
     <string name="forgot_password">I forgot my password</string>
+    <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
+    <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
 </resources>

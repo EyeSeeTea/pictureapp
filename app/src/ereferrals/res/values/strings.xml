@@ -204,4 +204,6 @@
     <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
     <string name="error_exporting_data">"Error metadata could not be exported."</string>
     <string name="forgot_password">I forgot my password</string>
+    <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
+    <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
 </resources>

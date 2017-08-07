@@ -1,9 +1,11 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -133,16 +135,19 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     @Override
                     public void onGetForgotPasswordSuccess() {
                         loginActivity.onFinishLoading(null);
+                        showMessageDialog(R.string.forgot_password_sms_sent);
                     }
 
                     @Override
                     public void onInvalidUsername() {
                         loginActivity.onFinishLoading(null);
+                        showMessageDialog(R.string.forgot_password_wrong_username);
                     }
 
                     @Override
                     public void onNetworkError() {
                         loginActivity.onFinishLoading(null);
+                        showMessageDialog(R.string.network_error);
                     }
                 });
 
@@ -330,6 +335,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
         });
 
+    }
+
+    private void showMessageDialog(int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(loginActivity);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.show();
     }
 
 }

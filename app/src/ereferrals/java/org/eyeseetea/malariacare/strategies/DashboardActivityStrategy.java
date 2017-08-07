@@ -83,7 +83,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Survey malariaSurvey = Session.getMalariaSurveyDB();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
         malariaSurvey.updateSurveyStatus();
         if (malariaSurvey.isCompleted()) {
             malariaSurvey.setEventUid(String.valueOf(UIDGenerator.generateUID()));

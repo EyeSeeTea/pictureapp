@@ -35,14 +35,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AVDetailedAdapter;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.util.ArrayList;
@@ -55,17 +53,17 @@ public class AVFragment extends Fragment implements IDashboardFragment {
 
 
     public static final String TAG = ".SentFragment";
-    protected AVAdapter cardViewAdapter;
-    protected AVDetailedAdapter detailedAdapter;
+    protected AVAdapter reciclerAdapter;
     private List<Media> mMedias;
-    private RecyclerView mCardViewRecyclerView;
-    private RecyclerView mDetailedRecyclerView;
+    private RecyclerView recyclerViewList;
     private AVFragment.SurveyReceiver surveyReceiver;
+    private AVAdapter.ViewType activeViewType = AVAdapter.ViewType.cardview;
     AVFragment mAVFragment;
 
     public AVFragment() {
         mAVFragment = this;
         this.mMedias = new ArrayList();
+        this.mMedias.add(new Media("newfile","path", 1, "30mb")); this.mMedias.add(new Media("newfile2","path", 1, "530mb")); this.mMedias.add(new Media("newfile3","path", 1, "320mb")); this.mMedias.add(new Media("newfile4","path", 1, "310mb")); this.mMedias.add(new Media("newfile5","path", 1, "330mb")); this.mMedias.add(new Media("newfile6","path", 1, "340mb"));
     }
 
     @Override
@@ -89,25 +87,15 @@ public class AVFragment extends Fragment implements IDashboardFragment {
         Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        initAdapters();
-        initCardViewRecyclerViewList();
         initDetailedRecyclerViewList();
-    }
-
-    private void initCardViewRecyclerViewList() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mAVFragment.getActivity().getApplicationContext());
-        mCardViewRecyclerView = (RecyclerView) getView().findViewById(R.id.av_recycler);
-        mCardViewRecyclerView.setHasFixedSize(true);
-        mCardViewRecyclerView.setLayoutManager(linearLayoutManager);
-        mCardViewRecyclerView.setAdapter(cardViewAdapter);
+        initAdapters();
     }
 
     private void initDetailedRecyclerViewList() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mAVFragment.getActivity().getApplicationContext());
-        mDetailedRecyclerView = (RecyclerView)  getView().findViewById(R.id.detailed_media_list);
-        mDetailedRecyclerView.setHasFixedSize(true);
-        mDetailedRecyclerView.setLayoutManager(linearLayoutManager);
-        mDetailedRecyclerView.setAdapter(detailedAdapter);
+        recyclerViewList = (RecyclerView)  getView().findViewById(R.id.av_recycler);
+        recyclerViewList.setHasFixedSize(true);
+        recyclerViewList.setLayoutManager(linearLayoutManager);
 }
 
     @Override
@@ -121,8 +109,8 @@ public class AVFragment extends Fragment implements IDashboardFragment {
      * Inits adapter.
      */
     private void initAdapters() {
-        this.cardViewAdapter = new AVAdapter(this.mMedias);
-        this.detailedAdapter = new AVDetailedAdapter(this.mMedias, mAVFragment.getActivity().getApplicationContext());
+        this.reciclerAdapter = new AVAdapter(this.mMedias, activeViewType, mAVFragment.getActivity().getApplicationContext());
+        recyclerViewList.setAdapter(reciclerAdapter);
     }
 
     @Override
@@ -138,8 +126,7 @@ public class AVFragment extends Fragment implements IDashboardFragment {
                 + newListMediaDBs.size());
         this.mMedias.clear();
         this.mMedias.addAll(MediaRepository.fromModel(newListMediaDBs));
-        this.cardViewAdapter.notifyDataSetChanged();
-        this.detailedAdapter.notifyDataSetChanged();
+        this.reciclerAdapter.notifyDataSetChanged();
     }
 
     public void reloadHeader(Activity activity) {
@@ -181,18 +168,13 @@ public class AVFragment extends Fragment implements IDashboardFragment {
                 mediaIntent);
     }
 
-    public void changeList() {
-        toggleLists();
-    }
-
-    private void toggleLists() {
-        if(mCardViewRecyclerView.getVisibility()==View.VISIBLE){
-            mCardViewRecyclerView.setVisibility(View.GONE);
-            mDetailedRecyclerView.setVisibility(View.VISIBLE);
+    public void toggleLists() {
+        if(activeViewType== AVAdapter.ViewType.cardview){
+            activeViewType=AVAdapter.ViewType.detailed;
         }else{
-            mCardViewRecyclerView.setVisibility(View.VISIBLE);
-            mDetailedRecyclerView.setVisibility(View.GONE);
+            activeViewType=AVAdapter.ViewType.cardview;
         }
+        initAdapters();
     }
 
     /**

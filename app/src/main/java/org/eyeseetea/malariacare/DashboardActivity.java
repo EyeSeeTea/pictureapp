@@ -783,7 +783,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void changeList(View view) {
-        mDashboardActivityStrategy.avFragment.changeList();
+        mDashboardActivityStrategy.avFragment.toggleLists();
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {

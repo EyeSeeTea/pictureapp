@@ -1,11 +1,13 @@
 package org.eyeseetea.malariacare.data.repositories;
 
+import com.google.android.gms.wearable.MessageEvent;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.MediaDB_Table;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +81,16 @@ public class MediaRepository {
     }
 
     public static Media fromModel(MediaDB mediaDB){
-        return new Media(mediaDB.getFilename(), mediaDB.getResourceUrl(), mediaDB.getMediaType(),
+        return new Media(mediaDB.getFilename(), mediaDB.getResourceUrl(), getMediaType(mediaDB.getMediaType()),
                 Media.getSizeInMB(mediaDB.getFilename()));
+    }
+
+    public static Media.MediaType getMediaType(int mediaType) {
+        if (mediaType == Constants.MEDIA_TYPE_IMAGE) {
+            return Media.MediaType.PICTURE;
+        } else if (mediaType == Constants.MEDIA_TYPE_VIDEO) {
+            return Media.MediaType.VIDEO;
+        }
+        return null;
     }
 }

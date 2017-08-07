@@ -19,12 +19,13 @@ import java.util.List;
  */
 
 public class Media {
+    public enum MediaType{ PICTURE, VIDEO};
     String name;
     String path;
-    int type;
+    MediaType type;
     String size;
 
-    public Media(String name, String path, int type, String size) {
+    public Media(String name, String path, MediaType type, String size) {
         this.name = required(name,"name is required");
         this.path = required(path,"path is required");
         this.type = required(type,"type is required");
@@ -55,11 +56,11 @@ public class Media {
         this.size = size;
     }
 
-    public int getType() {
+    public MediaType getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(MediaType type) {
         this.type = type;
     }
 
@@ -79,10 +80,10 @@ public class Media {
     }
 
     public boolean isPicture() {
-        return type == Constants.MEDIA_TYPE_IMAGE;
+        return type == MediaType.PICTURE;
     }
 
     public boolean isVideo() {
-        return type == Constants.MEDIA_TYPE_VIDEO;
+        return type == MediaType.VIDEO;
     }
 }

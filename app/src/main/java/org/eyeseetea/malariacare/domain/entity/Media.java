@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -23,10 +25,10 @@ public class Media {
     String size;
 
     public Media(String name, String path, int type, String size) {
-        this.name = name;
-        this.path = path;
-        this.type = type;
-        this.size = size;
+        this.name = required(name,"name is required");
+        this.path = required(path,"path is required");
+        this.type = required(type,"type is required");
+        this.size = required(size,"size is required");
     }
 
     public String getName() {

@@ -224,7 +224,12 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysFromService);
-                new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView, surveysFromService);
+                if(mListView==null) {
+                    mListView = getListView();
+                    Log.d(TAG, "error null listView");
+                }
+                new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView,
+                            surveysFromService);
             }
         }
     }

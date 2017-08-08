@@ -68,7 +68,7 @@ public class MediaRepository {
                 .querySingle();
     }
 
-    public static List<Media> fromModel(List<MediaDB> mediaDBs){
+    private static List<Media> fromModel(List<MediaDB> mediaDBs){
         List<Media> medias = new ArrayList<>();
         for(MediaDB mediaDB:mediaDBs){
             medias.add(fromModel(mediaDB));
@@ -76,7 +76,7 @@ public class MediaRepository {
         return medias;
     }
 
-    public static Media fromModel(MediaDB mediaDB){
+    private static Media fromModel(MediaDB mediaDB){
         return new Media(mediaDB.getFilename(), mediaDB.getResourceUrl(), getMediaType(mediaDB.getMediaType()),
                 Media.getSizeInMB(mediaDB.getFilename()));
     }

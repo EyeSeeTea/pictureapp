@@ -180,11 +180,6 @@ public abstract class ADashboardActivityStrategy {
         mDashboardActivity.replaceFragment(R.id.dashboard_av_container, avFragment);
     }
 
-    public void reloadAVFragment(){
-        avFragment.reloadData();
-        avFragment.reloadHeader(mDashboardActivity);
-    }
-
     public int getSurveyContainer() {
         return R.id.dashboard_details_container;
     }

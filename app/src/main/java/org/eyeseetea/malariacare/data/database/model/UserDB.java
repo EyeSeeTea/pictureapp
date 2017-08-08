@@ -283,9 +283,4 @@ public class UserDB extends BaseModel {
         this.last_updated = last_updated;
         this.mSurveyDBs = surveyDBs;
     }
-
-    @Override
-    public void save() {
-        super.save();
-    }
 }

@@ -95,7 +95,6 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                     public void onSuccess(UserAccount userAccount) {
                             mCredentialsLocalDataSource.saveOrganisationCredentials(insertedCredentials);
                             checkUserCredentialsWithOrgUnit(insertedCredentials, false);
-                            notifyLoginSucces();
                         }
 
                     @Override
@@ -158,7 +157,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                 && insertedCredentials.getPassword().equals(credentials.getPassword())
                 && (fromNetWorkError || insertedCredentials.getServerURL().equals(
                 credentials.getServerURL()))) {
-            notifyLoginSucces();
+            notifyLoginSuccess();
         } else {
             if (fromNetWorkError) {
                 notifyNetworkError();
@@ -168,7 +167,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         }
     }
 
-    public void notifyLoginSucces() {
+    public void notifyLoginSuccess() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {

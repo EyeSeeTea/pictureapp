@@ -207,5 +207,4 @@
     <string name="empty_review_value">""</string>
     <string name="webservice_url_error_title">"Kosa webservice"</string>
     <string name="webservice_url_error">"Hitilafu kujenga huduma ya mtandao: %s"</string>
-    <string name="clean_demo_db">"Demo safi DB"</string>
 </resources>

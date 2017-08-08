@@ -204,5 +204,4 @@
     <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
     <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
     <string name="error_exporting_data">"Error metadata could not be exported."</string>
-    <string name="clean_demo_db">"Clean demo DB"</string>
 </resources>

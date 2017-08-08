@@ -12,12 +12,15 @@ public class GetMediaUseCase implements UseCase {
     private Callback mCallback;
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
+    private MediaRepository mMediaRepository;
 
     public GetMediaUseCase(
             IMainExecutor mainExecutor,
-            IAsyncExecutor asyncExecutor) {
+            IAsyncExecutor asyncExecutor,
+            MediaRepository mediaRepository) {
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
+        mMediaRepository = mediaRepository;
     }
 
     public void execute(Callback callback) {
@@ -27,7 +30,7 @@ public class GetMediaUseCase implements UseCase {
 
     @Override
     public void run() {
-        final List<Media> medias = MediaRepository.getAllMedia();
+        final List<Media> medias = mMediaRepository.getAllMedia();
         if (medias != null && !medias.isEmpty()) {
             mMainExecutor.run(new Runnable() {
                 @Override

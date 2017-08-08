@@ -12,10 +12,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ignac on 07/08/2017.
- */
-
 public class MediaRepository {
 
     public static List<MediaDB> getAllNotInLocal() {

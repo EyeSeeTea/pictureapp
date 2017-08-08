@@ -3,9 +3,6 @@ package org.eyeseetea.malariacare.domain.entity;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -49,13 +46,4 @@ public class MediaTest {
         new Media("name", "path", Media.MediaType.PICTURE, null);
     }
 
-    @Test
-    public void test_mediaDB_conversion_to_Media() {
-        MediaDB mediaDB = new MediaDB(Constants.MEDIA_TYPE_IMAGE, "path", null);
-        mediaDB.setFilename("name");
-        Media media = MediaRepository.fromModel(mediaDB);
-        assertThat(media.getName().equals("name"), is(true));
-        assertThat(media.getPath().equals("path"), is(true));
-        assertThat(media.getType() == Media.MediaType.PICTURE, is(true));
-    }
 }

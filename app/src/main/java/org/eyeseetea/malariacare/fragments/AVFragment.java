@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -46,14 +45,14 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class AVFragment extends Fragment implements IDashboardFragment {
+public class AVFragment extends Fragment {
 
 
     public static final String TAG = ".SentFragment";
     protected AVAdapter recyclerAdapter;
     private List<Media> mMedias;
     private RecyclerView recyclerViewList;
-    private AVAdapter.ViewType activeViewType = AVAdapter.ViewType.cardview;
+    private AVAdapter.ViewType activeViewType = AVAdapter.ViewType.GRID;
     AVFragment mAVFragment;
 
     public AVFragment() {
@@ -90,8 +89,9 @@ public class AVFragment extends Fragment implements IDashboardFragment {
     private void loadMediaListAndAdapter() {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        MediaRepository mediaRepository = new MediaRepository();
 
-        GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor);
+        GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor, mediaRepository);
         getMediaUseCase.execute(new GetMediaUseCase.Callback() {
             @Override
             public void onSuccess(List<Media> medias) {
@@ -121,37 +121,15 @@ public class AVFragment extends Fragment implements IDashboardFragment {
         recyclerViewList.setAdapter(recyclerAdapter);
     }
 
-    public void reloadMedia(List<MediaDB> newListMediaDBs) {
-        Log.d(TAG, "reloadMedia (Thread: " + Thread.currentThread().getId() + "): "
-                + newListMediaDBs.size());
-        this.mMedias.clear();
-        this.mMedias.addAll(MediaRepository.fromModel(newListMediaDBs));
-        this.recyclerAdapter.notifyDataSetChanged();
-    }
-
-    public void reloadHeader(Activity activity) {
-
-    }
-
-    @Override
-    public void registerFragmentReceiver() {
-
-    }
-
-    @Override
-    public void unregisterFragmentReceiver() {
-
-    }
-
     public void reloadData() {
         loadMediaListAndAdapter();
     }
 
     public void toggleLists() {
-        if(activeViewType== AVAdapter.ViewType.cardview){
-            activeViewType=AVAdapter.ViewType.detailed;
+        if(activeViewType== AVAdapter.ViewType.GRID){
+            activeViewType=AVAdapter.ViewType.LIST;
         }else{
-            activeViewType=AVAdapter.ViewType.cardview;
+            activeViewType=AVAdapter.ViewType.GRID;
         }
         initAdapters();
     }

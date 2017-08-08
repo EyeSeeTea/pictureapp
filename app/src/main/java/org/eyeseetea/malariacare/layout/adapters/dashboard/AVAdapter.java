@@ -23,7 +23,7 @@ import java.util.List;
 
 public class AVAdapter extends RecyclerView.Adapter {
 
-    public enum ViewType {cardview, detailed}
+    public enum ViewType {GRID, LIST}
 
     ViewType typeOfView;
 
@@ -43,14 +43,14 @@ public class AVAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if(typeOfView.equals(ViewType.cardview)) {
+        if(typeOfView.equals(ViewType.GRID)) {
             View rowView = LayoutInflater.from(viewGroup.getContext()).inflate(
-                    R.layout.av_cardview, viewGroup, false);
-            return new CardviewMediaViewHolder(rowView);
-        }else if(typeOfView.equals(ViewType.detailed)){
+                    R.layout.av_grid_item, viewGroup, false);
+            return new GridMediaViewHolder(rowView);
+        }else if(typeOfView.equals(ViewType.LIST)){
             View rowView = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.av_detailed_row, viewGroup, false);
-            return new DetailedMediaViewHolder(rowView);
+                    .inflate(R.layout.av_list_item, viewGroup, false);
+            return new ListItemMediaViewHolder(rowView);
         }
         return null;
     }
@@ -58,14 +58,14 @@ public class AVAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        if(viewHolder instanceof CardviewMediaViewHolder){
-            CardviewMediaViewHolder mediaViewHolder = (CardviewMediaViewHolder) viewHolder;
+        if(viewHolder instanceof GridMediaViewHolder){
+            GridMediaViewHolder mediaViewHolder = (GridMediaViewHolder) viewHolder;
             mediaViewHolder.name.setText(medias.get(position).getName());
             Drawable drawable = medias.get(position).getFileFromPath(viewHolder.itemView.getContext());
             mediaViewHolder.filename.setImageDrawable(drawable);
         }
-        else if (viewHolder instanceof DetailedMediaViewHolder){
-            DetailedMediaViewHolder mediaViewHolder = (DetailedMediaViewHolder) viewHolder;
+        else if (viewHolder instanceof ListItemMediaViewHolder){
+            ListItemMediaViewHolder mediaViewHolder = (ListItemMediaViewHolder) viewHolder;
             Media media = medias.get(position);
             if (media.getName() != null) {
                 mediaViewHolder.fileName.setText(media.getName());
@@ -91,12 +91,12 @@ public class AVAdapter extends RecyclerView.Adapter {
 
 
 
-    public static class CardviewMediaViewHolder extends RecyclerView.ViewHolder {
+    public static class GridMediaViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         ImageView filename;
         TextView name;
 
-        CardviewMediaViewHolder(View itemView) {
+        GridMediaViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.av_card_view);
             filename = (ImageView)itemView.findViewById(R.id.image_content);
@@ -105,12 +105,12 @@ public class AVAdapter extends RecyclerView.Adapter {
     }
 
 
-    public class DetailedMediaViewHolder extends RecyclerView.ViewHolder {
+    public class ListItemMediaViewHolder extends RecyclerView.ViewHolder {
         private final ImageView icon;
         private final CustomTextView fileName;
         private final CustomTextView size;
 
-        public DetailedMediaViewHolder(View itemView) {
+        public ListItemMediaViewHolder(View itemView) {
             super(itemView);
             icon = (ImageView) itemView.findViewById(R.id.icon);
             fileName = (CustomTextView) itemView.findViewById(R.id.filename);

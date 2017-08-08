@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
+import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -40,8 +41,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
-                //// FIXME: 30/05/2017 Uncomment this line to reactivate the disable login feature
-                //showLogin();
+                showLogin();
             }
         }
     };
@@ -49,7 +49,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onStop() {
         applicationdidenterbackground();
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+                settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
         }
     }
@@ -130,9 +131,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     private void showLogin() {
-        Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
-        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        settingsActivity.startActivity(loginIntent);
+        if (LockScreenStatus.isPatternSet(settingsActivity)) {
+            Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            settingsActivity.startActivity(loginIntent);
+        }
     }
 
     @Override

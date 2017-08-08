@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.sync.exporter.WSClient;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IForgotPasswordRepository;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
@@ -18,17 +18,18 @@ public class ForgotPasswordRepository implements IForgotPasswordRepository {
     }
 
     @Override
-    public void getForgotPassword(String username,
-            final IDataSourceCallback<String> dataSourceCallback) {
+    public void getForgotPassword(java.lang.String username,
+            final Callback dataSourceCallback) {
         if (!isNetworkAvailable()) {
             dataSourceCallback.onError(new NetworkException());
         }
 
         WSClient wsClient = new WSClient();
-        wsClient.getForgotPassword(username, new WSClient.WSClientCallBack<String>() {
+        wsClient.getForgotPassword(username,
+                new WSClient.WSClientCallBack<ForgotPasswordResponse>() {
             @Override
-            public void onSuccess(String result) {
-                dataSourceCallback.onSuccess(result);
+            public void onSuccess(ForgotPasswordResponse result) {
+                dataSourceCallback.onSuccess(result.getMessage(), result.getStatus());
             }
 
             @Override
@@ -45,4 +46,6 @@ public class ForgotPasswordRepository implements IForgotPasswordRepository {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
+
 }

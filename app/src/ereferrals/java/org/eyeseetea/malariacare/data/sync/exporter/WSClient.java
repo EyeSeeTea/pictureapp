@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -21,7 +22,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class WSClient {
-    private static final String TAG = "WSClient";
+    private static final java.lang.String TAG = "WSClient";
 
     private Retrofit mRetrofit;
     private Context mContext;
@@ -77,7 +78,7 @@ public class WSClient {
     }
 
     public void getForgotPassword(String username, WSClientCallBack wsClientCallBack) {
-        Response<String> response = null;
+        Response<ForgotPasswordResponse> response = null;
         try {
             response = mSurveyApiClientRetrofit.forgotPassword(username).execute();
 
@@ -87,10 +88,9 @@ public class WSClient {
         } catch (IOException e) {
             wsClientCallBack.onError(e);
         }
-        if (response.isSuccessful()) {
+        if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());
         }
-        wsClientCallBack.onError(new InvalidCredentialsException());
     }
 
     public interface WSClientCallBack<T> {

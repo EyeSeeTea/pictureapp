@@ -47,8 +47,8 @@ import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
-    private static final String TAG = ".LoginActivityStrategy";
-    public static final String EXIT = "exit";
+    private static final java.lang.String TAG = ".LoginActivityStrategy";
+    public static final java.lang.String EXIT = "exit";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
     private EditText username;
@@ -133,21 +133,23 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         forgotPasswordUseCase.execute(username.getText().toString(),
                 new ForgotPasswordUseCase.Callback() {
                     @Override
-                    public void onGetForgotPasswordSuccess() {
+                    public void onGetForgotPasswordSuccess(String result, String title) {
                         loginActivity.onFinishLoading(null);
-                        showMessageDialog(R.string.forgot_password_sms_sent);
-                    }
-
-                    @Override
-                    public void onInvalidUsername() {
-                        loginActivity.onFinishLoading(null);
-                        showMessageDialog(R.string.forgot_password_wrong_username);
+                        showMessageDialog(result, title);
                     }
 
                     @Override
                     public void onNetworkError() {
                         loginActivity.onFinishLoading(null);
-                        showMessageDialog(R.string.network_error);
+                        showMessageDialog(loginActivity.getString(R.string.network_error),
+                                loginActivity.getString(R.string.error_conflict_title));
+                    }
+
+                    @Override
+                    public void onError(String messages) {
+                        loginActivity.onFinishLoading(null);
+                        showMessageDialog(messages,
+                                loginActivity.getString(R.string.error_conflict_title));
                     }
                 });
 
@@ -277,7 +279,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 }
 
                 @Override
-                public void onLogoutError(String message) {
+                public void onLogoutError(java.lang.String message) {
                     callback.onError();
                 }
             });
@@ -312,7 +314,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
-            public void onError(String message) {
+            public void onError(java.lang.String message) {
                 loginActivity.onFinishLoading(null);
                 loginActivity.showError(R.string.dialog_pull_error);
             }
@@ -337,8 +339,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     }
 
-    private void showMessageDialog(int message) {
+    private void showMessageDialog(String message, String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(loginActivity);
+        builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -348,5 +351,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
         builder.show();
     }
+
 
 }

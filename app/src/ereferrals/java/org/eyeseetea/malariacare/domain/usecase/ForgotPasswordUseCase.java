@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IForgotPasswordRepository;
@@ -11,7 +10,7 @@ public class ForgotPasswordUseCase implements UseCase {
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
     private IForgotPasswordRepository mForgotPasswordRepository;
-    private String mUsername;
+    private java.lang.String mUsername;
     private Callback mCallback;
 
     public ForgotPasswordUseCase(
@@ -23,7 +22,7 @@ public class ForgotPasswordUseCase implements UseCase {
         mForgotPasswordRepository = forgotPasswordRepository;
     }
 
-    public void execute(String username, Callback callback) {
+    public void execute(java.lang.String username, Callback callback) {
         mUsername = username;
         mCallback = callback;
         mAsyncExecutor.run(this);
@@ -31,19 +30,20 @@ public class ForgotPasswordUseCase implements UseCase {
 
     @Override
     public void run() {
-        mForgotPasswordRepository.getForgotPassword(mUsername, new IDataSourceCallback<String>() {
+        mForgotPasswordRepository.getForgotPassword(mUsername,
+                new IForgotPasswordRepository.Callback() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(final String result, final String title) {
                 mMainExecutor.run(new Runnable() {
                     @Override
                     public void run() {
-                        mCallback.onGetForgotPasswordSuccess();
+                        mCallback.onGetForgotPasswordSuccess(result, title);
                     }
                 });
             }
 
             @Override
-            public void onError(Throwable throwable) {
+            public void onError(final Throwable throwable) {
                 if (throwable instanceof NetworkException) {
                     mMainExecutor.run(new Runnable() {
                         @Override
@@ -55,7 +55,7 @@ public class ForgotPasswordUseCase implements UseCase {
                     mMainExecutor.run(new Runnable() {
                         @Override
                         public void run() {
-                            mCallback.onInvalidUsername();
+                            mCallback.onError(throwable.getMessage());
                         }
                     });
                 }
@@ -64,10 +64,10 @@ public class ForgotPasswordUseCase implements UseCase {
     }
 
     public interface Callback {
-        void onGetForgotPasswordSuccess();
-
-        void onInvalidUsername();
+        void onGetForgotPasswordSuccess(String result, String title);
 
         void onNetworkError();
+
+        void onError(String messages);
     }
 }

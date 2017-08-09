@@ -200,6 +200,7 @@
     <string name="webservice_url_error">"Error building webservice: %s"</string>
 
     <string name="error_web">errorpage.html</string>
+    <string name="demo_web">demopage.html</string>
     <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>
     <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
     <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>

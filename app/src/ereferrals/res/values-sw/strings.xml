@@ -40,6 +40,7 @@
     <string name="login_pin">"siri"</string>
 
     <string name="error_web">errorpage_sw.html</string>
+    <string name="demo_web">demopage_sw.html</string>
 
     <string name="app_settings">"Vipimo vya"</string>
     <string name="server">"Seva:"</string>

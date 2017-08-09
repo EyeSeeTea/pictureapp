@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
@@ -31,6 +32,9 @@ public class GetUrlForWebViewsUseCase implements UseCase {
 
     public void execute(int urlType, Callback callback) {
         mCallback = callback;
+        if(PreferencesState.getCredentialsFromPreferences().isDemoCredentials()){
+            mCallback.onGetUrl(null);
+        }
         mUrlType = urlType;
         run();
     }

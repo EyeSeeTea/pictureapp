@@ -116,7 +116,7 @@ public class PullController implements IPullController {
         }
     }
 
-    public void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
+    public void pullData(final PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
             final Callback callback) {
 
         if (cancelPull) {
@@ -128,7 +128,7 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> result) {
-                        mPullControllerStrategy.onPullDataComplete(callback);
+                        mPullControllerStrategy.onPullDataComplete(callback, pullFilters.isDemo());
                     }
 
                     @Override
@@ -177,5 +177,9 @@ public class PullController implements IPullController {
         } catch (NullPointerException ex) {
             callback.onError(new PullConversionException(ex));
         }
+    }
+
+    public void onPullDataComplete(Callback callback, boolean isDemo) {
+        mPullControllerStrategy.onPullDataComplete(callback, isDemo);
     }
 }

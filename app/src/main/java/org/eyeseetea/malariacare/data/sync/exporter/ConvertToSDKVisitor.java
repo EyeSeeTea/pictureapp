@@ -37,13 +37,12 @@ import org.eyeseetea.malariacare.data.sync.exporter.strategies.ConvertToSdkVisit
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushConflict;
+import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
+import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.push.NullEventDateException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
-import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.joda.time.DateTime;
 
@@ -81,10 +80,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     public static void logEmptySurveyException(SurveyDB surveyDB) {
-        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
         String info = String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
-                surveyDB.toString(),
-                phoneMetaData == null ? "" : phoneMetaData.getPhone_metaData(),
+                surveyDB.toString(),Session.getPhoneMetaDataValue(),
                 Build.VERSION.RELEASE
         );
         Crashlytics.logException(new Throwable(info));
@@ -174,9 +171,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      */
     private void buildControlDataElements(SurveyDB surveyDB, EventExtended event) {
         //save phonemetadata
-        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
         buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(
-                R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData(),
+                R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
                 event);
 
         //save Time capture

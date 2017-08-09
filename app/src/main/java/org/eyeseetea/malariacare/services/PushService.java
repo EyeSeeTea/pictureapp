@@ -94,6 +94,10 @@ public class PushService extends IntentService {
             Log.d(TAG, "d2 is not config, re-initializating...");
             D2.init(this);
         }
+        if(PreferencesState.getInstance().getContext()==null) {
+            Log.d(TAG, "The preferencestate context should exist");
+            return;
+        }
 
         mPushServiceStrategy.push();
     }

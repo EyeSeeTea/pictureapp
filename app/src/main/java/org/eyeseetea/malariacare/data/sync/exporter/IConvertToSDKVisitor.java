@@ -21,7 +21,8 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.NullContextException;
 
 public interface IConvertToSDKVisitor {
-    void visit(SurveyDB surveyDB) throws ConversionException;
+    void visit(SurveyDB surveyDB) throws ConversionException, NullContextException;
 }

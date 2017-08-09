@@ -20,7 +20,9 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.NullContextException;
 
 public interface VisitableToSDK {
-    void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws ConversionException;
+    void accept(IConvertToSDKVisitor IConvertToSDKVisitor)
+            throws ConversionException, NullContextException;
 }

@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
+import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -136,6 +137,8 @@ public class PushClient {
             return new PushResult(ex);
         } catch (ApiCallException ex){
             return new PushResult(ex);
+        } catch (NullContextException ex) {
+            return new PushResult(ex);
         }
     }
 
@@ -205,7 +208,8 @@ public class PushClient {
      *
      * @return JSONObject with progra, orgunit, eventdate and so on...
      */
-    private JSONObject prepareMetadata() throws EmptyLocationException, JSONException, ApiCallException {
+    private JSONObject prepareMetadata()
+            throws EmptyLocationException, JSONException, ApiCallException, NullContextException {
         Log.d(TAG, "prepareMetadata for survey: " + mSurveyDB.getId_survey());
 
         JSONObject object = new JSONObject();

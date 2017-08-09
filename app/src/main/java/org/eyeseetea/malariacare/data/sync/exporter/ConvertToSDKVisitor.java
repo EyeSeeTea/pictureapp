@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushConflict;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.domain.exception.push.NullEventDateException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
@@ -81,14 +82,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     public static void logEmptySurveyException(SurveyDB surveyDB) {
         String info = String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
-                surveyDB.toString(),Session.getPhoneMetaDataValue(),
+                surveyDB.toString(), Session.getPhoneMetaDataValue(),
                 Build.VERSION.RELEASE
         );
         Crashlytics.logException(new Throwable(info));
     }
 
     @Override
-    public void visit(SurveyDB surveyDB) throws ConversionException {
+    public void visit(SurveyDB surveyDB) throws ConversionException, NullContextException {
         EventExtended event = null;
         try {
             //Precondition
@@ -103,7 +104,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 return;
             }
 
-            Log.d(TAG, String.format("Creating event for survey (%d) ...", surveyDB.getId_survey()));
+            Log.d(TAG,
+                    String.format("Creating event for survey (%d) ...", surveyDB.getId_survey()));
             event = buildEvent(surveyDB);
 
             surveyDB.setEventUid(event.getUid());
@@ -112,7 +114,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             Log.d(TAG, "Creating datavalues from questions...");
             for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
                 if (valueDB.getQuestionDB().hasDataElement()) {
-                    buildAndSaveDataValue(valueDB.getQuestionDB().getUid(), valueDB.getValue(), event);
+                    buildAndSaveDataValue(valueDB.getQuestionDB().getUid(), valueDB.getValue(),
+                            event);
                 }
             }
 
@@ -169,30 +172,31 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds several datavalues from the mainScore of the survey
      */
-    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event) {
+    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event)
+            throws NullContextException {
         //save phonemetadata
-        buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(
+        buildAndSaveDataValue((getContext().getString(
                 R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
                 event);
 
         //save Time capture
-        if (PreferencesState.getInstance().getContext().getString(
+        if (getContext().getString(
                 R.string.control_data_element_datetime_capture) != null
-                && !PreferencesState.getInstance().getContext().getString(
+                && !getContext().getString(
                 R.string.control_data_element_datetime_capture).equals(
                 "")) {
-            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
+            buildAndSaveDataValue(getContext().getString(
                     R.string.control_data_element_datetime_capture),
                     EventExtended.format(surveyDB.getCompletionDate(),
                             EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
 
         //save Time Sent
-        if (PreferencesState.getInstance().getContext().getString(
+        if (getContext().getString(
                 R.string.control_data_element_datetime_sent) != null
-                && !PreferencesState.getInstance().getContext().getString(
+                && !getContext().getString(
                 R.string.control_data_element_datetime_sent).equals("")) {
-            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
+            buildAndSaveDataValue(getContext().getString(
                     R.string.control_data_element_datetime_sent),
                     EventExtended.format(new Date(), EventExtended.DHIS2_GMT_DATE_FORMAT),
                     event);
@@ -220,7 +224,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds an event from a survey
      */
-    private EventExtended buildEvent(SurveyDB surveyDB) {
+    private EventExtended buildEvent(SurveyDB surveyDB) throws NullContextException {
         EventExtended event = new EventExtended();
 
         ConvertToSdkVisitorStrategy.setAttributeCategoryOptionsInEvent(event);
@@ -268,7 +272,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Updates the location of the current event that it is being processed
      */
-    private EventExtended updateEventLocation(SurveyDB surveyDB, EventExtended event) {
+    private EventExtended updateEventLocation(SurveyDB surveyDB, EventExtended event)
+            throws NullContextException {
+        LocationMemory.getInstance().init(getContext());
         Location lastLocation = LocationMemory.get(surveyDB.getId_survey());
 
         //No location + not required -> done
@@ -296,12 +302,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * Saves changes in the survey (supposedly after a successful push)
      */
     public void saveSurveyStatus(Map<String, PushReport> pushReportMap, final
-    IPushController.IPushControllerCallback callback) {
+    IPushController.IPushControllerCallback callback) throws NullContextException {
         Log.d(TAG, String.format("pushReportMap %d surveys savedSurveyStatus", mSurveyDBs.size()));
         for (int i = 0; i < mSurveyDBs.size(); i++) {
             SurveyDB iSurveyDB = mSurveyDBs.get(i);
             //Sets the survey status as quarantine to prevent wrong reports on unexpected exception.
-            //F.E. if the app crash unexpected this survey will be checked again in the future push to prevent the duplicates
+            //F.E. if the app crash unexpected this survey will be checked again in the future
+            // push to prevent the duplicates
             // in the server.
             iSurveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             iSurveyDB.save();
@@ -312,7 +319,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             if (pushReport == null) {
                 //the survey was saved as quarantine.
                 new PushReportException(
-                        "Error saving survey: report is null for this survey: " + iSurveyDB.getId_survey());
+                        "Error saving survey: report is null for this survey: "
+                                + iSurveyDB.getId_survey());
                 //The loop should continue without throw the Exception.
                 continue;
             }
@@ -333,7 +341,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                                 + " dataElement pushing survey: "
                                 + iSurveyDB.getId_survey());
                         callback.onInformativeError(new PushValueException(
-                                String.format(context.getString(R.string.error_conflict_message),
+                                String.format(
+                                        getContext().getString(R.string.error_conflict_message),
                                         iEvent.getEvent().getUId(), pushConflict.getUid(),
                                         pushConflict.getValue()) + ""));
                     }
@@ -342,14 +351,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             }
 
             //No errors -> Save and next
-            if (pushReport!=null && !pushReport.hasPushErrors()) {
+            if (pushReport != null && !pushReport.hasPushErrors()) {
                 Log.d(TAG, "saveSurveyStatus: report without errors and status ok "
                         + iSurveyDB.getId_survey());
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
                     //If eventDate is null the event is invalid. The event is sent but we need
                     // inform to the user.
                     callback.onInformativeError(new NullEventDateException(
-                            String.format(context.getString(R.string.error_message_push),
+                            String.format(getContext().getString(R.string.error_message_push),
                                     iEvent.getEvent())));
                 }
                 saveSurveyFromImportSummary(iSurveyDB);
@@ -373,5 +382,17 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             surveyDB.save();
         }
+    }
+
+    //getContext or throw exception to control background null crash
+    private Context getContext() throws NullContextException {
+        if (context == null) {
+            if (PreferencesState.getInstance().getContext() == null) {
+                throw new NullContextException();
+            } else {
+                context = PreferencesState.getInstance().getContext();
+            }
+        }
+        return context;
     }
 }

@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.domain.exception.NullContextException;
 
 /**
  * Basic location listener that persist coordinates associated to every survey in preferences
@@ -43,7 +44,11 @@ public class SurveyLocationListener implements LocationListener {
     }
 
     public void saveLocation(Location location) {
-        LocationMemory.put(idSurvey, location);
+        try {
+            LocationMemory.put(idSurvey, location);
+        } catch (NullContextException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -58,8 +63,13 @@ public class SurveyLocationListener implements LocationListener {
 
         //No more updates
         LocationManager locationManager =
-                (LocationManager) LocationMemory.getContext().getSystemService(
-                        Context.LOCATION_SERVICE);
+                null;
+        try {
+            locationManager = (LocationManager) LocationMemory.getContext().getSystemService(
+                    Context.LOCATION_SERVICE);
+        } catch (NullContextException e) {
+            e.printStackTrace();
+        }
         locationManager.removeUpdates(this);
     }
 

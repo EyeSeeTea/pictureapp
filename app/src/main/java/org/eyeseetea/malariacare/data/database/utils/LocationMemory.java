@@ -25,12 +25,14 @@ import android.location.Location;
 import android.location.LocationManager;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.exception.NullContextException;
 
 /**
  * Created by arrizabalaga on 23/09/15.
  */
 public class LocationMemory {
 
+    private static Context mContext;
     private static final String PREFIX_LATITUDE = "LAT";
     private static final String PREFIX_LONGITUDE = "LNG";
     /**
@@ -51,10 +53,15 @@ public class LocationMemory {
         return instance;
     }
 
+    public void init(Context context) {
+        mContext=context;
+    }
+
     /**
      * Saves the coordinates for the given survey into internal shared preferences
      */
-    public synchronized static void put(long idSurvey, Location location) {
+    public synchronized static void put(long idSurvey, Location location)
+            throws NullContextException {
         if (location == null) {
             return;
         }
@@ -71,7 +78,7 @@ public class LocationMemory {
      *
      * @return A Location if it is stored in preferences, null otherwise
      */
-    public static Location get(long idSurvey) {
+    public static Location get(long idSurvey) throws NullContextException {
         Location location = new Location(LocationManager.GPS_PROVIDER);
         System.out.println("gps get "+ getContext().getPackageName()+"_preferences");
         SharedPreferences sharedPreferences =
@@ -98,13 +105,17 @@ public class LocationMemory {
     /**
      * Gets the app context
      */
-    public static Context getContext() {
-        return PreferencesState.getInstance().getContext();
+    public static Context getContext() throws NullContextException {
+        if(mContext==null){
+            throw new NullContextException();
+        }else{
+            return mContext;
+        }
     }
 
-    private static SharedPreferences getDefaultPreferences(int modePrivate) {
+    private static SharedPreferences getDefaultPreferences(int modePrivate)
+            throws NullContextException {
         return getContext().getSharedPreferences(getContext().getPackageName() + "_preferences",
                 modePrivate);
     }
-
 }

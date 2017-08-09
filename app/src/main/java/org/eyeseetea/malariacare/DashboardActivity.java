@@ -130,7 +130,11 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getString(R.string.tab_tag_stock));
+                    context.getResources().getString(R.string.tab_stock));
+        }
+        if (GradleVariantConfig.isAVFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getString(R.string.monitoring_title));
@@ -148,6 +152,10 @@ public class DashboardActivity extends BaseActivity {
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
                     context.getResources().getDrawable(R.drawable.tab_stock));
+        }
+        if (GradleVariantConfig.isAVFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
@@ -265,6 +273,13 @@ public class DashboardActivity extends BaseActivity {
      */
     public void initStock() {
         isMoveToLeft = mDashboardActivityStrategy.showStockFragment(this, isMoveToLeft);
+    }
+
+    /**
+     * This method initializes the AV fragment
+     */
+    public void initAV() {
+        mDashboardActivityStrategy.showAVFragment();
     }
 
     /**
@@ -680,6 +695,9 @@ public class DashboardActivity extends BaseActivity {
             initMonitor();
             if (GradleVariantConfig.isStockFragmentActive()) {
                 initStock();
+            }
+            if (GradleVariantConfig.isAVFragmentActive()) {
+                initAV();
             }
             initAssess();
         }

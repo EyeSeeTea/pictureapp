@@ -53,38 +53,68 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     @Override
     public void run() {
 
-        if (isLoginEnable()) {
-            mAuthenticationManager.hardcodedLogin(insertedCredentials.getServerURL(),
-                    new IAuthenticationManager.Callback<UserAccount>() {
-                        @Override
-                        public void onSuccess(UserAccount userAccount) {
-                            mAsyncExecutor.run(new Runnable() {
-                                @Override
-                                public void run() {
-                                    pullOrganisationCredentials();
-                        }
-                            });
+        if(insertedCredentials.isDemoCredentials()){
+            runDemoLogin();
+        }else {
+            if (isLoginEnable()) {
+                mAuthenticationManager.hardcodedLogin(insertedCredentials.getServerURL(),
+                        new IAuthenticationManager.Callback<UserAccount>() {
+                            @Override
+                            public void onSuccess(UserAccount userAccount) {
+                                mAsyncExecutor.run(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pullOrganisationCredentials();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                if (throwable instanceof MalformedURLException
+                                        || throwable instanceof UnknownHostException) {
+                                    notifyServerURLNotValid();
+                                } else if (throwable instanceof InvalidCredentialsException) {
+                                    notifyInvalidCredentials();
+                                } else if (throwable instanceof NetworkException) {
+                                    checkUserCredentialsWithOrgUnit(
+                                            mCredentialsLocalDataSource.getOrganisationCredentials(),
+
+                                            true);
+                                } else {
+                                    throwable.printStackTrace();
+                                }
+                            }
+                        });
+            } else {
+                notifyMaxLoginAttemptsReached();
+            }
+        }
+    }
+
+    private void runDemoLogin() {
+        mAuthenticationManager.login(insertedCredentials,
+                new IAuthenticationManager.Callback<UserAccount>() {
+                    @Override
+                    public void onSuccess(UserAccount userAccount) {
+                            mCredentialsLocalDataSource.saveOrganisationCredentials(insertedCredentials);
+                            checkUserCredentialsWithOrgUnit(insertedCredentials, false);
                         }
 
-                        @Override
-                        public void onError(Throwable throwable) {
-                            if (throwable instanceof MalformedURLException
-                                    || throwable instanceof UnknownHostException) {
-                                notifyServerURLNotValid();
-                            } else if (throwable instanceof InvalidCredentialsException) {
-                                notifyInvalidCredentials();
-                            } else if (throwable instanceof NetworkException) {
-                                checkUserCredentialsWithOrgUnit(
-                                        mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                        true);
-                            } else {
-                                throwable.printStackTrace();
-                            }
+                    @Override
+                    public void onError(Throwable throwable) {
+                        if (throwable instanceof MalformedURLException
+                                || throwable instanceof UnknownHostException) {
+                            notifyServerURLNotValid();
+                        } else if (throwable instanceof InvalidCredentialsException) {
+                            notifyInvalidCredentials();
+                        } else if (throwable instanceof NetworkException) {
+                            checkUserCredentialsWithOrgUnit(
+                                    mCredentialsLocalDataSource.getOrganisationCredentials(),
+                                    true);
                         }
-                    });
-        } else {
-            notifyMaxLoginAttemptsReached();
-        }
+                    }
+                });
     }
 
     private boolean isLoginEnable() {
@@ -131,7 +161,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                 && insertedCredentials.getPassword().equals(credentials.getPassword())
                 && (fromNetWorkError || insertedCredentials.getServerURL().equals(
                 credentials.getServerURL()))) {
-            notifyLoginSucces();
+            notifyLoginSuccess();
         } else {
             if (fromNetWorkError) {
                 notifyNetworkError();
@@ -141,7 +171,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         }
     }
 
-    public void notifyLoginSucces() {
+    public void notifyLoginSuccess() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {

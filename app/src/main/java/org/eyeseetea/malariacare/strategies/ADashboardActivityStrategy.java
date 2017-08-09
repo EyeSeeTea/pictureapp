@@ -14,13 +14,14 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.domain.exception.NullContextException;
-import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
+import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {
@@ -28,6 +29,7 @@ public abstract class ADashboardActivityStrategy {
     protected DashboardActivity mDashboardActivity;
     protected DashboardUnsentFragment unsentFragment;
     protected DashboardSentFragment sentFragment;
+    public AVFragment avFragment;
     protected MonitorFragment monitorFragment;
 
     public void onCreate() {
@@ -174,6 +176,13 @@ public abstract class ADashboardActivityStrategy {
         monitorFragment.reloadHeader(mDashboardActivity);
     }
 
+    public void showAVFragment() {
+        if (avFragment == null) {
+            avFragment = new AVFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_av_container, avFragment);
+    }
+
     public int getSurveyContainer() {
         return R.id.dashboard_details_container;
     }
@@ -201,4 +210,5 @@ public abstract class ADashboardActivityStrategy {
                 mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
         mDashboardActivity.initSurvey();
     }
+
 }

@@ -40,7 +40,7 @@ public abstract class APullControllerStrategy {
         }
     }
 
-    public void onPullDataComplete(final IPullController.Callback callback) {
+    public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
         mPullController.convertData(callback);
         callback.onComplete();
     }

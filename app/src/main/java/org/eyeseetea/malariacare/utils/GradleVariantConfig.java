@@ -27,4 +27,11 @@ public class GradleVariantConfig {
         }
         return false;
     }
+
+    public static boolean isAVFragmentActive() {
+        if (BuildConfig.activeAVFragment) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -40,6 +40,7 @@
     <string name="login_pin">"siri"</string>
 
     <string name="error_web">errorpage_sw.html</string>
+    <string name="demo_web">demopage_sw.html</string>
 
     <string name="app_settings">"Vipimo vya"</string>
     <string name="server">"Seva:"</string>
@@ -111,7 +112,8 @@
     <string name="error_conflict_title">"Kosa"</string>
     <string name="date_format_forward_slash">"yyyy/mm/dd"</string>
 
-    <string name="tab_tag_stock">"NJE YA MTANDAO"</string>
+    <string name="tab_stock">"NJE YA MTANDAO"</string>
+    <string name="tab_av">"AV"</string>
     <string name="past_cases">"KESI YA ZAMANI"</string>
     <string name="monitoring_label_option_months">"Miezi 6 iliyopita"</string>
     <string name="monitoring_label_option_days">"Mwisho wa siku 6"</string>

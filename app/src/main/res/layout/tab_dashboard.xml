@@ -124,6 +124,19 @@
                             android:focusable="true" />
                     </FrameLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/tab_av_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/dashboard_av_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                    <!-- stock content view will be automatically added here by the fragment -->
+                </LinearLayout>
             </FrameLayout>
         </RelativeLayout>
     </TabHost>

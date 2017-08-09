@@ -35,7 +35,6 @@ import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
@@ -242,6 +241,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
             public void onApiCallError(ApiCallException e) {
                 onError("PUSHUSECASE ERROR " + e.getMessage());
                 e.printStackTrace();
+            }
+
+            @Override
+            public void onNullContext() {
+                onError("PUSHUSECASE ERROR "+"the context during conversion was null");
             }
 
             @Override

@@ -5,7 +5,8 @@
     <string name="new_case_title">"NEW CASE"</string>
     <string name="open_tab_title">"OPEN"</string>
     <string name="closed_tab_title">"CLOSED"</string>
-    <string name="tab_tag_stock">"OFF LINE"</string>
+    <string name="tab_stock">"OFF LINE"</string>
+    <string name="tab_av">"AV"</string>
     <string name="status_tab_title">"STATUS"</string>
     <string name="survey_completed">"Survey completed"</string>
     <string name="survey_completed_text">"The survey has been successfully completed."</string>

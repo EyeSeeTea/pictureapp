@@ -17,10 +17,6 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-/**
- * Created by ignac on 04/08/2017.
- */
-
 public class AVAdapter extends RecyclerView.Adapter {
 
     public enum ViewType {GRID, LIST}

@@ -745,7 +745,6 @@ public class DashboardActivity extends BaseActivity {
     public void executeLogout() {
         IAuthenticationManager iAuthenticationManager = new AuthenticationManager(this);
         LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
-        AlarmPushReceiver.cancelPushAlarm(this);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

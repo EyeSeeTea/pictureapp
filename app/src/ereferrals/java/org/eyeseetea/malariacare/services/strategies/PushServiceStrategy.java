@@ -124,7 +124,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
         LogoutUseCase logoutUseCase;
         authenticationManager = new AuthenticationManager(mPushService);
         logoutUseCase = new LogoutUseCase(authenticationManager);
-        AlarmPushReceiver.cancelPushAlarm(mPushService);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

@@ -178,7 +178,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void logout() {
-        AlarmPushReceiver.cancelPushAlarm(mBaseActivity);
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

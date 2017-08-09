@@ -96,7 +96,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             surveyDB.save();
         }
-        alarmPush = new AlarmPushReceiver();
+        alarmPush = AlarmPushReceiver.getInstance();
         alarmPush.setPushAlarm(this);
 
         mBaseActivityStrategy.onCreate();
@@ -435,7 +435,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onDestroy() {
         mBaseActivityStrategy.onDestroy();
         super.onDestroy();
-        alarmPush.cancelPushAlarm(this);
     }
 
     @Override

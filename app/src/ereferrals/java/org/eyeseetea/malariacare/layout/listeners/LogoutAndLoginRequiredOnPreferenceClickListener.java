@@ -54,7 +54,6 @@ public class LogoutAndLoginRequiredOnPreferenceClickListener implements
         Log.d(TAG, "Logging out...");
         AuthenticationManager authenticationManager = new AuthenticationManager(settingsActivity);
         LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);
-        AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

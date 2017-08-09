@@ -133,7 +133,9 @@ public abstract class APushServiceStrategy {
     }
 
     public void showInDialog(String title, String message) {
-        DashboardActivity.dashboardActivity.showException(title, message);
+        if(DashboardActivity.dashboardActivity != null && DashboardActivity.dashboardActivity.isInForeground()) {
+            DashboardActivity.dashboardActivity.showException(title, message);
+        }
     }
 
     public void closeUserLogout() {

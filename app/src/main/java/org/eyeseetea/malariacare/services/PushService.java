@@ -95,8 +95,7 @@ public class PushService extends IntentService {
             D2.init(this);
         }
         if(PreferencesState.getInstance().getContext()==null) {
-            Log.d(TAG, "The preferencestate context should exist");
-            return;
+            PreferencesState.getInstance().init(this);
         }
 
         mPushServiceStrategy.push();

@@ -115,7 +115,9 @@ public abstract class APushServiceStrategy {
             @Override
             public void onClosedUser() {
                 onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
-                closeUserLogout();
+                if(DashboardActivity.dashboardActivity != null && DashboardActivity.dashboardActivity.isInForeground()) {
+                    closeUserLogout();
+                }
             }
 
             @Override

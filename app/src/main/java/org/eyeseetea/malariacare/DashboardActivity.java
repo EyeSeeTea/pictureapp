@@ -58,7 +58,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
@@ -96,6 +95,12 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isReadOnly = false;
 
+    private boolean mIsInForegroundMode;
+
+    // Some function.
+    public boolean isInForeground() {
+        return mIsInForegroundMode;
+    }
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
         String dialogTitle = "", dialogMessage = "";
@@ -344,6 +349,7 @@ public class DashboardActivity extends BaseActivity {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
+        mIsInForegroundMode = true;
     }
 
     @Override
@@ -357,6 +363,7 @@ public class DashboardActivity extends BaseActivity {
     public void onPause() {
         Log.d(TAG, "onPause");
         super.onPause();
+        mIsInForegroundMode = false;
     }
 
     @Override

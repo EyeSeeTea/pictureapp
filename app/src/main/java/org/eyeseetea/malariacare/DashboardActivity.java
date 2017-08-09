@@ -782,10 +782,6 @@ public class DashboardActivity extends BaseActivity {
                 PreferencesState.getInstance().getContext().getString(R.string.user_close), DashboardActivity.dashboardActivity);
     }
 
-    public void changeList(View view) {
-        mDashboardActivityStrategy.avFragment.toggleLists();
-    }
-
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
         UserDB mLoggedUserDB;
 

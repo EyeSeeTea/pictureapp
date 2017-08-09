@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -66,7 +67,7 @@ public class AVFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         initRecyclerView();
-
+        initChangeModeButton();
         loadMediaListAndAdapter();
     }
 
@@ -76,6 +77,17 @@ public class AVFragment extends Fragment {
         recyclerViewList = (RecyclerView) getView().findViewById(R.id.av_recycler);
         recyclerViewList.setHasFixedSize(true);
         recyclerViewList.setLayoutManager(linearLayoutManager);
+    }
+
+
+    private void initChangeModeButton() {
+        Button changeModeButton = (Button) getView().findViewById(R.id.change_mode_button);
+        changeModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeMode();
+            }
+        });
     }
 
     private void loadMediaListAndAdapter() {
@@ -121,7 +133,7 @@ public class AVFragment extends Fragment {
         recyclerViewList.setAdapter(recyclerAdapter);
     }
 
-    public void toggleLists() {
+    private void changeMode() {
         if (activeViewType == AVAdapter.ViewType.GRID) {
             activeViewType = AVAdapter.ViewType.LIST;
         } else {

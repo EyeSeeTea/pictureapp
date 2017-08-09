@@ -66,7 +66,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     private static final int DUMP_REQUEST_CODE = 0;
     protected static String TAG = ".BaseActivity";
-    private AlarmPushReceiver alarmPush;
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
@@ -96,8 +95,23 @@ public abstract class BaseActivity extends ActionBarActivity {
             surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             surveyDB.save();
         }
-        alarmPush = AlarmPushReceiver.getInstance();
-        alarmPush.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
+        try {
+            Thread.sleep(100);
+            AlarmPushReceiver.setPushAlarm(this);
+            AlarmPushReceiver.setPushAlarm(this);
+            Thread.sleep(100);
+            AlarmPushReceiver.setPushAlarm(this);
+            AlarmPushReceiver.setPushAlarm(this);
+            Thread.sleep(100);
+            AlarmPushReceiver.setPushAlarm(this);
+            AlarmPushReceiver.setPushAlarm(this);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         mBaseActivityStrategy.onCreate();
     }

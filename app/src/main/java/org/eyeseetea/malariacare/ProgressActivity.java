@@ -108,6 +108,7 @@ public class ProgressActivity extends Activity {
     }
 
     private void executeLogout() {
+        AlarmPushReceiver.cancelPushAlarm(this);
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

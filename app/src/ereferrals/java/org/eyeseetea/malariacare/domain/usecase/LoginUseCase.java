@@ -136,9 +136,9 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                             orgUnit.getPin());
 
         } catch (ApiCallException e) {
-            if (e.getCause() instanceof IOException) {
+            if(e.getCause() instanceof  IOException){
                 notifyUnexpectedError();
-            } else {
+            }else {
                 e.printStackTrace();
                 notifyConfigJsonNotPresent();
             }

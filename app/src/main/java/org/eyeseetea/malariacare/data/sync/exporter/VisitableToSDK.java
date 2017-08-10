@@ -22,6 +22,5 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 
 public interface VisitableToSDK {
-    void accept(IConvertToSDKVisitor IConvertToSDKVisitor)
-            throws ConversionException;
+    void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws ConversionException;
 }

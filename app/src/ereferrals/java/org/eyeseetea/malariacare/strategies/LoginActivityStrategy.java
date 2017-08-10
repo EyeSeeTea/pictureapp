@@ -223,6 +223,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
                     loginActivity);
             LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+            AlarmPushReceiver.cancelPushAlarm(loginActivity);
             logoutUseCase.execute(new LogoutUseCase.Callback() {
                 @Override
                 public void onLogoutSuccess() {

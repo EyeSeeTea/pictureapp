@@ -103,8 +103,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 return;
             }
 
-            Log.d(TAG,
-                    String.format("Creating event for survey (%d) ...", surveyDB.getId_survey()));
+            Log.d(TAG, String.format("Creating event for survey (%d) ...", surveyDB.getId_survey()));
             event = buildEvent(surveyDB);
 
             surveyDB.setEventUid(event.getUid());
@@ -113,8 +112,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             Log.d(TAG, "Creating datavalues from questions...");
             for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
                 if (valueDB.getQuestionDB().hasDataElement()) {
-                    buildAndSaveDataValue(valueDB.getQuestionDB().getUid(), valueDB.getValue(),
-                            event);
+                    buildAndSaveDataValue(valueDB.getQuestionDB().getUid(), valueDB.getValue(), event);
                 }
             }
 
@@ -303,8 +301,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         for (int i = 0; i < mSurveyDBs.size(); i++) {
             SurveyDB iSurveyDB = mSurveyDBs.get(i);
             //Sets the survey status as quarantine to prevent wrong reports on unexpected exception.
-            //F.E. if the app crash unexpected this survey will be checked again in the future
-            // push to prevent the duplicates
+            //F.E. if the app crash unexpected this survey will be checked again in the future push to prevent the duplicates
             // in the server.
             iSurveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             iSurveyDB.save();
@@ -315,8 +312,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             if (pushReport == null) {
                 //the survey was saved as quarantine.
                 new PushReportException(
-                        "Error saving survey: report is null for this survey: "
-                                + iSurveyDB.getId_survey());
+                        "Error saving survey: report is null for this survey: " + iSurveyDB.getId_survey());
                 //The loop should continue without throw the Exception.
                 continue;
             }

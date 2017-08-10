@@ -173,13 +173,15 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
             View button = footer.findViewById(R.id.plusButton);
             if (button != null) {
                 button.setVisibility(View.GONE);
+                mListView.addFooterView(footer);
             }else{
                 Log.d(TAG, "error null button");
             }
-            mListView.addFooterView(footer);
             LayoutUtils.setRowDivider(mListView);
             setListAdapter((BaseAdapter) adapter);
             setListShown(false);
+        }else{
+            Log.d(TAG, "isNotFullOfUnsent is false");
         }
     }
 
@@ -254,12 +256,17 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysFromService);
-                if(mListView==null) {
-                    mListView = getListView();
-                    Log.d(TAG, "error null listView");
-                }
-                new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView,
+                if (Session.isNotFullOfUnsent(getActivity())) {
+                    if (mListView == null) {
+                        mListView = getListView();
+                        Log.d(TAG, "error null listView");
+                    }
+                    new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView,
                             surveysFromService);
+                }
+                else{
+                    Log.d(TAG, "isNotFullOfUnsent is false");
+                }
             }
         }
     }

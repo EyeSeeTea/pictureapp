@@ -97,6 +97,30 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
         super.onResume();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach");
+    }
+
     /**
      * Inits adapter.
      * Most of times is just an AssessmentAdapter.
@@ -138,13 +162,19 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
             View viewFilter = DashboardHeaderStrategy.getInstance().loadFilter(inflater);
             if (viewFilter != null) {
                 mListView.addHeaderView(viewFilter);
+            }else{
+                Log.d(TAG, "error null viewFilter");
             }
             if (header != null) {
                 mListView.addHeaderView(header);
+            }else{
+                Log.d(TAG, "error null header");
             }
             View button = footer.findViewById(R.id.plusButton);
             if (button != null) {
                 button.setVisibility(View.GONE);
+            }else{
+                Log.d(TAG, "error null button");
             }
             mListView.addFooterView(footer);
             LayoutUtils.setRowDivider(mListView);

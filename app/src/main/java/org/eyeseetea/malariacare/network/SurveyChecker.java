@@ -201,10 +201,10 @@ public class SurveyChecker {
             if (dataValue.getDataElement().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.control_data_element_datetime_capture))
-                    && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(),
+                    && dataValue.getValue().equals(EventExtended.format(survey.getCreationDate(),
                     EventExtended.DHIS2_GMT_DATE_FORMAT))) {
                 Log.d(TAG, "Found survey" + survey.getId_survey() + "date "
-                        + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
+                        + survey.getCreationDate() + "dateevent" + dataValue.getValue());
                 return true;
             }
         }

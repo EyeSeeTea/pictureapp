@@ -187,7 +187,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 "")) {
             buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
                     R.string.control_data_element_datetime_capture),
-                    EventExtended.format(survey.getCompletionDate(),
+                    EventExtended.format(survey.getCreationDate(),
                             EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
 

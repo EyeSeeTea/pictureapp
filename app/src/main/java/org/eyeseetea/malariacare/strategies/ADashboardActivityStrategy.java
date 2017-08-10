@@ -15,7 +15,6 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
-import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -72,8 +71,6 @@ public abstract class ADashboardActivityStrategy {
         }
         catch (NullPointerException e){
             new EmptyLocationException(e);
-        } catch (NullContextException e) {
-            e.printStackTrace();
         }
 
         if (locationManager == null)

@@ -108,11 +108,6 @@ public abstract class APushServiceStrategy {
             }
 
             @Override
-            public void onNullContext() {
-                onError("PUSHUSECASE ERROR "+"the context during conversion was null");
-            }
-
-            @Override
             public void onClosedUser() {
                 onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
                 if(DashboardActivity.dashboardActivity != null && DashboardActivity.dashboardActivity.isInForeground()) {

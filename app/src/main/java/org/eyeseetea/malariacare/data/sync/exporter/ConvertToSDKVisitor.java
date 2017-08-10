@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.sync.exporter.exception.NullContextException;
 import org.eyeseetea.malariacare.data.sync.exporter.strategies.ConvertToSdkVisitorStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
@@ -40,7 +41,6 @@ import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushConflict;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.domain.exception.push.NullEventDateException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
@@ -89,7 +89,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     @Override
-    public void visit(SurveyDB surveyDB) throws ConversionException, NullContextException {
+    public void visit(SurveyDB surveyDB) throws ConversionException {
         EventExtended event = null;
         try {
             //Precondition
@@ -136,6 +136,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             //If the conversion fails the survey is wrong and will be delete.
             removeSurveyAndEvent(surveyDB, event);
             throw new ConversionException(e);
+        }catch (NullContextException e){
+            Crashlytics.log("Null context exception during the background push");
         }
     }
 

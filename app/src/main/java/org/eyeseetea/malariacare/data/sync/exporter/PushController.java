@@ -35,7 +35,6 @@ import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushDhisException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
@@ -102,9 +101,6 @@ public class PushController implements IPushController {
                     Log.d(TAG, "convert surveys to sdk");
                     convertToSDK(surveyDBs);
                 } catch (Exception ex) {
-                    if(ex instanceof NullContextException){
-                        callback.onError(ex);
-                    }
                     callback.onError(new ConversionException(ex));
                     return;
                 }
@@ -162,20 +158,13 @@ public class PushController implements IPushController {
     /**
      * Launches visitor that turns an APP survey into a SDK event
      */
-    private void convertToSDK(List<SurveyDB> surveyDBs)
-            throws ConversionException, NullContextException {
+    private void convertToSDK(List<SurveyDB> surveyDBs) throws ConversionException {
         Log.d(TAG, "Converting APP survey into a SDK event");
         for (SurveyDB surveyDB : surveyDBs) {
             surveyDB.setStatus(Constants.SURVEY_SENDING);
             surveyDB.save();
             Log.d(TAG, "Status of survey to be push is = " + surveyDB.getStatus());
-            try {
-                surveyDB.accept(mConvertToSDKVisitor);
-            }catch (NullContextException e){
-                surveyDB.setStatus(Constants.SURVEY_COMPLETED);
-                surveyDB.save();
-                throw new NullContextException(e);
-            }
+            surveyDB.accept(mConvertToSDKVisitor);
         }
     }
 }

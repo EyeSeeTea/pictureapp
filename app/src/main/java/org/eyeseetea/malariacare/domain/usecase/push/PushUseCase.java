@@ -35,8 +35,6 @@ public class PushUseCase implements UseCase {
         void onApiCallError();
 
         void onApiCallError(ApiCallException e);
-
-        void onNullContext();
     }
 
     private IAsyncExecutor mAsyncExecutor;

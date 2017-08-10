@@ -244,11 +244,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
 
             @Override
-            public void onNullContext() {
-                onError("PUSHUSECASE ERROR "+"the context during conversion was null");
-            }
-
-            @Override
             public void onClosedUser() {
                 onError("PUSHUSECASE ERROR on closedUser "
                         + PreferencesState.getInstance().isPushInProgress());

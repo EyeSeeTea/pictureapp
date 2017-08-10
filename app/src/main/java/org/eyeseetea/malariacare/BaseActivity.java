@@ -96,22 +96,6 @@ public abstract class BaseActivity extends ActionBarActivity {
             surveyDB.save();
         }
         AlarmPushReceiver.setPushAlarm(this);
-        AlarmPushReceiver.setPushAlarm(this);
-        AlarmPushReceiver.setPushAlarm(this);
-        AlarmPushReceiver.setPushAlarm(this);
-        try {
-            Thread.sleep(100);
-            AlarmPushReceiver.setPushAlarm(this);
-            AlarmPushReceiver.setPushAlarm(this);
-            Thread.sleep(100);
-            AlarmPushReceiver.setPushAlarm(this);
-            AlarmPushReceiver.setPushAlarm(this);
-            Thread.sleep(100);
-            AlarmPushReceiver.setPushAlarm(this);
-            AlarmPushReceiver.setPushAlarm(this);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         mBaseActivityStrategy.onCreate();
     }

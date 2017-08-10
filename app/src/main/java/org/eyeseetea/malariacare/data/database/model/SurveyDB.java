@@ -65,7 +65,6 @@ import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
@@ -1271,7 +1270,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
     @Override
     public void accept(IConvertToSDKVisitor IConvertToSDKVisitor)
-            throws ConversionException, NullContextException {
+            throws ConversionException {
         IConvertToSDKVisitor.visit(this);
     }
 

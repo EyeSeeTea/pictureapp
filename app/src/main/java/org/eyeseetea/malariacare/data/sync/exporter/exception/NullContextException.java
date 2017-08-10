@@ -1,5 +1,4 @@
-package org.eyeseetea.malariacare.domain.exception;
-
+package org.eyeseetea.malariacare.data.sync.exporter.exception;
 
 public class NullContextException extends Exception {
     public static String ERROR_MESSAGE = "Exception info: Error null context during conversion";

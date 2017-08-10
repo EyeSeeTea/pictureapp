@@ -11,7 +11,6 @@ import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.NullContextException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
@@ -126,8 +125,6 @@ public abstract class APushUseCaseStrategy {
                     notifySurveysNotFoundError();
                 } else if (throwable instanceof ClosedUserPushException) {
                     notifyClosedUser();
-                }else if (throwable instanceof NullContextException) {
-                    notifyNullContext();
                 } else {
                     notifyPushError();
                 }
@@ -232,15 +229,6 @@ public abstract class APushUseCaseStrategy {
             @Override
             public void run() {
                 mCallback.onClosedUser();
-            }
-        });
-    }
-
-    private void notifyNullContext() {
-        mMainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onNullContext();
             }
         });
     }

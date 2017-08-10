@@ -24,8 +24,9 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.exception.NullContextException;
 
 /**
  * Created by arrizabalaga on 23/09/15.
@@ -60,8 +61,7 @@ public class LocationMemory {
     /**
      * Saves the coordinates for the given survey into internal shared preferences
      */
-    public synchronized static void put(long idSurvey, Location location)
-            throws NullContextException {
+    public synchronized static void put(long idSurvey, Location location) {
         if (location == null) {
             return;
         }
@@ -78,7 +78,7 @@ public class LocationMemory {
      *
      * @return A Location if it is stored in preferences, null otherwise
      */
-    public static Location get(long idSurvey) throws NullContextException {
+    public static Location get(long idSurvey) {
         Location location = new Location(LocationManager.GPS_PROVIDER);
         System.out.println("gps get "+ getContext().getPackageName()+"_preferences");
         SharedPreferences sharedPreferences =
@@ -105,16 +105,14 @@ public class LocationMemory {
     /**
      * Gets the app context
      */
-    public static Context getContext() throws NullContextException {
+    public static Context getContext() {
         if(mContext==null){
-            throw new NullContextException();
-        }else{
-            return mContext;
+            Crashlytics.log("Null context exception during the background push in LocationMemory");
         }
+        return mContext;
     }
 
-    private static SharedPreferences getDefaultPreferences(int modePrivate)
-            throws NullContextException {
+    private static SharedPreferences getDefaultPreferences(int modePrivate) {
         return getContext().getSharedPreferences(getContext().getPackageName() + "_preferences",
                 modePrivate);
     }

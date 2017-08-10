@@ -9,9 +9,12 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -22,6 +25,7 @@ import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.repositories.ForgotPasswordRepository;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -35,6 +39,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttem
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -44,6 +49,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.hisp.dhis.client.sdk.ui.views.FontButton;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -79,6 +85,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
+        loginActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                addDemoButton();
+            }
+        });
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -352,5 +363,113 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         builder.show();
     }
 
+
+
+    private void addDemoButton() {
+        final ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
+                R.id.login_dynamic_views_container);
+
+        loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
+                true);
+
+        FontButton demoButton = (FontButton) loginActivity.findViewById(R.id.demo_login_button);
+
+        demoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopulateDB.wipeDataBase();
+                Credentials demoCrededentials = Credentials.createDemoCredentials();
+                loginActivity.showProgressBar();
+                loginActivity.mLoginUseCase.execute(demoCrededentials,
+                        new ALoginUseCase.Callback() {
+                            @Override
+                            public void onLoginSuccess() {
+                                executePullDemo();
+                            }
+
+                            @Override
+                            public void onServerURLNotValid() {
+                                Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                            }
+
+                            @Override
+                            public void onInvalidCredentials() {
+                                Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                            }
+
+                            @Override
+                            public void onNetworkError() {
+                                Log.e(this.getClass().getSimpleName(), "Network Error");
+                            }
+
+
+                            @Override
+                            public void onConfigJsonInvalid() {
+                                Log.d(TAG, "onConfigJsonInvalid");
+                            }
+
+                            @Override
+                            public void onUnexpectedError() {
+                                Log.e(this.getClass().getSimpleName(),
+                                        "Config Json file not found");
+                            }
+
+                            @Override
+                            public void onMaxLoginAttemptsReachedError() {
+                                Log.d(TAG, "onMaxLoginAttemptsReachedError");
+                            }
+                        });
+            }
+        });
+    }
+
+    private void executePullDemo() {
+        PullController pullController = new PullController(loginActivity);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+
+        PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setDemo(true);
+
+        pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
+            @Override
+            public void onComplete() {
+                loginActivity.hideProgressBar();
+                finishAndGo(DashboardActivity.class);
+            }
+
+            @Override
+            public void onStep(PullStep step) {
+                Log.d(this.getClass().getSimpleName(), step.toString());
+            }
+
+            @Override
+            public void onError(String message) {
+                loginActivity.hideProgressBar();
+                Log.e(this.getClass().getSimpleName(), message);
+            }
+
+            @Override
+            public void onPullConversionError() {
+                loginActivity.hideProgressBar();
+                Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+            }
+
+            @Override
+            public void onCancel() {
+                loginActivity.hideProgressBar();
+                Log.e(this.getClass().getSimpleName(), "Pull cancel");
+            }
+
+            @Override
+            public void onNetworkError() {
+                loginActivity.hideProgressBar();
+                Log.e(this.getClass().getSimpleName(), "Network Error");
+            }
+        });
+    }
 
 }

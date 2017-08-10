@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
@@ -13,6 +14,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
@@ -42,7 +44,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
         try {
             mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
-            mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
+            if(!pullFilters.isDemo()) {
+                mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
+            }else{
+                mPullController.onPullDataComplete(callback, true);
+                callback.onComplete();
+            }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
             callback.onError(ex);
@@ -50,20 +57,28 @@ public class PullControllerStrategy extends APullControllerStrategy {
     }
 
     @Override
-    public void onPullDataComplete(final IPullController.Callback callback) {
-        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
-        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-        try {
-            org.eyeseetea.malariacare.domain.entity.OrganisationUnit orgUnit =
-                    orgUnitDataSource.getUserOrgUnit(
-                            credentialsLocalDataSource.getOrganisationCredentials());
-            org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
+    public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
+        if(isDemo){
+            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+            ProgramDB programDB = ProgramDB.getFirstProgram();
+            Program program = new Program(programDB.getName(), programDB.getUid());
             programLocalDataSource.saveUserProgramId(program);
-        } catch (Exception e) {
-            e.printStackTrace();
-            callback.onError(e);
+            callback.onComplete();
+        }else {
+            ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+            IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
+            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+            try {
+                org.eyeseetea.malariacare.domain.entity.OrganisationUnit orgUnit =
+                        orgUnitDataSource.getUserOrgUnit(
+                                credentialsLocalDataSource.getOrganisationCredentials());
+                org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
+                programLocalDataSource.saveUserProgramId(program);
+            } catch (Exception e) {
+                e.printStackTrace();
+                callback.onError(e);
+            }
+            mPullController.convertData(callback);
         }
-        mPullController.convertData(callback);
     }
 }

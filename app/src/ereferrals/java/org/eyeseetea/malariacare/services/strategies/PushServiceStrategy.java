@@ -49,55 +49,60 @@ public class PushServiceStrategy extends APushServiceStrategy {
     @Override
     public void push() {
 
-        IAuthenticationManager authenticationManager = new AuthenticationManager(
-                PreferencesState.getInstance().getContext());
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
-        IInvalidLoginAttemptsRepository
-                iInvalidLoginAttemptsRepository =
-                new InvalidLoginAttemptsRepositoryLocalDataSource();
-        LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
-                iInvalidLoginAttemptsRepository);
-        final Credentials oldCredentials = credentialsLocalDataSoruce.getOrganisationCredentials();
-        loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
-            @Override
-            public void onLoginSuccess() {
-                PushServiceStrategy.this.onCorrectCredentials();
-            }
+        if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
+            PushServiceStrategy.this.onCorrectCredentials();
+        } else {
+            IAuthenticationManager authenticationManager = new AuthenticationManager(
+                    PreferencesState.getInstance().getContext());
+            IMainExecutor mainExecutor = new UIThreadExecutor();
+            IAsyncExecutor asyncExecutor = new AsyncExecutor();
+            ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+            IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
+            IInvalidLoginAttemptsRepository
+                    iInvalidLoginAttemptsRepository =
+                    new InvalidLoginAttemptsRepositoryLocalDataSource();
+            LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                    asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
+                    iInvalidLoginAttemptsRepository);
+            final Credentials oldCredentials =
+                    credentialsLocalDataSoruce.getOrganisationCredentials();
+            loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
+                @Override
+                public void onLoginSuccess() {
+                    PushServiceStrategy.this.onCorrectCredentials();
+                }
 
-            @Override
-            public void onServerURLNotValid() {
-                Log.e(TAG, "Error getting user credentials: URL not valid ");
-            }
+                @Override
+                public void onServerURLNotValid() {
+                    Log.e(TAG, "Error getting user credentials: URL not valid ");
+                }
 
-            @Override
-            public void onInvalidCredentials() {
-                logout();
-            }
+                @Override
+                public void onInvalidCredentials() {
+                    logout();
+                }
 
-            @Override
-            public void onNetworkError() {
-                Log.e(TAG, "Error getting user credentials: NetworkError");
-            }
+                @Override
+                public void onNetworkError() {
+                    Log.e(TAG, "Error getting user credentials: NetworkError");
+                }
 
-            @Override
-            public void onConfigJsonInvalid() {
-                Log.e(TAG, "Error getting user credentials: JsonInvalid");
-            }
+                @Override
+                public void onConfigJsonInvalid() {
+                    Log.e(TAG, "Error getting user credentials: JsonInvalid");
+                }
 
-            @Override
-            public void onUnexpectedError() {
-                Log.e(TAG, "Error getting user credentials: unexpectedError ");
-            }
+                @Override
+                public void onUnexpectedError() {
+                    Log.e(TAG, "Error getting user credentials: unexpectedError ");
+                }
 
-            @Override
-            public void onMaxLoginAttemptsReachedError() {
+                @Override
+                public void onMaxLoginAttemptsReachedError() {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     protected void executeMockedPush() {
@@ -115,7 +120,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     private void onCorrectCredentials() {
-        executePush();
+        if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
+            executeMockedPush();
+        } else {
+            executePush();
+        }
     }
 
 
@@ -188,7 +197,8 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onSurveysNotFoundError() {
-                onError("PUSHUSECASE ERROR Pending surveys not found");}
+                onError("PUSHUSECASE ERROR Pending surveys not found");
+            }
 
             @Override
             public void onConversionError() {
@@ -200,12 +210,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onNetworkError() {
-                onError("PUSHUSECASE ERROR Network not available");}
+                onError("PUSHUSECASE ERROR Network not available");
+            }
 
             @Override
             public void onInformativeError(String message) {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
-                        R.string.error_conflict_title), "PUSHUSECASE ERROR "+message + PreferencesState.getInstance().isPushInProgress());
+                        R.string.error_conflict_title), "PUSHUSECASE ERROR " + message
+                        + PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
@@ -229,13 +241,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onApiCallError(ApiCallException e) {
-                onError("PUSHUSECASE ERROR "+e.getMessage());
+                onError("PUSHUSECASE ERROR " + e.getMessage());
                 e.printStackTrace();
             }
 
             @Override
             public void onClosedUser() {
-                onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
+                onError("PUSHUSECASE ERROR on closedUser "
+                        + PreferencesState.getInstance().isPushInProgress());
                 closeUserLogout();
             }
         });

@@ -144,4 +144,12 @@ public class Constants {
      * server
      */
     public static final int REQUEST_CODE_ON_EULA_ACCEPTED = 1;
+
+
+    //############# MEDIA TYPE ##############
+    // Values to identify image/video on media_type column in the DB
+    public static final int MEDIA_TYPE_IMAGE = 0;
+    public static final int MEDIA_TYPE_VIDEO = 1;
+    public static final String MEDIA_SEPARATOR="#";
+    public static final int NO_MEDIA_ID=-1;
 }

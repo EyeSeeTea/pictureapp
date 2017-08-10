@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -131,8 +132,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
-                //// FIXME: 30/05/2017 Uncomment this line to reactivate the disable login feature
-                //showLogin();
+                if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
+                    showLogin();
+                }
             }
         }
     };
@@ -154,7 +156,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onStop() {
         applicationdidenterbackground();
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+                mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
         }
         mBaseActivity.unregisterReceiver(connectionReceiver);

@@ -42,6 +42,19 @@ public class AlarmPushReceiver extends BroadcastReceiver {
     private static final long SECONDS = 1000;
     private static AlarmManager alarmManagerInstance;
 
+    public static void cancelPushAlarm(Context context) {
+        Log.d(TAG, "cancelPushAlarm");
+
+        if(alarmManagerInstance!=null) {
+            Log.d(TAG, "canceling PushAlarm");
+            Intent intent = new Intent(context, AlarmPushReceiver.class);
+            PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManagerInstance.cancel(sender);
+        }
+
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive");

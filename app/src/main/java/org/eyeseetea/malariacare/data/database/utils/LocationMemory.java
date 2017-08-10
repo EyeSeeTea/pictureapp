@@ -53,11 +53,6 @@ public class LocationMemory {
         }
         return instance;
     }
-
-    public void init(Context context) {
-        mContext=context;
-    }
-
     /**
      * Saves the coordinates for the given survey into internal shared preferences
      */
@@ -106,6 +101,7 @@ public class LocationMemory {
      * Gets the app context
      */
     public static Context getContext() {
+        mContext = PreferencesState.getInstance().getContext();
         if(mContext==null){
             Crashlytics.log("Null context exception during the background push in LocationMemory");
         }

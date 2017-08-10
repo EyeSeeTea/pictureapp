@@ -222,4 +222,6 @@
 <string name="Option_Text_Reason_Child">"ເດັກນ້ອຍຕ່ໍາກວ່າ 2 ປີ"</string>
 <string name="Option_Text_Reason_Calendar">"ຮັບການປິ່ນປົວພາຍໃນ 28 ວັນ"</string>
 <string name="clean_demo_db">"ຖານຂໍ້ມູນຕົວຢ່າງທີ່ສະອາດ"</string>
+<string name="tab_av">"AV"</string>
+<string name="tab_stock">"Stock"</string>
 </resources>

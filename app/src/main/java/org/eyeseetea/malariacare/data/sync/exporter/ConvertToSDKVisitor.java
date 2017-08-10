@@ -33,7 +33,6 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.sync.exporter.exception.NullContextException;
 import org.eyeseetea.malariacare.data.sync.exporter.strategies.ConvertToSdkVisitorStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
@@ -136,8 +135,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             //If the conversion fails the survey is wrong and will be delete.
             removeSurveyAndEvent(surveyDB, event);
             throw new ConversionException(e);
-        }catch (NullContextException e){
-            Crashlytics.log("Null context exception during the background push");
         }
     }
 
@@ -174,8 +171,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds several datavalues from the mainScore of the survey
      */
-    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event)
-            throws NullContextException {
+    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event) {
         //save phonemetadata
         buildAndSaveDataValue((getContext().getString(
                 R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
@@ -226,7 +222,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds an event from a survey
      */
-    private EventExtended buildEvent(SurveyDB surveyDB) throws NullContextException {
+    private EventExtended buildEvent(SurveyDB surveyDB) {
         EventExtended event = new EventExtended();
 
         ConvertToSdkVisitorStrategy.setAttributeCategoryOptionsInEvent(event);
@@ -274,9 +270,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Updates the location of the current event that it is being processed
      */
-    private EventExtended updateEventLocation(SurveyDB surveyDB, EventExtended event)
-            throws NullContextException {
-        LocationMemory.getInstance().init(getContext());
+    private EventExtended updateEventLocation(SurveyDB surveyDB, EventExtended event) {
         Location lastLocation = LocationMemory.get(surveyDB.getId_survey());
 
         //No location + not required -> done
@@ -304,7 +298,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * Saves changes in the survey (supposedly after a successful push)
      */
     public void saveSurveyStatus(Map<String, PushReport> pushReportMap, final
-    IPushController.IPushControllerCallback callback) throws NullContextException {
+    IPushController.IPushControllerCallback callback) {
         Log.d(TAG, String.format("pushReportMap %d surveys savedSurveyStatus", mSurveyDBs.size()));
         for (int i = 0; i < mSurveyDBs.size(); i++) {
             SurveyDB iSurveyDB = mSurveyDBs.get(i);
@@ -387,13 +381,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     //getContext or throw exception to control background null crash
-    private Context getContext() throws NullContextException {
+    private Context getContext(){
         if (context == null) {
-            if (PreferencesState.getInstance().getContext() == null) {
-                throw new NullContextException();
-            } else {
-                context = PreferencesState.getInstance().getContext();
-            }
+            Crashlytics.log("Null context exception during the background push in convertToSdkVisitor");
         }
         return context;
     }

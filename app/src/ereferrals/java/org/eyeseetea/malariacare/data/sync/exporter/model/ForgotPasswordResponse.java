@@ -8,6 +8,10 @@ public class ForgotPasswordResponse {
     private String status;
     private String message;
 
+
+    public ForgotPasswordResponse() {
+    }
+
     public ForgotPasswordResponse(String status, String message) {
         this.status = status;
         this.message = message;

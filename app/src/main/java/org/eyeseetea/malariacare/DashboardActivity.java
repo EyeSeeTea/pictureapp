@@ -127,11 +127,11 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getString(R.string.tab_stock));
+                    context.getResources().getString(R.string.sent_data));
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.tab_av));
+                    context.getResources().getString(R.string.server_name));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getString(R.string.monitoring_title));
@@ -152,7 +152,7 @@ public class DashboardActivity extends BaseActivity {
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.tab_av));
+                    context.getResources().getString(R.string.sent_data));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
@@ -360,7 +360,7 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onResume() {
         Log.d(TAG, "onResume");
-        DriveRestController.getInstance().syncMedia();
+        mDashboardActivityStrategy.onResume();
         super.onResume();
     }
 
@@ -762,7 +762,7 @@ public class DashboardActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         //Delegate activity result to media controller
-        DriveRestController.getInstance().onActivityResult(requestCode, resultCode, data);
+        mDashboardActivityStrategy.onActivityResult(requestCode, resultCode, data);
     }
     /**
      * Called when activity gets invisible. Connection to Drive service needs to

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -222,5 +223,14 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void openSentSurvey() {
         mDashboardActivity.initSurvey();
+    }
+
+
+    public void onResume() {
+        DriveRestController.getInstance().syncMedia();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        DriveRestController.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 }

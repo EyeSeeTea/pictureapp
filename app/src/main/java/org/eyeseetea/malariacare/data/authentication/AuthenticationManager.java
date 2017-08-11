@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 
@@ -56,6 +57,23 @@ public class AuthenticationManager implements IAuthenticationManager {
         } else {
             remoteLogout(callback);
         }
+    }
+
+    @Override
+    public void forgotPassword(String username,
+            final Callback<ForgotPasswordMessage> callback) {
+        userAccountRemoteDataSource.forgotPassword(username,
+                new IDataSourceCallback<ForgotPasswordMessage>() {
+                    @Override
+                    public void onSuccess(ForgotPasswordMessage result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
     }
 
     private void remoteLogout(final IAuthenticationManager.Callback<Void> callback) {

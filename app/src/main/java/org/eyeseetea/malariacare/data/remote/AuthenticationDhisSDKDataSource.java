@@ -6,7 +6,10 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.remote.strategies.AuthenticationDhisSDKDataSourceStrategy;
+import org.eyeseetea.malariacare.data.remote.strategies.IAuthenticationDhisSDKDataSourceStrategy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -24,9 +27,11 @@ import rx.schedulers.Schedulers;
 
 public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSource {
     private Context mContext;
+    private IAuthenticationDhisSDKDataSourceStrategy mAuthenticationDhisSDKDataSourceStrategy;
 
     public AuthenticationDhisSDKDataSource(Context context) {
         mContext = context;
+        mAuthenticationDhisSDKDataSourceStrategy = new AuthenticationDhisSDKDataSourceStrategy();
     }
 
     @Override
@@ -50,6 +55,13 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
             //The user is never logged
             callback.onSuccess(null);
         }
+    }
+
+    @Override
+    public void forgotPassword(String username,
+            IDataSourceCallback<ForgotPasswordMessage> callback) {
+        mAuthenticationDhisSDKDataSourceStrategy.forgotPassword(username, isNetworkAvailable(),
+                callback);
     }
 
 

@@ -9,11 +9,11 @@ import static org.junit.Assert.fail;
 import android.content.Context;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.data.repositories.ForgotPasswordRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IForgotPasswordRepository;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -76,10 +76,9 @@ public class TestWSForgotPassword {
 
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IForgotPasswordRepository forgotPasswordRepository = new ForgotPasswordRepository(
-                context);
+        IAuthenticationManager authenticationManager = new AuthenticationManager(context);
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
-                asyncExecutor, forgotPasswordRepository);
+                asyncExecutor, authenticationManager);
         final CountDownLatch signal = new CountDownLatch(1);
         forgotPasswordUseCase.execute("test",
                 new ForgotPasswordUseCase.Callback() {
@@ -119,10 +118,9 @@ public class TestWSForgotPassword {
         Context context = getInstrumentation().getContext();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IForgotPasswordRepository forgotPasswordRepository = new ForgotPasswordRepository(
-                context);
+        IAuthenticationManager authenticationManager = new AuthenticationManager(context);
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
-                asyncExecutor, forgotPasswordRepository);
+                asyncExecutor, authenticationManager);
         final CountDownLatch signal = new CountDownLatch(1);
         forgotPasswordUseCase.execute("test",
                 new ForgotPasswordUseCase.Callback() {

@@ -105,7 +105,7 @@ public class LocationMemory {
     public static Context getContext() {
         context = PreferencesState.getInstance().getContext();
         if(context==null){
-            Crashlytics.log("Null context exception during the background push in LocationMemory");
+            Crashlytics.logException(new Throwable("Null context exception during the background push in LocationMemory, surveys deleted!"));
         }
         return context;
     }

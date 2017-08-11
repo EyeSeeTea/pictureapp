@@ -169,7 +169,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds several datavalues from the mainScore of the survey
      */
-    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event) {
+    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event){
         //save phonemetadata
         buildAndSaveDataValue((getContext().getString(
                 R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
@@ -377,9 +377,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     //getContext or throw exception to control background null crash
-    private Context getContext(){
+    private Context getContext() {
         if (context == null) {
-            Crashlytics.log("Null context exception during the background push in convertToSdkVisitor");
+            Crashlytics.logException(new Throwable("Null context exception during the background push in convertToSdkVisitor, surveys deleted!"));
         }
         return context;
     }

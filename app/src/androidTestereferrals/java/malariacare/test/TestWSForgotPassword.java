@@ -44,7 +44,7 @@ public class TestWSForgotPassword {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        PreferencesEReferral.setWSURL(server.url("test/").toString());
+        PreferencesEReferral.setWSURL(server.url("eRefWSDev/api/forgotpassword/").toString());
 
     }
 

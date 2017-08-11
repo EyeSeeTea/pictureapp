@@ -759,7 +759,7 @@ public class DashboardActivity extends BaseActivity {
 
             @Override
             public void onLogoutError(String message) {
-                Log.e("." + this.getClass().getSimpleName(), message);
+                Log.e("." + TAG, message);
             }
         });
     }

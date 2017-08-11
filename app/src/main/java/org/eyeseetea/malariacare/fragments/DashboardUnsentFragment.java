@@ -292,8 +292,10 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
                 // Set the variable that establish the unsent list is shown or not
                 if (unsentHeight >= screenHeight) {
+                    Log.d(TAG, "setFullOfUnsent");
                     Session.setFullOfUnsent(getActivity());
                 } else {
+                    Log.d(TAG, "setNotFullOfUnsent");
                     Session.setNotFullOfUnsent(getActivity());
                 }
             }

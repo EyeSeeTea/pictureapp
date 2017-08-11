@@ -68,33 +68,33 @@ public class SplashScreenActivity extends Activity {
             pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
                 @Override
                 public void onComplete() {
-                    Log.d(this.getClass().getSimpleName(), "pull complete");
+                    Log.d(TAG, "pull complete");
                     NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
                 }
 
                 @Override
                 public void onStep(PullStep step) {
-                    Log.d(this.getClass().getSimpleName(), step.toString());
+                    Log.d(TAG, step.toString());
                 }
 
                 @Override
                 public void onError(String message) {
-                    Log.e(this.getClass().getSimpleName(), message);
+                    Log.e(TAG, message);
                 }
 
                 @Override
                 public void onNetworkError() {
-                    Log.e(this.getClass().getSimpleName(), "Network Error");
+                    Log.e(TAG, "Network Error");
                 }
 
                 @Override
                 public void onPullConversionError() {
-                    Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
+                    Log.e(TAG, "Pull Conversion Error");
                 }
 
                 @Override
                 public void onCancel() {
-                    Log.e(this.getClass().getSimpleName(), "Pull oncancel");
+                    Log.e(TAG, "Pull oncancel");
                 }
             });
         }

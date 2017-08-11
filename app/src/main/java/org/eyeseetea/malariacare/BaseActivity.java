@@ -438,7 +438,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * SurveyActivity => ".SurveyActivity"
      */
     private void debugMessage(String message) {
-        Log.d("." + this.getClass().getSimpleName(), message);
+        Log.d("." + TAG, message);
     }
 
     @Override

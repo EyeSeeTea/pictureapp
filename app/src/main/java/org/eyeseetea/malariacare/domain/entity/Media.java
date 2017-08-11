@@ -86,7 +86,7 @@ public class Media {
         if(filename==null) {
             return null;
         }else{
-            return filename.substring(filename.lastIndexOf("/"), filename.length());
+            return filename.substring(filename.lastIndexOf("/")+1, filename.length());
         }
     }
 

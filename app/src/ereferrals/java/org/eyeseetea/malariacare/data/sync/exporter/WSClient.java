@@ -5,11 +5,14 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
@@ -77,10 +80,11 @@ public class WSClient {
 
     }
 
-    public void getForgotPassword(String username, WSClientCallBack wsClientCallBack) {
+    public void getForgotPassword(ForgotPasswordPayload forgotPasswordPayload,
+            WSClientCallBack wsClientCallBack) {
         Response<ForgotPasswordResponse> response = null;
         try {
-            response = mSurveyApiClientRetrofit.forgotPassword(username).execute();
+            response = mSurveyApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();
 
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
@@ -90,6 +94,9 @@ public class WSClient {
         }
         if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());
+        } else {
+            wsClientCallBack.onError(
+                    new ApiCallException(mContext.getString(R.string.ws_unknown_exception)));
         }
     }
 

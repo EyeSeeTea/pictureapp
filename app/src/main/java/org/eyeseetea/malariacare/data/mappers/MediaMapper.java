@@ -18,7 +18,7 @@ public class MediaMapper {
     }
 
     public static Media mapFromDbToDomain(MediaDB mediaDB) {
-        return new Media(mediaDB.getFilename(), mediaDB.getResourceUrl(),
+        return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(),
                 getMediaType(mediaDB.getMediaType()),
                 Media.getSizeInMB(mediaDB.getFilename()));
     }

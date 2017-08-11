@@ -22,10 +22,15 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(database = AppDatabase.class, name = "Media")
 public class MediaDB extends BaseModel {
@@ -33,7 +38,7 @@ public class MediaDB extends BaseModel {
     /**
      * Null media value to express that a question has NO media without using queries
      */
-    private static MediaDB noMedia = new MediaDB(Constants.NO_MEDIA_ID, null, null);
+    private static MediaDB noMedia = new MediaDB(Constants.NO_MEDIA_ID, null);
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -46,34 +51,19 @@ public class MediaDB extends BaseModel {
     String resource_url;
 
     @Column
-    Long id_question_fk;
-
-    @Column
     String filename;
-
-
-    /**
-     * Reference to the question
-     */
-    QuestionDB question;
 
     public MediaDB() {
     }
 
-    public MediaDB(int media_type, String resource_url, QuestionDB question) {
+    public MediaDB(int media_type, String resource_url) {
         this.media_type = media_type;
         this.resource_url = resource_url;
         this.filename = null;
-        this.setQuestion(question);
     }
 
-    public QuestionDB getQuestion() {
-        if (question == null) {
-
-            if (id_question_fk == null) return null;
-            question = QuestionDB.findByID(id_question_fk);
-        }
-        return question;
+    public long getId_media() {
+        return id_media;
     }
 
     public int getMediaType() {
@@ -100,31 +90,6 @@ public class MediaDB extends BaseModel {
         this.filename = filename;
     }
 
-    public void setQuestion(QuestionDB question) {
-        this.question = question;
-        this.id_question_fk = (question != null) ? question.getId_question() : null;
-    }
-
-    public void setQuestion(Long id_question) {
-        this.id_question_fk = id_question;
-        this.question = null;
-    }
-
-    /**
-     * Since questions are saved in batch the referenced question has no id_question when the setter
-     * is called.
-     * This method allows the media to refresh de id_question according to the question referenced
-     * once it is persisted.
-     */
-    public void updateQuestion() {
-        //No question nothing to update
-        if (this.question == null) {
-            return;
-        }
-
-        this.id_question_fk = question.getId_question();
-    }
-
     /**
      * Returns if is a picture
      */
@@ -149,12 +114,8 @@ public class MediaDB extends BaseModel {
         if (id_media != media.id_media) return false;
         if (media_type != media.media_type) return false;
         if (filename != media.filename) return false;
-        if (resource_url != null ? !resource_url.equals(media.resource_url)
-                : media.resource_url != null) {
-            return false;
-        }
-        return id_question_fk != null ? id_question_fk.equals(media.id_question_fk)
-                : media.id_question_fk == null;
+        return resource_url != null ? resource_url.equals(media.resource_url)
+                : media.resource_url == null;
 
     }
 
@@ -163,7 +124,6 @@ public class MediaDB extends BaseModel {
         int result = (int) (id_media ^ (id_media >>> 32));
         result = 31 * result + media_type;
         result = 31 * result + (resource_url != null ? resource_url.hashCode() : 0);
-        result = 31 * result + (id_question_fk != null ? id_question_fk.hashCode() : 0);
         result = 31 * result + (filename != null ? filename.hashCode() : 0);
         return result;
     }
@@ -174,7 +134,6 @@ public class MediaDB extends BaseModel {
                 "id_media=" + id_media +
                 ", media_type=" + media_type +
                 ", resource_url='" + resource_url + '\'' +
-                ", id_question=" + id_question_fk +
                 ", filename=" + filename +
                 '}';
     }

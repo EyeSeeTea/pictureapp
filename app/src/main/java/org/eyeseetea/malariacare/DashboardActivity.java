@@ -48,6 +48,8 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.drive.DriveRestController;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -358,6 +360,7 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onResume() {
         Log.d(TAG, "onResume");
+        DriveRestController.getInstance().syncMedia();
         super.onResume();
     }
 
@@ -365,13 +368,6 @@ public class DashboardActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-    }
-
-
-    @Override
-    public void onPause() {
-        Log.d(TAG, "onPause");
-        super.onPause();
     }
 
     @Override
@@ -756,6 +752,27 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Handles resolution callbacks.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        Log.d(TAG, String.format("onActivityResult(%d, %d)", requestCode, resultCode));
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Delegate activity result to media controller
+        DriveRestController.getInstance().onActivityResult(requestCode, resultCode, data);
+    }
+    /**
+     * Called when activity gets invisible. Connection to Drive service needs to
+     * be disconnected as soon as an activity is invisible.
+     */
+    @Override
+    public void onPause(){
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
     private void initNavigationController() throws LoadingNavigationControllerException{
         mDashboardActivityStrategy.initNavigationController();
     }

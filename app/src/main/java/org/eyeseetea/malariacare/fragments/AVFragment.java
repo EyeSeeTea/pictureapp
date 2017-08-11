@@ -100,12 +100,12 @@ public class AVFragment extends Fragment {
             @Override
             public List<Media> getAll() {
                 List<Media> testMedia = new ArrayList<>();
-                testMedia.add(new Media("newfile", "path", Media.MediaType.PICTURE, "30mb"));
-                testMedia.add(new Media("newfile2", "path", Media.MediaType.PICTURE, "530mb"));
-                testMedia.add(new Media("newfile3", "path", Media.MediaType.VIDEO, "320mb"));
-                testMedia.add(new Media("newfile4", "path", Media.MediaType.VIDEO, "310mb"));
-                testMedia.add(new Media("newfile5", "path", Media.MediaType.PICTURE, "330mb"));
-                testMedia.add(new Media("newfile6", "path", Media.MediaType.PICTURE, "340mb"));
+                testMedia.add(new Media(1, Media.getFilenameFromPath("data/newfile.org"), "localPath","externalPath", Media.MediaType.PICTURE, "30mb"));
+                testMedia.add(new Media(2, Media.getFilenameFromPath("data/newfile2.org"), "localPath","externalPath", Media.MediaType.PICTURE, "530mb"));
+                testMedia.add(new Media(3, Media.getFilenameFromPath("data/newfile3.org"), "localPath","externalPath", Media.MediaType.VIDEO, "320mb"));
+                testMedia.add(new Media(4, Media.getFilenameFromPath("data/newfile4.org"), "localPath","externalPath", Media.MediaType.VIDEO, "310mb"));
+                testMedia.add(new Media(5, Media.getFilenameFromPath("data/newfile5.org"), "localPath","externalPath", Media.MediaType.PICTURE, "330mb"));
+                testMedia.add(new Media(6, Media.getFilenameFromPath("data/newfile6.org"), "localPath","externalPath", Media.MediaType.PICTURE, "340mb"));
 
                 return testMedia;
             }

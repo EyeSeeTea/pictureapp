@@ -208,4 +208,5 @@
     <string name="empty_review_value">""</string>
     <string name="webservice_url_error_title">"Kosa webservice"</string>
     <string name="webservice_url_error">"Hitilafu kujenga huduma ya mtandao: %s"</string>
+    <string name="google_play_required">Den här appen kräver Google Play Services. Installera Google Play Services på din enhet och starta om den här appen igen.</string>
 </resources>

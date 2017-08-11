@@ -19,6 +19,7 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
@@ -130,6 +131,11 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void loadValidUrl() {
         if (mWebView != null) {
+            if(PreferencesState.getCredentialsFromPreferences().isDemoCredentials()){
+                mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
+                        getString(R.string.demo_web)));
+                return;
+            }
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setDomStorageEnabled(true);
             clearCookies(getActivity());

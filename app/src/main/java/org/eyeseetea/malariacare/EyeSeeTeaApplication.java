@@ -88,9 +88,7 @@ public class EyeSeeTeaApplication extends Application {
     }
 
     public boolean isAppWentToBg() {
-        //// FIXME: 30/05/2017 remove this line and uncomment the next one to restore the disable login feature
-        return false;
-        //return isAppWentToBg;
+        return isAppWentToBg;
     }
 
     public void setIsAppWentToBg(boolean isAppWentToBg) {

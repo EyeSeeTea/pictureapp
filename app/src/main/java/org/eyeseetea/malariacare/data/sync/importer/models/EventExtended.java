@@ -48,7 +48,7 @@ public class EventExtended implements VisitableFromSDK {
 
     private final static String TAG = ".EventExtended";
     public final static String DHIS2_GMT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    public final static String DHIS2_LONG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    public final static String DHIS2_LONG_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
 
 
@@ -104,7 +104,6 @@ public class EventExtended implements VisitableFromSDK {
         if (event == null) {
             return null;
         }
-
         return event.getCreated().toDate();
     }
 
@@ -123,14 +122,14 @@ public class EventExtended implements VisitableFromSDK {
      * Returns the survey.eventDate associated with this event (eventDate field)
      */
     public Date getEventDate() {
-        return (event.getEventDate() != null) ? new DateTime(event.getEventDate()).toDate() : null;
+        return (event.getEventDate() != null) ? event.getEventDate().toDate() : null;
     }
 
     /**
      * Returns the survey.eventDate associated with this event (dueDate field)
      */
     public Date getDueDate() {
-        return (event != null) ? new DateTime(event.getDueDate()).toDate() : null;
+        return (event != null) ? event.getDueDate().toDate() : null;
     }
 
     /**
@@ -205,11 +204,11 @@ public class EventExtended implements VisitableFromSDK {
         event.setLastUpdated(dateTime);
     }
 
-    public void setEventDate(String dateTime) {
+    public void setEventDate(DateTime dateTime) {
         event.setEventDate(dateTime);
     }
 
-    public void setDueDate(String dateTime) {
+    public void setDueDate(DateTime dateTime) {
         event.setDueDate(dateTime);
     }
 
@@ -250,7 +249,7 @@ public class EventExtended implements VisitableFromSDK {
         if (event.getDueDate() == null) {
             return null;
         }
-        return new DateTime(event.getDueDate()).toDate();
+        return event.getDueDate().toDate();
     }
 
     public void delete() {

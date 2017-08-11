@@ -15,6 +15,8 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.drive.DriveRestController;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -38,6 +40,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
+
+            //Media: init drive credentials
+            DriveRestController.getInstance().init(new MediaRepository(),mDashboardActivity.getApplicationContext());
     }
 
     @Override

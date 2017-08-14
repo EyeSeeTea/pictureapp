@@ -27,7 +27,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 public class DriveRestController {
-
+    public interface CallBack{
+        void onSuccess();
+    }
 
     private static final String TAG = "DriveRestController";
     private static DriveRestController instance;
@@ -40,6 +42,7 @@ public class DriveRestController {
 
     private Context mContext;
     private MediaRepository mMediaRepository;
+    private CallBack mCallBack;
 
     DriveRestController() {
 
@@ -52,11 +55,12 @@ public class DriveRestController {
         return instance;
     }
 
-    public void init(MediaRepository mediaRepository, Context context) {
+    public void init(MediaRepository mediaRepository, Context context, CallBack callBack) {
         Log.d(TAG, "Init drive credential");
         mContext = context;
         mMediaRepository = mediaRepository;
         initServiceAccountCredential();
+        mCallBack = callBack;
     }
 
     private void initServiceAccountCredential() {
@@ -94,7 +98,7 @@ public class DriveRestController {
             return;
         }
 
-        new DownloadMediaTask(serviceCredential, mMediaRepository, mContext).execute();
+        new DownloadMediaTask(serviceCredential, mMediaRepository, mContext, mCallBack).execute();
     }
 
     private boolean isGooglePlayAppAvailable() {

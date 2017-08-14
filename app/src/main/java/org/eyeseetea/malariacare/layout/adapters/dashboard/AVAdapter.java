@@ -42,6 +42,9 @@ public class AVAdapter extends RecyclerView.Adapter {
     }
     @Override
     public int getItemCount() {
+        if(medias==null) {
+            return 0;
+        }
         return medias.size();
     }
 

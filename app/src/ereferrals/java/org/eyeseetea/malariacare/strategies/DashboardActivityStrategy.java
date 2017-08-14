@@ -42,8 +42,14 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
 
-            //Media: init drive credentials
-            DriveRestController.getInstance().init(new MediaRepository(),mDashboardActivity.getApplicationContext());
+        //Media: init drive credentials
+        DriveRestController.getInstance().init(new MediaRepository(),
+                mDashboardActivity.getApplicationContext(), new DriveRestController.CallBack() {
+                    @Override
+                    public void onSuccess() {
+                        avFragment.reloadData();
+                    }
+                });
     }
 
     @Override

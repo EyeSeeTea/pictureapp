@@ -129,4 +129,8 @@ public class AVFragment extends Fragment {
         }
         initAdapters();
     }
+
+    public void reloadData() {
+        loadMediaListAndAdapter();
+    }
 }

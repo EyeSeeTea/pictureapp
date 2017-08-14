@@ -42,12 +42,14 @@ class DownloadMediaTask extends AsyncTask<Void, Void, Integer> {
     private Exception mLastError = null;
     private MediaRepository mMediaRepository;
     private Context mContext;
+    private DriveRestController.CallBack mCallBack;
 
     /**
      * Builds a task that requires service credentials
      */
     public DownloadMediaTask(GoogleCredential credential, MediaRepository mediaRepository,
-            Context context) {
+            Context context, DriveRestController.CallBack callBack) {
+        mCallBack = callBack;
         this.mContext = context;
         this.mMediaRepository = mediaRepository;
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -131,6 +133,7 @@ class DownloadMediaTask extends AsyncTask<Void, Void, Integer> {
         if (numSyncedFiles > 0) {
             Toast.makeText(mContext, String.format("%d files synced", numSyncedFiles),
                     Toast.LENGTH_LONG).show();
+            mCallBack.onSuccess();
         }
     }
 

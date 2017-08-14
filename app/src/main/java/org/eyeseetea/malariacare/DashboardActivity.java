@@ -778,7 +778,7 @@ public class DashboardActivity extends BaseActivity {
         //Delegate activity result to media controller
         mDashboardActivityStrategy.onActivityResult(requestCode, resultCode, data);
     }
-    
+
     private void initNavigationController() throws LoadingNavigationControllerException{
         mDashboardActivityStrategy.initNavigationController();
     }

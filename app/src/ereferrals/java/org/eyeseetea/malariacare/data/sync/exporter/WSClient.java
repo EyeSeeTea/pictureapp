@@ -5,10 +5,14 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
@@ -21,11 +25,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class WSClient {
-    private static final String TAG = "WSClient";
+    private static final java.lang.String TAG = "WSClient";
 
     private Retrofit mRetrofit;
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
+
 
     public WSClient() throws IllegalArgumentException{
         mContext = PreferencesState.getInstance().getContext();
@@ -75,8 +80,28 @@ public class WSClient {
 
     }
 
-    public interface WSClientCallBack {
-        void onSuccess(SurveyWSResult surveyWSResult);
+    public void getForgotPassword(ForgotPasswordPayload forgotPasswordPayload,
+            WSClientCallBack wsClientCallBack) {
+        Response<ForgotPasswordResponse> response = null;
+        try {
+            response = mSurveyApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();
+
+        } catch (UnrecognizedPropertyException e) {
+            ConversionException conversionException = new ConversionException(e);
+            wsClientCallBack.onError(conversionException);
+        } catch (IOException e) {
+            wsClientCallBack.onError(e);
+        }
+        if (response != null && response.isSuccessful()) {
+            wsClientCallBack.onSuccess(response.body());
+        } else {
+            wsClientCallBack.onError(
+                    new ApiCallException(mContext.getString(R.string.ws_unknown_exception)));
+        }
+    }
+
+    public interface WSClientCallBack<T> {
+        void onSuccess(T result);
 
         void onError(Exception e);
     }

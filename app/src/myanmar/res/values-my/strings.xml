@@ -333,4 +333,6 @@
 <string name="error_message_push">"UID နှင့်အတူထိုအဖြစ်အပျက်: %s ကို။ နေ့စွဲမရှိဘဲတင်ခံခဲ့ရသည်။ စီမံခန့်ခွဲသူကိုဆက်သွယ်ပါ။ "</string>
 <string name="db_migration_error">"ဟုအဆိုပါစီမံအုပ်ချုပ်သူကိုအကြောင်းကြားပေးပါ, လျှောက်လွှာ-install ခံရဖို့လိုအပ်နိုင်ပါသည်"</string>
 <string name="error_exporting_data">"မှားယွင်းနေသည် metadata ကိုတင်ပို့လို့မရပါ။ "</string>
+<string name="tab_av">"AV"</string>
+<string name="tab_stock">"Stock"</string>
 </resources>

@@ -52,7 +52,6 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
         }
     }
 
-
     @Override
     public void login(final Credentials credentials,
             final IDataSourceCallback<UserAccount> callback) {
@@ -83,7 +82,8 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                         @Override
                         public void call(
                                 org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
-                            UserAccount userAccount = new UserAccount(credentials.getUsername(), dhisUserAccount.getUId(),
+                            UserAccount userAccount = new UserAccount(credentials.getUsername(),
+                                    dhisUserAccount.getUId(),
                                     credentials.isDemoCredentials());
                             callback.onSuccess(userAccount);
                         }

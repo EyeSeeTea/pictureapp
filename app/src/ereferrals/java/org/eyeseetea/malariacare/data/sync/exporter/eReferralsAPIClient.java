@@ -6,7 +6,6 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
@@ -24,30 +23,32 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class WSClient {
-    private static final java.lang.String TAG = "WSClient";
+public class eReferralsAPIClient {
+    private static final java.lang.String TAG = "eReferralsAPIClient";
 
     private Retrofit mRetrofit;
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
 
 
-    public WSClient() throws IllegalArgumentException{
+    public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
         mContext = PreferencesState.getInstance().getContext();
 
+        initializeDependencies(baseAddress);
+    }
+
+    private void initializeDependencies(String baseAddress) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(PreferencesEReferral.getWSURL())
+                .baseUrl(baseAddress)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(client)
                 .build();
 
         mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
-
     }
 
     public void pushSurveys(SurveyContainerWSObject surveyContainerWSObject,
@@ -81,7 +82,7 @@ public class WSClient {
     }
 
     public void getForgotPassword(ForgotPasswordPayload forgotPasswordPayload,
-            WSClientCallBack wsClientCallBack) {
+            WSClientCallBack<ForgotPasswordResponse> wsClientCallBack) {
         Response<ForgotPasswordResponse> response = null;
         try {
             response = mSurveyApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();

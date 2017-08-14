@@ -6,8 +6,9 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.sync.exporter.WSClient;
+import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
@@ -33,9 +34,10 @@ public class ForgotPasswordDataSource implements IForgotPasswordDataSource {
                     PreferencesState.getInstance().getContext().getString(
                             R.string.ws_version), username, "en");
 
-            WSClient wsClient = new WSClient();
-            wsClient.getForgotPassword(forgotPasswordPayload,
-                    new WSClient.WSClientCallBack<ForgotPasswordResponse>() {
+            eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
+                    PreferencesEReferral.getWSURL());
+            eReferralsAPIClient.getForgotPassword(forgotPasswordPayload,
+                    new eReferralsAPIClient.WSClientCallBack<ForgotPasswordResponse>() {
                         @Override
                         public void onSuccess(ForgotPasswordResponse result) {
                             callback.onSuccess(

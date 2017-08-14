@@ -120,15 +120,4 @@ public class PreferencesEReferral {
                 context);
         return sharedPreferences.getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
     }
-
-    public static void setWSURL(String url){
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url), url);
-        editor.commit();
-    }
-
-
 }

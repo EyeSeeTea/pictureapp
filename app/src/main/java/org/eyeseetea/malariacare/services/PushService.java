@@ -26,6 +26,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
+import org.hisp.dhis.client.sdk.android.api.D2;
 
 /**
  * A service that runs pushing process for pending surveys.
@@ -87,6 +88,16 @@ public class PushService extends IntentService {
         if (!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))) {
             return;
         }
+        try{
+            D2.isConfigured();
+        }catch (IllegalArgumentException e){
+            Log.d(TAG, "d2 is not config, re-initializating...");
+            D2.init(this);
+        }
+        if(PreferencesState.getInstance().getContext()==null) {
+            PreferencesState.getInstance().init(this);
+        }
+
         mPushServiceStrategy.push();
     }
 

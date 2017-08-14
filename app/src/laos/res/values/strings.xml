@@ -214,4 +214,6 @@
 <string name="Option_Text_Reason_Child">"Children under 2 year old"</string>
 <string name="Option_Text_Reason_Calendar">"Treated within the last 28 days"</string>
 <string name="clean_demo_db">"Clean demo DB"</string>
+<string name="tab_av">"AV"</string>
+<string name="tab_stock">"Stock"</string>
 </resources>

@@ -207,6 +207,8 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
     // Espresso-web for WebView support
     androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
+    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+
 
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {

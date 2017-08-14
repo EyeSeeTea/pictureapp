@@ -37,13 +37,12 @@ import org.eyeseetea.malariacare.data.sync.exporter.strategies.ConvertToSdkVisit
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushConflict;
+import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
+import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.push.NullEventDateException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
-import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.joda.time.DateTime;
 
@@ -81,10 +80,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     public static void logEmptySurveyException(SurveyDB surveyDB) {
-        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
         String info = String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
-                surveyDB.toString(),
-                phoneMetaData == null ? "" : phoneMetaData.getPhone_metaData(),
+                surveyDB.toString(), Session.getPhoneMetaDataValue(),
                 Build.VERSION.RELEASE
         );
         Crashlytics.logException(new Throwable(info));
@@ -172,31 +169,30 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds several datavalues from the mainScore of the survey
      */
-    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event) {
+    private void buildControlDataElements(SurveyDB surveyDB, EventExtended event){
         //save phonemetadata
-        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
-        buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(
-                R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData(),
+        buildAndSaveDataValue((getContext().getString(
+                R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
                 event);
 
         //save Time capture
-        if (PreferencesState.getInstance().getContext().getString(
+        if (getContext().getString(
                 R.string.control_data_element_datetime_capture) != null
-                && !PreferencesState.getInstance().getContext().getString(
+                && !getContext().getString(
                 R.string.control_data_element_datetime_capture).equals(
                 "")) {
-            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
+            buildAndSaveDataValue(getContext().getString(
                     R.string.control_data_element_datetime_capture),
                     EventExtended.format(surveyDB.getCompletionDate(),
                             EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
 
         //save Time Sent
-        if (PreferencesState.getInstance().getContext().getString(
+        if (getContext().getString(
                 R.string.control_data_element_datetime_sent) != null
-                && !PreferencesState.getInstance().getContext().getString(
+                && !getContext().getString(
                 R.string.control_data_element_datetime_sent).equals("")) {
-            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
+            buildAndSaveDataValue(getContext().getString(
                     R.string.control_data_element_datetime_sent),
                     EventExtended.format(new Date(), EventExtended.DHIS2_GMT_DATE_FORMAT),
                     event);
@@ -337,7 +333,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                                 + " dataElement pushing survey: "
                                 + iSurveyDB.getId_survey());
                         callback.onInformativeError(new PushValueException(
-                                String.format(context.getString(R.string.error_conflict_message),
+                                String.format(
+                                        getContext().getString(R.string.error_conflict_message),
                                         iEvent.getEvent().getUId(), pushConflict.getUid(),
                                         pushConflict.getValue()) + ""));
                     }
@@ -346,14 +343,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             }
 
             //No errors -> Save and next
-            if (pushReport!=null && !pushReport.hasPushErrors()) {
+            if (pushReport != null && !pushReport.hasPushErrors()) {
                 Log.d(TAG, "saveSurveyStatus: report without errors and status ok "
                         + iSurveyDB.getId_survey());
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
                     //If eventDate is null the event is invalid. The event is sent but we need
                     // inform to the user.
                     callback.onInformativeError(new NullEventDateException(
-                            String.format(context.getString(R.string.error_message_push),
+                            String.format(getContext().getString(R.string.error_message_push),
                                     iEvent.getEvent())));
                 }
                 saveSurveyFromImportSummary(iSurveyDB);
@@ -377,5 +374,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             surveyDB.save();
         }
+    }
+
+    //getContext or throw exception to control background null crash
+    private Context getContext() {
+        if (context == null) {
+            Crashlytics.logException(new Throwable("Null context exception during the background push in convertToSdkVisitor, surveys deleted!"));
+        }
+        return context;
     }
 }

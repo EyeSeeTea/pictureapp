@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
@@ -85,7 +86,7 @@ public class AVAdapter extends RecyclerView.Adapter {
             });
         } else if (viewHolder instanceof ListItemMediaViewHolder) {
             ListItemMediaViewHolder mediaViewHolder = (ListItemMediaViewHolder) viewHolder;
-            Media media = medias.get(position);
+            final Media media = medias.get(position);
             if (media.getName() != null) {
                 mediaViewHolder.fileName.setText(media.getName());
             }
@@ -100,6 +101,12 @@ public class AVAdapter extends RecyclerView.Adapter {
                 mediaViewHolder.icon.setImageDrawable(
                         ContextCompat.getDrawable(context, R.drawable.ic_movie_black_18dp));
             }
+            ((TableRow) mediaViewHolder.icon.getParent()).setOnClickListener(new ImageView.OnClickListener() {
+                public void onClick(View v)
+                {
+                    callback.openMedia(media.getResourcePath());
+                }
+            });
         }
     }
 

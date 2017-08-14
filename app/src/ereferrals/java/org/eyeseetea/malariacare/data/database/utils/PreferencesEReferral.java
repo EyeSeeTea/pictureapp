@@ -60,6 +60,22 @@ public class PreferencesEReferral {
         return sharedPreferences.getLong(context.getString(R.string.logged_user_program), -1);
     }
 
+    public static void saveLastDownloadedProgramMedia(String programName) {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.last_media_program), programName);
+        editor.commit();
+    }
+
+    public static String getLastDownloadedProgramMedia() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.last_media_program), "");
+    }
+
     public static int getNumberBadLogin() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(

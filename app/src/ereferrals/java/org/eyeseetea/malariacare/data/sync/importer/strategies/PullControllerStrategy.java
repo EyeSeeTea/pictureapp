@@ -2,8 +2,11 @@ package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.sql.language.Delete;
+
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
@@ -62,7 +65,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
             ProgramDB programDB = ProgramDB.getFirstProgram();
             Program program = new Program(programDB.getName(), programDB.getUid());
-            programLocalDataSource.saveUserProgramId(program);
+            saveProgram(programLocalDataSource, program);
             callback.onComplete();
         }else {
             ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
@@ -73,12 +76,20 @@ public class PullControllerStrategy extends APullControllerStrategy {
                         orgUnitDataSource.getUserOrgUnit(
                                 credentialsLocalDataSource.getOrganisationCredentials());
                 org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
-                programLocalDataSource.saveUserProgramId(program);
+                saveProgram(programLocalDataSource, program);
             } catch (Exception e) {
                 e.printStackTrace();
                 callback.onError(e);
             }
             mPullController.convertData(callback);
         }
+    }
+
+    private void saveProgram(IProgramRepository programLocalDataSource, Program program) {
+        if(!programLocalDataSource.checkLastDownloadedProgramMedia(program.getCode())){
+            programLocalDataSource.removeProgramMedia();
+            programLocalDataSource.saveLastDownloadedProgramMedia(program.getCode());
+        }
+        programLocalDataSource.saveUserProgramId(program);
     }
 }

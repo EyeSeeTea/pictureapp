@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.repositories;
 
+import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
@@ -9,6 +10,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MediaRepository implements IMediaRepository {
@@ -141,5 +143,14 @@ public class MediaRepository implements IMediaRepository {
             mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl());
             mediaDB.save();
         }
+    }
+
+    public static List<String> listOfDownloadedFiles(){
+        List<String> paths = new ArrayList<>();
+        List<MediaDB> mediaList = new Select().from(MediaDB.class).where(MediaDB_Table.filename.isNotNull()).queryList();
+        for(MediaDB mediaDB:mediaList){
+            paths.add(mediaDB.getFilename());
+        }
+        return paths;
     }
 }

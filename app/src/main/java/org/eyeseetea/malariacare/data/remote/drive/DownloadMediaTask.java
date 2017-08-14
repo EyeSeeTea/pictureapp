@@ -35,6 +35,7 @@ import java.util.List;
 class DownloadMediaTask extends AsyncTask<Void, Void, Integer> {
 
 
+    //TODO  Change by the correct uid
     private static final String rootUid = "0B8oszoX2-DdHOFZwVmRyTWc1X3c";
     private static final String QUICKTIME_NON_SUPPORTED_FORMAT = "mov";
     private final String TAG = "DownloadMediaTask";

@@ -20,7 +20,10 @@
 package org.eyeseetea.malariacare.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,21 +32,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 public class AVFragment extends Fragment {
+
+    public interface Callback{
+        void openMedia(String media);
+    }
 
     public static final String TAG = ".AVFragment";
     protected AVAdapter recyclerAdapter;
@@ -117,7 +125,20 @@ public class AVFragment extends Fragment {
 
     private void initAdapters() {
         this.recyclerAdapter = new AVAdapter(this.mMedias, activeViewType,
-                getActivity().getApplicationContext());
+                getActivity().getApplicationContext(), new Callback(){
+            @Override
+            public void openMedia(String media) {
+                Intent implicitIntent = new Intent();
+                implicitIntent.setAction(Intent.ACTION_VIEW);
+                File file = new File(media);
+                Uri contentUri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID +".layout.adapters.dashboard.AVAdapter", file);
+
+                implicitIntent.setDataAndType(contentUri, PreferencesState.getInstance().getContext().getContentResolver().getType(contentUri));
+                implicitIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                implicitIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                getActivity().startActivity(Intent.createChooser(implicitIntent,PreferencesState.getInstance().getContext().getString(R.string.feedback_view_image)));
+            }
+        });
         recyclerViewList.setAdapter(recyclerAdapter);
     }
 

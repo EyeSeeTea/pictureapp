@@ -1,15 +1,10 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -35,14 +30,18 @@ public class AVAdapter extends RecyclerView.Adapter {
 
     Context context;
 
-    public AVAdapter(List<Media> medias, ViewType typeOfView, Context context){
+    AVFragment.Callback callback;
+
+    public AVAdapter(List<Media> medias, ViewType typeOfView, Context context,  AVFragment.Callback callback) {
         this.medias = medias;
         this.typeOfView = typeOfView;
         this.context = context;
+        this.callback = callback;
     }
+
     @Override
     public int getItemCount() {
-        if(medias==null) {
+        if (medias == null) {
             return 0;
         }
         return medias.size();
@@ -50,11 +49,11 @@ public class AVAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if(typeOfView.equals(ViewType.GRID)) {
+        if (typeOfView.equals(ViewType.GRID)) {
             View rowView = LayoutInflater.from(viewGroup.getContext()).inflate(
                     R.layout.av_grid_item, viewGroup, false);
             return new GridMediaViewHolder(rowView);
-        }else if(typeOfView.equals(ViewType.LIST)){
+        } else if (typeOfView.equals(ViewType.LIST)) {
             View rowView = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.av_list_item, viewGroup, false);
             return new ListItemMediaViewHolder(rowView);
@@ -65,20 +64,26 @@ public class AVAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        if(viewHolder instanceof GridMediaViewHolder){
+        if (viewHolder instanceof GridMediaViewHolder) {
             GridMediaViewHolder mediaViewHolder = (GridMediaViewHolder) viewHolder;
-            Media media = medias.get(position);
+            final Media media = medias.get(position);
             mediaViewHolder.name.setText(media.getName());
-            if(media.getType().equals(Media.MediaType.PICTURE)){
+            if (media.getType().equals(Media.MediaType.PICTURE)) {
                 File file = new File(media.getResourcePath());
                 Uri uri = Uri.fromFile(file);
                 mediaViewHolder.filename.setImageURI(uri);
-            }else {
+            } else {
 
-                mediaViewHolder.filename.setImageBitmap(FileIOUtils.getVideoPreview(media.getResourcePath()));
+                mediaViewHolder.filename.setImageBitmap(
+                        FileIOUtils.getVideoPreview(media.getResourcePath()));
             }
-        }
-        else if (viewHolder instanceof ListItemMediaViewHolder){
+            mediaViewHolder.filename.setOnClickListener(new ImageView.OnClickListener() {
+                public void onClick(View v)
+                {
+                    callback.openMedia(media.getResourcePath());
+                }
+            });
+        } else if (viewHolder instanceof ListItemMediaViewHolder) {
             ListItemMediaViewHolder mediaViewHolder = (ListItemMediaViewHolder) viewHolder;
             Media media = medias.get(position);
             if (media.getName() != null) {
@@ -104,7 +109,6 @@ public class AVAdapter extends RecyclerView.Adapter {
     }
 
 
-
     public static class GridMediaViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         ImageView filename;
@@ -112,9 +116,9 @@ public class AVAdapter extends RecyclerView.Adapter {
 
         GridMediaViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.av_card_view);
-            filename = (ImageView)itemView.findViewById(R.id.image_content);
-            name = (TextView)itemView.findViewById(R.id.resource_name);
+            cv = (CardView) itemView.findViewById(R.id.av_card_view);
+            filename = (ImageView) itemView.findViewById(R.id.image_content);
+            name = (TextView) itemView.findViewById(R.id.resource_name);
         }
     }
 

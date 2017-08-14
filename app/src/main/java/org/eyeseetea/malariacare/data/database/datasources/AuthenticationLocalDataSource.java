@@ -14,7 +14,6 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
 import java.util.List;
@@ -34,12 +33,6 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
     @Override
     public void logout(IDataSourceCallback<Void> callback) {
         mAuthenticationLocalDataSourceStrategy.logout(callback);
-    }
-
-    @Override
-    public void forgotPassword(String username,
-            IDataSourceCallback<ForgotPasswordMessage> callback) {
-
     }
 
     @Override

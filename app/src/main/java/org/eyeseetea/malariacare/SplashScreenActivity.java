@@ -8,7 +8,6 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -40,8 +39,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void init() {
-        LocationMemory.getInstance().init(getApplicationContext());
-
         D2.init(this);
         SdkQueries.createDBIndexes();
         //Added to execute a query in DB, because DBFLow doesn't do any migration until a query

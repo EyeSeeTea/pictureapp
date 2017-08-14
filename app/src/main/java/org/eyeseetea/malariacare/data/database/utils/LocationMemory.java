@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
-import android.preference.PreferenceManager;
+import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.R;
 
@@ -63,8 +63,8 @@ public class LocationMemory {
         if (location == null) {
             return;
         }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                instance.context);
+        SharedPreferences sharedPreferences =
+                getDefaultPreferences(getContext().MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(PREFIX_LONGITUDE + idSurvey, (float) location.getLongitude());
         editor.putFloat(PREFIX_LATITUDE + idSurvey, (float) location.getLatitude());
@@ -78,17 +78,17 @@ public class LocationMemory {
      */
     public static Location get(long idSurvey) {
         Location location = new Location(LocationManager.GPS_PROVIDER);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                instance.context);
+        SharedPreferences sharedPreferences =
+                getDefaultPreferences(Context.MODE_PRIVATE);
 
         float longitude = sharedPreferences.getFloat(PREFIX_LONGITUDE + idSurvey, 0f);
         float latitude = sharedPreferences.getFloat(PREFIX_LATITUDE + idSurvey, 0f);
 
         //No coordinates were stored for the given survey
         if (longitude == 0 && latitude == 0) {
-            location.setLongitude(Double.parseDouble(context.getString(
+            location.setLongitude(Double.parseDouble(getContext().getString(
                     R.string.GPS_LONGITUDE_DEFAULT)));
-            location.setLatitude(Double.parseDouble(context.getString(
+            location.setLatitude(Double.parseDouble(getContext().getString(
                     R.string.GPS_LATITUDE_DEFAULT)));
             return location;
         }
@@ -103,14 +103,15 @@ public class LocationMemory {
      * Gets the app context
      */
     public static Context getContext() {
-        return instance.context;
+        context = PreferencesState.getInstance().getContext();
+        if(context==null){
+            Crashlytics.logException(new Throwable("Null context exception during the background push in LocationMemory, surveys deleted!"));
+        }
+        return context;
     }
 
-    /**
-     * Init method required to hold a reference to the app context
-     */
-    public void init(Context context) {
-        this.context = context;
+    private static SharedPreferences getDefaultPreferences(int modePrivate) {
+        return getContext().getSharedPreferences(getContext().getPackageName() + "_preferences",
+                modePrivate);
     }
-
 }

@@ -60,7 +60,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
@@ -98,6 +97,12 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isReadOnly = false;
 
+    private boolean mIsInForegroundMode;
+
+    // Some function.
+    public boolean isInForeground() {
+        return mIsInForegroundMode;
+    }
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
         String dialogTitle = "", dialogMessage = "";
@@ -127,11 +132,11 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getString(R.string.sent_data));
+                    context.getResources().getString(R.string.tab_stock));
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.server_name));
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getString(R.string.monitoring_title));
@@ -152,7 +157,7 @@ public class DashboardActivity extends BaseActivity {
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.sent_data));
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
@@ -362,12 +367,21 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onResume");
         mDashboardActivityStrategy.onResume();
         super.onResume();
+        mIsInForegroundMode = true;
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
+    }
+
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+        mIsInForegroundMode = false;
     }
 
     @Override
@@ -780,7 +794,6 @@ public class DashboardActivity extends BaseActivity {
     public void executeLogout() {
         IAuthenticationManager iAuthenticationManager = new AuthenticationManager(this);
         LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
-        AlarmPushReceiver.cancelPushAlarm(this);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

@@ -85,7 +85,7 @@ public class WSPushController implements IPushController {
 
     private void pushSurveys() {
         mWSClient.pushSurveys(mConvertToWSVisitor.getSurveyContainerWSObject(),
-                new WSClient.WSClientCallBack() {
+                new WSClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
                     public void onSuccess(SurveyWSResult surveyWSResult) {
                         checkPushResult(surveyWSResult);

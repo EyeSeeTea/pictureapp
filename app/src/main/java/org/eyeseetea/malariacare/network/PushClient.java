@@ -42,7 +42,6 @@ import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -206,7 +205,8 @@ public class PushClient {
      *
      * @return JSONObject with progra, orgunit, eventdate and so on...
      */
-    private JSONObject prepareMetadata() throws EmptyLocationException, JSONException, ApiCallException {
+    private JSONObject prepareMetadata()
+            throws EmptyLocationException, JSONException, ApiCallException {
         Log.d(TAG, "prepareMetadata for survey: " + mSurveyDB.getId_survey());
 
         JSONObject object = new JSONObject();
@@ -286,8 +286,7 @@ public class PushClient {
             values.put(prepareValue(compositeScoreDB));
         }
 
-        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
-        values.put(prepareDataElementValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData()));
+        values.put(prepareDataElementValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue()));
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals("")) {
             values.put(prepareDataElementValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
                     EventExtended.format(mSurveyDB.getCompletionDate(),

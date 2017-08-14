@@ -21,7 +21,6 @@ package org.eyeseetea.malariacare.data.database.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -65,10 +64,6 @@ public class Session {
      * The current credentials
      */
     private static Credentials sCredentials;
-    /**
-     * The current location
-     */
-    private static Location location;
     /**
      * The current phone metadata
      */
@@ -191,19 +186,18 @@ public class Session {
         serviceValues.clear();
     }
 
-    public static Location getLocation() {
-        return location;
-    }
-
-    public static synchronized void setLocation(Location location) {
-        Session.location = location;
-    }
-
-    public static PhoneMetaData getPhoneMetaData() {
-        return phoneMetaData;
+    public static String getPhoneMetaDataValue() {
+        if(phoneMetaData==null || phoneMetaData.getPhone_metaData()==null){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                    PreferencesState.getInstance().getContext());
+            return sharedPreferences.getString(
+                    PreferencesState.getInstance().getContext().getString(R.string.phone_meta_data_key), "");
+        }
+        return phoneMetaData.getPhone_metaData();
     }
 
     public static synchronized void setPhoneMetaData(PhoneMetaData phoneMetaData) {
+        PreferencesState.getInstance().saveStringPreference(R.string.phone_meta_data_key, phoneMetaData.getPhone_metaData());
         Session.phoneMetaData = phoneMetaData;
     }
 

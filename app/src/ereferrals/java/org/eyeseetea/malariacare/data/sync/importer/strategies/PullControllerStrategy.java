@@ -1,16 +1,22 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
+import android.content.Context;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CSVVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.remote.repositories.CSVVersionRepository;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -44,6 +50,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
         try {
             mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
+
+            checkCSVVersion(callback);
+
             if(!pullFilters.isDemo()) {
                 mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
             }else{
@@ -80,5 +89,41 @@ public class PullControllerStrategy extends APullControllerStrategy {
             }
             mPullController.convertData(callback);
         }
+    }
+
+    private void checkCSVVersion(final IPullController.Callback callback) {
+        Context context = PreferencesState.getInstance().getContext();
+        ICSVVersionRepository csvVersionLocalDataSource = new CSVVersionLocalDataSource(context);
+        final ICSVVersionRepository csvVersionRepository = new CSVVersionRepository();
+
+        csvVersionRepository.getCSVVersion(new IDataSourceCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer result) {
+                final int phoneVersion = result;
+                csvVersionRepository.getCSVVersion(new IDataSourceCallback<Integer>() {
+                    @Override
+                    public void onSuccess(Integer result) {
+                        if (phoneVersion < result) {
+                            downloadCsvsAndRepopulateDB();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
+
+    }
+
+    private void downloadCsvsAndRepopulateDB() {
+
     }
 }

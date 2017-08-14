@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.data.mappers;
 
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 

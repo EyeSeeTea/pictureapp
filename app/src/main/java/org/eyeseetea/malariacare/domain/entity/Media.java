@@ -4,9 +4,12 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
 import org.eyeseetea.malariacare.R;
+
+import java.io.File;
 
 /**
  * Created by ignac on 04/08/2017.
@@ -21,6 +24,12 @@ public class Media {
     String resourceUrl;
     MediaType type;
     String size;
+
+    public Media(String resourceUrl, MediaType type) {
+        this.id = required(id,"id is required");
+        this.resourceUrl = required(resourceUrl,"resourceUrl is required");
+        this.type = required(type,"type is required");
+    }
 
     public Media(long id, String name, String resourcePath, String resourceUrl, MediaType type, String size) {
         this.id = required(id,"id is required");
@@ -79,6 +88,12 @@ public class Media {
 
     public Drawable getFileFromPath(Context context){
         //TODO
+        if (type.equals(MediaType.PICTURE)) {
+            File file = new File(getResourcePath());
+            Uri uri = Uri.fromFile(file);
+        }else{
+
+        }
         return ContextCompat.getDrawable(context, R.drawable.preview);
     }
 

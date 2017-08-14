@@ -70,6 +70,23 @@ public class MediaRepository implements IMediaRepository {
         }
     }
 
+    /**
+     * Returns a media that holds a reference to the same resource with an already downloaded copy
+     * of the file.
+     */
+    public Media findLocalByUid(String resourceUrl) {
+        MediaDB mediaDB = new Select().from(MediaDB.class)
+                .where(MediaDB_Table.filename.isNotNull())
+                .and(MediaDB_Table.resource_url.is(resourceUrl))
+                .querySingle();
+        if(mediaDB==null){
+            return null;
+        }else{
+            return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
+                    Media.getSizeInMB(mediaDB.getFilename()));
+        }
+    }
+
     public static Media.MediaType convertConstantToMediaType(int mediaType) {
         if (mediaType == Constants.MEDIA_TYPE_IMAGE) {
             return Media.MediaType.PICTURE;
@@ -77,6 +94,15 @@ public class MediaRepository implements IMediaRepository {
             return Media.MediaType.VIDEO;
         }
         return null;
+    }
+
+    public static int convertMediaTypeToConstant(Media.MediaType mediaType) {
+        if (mediaType.equals(Media.MediaType.PICTURE)){
+            return Constants.MEDIA_TYPE_IMAGE;
+        } else if (mediaType.equals(Media.MediaType.VIDEO)){
+                return Constants.MEDIA_TYPE_VIDEO;
+        }
+        return 0;
     }
 
     public void updateResourcePath(Media media) {
@@ -102,5 +128,18 @@ public class MediaRepository implements IMediaRepository {
     public void deleteModel(Media media) {
         MediaDB mediaDb = getMedia(media.getId());
         mediaDb.delete();
+    }
+
+    public void updateNotDownloadedMedia(Media media) {
+        MediaDB mediaDB = new Select().from(MediaDB.class).where(MediaDB_Table.resource_url.eq(media.getResourceUrl())).querySingle();
+        if(mediaDB!=null){
+            if(mediaDB.getFilename()!=null){
+                System.out.println(mediaDB.getResourceUrl() +" is already downloaded");
+                media=findLocalByUid(media.getResourceUrl());
+            }
+        }else{
+            mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl());
+            mediaDB.save();
+        }
     }
 }

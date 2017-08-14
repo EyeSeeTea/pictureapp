@@ -1,10 +1,15 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
+import java.io.File;
 import java.util.List;
 
 public class AVAdapter extends RecyclerView.Adapter {
@@ -56,9 +64,16 @@ public class AVAdapter extends RecyclerView.Adapter {
 
         if(viewHolder instanceof GridMediaViewHolder){
             GridMediaViewHolder mediaViewHolder = (GridMediaViewHolder) viewHolder;
-            mediaViewHolder.name.setText(medias.get(position).getName());
-            Drawable drawable = medias.get(position).getFileFromPath(viewHolder.itemView.getContext());
-            mediaViewHolder.filename.setImageDrawable(drawable);
+            Media media = medias.get(position);
+            mediaViewHolder.name.setText(media.getName());
+            if(media.getType().equals(Media.MediaType.PICTURE)){
+                File file = new File(media.getResourcePath());
+                Uri uri = Uri.fromFile(file);
+                mediaViewHolder.filename.setImageURI(uri);
+            }else {
+
+                mediaViewHolder.filename.setImageBitmap(FileIOUtils.getVideoPreview(media.getResourcePath()));
+            }
         }
         else if (viewHolder instanceof ListItemMediaViewHolder){
             ListItemMediaViewHolder mediaViewHolder = (ListItemMediaViewHolder) viewHolder;

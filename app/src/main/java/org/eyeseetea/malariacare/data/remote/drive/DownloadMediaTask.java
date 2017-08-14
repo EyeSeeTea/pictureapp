@@ -15,12 +15,17 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 
 import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +33,10 @@ import java.util.List;
  * Created by arrizabalaga on 28/05/16.
  */
 class DownloadMediaTask extends AsyncTask<Void, Void, Integer> {
-    public static final String QUICKTIME_NON_SUPPORTED_FORMAT = "mov";
+
+
+    private static final String rootUid = "0B8oszoX2-DdHOFZwVmRyTWc1X3c";
+    private static final String QUICKTIME_NON_SUPPORTED_FORMAT = "mov";
     private final String TAG = "DownloadMediaTask";
     private Drive mService = null;
     private Exception mLastError = null;
@@ -53,7 +61,25 @@ class DownloadMediaTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... params) {
         Log.d(TAG, String.format("DownloadMediaTask starts"));
+        List<Media> mediaFiles = new ArrayList<>();
+        try {
+            FileList folders = mService.files().list().setQ("\'"+ rootUid +"\' in parents").execute();
+            for(File file:folders.getFiles()){
+                if(file.getMimeType().equals("application/vnd.google-apps.folder")){
+                    if(file.getName().equals(ProgramDB.getProgram(PreferencesEReferral.getUserProgramId()).getName())) {
+                        FileList fileList = mService.files().list().setQ(
+                                "\'" + file.getId() + "\' in parents").execute();
+                        mediaFiles = convertInMediaList(fileList);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        for(Media media:mediaFiles){
+            mMediaRepository.updateNotDownloadedMedia(media);
+        }
         //Check elements to download
         List<Media> mediaList = mMediaRepository.getAllNotDownloaded();
 
@@ -80,6 +106,24 @@ class DownloadMediaTask extends AsyncTask<Void, Void, Integer> {
             //Any other exception -> Non existent resource, just move forward
         }
         return numSyncedFiles;
+    }
+
+    private List<Media> convertInMediaList(FileList fileList) {
+        List <Media> mediaList= new ArrayList<>();
+        for(File file:fileList.getFiles()){
+            if(!file.getMimeType().equals("application/vnd.google-apps.folder")){
+                Media.MediaType mediaType = Media.MediaType.VIDEO;
+                if(file.getMimeType().contains("image")){
+                    mediaType = Media.MediaType.PICTURE;
+                }
+                else if (file.getMimeType().contains("video")){
+                    mediaType = Media.MediaType.VIDEO;
+                }
+                mediaList.add(new Media(file.getId(), mediaType));
+            }
+
+        }
+        return mediaList;
     }
 
     @Override

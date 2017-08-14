@@ -66,7 +66,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     private static final int DUMP_REQUEST_CODE = 0;
     protected static String TAG = ".BaseActivity";
-    private AlarmPushReceiver alarmPush;
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
@@ -96,8 +95,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
             surveyDB.save();
         }
-        alarmPush = new AlarmPushReceiver();
-        alarmPush.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
 
         mBaseActivityStrategy.onCreate();
     }
@@ -435,7 +433,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onDestroy() {
         mBaseActivityStrategy.onDestroy();
         super.onDestroy();
-        alarmPush.cancelPushAlarm(this);
     }
 
     @Override

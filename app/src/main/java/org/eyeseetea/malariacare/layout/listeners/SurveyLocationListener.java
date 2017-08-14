@@ -58,8 +58,9 @@ public class SurveyLocationListener implements LocationListener {
 
         //No more updates
         LocationManager locationManager =
-                (LocationManager) LocationMemory.getContext().getSystemService(
-                        Context.LOCATION_SERVICE);
+                null;
+        locationManager = (LocationManager) LocationMemory.getContext().getSystemService(
+                    Context.LOCATION_SERVICE);
         locationManager.removeUpdates(this);
     }
 

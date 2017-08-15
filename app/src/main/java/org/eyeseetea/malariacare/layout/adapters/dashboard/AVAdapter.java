@@ -15,7 +15,7 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.fragments.AVFragment;
-import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
+import org.eyeseetea.sdk.common.VideoUtils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.io.File;
@@ -74,9 +74,7 @@ public class AVAdapter extends RecyclerView.Adapter {
                 Uri uri = Uri.fromFile(file);
                 mediaViewHolder.filename.setImageURI(uri);
             } else {
-
-                mediaViewHolder.filename.setImageBitmap(
-                        FileIOUtils.getVideoPreview(media.getResourcePath()));
+                mediaViewHolder.filename.setImageBitmap(VideoUtils.getVideoPreview(media.getResourcePath()));
             }
             mediaViewHolder.filename.setOnClickListener(new ImageView.OnClickListener() {
                 public void onClick(View v)

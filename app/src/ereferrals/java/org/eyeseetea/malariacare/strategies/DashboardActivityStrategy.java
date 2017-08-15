@@ -18,10 +18,8 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.drive.DriveRestController;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
@@ -31,7 +29,6 @@ import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -53,7 +50,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         MediaRepository mediaRepository = new MediaRepository();
-        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mediaRepository, mDashboardActivity.getApplicationContext(),
+        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mediaRepository,
+                mDashboardActivity.getApplicationContext(),
                 new DownloadMediaUseCase.Callback() {
                     @Override
                     public void onUpdatedItems() {
@@ -85,7 +83,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ft.replace(R.id.dashboard_stock_container, mDashboardUnsentFragment);
 
         ft.commit();
-        if(BuildConfig.translations) {
+        if (BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
         return isMoveToLeft;
@@ -266,7 +264,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         switch (requestCode) {
             case DownloadMediaUseCase.REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != Activity.RESULT_OK) {
-                    Toast.makeText(mDashboardActivity.getApplicationContext(), mDashboardActivity.getApplicationContext().getString(R.string.google_play_required),
+                    Toast.makeText(mDashboardActivity.getApplicationContext(),
+                            mDashboardActivity.getApplicationContext().getString(
+                                    R.string.google_play_required),
                             Toast.LENGTH_LONG);
                 } else {
                     mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());

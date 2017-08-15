@@ -13,7 +13,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth
+        .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -29,6 +30,7 @@ import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
+import org.eyeseetea.sdk.data.DownloadMediaTask;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,9 +39,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class DownloadMediaUseCase  implements UseCase {
+public class DownloadMediaUseCase implements UseCase {
 
-    public interface Callback{
+    public interface Callback {
         void onUpdatedItems();
     }
 
@@ -64,6 +66,7 @@ public class DownloadMediaUseCase  implements UseCase {
         mAsyncExecutor = asyncExecutor;
         mMediaRepository = mediaRepository;
         mContext = context;
+        mCallback = callback;
         initServiceAccountCredential();
     }
 
@@ -110,20 +113,21 @@ public class DownloadMediaUseCase  implements UseCase {
 
         final List<Media> medias = mMediaRepository.getAllNotDownloaded();
         List<String> uids = new ArrayList<>();
-        for(Media media:medias){
-            if(!uids.contains(media.getResourceUrl())) {
+        for (Media media : medias) {
+            if (!uids.contains(media.getResourceUrl())) {
                 uids.add(media.getResourceUrl());
             }
         }
 
         if (uids != null && !uids.isEmpty()) {
-            new org.eyeseetea.sdk.data.DownloadMediaTask(mContext.getFilesDir(), mService , uids,
-                    new org.eyeseetea.sdk.data.DownloadMediaTask.Callback() {
+            new DownloadMediaTask(mContext.getFilesDir(), mService, uids,
+                    new DownloadMediaTask.Callback() {
                         @Override
                         public void onError(Exception error) {
                             if (error instanceof UserRecoverableAuthIOException) {
                                 showMessage(error.getMessage());
-                                //First time auth confirm from user lets stop and try again after confirming
+                                //First time auth confirm from user lets stop and try again after
+                                // confirming
                             }
                         }
 
@@ -146,27 +150,34 @@ public class DownloadMediaUseCase  implements UseCase {
                             }
 
                             //Other error
-                            Log.e(TAG, "onCancelled: " + mLastError == null ? "" : mLastError.getMessage());
+                            Log.e(TAG, "onCancelled: " + mLastError == null ? ""
+                                    : mLastError.getMessage());
                         }
 
                         @Override
                         public void onSuccess(HashMap<String, String> syncedFiles) {
-                            int correctSyncedFiles=0;
+                            int correctSyncedFiles = 0;
 
-                            //Try to reuse a local copy if another media references same url
-                            if(syncedFiles.size()>0){
-                                for(Media media:medias){
+                            if (syncedFiles.size() > 0) {
+                                for (Media media : medias) {
                                     String absolutePath = syncedFiles.get(media.getResourceUrl());
-                                    List<Media> allMediaWithSameResource = mMediaRepository.getAllMediaByResourceUid(media.getResourceUrl());
-                                    for(Media localMedia:allMediaWithSameResource) {
-                                        Log.d(TAG, localMedia.toString()+ "\tsaved in " + absolutePath);
-                                        localMedia.setResourcePath(absolutePath);
-                                        mMediaRepository.updateModel(localMedia);
+                                    List<Media> allMediaWithSameResource =
+                                            mMediaRepository.getAllMediaByResourceUid(
+                                                    media.getResourceUrl());
+                                    //Try to reuse a local copy if another media references same url
+                                    for (Media localMedia : allMediaWithSameResource) {
+                                        Log.d(TAG, localMedia.toString() + "\tsaved in "
+                                                + absolutePath);
+                                        if(localMedia.getResourcePath()==null || !localMedia.getResourcePath().equals(absolutePath)) {
+                                            correctSyncedFiles++;
+                                            localMedia.setResourcePath(absolutePath);
+                                            mMediaRepository.updateModel(localMedia);
+                                        }
                                     }
                                 }
 
                             }
-                            if(correctSyncedFiles>0) {
+                            if (correctSyncedFiles > 0) {
                                 showMessage(String.format("%d files synced", syncedFiles.size()));
                                 mCallback.onUpdatedItems();
                             }
@@ -261,7 +272,6 @@ public class DownloadMediaUseCase  implements UseCase {
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
     }
-
 
 
     private void showMessage(String message) {

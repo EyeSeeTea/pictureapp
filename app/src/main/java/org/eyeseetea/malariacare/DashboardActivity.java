@@ -778,15 +778,7 @@ public class DashboardActivity extends BaseActivity {
         //Delegate activity result to media controller
         mDashboardActivityStrategy.onActivityResult(requestCode, resultCode, data);
     }
-    /**
-     * Called when activity gets invisible. Connection to Drive service needs to
-     * be disconnected as soon as an activity is invisible.
-     */
-    @Override
-    public void onPause(){
-        Log.d(TAG, "onPause");
-        super.onPause();
-    }
+
     private void initNavigationController() throws LoadingNavigationControllerException{
         mDashboardActivityStrategy.initNavigationController();
     }

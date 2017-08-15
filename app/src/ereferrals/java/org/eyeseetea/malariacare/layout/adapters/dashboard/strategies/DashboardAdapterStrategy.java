@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
@@ -19,6 +20,11 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     @Override
     public void renderSurveySummary(View rowView, SurveyDB survey) {
+        String firstRowBuilder = mContext.getString(R.string.uid) +
+                ":" +
+                survey.getEventUid();
+        ((TextView) rowView.findViewById(R.id.assessment_uid)).setText(firstRowBuilder);
+
         mAssessmentAdapter.showDate(rowView, R.id.completionDate, survey.getEventDate());
 
         mAssessmentAdapter.showInfo(rowView, R.id.info, survey.getValuesToString());

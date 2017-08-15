@@ -96,7 +96,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         ICSVVersionRepository csvVersionLocalDataSource = new CSVVersionLocalDataSource(context);
         final ICSVVersionRepository csvVersionRepository = new CSVVersionRepository();
 
-        csvVersionRepository.getCSVVersion(new IDataSourceCallback<Integer>() {
+        csvVersionLocalDataSource.getCSVVersion(new IDataSourceCallback<Integer>() {
             @Override
             public void onSuccess(Integer result) {
                 final int phoneVersion = result;

@@ -20,4 +20,8 @@ public class FileCsvsStrategy extends AFileCsvsStrategy {
             PopulateDB.ORG_UNIT_CSV,
             PopulateDB.ORG_UNIT_LEVEL_CSV
     );
+
+    public static List<String> getCsvsToCreate() {
+        return csvsToCreate;
+    }
 }

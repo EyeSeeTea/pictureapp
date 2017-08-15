@@ -14,7 +14,7 @@ public class CSVVersionRepository implements ICSVVersionRepository {
         csvImporter.getCSVVersion(new CSVImporter.CSVImporterCallBack() {
             @Override
             public void onSuccess(String csvString) {
-                callback.onSuccess(Integer.parseInt(csvString));
+                callback.onSuccess(Integer.parseInt(csvString.replace("\n", "")));
             }
 
             @Override

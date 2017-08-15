@@ -1,10 +1,10 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -19,7 +19,21 @@ public class CSVImporter {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(PreferencesEReferral.getWSURL())
+                .baseUrl(
+                        "https://raw.githubusercontent"
+                                + ".com/manuelplazaspalacio/Test-ereferrals-csvs/master/")
+                .client(client)
+                .build();
+        mCSVImporterRetrofit = mRetrofit.create(CSVImporterRetrofit.class);
+    }
+
+    public CSVImporter(String baseUrl) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        mRetrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
                 .client(client)
                 .build();
         mCSVImporterRetrofit = mRetrofit.create(CSVImporterRetrofit.class);
@@ -27,14 +41,16 @@ public class CSVImporter {
 
     public void getCSVVersion(CSVImporterCallBack csvImporterCallBack) {
 
-        Response<String> versionString = null;
+        Response<ResponseBody> versionString = null;
         try {
             versionString = mCSVImporterRetrofit.getVersionCSV().execute();
+            String version = versionString.body().string();
+            csvImporterCallBack.onSuccess(version);
         } catch (IOException e) {
             e.printStackTrace();
             csvImporterCallBack.onError(e);
         }
-        csvImporterCallBack.onSuccess(versionString.body());
+
 
     }
 

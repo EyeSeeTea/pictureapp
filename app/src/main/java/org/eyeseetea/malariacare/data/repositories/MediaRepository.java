@@ -6,22 +6,24 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.MediaDB_Table;
 import org.eyeseetea.malariacare.data.mappers.MediaMapper;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaRepository implements IMediaRepository {
+public class MediaRepository{
 
-    @Override
     public List<Media> getAll() {
         return MediaMapper.mapFromDbToDomain(getAllMediaDB());
     }
 
     public List<Media> getAllNotDownloaded() {
         return MediaMapper.mapFromDbToDomain(getAllNotInLocal());
+    }
+
+    public List<Media> getAllMediaByResourceUid(String url) {
+        return MediaMapper.mapFromDbToDomain(getAllByResourceUid(url));
     }
 
     public List<Media> getAllDownloaded() {
@@ -54,6 +56,29 @@ public class MediaRepository implements IMediaRepository {
     }
 
 
+
+    /**
+     * Returns a media that holds a reference to the same resource with an already downloaded copy
+     * of the file.
+     */
+    public Media findByUid(String resourceUrl) {
+        MediaDB mediaDB = new Select().from(MediaDB.class)
+                .where(MediaDB_Table.filename.isNotNull())
+                .and(MediaDB_Table.resource_url.is(resourceUrl))
+                .querySingle();
+        if(mediaDB==null){
+            return null;
+        }else{
+            return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
+                    Media.getSizeInMB(mediaDB.getFilename()));
+        }
+    }
+
+    private List<MediaDB> getAllByResourceUid(String resourceUrl) {
+        return new Select().from(MediaDB.class)
+                .where(MediaDB_Table.resource_url.is(resourceUrl))
+                .queryList();
+    }
     /**
      * Returns a media that holds a reference to the same resource with an already downloaded copy
      * of the file.

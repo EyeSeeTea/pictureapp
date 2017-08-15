@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -16,15 +18,17 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.drive.DriveRestController;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -32,6 +36,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
     private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
+    private DownloadMediaUseCase mDownloadMediaUseCase;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -43,11 +48,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
 
-        //Media: init drive credentials
-        DriveRestController.getInstance().init(new MediaRepository(),
-                mDashboardActivity.getApplicationContext(), new DriveRestController.CallBack() {
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        MediaRepository mediaRepository = new MediaRepository();
+        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mediaRepository,
+                mDashboardActivity.getApplicationContext(),
+                new DownloadMediaUseCase.Callback() {
                     @Override
-                    public void onSuccess() {
+                    public void onUpdatedItems() {
                         avFragment.reloadData();
                     }
                 });
@@ -76,7 +83,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ft.replace(R.id.dashboard_stock_container, mDashboardUnsentFragment);
 
         ft.commit();
-        if(BuildConfig.translations) {
+        if (BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
         return isMoveToLeft;
@@ -239,10 +246,32 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
 
     public void onResume() {
-        DriveRestController.getInstance().syncMedia();
+        mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
     }
 
+    /**
+     * Called when an activity launched here (specifically, AccountPicker
+     * and authorization) exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it.
+     *
+     * @param requestCode code indicating which activity result is incoming.
+     * @param resultCode  code indicating the result of the incoming
+     *                    activity result.
+     * @param data        Intent (containing result data) returned by incoming
+     *                    activity result.
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        DriveRestController.getInstance().onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case DownloadMediaUseCase.REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != Activity.RESULT_OK) {
+                    Toast.makeText(mDashboardActivity.getApplicationContext(),
+                            mDashboardActivity.getApplicationContext().getString(
+                                    R.string.google_play_required),
+                            Toast.LENGTH_LONG);
+                } else {
+                    mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+                }
+                break;
+        }
     }
 }

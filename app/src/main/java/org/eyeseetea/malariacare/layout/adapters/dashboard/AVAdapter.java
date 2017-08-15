@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.sdk.common.VideoUtils;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.sdk.common.VideoUtils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;

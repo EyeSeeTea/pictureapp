@@ -48,8 +48,6 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.drive.DriveRestController;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -778,10 +776,7 @@ public class DashboardActivity extends BaseActivity {
         //Delegate activity result to media controller
         mDashboardActivityStrategy.onActivityResult(requestCode, resultCode, data);
     }
-    /**
-     * Called when activity gets invisible. Connection to Drive service needs to
-     * be disconnected as soon as an activity is invisible.
-     */
+
     private void initNavigationController() throws LoadingNavigationControllerException{
         mDashboardActivityStrategy.initNavigationController();
     }

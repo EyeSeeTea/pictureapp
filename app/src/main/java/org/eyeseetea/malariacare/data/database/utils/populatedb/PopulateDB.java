@@ -34,8 +34,8 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
-import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
@@ -65,12 +65,11 @@ import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
-import org.eyeseetea.sdk.presentation.fileio.FileIOUtils;
+import org.eyeseetea.sdk.common.FileUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -982,7 +981,7 @@ public class PopulateDB {
 
     public static void wipeMedia() {
         for(String path:MediaRepository.listOfDownloadedFiles()){
-            FileIOUtils.removeFile(path);
+            FileUtils.removeFile(path);
         }
         wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
                 MediaDB.class).toArray());

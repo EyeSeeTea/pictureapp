@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+import static org.eyeseetea.sdk.common.RequiredChecker.required;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

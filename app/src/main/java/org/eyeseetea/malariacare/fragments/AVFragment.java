@@ -123,11 +123,24 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     }
 
     private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {
-        this.mAdapter = new AVAdapter(mediaList, viewType, getActivity());
+        this.mAdapter = new AVAdapter(mediaList, viewType, getActivity(), new Callback(){
+            @Override
+            public void openMedia(String media) {
+                Intent implicitIntent = new Intent();
+                implicitIntent.setAction(Intent.ACTION_VIEW);
+                File file = new File(media);
+                Uri contentUri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID +".layout.adapters.dashboard.AVAdapter", file);
+
+                implicitIntent.setDataAndType(contentUri, PreferencesState.getInstance().getContext().getContentResolver().getType(contentUri));
+                implicitIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                implicitIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                getActivity().startActivity(Intent.createChooser(implicitIntent,PreferencesState.getInstance().getContext().getString(R.string.feedback_view_image)));
+            }
+        });
         recyclerView.setAdapter(mAdapter);
     }
 
     public void reloadData() {
-        loadMediaListAndAdapter();
+        initializePresenter();
     }
 }

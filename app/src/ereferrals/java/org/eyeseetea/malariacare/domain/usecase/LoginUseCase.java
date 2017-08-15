@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import android.util.Log;
+
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -79,6 +81,8 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                                             mCredentialsLocalDataSource.getOrganisationCredentials(),
 
                                             true);
+                                } else {
+                                    throwable.printStackTrace();
                                 }
                             }
                         });

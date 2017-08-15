@@ -30,16 +30,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AVFragment extends Fragment {
@@ -96,21 +95,7 @@ public class AVFragment extends Fragment {
         //MediaRepository mediaRepository = new MediaRepository();
 
         //TODO: remove fake media repository
-        IMediaRepository mediaRepository = new IMediaRepository() {
-            @Override
-            public List<Media> getAll() {
-                List<Media> testMedia = new ArrayList<>();
-                testMedia.add(new Media(1, Media.getFilenameFromPath("data/newfile.org"), "localPath","externalPath", Media.MediaType.PICTURE, "30mb"));
-                testMedia.add(new Media(2, Media.getFilenameFromPath("data/newfile2.org"), "localPath","externalPath", Media.MediaType.PICTURE, "530mb"));
-                testMedia.add(new Media(3, Media.getFilenameFromPath("data/newfile3.org"), "localPath","externalPath", Media.MediaType.VIDEO, "320mb"));
-                testMedia.add(new Media(4, Media.getFilenameFromPath("data/newfile4.org"), "localPath","externalPath", Media.MediaType.VIDEO, "310mb"));
-                testMedia.add(new Media(5, Media.getFilenameFromPath("data/newfile5.org"), "localPath","externalPath", Media.MediaType.PICTURE, "330mb"));
-                testMedia.add(new Media(6, Media.getFilenameFromPath("data/newfile6.org"), "localPath","externalPath", Media.MediaType.PICTURE, "340mb"));
-
-                return testMedia;
-            }
-        };
-
+        MediaRepository mediaRepository = new MediaRepository();
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
         getMediaUseCase.execute(new GetMediaUseCase.Callback() {

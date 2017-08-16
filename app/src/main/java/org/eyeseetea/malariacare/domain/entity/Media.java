@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.eyeseetea.sdk.common.RequiredChecker.required;
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,14 +8,8 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.sdk.common.FileUtils;
 
 import java.io.File;
-
-/**
- * Created by ignac on 04/08/2017.
- */
 
 public class Media {
 

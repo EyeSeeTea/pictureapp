@@ -69,7 +69,7 @@ public class AVAdapter extends RecyclerView.Adapter {
                 mediaViewHolder.filename.setImageURI(uri);
             }else {
 
-                mediaViewHolder.filename.setImageBitmap(VideoUtils.getVideoPreview(media.getResourcePath()));
+                mediaViewHolder.filename.setImageBitmap(VideoUtils.getVideoPreview(media.getResourcePath(), context));
             }
         }
         else if (viewHolder instanceof ListItemMediaViewHolder){

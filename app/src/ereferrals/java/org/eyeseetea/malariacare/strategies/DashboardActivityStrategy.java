@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
@@ -57,6 +58,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         void onSuccess(HashMap<String, String> syncedFiles);
 
         void onRemove(String uid);
+
+        void save(Media media);
     }
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
@@ -141,6 +144,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         System.out.println(
                                 "downloadFile error (file extension not supported)" + uid);
                         mediaRepository.deleteModel(mediaRepository.findByUid(uid));
+                    }
+
+                    @Override
+                    public void save(Media media) {
+                        mediaRepository.updateNotDownloadedMedia(media);
                     }
                 });
     }

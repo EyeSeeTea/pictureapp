@@ -56,6 +56,7 @@ public class DownloadMediaUseCase implements UseCase {
      */
     @Override
     public void run() {
+        mFileDownloader.init(rootUid, mCallback);
         final List<Media> medias = mMediaRepository.getAllNotDownloaded();
         List<String> uids = new ArrayList<>();
         for (Media media : medias) {

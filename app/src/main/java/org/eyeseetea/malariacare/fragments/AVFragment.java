@@ -118,6 +118,6 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     }
 
     public void reloadData() {
-        //// FIXME: 16/08/2017 
+        initializePresenter();
     }
 }

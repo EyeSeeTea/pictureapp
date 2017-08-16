@@ -25,7 +25,7 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.presenter.ReviewPresenter;
+import org.eyeseetea.malariacare.presentation.presenters.ReviewPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
 import java.util.ArrayList;

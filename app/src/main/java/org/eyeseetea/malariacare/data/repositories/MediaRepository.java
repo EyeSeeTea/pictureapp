@@ -5,13 +5,15 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.MediaDB_Table;
 import org.eyeseetea.malariacare.data.mappers.MediaMapper;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-public class MediaRepository{
+public class MediaRepository implements IMediaRepository{
 
+    @Override
     public List<Media> getAll() {
         return MediaMapper.mapFromDbToDomain(getAllMediaDB());
     }

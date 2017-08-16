@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 
 import java.util.List;
@@ -11,12 +12,12 @@ public class GetMediaUseCase implements UseCase {
     private Callback mCallback;
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
-    private MediaRepository mMediaRepository;
+    private IMediaRepository mMediaRepository;
 
     public GetMediaUseCase(
             IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor,
-            MediaRepository mediaRepository) {
+            IMediaRepository mediaRepository) {
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
         mMediaRepository = mediaRepository;

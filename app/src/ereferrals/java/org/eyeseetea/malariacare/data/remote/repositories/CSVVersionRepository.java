@@ -7,11 +7,10 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVVersionReposit
 
 public class CSVVersionRepository implements ICSVVersionRepository {
 
-
     @Override
     public void getCSVVersion(final IDataSourceCallback<Integer> callback) {
         CSVImporter csvImporter = new CSVImporter();
-        csvImporter.getCSVVersion(new CSVImporter.CSVImporterCallBack() {
+        csvImporter.getCSVVersion(new CSVImporter.CSVImporterCallBack<String>() {
             @Override
             public void onSuccess(String csvString) {
                 callback.onSuccess(Integer.parseInt(csvString.replace("\n", "")));
@@ -28,6 +27,5 @@ public class CSVVersionRepository implements ICSVVersionRepository {
     public void saveCSVVersion(int version, IDataSourceCallback<Integer> callback) {
 
     }
-
 
 }

@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -51,12 +53,55 @@ public class CSVImporter {
             csvImporterCallBack.onError(e);
         }
 
-
     }
 
 
-    public interface CSVImporterCallBack {
-        void onSuccess(String csvString);
+    public void importCSV(String csvName, CSVImporterCallBack csvImporterCallBack) {
+        Response<ResponseBody> csv = null;
+        try {
+            csv = getCSVbyName(csvName);
+            csvImporterCallBack.onSuccess(csv.body().bytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            csvImporterCallBack.onError(e);
+        }
+
+
+    }
+
+    private Response<ResponseBody> getCSVbyName(String csvName) throws IOException {
+        switch (csvName) {
+            case PopulateDB.ANSWERS_CSV:
+                return mCSVImporterRetrofit.getAnswersCSV().execute();
+            case PopulateDB.PROGRAMS_CSV:
+                return mCSVImporterRetrofit.getProgramsCSV().execute();
+            case PopulateDB.TABS_CSV:
+                return mCSVImporterRetrofit.getTabsCSV().execute();
+            case PopulateDB.HEADERS_CSV:
+                return mCSVImporterRetrofit.getHeadersCSV().execute();
+            case PopulateDB.OPTION_ATTRIBUTES_CSV:
+                return mCSVImporterRetrofit.getOptionAttributesCSV().execute();
+            case PopulateDB.OPTIONS_CSV:
+                return mCSVImporterRetrofit.getOptionsCSV().execute();
+            case PopulateDB.QUESTIONS_CSV:
+                return mCSVImporterRetrofit.getQuestionsCSV().execute();
+            case PopulateDB.QUESTION_RELATIONS_CSV:
+                return mCSVImporterRetrofit.getQuestionRelationsCSV().execute();
+            case PopulateDB.MATCHES:
+                return mCSVImporterRetrofit.getMatchesCSV().execute();
+            case PopulateDB.QUESTION_OPTIONS_CSV:
+                return mCSVImporterRetrofit.getQuestionOptionsCSV().execute();
+            case PopulateDB.QUESTION_THRESHOLDS_CSV:
+                return mCSVImporterRetrofit.getQuestionThresholdsCSV().execute();
+            case PopulateDB.VERSIONS_CSV:
+                return mCSVImporterRetrofit.getVersionCSV().execute();
+        }
+        return null;
+    }
+
+
+    public interface CSVImporterCallBack<T> {
+        void onSuccess(T csvString);
 
         void onError(Exception e);
     }

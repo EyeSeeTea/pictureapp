@@ -5,17 +5,21 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CSVFileDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CSVVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.remote.repositories.CSVFileRepository;
 import org.eyeseetea.malariacare.data.remote.repositories.CSVVersionRepository;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVFileRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -27,6 +31,7 @@ import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroup
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
     public PullControllerStrategy(PullController pullController) {
@@ -104,7 +109,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     @Override
                     public void onSuccess(Integer result) {
                         if (phoneVersion < result) {
-                            downloadCsvsAndRepopulateDB();
+                            downloadCsvsAndRepopulateDB(callback);
                         }
                     }
 
@@ -123,7 +128,38 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
     }
 
-    private void downloadCsvsAndRepopulateDB() {
+    private void downloadCsvsAndRepopulateDB(final IPullController.Callback callback) {
+        List<String> csvsToImport = FileCsvsStrategy.getCsvsToCreate();
+        ICSVFileRepository csvFileRepository = new CSVFileRepository();
+        final ICSVFileRepository csvFileDataSource = new CSVFileDataSource(
+                PreferencesState.getInstance().getContext());
+        for (final String csvToImport : csvsToImport) {
+            csvFileRepository.getCSVFile(csvToImport, new IDataSourceCallback<byte[]>() {
+                @Override
+                public void onSuccess(byte[] result) {
+                    csvFileDataSource.saveCSVFile(csvToImport, result,
+                            new IDataSourceCallback<Void>() {
+                                @Override
+                                public void onSuccess(Void result) {
+                                    clearCSVSDBAndRepopulate();
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    callback.onError(throwable);
+                                }
+                            });
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    callback.onError(throwable);
+                }
+            });
+        }
+    }
+
+    private void clearCSVSDBAndRepopulate() {
 
     }
 }

@@ -1,9 +1,10 @@
 package org.eyeseetea.malariacare.data.mappers;
 
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.sdk.common.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class MediaMapper {
     public static Media mapFromDbToDomain(MediaDB mediaDB) {
         return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(),
                 getMediaType(mediaDB.getMediaType()),
-                Media.getSizeInMB(mediaDB.getFilename()));
+                getSizeInMB(mediaDB.getFilename()));
     }
 
     private static Media.MediaType getMediaType(int mediaType) {
@@ -31,5 +32,9 @@ public class MediaMapper {
             return Media.MediaType.VIDEO;
         }
         return null;
+    }
+
+    public static String getSizeInMB(String filename) {
+        return FileUtils.getSizeInMB(filename, PreferencesState.getInstance().getContext());
     }
 }

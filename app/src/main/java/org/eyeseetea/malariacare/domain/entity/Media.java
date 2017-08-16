@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.sdk.common.FileUtils;
 
 import java.io.File;
 
@@ -66,16 +68,6 @@ public class Media {
 
     public MediaType getType() {
         return type;
-    }
-
-    public static String getSizeInMB(String filename) {
-        //Todo fix this method using for example SizeCalculator.getSizeInMB(mediaDB.getFilename()) from eyeseetesdk
-        return "0mb";
-    }
-
-    public static String getFileSize(){
-        //TODO
-        return "0MB";
     }
 
     public void setResourcePath(String resourcePath) {

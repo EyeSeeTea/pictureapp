@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-public class MediaRepository implements IMediaRepository{
+public class MediaRepository implements IMediaRepository {
 
     @Override
     public List<Media> getAll() {
@@ -37,7 +37,7 @@ public class MediaRepository implements IMediaRepository{
                 queryList();
     }
 
-    private static List<MediaDB> getAllNotInLocal() {
+    private List<MediaDB> getAllNotInLocal() {
         return new Select().
                 from(MediaDB.class).
                 where(MediaDB_Table.filename.isNull()).
@@ -46,7 +46,7 @@ public class MediaRepository implements IMediaRepository{
                 queryList();
     }
 
-    private static List<MediaDB> getAllInLocal() {
+    private List<MediaDB> getAllInLocal() {
         return new Select().
                 from(MediaDB.class).
                 where(MediaDB_Table.filename.isNotNull()).
@@ -79,25 +79,8 @@ public class MediaRepository implements IMediaRepository{
                 .where(MediaDB_Table.resource_url.is(resourceUrl))
                 .queryList();
     }
-    /**
-     * Returns a media that holds a reference to the same resource with an already downloaded copy
-     * of the file.
-     */
-    public Media findLocalCopy(long idMedia, String resourceUrl) {
-        MediaDB mediaDB = new Select().from(MediaDB.class)
-                .where(MediaDB_Table.filename.isNotNull())
-                .and(MediaDB_Table.id_media.isNot(idMedia))
-                .and(MediaDB_Table.resource_url.is(resourceUrl))
-                .querySingle();
-        if(mediaDB==null){
-            return null;
-        }else{
-            return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
-                    Media.getSizeInMB(mediaDB.getFilename()));
-        }
-    }
 
-    public static Media.MediaType convertConstantToMediaType(int mediaType) {
+    public Media.MediaType convertConstantToMediaType(int mediaType) {
         if (mediaType == Constants.MEDIA_TYPE_IMAGE) {
             return Media.MediaType.PICTURE;
         } else if (mediaType == Constants.MEDIA_TYPE_VIDEO) {
@@ -112,7 +95,7 @@ public class MediaRepository implements IMediaRepository{
         mediaDb.update();
     }
 
-    private static MediaDB getMedia(long id) {
+    private MediaDB getMedia(long id) {
         return new Select().
                 from(MediaDB.class).
                 where(MediaDB_Table.id_media.is(id))

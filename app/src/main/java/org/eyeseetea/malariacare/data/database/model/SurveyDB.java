@@ -1253,6 +1253,13 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .querySingle();
         return surveyDB.getEventDate();
     }
+
+    public static void deleteAll() {
+        List<SurveyDB> surveyDBs = SurveyDB.getAllSurveys();
+        for (SurveyDB surveyDB : surveyDBs) {
+            surveyDB.delete();
+        }
+    }
     /**
      * This method get the return the highest number of total pages in the survey mQuestionDB values.
      */

@@ -97,6 +97,12 @@ public class OptionDB extends BaseModel {
         return new Select().from(OptionDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        for (OptionDB optionDB : getAllOptions()) {
+            optionDB.delete();
+        }
+    }
+
     public static OptionDB findById(Long id) {
         return new Select()
                 .from(OptionDB.class)
@@ -335,4 +341,5 @@ public class OptionDB extends BaseModel {
     public void delete() {
         super.delete();
     }
+
 }

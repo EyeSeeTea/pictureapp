@@ -4,6 +4,20 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVFileRepository;
 
 import java.io.File;
@@ -50,6 +64,20 @@ public class CSVFileDataSource implements ICSVFileRepository {
 
     }
 
+    @Override
+    public void updateCSVDB(IDataSourceCallback<Void> callback) {
+        deleteDB();
+        try {
+            PopulateDB.populateDB(mContext);
+        } catch (IOException e) {
+            e.printStackTrace();
+            callback.onError(e);
+        }
+        //Get maximum total of questions
+        Session.setMaxTotalQuestions(ProgramDB.getMaxTotalQuestions());
+        callback.onSuccess(null);
+    }
+
 
     private boolean fileExists(String fname) {
         File file = mContext.getFileStreamPath(fname);
@@ -67,5 +95,20 @@ public class CSVFileDataSource implements ICSVFileRepository {
             throw e;
         }
         return created ? file : null;
+    }
+
+    private void deleteDB() {
+        SurveyDB.deleteAll();
+        ProgramDB.deleteAll();
+        TabDB.deleteAll();
+        HeaderDB.deleteAll();
+        AnswerDB.deleteAll();
+        OptionAttributeDB.deleteAll();
+        OptionDB.deleteAll();
+        QuestionDB.deleteAll();
+        QuestionRelationDB.deleteAll();
+        MatchDB.deleteAll();
+        QuestionOptionDB.deleteAll();
+        QuestionThresholdDB.deleteAll();
     }
 }

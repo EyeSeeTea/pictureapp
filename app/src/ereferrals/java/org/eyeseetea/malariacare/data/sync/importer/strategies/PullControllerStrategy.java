@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
+    private int csvNewVersion;
+
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
     }
@@ -109,6 +111,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     @Override
                     public void onSuccess(Integer result) {
                         if (phoneVersion < result) {
+                            csvNewVersion = result;
                             downloadCsvsAndRepopulateDB(callback);
                         }
                     }
@@ -131,6 +134,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void downloadCsvsAndRepopulateDB(final IPullController.Callback callback) {
         List<String> csvsToImport = FileCsvsStrategy.getCsvsToCreate();
         ICSVFileRepository csvFileRepository = new CSVFileRepository();
+        final int[] csvImportedSize = {0};
         final ICSVFileRepository csvFileDataSource = new CSVFileDataSource(
                 PreferencesState.getInstance().getContext());
         for (final String csvToImport : csvsToImport) {
@@ -141,7 +145,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
                             new IDataSourceCallback<Void>() {
                                 @Override
                                 public void onSuccess(Void result) {
-                                    clearCSVSDBAndRepopulate();
+                                    csvImportedSize[0]++;
+
                                 }
 
                                 @Override
@@ -157,9 +162,41 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 }
             });
         }
+        if (csvImportedSize[0] == csvsToImport.size()) {
+            clearCSVSDBAndRepopulate(csvFileDataSource, callback);
+        } else {
+            callback.onError(new Exception(
+                    "Not all csv imported needed: " + csvsToImport.size() + " imported: "
+                            + csvImportedSize[0]));
+        }
+
     }
 
-    private void clearCSVSDBAndRepopulate() {
+    private void clearCSVSDBAndRepopulate(ICSVFileRepository csvFileDataSource,
+            final IPullController.Callback callback) {
+        csvFileDataSource.updateCSVDB(new IDataSourceCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                ICSVVersionRepository csvVersionLocalDataSource = new CSVVersionLocalDataSource(
+                        PreferencesState.getInstance().getContext());
+                csvVersionLocalDataSource.saveCSVVersion(csvNewVersion,
+                        new IDataSourceCallback<Integer>() {
+                            @Override
+                            public void onSuccess(Integer result) {
+                                return;
+                            }
 
+                            @Override
+                            public void onError(Throwable throwable) {
+                                callback.onError(throwable);
+                            }
+                        });
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
     }
 }

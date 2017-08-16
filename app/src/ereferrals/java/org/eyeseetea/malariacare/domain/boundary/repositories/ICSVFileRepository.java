@@ -7,4 +7,6 @@ public interface ICSVFileRepository {
     void getCSVFile(String filename, IDataSourceCallback<byte[]> callback);
 
     void saveCSVFile(String filename, byte[] fileToSave, IDataSourceCallback<Void> callback);
+
+    void updateCSVDB(IDataSourceCallback<Void> callback);
 }

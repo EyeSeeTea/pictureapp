@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MediaRepository implements IMediaRepository {
@@ -56,7 +57,6 @@ public class MediaRepository implements IMediaRepository {
     }
 
 
-
     /**
      * Returns a media that holds a reference to the same resource with an already downloaded copy
      * of the file.
@@ -66,10 +66,12 @@ public class MediaRepository implements IMediaRepository {
                 .where(MediaDB_Table.filename.isNotNull())
                 .and(MediaDB_Table.resource_url.is(resourceUrl))
                 .querySingle();
-        if(mediaDB==null){
+        if (mediaDB == null) {
             return null;
-        }else{
-            return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
+        } else {
+            return new Media(mediaDB.getId_media(),
+                    Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(),
+                    mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
                     MediaMapper.getSizeInMB(mediaDB.getFilename()));
         }
     }
@@ -112,5 +114,23 @@ public class MediaRepository implements IMediaRepository {
     public void deleteModel(Media media) {
         MediaDB mediaDb = getMedia(media.getId());
         mediaDb.delete();
+    }
+
+    public int updateSyncedFiles(HashMap<String, String> syncedFiles) {
+        int correctSyncedFiles = 0;
+        //Try to reuse a local copy if another media references same url
+        if (syncedFiles.size() > 0) {
+            for (String mediaUid : syncedFiles.keySet()) {
+                String absolutePath = syncedFiles.get(mediaUid);
+                List<Media> allMediaWithSameResource = getAllMediaByResourceUid(mediaUid);
+                for (Media localMedia : allMediaWithSameResource) {
+                    correctSyncedFiles++;
+                    System.out.println(localMedia.toString() + "\tsaved in " + absolutePath);
+                    localMedia.setResourcePath(absolutePath);
+                    updateModel(localMedia);
+                }
+            }
+        }
+        return correctSyncedFiles;
     }
 }

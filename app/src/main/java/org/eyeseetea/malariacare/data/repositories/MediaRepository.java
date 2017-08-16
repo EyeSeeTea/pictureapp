@@ -70,7 +70,7 @@ public class MediaRepository implements IMediaRepository {
             return null;
         }else{
             return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
-                    Media.getSizeInMB(mediaDB.getFilename()));
+                    MediaMapper.getSizeInMB(mediaDB.getFilename()));
         }
     }
 

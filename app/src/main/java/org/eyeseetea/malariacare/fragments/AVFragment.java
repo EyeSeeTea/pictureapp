@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
@@ -83,9 +84,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     private void initializePresenter() {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-
-        //TODO: remove fake media repository
-        MediaRepository mediaRepository = new MediaRepository();
+        IMediaRepository mediaRepository = new MediaRepository();
 
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);

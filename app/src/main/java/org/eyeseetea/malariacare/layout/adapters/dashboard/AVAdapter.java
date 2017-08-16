@@ -75,7 +75,7 @@ public class AVAdapter extends RecyclerView.Adapter {
                 Uri uri = Uri.fromFile(file);
                 mediaViewHolder.filename.setImageURI(uri);
             } else {
-                mediaViewHolder.filename.setImageBitmap(VideoUtils.getVideoPreview(media.getResourcePath()));
+                mediaViewHolder.filename.setImageBitmap(VideoUtils.getVideoPreview(media.getResourcePath(), context));
             }
             mediaViewHolder.filename.setOnClickListener(new ImageView.OnClickListener() {
                 public void onClick(View v)

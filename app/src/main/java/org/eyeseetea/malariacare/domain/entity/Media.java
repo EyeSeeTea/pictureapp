@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.eyeseetea.sdk.common.RequiredChecker.required;
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,10 +10,6 @@ import android.support.v4.content.ContextCompat;
 import org.eyeseetea.malariacare.R;
 
 import java.io.File;
-
-/**
- * Created by ignac on 04/08/2017.
- */
 
 public class Media {
 
@@ -66,16 +62,6 @@ public class Media {
 
     public MediaType getType() {
         return type;
-    }
-
-    public static String getSizeInMB(String filename) {
-        //Todo fix this method using for example SizeCalculator.getSizeInMB(mediaDB.getFilename()) from eyeseetesdk
-        return "0mb";
-    }
-
-    public static String getFileSize(){
-        //TODO
-        return "0MB";
     }
 
     public void setResourcePath(String resourcePath) {

@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -7,6 +8,7 @@ import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
+import org.eyeseetea.sdk.common.FileUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public class DownloadMediaUseCase implements UseCase {
     }
 
     //TODO  Change by the correct uid
-    private static final String rootUid = "0B8oszoX2-DdHOFZwVmRyTWc1X3c";
+    private static final String rootUid = "0B7TXlu17DcAbNHNvRUxnSDd4LUk";
     private static final String TAG = "DownloadMediaUseCase";
     private Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
@@ -58,6 +60,7 @@ public class DownloadMediaUseCase implements UseCase {
      */
     @Override
     public void run() {
+        System.out.println("Running DownloadMediaUseCase");
         IFileDownloader.Callback callback = new IFileDownloader.Callback() {
             @Override
             public void onError(FileDownloadException ex) {
@@ -76,18 +79,33 @@ public class DownloadMediaUseCase implements UseCase {
             }
 
             @Override
+            public void removeRemotelyDeletedMedia(List<String> uids){
+                List<Media> medias = mMediaRepository.getAll();
+                for(Media media:medias){
+                    //If the media is not stored in the hashMap, the media was removed from drive folder and will be removed from database.
+                    if(!uids.contains(media.getResourceUrl())){
+                        if(media.getResourcePath()!=null) {
+                            FileUtils.removeFile(media.getResourcePath());
+                        }
+                        remove(media.getResourceUrl());
+                    }
+                }
+                mCallback.onSuccess(0);
+            }
+
+            @Override
             public void save(Media media) {
                 mMediaRepository.updateNotDownloadedMedia(media);
             }
 
             @Override
             public void remove(String uid) {
-                System.out.println("downloadFile error (file extension not supported)" + uid);
+                System.out.println("Remove file with uid" + uid);
                 mMediaRepository.deleteModel(mMediaRepository.findByUid(uid));
             }
         };
 
-        mFileDownloader.init(rootUid, callback);
+        mFileDownloader.init(PreferencesState.getInstance().getDriveRootFolderUid(),  callback);
         final List<Media> medias = mMediaRepository.getAllNotDownloaded();
         List<String> uids = new ArrayList<>();
         for (Media media : medias) {

@@ -108,9 +108,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
                     @Override
                     public void onSuccess(int syncedFiles) {
+                        //the fragment should be updated to represent the removed data
+                        avFragment.reloadData();
                         if (syncedFiles > 0) {
                             showToast(String.format("%d files synced", syncedFiles));
-                            avFragment.reloadData();
                         }
                     }
                 });

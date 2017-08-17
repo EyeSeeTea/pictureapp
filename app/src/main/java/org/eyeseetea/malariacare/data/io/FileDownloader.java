@@ -47,7 +47,7 @@ public class FileDownloader implements IFileDownloader {
                 "Private Json stream with google play key is required");
     }
 
-    public void init(String rootUid, final IFileDownloader.Callback mCallback){
+    public void init(String rootUid, final IFileDownloader.Callback mCallback) {
         initServiceAccountCredential();
 
         if (!isGooglePlayServicesAvailable()) {
@@ -67,14 +67,24 @@ public class FileDownloader implements IFileDownloader {
                 .setHttpRequestInitializer(serviceCredential)
                 .build();
         List<Media> mediaFiles = new ArrayList<>();
+        List<String> uids = new ArrayList<>();
         try {
-            FileList folders = drive.files().list().setQ("\'"+ rootUid +"\' in parents").execute();
-            for(com.google.api.services.drive.model.File file:folders.getFiles()){
-                if(file.getMimeType().equals("application/vnd.google-apps.folder")){
-                    if(file.getName().equals(ProgramDB.getProgram(PreferencesEReferral.getUserProgramId()).getName())) {
+            FileList folders = drive.files().list().setQ(
+                    "\'" + rootUid + "\' in parents").execute();
+            for (com.google.api.services.drive.model.File file : folders.getFiles()) {
+                if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+                    if (file.getName().equals(ProgramDB.getProgram(
+                            PreferencesEReferral.getUserProgramId()).getName())) {
                         FileList fileList = drive.files().list().setQ(
                                 "\'" + file.getId() + "\' in parents").execute();
-                        mediaFiles = convertInMediaList(fileList);
+                        for (com.google.api.services.drive.model.File fileMedia : fileList
+                                .getFiles()) {
+                            Media media = convertInMedia(fileMedia);
+                            if (media != null) {
+                                mediaFiles.add(media);
+                                uids.add(fileMedia.getId());
+                            }
+                        }
                     }
                 }
             }
@@ -82,33 +92,29 @@ public class FileDownloader implements IFileDownloader {
             e.printStackTrace();
         }
 
-        for(Media media:mediaFiles){
+        for (Media media : mediaFiles) {
             mCallback.save(media);
         }
+        mCallback.removeRemotelyDeletedMedia(uids);
     }
 
 
-    private static List<Media> convertInMediaList(FileList fileList) {
-        List <Media> mediaList= new ArrayList<>();
-        for(com.google.api.services.drive.model.File file:fileList.getFiles()){
-            if(!file.getMimeType().equals("application/vnd.google-apps.folder")){
-                Media.MediaType mediaType = Media.MediaType.VIDEO;
-                if(file.getMimeType().contains("image")){
-                    mediaType = Media.MediaType.PICTURE;
-                }
-                else if (file.getMimeType().contains("video")){
-                    mediaType = Media.MediaType.VIDEO;
-                }
-                mediaList.add(new Media(file.getId(), mediaType));
+    private static Media convertInMedia(com.google.api.services.drive.model.File file) {
+        if (!file.getMimeType().equals("application/vnd.google-apps.folder")) {
+            Media.MediaType mediaType = Media.MediaType.VIDEO;
+            if (file.getMimeType().contains("image")) {
+                mediaType = Media.MediaType.PICTURE;
+            } else if (file.getMimeType().contains("video")) {
+                mediaType = Media.MediaType.VIDEO;
             }
-
+            return new Media(file.getId(), mediaType);
         }
-        return mediaList;
+        return null;
     }
 
     @Override
     public void download(List<String> uids, final Callback mCallback) {
-        if(drive==null){
+        if (drive == null) {
             System.out.println("Drive is null, init() method must be called first");
         }
         new DownloadMediaTask(mFileDir, drive, uids,
@@ -138,8 +144,10 @@ public class FileDownloader implements IFileDownloader {
 
     private void initServiceAccountCredential() {
         try {
-            serviceCredential = GoogleCredential.fromStream(mPrivateJsonStream).createScoped(
-                    Arrays.asList(SCOPES));
+            if(serviceCredential==null) {
+                serviceCredential = GoogleCredential.fromStream(mPrivateJsonStream).createScoped(
+                        Arrays.asList(SCOPES));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

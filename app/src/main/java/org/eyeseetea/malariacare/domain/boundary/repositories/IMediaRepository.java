@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IMediaRepository {
     List<Media> getAll();
+
+    List<Media> getAllDownloaded();
 }

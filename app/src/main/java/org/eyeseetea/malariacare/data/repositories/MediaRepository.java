@@ -28,6 +28,7 @@ public class MediaRepository implements IMediaRepository {
         return MediaMapper.mapFromDbToDomain(getAllByResourceUid(url));
     }
 
+    @Override
     public List<Media> getAllDownloaded() {
         return MediaMapper.mapFromDbToDomain(getAllInLocal());
     }
@@ -146,6 +147,7 @@ public class MediaRepository implements IMediaRepository {
 
     public int updateSyncedFiles(HashMap<String, String> syncedFiles) {
         int correctSyncedFiles = 0;
+
         //Try to reuse a local copy if another media references same url
         if (syncedFiles.size() > 0) {
             for (String mediaUid : syncedFiles.keySet()) {
@@ -167,7 +169,6 @@ public class MediaRepository implements IMediaRepository {
         if(mediaDB!=null){
             if(mediaDB.getFilename()!=null){
                 System.out.println(mediaDB.getResourceUrl() +" is already downloaded");
-                media=findLocalByUid(media.getResourceUrl());
             }
         }else{
             mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl());

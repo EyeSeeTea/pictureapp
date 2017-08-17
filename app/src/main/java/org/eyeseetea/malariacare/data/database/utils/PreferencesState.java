@@ -103,6 +103,18 @@ public class PreferencesState {
         return credentials;
     }
 
+    /**
+     * Get credentials from sharedPreferences.
+     */
+    public static String getDriveRootFolderUid() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        String value = sharedPreferences.getString(context.getString(R.string.drive_key), context.getString(R.string.default_drive_folder));
+
+        return value;
+    }
+
     public void init(Context context) {
         this.context = context;
         reloadPreferences();
@@ -250,6 +262,13 @@ public class PreferencesState {
         prefEditor.putString(namePreference,
                 value); // set your default value here (could be empty as well)
         prefEditor.commit(); // finally save changes
+    }
+
+    public String getPreference() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getString(
+                instance.getContext().getString(R.string.data_limited_by_date), "");
     }
 
     public String getDataLimitedByDate() {

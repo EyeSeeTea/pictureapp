@@ -12,6 +12,8 @@ public interface IFileDownloader {
 
         void onError(FileDownloadException throwable);
 
+        void removeRemotelyDeletedMedia(List<String> uids);
+
         void remove(String uid);
 
         void save(Media media);

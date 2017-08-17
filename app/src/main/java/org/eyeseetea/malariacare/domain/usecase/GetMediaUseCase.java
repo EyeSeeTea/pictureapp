@@ -29,7 +29,7 @@ public class GetMediaUseCase implements UseCase {
 
     @Override
     public void run() {
-        final List<Media> medias = mMediaRepository.getAll();
+        final List<Media> medias = mMediaRepository.getAllDownloaded();
 
         if (medias != null && !medias.isEmpty()) {
             mMainExecutor.run(new Runnable() {

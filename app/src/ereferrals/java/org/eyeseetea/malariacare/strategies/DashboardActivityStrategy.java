@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.googleapis.extensions.android.gms.auth
-        .GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -31,6 +30,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
@@ -45,18 +45,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
 
     static final int REQUEST_AUTHORIZATION = 101;
-
-    public interface Callback {
-        void onCancel(Exception ex);
-
-        void showToast(String format);
-
-        void acquireGooglePlayServices();
-
-        void onSuccess(HashMap<String, String> syncedFiles);
-
-        void onRemove(String uid);
-    }
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
@@ -82,22 +70,22 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         final MediaRepository mediaRepository = new MediaRepository();
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
                 mConnectivity, mediaRepository,
-                new Callback() {
+                new DownloadMediaUseCase.Callback() {
                     @Override
-                    public void onCancel(Exception ex) {
-
+                    public void onError(FileDownloadException ex) {
                         //Need to complete credentials (ack from user first time)
-                        if (ex instanceof UserRecoverableAuthIOException) {
+                        if (ex.getCause() instanceof UserRecoverableAuthIOException) {
+                            showToast(ex.getCause().getMessage());
                             DashboardActivity.dashboardActivity.startActivityForResult(
-                                    ((UserRecoverableAuthIOException) ex).getIntent(),
+                                    ((UserRecoverableAuthIOException) ex.getCause()).getIntent(),
                                     REQUEST_AUTHORIZATION);
                             return;
                         }
 
                         //Real connection google error
-                        if (ex instanceof GooglePlayServicesAvailabilityIOException) {
+                        if (ex.getCause() instanceof GooglePlayServicesAvailabilityIOException) {
                             showDialog(
-                                    ((GooglePlayServicesAvailabilityIOException) ex)
+                                    ((GooglePlayServicesAvailabilityIOException) ex.getCause())
                                             .getConnectionStatusCode());
                             return;
                         }
@@ -127,17 +115,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
                     @Override
                     public void onSuccess(HashMap<String, String> syncedFiles) {
-                        int correctSyncedFiles = mediaRepository.updateSyncedFiles(syncedFiles);
-                        if (correctSyncedFiles > 0) {
-                            showToast(String.format("%d files synced", correctSyncedFiles));
-                        }
+                        System.out.println("File download finish");
                     }
 
                     @Override
                     public void onRemove(String uid) {
-                        System.out.println(
-                                "downloadFile error (file extension not supported)" + uid);
-                        mediaRepository.deleteModel(mediaRepository.findByUid(uid));
                     }
                 });
     }

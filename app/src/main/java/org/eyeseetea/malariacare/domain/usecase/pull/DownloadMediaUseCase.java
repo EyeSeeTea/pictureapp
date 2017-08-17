@@ -5,16 +5,29 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
-import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DownloadMediaUseCase implements UseCase {
 
 
-    private DashboardActivityStrategy.Callback mCallback;
+    public interface Callback {
+        void onError(FileDownloadException ex);
+
+        void showToast(String format);
+
+        void acquireGooglePlayServices();
+
+        void onSuccess(HashMap<String, String> syncedFiles);
+
+        void onRemove(String uid);
+    }
+
+    private Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
     private IFileDownloader mFileDownloader;
     private IConnectivityManager mConnectivityManager;
@@ -25,7 +38,7 @@ public class DownloadMediaUseCase implements UseCase {
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
             MediaRepository mediaRepository,
-            DashboardActivityStrategy.Callback callback) {
+            Callback callback) {
         mAsyncExecutor = asyncExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
@@ -56,7 +69,35 @@ public class DownloadMediaUseCase implements UseCase {
 
         if (uids != null && !uids.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
-                mFileDownloader.download(uids, mCallback);
+                mFileDownloader.download(uids, new Callback() {
+                    @Override
+                    public void onError(FileDownloadException ex) {
+                        mCallback.onError(ex);
+                    }
+
+                    @Override
+                    public void showToast(String message) {
+                        mCallback.showToast(message);
+                    }
+
+                    @Override
+                    public void acquireGooglePlayServices() {
+                        mCallback.acquireGooglePlayServices();
+                    }
+
+                    @Override
+                    public void onSuccess(HashMap<String, String> syncedFiles) {
+                        int numOfSyncedFiles =  mMediaRepository.updateSyncedFiles(syncedFiles);
+                        showToast(String.format("%d files synced", numOfSyncedFiles));
+                        mCallback.onSuccess(syncedFiles);
+                    }
+
+                    @Override
+                    public void onRemove(String uid) {
+                        System.out.println("downloadFile error (file extension not supported)" + uid);
+                        mMediaRepository.deleteModel(mMediaRepository.findByUid(uid));
+                    }
+                });
             } else {
                 System.out.println(this.getClass().getSimpleName()
                         + ": No wifi connection available. Media will not be synced");

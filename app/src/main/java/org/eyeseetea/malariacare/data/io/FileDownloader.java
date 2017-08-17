@@ -9,7 +9,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -18,7 +17,8 @@ import com.google.api.services.drive.DriveScopes;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
-import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
+import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.sdk.data.DownloadMediaTask;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class FileDownloader implements IFileDownloader {
     }
 
     @Override
-    public void download(List<String> uids, final DashboardActivityStrategy.Callback mCallback) {
+    public void download(List<String> uids, final DownloadMediaUseCase.Callback mCallback) {
         initServiceAccountCredential();
 
         if (!isGooglePlayServicesAvailable()) {
@@ -64,19 +64,15 @@ public class FileDownloader implements IFileDownloader {
                 .build();
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {
+
                     @Override
                     public void onError(Exception error) {
-                        if (error instanceof UserRecoverableAuthIOException) {
-                            mCallback.showToast(error.getMessage());
-                        }
+                        mCallback.onError(new FileDownloadException(error));
                     }
 
                     @Override
                     public void onCancelled(Exception mLastError) {
-                        mCallback.onCancel(mLastError);
-                        //Other error
-                        System.out.println("onCancelled: " + mLastError == null ? ""
-                                : mLastError.getMessage());
+                        mCallback.onError(new FileDownloadException(mLastError));
                     }
 
                     @Override

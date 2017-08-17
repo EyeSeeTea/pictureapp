@@ -1232,9 +1232,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
                 .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.completion_date).ascending())
+                .orderBy(OrderBy.fromProperty(Survey_Table.creation_date).ascending())
                 .querySingle();
-        return survey.getCompletionDate();
+        return survey.getCreationDate();
     }
 
     public static Date getMaxQuarantineEventDateByProgramAndOrgUnit(Program program,

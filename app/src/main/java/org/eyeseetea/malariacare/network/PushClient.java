@@ -214,7 +214,7 @@ public class PushClient {
         object.put(TAG_ORG_UNIT, ServerAPIController.getOrgUnitUID());
         object.put(TAG_EVENTDATE,
                 android.text.format.DateFormat.format("yyyy-MM-dd",
-                        survey.getCompletionDate()));
+                        survey.getEventDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
         //TODO: put it in the object.
@@ -290,7 +290,7 @@ public class PushClient {
         values.put(prepareDataElementValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData()));
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals("")) {
             values.put(prepareDataElementValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
-                    EventExtended.format(survey.getCompletionDate(),
+                    EventExtended.format(survey.getCreationDate(),
                             EventExtended.AMERICAN_DATE_FORMAT)));
         }
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent).equals("")) {

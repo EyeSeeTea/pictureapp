@@ -39,8 +39,6 @@ import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
-import java.util.HashMap;
-
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
 
@@ -92,12 +90,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     }
 
                     @Override
-                    public void showToast(String message) {
-                        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
                     public void acquireGooglePlayServices() {
                         /**
                          * Attempt to resolve a missing, out-of-date, invalid or disabled Google
@@ -114,14 +106,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     }
 
                     @Override
-                    public void onSuccess(HashMap<String, String> syncedFiles) {
-                        System.out.println("File download finish");
-                    }
-
-                    @Override
-                    public void onRemove(String uid) {
+                    public void onSuccess(int syncedFiles) {
+                        showToast(String.format("%d files synced", syncedFiles));
                     }
                 });
+    }
+
+    private void showToast(String message){
+        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
+                Toast.LENGTH_LONG).show();
     }
 
     private void showDialog(int connectionStatusCode) {

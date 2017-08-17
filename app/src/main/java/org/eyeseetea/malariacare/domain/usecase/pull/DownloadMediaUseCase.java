@@ -18,13 +18,9 @@ public class DownloadMediaUseCase implements UseCase {
     public interface Callback {
         void onError(FileDownloadException ex);
 
-        void showToast(String format);
-
         void acquireGooglePlayServices();
 
-        void onSuccess(HashMap<String, String> syncedFiles);
-
-        void onRemove(String uid);
+        void onSuccess(int syncedFiles);
     }
 
     private Callback mCallback;
@@ -69,15 +65,10 @@ public class DownloadMediaUseCase implements UseCase {
 
         if (uids != null && !uids.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
-                mFileDownloader.download(uids, new Callback() {
+                mFileDownloader.download(uids, new IFileDownloader.Callback() {
                     @Override
                     public void onError(FileDownloadException ex) {
                         mCallback.onError(ex);
-                    }
-
-                    @Override
-                    public void showToast(String message) {
-                        mCallback.showToast(message);
                     }
 
                     @Override
@@ -88,8 +79,7 @@ public class DownloadMediaUseCase implements UseCase {
                     @Override
                     public void onSuccess(HashMap<String, String> syncedFiles) {
                         int numOfSyncedFiles =  mMediaRepository.updateSyncedFiles(syncedFiles);
-                        showToast(String.format("%d files synced", numOfSyncedFiles));
-                        mCallback.onSuccess(syncedFiles);
+                        mCallback.onSuccess(numOfSyncedFiles);
                     }
 
                     @Override

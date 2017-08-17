@@ -1,8 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
-import android.content.Context;
-import android.util.Log;
-
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -17,8 +14,6 @@ import java.util.List;
 public class DownloadMediaUseCase implements UseCase {
 
 
-    private static final String TAG = "DownloadMediaUseCase";
-    private Context mContext;
     private DashboardActivityStrategy.Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
     private IFileDownloader mFileDownloader;
@@ -30,18 +25,15 @@ public class DownloadMediaUseCase implements UseCase {
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
             MediaRepository mediaRepository,
-            Context context,
             DashboardActivityStrategy.Callback callback) {
         mAsyncExecutor = asyncExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
         mMediaRepository = mediaRepository;
-        mContext = context;
         mCallback = callback;
     }
 
-    public void execute(Context context) {
-        mContext = context;
+    public void execute() {
         mAsyncExecutor.run(this);
     }
 
@@ -66,7 +58,8 @@ public class DownloadMediaUseCase implements UseCase {
             if (mConnectivityManager.isDeviceOnline()) {
                 mFileDownloader.download(uids, mCallback);
             } else {
-                Log.w(TAG, "No wifi connection available. Media will not be synced");
+                System.out.println(this.getClass().getSimpleName()
+                        + ": No wifi connection available. Media will not be synced");
             }
         }
     }

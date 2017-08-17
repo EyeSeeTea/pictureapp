@@ -41,7 +41,6 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
 import java.util.HashMap;
 
-
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
 
@@ -82,8 +81,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         R.raw.driveserviceprivatekey));
         final MediaRepository mediaRepository = new MediaRepository();
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
-                mConnectivity, mediaRepository, mDashboardActivity.getApplicationContext(),
-
+                mConnectivity, mediaRepository,
                 new Callback() {
                     @Override
                     public void onCancel(Exception ex) {
@@ -339,7 +337,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
 
     public void onResume() {
-        mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+        mDownloadMediaUseCase.execute();
     }
 
     /**
@@ -362,7 +360,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                                     R.string.google_play_required),
                             Toast.LENGTH_LONG);
                 } else {
-                    mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+                    mDownloadMediaUseCase.execute();
                 }
                 break;
         }

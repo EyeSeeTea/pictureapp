@@ -18,7 +18,6 @@ import com.google.api.services.drive.DriveScopes;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
-import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.sdk.data.DownloadMediaTask;
 
 import java.io.File;
@@ -43,7 +42,7 @@ public class FileDownloader implements IFileDownloader {
     }
 
     @Override
-    public void download(List<String> uids, final DownloadMediaUseCase.Callback mCallback) {
+    public void download(List<String> uids, final Callback mCallback) {
         initServiceAccountCredential();
 
         if (!isGooglePlayServicesAvailable()) {
@@ -73,6 +72,7 @@ public class FileDownloader implements IFileDownloader {
                     @Override
                     public void onCancelled(Exception mLastError) {
                         mCallback.onError(new FileDownloadException(mLastError));
+
                     }
 
                     @Override

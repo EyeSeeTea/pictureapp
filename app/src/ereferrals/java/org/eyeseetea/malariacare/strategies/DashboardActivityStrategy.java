@@ -23,15 +23,15 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.ConnectivityManager;
-import org.eyeseetea.malariacare.data.remote.ports.FileDownloader;
+import org.eyeseetea.malariacare.data.io.FileDownloader;
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
@@ -40,27 +40,10 @@ import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
-import java.util.HashMap;
-
-
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
 
     static final int REQUEST_AUTHORIZATION = 101;
-
-    public interface Callback {
-        void onCancel(Exception ex);
-
-        void showToast(String format);
-
-        void acquireGooglePlayServices();
-
-        void onSuccess(HashMap<String, String> syncedFiles);
-
-        void onRemove(String uid);
-
-        void save(Media media);
-    }
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
@@ -85,33 +68,26 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         R.raw.driveserviceprivatekey));
         final MediaRepository mediaRepository = new MediaRepository();
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
-                mConnectivity, mediaRepository, mDashboardActivity.getApplicationContext(),
-
-                new Callback() {
+                mConnectivity, mediaRepository,
+                new DownloadMediaUseCase.Callback() {
                     @Override
-                    public void onCancel(Exception ex) {
-
+                    public void onError(FileDownloadException ex) {
                         //Need to complete credentials (ack from user first time)
-                        if (ex instanceof UserRecoverableAuthIOException) {
+                        if (ex.getCause() instanceof UserRecoverableAuthIOException) {
+                            showToast(ex.getCause().getMessage());
                             DashboardActivity.dashboardActivity.startActivityForResult(
-                                    ((UserRecoverableAuthIOException) ex).getIntent(),
+                                    ((UserRecoverableAuthIOException) ex.getCause()).getIntent(),
                                     REQUEST_AUTHORIZATION);
                             return;
                         }
 
                         //Real connection google error
-                        if (ex instanceof GooglePlayServicesAvailabilityIOException) {
+                        if (ex.getCause() instanceof GooglePlayServicesAvailabilityIOException) {
                             showDialog(
-                                    ((GooglePlayServicesAvailabilityIOException) ex)
+                                    ((GooglePlayServicesAvailabilityIOException) ex.getCause())
                                             .getConnectionStatusCode());
                             return;
                         }
-                    }
-
-                    @Override
-                    public void showToast(String message) {
-                        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
-                                Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -131,26 +107,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     }
 
                     @Override
-                    public void onSuccess(HashMap<String, String> syncedFiles) {
-                        int correctSyncedFiles = mediaRepository.updateSyncedFiles(syncedFiles);
-                        if (correctSyncedFiles > 0) {
-                            showToast(String.format("%d files synced", correctSyncedFiles));
+                    public void onSuccess(int syncedFiles) {
+                        if (syncedFiles > 0) {
+                            showToast(String.format("%d files synced", syncedFiles));
                             avFragment.reloadData();
                         }
                     }
-
-                    @Override
-                    public void onRemove(String uid) {
-                        System.out.println(
-                                "downloadFile error (file extension not supported)" + uid);
-                        mediaRepository.deleteModel(mediaRepository.findByUid(uid));
-                    }
-
-                    @Override
-                    public void save(Media media) {
-                        mediaRepository.updateNotDownloadedMedia(media);
-                    }
                 });
+    }
+
+    private void showToast(String message){
+        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
+                Toast.LENGTH_LONG).show();
     }
 
     private void showDialog(int connectionStatusCode) {
@@ -348,7 +316,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
 
     public void onResume() {
-        mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+        mDownloadMediaUseCase.execute();
     }
 
     /**
@@ -371,7 +339,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                                     R.string.google_play_required),
                             Toast.LENGTH_LONG);
                 } else {
-                    mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+                    mDownloadMediaUseCase.execute();
                 }
                 break;
         }

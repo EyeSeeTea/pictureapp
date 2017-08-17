@@ -64,12 +64,16 @@ public class AVAdapter extends RecyclerView.Adapter {
             Media media = medias.get(position);
             mediaViewHolder.name.setText(media.getName());
             if(media.getType().equals(Media.MediaType.PICTURE)){
-                File file = new File(media.getResourcePath());
-                Uri uri = Uri.fromFile(file);
-                mediaViewHolder.filename.setImageURI(uri);
+                if(media.getResourcePath()!=null) {
+                    File file = new File(media.getResourcePath());
+                    Uri uri = Uri.fromFile(file);
+                    mediaViewHolder.filename.setImageURI(uri);
+                }
             }else {
-
-                mediaViewHolder.filename.setImageBitmap(VideoUtils.getVideoPreview(media.getResourcePath(), context));
+                if(media.getResourcePath()!=null) {
+                    mediaViewHolder.filename.setImageBitmap(
+                            VideoUtils.getVideoPreview(media.getResourcePath(), context));
+                }
             }
         }
         else if (viewHolder instanceof ListItemMediaViewHolder){

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.remote;
+package org.eyeseetea.malariacare.data.net;
 
 import android.content.Context;
 import android.net.NetworkInfo;

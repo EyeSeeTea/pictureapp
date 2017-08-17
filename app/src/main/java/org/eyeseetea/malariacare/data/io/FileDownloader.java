@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.remote.ports;
+package org.eyeseetea.malariacare.data.io;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
@@ -9,7 +9,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -20,10 +19,9 @@ import com.google.api.services.drive.model.FileList;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
-import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
-import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.sdk.data.DownloadMediaTask;
 
 import java.io.File;
@@ -49,7 +47,7 @@ public class FileDownloader implements IFileDownloader {
                 "Private Json stream with google play key is required");
     }
 
-    public void init(String rootUid, final DashboardActivityStrategy.Callback mCallback){
+    public void init(String rootUid, final IFileDownloader.Callback mCallback){
         initServiceAccountCredential();
 
         if (!isGooglePlayServicesAvailable()) {
@@ -109,25 +107,21 @@ public class FileDownloader implements IFileDownloader {
     }
 
     @Override
-    public void download(List<String> uids, final DashboardActivityStrategy.Callback mCallback) {
+    public void download(List<String> uids, final Callback mCallback) {
         if(drive==null){
             System.out.println("Drive is null, init() method must be called first");
         }
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {
+
                     @Override
                     public void onError(Exception error) {
-                        if (error instanceof UserRecoverableAuthIOException) {
-                            mCallback.showToast(error.getMessage());
-                        }
+                        mCallback.onError(new FileDownloadException(error));
                     }
 
                     @Override
                     public void onCancelled(Exception mLastError) {
-                        mCallback.onCancel(mLastError);
-                        //Other error
-                        System.out.println("onCancelled: " + mLastError == null ? ""
-                                : mLastError.getMessage());
+                        mCallback.onError(new FileDownloadException(mLastError));
                     }
 
                     @Override
@@ -137,7 +131,7 @@ public class FileDownloader implements IFileDownloader {
 
                     @Override
                     public void removeIllegalFile(String uid) {
-                        mCallback.onRemove(uid);
+                        mCallback.remove(uid);
                     }
                 }).execute();
     }

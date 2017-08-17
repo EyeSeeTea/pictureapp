@@ -1,27 +1,32 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
-import android.content.Context;
-import android.util.Log;
-
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
-import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DownloadMediaUseCase implements UseCase {
 
 
+    public interface Callback {
+        void onError(FileDownloadException ex);
+
+        void acquireGooglePlayServices();
+
+        void onSuccess(int syncedFiles);
+    }
+
     //TODO  Change by the correct uid
     private static final String rootUid = "0B8oszoX2-DdHOFZwVmRyTWc1X3c";
     private static final String TAG = "DownloadMediaUseCase";
-    private Context mContext;
-    private DashboardActivityStrategy.Callback mCallback;
+    private Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
     private IFileDownloader mFileDownloader;
     private IConnectivityManager mConnectivityManager;
@@ -32,18 +37,15 @@ public class DownloadMediaUseCase implements UseCase {
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
             MediaRepository mediaRepository,
-            Context context,
-            DashboardActivityStrategy.Callback callback) {
+            Callback callback) {
         mAsyncExecutor = asyncExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
         mMediaRepository = mediaRepository;
-        mContext = context;
         mCallback = callback;
     }
 
-    public void execute(Context context) {
-        mContext = context;
+    public void execute() {
         mAsyncExecutor.run(this);
     }
 
@@ -56,7 +58,36 @@ public class DownloadMediaUseCase implements UseCase {
      */
     @Override
     public void run() {
-        mFileDownloader.init(rootUid, mCallback);
+        IFileDownloader.Callback callback = new IFileDownloader.Callback() {
+            @Override
+            public void onError(FileDownloadException ex) {
+                mCallback.onError(ex);
+            }
+
+            @Override
+            public void acquireGooglePlayServices() {
+                mCallback.acquireGooglePlayServices();
+            }
+
+            @Override
+            public void onSuccess(HashMap<String, String> syncedFiles) {
+                int numOfSyncedFiles =  mMediaRepository.updateSyncedFiles(syncedFiles);
+                mCallback.onSuccess(numOfSyncedFiles);
+            }
+
+            @Override
+            public void save(Media media) {
+                mMediaRepository.updateNotDownloadedMedia(media);
+            }
+
+            @Override
+            public void remove(String uid) {
+                System.out.println("downloadFile error (file extension not supported)" + uid);
+                mMediaRepository.deleteModel(mMediaRepository.findByUid(uid));
+            }
+        };
+
+        mFileDownloader.init(rootUid, callback);
         final List<Media> medias = mMediaRepository.getAllNotDownloaded();
         List<String> uids = new ArrayList<>();
         for (Media media : medias) {
@@ -67,9 +98,10 @@ public class DownloadMediaUseCase implements UseCase {
 
         if (uids != null && !uids.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
-                mFileDownloader.download(uids, mCallback);
+                mFileDownloader.download(uids, callback);
             } else {
-                Log.w(TAG, "No wifi connection available. Media will not be synced");
+                System.out.println(this.getClass().getSimpleName()
+                        + ": No wifi connection available. Media will not be synced");
             }
         }
     }

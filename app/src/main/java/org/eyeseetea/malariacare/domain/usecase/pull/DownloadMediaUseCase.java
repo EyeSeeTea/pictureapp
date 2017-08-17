@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase.pull;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;

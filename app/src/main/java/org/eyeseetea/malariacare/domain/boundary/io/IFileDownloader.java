@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.boundary.ports;
+package org.eyeseetea.malariacare.domain.boundary.io;
 
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 

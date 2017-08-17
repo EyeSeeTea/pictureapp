@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.remote.ports;
+package org.eyeseetea.malariacare.data.io;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
@@ -17,7 +17,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.sdk.data.DownloadMediaTask;
 

@@ -14,16 +14,17 @@ import retrofit2.Retrofit;
 public class CSVImporter {
     private Retrofit mRetrofit;
     private CSVImporterRetrofit mCSVImporterRetrofit;
+    private final static String BASE_URL = "https://raw.githubusercontent"
+            + ".com/manuelplazaspalacio/Test-ereferrals-csvs/master/";
 
     public CSVImporter() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        OkHttpClient client = new OkHttpClient.Builder().cache(null).addInterceptor(
+                interceptor).build();
 
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(
-                        "https://raw.githubusercontent"
-                                + ".com/manuelplazaspalacio/Test-ereferrals-csvs/master/")
+                .baseUrl(BASE_URL)
                 .client(client)
                 .build();
         mCSVImporterRetrofit = mRetrofit.create(CSVImporterRetrofit.class);

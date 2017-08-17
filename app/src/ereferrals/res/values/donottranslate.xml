@@ -42,4 +42,5 @@
     <string name="ws_source">Android v1.1</string>
     <string name="ws_base_url">https://james.psi-mis.org/</string>
     <string name="error_web_resource" translatable="false">file:///android_asset/web_view_error/%1$s</string>
+    <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
 </resources>

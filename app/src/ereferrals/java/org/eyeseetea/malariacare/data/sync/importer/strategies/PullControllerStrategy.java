@@ -1,13 +1,17 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CSVFileDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CSVVersionLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CanAddSurveysLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
@@ -21,10 +25,13 @@ import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupEx
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVFileRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVVersionRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICanAddSurveysRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
@@ -58,7 +65,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
         try {
             mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
 
-            checkCSVVersion(callback);
+            if (isNetworkAvailable()) {
+                checkCSVVersion(callback);
+            }
 
             if(!pullFilters.isDemo()) {
                 mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
@@ -112,7 +121,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     public void onSuccess(Integer result) {
                         if (phoneVersion < result) {
                             csvNewVersion = result;
-                            downloadCsvsAndRepopulateDB(callback);
+                            checkNotSentSurveys(callback);
                         }
                     }
 
@@ -129,6 +138,28 @@ public class PullControllerStrategy extends APullControllerStrategy {
             }
         });
 
+    }
+
+    private void checkNotSentSurveys(final IPullController.Callback callback) {
+        ISurveyRepository surveyLocalDataSource = new SurveyLocalDataSource();
+        surveyLocalDataSource.getUnsentSurveys(new IDataSourceCallback<List<Survey>>() {
+            @Override
+            public void onSuccess(List<Survey> surveys) {
+                ICanAddSurveysRepository canAddSurveyLocalDataSource =
+                        new CanAddSurveysLocalDataSource();
+                if (surveys.size() > 0) {
+                    canAddSurveyLocalDataSource.setCanAddSurveys(false);
+                } else {
+                    canAddSurveyLocalDataSource.setCanAddSurveys(true);
+                    downloadCsvsAndRepopulateDB(callback);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
     }
 
     private void downloadCsvsAndRepopulateDB(final IPullController.Callback callback) {
@@ -199,4 +230,13 @@ public class PullControllerStrategy extends APullControllerStrategy {
             }
         });
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
 }

@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.strategies.DashboardUnsentFragmentStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -144,7 +145,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
-        View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+        final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+
+        DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy =
+                new DashboardUnsentFragmentStrategy();
+        dashboardUnsentFragmentStrategy.initFooter(footer);
 
         ListView listView = getListView();
         if (header != null) {

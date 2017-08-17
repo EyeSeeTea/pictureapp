@@ -130,5 +130,21 @@ public class PreferencesEReferral {
         editor.commit();
     }
 
+    public static boolean canAddNewSurveys() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getBoolean(context.getString(R.string.can_add_new_surveys), true);
+    }
+
+    public static void setCanAddNewSurveys(boolean canAdd) {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.can_add_new_surveys), canAdd);
+        editor.commit();
+    }
+
 
 }

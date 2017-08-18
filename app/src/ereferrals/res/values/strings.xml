@@ -145,42 +145,6 @@
     <string name="error_conflict_title">"Error"</string>
     <string name="confirmation_really_exit_title">"Really Exit?"</string>
     <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
-    <string name="ipc_issueEntry_q_firstName">"First name"</string>
-    <string name="ipc_issueEntry_q_lastName">"Last Name"</string>
-    <string name="ipc_issueEntry_q_gender">"Gender"</string>
-    <string name="ipc_issueEntry_q_motherName">"Mother name"</string>
-    <string name="ipc_issueEntry_q_birthDistrict">"Birth District"</string>
-    <string name="ipc_issueEntry_q_yearOfBirth">"Year of Birth"</string>
-    <string name="ipc_issueEntry_q_numberOfChildren">"# Children"</string>
-    <string name="ipc_issueEntry_q_currentMethod">"Current method"</string>
-    <string name="ipc_issueEntry_q_channelOfReferral">"Channel of referral"</string>
-    <string name="ipc_issueEntry_q_civilStatus">"Civil Status"</string>
-    <string name="ipc_issueEntry_q_ownershipOfPhone">"Ownership of Phone"</string>
-    <string name="ipc_issueEntry_q_phoneNumber">"Phone number"</string>
-    <string name="ipc_issueEntry_q_program">"Program"</string>
-    <string name="common_option_method_none">"None"</string>
-    <string name="common_option_method_injection">"Injectable"</string>
-    <string name="common_option_method_iud">"IUD"</string>
-    <string name="common_option_method_condom">"Condom"</string>
-    <string name="common_option_method_pills">"Pills"</string>
-    <string name="common_option_method_implant">"Implant"</string>
-    <string name="common_option_method_other">"Other"</string>
-    <string name="common_option_channelOfReferral_healthFacility">"Health Facility"</string>
-    <string name="common_option_channelOfReferral_groupSession">"Group Session"</string>
-    <string name="common_option_channelOfReferral_doorToDoor">"Door To Door"</string>
-    <string name="common_option_civilStatus_unmarried">"Unmarried"</string>
-    <string name="common_option_civilStatus_married">"Married"</string>
-    <string name="common_option_civilStatus_divorced">"Divorced"</string>
-    <string name="common_option_civilStatus_widowed">"Widowed"</string>
-    <string name="common_option_ownershipOfPhone_noMobile">"No Mobile"</string>
-    <string name="common_option_ownershipOfPhone_herNumber">"Her Number"</string>
-    <string name="common_option_ownershipOfPhone_husbandPartner">"Husband/Partner"</string>
-    <string name="common_option_ownershipOfPhone_shared">"Shared"</string>
-    <string name="common_option_program_familyPlanning">"Family Planning"</string>
-    <string name="common_option_program_cervicalCancer">"Cervical Cancer"</string>
-    <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
-    <string name="common_option_gender_male">"Male"</string>
-    <string name="common_option_gender_female">"Female"</string>
     <string name="login_error_json">"Error reading json config file. Please contact your administrator."</string>
 
     <string name="admin_announcement">"Administrator announcement"</string>
@@ -499,10 +463,6 @@
     <!-- The voucher is enrolled in program -->
     <!-- Fuzzy -->
     <string name="ipc_issueEntry_msg_voucherEnrolledInProgram">"The voucher is enrolled in program"</string>
-
-    <!-- Enroll the voucher in the program responseCode is not 200, but -->
-    <!-- Fuzzy -->
-    <string name="ipc_issueEntry_msg_enrollVoucherInProgramError">"Enroll the voucher in the program reponseCode is not 200, but"</string>
 
     <!-- Creating event for the voucher -->
     <!-- Fuzzy -->

@@ -23,13 +23,13 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
@@ -38,107 +38,81 @@ import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.presentation.presenters.MediaPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AVFragment extends Fragment {
+public class AVFragment extends Fragment implements MediaPresenter.View {
 
     public static final String TAG = ".AVFragment";
-    protected AVAdapter recyclerAdapter;
-    private List<Media> mMedias;
-    private RecyclerView recyclerViewList;
-    private AVAdapter.ViewType activeViewType = AVAdapter.ViewType.GRID;
+    protected AVAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private MediaPresenter mPresenter;
+
+    View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
-        if (container == null) {
-            return null;
-        }
 
-        return inflater.inflate(R.layout.av_fragment, container, false);
+        rootView = inflater.inflate(R.layout.av_fragment, container, false);
+
+        initializeRecyclerView();
+        initializeChangeModeButton();
+        initializePresenter();
+
+        return rootView;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
+    public void onDestroy() {
+        mPresenter.detachView();
 
-        initRecyclerView();
-        initChangeModeButton();
-        loadMediaListAndAdapter();
+        super.onDestroy();
     }
 
-    private void initRecyclerView() {
+    private void initializePresenter() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        MediaRepository mediaRepository = new MediaRepository();
+        GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
+                mediaRepository);
+
+        mPresenter = new MediaPresenter(getMediaUseCase);
+        mPresenter.attachView(this);
+    }
+
+    private void initializeRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
                 getActivity().getApplicationContext());
-        recyclerViewList = (RecyclerView) getView().findViewById(R.id.av_recycler);
-        recyclerViewList.setHasFixedSize(true);
-        recyclerViewList.setLayoutManager(linearLayoutManager);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.av_recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
     }
 
-
-    private void initChangeModeButton() {
-        Button changeModeButton = (Button) getView().findViewById(R.id.change_mode_button);
+    private void initializeChangeModeButton() {
+        Button changeModeButton = (Button) rootView.findViewById(R.id.change_mode_button);
         changeModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeMode();
+                mPresenter.onClickChangeMode();
             }
         });
     }
 
-    private void loadMediaListAndAdapter() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        //MediaRepository mediaRepository = new MediaRepository();
-
-        //TODO: remove fake media repository
-        IMediaRepository mediaRepository = new IMediaRepository() {
-            @Override
-            public List<Media> getAll() {
-                List<Media> testMedia = new ArrayList<>();
-                testMedia.add(new Media("newfile", "path", Media.MediaType.PICTURE, "30mb"));
-                testMedia.add(new Media("newfile2", "path", Media.MediaType.PICTURE, "530mb"));
-                testMedia.add(new Media("newfile3", "path", Media.MediaType.VIDEO, "320mb"));
-                testMedia.add(new Media("newfile4", "path", Media.MediaType.VIDEO, "310mb"));
-                testMedia.add(new Media("newfile5", "path", Media.MediaType.PICTURE, "330mb"));
-                testMedia.add(new Media("newfile6", "path", Media.MediaType.PICTURE, "340mb"));
-
-                return testMedia;
-            }
-        };
-
-        GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
-                mediaRepository);
-        getMediaUseCase.execute(new GetMediaUseCase.Callback() {
-            @Override
-            public void onSuccess(List<Media> medias) {
-                mMedias = medias;
-                initAdapters();
-            }
-
-            @Override
-            public void onError() {
-                Log.e(TAG, "error getting user program");
-            }
-        });
+    @Override
+    public void showMediaGridMode(List<Media> mediaList) {
+        refreshList(mediaList, AVAdapter.ViewType.GRID);
     }
 
-    private void initAdapters() {
-        this.recyclerAdapter = new AVAdapter(this.mMedias, activeViewType,
-                getActivity().getApplicationContext());
-        recyclerViewList.setAdapter(recyclerAdapter);
+    @Override
+    public void showMediaListMode(List<Media> mediaList) {
+        refreshList(mediaList, AVAdapter.ViewType.LIST);
     }
 
-    private void changeMode() {
-        if (activeViewType == AVAdapter.ViewType.GRID) {
-            activeViewType = AVAdapter.ViewType.LIST;
-        } else {
-            activeViewType = AVAdapter.ViewType.GRID;
-        }
-        initAdapters();
+    private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {
+        this.mAdapter = new AVAdapter(mediaList, viewType, getActivity());
+        recyclerView.setAdapter(mAdapter);
     }
 }

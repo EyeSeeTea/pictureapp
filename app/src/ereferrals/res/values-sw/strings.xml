@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- TERMS FROM EYESEETEA -->
     <string name="ipc_issueEntry_q_firstName">"Jina la kwanza"</string>
     <string name="ipc_issueEntry_q_lastName">"Jina la ukoo"</string>
     <string name="system_defined">"mfumo defined"</string>
@@ -214,4 +215,640 @@
     <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
     <string name="ws_unknown_exception">Unknown exception.</string>
+
+    <!-- TERMS FROM POEDITOR -->
+    <string name="login_userName">"Jina la mtumiaji"</string>
+    <string name="login_password">"Namba ya siri"</string>
+
+    <!-- Open Referrals -->
+    <string name="ipc_menu_openReferrals">"Rufaa ambazo hazijafanyiwa kazi"</string>
+
+    <!-- Add + -->
+    <string name="ipc_menu_issueReferral">"Kuongeza Rufaa +"</string>
+
+    <!-- About -->
+    <string name="common_menu_about">"Kuhusu"</string>
+
+    <!-- Log off -->
+    <string name="common_menu_logOff">"Kufunga"</string>
+
+    <!-- Redeemed last 60 days -->
+    <string name="provider_menu_redeemedLast60Days">"Rufaa zilizokuwa  Redeemed siku 60 zilizopita"</string>
+
+    <!-- New redemption -->
+    <string name="provider_menu_newRedemption">"Kuredeem rufaa mpya"</string>
+
+    <!-- Find Voucher -->
+    <string name="provider_menu_findVoucher">"Tafuta namba ya rufaa"</string>
+
+    <!-- Show all vouchers -->
+    <string name="ipc_openReferralsList_filter_showAllVouchers">"Rufaa zote"</string>
+
+    <!-- Show vouchers with actions -->
+    <string name="ipc_openReferralsList_filter_showVouchersWithActions">"Rufaa zinazohitaji ufauatiliaji"</string>
+
+    <!-- Issued -->
+    <string name="ipc_statistics_rowHeader_Issued">"Rufaa zilizotolewa"</string>
+
+    <!-- Performance vs target -->
+    <string name="ipc_statistics_rowHeader_performanceVsTarget">"Zilozotolewa vs Lengo"</string>
+
+    <!-- Total credit -->
+    <string name="common_statistics_rowHeader_totalCredit">"Jumla ya hela"</string>
+
+    <!-- Information last calculated -->
+    <string name="common_statistics_footer_InformationLastCalculated">"Taarifa ya mwisho ya  mahesabu"</string>
+
+    <!-- ago -->
+    <string name="common_statistics_footer_Ago">"Iliyopita"</string>
+
+    <!-- Vouchers found -->
+    <string name="provider_findVoucher_msg_vouchersFound">" Kupatikana kwa vocha"</string>
+
+    <!-- Voucher Code -->
+    <string name="provider_findVoucher_result_tableHeader_VoucherCode">"Vocha code"</string>
+
+    <!-- Client Phone -->
+    <string name="provider_findVoucher_result_tableHeader_clientPhone">"Simu ya Mteja "</string>
+
+    <!-- Days since issue -->
+    <string name="provider_findVoucher_result_tableHeader_daysSinceIssue">"Idadi ya siku"</string>
+
+    <!-- Follow-up -->
+    <string name="provider_findVoucher_result_tableHeader_FollowUp">"Kufuatilia"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_btn_backHome">"Nyuma"</string>
+
+    <!-- About eReferals App -->
+    <!-- Fuzzy -->
+    <string name="common_about_titleText">"Kuhusu eReferals App"</string>
+
+    <!-- Version -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_version">"Version"</string>
+
+    <!-- dhis_server -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_dhisServer">"DHIS server"</string>
+
+    <!-- Show Form -->
+    <string name="ipc_issueEntry_btn_editEntry">"Onyesha fomu"</string>
+
+    <!-- Referrals redeemed in the last 60 days -->
+    <string name="ipc_referralsRedeemedList_titleText">"Rufaa zilizokuwa redeemed  ndani ya siku 60 zilizopita"</string>
+
+    <!-- First name -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_firstName">"Jina la kwanza"</string>
+
+    <!-- Last name -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_lastName">"Jina la ukoo"</string>
+
+    <!-- Gender -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_gender">"Jinsia"</string>
+
+    <!-- Mother name -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_motherName">"Jina la mama"</string>
+
+    <!-- Birth District -->
+    <string name="ipc_issueEntry_q_birthDistrict">"Wilaya uliyozaliwa"</string>
+
+    <!-- Year of Birth -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_yearOfBirth">"Mwaka wa kuzaliwa"</string>
+
+    <!-- # Children -->
+    <string name="ipc_issueEntry_q_numberOfChildren">"# Idadi ya Watoto"</string>
+
+    <!-- Current method -->
+    <string name="ipc_issueEntry_q_currentMethod">"Njia anayotumia sasa"</string>
+
+    <!-- Channel of referral -->
+    <string name="ipc_issueEntry_q_channelOfReferral">"Rufaa ilitolewa wapi"</string>
+
+    <!-- Civil Status -->
+    <string name="ipc_issueEntry_q_civilStatus">"Hali ya ndoa"</string>
+
+    <!-- Ownership of Phone -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_ownershipOfPhone">"Umiliki wa simu"</string>
+
+    <!-- Phone number -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_phoneNumber">"Nambari ya simu"</string>
+
+    <!-- Further Information consent -->
+    <string name="ipc_issueEntry_q_furtherInformationConsent">"Taarifa zaidi ridhaa"</string>
+
+    <!-- Program -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_program">"Programu"</string>
+
+    <!-- Issue Referal -->
+    <string name="ipc_issueEntry_btn_issueReferal">"Tengeneza Rufaa"</string>
+
+    <!-- Voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_q_voucher">"Vocha"</string>
+
+    <!-- Method -->
+    <string name="provider_redeemEntry_q_service">"Njia"</string>
+
+    <!-- User is not logged in or session is expired -->
+    <string name="session_msg_expired">"Muda wa App kukaa bila kutumika umepita. Ni lazima kuingia upya kutoka mwanzo"</string>
+
+    <!-- Please login again -->
+    <!-- Fuzzy -->
+    <string name="session_msg_loginAgain">"Tafadhali ingia tena"</string>
+
+    <!-- here -->
+    <string name="session_msg_here">"hapa"</string>
+
+    <!-- Client Details for issuing a referral -->
+    <string name="ipc_issueEntry_titleText">"Maelezo ya mteja kwa ajili ya kutoa rufaa"</string>
+
+    <!-- Processed successfully -->
+    <string name="ipc_issueEntry_msg_processedSuccessfully">"Huduma imekamilika"</string>
+
+    <!-- Voucher sent to client -->
+    <string name="ipc_issueEntry_msg_voucherIssued">"Vocha [voucherNo] iliyotolewa - Tafadhali kutoa idadi hii kwa mteja."</string>
+
+    <!-- Send data fail -->
+    <string name="ipc_issueEntry_msg_sendDataFailed">"Taarifa hazikutumwa"</string>
+
+    <!-- User loggin doesn't have authority on any orgUnit -->
+    <string name="ipc_issueEntry_msg_userLogginWithoutAuthority">"Mtumiaji hana mamlaka juu ya orgUnit yoyote"</string>
+
+    <!-- Failed during received data processing -->
+    <string name="ipc_issueEntry_msg_failedDuringReceivedDataProcessing">"Taarifa haikufanyiwa kazi "</string>
+
+    <!-- Username is missing -->
+    <string name="ipc_issueEntry_msg_usernameMissing">"Jina la mtumiaji limekosewa "</string>
+
+    <!-- Password is missing -->
+    <string name="ipc_issueEntry_msg_passwordMissing">"Namba ya siri sio sahihi"</string>
+
+    <!-- Creating the client -->
+    <string name="ipc_issueEntry_msg_creatingClient">"Kusajili  mteja"</string>
+
+    <!-- The client CUIC is -->
+    <string name="ipc_issueEntry_msg_clientCUICis">"Namba ya utambulisho  ya mteja  (CUIC)"</string>
+
+    <!-- The client is created with id -->
+    <string name="ipc_issueEntry_msg_cientCreatedWithId">"Mteja aliyesajiliwa "</string>
+
+    <!-- Client created responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientCreatedError">"Mteja umba wa Jibu ni si 200, lakini"</string>
+
+    <!-- This is the details -->
+    <string name="ipc_issueEntry_msg_bugDetails">"Haya ni maelezo yake"</string>
+
+    <!-- Enrolling the Client -->
+    <string name="ipc_issueEntry_msg_enrollingClient">"Kumsajili Mteja"</string>
+
+    <!-- Enrolled the Client in program -->
+    <string name="ipc_issueEntry_msg_enrolledClientInProgram">"Mteja aliyeunganishwa katika programu"</string>
+
+    <!-- The client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_theClient">"Mteja"</string>
+
+    <!-- Andikisha kwenye programu -->
+    <!-- enroll to program -->
+    <string name="ipc_issueEntry_msg_enrollProgram">"Kujiandikisha kwenye programu"</string>
+
+    <!-- responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_responseCodeNot200">"wa Jibu ni si 200, lakini"</string>
+
+    <!-- Creating the voucher -->
+    <string name="ipc_issueEntry_msg_creatingVoucher">"Kusajili  vocha namba"</string>
+
+    <!-- The voucher is created with id -->
+    <string name="ipc_issueEntry_msg_voucherCreatedWithId">"Vocha imesajiliwa"</string>
+
+    <!-- Voucher create responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherCreateError">"Vocha kuunda wa Jibu ni si 200, lakini"</string>
+
+    <!-- Add client/voucher relationship -->
+    <string name="ipc_issueEntry_msg_addClientVoucherRelationship">"Kuongeza mteja / uhusiano wa vocha namba"</string>
+
+    <!-- The relationship is added -->
+    <string name="ipc_issueEntry_msg_relationshipAdded">"Uhusiano umeongezwa"</string>
+
+    <!-- Voucher client relationship update responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherClientRelationshipUpdateError">"Vocha mteja uhusiano update reponseCode si 200, lakini"</string>
+
+    <!-- The voucher is enrolled in program -->
+    <string name="ipc_issueEntry_msg_voucherEnrolledInProgram">"Vocha ni waliojiunga katika  programu "</string>
+
+    <!-- Enroll the voucher in the program responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_enrollVoucherInProgramError">"Kujiandikisha vocha katika mpango reponseCode si 200, lakini"</string>
+
+    <!-- Creating event for the voucher -->
+    <string name="ipc_issueEntry_msg_creatingEventForVoucher">"Kusajili  tukio kwa ajili ya rufaa"</string>
+
+    <!-- The voucher event is created with id -->
+    <string name="ipc_issueEntry_msg_voucherEventIsCreatedWithId">"Vocha event  iliyoundwa na kitambulisho"</string>
+
+    <!-- Creating event for the client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_creatingEventForTheClient">"Kujenga tukio kwa ajili ya mteja"</string>
+
+    <!-- The client event is created with id -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientEventCreatedWithId">"Tukio mteja iliyoundwa na kitambulisho"</string>
+
+    <!-- Sending SMS Message to Client Number -->
+    <string name="ipc_issueEntry_msg_sendingSMSMessageToClientNumber">"Ujumbe mfupi unatumwa kwa namba ya  mteja"</string>
+
+    <!-- Sent the SMS Message to Client -->
+    <string name="ipc_issueEntry_msg_sentSMSMessageToClient">"Ujumbe mfupi umetumwa kwa Mteja"</string>
+
+    <!-- SMS process message -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_smsPocessMessage">"Ujumbe wa SMS mchakato"</string>
+
+    <!-- Stats -->
+    <!-- Fuzzy -->
+    <string name="common_menu_statistics">"Takwimu"</string>
+
+    <!-- Referrals redeemed -->
+    <string name="common_statistics_rowHeader_referralsRedeemed">"Rufaa zilizokuwa redeemed "</string>
+
+    <!-- Find Voucher -->
+    <string name="provider_findVoucher_titleText">"
+Tafuta namba ya rufaa"</string>
+
+    <!-- Find -->
+    <string name="provider_findVoucher_btn_find">"Tafuta"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_result_btn_back">"Nyuma"</string>
+
+    <!-- Details for redeeming a referral -->
+    <string name="provider_redeemEntry_titleText">"Maelezo kwa ajili ya ku-redeem rufaa"</string>
+
+    <!-- Program -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_q_program">"Programu"</string>
+
+    <!-- Redeem -->
+    <string name="provider_redeemEntry_btn_redeem">"Redeem"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_btn_backToSearch">"Nyuma"</string>
+
+    <!-- Edit Redeem Entry -->
+    <string name="provider_redeemEntry_btn_editRedeemEntry">"Hakiki rufaa iliyokuwa redeemed"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_btn_back">"Nyuma"</string>
+
+    <!-- Referrals redeemed -->
+    <string name="ipc_menu_referralsRedeemed">"Rufaa zilizokuwa redeemed "</string>
+
+    <!-- Phone -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_tableHeader_phone">"Simu #"</string>
+
+    <!-- Days since issue -->
+    <string name="ipc_openReferralsList_tableHeader_daysSinceIssue">"Siku toka rufaa ilipotolewa"</string>
+
+    <!-- Follow-up -->
+    <string name="ipc_openReferralsList_tableHeader_followUp">"Kufuatilia"</string>
+
+    <!-- Client -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_tableHeader_client">"Mteja"</string>
+
+    <!-- Phone -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_tableHeader_phone">"Simu"</string>
+
+    <!-- Redemption date -->
+    <string name="ipc_referralsRedeemedList_tableHeader_redemptionDate">"Tarehe rufaa ilipokuwa redeemed"</string>
+
+    <!-- Login -->
+    <!-- Fuzzy -->
+    <string name="login_btn_login">"Ingia"</string>
+
+    <!-- Enroll voucher in program responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_enrollVoucherInProgramError">"Kujiandikisha vocha katika mpango wa Jibu ni si 200, lakini"</string>
+
+    <!-- Voucher event create responseCode not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherEventCreateError">"Tukio vocha kuunda wa Jibu si 200, lakini"</string>
+
+    <!-- Client event create responseCode not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientEventCreateError">"Tukio mteja kuunda wa Jibu si 200, lakini"</string>
+
+    <!-- Start redeem -->
+    <string name="provider_redeemEntry_msg_startRedeem">"Kuanza kuredeem"</string>
+
+    <!-- Searching vouchers by code -->
+    <string name="provider_redeemEntry_msg_searchingVouchersByCode">"Kutafuta namba ya rufaa kwa code"</string>
+
+    <!-- Checking password code -->
+    <string name="provider_redeemEntry_msg_checkingPasswordCode">"Kuangalia namba ya siri"</string>
+
+    <!-- Password code provided -->
+    <string name="provider_redeemEntry_msg_passwordCodeProvided">"Namba ya siri  iliyotolewa"</string>
+
+    <!-- Matching -->
+    <string name="provider_redeemEntry_msg_matchingPasswordCode">"Fanana"</string>
+
+    <!-- Pass -->
+    <string name="provider_redeemEntry_msg_matchingPass">"Faulu"</string>
+
+    <!-- Failed -->
+    <string name="provider_redeemEntry_msg_matchingFailed">"Imeshindikana"</string>
+
+    <!-- ok -->
+    <string name="provider_redeemEntry_msg_matchingOk">"Sawa"</string>
+
+    <!-- Getting data of the voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_gettingDataVoucher">"Kupata data ya vocha"</string>
+
+    <!-- with all attribute values and relationships -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_withAllAttributeValuesAndRelationships">"na maadili yote sifa na mahusiano"</string>
+
+    <!-- Event create responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_eventCreateError">"Tukio kuunda wa Jibu ni si 200, lakini"</string>
+
+    <!-- Details -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_bugDetails">"Maelezo"</string>
+
+    <!-- Creating events for the client -->
+    <string name="provider_redeemEntry_msg_creatingEventsForTheClient">"Kujenga matukio ya mteja"</string>
+
+    <!-- Updating the status of voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_updatingStatusVoucher">"Kuhuisha hali ya vocha"</string>
+
+    <!-- Voucher status update responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_voucherStatusUpdateError">"Vocha hali update wa Jibu ni si 200, lakini"</string>
+
+    <!-- Creating Events for the voucher -->
+    <string name="provider_redeemEntry_msg_creatingVoucherEvents">"Kujenga Matukio ya Rufaa"</string>
+
+    <!-- The Voucher with voucherCode -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_voucherWithCode">"Vocha na vocha Kanuni"</string>
+
+    <!-- is not in ISSUE status -->
+    <string name="provider_redeemEntry_msg_isNotIssueStatus">"Haipo katika hali ya toleo"</string>
+
+    <!-- does not exists -->
+    <string name="provider_redeemEntry_msg_notExists">"Haipo"</string>
+
+    <!-- Referrals that haven't been redeemed -->
+    <string name="ipc_openReferralsList_titleText">"Rufaa ambazo hazijawa redeemed"</string>
+
+    <!-- Statistics -->
+    <string name="common_statistics_titleText">"Takwimu "</string>
+
+    <!-- First Name -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_q_firstName">"Jina la kwanza"</string>
+
+    <!-- Last Name -->
+    <string name="provider_findVoucher_q_lastName">"Jina la ukoo"</string>
+
+    <!-- Monther Name -->
+    <string name="provider_findVoucher_q_motherName">"Jina la mama"</string>
+
+    <!-- District of Birth -->
+    <string name="provider_findVoucher_q_birthDistrict">"Wilaya aliyozaliwa"</string>
+
+    <!-- Processing Issuing -->
+    <string name="ipc_issueEntry_msg_processingIssuing">"Hatua ya  kutoa"</string>
+
+    <!-- Phone -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemList_tableHeader_phone">"Simu"</string>
+
+    <!-- Redemption Date -->
+    <string name="provider_redeemList_tableHeader_redemptionDate">"Tarehe ya kuredeem"</string>
+
+    <!-- Service Provided -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemList_tableHeader_serviceProvided">"Huduma Zinazotolewa"</string>
+
+    <!-- Error Occurred During The Search -->
+    <string name="provider_findVoucher_msg_error">"Tatizo ilitokea wakati wa kutafuta"</string>
+
+    <!-- Referral Redeemed -->
+    <string name="provider_redeemEntry_msg_referralRedeemed">"Rufaa imekuwa redeemed "</string>
+
+    <!-- Amount Credited -->
+    <string name="provider_redeemEntry_msg_amountCredited">"Jumla ya hela"</string>
+
+    <!-- Referral Redeem Failed -->
+    <string name="provider_redeemEntry_msg_fail">"Rufaa imefeli"</string>
+
+    <!-- Processing Redeeming -->
+    <string name="provider_redeemEntry_msg_processingRedeeming">"Hatua ya kuredeem "</string>
+
+    <!-- Language -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_language">"Lugha"</string>
+
+    <!-- Current User -->
+    <string name="common_about_rowHeader_currentUser">"Mtumiaji kwa sasa"</string>
+
+    <!-- Enter data in this field -->
+    <string name="common_validation_requiredValue">"Ingiza taarifa/ data"</string>
+
+    <!-- The value should be between [0, 20] -->
+    <string name="common_validation_valueMax">"Namba yapaswa  kuwa kat ya 0,20"</string>
+
+    <!-- Length should be not over 12 and not less then 15. -->
+    <string name="common_validation_phoneNumberLengthFor00">"Urefu usizidi zaidi kati ya  12 na si chini ya  15"</string>
+
+    <!-- Length should be 10 -->
+    <string name="common_validation_phoneNumberLengthForLocal">"Urefu lazima uwe 10"</string>
+
+    <!-- Number should start with '00', '06', '07' -->
+    <string name="common_validation_phoneNumberStartWith">"Namba ya simu  ianzie  '00' 06 '07'"</string>
+
+    <!-- Please correct data in red fields -->
+    <string name="common_validation_checkDataInRedFields">"Tafadhali rekebisha taarifa iliyo onyeshwa kwa rangi nyekundu"</string>
+
+    <!-- Enter at least 2 characters -->
+    <string name="common_validation_minLength">"Ingiza angalau herufi 2 "</string>
+
+    <!-- Service Received -->
+    <string name="ipc_referralsRedeemedList_tableHeader_serviceReceived">"Huduma imepokelewa"</string>
+
+    <!-- Click to redeem this voucher -->
+    <string name="provider_findVoucher_result_warmingMsg">"Bonyeza  hapa kureedem vocha hii"</string>
+    <string name="sms_msg_clientReferral_success">"Namba yako ya Rufaa ni [[RefNo]] na itamalizika muda wake [[ExpireDate]]. Asante"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_title">"Mtoto wako mdogo ana umri gani?"</string>
+    <string name="ipc_issueEntry_afterIssuing_q1_option1">"Miezi 0 – 6"</string>
+    <string name="ipc_issueEntry_afterIssuing_q1_option2">"Miezi 6 – 12"</string>
+    <string name="ipc_issueEntry_afterIssuing_q1_option3">"Mwaka 1 – 2"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_option4">"Zaidi ya miaka 2"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q2_title">"Je ungependa kupokea ujumbe wa bila malipo kuhusu afya na malezi ya mtoto wako mchanga?"</string>
+    <string name="sms_msg_reminder_referralExpire">"PSI: Rufaa uliyopewa itamalizika muda wake ndani ya siku 45 zijazo. Tafadhali nenda kwenye kituo cha afya kupata huduma kabla ya muda wa rufaa kumalizika."</string>
+    <string name="provider_findVoucher_q_yearOfBirth">"Mwaka wa kuzaliwa"</string>
+
+    <!-- Control -->
+    <string name="ipc_issueEntry_q_control">"Kudhibiti"</string>
+    <string name="provider_findVoucher_q_gender">"Jinsia"</string>
+    <string name="common_option_gender_male">"Kiume"</string>
+    <string name="common_option_gender_female">"Kike"</string>
+    <string name="common_option_language_english">"English"</string>
+    <string name="common_option_language_swahili">"Swahili"</string>
+    <string name="common_option_program_familyPlanning">"Uzazi wa mpango"</string>
+    <string name="common_option_program_cervicalCancer">"Saratani ya  mlango wa Kizazi"</string>
+    <string name="common_option_program_antinatalCare">"Uangalizi wa wajawazito "</string>
+    <string name="common_option_method_iud">"Kitanzi/IUD"</string>
+    <string name="common_option_method_condom">"Kondomu"</string>
+    <string name="common_option_method_pills">"Vidonge vya kumeza"</string>
+    <string name="common_option_method_implant">"Implant/ vipandizi"</string>
+    <string name="common_page_titleText">"PSI TZ"</string>
+
+    <!-- ipc_issueEntry_msg_enrollingVoucher -->
+    <string name="ipc_issueEntry_msg_enrollingVoucher">"Kujiandikisha vocha"</string>
+    <string name="common_option_method_counselling">"Ushauri"</string>
+
+    <!-- Fuzzy -->
+    <string name="common_option_method_injection">"Sindano"</string>
+    <string name="common_option_channelOfReferral_healthFacility">"Kituo cha Afya"</string>
+    <string name="common_option_channelOfReferral_groupSession">"Mkutano wa kikundi"</string>
+    <string name="common_option_channelOfReferral_doorToDoor">"Nyumba kwa Nyumba"</string>
+    <string name="common_option_civilStatus_unmarried">"Hajaolewa"</string>
+    <string name="common_option_civilStatus_married">"Ndoa"</string>
+    <string name="common_option_civilStatus_divorced">"Talaka"</string>
+    <string name="common_option_civilStatus_widowed">"mjane"</string>
+    <string name="common_option_ownershipOfPhone_noMobile">"Hana Simu"</string>
+    <string name="common_option_ownershipOfPhone_herNumber">"Ana Simu"</string>
+    <string name="common_option_ownershipOfPhone_husbandPartner">"Mume / Rafiki"</string>
+    <string name="common_option_ownershipOfPhone_shared">"Simu ya kushea"</string>
+    <string name="common_option_furtherInformationConsent_no">"Hapana"</string>
+    <string name="common_option_furtherInformationConsent_yesFromPSI">"Ndiyo - Kutoka  PSI"</string>
+    <string name="common_option_furtherInformationConsent_yesFromPSIAndPartners">"Ndiyo - PSI &amp; washirika"</string>
+
+    <!-- Please enter data in madatory fields -->
+    <string name="provider_redeemEntry_msg_warning"></string>
+    <string name="common_btn_yes">"Ndiyo"</string>
+    <string name="common_btn_no">"Hapana"</string>
+
+    <!-- Update -->
+    <!-- Fuzzy -->
+    <string name="common_translation_btn_updateKeyword">"Update"</string>
+    <string name="common_translation_msg_checkingVersion">"Checking"</string>
+
+    <!-- Updating translation keywords -->
+    <string name="common_translation_msg_updatingTranslationKeywords">"Updating"</string>
+
+    <!-- Updated -->
+    <string name="common_translation_msg_updatedTranslationKeywords">"Updated"</string>
+    <string name="common_translation_msg_checked"></string>
+    <string name="ipc_issueEntry_msg_smsMessage">"Namba yako ya rufaa ni: "</string>
+    <string name="ipc_issueEntry_msg_smsMessageEndsWith">"."</string>
+    <string name="common_option_method_none">"Hatumii"</string>
+    <string name="common_option_method_other">"nyingine"</string>
+    <string name="common_option_pleaseSelect">"[Tafadhali chagua]"</string>
+    <string name="common_validation_numberOnly">"Kuruhusiwa idadi tu"</string>
+    <string name="ipc_logCall_tabName_newCall">"Wito New"</string>
+    <string name="ipc_logCall_tabName_previousContacts">"Mawasiliano uliopita"</string>
+    <string name="ipc_logCall_tab1_q_typeOfContact">"Aina ya Mawasiliano"</string>
+    <string name="ipc_logCall_tab1_q_output">"pato"</string>
+    <string name="ipc_logCall_tab1_q_comment">"maoni"</string>
+    <string name="ipc_logCall_tab1_btn_logCall">"Log Wito"</string>
+    <string name="common_option_typeOfContact_phone">"simu"</string>
+    <string name="common_option_typeOfContact_inPerson">"Katika-Mtu"</string>
+    <string name="common_option_callOutput_noReach">"Si Kufikiwa / No Response"</string>
+    <string name="common_option_callOutput_nonPSI">"Alichukua huduma katika zisizo PSI kituo"</string>
+    <string name="common_option_callOutput_PSI">"Alichukua huduma katika kituo PSI (si kukombolewa)"</string>
+    <string name="common_option_callOutput_attend">"
+Ameahidi kuhudhuria"</string>
+    <string name="common_option_callOutput_noAttend">"Hatahudhuria"</string>
+    <string name="provider_redeemEntry_msg_redeemedAldready">"Namba hii ya rufaa imeshatumika"</string>
+    <string name="provider_redeemEntry_msg_redeemedNotExist">"Namba hii ya rufaa haipo"</string>
+    <string name="login_msg_wrongUsernamePassword">"Hakikisha jina la mtumiaji au nenosiri"</string>
+
+    <!-- You are not IPC or Provider -->
+    <string name="login_msg_userNotIPCOrProvider">"Wewe si IPC au Mtoa huduma"</string>
+
+    <!-- Please enter username / password -->
+    <string name="login_msg_enterUserNameOrPassword">"Tafadhali kuingia jina la mtumiaji / nywila"</string>
+
+    <!-- Please enter exactly -->
+    <string name="common_validation_exactLength">"Tafadhali kuingia hasa"</string>
+
+    <!-- characters -->
+    <string name="common_validation_exactCharacter">"wahusika"</string>
+
+    <!-- If you need help, please contact Rehema at PSI Tanzania at 071234567 -->
+    <string name="login_notice">"Kama unahitaji msaada, tafadhali wasiliana na msimamizi wa PSI kwenye eneo lako"</string>
+
+    <!-- Full name -->
+    <string name="ipc_openReferralsList_tableHeader_fullName">"Jina kamili"</string>
+
+    <!-- Full name -->
+    <string name="provider_redeemList_tableHeader_fullname">"Jina kamili"</string>
+
+    <!-- Client -->
+    <string name="ipc_openReferralsList_tableHeader_client">"Mteja"</string>
+
+    <!-- Client -->
+    <string name="provider_redeemList_tableHeader_client">"Mteja"</string>
+
+    <!-- Issued Date -->
+    <string name="ipc_referralsRedeemedList_tableHeader_issuedDate">"Iliyotolewa Tarehe"</string>
+
+    <!-- Logging -->
+    <string name="login_msg_logging">"Kuingia"</string>
+
+    <!-- no voucher pending actions exist - you can view all vouchers by switching the view above to ‘all unredeemed’ -->
+    <string name="ipc_openReferralsList_msg_noActionVoucher">"Hakuna rufaa yeyote - unaweza kuona rufaa zote kwa kubonyeza 'Onyesha vocha zote' hapo juu"</string>
+
+    <!-- Full name -->
+    <string name="ipc_referralsRedeemedList_tableHeader_fullName">"Jina kamili"</string>
+    <string name="ipc_issueEntry_msg_voucherSentToClient">"Rufaa imetumwa kwa mteja"</string>
+
+    <!-- Loading translation keywords -->
+    <string name="settings_translation_msg_loading">"Subiri kuonyesha kwa kiswahili"</string>
+
+    <!-- Update -->
+    <string name="about_btn_translationUpdate">"Mwisho"</string>
+
+    <!-- Fuzzy -->
+    <string name="login_msg_loginFailed">"Imeshindwa kuingia au kikao muda wake"</string>
+    <string name="common_msg_mainLoadingInProgress">"Inaendelea..."</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_msg_retrievingOpenReferrals">"Inaepua Open Rufaa ..."</string>
+    <string name="common_msg_issueInDataRetrieval">"Suala ilitokea wakati data retrieval"</string>
+    <string name="ipc_msg_retrievingCompletedReferrals">"Inaepua Rufaa zilizokamilika ..."</string>
+    <string name="provider_msg_retrievingRedeemedReferrals">"Inaepua Redeemed Referrrals..."</string>
+    <string name="provider_msg_retrievingSearchedReferrals">"Inaepua Referrrals..."</string>
 </resources>

@@ -1,8 +1,17 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.googleapis.extensions.android.gms.auth
+        .GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -15,19 +24,33 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.io.FileDownloader;
+import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
-import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
-
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
+    public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
+
+    static final int REQUEST_AUTHORIZATION = 101;
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
     private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
+    private DownloadMediaUseCase mDownloadMediaUseCase;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -38,6 +61,32 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
+
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IConnectivityManager mConnectivity = new ConnectivityManager();
+        IFileDownloader fileDownloader = new FileDownloader(
+                mDashboardActivity.getApplicationContext().getFilesDir(),
+                mDashboardActivity.getApplicationContext().getResources().openRawResource(
+                        R.raw.driveserviceprivatekey));
+        final MediaRepository mediaRepository = new MediaRepository();
+        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
+                mConnectivity, mediaRepository);
+
+
+    }
+
+    private void showToast(String message){
+        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
+                Toast.LENGTH_LONG).show();
+    }
+
+    private void showDialog(int connectionStatusCode) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = apiAvailability.getErrorDialog(
+                DashboardActivity.dashboardActivity,
+                connectionStatusCode,
+                REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
     }
 
     @Override
@@ -63,7 +112,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ft.replace(R.id.dashboard_stock_container, mDashboardUnsentFragment);
 
         ft.commit();
-        if(BuildConfig.translations) {
+        if (BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
         return isMoveToLeft;
@@ -82,7 +131,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurveyDB().updateSurveyStatus();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        malariaSurvey.updateSurveyStatus();
+        if (malariaSurvey.isCompleted()) {
+            malariaSurvey.setEventUid(String.valueOf(UIDGenerator.generateUID()));
+            malariaSurvey.save();
+        }
     }
 
     @Override
@@ -217,5 +271,79 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void openSentSurvey() {
         mDashboardActivity.initSurvey();
+    }
+
+
+    public void onResume() {
+        downloadMedia();
+    }
+
+    private void downloadMedia() {
+        mDownloadMediaUseCase.execute(new DownloadMediaUseCase.Callback() {
+            @Override
+            public void onError(FileDownloadException ex) {
+                //Need to complete credentials (ack from user first time)
+                if (ex.getCause() instanceof UserRecoverableAuthIOException) {
+                    showToast(ex.getCause().getMessage());
+                    DashboardActivity.dashboardActivity.startActivityForResult(
+                            ((UserRecoverableAuthIOException) ex.getCause()).getIntent(),
+                            REQUEST_AUTHORIZATION);
+                    return;
+                }
+                //Real connection google error
+                else if (ex.getCause() instanceof GooglePlayServicesAvailabilityIOException) {
+                    showDialog(
+                            ((GooglePlayServicesAvailabilityIOException) ex.getCause())
+                                    .getConnectionStatusCode());
+                    return;
+                } else if (ex.getCause() instanceof GooglePlayAppNotAvailableException) {
+                    /**
+                     * Attempt to resolve a missing, out-of-date, invalid or disabled Google
+                     * Play Services installation via a user dialog, if possible.
+                     */
+                    GoogleApiAvailability apiAvailability =
+                            GoogleApiAvailability.getInstance();
+                    final int connectionStatusCode =
+                            apiAvailability.isGooglePlayServicesAvailable(
+                                    PreferencesState.getInstance().getContext());
+                    if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+                        showDialog(connectionStatusCode);
+                    }
+                } else {
+                    Log.e(this.getClass().getSimpleName(), "Unexpected error to download Media");
+                }
+            }
+
+            @Override
+            public void onSuccess(int syncedFiles) {
+                showToast(String.format("%d files synced", syncedFiles));
+            }
+        });
+    }
+
+    /**
+     * Called when an activity launched here (specifically, AccountPicker
+     * and authorization) exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it.
+     *
+     * @param requestCode code indicating which activity result is incoming.
+     * @param resultCode  code indicating the result of the incoming
+     *                    activity result.
+     * @param data        Intent (containing result data) returned by incoming
+     *                    activity result.
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != Activity.RESULT_OK) {
+                    Toast.makeText(mDashboardActivity.getApplicationContext(),
+                            mDashboardActivity.getApplicationContext().getString(
+                                    R.string.google_play_required),
+                            Toast.LENGTH_LONG);
+                } else {
+                    downloadMedia();
+                }
+                break;
+        }
     }
 }

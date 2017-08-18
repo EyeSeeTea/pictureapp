@@ -71,7 +71,7 @@
 
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="pref_visual"
+        android:key="@string/pref_visual"
         android:title="@string/app_visual">
         <!--<CheckBoxPreference-->
         <!--android:key="@string/show_num_dems"-->

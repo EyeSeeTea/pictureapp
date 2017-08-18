@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.presenter;
+package org.eyeseetea.malariacare.presentation.presenters;
 
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;

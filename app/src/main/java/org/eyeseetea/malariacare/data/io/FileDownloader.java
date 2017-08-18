@@ -47,6 +47,13 @@ public class FileDownloader implements IFileDownloader {
                 "Private Json stream with google play key is required");
     }
 
+    /**
+     * Attempt to call the API, after verifying that all the preconditions are
+     * satisfied. The preconditions are: Google Play Services installed, an
+     * account was selected and the device currently has online access. If any
+     * of the preconditions are not satisfied, the app will prompt the user as
+     * appropriate.
+     */
     public void init(String rootUid, final IFileDownloader.Callback mCallback) {
         initServiceAccountCredential();
 
@@ -54,13 +61,12 @@ public class FileDownloader implements IFileDownloader {
             if (!isGooglePlayAppAvailable()) {
                 return;
             }
-            mCallback.acquireGooglePlayServices();
+            mCallback.onError(new FileDownloadException(new GooglePlayAppNotAvailableException()));
             return;
         }
 
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        //mMediaRepository
 
         drive = new Drive.Builder(
                 transport, jsonFactory, null)
@@ -151,7 +157,6 @@ public class FileDownloader implements IFileDownloader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private boolean isGooglePlayAppAvailable() {

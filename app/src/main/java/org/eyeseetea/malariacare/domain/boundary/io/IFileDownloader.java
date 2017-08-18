@@ -17,8 +17,6 @@ public interface IFileDownloader {
         void remove(String uid);
 
         void save(Media media);
-
-        void acquireGooglePlayServices();
     }
 
     void download(List<String> uids, Callback callback);

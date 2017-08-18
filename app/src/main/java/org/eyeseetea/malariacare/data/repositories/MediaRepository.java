@@ -134,13 +134,13 @@ public class MediaRepository implements IMediaRepository {
 
     }
 
-    public void updateModel(Media media) {
+    public void save(Media media) {
         MediaDB mediaDB = getMedia(media.getId());
         mediaDB.setFilename(media.getResourcePath());
         mediaDB.update();
     }
 
-    public void deleteModel(Media media) {
+    public void delete(Media media) {
         MediaDB mediaDb = getMedia(media.getId());
         mediaDb.delete();
     }
@@ -157,7 +157,7 @@ public class MediaRepository implements IMediaRepository {
                     correctSyncedFiles++;
                     System.out.println(localMedia.toString() + "\tsaved in " + absolutePath);
                     localMedia.setResourcePath(absolutePath);
-                    updateModel(localMedia);
+                    save(localMedia);
                 }
             }
         }

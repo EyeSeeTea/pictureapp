@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
+import android.support.annotation.NonNull;
+
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
@@ -15,19 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DownloadMediaUseCase implements UseCase {
-
-
     public interface Callback {
         void onError(FileDownloadException ex);
 
-        void acquireGooglePlayServices();
-
         void onSuccess(int syncedFiles);
     }
-
-    //TODO  Change by the correct uid
-    private static final String rootUid = "0B7TXlu17DcAbNHNvRUxnSDd4LUk";
-    private static final String TAG = "DownloadMediaUseCase";
+    
     private Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
     private IFileDownloader mFileDownloader;
@@ -38,26 +33,20 @@ public class DownloadMediaUseCase implements UseCase {
             IAsyncExecutor asyncExecutor,
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
-            MediaRepository mediaRepository,
-            Callback callback) {
+            MediaRepository mediaRepository) {
         mAsyncExecutor = asyncExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
         mMediaRepository = mediaRepository;
-        mCallback = callback;
+
     }
 
-    public void execute() {
+    public void execute(Callback callback) {
+        mCallback = callback;
         mAsyncExecutor.run(this);
     }
 
-    /**
-     * Attempt to call the API, after verifying that all the preconditions are
-     * satisfied. The preconditions are: Google Play Services installed, an
-     * account was selected and the device currently has online access. If any
-     * of the preconditions are not satisfied, the app will prompt the user as
-     * appropriate.
-     */
+
     @Override
     public void run() {
         System.out.println("Running DownloadMediaUseCase");
@@ -68,23 +57,19 @@ public class DownloadMediaUseCase implements UseCase {
             }
 
             @Override
-            public void acquireGooglePlayServices() {
-                mCallback.acquireGooglePlayServices();
-            }
-
-            @Override
             public void onSuccess(HashMap<String, String> syncedFiles) {
-                int numOfSyncedFiles =  mMediaRepository.updateSyncedFiles(syncedFiles);
+                int numOfSyncedFiles = mMediaRepository.updateSyncedFiles(syncedFiles);
                 mCallback.onSuccess(numOfSyncedFiles);
             }
 
             @Override
-            public void removeRemotelyDeletedMedia(List<String> uids){
+            public void removeRemotelyDeletedMedia(List<String> uids) {
                 List<Media> medias = mMediaRepository.getAll();
-                for(Media media:medias){
-                    //If the media is not stored in the hashMap, the media was removed from drive folder and will be removed from database.
-                    if(!uids.contains(media.getResourceUrl())){
-                        if(media.getResourcePath()!=null) {
+                for (Media media : medias) {
+                    //If the media is not stored in the hashMap, the media was removed from drive
+                    // folder and will be removed from database.
+                    if (!uids.contains(media.getResourceUrl())) {
+                        if (media.getResourcePath() != null) {
                             FileUtils.removeFile(media.getResourcePath());
                         }
                         remove(media.getResourceUrl());
@@ -100,19 +85,13 @@ public class DownloadMediaUseCase implements UseCase {
 
             @Override
             public void remove(String uid) {
-                System.out.println("Remove file with uid" + uid);
-                mMediaRepository.deleteModel(mMediaRepository.findByUid(uid));
+                System.out.println("downloadFile error (file extension not supported)" + uid);
+                mMediaRepository.delete(mMediaRepository.findByUid(uid));
             }
         };
 
-        mFileDownloader.init(PreferencesState.getInstance().getDriveRootFolderUid(),  callback);
-        final List<Media> medias = mMediaRepository.getAllNotDownloaded();
-        List<String> uids = new ArrayList<>();
-        for (Media media : medias) {
-            if (!uids.contains(media.getResourceUrl())) {
-                uids.add(media.getResourceUrl());
-            }
-        }
+        mFileDownloader.init(PreferencesState.getInstance().getDriveRootFolderUid(), callback);
+        final List<String> uids = getResourceUrlsToDownload();
 
         if (uids != null && !uids.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
@@ -122,5 +101,17 @@ public class DownloadMediaUseCase implements UseCase {
                         + ": No wifi connection available. Media will not be synced");
             }
         }
+    }
+
+    @NonNull
+    private List<String> getResourceUrlsToDownload() {
+        final List<Media> medias = mMediaRepository.getAllNotDownloaded();
+        List<String> uids = new ArrayList<>();
+        for (Media media : medias) {
+            if (!uids.contains(media.getResourceUrl())) {
+                uids.add(media.getResourceUrl());
+            }
+        }
+        return uids;
     }
 }

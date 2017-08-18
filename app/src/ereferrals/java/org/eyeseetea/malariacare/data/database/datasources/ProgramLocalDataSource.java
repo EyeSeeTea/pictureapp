@@ -28,16 +28,6 @@ public class ProgramLocalDataSource implements IProgramRepository {
     }
 
     @Override
-    public boolean checkLastDownloadedProgramMedia(String program) {
-        return PreferencesEReferral.getLastDownloadedProgramMedia().equals(program);
-    }
-
-    @Override
-    public void saveLastDownloadedProgramMedia(String code) {
-        PreferencesEReferral.saveLastDownloadedProgramMedia(code);
-    }
-
-    @Override
     public void removeProgramMedia() {
         PopulateDB.wipeMedia(Constants.MEDIA_FOLDER);
 

@@ -22,7 +22,7 @@ public class MediaMapper {
     public static Media mapFromDbToDomain(MediaDB mediaDB) {
         return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(),
                 getMediaType(mediaDB.getMediaType()),
-                getSizeInMB(mediaDB.getFilename()));
+                getSizeInMB(mediaDB.getFilename()), mediaDB.getProgram());
     }
 
     private static Media.MediaType getMediaType(int mediaType) {

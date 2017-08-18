@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
@@ -32,6 +33,7 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -67,19 +69,22 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager();
-        String path = PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath()+"/"+ Constants.MEDIA_FOLDER;
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        String path =
+                PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath() + "/"
+                        + Constants.MEDIA_FOLDER;
         IFileDownloader fileDownloader = new FileDownloader(
                 new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
                         R.raw.driveserviceprivatekey));
         final MediaRepository mediaRepository = new MediaRepository();
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
-                mConnectivity, mediaRepository);
+                mConnectivity, programRepository, mediaRepository);
 
 
     }
 
-    private void showToast(String message){
+    private void showToast(String message) {
         Toast.makeText(mDashboardActivity.getApplicationContext(), message,
                 Toast.LENGTH_LONG).show();
     }

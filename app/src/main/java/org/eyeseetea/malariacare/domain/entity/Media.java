@@ -35,13 +35,14 @@ public class Media {
         this.program = required(program, "program is required");
     }
 
-    public Media(long id, String name, String resourcePath, String resourceUrl, MediaType type, String size) {
+    public Media(long id, String name, String resourcePath, String resourceUrl, MediaType type, String size, String program) {
         this.id = required(id,"id is required");
         this.resourcePath = resourcePath;
         this.name = name;
         this.resourceUrl = required(resourceUrl,"resourceUrl is required");
         this.type = required(type,"type is required");
         this.size = required(size,"size is required");
+        this.program = required(program, "program is required");
     }
 
     public String getProgram() {

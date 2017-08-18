@@ -1,11 +1,11 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
@@ -24,16 +24,19 @@ public class DownloadMediaUseCase implements UseCase {
     private IAsyncExecutor mAsyncExecutor;
     private IFileDownloader mFileDownloader;
     private IConnectivityManager mConnectivityManager;
+    private IProgramRepository mProgramRepository;
     private MediaRepository mMediaRepository;
 
     public DownloadMediaUseCase(
             IAsyncExecutor asyncExecutor,
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
+            IProgramRepository programRepository,
             MediaRepository mediaRepository) {
         mAsyncExecutor = asyncExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
+        mProgramRepository = programRepository;
         mMediaRepository = mediaRepository;
 
     }
@@ -55,10 +58,7 @@ public class DownloadMediaUseCase implements UseCase {
 
             @Override
             public void onSuccess(List<Media> syncMedias) {
-                int numOfSyncedFiles = 0;
-                //If the media is not stored in the hashMap, the media was removed from drive
-                // folder and will be removed from database.
-                numOfSyncedFiles = saveDownloadedMedia(syncMedias);
+                int numOfSyncedFiles = saveDownloadedMedia(syncMedias);
                 List<Media> allMedias = mMediaRepository.getAll();
                 removeNotDownloadedMedia(syncMedias, allMedias);
                 mCallback.onSuccess(numOfSyncedFiles);
@@ -68,7 +68,7 @@ public class DownloadMediaUseCase implements UseCase {
 
         List<Media> medias = mFileDownloader.init(
                 PreferencesState.getInstance().getDriveRootFolderUid(),
-                String.valueOf(PreferencesEReferral.getUserProgramId()), callback);
+                mProgramRepository.getUserProgram().getId(), callback);
 
         if (medias != null && !medias.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
@@ -81,11 +81,11 @@ public class DownloadMediaUseCase implements UseCase {
     }
 
     private int saveDownloadedMedia(List<Media> syncMedias) {
-        int numOfSyncedFiles=0;
+        int numOfSyncedFiles = 0;
         for (Media syncMedia : syncMedias) {
-            if(mMediaRepository.existMedia(syncMedia)) {
+            if (mMediaRepository.existMedia(syncMedia)) {
                 mMediaRepository.update(syncMedia);
-            }else{
+            } else {
                 numOfSyncedFiles++;
                 mMediaRepository.save(syncMedia);
             }

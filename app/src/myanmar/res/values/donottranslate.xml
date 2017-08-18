@@ -74,4 +74,5 @@
     <string name="test_partner_uid">9fV2JoHmO94</string>
     <string name="authority">MYANMAR_DHIS2_DEFAULT_AUTHORITY</string>
 
+    <string name="google_play_required" translatable="false"></string>
 </resources>

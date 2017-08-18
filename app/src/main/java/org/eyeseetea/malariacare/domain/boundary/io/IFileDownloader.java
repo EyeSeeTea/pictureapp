@@ -13,8 +13,6 @@ public interface IFileDownloader {
         void onError(FileDownloadException throwable);
 
         void onRemove(String uid);
-
-        void acquireGooglePlayServices();
     }
     void download(List<String> uids, Callback callback);
 }

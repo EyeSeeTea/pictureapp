@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
+import android.support.annotation.NonNull;
+
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -13,13 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DownloadMediaUseCase implements UseCase {
-
-
     public interface Callback {
         void onError(FileDownloadException ex);
-
-        void acquireGooglePlayServices();
-
         void onSuccess(int syncedFiles);
     }
 
@@ -33,35 +30,23 @@ public class DownloadMediaUseCase implements UseCase {
             IAsyncExecutor asyncExecutor,
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
-            MediaRepository mediaRepository,
-            Callback callback) {
+            MediaRepository mediaRepository) {
         mAsyncExecutor = asyncExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
         mMediaRepository = mediaRepository;
-        mCallback = callback;
+
     }
 
-    public void execute() {
+    public void execute(Callback callback) {
+        mCallback = callback;
         mAsyncExecutor.run(this);
     }
 
-    /**
-     * Attempt to call the API, after verifying that all the preconditions are
-     * satisfied. The preconditions are: Google Play Services installed, an
-     * account was selected and the device currently has online access. If any
-     * of the preconditions are not satisfied, the app will prompt the user as
-     * appropriate.
-     */
+
     @Override
     public void run() {
-        final List<Media> medias = mMediaRepository.getAllNotDownloaded();
-        List<String> uids = new ArrayList<>();
-        for (Media media : medias) {
-            if (!uids.contains(media.getResourceUrl())) {
-                uids.add(media.getResourceUrl());
-            }
-        }
+        List<String> uids = getResourceUrlsToDownload();
 
         if (uids != null && !uids.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
@@ -69,11 +54,6 @@ public class DownloadMediaUseCase implements UseCase {
                     @Override
                     public void onError(FileDownloadException ex) {
                         mCallback.onError(ex);
-                    }
-
-                    @Override
-                    public void acquireGooglePlayServices() {
-                        mCallback.acquireGooglePlayServices();
                     }
 
                     @Override
@@ -85,7 +65,7 @@ public class DownloadMediaUseCase implements UseCase {
                     @Override
                     public void onRemove(String uid) {
                         System.out.println("downloadFile error (file extension not supported)" + uid);
-                        mMediaRepository.deleteModel(mMediaRepository.findByUid(uid));
+                        mMediaRepository.delete(mMediaRepository.findByUid(uid));
                     }
                 });
             } else {
@@ -93,5 +73,17 @@ public class DownloadMediaUseCase implements UseCase {
                         + ": No wifi connection available. Media will not be synced");
             }
         }
+    }
+
+    @NonNull
+    private List<String> getResourceUrlsToDownload() {
+        final List<Media> medias = mMediaRepository.getAllNotDownloaded();
+        List<String> uids = new ArrayList<>();
+        for (Media media : medias) {
+            if (!uids.contains(media.getResourceUrl())) {
+                uids.add(media.getResourceUrl());
+            }
+        }
+        return uids;
     }
 }

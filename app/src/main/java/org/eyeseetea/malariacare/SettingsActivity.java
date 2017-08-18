@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
@@ -242,6 +243,15 @@ public class SettingsActivity extends PreferenceActivity implements
 
         mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
 
+        if(!BuildConfig.customfont) {
+            PreferenceCategory preferenceCategory =
+                    (PreferenceCategory) getPreferenceScreen().findPreference(
+                            this.getResources().getString(R.string.pref_visual));
+            preferenceCategory.removePreference(getPreferenceScreen().findPreference(
+                    this.getResources().getString(R.string.font_sizes)));
+            preferenceCategory.removePreference(getPreferenceScreen().findPreference(
+                    this.getResources().getString(R.string.customize_fonts)));
+        }
         if (mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
             serverUrlPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());

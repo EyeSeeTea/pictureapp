@@ -6,6 +6,7 @@
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet</string>
 
     <item name="show_num_dems" translatable="false" type="string">show_num_dems</item>
+    <item name="pref_visual" translatable="false" type="string">pref_visual</item>
     <item name="customize_fonts" translatable="false" type="string">customize_fonts</item>
     <item name="font_sizes" translatable="false" type="string">font_sizes</item>
     <item name="dhis_url" translatable="false" type="string">dhis_url</item>

@@ -9,8 +9,6 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MediaRepository implements IMediaRepository {
@@ -84,24 +82,6 @@ public class MediaRepository implements IMediaRepository {
                 .queryList();
     }
 
-    /**
-     * Returns a media that holds a reference to the same resource with an already downloaded copy
-     * of the file.
-     */
-    public Media findLocalByUid(String resourceUrl) {
-        MediaDB mediaDB = new Select().from(MediaDB.class)
-                .where(MediaDB_Table.filename.isNotNull())
-                .and(MediaDB_Table.resource_url.is(resourceUrl))
-                .querySingle();
-        if(mediaDB==null){
-            return null;
-        }else{
-            return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
-                    MediaMapper.getSizeInMB(mediaDB.getFilename()));
-        }
-    }
-
-
     public Media.MediaType convertConstantToMediaType(int mediaType) {
         if (mediaType == Constants.MEDIA_TYPE_IMAGE) {
             return Media.MediaType.PICTURE;
@@ -111,7 +91,7 @@ public class MediaRepository implements IMediaRepository {
         return null;
     }
 
-    public static int convertMediaTypeToConstant(Media.MediaType mediaType) {
+    public int convertMediaTypeToConstant(Media.MediaType mediaType) {
         if (mediaType.equals(Media.MediaType.PICTURE)){
             return Constants.MEDIA_TYPE_IMAGE;
         } else if (mediaType.equals(Media.MediaType.VIDEO)){
@@ -145,25 +125,6 @@ public class MediaRepository implements IMediaRepository {
         mediaDb.delete();
     }
 
-    public int updateSyncedFiles(HashMap<String, String> syncedFiles) {
-        int correctSyncedFiles = 0;
-
-        //Try to reuse a local copy if another media references same url
-        if (syncedFiles.size() > 0) {
-            for (String mediaUid : syncedFiles.keySet()) {
-                String absolutePath = syncedFiles.get(mediaUid);
-                List<Media> allMediaWithSameResource = getAllMediaByResourceUid(mediaUid);
-                for (Media localMedia : allMediaWithSameResource) {
-                    correctSyncedFiles++;
-                    System.out.println(localMedia.toString() + "\tsaved in " + absolutePath);
-                    localMedia.setResourcePath(absolutePath);
-                    save(localMedia);
-                }
-            }
-        }
-        return correctSyncedFiles;
-    }
-
     public void updateNotDownloadedMedia(Media media) {
         MediaDB mediaDB = new Select().from(MediaDB.class).where(MediaDB_Table.resource_url.eq(media.getResourceUrl())).querySingle();
         if(mediaDB!=null){
@@ -171,17 +132,8 @@ public class MediaRepository implements IMediaRepository {
                 System.out.println(mediaDB.getResourceUrl() +" is already downloaded");
             }
         }else{
-            mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl());
+            mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl(), media.getProgram());
             mediaDB.save();
         }
-    }
-
-    public static List<String> listOfDownloadedFiles(){
-        List<String> paths = new ArrayList<>();
-        List<MediaDB> mediaList = new Select().from(MediaDB.class).where(MediaDB_Table.filename.isNotNull()).queryList();
-        for(MediaDB mediaDB:mediaList){
-            paths.add(mediaDB.getFilename());
-        }
-        return paths;
     }
 }

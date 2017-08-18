@@ -64,7 +64,6 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.sdk.common.FileUtils;
 
 import java.io.FileNotFoundException;
@@ -979,10 +978,8 @@ public class PopulateDB {
                 UserDB.class).toArray());
     }
 
-    public static void wipeMedia() {
-        for(String path:MediaRepository.listOfDownloadedFiles()){
-            FileUtils.removeFile(path);
-        }
+    public static void wipeMedia(String dir) {
+        FileUtils.removeDir(PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath()+"/"+dir);
         wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
                 MediaDB.class).toArray());
     }

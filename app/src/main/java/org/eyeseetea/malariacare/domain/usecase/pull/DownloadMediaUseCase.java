@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
-import android.support.annotation.NonNull;
-
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
@@ -12,8 +11,6 @@ import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.sdk.common.FileUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class DownloadMediaUseCase implements UseCase {
@@ -22,7 +19,7 @@ public class DownloadMediaUseCase implements UseCase {
 
         void onSuccess(int syncedFiles);
     }
-    
+
     private Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
     private IFileDownloader mFileDownloader;
@@ -57,45 +54,25 @@ public class DownloadMediaUseCase implements UseCase {
             }
 
             @Override
-            public void onSuccess(HashMap<String, String> syncedFiles) {
-                int numOfSyncedFiles = mMediaRepository.updateSyncedFiles(syncedFiles);
+            public void onSuccess(List<Media> syncMedias) {
+                int numOfSyncedFiles = 0;
+                //If the media is not stored in the hashMap, the media was removed from drive
+                // folder and will be removed from database.
+                numOfSyncedFiles = saveDownloadedMedia(syncMedias);
+                List<Media> allMedias = mMediaRepository.getAll();
+                removeNotDownloadedMedia(syncMedias, allMedias);
                 mCallback.onSuccess(numOfSyncedFiles);
             }
 
-            @Override
-            public void removeRemotelyDeletedMedia(List<String> uids) {
-                List<Media> medias = mMediaRepository.getAll();
-                for (Media media : medias) {
-                    //If the media is not stored in the hashMap, the media was removed from drive
-                    // folder and will be removed from database.
-                    if (!uids.contains(media.getResourceUrl())) {
-                        if (media.getResourcePath() != null) {
-                            FileUtils.removeFile(media.getResourcePath());
-                        }
-                        remove(media.getResourceUrl());
-                    }
-                }
-                mCallback.onSuccess(0);
-            }
-
-            @Override
-            public void save(Media media) {
-                mMediaRepository.updateNotDownloadedMedia(media);
-            }
-
-            @Override
-            public void remove(String uid) {
-                System.out.println("downloadFile error (file extension not supported)" + uid);
-                mMediaRepository.delete(mMediaRepository.findByUid(uid));
-            }
         };
 
-        mFileDownloader.init(PreferencesState.getInstance().getDriveRootFolderUid(), callback);
-        final List<String> uids = getResourceUrlsToDownload();
+        List<Media> medias = mFileDownloader.init(
+                PreferencesState.getInstance().getDriveRootFolderUid(),
+                String.valueOf(PreferencesEReferral.getUserProgramId()), callback);
 
-        if (uids != null && !uids.isEmpty()) {
+        if (medias != null && !medias.isEmpty()) {
             if (mConnectivityManager.isDeviceOnline()) {
-                mFileDownloader.download(uids, callback);
+                mFileDownloader.download(medias, callback);
             } else {
                 System.out.println(this.getClass().getSimpleName()
                         + ": No wifi connection available. Media will not be synced");
@@ -103,15 +80,37 @@ public class DownloadMediaUseCase implements UseCase {
         }
     }
 
-    @NonNull
-    private List<String> getResourceUrlsToDownload() {
-        final List<Media> medias = mMediaRepository.getAllNotDownloaded();
-        List<String> uids = new ArrayList<>();
-        for (Media media : medias) {
-            if (!uids.contains(media.getResourceUrl())) {
-                uids.add(media.getResourceUrl());
+    private int saveDownloadedMedia(List<Media> syncMedias) {
+        int numOfSyncedFiles=0;
+        for (Media syncMedia : syncMedias) {
+            if(mMediaRepository.existMedia(syncMedia)) {
+                mMediaRepository.update(syncMedia);
+            }else{
+                numOfSyncedFiles++;
+                mMediaRepository.save(syncMedia);
             }
         }
-        return uids;
+        return numOfSyncedFiles;
+    }
+
+    private void removeNotDownloadedMedia(List<Media> downloadedMedia,
+            List<Media> persistentMedia) {
+        for (Media localMedia : persistentMedia) {
+            boolean isRemoved = true;
+            for (Media driveMedia : downloadedMedia) {
+                if (driveMedia.getResourceUrl().equals(localMedia.getResourceUrl())) {
+                    isRemoved = false;
+                }
+            }
+            if (isRemoved) {
+                if (localMedia.getResourcePath() != null) {
+                    FileUtils.removeFile(localMedia.getResourcePath());
+                }
+                System.out.println("downloadFile error (file extension not supported)"
+                        + localMedia.getResourceUrl());
+                mMediaRepository.delete(
+                        mMediaRepository.findByUid(localMedia.getResourceUrl()));
+            }
+        }
     }
 }

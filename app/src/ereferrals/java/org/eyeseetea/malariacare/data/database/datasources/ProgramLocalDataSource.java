@@ -1,12 +1,12 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
 
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.utils.Constants;
 
 
 public class ProgramLocalDataSource implements IProgramRepository {
@@ -39,7 +39,7 @@ public class ProgramLocalDataSource implements IProgramRepository {
 
     @Override
     public void removeProgramMedia() {
-        PopulateDB.wipeMedia();
+        PopulateDB.wipeMedia(Constants.MEDIA_FOLDER);
 
     }
 

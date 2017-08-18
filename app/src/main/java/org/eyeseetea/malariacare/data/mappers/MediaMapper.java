@@ -34,7 +34,20 @@ public class MediaMapper {
         return null;
     }
 
+    private static int getConstant(Media.MediaType mediaType) {
+        if (mediaType.equals(Media.MediaType.PICTURE)) {
+            return Constants.MEDIA_TYPE_IMAGE;
+        }  else if (mediaType.equals(Media.MediaType.VIDEO)) {
+            return Constants.MEDIA_TYPE_VIDEO;
+        }
+        return 0;
+    }
+
     public static String getSizeInMB(String filename) {
         return FileUtils.getSizeInMB(filename, PreferencesState.getInstance().getContext());
+    }
+
+    public static MediaDB mapFromDomainToDb(Media media) {
+        return new MediaDB(getConstant(media.getType()), media.getResourceUrl(), media.getResourcePath(), media.getProgram());
     }
 }

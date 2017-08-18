@@ -41,6 +41,9 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.utils.Constants;
+
+import java.io.File;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
@@ -64,8 +67,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager();
+        String path = PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath()+"/"+ Constants.MEDIA_FOLDER;
         IFileDownloader fileDownloader = new FileDownloader(
-                mDashboardActivity.getApplicationContext().getFilesDir(),
+                new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
                         R.raw.driveserviceprivatekey));
         final MediaRepository mediaRepository = new MediaRepository();

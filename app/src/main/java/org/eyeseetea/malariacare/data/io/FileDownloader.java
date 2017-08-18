@@ -54,15 +54,15 @@ public class FileDownloader implements IFileDownloader {
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    public void init(String rootUid, final IFileDownloader.Callback mCallback) {
+    public List<Media> init(String rootUid, String program, final IFileDownloader.Callback mCallback) {
         initServiceAccountCredential();
 
         if (!isGooglePlayServicesAvailable()) {
             if (!isGooglePlayAppAvailable()) {
-                return;
+                return null;
             }
             mCallback.onError(new FileDownloadException(new GooglePlayAppNotAvailableException()));
-            return;
+            return null;
         }
 
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -73,7 +73,6 @@ public class FileDownloader implements IFileDownloader {
                 .setHttpRequestInitializer(serviceCredential)
                 .build();
         List<Media> mediaFiles = new ArrayList<>();
-        List<String> uids = new ArrayList<>();
         try {
             FileList folders = drive.files().list().setQ(
                     "\'" + rootUid + "\' in parents").execute();
@@ -85,10 +84,9 @@ public class FileDownloader implements IFileDownloader {
                                 "\'" + file.getId() + "\' in parents").execute();
                         for (com.google.api.services.drive.model.File fileMedia : fileList
                                 .getFiles()) {
-                            Media media = convertInMedia(fileMedia);
+                            Media media = convertInMedia(fileMedia, program);
                             if (media != null) {
                                 mediaFiles.add(media);
-                                uids.add(fileMedia.getId());
                             }
                         }
                     }
@@ -98,14 +96,11 @@ public class FileDownloader implements IFileDownloader {
             e.printStackTrace();
         }
 
-        for (Media media : mediaFiles) {
-            mCallback.save(media);
-        }
-        mCallback.removeRemotelyDeletedMedia(uids);
+        return mediaFiles;
     }
 
 
-    private static Media convertInMedia(com.google.api.services.drive.model.File file) {
+    private static Media convertInMedia(com.google.api.services.drive.model.File file, String program) {
         if (!file.getMimeType().equals("application/vnd.google-apps.folder")) {
             Media.MediaType mediaType = Media.MediaType.VIDEO;
             if (file.getMimeType().contains("image")) {
@@ -113,15 +108,22 @@ public class FileDownloader implements IFileDownloader {
             } else if (file.getMimeType().contains("video")) {
                 mediaType = Media.MediaType.VIDEO;
             }
-            return new Media(file.getId(), mediaType);
+            return new Media(file.getId(), mediaType, program);
         }
         return null;
     }
 
     @Override
-    public void download(List<String> uids, final Callback mCallback) {
+    public void download(final List<Media> mediaList, final Callback mCallback) {
+        if (mediaList == null) {
+            System.out.println("mediaList is null or empty");
+        }
         if (drive == null) {
             System.out.println("Drive is null, init() method must be called first");
+        }
+        List<String> uids = new ArrayList<>();
+        for(Media media:mediaList){
+            uids.add(media.getResourceUrl());
         }
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {
@@ -138,12 +140,10 @@ public class FileDownloader implements IFileDownloader {
 
                     @Override
                     public void onSuccess(HashMap<String, String> syncedFiles) {
-                        mCallback.onSuccess(syncedFiles);
-                    }
-
-                    @Override
-                    public void removeIllegalFile(String uid) {
-                        mCallback.remove(uid);
+                        for(Media media : mediaList){
+                            media.setResourcePath(syncedFiles.get(media.getResourceUrl()));
+                        }
+                        mCallback.onSuccess(mediaList);
                     }
                 }).execute();
     }

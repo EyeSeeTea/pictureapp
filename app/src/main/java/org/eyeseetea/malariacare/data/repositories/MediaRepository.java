@@ -100,28 +100,26 @@ public class MediaRepository implements IMediaRepository {
         return 0;
     }
 
-    public void updateResourcePath(Media media) {
-        MediaDB mediaDb = getMedia(media.getId());
-        mediaDb.setFilename(media.getResourcePath());
-        mediaDb.update();
-    }
-
-    private MediaDB getMedia(long id) {
+    private MediaDB getMedia(String resourceUrl) {
         return new Select().
                 from(MediaDB.class).
-                where(MediaDB_Table.id_media.is(id))
+                where(MediaDB_Table.resource_url.eq(resourceUrl))
                 .querySingle();
 
     }
 
+
+    public boolean existMedia(Media media) {
+        return (getMedia(media.getResourceUrl())!=null);
+    }
+
     public void save(Media media) {
-        MediaDB mediaDB = getMedia(media.getId());
-        mediaDB.setFilename(media.getResourcePath());
-        mediaDB.update();
+        MediaDB mediaDB = MediaMapper.mapFromDomainToDb(media);
+        mediaDB.save();
     }
 
     public void delete(Media media) {
-        MediaDB mediaDb = getMedia(media.getId());
+        MediaDB mediaDb = getMedia(media.getResourceUrl());
         mediaDb.delete();
     }
 
@@ -134,6 +132,14 @@ public class MediaRepository implements IMediaRepository {
         }else{
             mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl(), media.getProgram());
             mediaDB.save();
+        }
+    }
+
+    public void update(Media media) {
+        MediaDB mediaDB = getMedia(media.getResourceUrl());
+        if (mediaDB.getFilename()==null) {
+            mediaDB.setFilename(media.getResourcePath());
+            mediaDB.update();
         }
     }
 }

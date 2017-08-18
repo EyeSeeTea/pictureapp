@@ -13,11 +13,11 @@ public class MediaMapperTest {
 
     @Test
     public void test_mediaDB_conversion_to_Media() {
-        MediaDB mediaDB = new MediaDB(Constants.MEDIA_TYPE_IMAGE, "path", null);
+        MediaDB mediaDB = new MediaDB(Constants.MEDIA_TYPE_IMAGE, "path");
         mediaDB.setFilename("name");
         Media media = MediaMapper.mapFromDbToDomain(mediaDB);
         Assert.assertThat(media.getName().equals("name"), Is.is(true));
-        Assert.assertThat(media.getPath().equals("path"), Is.is(true));
+        Assert.assertThat(media.getResourceUrl().equals("path"), Is.is(true));
         Assert.assertThat(media.getType() == Media.MediaType.PICTURE, Is.is(true));
     }
 }

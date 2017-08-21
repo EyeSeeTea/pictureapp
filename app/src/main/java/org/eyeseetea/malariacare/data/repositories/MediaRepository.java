@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.repositories;
 
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
@@ -141,5 +142,9 @@ public class MediaRepository implements IMediaRepository {
             mediaDB.setFilename(media.getResourcePath());
             mediaDB.update();
         }
+    }
+
+    public void clearMedia(){
+        Delete.table(MediaDB.class);
     }
 }

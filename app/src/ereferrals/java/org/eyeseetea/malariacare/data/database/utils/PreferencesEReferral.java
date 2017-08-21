@@ -59,7 +59,7 @@ public class PreferencesEReferral {
                 context);
         return sharedPreferences.getLong(context.getString(R.string.logged_user_program), -1);
     }
-    
+
     public static int getNumberBadLogin() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(

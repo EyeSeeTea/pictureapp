@@ -8,4 +8,6 @@ public interface IMediaRepository {
     List<Media> getAll();
 
     List<Media> getAllDownloaded();
+
+    void clearMedia();
 }

@@ -9,7 +9,7 @@ public interface IMediaRepository {
 
     List<Media> getAllDownloaded();
 
-    void clearMedia();
+    void deleteAll();
 
     String getResourcePathByUid(String id);
 }

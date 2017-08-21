@@ -144,7 +144,7 @@ public class MediaRepository implements IMediaRepository {
         }
     }
 
-    public void clearMedia(){
+    public void deleteAll() {
         Delete.table(MediaDB.class);
     }
 

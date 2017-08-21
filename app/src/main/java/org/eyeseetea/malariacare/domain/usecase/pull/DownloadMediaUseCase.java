@@ -50,34 +50,28 @@ public class DownloadMediaUseCase implements UseCase {
     @Override
     public void run() {
         System.out.println("Running DownloadMediaUseCase");
-        IFileDownloader.Callback callback = new IFileDownloader.Callback() {
-            @Override
-            public void onError(FileDownloadException ex) {
-                mCallback.onError(ex);
-            }
 
-            @Override
-            public void onSuccess(List<Media> syncMedias) {
-                int numOfSyncedFiles = saveDownloadedMedia(syncMedias);
-                List<Media> allMedias = mMediaRepository.getAll();
-                removeNotDownloadedMedia(syncMedias, allMedias);
-                mCallback.onSuccess(numOfSyncedFiles);
-            }
+        if (mConnectivityManager.isDeviceOnline()) {
+            mFileDownloader.download(PreferencesState.getInstance().getDriveRootFolderUid(), mProgramRepository.getUserProgram().getId(),
+                    new IFileDownloader.Callback() {
+                        @Override
+                        public void onError(FileDownloadException ex) {
+                            mCallback.onError(ex);
+                        }
 
-        };
+                        @Override
+                        public void onSuccess(List<Media> syncMedias) {
+                            int numOfSyncedFiles = saveDownloadedMedia(syncMedias);
+                            List<Media> allMedias = mMediaRepository.getAll();
+                            removeNotDownloadedMedia(syncMedias, allMedias);
+                            mCallback.onSuccess(numOfSyncedFiles);
+                        }
 
-        List<Media> medias = mFileDownloader.init(
-                PreferencesState.getInstance().getDriveRootFolderUid(),
-                mProgramRepository.getUserProgram().getId(), callback);
-
-        if (medias != null && !medias.isEmpty()) {
-            if (mConnectivityManager.isDeviceOnline()) {
-                mFileDownloader.download(medias, callback);
+                    });
             } else {
                 System.out.println(this.getClass().getSimpleName()
                         + ": No wifi connection available. Media will not be synced");
             }
-        }
     }
 
     private int saveDownloadedMedia(List<Media> syncMedias) {

@@ -47,22 +47,16 @@ public class FileDownloader implements IFileDownloader {
                 "Private Json stream with google play key is required");
     }
 
-    /**
-     * Attempt to call the API, after verifying that all the preconditions are
-     * satisfied. The preconditions are: Google Play Services installed, an
-     * account was selected and the device currently has online access. If any
-     * of the preconditions are not satisfied, the app will prompt the user as
-     * appropriate.
-     */
-    public List<Media> init(String rootUid, String program, final IFileDownloader.Callback mCallback) {
+    @Override
+    public void download(String rootUid, String program, final Callback mCallback) {
         initServiceAccountCredential();
 
         if (!isGooglePlayServicesAvailable()) {
             if (!isGooglePlayAppAvailable()) {
-                return null;
+                return;
             }
             mCallback.onError(new FileDownloadException(new GooglePlayAppNotAvailableException()));
-            return null;
+            return;
         }
 
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -72,57 +66,21 @@ public class FileDownloader implements IFileDownloader {
                 transport, jsonFactory, null)
                 .setHttpRequestInitializer(serviceCredential)
                 .build();
-        List<Media> mediaFiles = new ArrayList<>();
-        try {
-            FileList folders = drive.files().list().setQ(
-                    "\'" + rootUid + "\' in parents").execute();
-            for (com.google.api.services.drive.model.File file : folders.getFiles()) {
-                if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-                    if (file.getName().equals(ProgramDB.getProgram(
-                            PreferencesEReferral.getUserProgramId()).getName())) {
-                        FileList fileList = drive.files().list().setQ(
-                                "\'" + file.getId() + "\' in parents").execute();
-                        for (com.google.api.services.drive.model.File fileMedia : fileList
-                                .getFiles()) {
-                            Media media = convertInMedia(fileMedia, program);
-                            if (media != null) {
-                                mediaFiles.add(media);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return mediaFiles;
-    }
-
-
-    private static Media convertInMedia(com.google.api.services.drive.model.File file, String program) {
-        if (!file.getMimeType().equals("application/vnd.google-apps.folder")) {
-            Media.MediaType mediaType = Media.MediaType.VIDEO;
-            if (file.getMimeType().contains("image")) {
-                mediaType = Media.MediaType.PICTURE;
-            } else if (file.getMimeType().contains("video")) {
-                mediaType = Media.MediaType.VIDEO;
-            }
-            return new Media(file.getId(), mediaType, program);
-        }
-        return null;
-    }
-
-    @Override
-    public void download(final List<Media> mediaList, final Callback mCallback) {
-        if (mediaList == null) {
-            System.out.println("mediaList is null or empty");
-        }
         if (drive == null) {
             System.out.println("Drive is null, init() method must be called first");
         }
         List<String> uids = new ArrayList<>();
-        for(Media media:mediaList){
+
+        final List<Media> mediaFiles = new ArrayList<>();
+        try {
+            getFilesFromDriveFolder(rootUid, program, mediaFiles);
+        } catch (IOException e) {
+            e.printStackTrace();
+            mCallback.onError(new FileDownloadException(e));
+            return;
+        }
+
+        for(Media media:mediaFiles){
             uids.add(media.getResourceUrl());
         }
         new DownloadMediaTask(mFileDir, drive, uids,
@@ -140,12 +98,47 @@ public class FileDownloader implements IFileDownloader {
 
                     @Override
                     public void onSuccess(HashMap<String, String> syncedFiles) {
-                        for(Media media : mediaList){
+                        for(Media media : mediaFiles){
                             media.setResourcePath(syncedFiles.get(media.getResourceUrl()));
                         }
-                        mCallback.onSuccess(mediaList);
+                        mCallback.onSuccess(mediaFiles);
                     }
                 }).execute();
+    }
+
+    private void getFilesFromDriveFolder(String rootUid, String program, List<Media> mediaFiles)
+            throws IOException {
+        FileList folders = drive.files().list().setQ(
+                "\'" + rootUid + "\' in parents").execute();
+        for (com.google.api.services.drive.model.File file : folders.getFiles()) {
+            if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+                if (file.getName().equals(ProgramDB.getProgram(
+                        PreferencesEReferral.getUserProgramId()).getName())) {
+                    FileList fileList = drive.files().list().setQ(
+                            "\'" + file.getId() + "\' in parents").execute();
+                    for (com.google.api.services.drive.model.File fileMedia : fileList
+                            .getFiles()) {
+                        Media media = convertInMedia(fileMedia, program);
+                        if (media != null) {
+                            mediaFiles.add(media);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static Media convertInMedia(com.google.api.services.drive.model.File file, String program) {
+        if (!file.getMimeType().equals("application/vnd.google-apps.folder")) {
+            Media.MediaType mediaType = Media.MediaType.VIDEO;
+            if (file.getMimeType().contains("image")) {
+                mediaType = Media.MediaType.PICTURE;
+            } else if (file.getMimeType().contains("video")) {
+                mediaType = Media.MediaType.VIDEO;
+            }
+            return new Media(file.getId(), mediaType, program);
+        }
+        return null;
     }
 
     private void initServiceAccountCredential() {

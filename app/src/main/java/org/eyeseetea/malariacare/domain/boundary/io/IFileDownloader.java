@@ -12,7 +12,5 @@ public interface IFileDownloader {
         void onError(FileDownloadException throwable);
     }
 
-    void download(List<Media> mediaList, Callback callback);
-
-    List<Media> init(String rootUid, String program, Callback callback);
+    void download(String rootUid, String program, Callback callback);
 }

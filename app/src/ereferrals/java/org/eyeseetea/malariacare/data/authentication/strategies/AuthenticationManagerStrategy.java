@@ -3,30 +3,30 @@ package org.eyeseetea.malariacare.data.authentication.strategies;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.datasources.CurrentLanguageDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.remote.ForgotPasswordDataSource;
 import org.eyeseetea.malariacare.data.remote.IForgotPasswordDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICurrentLanguageRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 
 
 public class AuthenticationManagerStrategy extends AAuthenticationManagerStrategy {
     IForgotPasswordDataSource mForgotPasswordDataSource;
-    ICurrentLanguageRepository mCurrentLanguageRepository;
+    ISettingsRepository mSettingsRepository;
 
     public AuthenticationManagerStrategy(Context context) {
         mForgotPasswordDataSource = new ForgotPasswordDataSource(context);
-        mCurrentLanguageRepository = new CurrentLanguageDataSource();
+        mSettingsRepository = new SettingsDataSource();
     }
 
     @Override
     public void forgotPassword(final String username,
             final IAuthenticationManager.Callback<ForgotPasswordMessage> callback) {
-        mCurrentLanguageRepository.getCurrentLanguage(new IDataSourceCallback<String>() {
-            @Override
-            public void onSuccess(String language) {
-                mForgotPasswordDataSource.forgotPassword(username, language,
+
+        Settings settings = mSettingsRepository.getSettings();
+        mForgotPasswordDataSource.forgotPassword(username, settings.getLanguage(),
                         new IDataSourceCallback<ForgotPasswordMessage>() {
                             @Override
                             public void onSuccess(ForgotPasswordMessage result) {
@@ -39,12 +39,4 @@ public class AuthenticationManagerStrategy extends AAuthenticationManagerStrateg
                             }
                         });
             }
-
-            @Override
-            public void onError(Throwable throwable) {
-                callback.onError(throwable);
-            }
-        });
-
-    }
 }

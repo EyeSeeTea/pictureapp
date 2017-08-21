@@ -13,7 +13,7 @@
 "</string>
 <string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
 
-<string name="app_about">"ກ່ຽວກັບ"</string>
+<string name="common_menu_about">"ກ່ຽວກັບ"</string>
 <string name="settings_menu_licence">"ການໄດ້ຮັບອະນຸຍາດ"</string>
 <string name="dialog_title_delete_surveys">"ທ່ານຕ້ອງການຈະລຶບຂໍ້ມູນທັງໝົດທີ່ສົ່ງໄປແລ້ວບໍ?"</string>
 <string name="dialog_title_delete_survey">"ລຶບຂໍ້ມູນ"</string>
@@ -40,7 +40,7 @@
 <string name="fonts_customise">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="font_size">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="server_name">"DHIS URL ເຄື່ອງແມ່ຂ່າຍຂອງ"</string>
-<string name="settings_select_language">"ພາສາ"</string>
+<string name="common_about_rowHeader_language">"ພາສາ"</string>
 <string name="pref_header_general">"ທົ່ວໄປ"</string>
 <string name="dialog_title_push">"ກຳລັງໂຫຼດຂໍ້ມູນເຂົ້າໃນລະບົບ"</string>
 <string name="dialog_title_push_response">"ການຕອບສະຫນອງ"</string>

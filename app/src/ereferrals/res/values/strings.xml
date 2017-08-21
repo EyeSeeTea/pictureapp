@@ -24,10 +24,8 @@
     <string name="font_medium">"Medium"</string>
     <string name="font_large">"Large"</string>
     <string name="font_extra_large">"Extra large"</string>
-    <string name="settings_select_language">"Language"</string>
     <string name="developer_option_title">"Show developer options"</string>
     <string name="developer_option_summary">"This feature activates the developer options."</string>
-    <string name="app_about">"About"</string>
     <string name="app_legal">"Legal"</string>
     <string name="app_copyright">"Copyright"</string>
     <string name="app_software_licenses">"Software licenses"</string>
@@ -35,7 +33,6 @@
     <string name="app_logout">"Logout"</string>
     <string name="settings_menu_logout_message">"Changing the server requires you to log out. All unsent surveys will be deleted. Are you sure you want to continue?"</string>
     <string name="dashboard_menu_logout_message">"All unsent surveys will be deleted. Are you sure you want to continue?"</string>
-    <string name="settings_menu_about">"About"</string>
     <string name="past_cases">"PAST CASES"</string>
     <string name="sent_data">"Closed"</string>
     <string name="status_subtitle">""</string>

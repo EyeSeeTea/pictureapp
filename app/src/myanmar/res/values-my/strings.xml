@@ -78,7 +78,7 @@
 <string name="patient_advice_side_effects_helptext">"ဆီးအရောင်မည်းလာလျင် ပရိုင်မာကွင်းဆေး pq ကို ဆက်မသောက်ပါနှင့်။ အနီးဆုံးကျန်းမာရေးဌာနသို.သွားပြပါ။"</string>
 <string name="patient_advice_title_help">"ကျန်းမာရေးဌာနသို.သွားရန်"</string>
 <string name="patient_advice_helptext">"အကယ်၍ သုံးရက်အတွင်း မသက်သာလျင် သို.မဟုတ် ပိုဆိုးလာလျင် အနီးဆုံးကျန်းမာရေးဌာနသို. သွားပြပါ။"</string>
-<string name="follow_up">"ဆက်မေးရန်မေးခွန်းများ"</string>
+<string name="provider_findVoucher_result_tableHeader_FollowUp">"ဆက်မေးရန်မေးခွန်းများ"</string>
 <string name="follow_up_travelling_question">"ခရီးသွားခြင်း"</string>
 <string name="follow_up_travelling_helptext">"လူနာသည်လွန်ခဲ့သည့် ၂ ပတ်အတွင်း ညအိပ်ညနေခရီးသွားခဲ့ပါသလား"</string>
 <string name="follow_up_travelling_yes">"သွားခဲ့သည်"</string>
@@ -112,10 +112,10 @@
 <string name="font_medium">"လတ်"</string>
 <string name="font_large">"ကြီး"</string>
 <string name="font_extra_large">"အလွန်ကြီး"</string>
-<string name="settings_select_language">"ဘာသာစကား"</string>
+<string name="common_about_rowHeader_language">"ဘာသာစကား"</string>
 <string name="developer_option_title">"ဤမှတ်တမ်းအကြောင်း"</string>
 <string name="developer_option_summary">"Developer Option"</string>
-<string name="app_about">"ဤ application အကြောင်း"</string>
+<string name="common_menu_about">"ဤ application အကြောင်း"</string>
 <string name="app_legal">"ဥပဒေရေးရာ"</string>
 <string name="app_copyright">"မူပိုင်ခွင့်"</string>
 <string name="app_software_licenses">"Software လိုင်စင်"</string>
@@ -123,7 +123,7 @@
 <string name="app_logout">"ထွက်ရန်"</string>
 <string name="settings_menu_logout_message">"ဆာဗာကိုပြောင်းရန် သင် ဤ application မှ ထွက်ရန်လိုအပ်ပါသည်။ မပို့ထားသော လူနာမှတ်တမ်းများအားလုံးပျက်သွားပါမည်။ ဆာဗာပြောင်းချင်ပါသလား။"</string>
 <string name="dashboard_menu_logout_message">"မပို့ထားသော လူနာမှတ်တမ်းများအားလုံးပျက်သွားပါမည်။ ဆက်လုပ်ချင်ပါသလား။"</string>
-<string name="settings_menu_about">"ဤ application အကြောင်း"</string>
+<string name="common_menu_about">"ဤ application အကြောင်း"</string>
 <string name="past_cases">"ယခင်လူနာမှတ်တမ်းများ"</string>
 <string name="sent_data">"ပို.ပြီး"</string>
 <string name="unsent_data">"မပို.သေး"</string>
@@ -232,7 +232,7 @@
 <string name="patient_phone_review_title">"ဖုန်းနံပါတ်"</string>
 <string name="patient_residence_village_review_title">"လိပ်စာ"</string>
 <string name="patient_residence_village_other_review_title">"အခြား"</string>
-<string name="patient_sex_pregnancy_review_title">"ကျား/မ"</string>
+<string name="provider_findVoucher_q_gender">"ကျား/မ"</string>
 <string name="symptoms_fever_review_title">"အဖျား"</string>
 <string name="symptoms_care_sought_review_title">"ကုသမှုခံယူခြင်း"</string>
 <string name="symptoms_servere_review_title">"ပြင်းထန်လက္ခဏာ"</string>

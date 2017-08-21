@@ -87,7 +87,7 @@
 <string name="last_6_weeks">"៦ សប្ដាហ៍ចុងក្រោយ"</string>
 <string name="last_6_months">"៦ ខែចុងក្រោយ"</string>
 <string name="download">" ទាញយក:"</string>
-<string name="settings_select_language">"ភាសា"</string>
+<string name="common_about_rowHeader_language">"ភាសា"</string>
 <string name="system_defined">"ដែលបានកំណត់ប្រព័ន្ធ"</string>
 <string name="developer_option_summary">"ជម្រើសនេះអនុញ្ញាតជម្រើសអភិវឌ្ឍន៍"</string>
 <string name="developer_option_title">"បង្ហាញជាជម្រើសអភិវឌ្ឍន៍"</string>
@@ -95,7 +95,7 @@
 <string name="malaria_case_based_reporting">"ឃ្លាំមើលករណីគ្រុនចាញ់"</string>
 <string name="survey_review">"ពិនិត្យឡើងវិញ"</string>
 <string name="survey_send">"ផ្ញើ"</string>
-<string name="app_about">"អំពី"</string>
+<string name="common_menu_about">"អំពី"</string>
 <string name="survey_completed">"ការស្ទង់មតិបានបញ្ចប់"</string>
 <string name="survey_completed_text">"ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ"</string>
 <string name="app_settings">"ការកំណត់"</string>

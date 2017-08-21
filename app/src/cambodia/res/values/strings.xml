@@ -85,7 +85,7 @@
 <string name="last_6_weeks">"Latest 6 weeks"</string>
 <string name="last_6_months">"Latest 6 months"</string>
 <string name="download">"Download:"</string>
-<string name="settings_select_language">"Language"</string>
+<string name="common_about_rowHeader_language">"Language"</string>
 <string name="system_defined">"System defined"</string>
 <string name="developer_option_summary">"This feature activates the developer options"</string>
 <string name="developer_option_title">"Show developer options"</string>
@@ -93,7 +93,7 @@
 <string name="malaria_case_based_reporting">"Malaria Case Surveillance"</string>
 <string name="survey_review">"Review"</string>
 <string name="survey_send">"Send"</string>
-<string name="app_about">"About"</string>
+<string name="common_menu_about">"About"</string>
 <string name="survey_completed">"Survey completed"</string>
 <string name="survey_completed_text">"The survey has been successfully completed"</string>
 <string name="app_settings">"Settings"</string>

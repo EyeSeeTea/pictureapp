@@ -29,10 +29,8 @@
     <string name="font_medium">"Kati"</string>
     <string name="font_large">"Kubwa"</string>
     <string name="font_extra_large">"Kubwa sana"</string>
-    <string name="settings_select_language">"Lugha"</string>
     <string name="developer_option_title">"Onyesha chaguo la msanidi"</string>
     <string name="developer_option_summary">"Kipengele hiki Kinaamilisha chaguo la msanidi."</string>
-    <string name="app_about">"Kuhusu"</string>
     <string name="app_legal">"Kisheria"</string>
     <string name="app_copyright">"Hati miliki"</string>
     <string name="app_software_licenses">"Leseni ya programu"</string>
@@ -55,7 +53,6 @@
     <string name="cancel">"kufuta"</string>
     <string name="settings_menu_logout_message">"Kubadilisha server inahitaji kuingia nje. Tafiti zote ambazo hazijatumwa yatafutwa. Una uhakika unataka kuendelea?"</string>
     <string name="dashboard_menu_logout_message">"Tafiti zote ambazo hazijatumwa yatafutwa. Una uhakika unataka kuendelea?"</string>
-    <string name="settings_menu_about">"kuhusu"</string>
     <string name="review_title">"Tafadhali angalia kabla"</string>
     <string name="review_subtitle">"maambukizi"</string>
     <string name="survey_completed">"Utafiti imekamilika"</string>

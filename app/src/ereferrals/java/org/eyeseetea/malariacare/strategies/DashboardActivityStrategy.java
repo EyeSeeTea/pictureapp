@@ -77,7 +77,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         IFileDownloader fileDownloader = new FileDownloader(
                 new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
-                        R.raw.driveserviceprivatekey), mediaRepository);
+                        R.raw.driveserviceprivatekey));
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
                 mConnectivity, programRepository, mediaRepository);
 

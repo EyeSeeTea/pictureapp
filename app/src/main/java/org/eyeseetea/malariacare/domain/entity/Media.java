@@ -28,9 +28,10 @@ public class Media {
         this.type = required(type,"type is required");
     }
 
-    public Media(String resourceUrl, MediaType type, String program) {
+    public Media(String resourceUrl, String resourcePath, MediaType type, String program) {
         this.id = required(id,"id is required");
         this.resourceUrl = required(resourceUrl,"resourceUrl is required");
+        this.resourcePath = resourcePath;
         this.type = required(type,"type is required");
         this.program = required(program, "program is required");
     }

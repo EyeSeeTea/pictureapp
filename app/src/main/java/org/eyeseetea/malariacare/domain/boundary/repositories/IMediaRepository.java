@@ -10,4 +10,6 @@ public interface IMediaRepository {
     List<Media> getAllDownloaded();
 
     void clearMedia();
+
+    String getResourcePathByUid(String id);
 }

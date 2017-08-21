@@ -73,11 +73,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         String path =
                 PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath() + "/"
                         + Constants.MEDIA_FOLDER;
+        final MediaRepository mediaRepository = new MediaRepository();
         IFileDownloader fileDownloader = new FileDownloader(
                 new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
-                        R.raw.driveserviceprivatekey));
-        final MediaRepository mediaRepository = new MediaRepository();
+                        R.raw.driveserviceprivatekey), mediaRepository);
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
                 mConnectivity, programRepository, mediaRepository);
 

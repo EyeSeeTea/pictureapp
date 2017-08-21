@@ -147,4 +147,16 @@ public class MediaRepository implements IMediaRepository {
     public void clearMedia(){
         Delete.table(MediaDB.class);
     }
+
+    @Override
+    public String getResourcePathByUid(String resourceUrl) {
+        MediaDB mediaDB =  new Select().
+                from(MediaDB.class).
+                where(MediaDB_Table.resource_url.eq(resourceUrl))
+                .querySingle();
+        if(mediaDB==null){
+            return null;
+        }
+        return mediaDB.getFilename();
+    }
 }

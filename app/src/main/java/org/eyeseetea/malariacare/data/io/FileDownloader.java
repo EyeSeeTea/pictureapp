@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.sdk.data.DownloadMediaTask;
@@ -39,12 +40,15 @@ public class FileDownloader implements IFileDownloader {
     private static final String[] SCOPES = {DriveScopes.DRIVE};
     private final File mFileDir;
     private final InputStream mPrivateJsonStream;
+    private static IMediaRepository mMediaRepository;
     private Drive drive;
 
-    public FileDownloader(File fileDir, InputStream privateJsonStream) {
+    public FileDownloader(File fileDir, InputStream privateJsonStream,
+            IMediaRepository mediaRepository) {
         mFileDir = required(fileDir, "File dir is required");
         mPrivateJsonStream = required(privateJsonStream,
                 "Private Json stream with google play key is required");
+        mMediaRepository = mediaRepository;
     }
 
     @Override
@@ -80,8 +84,10 @@ public class FileDownloader implements IFileDownloader {
             return;
         }
 
-        for(Media media:mediaFiles){
-            uids.add(media.getResourceUrl());
+        for (Media media : mediaFiles) {
+            if (media.getResourcePath() == null) {
+                uids.add(media.getResourceUrl());
+            }
         }
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {
@@ -98,8 +104,10 @@ public class FileDownloader implements IFileDownloader {
 
                     @Override
                     public void onSuccess(HashMap<String, String> syncedFiles) {
-                        for(Media media : mediaFiles){
-                            media.setResourcePath(syncedFiles.get(media.getResourceUrl()));
+                        if (syncedFiles != null) {
+                            for (Media media : mediaFiles) {
+                                media.setResourcePath(syncedFiles.get(media.getResourceUrl()));
+                            }
                         }
                         mCallback.onSuccess(mediaFiles);
                     }
@@ -128,7 +136,8 @@ public class FileDownloader implements IFileDownloader {
         }
     }
 
-    private static Media convertInMedia(com.google.api.services.drive.model.File file, String program) {
+    private static Media convertInMedia(com.google.api.services.drive.model.File file,
+            String program) {
         if (!file.getMimeType().equals("application/vnd.google-apps.folder")) {
             Media.MediaType mediaType = Media.MediaType.VIDEO;
             if (file.getMimeType().contains("image")) {
@@ -136,14 +145,15 @@ public class FileDownloader implements IFileDownloader {
             } else if (file.getMimeType().contains("video")) {
                 mediaType = Media.MediaType.VIDEO;
             }
-            return new Media(file.getId(), mediaType, program);
+            return new Media(file.getId(), mMediaRepository.getResourcePathByUid(file.getId()),
+                    mediaType, program);
         }
         return null;
     }
 
     private void initServiceAccountCredential() {
         try {
-            if(serviceCredential==null) {
+            if (serviceCredential == null) {
                 serviceCredential = GoogleCredential.fromStream(mPrivateJsonStream).createScoped(
                         Arrays.asList(SCOPES));
             }

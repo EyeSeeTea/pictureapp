@@ -17,8 +17,6 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.FileList;
 
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
@@ -141,8 +139,7 @@ public class FileDownloader implements IFileDownloader {
                 "\'" + rootUid + "\' in parents").execute();
         for (com.google.api.services.drive.model.File file : folders.getFiles()) {
             if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-                if (file.getName().equals(ProgramDB.getProgram(
-                        PreferencesEReferral.getUserProgramId()).getName())) {
+                if (file.getName().equals(program)) {
                     FileList fileList = drive.files().list().setQ(
                             "\'" + file.getId() + "\' in parents").execute();
                     for (com.google.api.services.drive.model.File fileMedia : fileList

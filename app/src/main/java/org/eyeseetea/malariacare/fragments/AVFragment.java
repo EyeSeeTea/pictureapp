@@ -76,6 +76,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         MediaRepository mediaRepository = new MediaRepository();
+
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
 
@@ -114,5 +115,9 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {
         this.mAdapter = new AVAdapter(mediaList, viewType, getActivity());
         recyclerView.setAdapter(mAdapter);
+    }
+
+    public void reloadData() {
+        initializePresenter();
     }
 }

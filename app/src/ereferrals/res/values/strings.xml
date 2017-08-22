@@ -176,6 +176,7 @@
     <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
     <string name="ws_unknown_exception">Unknown exception.</string>
+    <string name="drive_title">Drive root folder</string>
 
     <!-- TERMS FROM POEDITOR -->
     <!-- Fuzzy -->

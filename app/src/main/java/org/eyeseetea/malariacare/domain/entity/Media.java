@@ -4,15 +4,12 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.sdk.common.FileUtils;
 
-/**
- * Created by ignac on 04/08/2017.
- */
+import java.io.File;
 
 public class Media {
 
@@ -21,16 +18,40 @@ public class Media {
     String name;
     String resourcePath;
     String resourceUrl;
+    String program;
     MediaType type;
     String size;
 
-    public Media(long id, String name, String resourcePath, String resourceUrl, MediaType type, String size) {
+    public Media(String resourceUrl, MediaType type) {
+        this.id = required(id,"id is required");
+        this.resourceUrl = required(resourceUrl,"resourceUrl is required");
+        this.type = required(type,"type is required");
+    }
+
+    public Media(String resourceUrl, String resourcePath, MediaType type, String program) {
+        this.id = required(id,"id is required");
+        this.resourceUrl = required(resourceUrl,"resourceUrl is required");
+        this.resourcePath = resourcePath;
+        this.type = required(type,"type is required");
+        this.program = required(program, "program is required");
+    }
+
+    public Media(long id, String name, String resourcePath, String resourceUrl, MediaType type, String size, String program) {
         this.id = required(id,"id is required");
         this.resourcePath = resourcePath;
         this.name = name;
         this.resourceUrl = required(resourceUrl,"resourceUrl is required");
         this.type = required(type,"type is required");
         this.size = required(size,"size is required");
+        this.program = required(program, "program is required");
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
     }
 
     public long getId() {
@@ -71,6 +92,12 @@ public class Media {
 
     public Drawable getFileFromPath(Context context){
         //TODO
+        if (type.equals(MediaType.PICTURE)) {
+            File file = new File(getResourcePath());
+            Uri uri = Uri.fromFile(file);
+        }else{
+
+        }
         return ContextCompat.getDrawable(context, R.drawable.preview);
     }
 

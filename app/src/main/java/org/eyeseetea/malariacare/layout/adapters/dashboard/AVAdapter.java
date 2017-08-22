@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.sdk.common.VideoUtils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
+import java.io.File;
 import java.util.List;
 
 public class AVAdapter extends RecyclerView.Adapter {
@@ -34,6 +36,9 @@ public class AVAdapter extends RecyclerView.Adapter {
     }
     @Override
     public int getItemCount() {
+        if(medias==null) {
+            return 0;
+        }
         return medias.size();
     }
 
@@ -56,9 +61,20 @@ public class AVAdapter extends RecyclerView.Adapter {
 
         if(viewHolder instanceof GridMediaViewHolder){
             GridMediaViewHolder mediaViewHolder = (GridMediaViewHolder) viewHolder;
-            mediaViewHolder.name.setText(medias.get(position).getName());
-            Drawable drawable = medias.get(position).getFileFromPath(viewHolder.itemView.getContext());
-            mediaViewHolder.filename.setImageDrawable(drawable);
+            Media media = medias.get(position);
+            mediaViewHolder.name.setText(media.getName());
+            if(media.getType().equals(Media.MediaType.PICTURE)){
+                if(media.getResourcePath()!=null) {
+                    File file = new File(media.getResourcePath());
+                    Uri uri = Uri.fromFile(file);
+                    mediaViewHolder.filename.setImageURI(uri);
+                }
+            }else {
+                if(media.getResourcePath()!=null) {
+                    mediaViewHolder.filename.setImageBitmap(
+                            VideoUtils.getVideoPreview(media.getResourcePath(), context));
+                }
+            }
         }
         else if (viewHolder instanceof ListItemMediaViewHolder){
             ListItemMediaViewHolder mediaViewHolder = (ListItemMediaViewHolder) viewHolder;

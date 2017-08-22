@@ -147,7 +147,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
         final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-        inflater.inflate(R.layout.create_button, null);
 
         DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy =
                 new DashboardUnsentFragmentStrategy();

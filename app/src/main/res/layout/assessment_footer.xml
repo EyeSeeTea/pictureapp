@@ -24,13 +24,4 @@
     android:measureWithLargestChild="false"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/plusButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/ic_menu_add"
-        android:onClick="newSurvey"
-        tools:showIn="@layout/dashboard_row" />
-
 </LinearLayout>

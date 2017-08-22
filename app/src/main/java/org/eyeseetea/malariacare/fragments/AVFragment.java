@@ -50,10 +50,6 @@ import java.util.List;
 
 public class AVFragment extends Fragment implements MediaPresenter.View {
 
-    public interface Callback{
-        void openMedia(String media);
-    }
-
     public static final String TAG = ".AVFragment";
     protected AVAdapter mAdapter;
     private RecyclerView recyclerView;
@@ -121,21 +117,35 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         refreshList(mediaList, AVAdapter.ViewType.LIST);
     }
 
-    private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {
-        this.mAdapter = new AVAdapter(mediaList, viewType, getActivity(), new Callback(){
-            @Override
-            public void openMedia(String media) {
-                Intent implicitIntent = new Intent();
-                implicitIntent.setAction(Intent.ACTION_VIEW);
-                File file = new File(media);
-                Uri contentUri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID +".layout.adapters.dashboard.AVAdapter", file);
+    @Override
+    public void OpenMedia(String resourcePath) {
+        Intent implicitIntent = new Intent();
+        implicitIntent.setAction(Intent.ACTION_VIEW);
+        File file = new File(resourcePath);
+        Uri contentUri = FileProvider.getUriForFile(getActivity(),
+                BuildConfig.APPLICATION_ID + ".layout.adapters.dashboard.AVAdapter", file);
 
-                implicitIntent.setDataAndType(contentUri, PreferencesState.getInstance().getContext().getContentResolver().getType(contentUri));
-                implicitIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                implicitIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                getActivity().startActivity(Intent.createChooser(implicitIntent,PreferencesState.getInstance().getContext().getString(R.string.feedback_view_image)));
+        implicitIntent.setDataAndType(contentUri,
+                PreferencesState.getInstance().getContext().getContentResolver().getType(
+                        contentUri));
+        implicitIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        implicitIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        getActivity().startActivity(Intent.createChooser(implicitIntent,
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.feedback_view_image)));
+
+    }
+
+    private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {
+        this.mAdapter = new AVAdapter(mediaList, viewType, getActivity());
+
+        mAdapter.setOnClickMediaListener(new AVAdapter.OnClickMediaListener() {
+            @Override
+            public void onClick(Media media) {
+                mPresenter.onClickMedia(media);
             }
         });
+
         recyclerView.setAdapter(mAdapter);
     }
 

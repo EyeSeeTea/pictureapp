@@ -15,14 +15,15 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.sdk.common.VideoUtils;
-import org.eyeseetea.malariacare.fragments.AVFragment;
-import org.eyeseetea.sdk.common.VideoUtils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.io.File;
 import java.util.List;
 
 public class AVAdapter extends RecyclerView.Adapter {
+    public interface OnClickMediaListener {
+        void onClick(Media media);
+    }
 
     public enum ViewType {GRID, LIST}
 
@@ -32,13 +33,16 @@ public class AVAdapter extends RecyclerView.Adapter {
 
     Context context;
 
-    AVFragment.Callback callback;
+    private OnClickMediaListener mOnClickMediaListener;
 
-    public AVAdapter(List<Media> medias, ViewType typeOfView, Context context,  AVFragment.Callback callback) {
+    public AVAdapter(List<Media> medias, ViewType typeOfView, Context context) {
         this.medias = medias;
         this.typeOfView = typeOfView;
         this.context = context;
-        this.callback = callback;
+    }
+
+    public void setOnClickMediaListener(OnClickMediaListener onClickMediaListener) {
+        mOnClickMediaListener = onClickMediaListener;
     }
 
     @Override
@@ -85,7 +89,9 @@ public class AVAdapter extends RecyclerView.Adapter {
             mediaViewHolder.filename.setOnClickListener(new ImageView.OnClickListener() {
                 public void onClick(View v)
                 {
-                    callback.openMedia(media.getResourcePath());
+                    if (mOnClickMediaListener != null) {
+                        mOnClickMediaListener.onClick(media);
+                    }
                 }
             });
         } else if (viewHolder instanceof ListItemMediaViewHolder) {
@@ -108,7 +114,9 @@ public class AVAdapter extends RecyclerView.Adapter {
             ((TableRow) mediaViewHolder.icon.getParent()).setOnClickListener(new ImageView.OnClickListener() {
                 public void onClick(View v)
                 {
-                    callback.openMedia(media.getResourcePath());
+                    if (mOnClickMediaListener != null) {
+                        mOnClickMediaListener.onClick(media);
+                    }
                 }
             });
         }

@@ -84,7 +84,8 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         }
         viewCreated = true;
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view= inflater.inflate(R.layout.unsent_list_fragment, container, false);
+        return view;
     }
 
     @Override
@@ -146,6 +147,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
         final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+        inflater.inflate(R.layout.create_button, null);
 
         DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy =
                 new DashboardUnsentFragmentStrategy();
@@ -207,9 +209,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
-
-
-        setListShown(false);
     }
 
 
@@ -267,7 +266,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
             LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
-            setListShown(true);
         }
     }
 
@@ -323,7 +321,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         protected void onPreExecute() {
             super.onPreExecute();
             //spinner
-            setListShown(false);
         }
 
         @Override
@@ -335,7 +332,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         @Override
         protected void onPostExecute(PushResult pushResult) {
             super.onPostExecute(pushResult);
-            setListShown(true);
             showResponse(pushResult);
         }
 

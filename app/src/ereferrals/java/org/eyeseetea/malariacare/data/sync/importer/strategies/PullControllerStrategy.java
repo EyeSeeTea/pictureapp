@@ -8,7 +8,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CSVFileDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.CSVVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
@@ -17,14 +16,13 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.remote.repositories.CSVFileRepository;
-import org.eyeseetea.malariacare.data.remote.repositories.CSVVersionRepository;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVFileRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -38,14 +36,17 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
     private int csvNewVersion;
+    private MetadataUpdater mMetadataUpdater;
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
+        mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
     }
 
     @Override
@@ -64,10 +65,10 @@ public class PullControllerStrategy extends APullControllerStrategy {
         callback.onStep(PullStep.METADATA);
 
         try {
-            mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
+
 
             if (isNetworkAvailable()) {
-                checkCSVVersion(callback);
+                checkCSVVersion(callback, pullFilters);
             }
 
             if(!pullFilters.isDemo()) {
@@ -108,42 +109,17 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
-    private void checkCSVVersion(final IPullController.Callback callback) {
-        Context context = PreferencesState.getInstance().getContext();
-        ICSVVersionRepository csvVersionLocalDataSource = new CSVVersionLocalDataSource(context);
-        final ICSVVersionRepository csvVersionRepository = new CSVVersionRepository();
-
-        csvVersionLocalDataSource.getCSVVersion(new IDataSourceCallback<Integer>() {
-            @Override
-            public void onSuccess(Integer result) {
-                final int phoneVersion = result;
-                csvVersionRepository.getCSVVersion(new IDataSourceCallback<Integer>() {
-                    @Override
-                    public void onSuccess(Integer result) {
-                        if (phoneVersion < result) {
-                            csvNewVersion = result;
-                            checkNotSentSurveys(callback);
-                        } else {
-                            IUserRepository userDataSource = new UserAccountDataSource();
-                            UserAccount userAccount = userDataSource.getLoggedUser();
-                            userAccount.setCanAddSurveys(true);
-                            userDataSource.saveLoggedUser(userAccount);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                callback.onError(throwable);
-            }
-        });
-
+    private void checkCSVVersion(final IPullController.Callback callback, PullFilters pullFilters)
+            throws IOException {
+        if (mMetadataUpdater.hasToUpdateMetadata()) {
+            checkNotSentSurveys(callback);
+        } else {
+            IUserRepository userDataSource = new UserAccountDataSource();
+            UserAccount userAccount = userDataSource.getLoggedUser();
+            userAccount.setCanAddSurveys(true);
+            userDataSource.saveLoggedUser(userAccount);
+            mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
+        }
     }
 
     private void checkNotSentSurveys(final IPullController.Callback callback) {
@@ -216,20 +192,11 @@ public class PullControllerStrategy extends APullControllerStrategy {
         csvFileDataSource.updateCSVDB(new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                ICSVVersionRepository csvVersionLocalDataSource = new CSVVersionLocalDataSource(
-                        PreferencesState.getInstance().getContext());
-                csvVersionLocalDataSource.saveCSVVersion(csvNewVersion,
-                        new IDataSourceCallback<Integer>() {
-                            @Override
-                            public void onSuccess(Integer result) {
-                                return;
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                callback.onError(throwable);
-                            }
-                        });
+                try {
+                    mMetadataUpdater.saveNewVersion(csvNewVersion);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

@@ -103,11 +103,6 @@ public class UserDB extends BaseModel {
         }
     }
 
-    @Override
-    public void save() {
-        super.save();
-    }
-
     public static UserDB getUserFromDB(UserDB userDB) {
         if (userDB.getUid() == null) {
             return  null;

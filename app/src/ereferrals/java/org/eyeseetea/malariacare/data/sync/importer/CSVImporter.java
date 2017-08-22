@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 
+import android.util.Log;
+
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 
 import java.io.IOException;
@@ -12,6 +14,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class CSVImporter {
+    private static final String TAG = "CSVImporter";
+
     private Retrofit mRetrofit;
     private CSVImporterRetrofit mCSVImporterRetrofit;
     private final static String BASE_URL = "https://raw.githubusercontent"
@@ -43,16 +47,17 @@ public class CSVImporter {
         mCSVImporterRetrofit = mRetrofit.create(CSVImporterRetrofit.class);
     }
 
-    public void getCSVVersion(CSVImporterCallBack csvImporterCallBack) {
+    public String getCSVVersion() throws IOException {
 
         Response<ResponseBody> versionString = null;
         try {
             versionString = mCSVImporterRetrofit.getCSVFile(PopulateDB.VERSIONS_CSV).execute();
             String version = versionString.body().string();
-            csvImporterCallBack.onSuccess(version);
+            return version;
         } catch (IOException e) {
+            Log.e(TAG, "Error downloading csv Version: " + e.getMessage());
             e.printStackTrace();
-            csvImporterCallBack.onError(e);
+            throw e;
         }
 
     }

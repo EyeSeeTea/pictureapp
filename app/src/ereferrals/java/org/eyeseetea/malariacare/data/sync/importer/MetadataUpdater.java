@@ -33,6 +33,7 @@ public class MetadataUpdater {
     private static final String TAG = "MetadataUpdater";
     private CSVImporter csvImporter;
     private Context mContext;
+    private int githubVersion;
 
     public MetadataUpdater(Context context) {
         csvImporter = new CSVImporter();
@@ -41,7 +42,7 @@ public class MetadataUpdater {
 
 
     public boolean hasToUpdateMetadata() throws IOException {
-        int githubVersion = getGithubCSVVersion();
+        githubVersion = getGithubCSVVersion();
         if (getPhoneCSVersion() < githubVersion) {
             return true;
         }
@@ -67,10 +68,10 @@ public class MetadataUpdater {
         }
         //Get maximum total of questions
         Session.setMaxTotalQuestions(ProgramDB.getMaxTotalQuestions());
-
+        saveNewVersion();
     }
 
-    public void saveNewVersion(int githubVersion) throws IOException {
+    private void saveNewVersion() throws IOException {
         FileUtils.saveFile(PopulateDB.VERSIONS_CSV, String.valueOf(githubVersion).getBytes(),
                 mContext);
     }

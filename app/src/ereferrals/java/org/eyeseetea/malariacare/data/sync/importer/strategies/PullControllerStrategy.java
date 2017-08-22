@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
-    private int csvNewVersion;
     private MetadataUpdater mMetadataUpdater;
 
     public PullControllerStrategy(PullController pullController) {
@@ -150,7 +149,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void downloadCsvsAndRepopulateDB()
             throws IOException {
         mMetadataUpdater.updateMetadata();
-        mMetadataUpdater.saveNewVersion(csvNewVersion);
     }
 
     private boolean isNetworkAvailable() {

@@ -2,21 +2,22 @@ package org.eyeseetea.malariacare.fragments.strategies;
 
 import android.view.View;
 
-import org.eyeseetea.malariacare.data.database.datasources.CanAddSurveysLocalDataSource;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICanAddSurveysRepository;
-import org.eyeseetea.malariacare.domain.usecase.CanAddNewSurveyButtonUseCase;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 
 public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStrategy {
 
     @Override
     public void initFooter(final View footer) {
-        ICanAddSurveysRepository canAddSurveysLocalDataSource = new CanAddSurveysLocalDataSource();
-        CanAddNewSurveyButtonUseCase canAddNewSurveyButtonUseCase =
-                new CanAddNewSurveyButtonUseCase(canAddSurveysLocalDataSource);
-        canAddNewSurveyButtonUseCase.execute(new CanAddNewSurveyButtonUseCase.Callback() {
+        IUserRepository userReposit = new UserAccountDataSource();
+        GetUserUserAccountUseCase getUserUserAccountUseCase =
+                new GetUserUserAccountUseCase(userReposit);
+        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
             @Override
-            public void canAddNewSurveyButton(boolean canAddNewSurvey) {
-                int visibility = canAddNewSurvey ? View.VISIBLE : View.GONE;
+            public void onGetUserAccount(UserAccount userAccount) {
+                int visibility = userAccount.canAddSurveys() ? View.VISIBLE : View.GONE;
                 footer.setVisibility(visibility);
             }
         });

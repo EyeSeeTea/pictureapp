@@ -9,9 +9,9 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CSVFileDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CSVVersionLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.CanAddSurveysLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
@@ -25,13 +25,14 @@ import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupEx
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVFileRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVVersionRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICanAddSurveysRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
@@ -122,6 +123,11 @@ public class PullControllerStrategy extends APullControllerStrategy {
                         if (phoneVersion < result) {
                             csvNewVersion = result;
                             checkNotSentSurveys(callback);
+                        } else {
+                            IUserRepository userDataSource = new UserAccountDataSource();
+                            UserAccount userAccount = userDataSource.getLoggedUser();
+                            userAccount.setCanAddSurveys(true);
+                            userDataSource.saveLoggedUser(userAccount);
                         }
                     }
 
@@ -145,12 +151,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
         surveyLocalDataSource.getUnsentSurveys(new IDataSourceCallback<List<Survey>>() {
             @Override
             public void onSuccess(List<Survey> surveys) {
-                ICanAddSurveysRepository canAddSurveyLocalDataSource =
-                        new CanAddSurveysLocalDataSource();
+                IUserRepository userDataSource = new UserAccountDataSource();
+                UserAccount currentUser = userDataSource.getLoggedUser();
                 if (surveys.size() > 0) {
-                    canAddSurveyLocalDataSource.setCanAddSurveys(false);
+                    currentUser.setCanAddSurveys(false);
+                    userDataSource.saveLoggedUser(currentUser);
                 } else {
-                    canAddSurveyLocalDataSource.setCanAddSurveys(true);
+                    currentUser.setCanAddSurveys(true);
+                    userDataSource.saveLoggedUser(currentUser);
                     downloadCsvsAndRepopulateDB(callback);
                 }
             }

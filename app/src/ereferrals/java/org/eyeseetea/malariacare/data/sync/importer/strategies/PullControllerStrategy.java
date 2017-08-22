@@ -7,22 +7,18 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.CSVFileDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
-import org.eyeseetea.malariacare.data.remote.repositories.CSVFileRepository;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICSVFileRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -135,7 +131,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 } else {
                     currentUser.setCanAddSurveys(true);
                     userDataSource.saveLoggedUser(currentUser);
-                    downloadCsvsAndRepopulateDB(callback);
+                    try {
+                        downloadCsvsAndRepopulateDB();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        callback.onError(e);
+                    }
                 }
             }
 
@@ -146,64 +147,10 @@ public class PullControllerStrategy extends APullControllerStrategy {
         });
     }
 
-    private void downloadCsvsAndRepopulateDB(final IPullController.Callback callback) {
-        List<String> csvsToImport = FileCsvsStrategy.getCsvsToCreate();
-        ICSVFileRepository csvFileRepository = new CSVFileRepository();
-        final int[] csvImportedSize = {0};
-        final ICSVFileRepository csvFileDataSource = new CSVFileDataSource(
-                PreferencesState.getInstance().getContext());
-        for (final String csvToImport : csvsToImport) {
-            csvFileRepository.getCSVFile(csvToImport, new IDataSourceCallback<byte[]>() {
-                @Override
-                public void onSuccess(byte[] result) {
-                    csvFileDataSource.saveCSVFile(csvToImport, result,
-                            new IDataSourceCallback<Void>() {
-                                @Override
-                                public void onSuccess(Void result) {
-                                    csvImportedSize[0]++;
-
-                                }
-
-                                @Override
-                                public void onError(Throwable throwable) {
-                                    callback.onError(throwable);
-                                }
-                            });
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    callback.onError(throwable);
-                }
-            });
-        }
-        if (csvImportedSize[0] == csvsToImport.size()) {
-            clearCSVSDBAndRepopulate(csvFileDataSource, callback);
-        } else {
-            callback.onError(new Exception(
-                    "Not all csv imported needed: " + csvsToImport.size() + " imported: "
-                            + csvImportedSize[0]));
-        }
-
-    }
-
-    private void clearCSVSDBAndRepopulate(ICSVFileRepository csvFileDataSource,
-            final IPullController.Callback callback) {
-        csvFileDataSource.updateCSVDB(new IDataSourceCallback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                try {
-                    mMetadataUpdater.saveNewVersion(csvNewVersion);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                callback.onError(throwable);
-            }
-        });
+    private void downloadCsvsAndRepopulateDB()
+            throws IOException {
+        mMetadataUpdater.updateMetadata();
+        mMetadataUpdater.saveNewVersion(csvNewVersion);
     }
 
     private boolean isNetworkAvailable() {

@@ -63,17 +63,10 @@ public class CSVImporter {
     }
 
 
-    public void importCSV(String csvName, CSVImporterCallBack csvImporterCallBack) {
+    public byte[] importCSV(String csvName) throws IOException {
         Response<ResponseBody> csv = null;
-        try {
             csv = mCSVImporterRetrofit.getCSVFile(csvName).execute();
-            csvImporterCallBack.onSuccess(csv.body().bytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-            csvImporterCallBack.onError(e);
-        }
-
-
+        return csv.body().bytes();
     }
 
     public interface CSVImporterCallBack<T> {

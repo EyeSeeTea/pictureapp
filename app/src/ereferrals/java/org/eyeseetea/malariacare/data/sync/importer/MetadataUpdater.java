@@ -6,13 +6,28 @@ import android.util.Log;
 
 import com.opencsv.CSVReader;
 
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.sdk.common.FileUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class MetadataUpdater {
     private static final String TAG = "MetadataUpdater";
@@ -33,10 +48,33 @@ public class MetadataUpdater {
         return false;
     }
 
+    public void updateMetadata() throws IOException {
+        List<String> csvsToImport = FileCsvsStrategy.getCsvsToCreate();
+        for (String csvName : csvsToImport) {
+            byte[] csvImported = csvImporter.importCSV(csvName);
+            FileUtils.saveFile(csvName, csvImported, mContext);
+        }
+        updateCSVDB();
+    }
+
+    private void updateCSVDB() throws IOException {
+        deleteDB();
+        try {
+            PopulateDB.populateDB(mContext);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        //Get maximum total of questions
+        Session.setMaxTotalQuestions(ProgramDB.getMaxTotalQuestions());
+
+    }
+
     public void saveNewVersion(int githubVersion) throws IOException {
         FileUtils.saveFile(PopulateDB.VERSIONS_CSV, String.valueOf(githubVersion).getBytes(),
                 mContext);
     }
+
 
     private int getPhoneCSVersion() throws IOException {
         String version = null;
@@ -75,5 +113,19 @@ public class MetadataUpdater {
         return Integer.parseInt(csvImporter.getCSVVersion().replace("\n", ""));
     }
 
+    private void deleteDB() {
+        SurveyDB.deleteAll();
+        ProgramDB.deleteAll();
+        TabDB.deleteAll();
+        HeaderDB.deleteAll();
+        AnswerDB.deleteAll();
+        OptionAttributeDB.deleteAll();
+        OptionDB.deleteAll();
+        QuestionDB.deleteAll();
+        QuestionRelationDB.deleteAll();
+        MatchDB.deleteAll();
+        QuestionOptionDB.deleteAll();
+        QuestionThresholdDB.deleteAll();
+    }
 
 }

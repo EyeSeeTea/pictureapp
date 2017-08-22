@@ -131,6 +131,12 @@ public class TabDB extends BaseModel {
         return new Select().from(TabDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        for (TabDB tabDB : getAllTabs()) {
+            tabDB.delete();
+        }
+    }
+
     /*
      * Return mTabDBs filter by mProgramDB and order by orderpos field
      */
@@ -285,4 +291,6 @@ public class TabDB extends BaseModel {
                 ", id_program_fk=" + id_program_fk +
                 '}';
     }
+
+
 }

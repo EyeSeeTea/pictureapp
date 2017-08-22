@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -9,6 +10,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
@@ -20,15 +22,18 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private static final String SURVEY_ACTION_ID = "issueReferral";
 
     private SurveyContainerWSObject mSurveyContainerWSObject;
+    private String language;
 
     public ConvertToWSVisitor() {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        ISettingsRepository currentLanguageRepository = new SettingsDataSource();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
+        language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.ws_version), PreferencesState.getInstance().getContext().getString(
                 R.string.ws_source), credentials.getUsername(),
-                credentials.getPassword());
+                credentials.getPassword(), language);
     }
 
     private static List<AttributeValueWS> getValuesWSFromSurvey(SurveyDB survey) {

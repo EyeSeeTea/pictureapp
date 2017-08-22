@@ -101,4 +101,6 @@
     <string name="user_accept_key" translatable="false">user_accept_key</string>
     <string name="show_announcement_key" translatable="false">show_announcement_key</string>
     <string name="phone_meta_data_key" translatable="false">phone_meta_data_key</string>
+    <string name="default_drive_folder" translatable="false">0B7TXlu17DcAbNHNvRUxnSDd4LUk</string>
+    <string name="drive_key" translatable="false">drive_key</string>
 </resources>

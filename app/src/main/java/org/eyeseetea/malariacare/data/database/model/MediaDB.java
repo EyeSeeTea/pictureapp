@@ -22,15 +22,10 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(database = AppDatabase.class, name = "Media")
 public class MediaDB extends BaseModel {
@@ -38,7 +33,7 @@ public class MediaDB extends BaseModel {
     /**
      * Null media value to express that a question has NO media without using queries
      */
-    private static MediaDB noMedia = new MediaDB(Constants.NO_MEDIA_ID, null);
+    private static MediaDB noMedia = new MediaDB(Constants.NO_MEDIA_ID, null, null);
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -53,6 +48,9 @@ public class MediaDB extends BaseModel {
     @Column
     String filename;
 
+    @Column
+    String program;
+
     public MediaDB() {
     }
 
@@ -60,6 +58,27 @@ public class MediaDB extends BaseModel {
         this.media_type = media_type;
         this.resource_url = resource_url;
         this.filename = null;
+    }
+
+    public MediaDB(int media_type, String resource_url, String program) {
+        this.media_type = media_type;
+        this.resource_url = resource_url;
+        this.filename = null;
+        this.program = program;
+    }
+
+    public MediaDB(int media_type, String resource_url, String filename, String program) {
+        this.media_type = media_type;
+        this.resource_url = resource_url;
+        this.filename = filename;
+        this.program = program;
+    }
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
     }
 
     public long getId_media() {

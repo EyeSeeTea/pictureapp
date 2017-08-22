@@ -4,11 +4,12 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationManagerStrategy;
+import org.eyeseetea.malariacare.data.authentication.strategies.AuthenticationManagerStrategy;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
-import org.eyeseetea.malariacare.data.remote.ForgotPasswordDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -19,15 +20,15 @@ import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 public class AuthenticationManager implements IAuthenticationManager {
     IAuthenticationDataSource userAccountLocalDataSource;
     IAuthenticationDataSource userAccountRemoteDataSource;
-    ForgotPasswordDataSource mForgotPasswordDataSource;
     IUserRepository mUserRepository;
+    AAuthenticationManagerStrategy mAuthenticationManagerStrategy;
 
     public AuthenticationManager(Context context) {
 
         userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
         userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
-        mForgotPasswordDataSource = new ForgotPasswordDataSource(context);
         mUserRepository = new UserAccountDataSource();
+        mAuthenticationManagerStrategy = new AuthenticationManagerStrategy(context);
     }
 
     @Override
@@ -65,18 +66,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     @Override
     public void forgotPassword(String username,
             final Callback<ForgotPasswordMessage> callback) {
-        mForgotPasswordDataSource.forgotPassword(username,
-                new IDataSourceCallback<ForgotPasswordMessage>() {
-                    @Override
-                    public void onSuccess(ForgotPasswordMessage result) {
-                        callback.onSuccess(result);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+        mAuthenticationManagerStrategy.forgotPassword(username, callback);
     }
 
     private void remoteLogout(final IAuthenticationManager.Callback<Void> callback) {

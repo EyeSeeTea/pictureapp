@@ -108,6 +108,18 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0ff574d40926a9541f1c04cdd0a1ce3c03140d51" />
+
+        <provider
+            android:authorities="${applicationId}.layout.adapters.dashboard.AVAdapter"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:readPermission="true"
+            android:writePermission="true"
+            android:name="android.support.v4.content.FileProvider">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

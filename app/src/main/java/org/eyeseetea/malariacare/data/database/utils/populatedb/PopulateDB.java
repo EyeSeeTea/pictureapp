@@ -38,7 +38,6 @@ import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
 import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
@@ -64,8 +63,6 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
-import org.eyeseetea.sdk.common.FileUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -977,13 +974,5 @@ public class PopulateDB {
                 ScoreDB.class,
                 SurveyScheduleDB.class,
                 UserDB.class).toArray());
-    }
-
-    public static void wipeMedia() {
-        for(String path:MediaRepository.listOfDownloadedFiles()){
-            FileUtils.removeFile(path);
-        }
-        wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
-                MediaDB.class).toArray());
     }
 }

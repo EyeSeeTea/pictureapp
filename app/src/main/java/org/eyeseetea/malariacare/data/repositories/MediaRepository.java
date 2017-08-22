@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.repositories;
 
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.model.MediaDB;
@@ -9,8 +10,6 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.utils.Constants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MediaRepository implements IMediaRepository {
@@ -28,6 +27,7 @@ public class MediaRepository implements IMediaRepository {
         return MediaMapper.mapFromDbToDomain(getAllByResourceUid(url));
     }
 
+    @Override
     public List<Media> getAllDownloaded() {
         return MediaMapper.mapFromDbToDomain(getAllInLocal());
     }
@@ -73,7 +73,7 @@ public class MediaRepository implements IMediaRepository {
             return new Media(mediaDB.getId_media(),
                     Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(),
                     mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
-                    MediaMapper.getSizeInMB(mediaDB.getFilename()));
+                    MediaMapper.getSizeInMB(mediaDB.getFilename()), mediaDB.getProgram());
         }
     }
 
@@ -82,24 +82,6 @@ public class MediaRepository implements IMediaRepository {
                 .where(MediaDB_Table.resource_url.is(resourceUrl))
                 .queryList();
     }
-
-    /**
-     * Returns a media that holds a reference to the same resource with an already downloaded copy
-     * of the file.
-     */
-    public Media findLocalByUid(String resourceUrl) {
-        MediaDB mediaDB = new Select().from(MediaDB.class)
-                .where(MediaDB_Table.filename.isNotNull())
-                .and(MediaDB_Table.resource_url.is(resourceUrl))
-                .querySingle();
-        if(mediaDB==null){
-            return null;
-        }else{
-            return new Media(mediaDB.getId_media(), Media.getFilenameFromPath(mediaDB.getFilename()), mediaDB.getFilename(), mediaDB.getResourceUrl(), convertConstantToMediaType(mediaDB.getMediaType()),
-                    MediaMapper.getSizeInMB(mediaDB.getFilename()));
-        }
-    }
-
 
     public Media.MediaType convertConstantToMediaType(int mediaType) {
         if (mediaType == Constants.MEDIA_TYPE_IMAGE) {
@@ -110,7 +92,7 @@ public class MediaRepository implements IMediaRepository {
         return null;
     }
 
-    public static int convertMediaTypeToConstant(Media.MediaType mediaType) {
+    public int convertMediaTypeToConstant(Media.MediaType mediaType) {
         if (mediaType.equals(Media.MediaType.PICTURE)){
             return Constants.MEDIA_TYPE_IMAGE;
         } else if (mediaType.equals(Media.MediaType.VIDEO)){
@@ -119,47 +101,27 @@ public class MediaRepository implements IMediaRepository {
         return 0;
     }
 
-    public void updateResourcePath(Media media) {
-        MediaDB mediaDb = getMedia(media.getId());
-        mediaDb.setFilename(media.getResourcePath());
-        mediaDb.update();
-    }
-
-    private MediaDB getMedia(long id) {
+    private MediaDB getMedia(String resourceUrl) {
         return new Select().
                 from(MediaDB.class).
-                where(MediaDB_Table.id_media.is(id))
+                where(MediaDB_Table.resource_url.eq(resourceUrl))
                 .querySingle();
 
     }
 
-    public void updateModel(Media media) {
-        MediaDB mediaDB = getMedia(media.getId());
-        mediaDB.setFilename(media.getResourcePath());
-        mediaDB.update();
+
+    public boolean existMedia(Media media) {
+        return (getMedia(media.getResourceUrl())!=null);
     }
 
-    public void deleteModel(Media media) {
-        MediaDB mediaDb = getMedia(media.getId());
+    public void save(Media media) {
+        MediaDB mediaDB = MediaMapper.mapFromDomainToDb(media);
+        mediaDB.save();
+    }
+
+    public void delete(Media media) {
+        MediaDB mediaDb = getMedia(media.getResourceUrl());
         mediaDb.delete();
-    }
-
-    public int updateSyncedFiles(HashMap<String, String> syncedFiles) {
-        int correctSyncedFiles = 0;
-        //Try to reuse a local copy if another media references same url
-        if (syncedFiles.size() > 0) {
-            for (String mediaUid : syncedFiles.keySet()) {
-                String absolutePath = syncedFiles.get(mediaUid);
-                List<Media> allMediaWithSameResource = getAllMediaByResourceUid(mediaUid);
-                for (Media localMedia : allMediaWithSameResource) {
-                    correctSyncedFiles++;
-                    System.out.println(localMedia.toString() + "\tsaved in " + absolutePath);
-                    localMedia.setResourcePath(absolutePath);
-                    updateModel(localMedia);
-                }
-            }
-        }
-        return correctSyncedFiles;
     }
 
     public void updateNotDownloadedMedia(Media media) {
@@ -167,20 +129,34 @@ public class MediaRepository implements IMediaRepository {
         if(mediaDB!=null){
             if(mediaDB.getFilename()!=null){
                 System.out.println(mediaDB.getResourceUrl() +" is already downloaded");
-                media=findLocalByUid(media.getResourceUrl());
             }
         }else{
-            mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl());
+            mediaDB = new MediaDB(convertMediaTypeToConstant(media.getType()), media.getResourceUrl(), media.getProgram());
             mediaDB.save();
         }
     }
 
-    public static List<String> listOfDownloadedFiles(){
-        List<String> paths = new ArrayList<>();
-        List<MediaDB> mediaList = new Select().from(MediaDB.class).where(MediaDB_Table.filename.isNotNull()).queryList();
-        for(MediaDB mediaDB:mediaList){
-            paths.add(mediaDB.getFilename());
+    public void update(Media media) {
+        MediaDB mediaDB = getMedia(media.getResourceUrl());
+        if (mediaDB.getFilename()==null) {
+            mediaDB.setFilename(media.getResourcePath());
+            mediaDB.update();
         }
-        return paths;
+    }
+
+    public void deleteAll() {
+        Delete.table(MediaDB.class);
+    }
+
+    @Override
+    public String getResourcePathByUid(String resourceUrl) {
+        MediaDB mediaDB =  new Select().
+                from(MediaDB.class).
+                where(MediaDB_Table.resource_url.eq(resourceUrl))
+                .querySingle();
+        if(mediaDB==null){
+            return null;
+        }
+        return mediaDB.getFilename();
     }
 }

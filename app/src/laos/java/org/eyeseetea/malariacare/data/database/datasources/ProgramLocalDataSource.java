@@ -22,19 +22,4 @@ public class ProgramLocalDataSource implements IProgramRepository {
         Program program = new Program(programDB.getName(), programDB.getUid());
         return program;
     }
-
-    @Override
-    public boolean checkLastDownloadedProgramMedia(String program) {
-        return false;
-    }
-
-    @Override
-    public void saveLastDownloadedProgramMedia(String code) {
-
-    }
-
-    @Override
-    public void removeProgramMedia() {
-
-    }
 }

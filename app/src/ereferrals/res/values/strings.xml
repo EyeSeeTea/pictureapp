@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- TERMS FROM EYESEETEA -->
     <string name="malaria_case_based_reporting">"eReferrals"</string>
     <string name="volunteer_label">"IPC:"</string>
     <string name="new_case_title">"NEW CASE"</string>
@@ -144,42 +145,6 @@
     <string name="error_conflict_title">"Error"</string>
     <string name="confirmation_really_exit_title">"Really Exit?"</string>
     <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
-    <string name="ipc_issueEntry_q_firstName">"First name"</string>
-    <string name="ipc_issueEntry_q_lastName">"Last Name"</string>
-    <string name="ipc_issueEntry_q_gender">"Gender"</string>
-    <string name="ipc_issueEntry_q_motherName">"Mother name"</string>
-    <string name="ipc_issueEntry_q_birthDistrict">"Birth District"</string>
-    <string name="ipc_issueEntry_q_yearOfBirth">"Year of Birth"</string>
-    <string name="ipc_issueEntry_q_numberOfChildren">"# Children"</string>
-    <string name="ipc_issueEntry_q_currentMethod">"Current method"</string>
-    <string name="ipc_issueEntry_q_channelOfReferral">"Channel of referral"</string>
-    <string name="ipc_issueEntry_q_civilStatus">"Civil Status"</string>
-    <string name="ipc_issueEntry_q_ownershipOfPhone">"Ownership of Phone"</string>
-    <string name="ipc_issueEntry_q_phoneNumber">"Phone number"</string>
-    <string name="ipc_issueEntry_q_program">"Program"</string>
-    <string name="common_option_method_none">"None"</string>
-    <string name="common_option_method_injection">"Injectable"</string>
-    <string name="common_option_method_iud">"IUD"</string>
-    <string name="common_option_method_condom">"Condom"</string>
-    <string name="common_option_method_pills">"Pills"</string>
-    <string name="common_option_method_implant">"Implant"</string>
-    <string name="common_option_method_other">"Other"</string>
-    <string name="common_option_channelOfReferral_healthFacility">"Health Facility"</string>
-    <string name="common_option_channelOfReferral_groupSession">"Group Session"</string>
-    <string name="common_option_channelOfReferral_doorToDoor">"Door To Door"</string>
-    <string name="common_option_civilStatus_unmarried">"Unmarried"</string>
-    <string name="common_option_civilStatus_married">"Married"</string>
-    <string name="common_option_civilStatus_divorced">"Divorced"</string>
-    <string name="common_option_civilStatus_widowed">"Widowed"</string>
-    <string name="common_option_ownershipOfPhone_noMobile">"No Mobile"</string>
-    <string name="common_option_ownershipOfPhone_herNumber">"Her Number"</string>
-    <string name="common_option_ownershipOfPhone_husbandPartner">"Husband/Partner"</string>
-    <string name="common_option_ownershipOfPhone_shared">"Shared"</string>
-    <string name="common_option_program_familyPlanning">"Family Planning"</string>
-    <string name="common_option_program_cervicalCancer">"Cervical Cancer"</string>
-    <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
-    <string name="common_option_gender_male">"Male"</string>
-    <string name="common_option_gender_female">"Female"</string>
     <string name="login_error_json">"Error reading json config file. Please contact your administrator."</string>
 
     <string name="admin_announcement">"Administrator announcement"</string>
@@ -212,4 +177,743 @@
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
     <string name="ws_unknown_exception">Unknown exception.</string>
     <string name="feedback_view_image">Open image with...</string>
+    <string name="drive_title">Drive root folder</string>
+
+    <!-- TERMS FROM POEDITOR -->
+    <!-- Fuzzy -->
+    <string name="login_userName">"User Name"</string>
+
+    <!-- Fuzzy -->
+    <string name="login_password">"Password"</string>
+
+    <!-- Open Referrals -->
+    <!-- Fuzzy -->
+    <string name="ipc_menu_openReferrals">"Open referrals"</string>
+
+    <!-- Add + -->
+    <!-- Fuzzy -->
+    <string name="ipc_menu_issueReferral">"Issue referral +"</string>
+
+    <!-- About -->
+    <!-- Fuzzy -->
+    <string name="common_menu_about">"About"</string>
+
+    <!-- Log off -->
+    <!-- Fuzzy -->
+    <string name="common_menu_logOff">"Log Off"</string>
+
+    <!-- Redeemed last 60 days -->
+    <!-- Fuzzy -->
+    <string name="provider_menu_redeemedLast60Days">"Redeemed last 60 days"</string>
+
+    <!-- New redemption -->
+    <!-- Fuzzy -->
+    <string name="provider_menu_newRedemption">"New redemption"</string>
+
+    <!-- Find Voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_menu_findVoucher">"Find Voucher"</string>
+
+    <!-- Show all vouchers -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_filter_showAllVouchers">"all un-redeemed"</string>
+
+    <!-- Show vouchers with actions -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_filter_showVouchersWithActions">"un-redeemed pending actions"</string>
+
+    <!-- Issued -->
+    <!-- Fuzzy -->
+    <string name="ipc_statistics_rowHeader_Issued">"Issued"</string>
+
+    <!-- Performance vs target -->
+    <!-- Fuzzy -->
+    <string name="ipc_statistics_rowHeader_performanceVsTarget">"Issued vs target"</string>
+
+    <!-- Total credit -->
+    <!-- Fuzzy -->
+    <string name="common_statistics_rowHeader_totalCredit">"Total credit"</string>
+
+    <!-- Information last calculated -->
+    <!-- Fuzzy -->
+    <string name="common_statistics_footer_InformationLastCalculated">"Information last calculated"</string>
+
+    <!-- ago -->
+    <!-- Fuzzy -->
+    <string name="common_statistics_footer_Ago">"ago"</string>
+
+    <!-- Vouchers found -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_msg_vouchersFound">"Vouchers found"</string>
+
+    <!-- Voucher Code -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_result_tableHeader_VoucherCode">"Voucher Code"</string>
+
+    <!-- Client Phone -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_result_tableHeader_clientPhone">"Client Phone"</string>
+
+    <!-- Days since issue -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_result_tableHeader_daysSinceIssue">"Days since issue"</string>
+
+    <!-- Follow-up -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_result_tableHeader_FollowUp">"Follow-up"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_btn_backHome">"Back"</string>
+
+    <!-- About eReferals App -->
+    <!-- Fuzzy -->
+    <string name="common_about_titleText">"About eReferals App"</string>
+
+    <!-- Version -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_version">"Version"</string>
+
+    <!-- dhis_server -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_dhisServer">"DHIS server"</string>
+
+    <!-- Show Form -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_btn_editEntry">"Edit Issue Referral Entry"</string>
+
+    <!-- Referrals redeemed in the last 60 days -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_titleText">"Referrals redeemed in the last 60 days"</string>
+
+    <!-- First name -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_firstName">"First name"</string>
+
+    <!-- Last name -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_lastName">"Last Name"</string>
+
+    <!-- Gender -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_gender">"Gender"</string>
+
+    <!-- Mother name -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_motherName">"Mother name"</string>
+
+    <!-- Birth District -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_birthDistrict">"Birth District"</string>
+
+    <!-- Year of Birth -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_yearOfBirth">"Year of Birth"</string>
+
+    <!-- # Children -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_numberOfChildren">"# Children"</string>
+
+    <!-- Current method -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_currentMethod">"Current method"</string>
+
+    <!-- Channel of referral -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_channelOfReferral">"Channel of referral"</string>
+
+    <!-- Civil Status -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_civilStatus">"Civil Status"</string>
+
+    <!-- Ownership of Phone -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_ownershipOfPhone">"Ownership of Phone"</string>
+
+    <!-- Phone number -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_phoneNumber">"Phone number"</string>
+
+    <!-- Further Information consent -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_furtherInformationConsent">"Further Information consent"</string>
+
+    <!-- Program -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_q_program">"Program"</string>
+
+    <!-- Issue Referal -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_btn_issueReferal">"Issue Referal"</string>
+
+    <!-- Voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_q_voucher">"Voucher"</string>
+
+    <!-- Method -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_q_service">"Service"</string>
+
+    <!-- User is not logged in or session is expired -->
+    <!-- Fuzzy -->
+    <string name="session_msg_expired">"User is not logged in or session is expired"</string>
+
+    <!-- Please login again -->
+    <!-- Fuzzy -->
+    <string name="session_msg_loginAgain">"Please login again"</string>
+
+    <!-- here -->
+    <!-- Fuzzy -->
+    <string name="session_msg_here">"here"</string>
+
+    <!-- Client Details for issuing a referral -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_titleText">"Client Details for issuing a referral"</string>
+
+    <!-- Processed successfully -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_processedSuccessfully">"Processed successfully"</string>
+
+    <!-- Voucher sent to client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherIssued">"Voucher [voucherNo] issued - Please give this number to client."</string>
+
+    <!-- Send data fail -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_sendDataFailed">"Send data fail"</string>
+
+    <!-- User loggin doesn't have authority on any orgUnit -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_userLogginWithoutAuthority">"User loggin doesn't have authority on any orgUnit"</string>
+
+    <!-- Failed during received data processing -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_failedDuringReceivedDataProcessing">"Failed during received data processing"</string>
+
+    <!-- Username is missing -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_usernameMissing">"Username is missing"</string>
+
+    <!-- Password is missing -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_passwordMissing">"Password is missing"</string>
+
+    <!-- Creating the client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_creatingClient">"Creating the client"</string>
+
+    <!-- The client CUIC is -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientCUICis">"The client CUIC is"</string>
+
+    <!-- The client is created with id -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_cientCreatedWithId">"The client is created with id"</string>
+
+    <!-- Client created responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientCreatedError">"Client created responseCode is not 200, but"</string>
+
+    <!-- This is the details -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_bugDetails">"This is the details"</string>
+
+    <!-- Enrolling the Client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_enrollingClient">"Enrolling the Client"</string>
+
+    <!-- Enrolled the Client in program -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_enrolledClientInProgram">"Enrolled the Client in program"</string>
+
+    <!-- The client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_theClient">"The client"</string>
+
+    <!-- enroll to program -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_enrollProgram">"enroll to program"</string>
+
+    <!-- responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_responseCodeNot200">"responseCode is not 200, but"</string>
+
+    <!-- Creating the voucher -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_creatingVoucher">"Creating the voucher"</string>
+
+    <!-- The voucher is created with id -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherCreatedWithId">"The voucher is created with id"</string>
+
+    <!-- Voucher create responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherCreateError">"Voucher create responseCode is not 200, but"</string>
+
+    <!-- Add client/voucher relationship -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_addClientVoucherRelationship">"Add client/voucher relationship"</string>
+
+    <!-- The relationship is added -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_relationshipAdded">"The relationship is added"</string>
+
+    <!-- Voucher client relationship update responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherClientRelationshipUpdateError">"Voucher client relationship update reponseCode is not 200, but"</string>
+
+    <!-- The voucher is enrolled in program -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherEnrolledInProgram">"The voucher is enrolled in program"</string>
+
+    <!-- Creating event for the voucher -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_creatingEventForVoucher">"Creating event for the voucher"</string>
+
+    <!-- The voucher event is created with id -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherEventIsCreatedWithId">"The voucher event is created with id"</string>
+
+    <!-- Creating event for the client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_creatingEventForTheClient">"Creating event for the client"</string>
+
+    <!-- The client event is created with id -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientEventCreatedWithId">"The client event is created with id"</string>
+
+    <!-- Sending SMS Message to Client Number -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_sendingSMSMessageToClientNumber">"Sending SMS Message to Client Number"</string>
+
+    <!-- Sent the SMS Message to Client -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_sentSMSMessageToClient">"Sent the SMS Message to Client"</string>
+
+    <!-- SMS process message -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_smsPocessMessage">"SMS process message"</string>
+
+    <!-- Stats -->
+    <!-- Fuzzy -->
+    <string name="common_menu_statistics">"Statistics"</string>
+
+    <!-- Referrals redeemed -->
+    <!-- Fuzzy -->
+    <string name="common_statistics_rowHeader_referralsRedeemed">"Referrals redeemed"</string>
+
+    <!-- Find Voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_titleText">"Find Voucher"</string>
+
+    <!-- Find -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_btn_find">"Find"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_result_btn_back">"Back"</string>
+
+    <!-- Details for redeeming a referral -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_titleText">"Details for redeeming a referral"</string>
+
+    <!-- Program -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_q_program">"Program"</string>
+
+    <!-- Redeem -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_btn_redeem">"Redeem"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_btn_backToSearch">"Back"</string>
+
+    <!-- Edit Redeem Entry -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_btn_editRedeemEntry">"Edit Redeem Entry"</string>
+
+    <!-- Back -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_btn_back">"Back"</string>
+
+    <!-- Referrals redeemed -->
+    <!-- Fuzzy -->
+    <string name="ipc_menu_referralsRedeemed">"Referrals redeemed"</string>
+
+    <!-- Phone -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_tableHeader_phone">"Phone"</string>
+
+    <!-- Days since issue -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_tableHeader_daysSinceIssue">"Days since issue"</string>
+
+    <!-- Follow-up -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_tableHeader_followUp">"Follow-up"</string>
+
+    <!-- Client -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_tableHeader_client">"Client"</string>
+
+    <!-- Phone -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_tableHeader_phone">"Phone"</string>
+
+    <!-- Redemption date -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_tableHeader_redemptionDate">"Redemption date"</string>
+
+    <!-- Login -->
+    <!-- Fuzzy -->
+    <string name="login_btn_login">"Login"</string>
+
+    <!-- Enroll voucher in program responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_enrollVoucherInProgramError">"Enroll voucher in program responseCode is not 200, but"</string>
+
+    <!-- Voucher event create responseCode not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherEventCreateError">"Voucher event create responseCode not 200, but"</string>
+
+    <!-- Client event create responseCode not 200, but -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_clientEventCreateError">"Client event create responseCode not 200, but"</string>
+
+    <!-- Start redeem -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_startRedeem">"Start redeem"</string>
+
+    <!-- Searching vouchers by code -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_searchingVouchersByCode">"Searching vouchers by code"</string>
+
+    <!-- Checking password code -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_checkingPasswordCode">"Checking password code"</string>
+
+    <!-- Password code provided -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_passwordCodeProvided">"Password code provided"</string>
+
+    <!-- Matching -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_matchingPasswordCode">"Matching"</string>
+
+    <!-- Pass -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_matchingPass">"Pass"</string>
+
+    <!-- Failed -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_matchingFailed">"Failed"</string>
+
+    <!-- ok -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
+
+    <!-- Getting data of the voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_gettingDataVoucher">"Getting data of the voucher"</string>
+
+    <!-- with all attribute values and relationships -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_withAllAttributeValuesAndRelationships">"with all attribute values and relationships"</string>
+
+    <!-- Event create responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_eventCreateError">"Event create responseCode is not 200, but"</string>
+
+    <!-- Details -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_bugDetails">"Details"</string>
+
+    <!-- Creating events for the client -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_creatingEventsForTheClient">"Creating events for the client"</string>
+
+    <!-- Updating the status of voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_updatingStatusVoucher">"Updating the status of voucher"</string>
+
+    <!-- Voucher status update responseCode is not 200, but -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_voucherStatusUpdateError">"Voucher status update responseCode is not 200, but"</string>
+
+    <!-- Creating Events for the voucher -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_creatingVoucherEvents">"Creating Events for the voucher"</string>
+
+    <!-- The Voucher with voucherCode -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_voucherWithCode">"The Voucher with code"</string>
+
+    <!-- is not in ISSUE status -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_isNotIssueStatus">"is not in ISSUE status"</string>
+
+    <!-- does not exists -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_notExists">"does not exists"</string>
+
+    <!-- Referrals that haven't been redeemed -->
+    <!-- Fuzzy -->
+    <string name="ipc_openReferralsList_titleText">"Referrals that haven't been redeemed"</string>
+
+    <!-- Statistics -->
+    <!-- Fuzzy -->
+    <string name="common_statistics_titleText">"Statistics"</string>
+
+    <!-- First Name -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_q_firstName">"First Name"</string>
+
+    <!-- Last Name -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_q_lastName">"Surname"</string>
+
+    <!-- Monther Name -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_q_motherName">"Monther Name"</string>
+
+    <!-- District of Birth -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_q_birthDistrict">"District of Birth"</string>
+
+    <!-- Processing Issuing -->
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_processingIssuing">"Processing Issuing"</string>
+
+    <!-- Phone -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemList_tableHeader_phone">"Phone"</string>
+
+    <!-- Redemption Date -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemList_tableHeader_redemptionDate">"Redemption Date"</string>
+
+    <!-- Service Provided -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemList_tableHeader_serviceProvided">"Service Provided"</string>
+
+    <!-- Error Occurred During The Search -->
+    <!-- Fuzzy -->
+    <string name="provider_findVoucher_msg_error">"Error occurred during the search"</string>
+
+    <!-- Referral Redeemed -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_referralRedeemed">"Referral Redeemed"</string>
+
+    <!-- Amount Credited -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_amountCredited">"Amount Credited"</string>
+
+    <!-- Referral Redeem Failed -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_fail">"Referral Redeem Failed"</string>
+
+    <!-- Processing Redeeming -->
+    <!-- Fuzzy -->
+    <string name="provider_redeemEntry_msg_processingRedeeming">"Processing Redeeming"</string>
+
+    <!-- Language -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_language">"Language"</string>
+
+    <!-- Current User -->
+    <!-- Fuzzy -->
+    <string name="common_about_rowHeader_currentUser">"Current User"</string>
+
+    <!-- Enter data in this field -->
+    <!-- Fuzzy -->
+    <string name="common_validation_requiredValue">"Enter data in this field"</string>
+
+    <!-- The value should be between [0, 20] -->
+    <!-- Fuzzy -->
+    <string name="common_validation_valueMax">"The value should be less than or equal to "</string>
+
+    <!-- Length should be not over 12 and not less then 15. -->
+    <!-- Fuzzy -->
+    <string name="common_validation_phoneNumberLengthFor00">"Length should be not over 12 and not less then 15"</string>
+
+    <!-- Length should be 10 -->
+    <!-- Fuzzy -->
+    <string name="common_validation_phoneNumberLengthForLocal">"Length should be 10"</string>
+
+    <!-- Number should start with '00', '06', '07' -->
+    <!-- Fuzzy -->
+    <string name="common_validation_phoneNumberStartWith">"Number should start with '00', '06', '07'"</string>
+
+    <!-- Please correct data in red fields -->
+    <!-- Fuzzy -->
+    <string name="common_validation_checkDataInRedFields">"Please correct data in red fields"</string>
+
+    <!-- Enter at least 2 characters -->
+    <!-- Fuzzy -->
+    <string name="common_validation_minLength">"Enter length of at least "</string>
+
+    <!-- Service Received -->
+    <!-- Fuzzy -->
+    <string name="ipc_referralsRedeemedList_tableHeader_serviceReceived">"Service Received"</string>
+
+    <!-- Click to redeem this voucher -->
+    <string name="provider_findVoucher_result_warmingMsg">"Click to redeem this voucher"</string>
+    <string name="sms_msg_clientReferral_success">"Your Referral number is [[RefNo]] and it will expire on [[ExpireDate]]. Thank you"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_title">"What is the age of your youngest child?"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_option1">"0 – 6 months"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_option2">"6 – 12 months"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_option3">"1 – 2 years"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q1_option4">"Above 2 years"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_afterIssuing_q2_title">"Would you like to receive free information about health and childcare for your child?"</string>
+    <string name="sms_msg_reminder_referralExpire">"PSI: The referral you received will expire within 45 days. Please visit a health facility to get the service before the referral expires."</string>
+    <string name="provider_findVoucher_q_yearOfBirth">"Year Of Birth"</string>
+
+    <!-- Control -->
+    <string name="ipc_issueEntry_q_control">"Control"</string>
+    <string name="provider_findVoucher_q_gender">"Gender"</string>
+    <string name="common_option_gender_male">"Male"</string>
+    <string name="common_option_gender_female">"Female"</string>
+    <string name="common_option_language_english">"English"</string>
+    <string name="common_option_language_swahili">"Swahili"</string>
+    <string name="common_option_program_familyPlanning">"Family Planning"</string>
+    <string name="common_option_program_cervicalCancer">"Cervical Cancer"</string>
+    <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
+    <string name="common_option_method_iud">"IUD"</string>
+    <string name="common_option_method_condom">"Condom"</string>
+    <string name="common_option_method_pills">"Pills"</string>
+    <string name="common_option_method_implant">"Implant"</string>
+    <string name="common_page_titleText">"PSI TZ"</string>
+
+    <!-- ipc_issueEntry_msg_enrollingVoucher -->
+    <string name="ipc_issueEntry_msg_enrollingVoucher">"Enrolling voucher"</string>
+    <string name="common_option_method_counselling">"Counselling"</string>
+
+    <!-- Fuzzy -->
+    <string name="common_option_method_injection">"Injectable"</string>
+    <string name="common_option_channelOfReferral_healthFacility">"Health Facility"</string>
+    <string name="common_option_channelOfReferral_groupSession">"Group Session"</string>
+    <string name="common_option_channelOfReferral_doorToDoor">"Door To Door"</string>
+    <string name="common_option_civilStatus_unmarried">"Unmarried"</string>
+    <string name="common_option_civilStatus_married">"Married"</string>
+    <string name="common_option_civilStatus_divorced">"Divorced"</string>
+    <string name="common_option_civilStatus_widowed">"Widowed"</string>
+    <string name="common_option_ownershipOfPhone_noMobile">"No Mobile"</string>
+    <string name="common_option_ownershipOfPhone_herNumber">"Her Number"</string>
+    <string name="common_option_ownershipOfPhone_husbandPartner">"Husband/Partner"</string>
+    <string name="common_option_ownershipOfPhone_shared">"Shared"</string>
+    <string name="common_option_furtherInformationConsent_no">"No"</string>
+    <string name="common_option_furtherInformationConsent_yesFromPSI">"Yes - From PSI"</string>
+    <string name="common_option_furtherInformationConsent_yesFromPSIAndPartners">"Yes - PSI &amp; partners"</string>
+
+    <!-- Please enter data in madatory fields -->
+    <string name="provider_redeemEntry_msg_warning">"Please enter data in madatory fields"</string>
+    <string name="common_btn_yes">"Yes"</string>
+    <string name="common_btn_no">"No"</string>
+
+    <!-- Update -->
+    <!-- Fuzzy -->
+    <string name="common_translation_btn_updateKeyword">"Update"</string>
+    <string name="common_translation_msg_checkingVersion">"Checking"</string>
+
+    <!-- Updating translation keywords -->
+    <string name="common_translation_msg_updatingTranslationKeywords">"Updating"</string>
+
+    <!-- Updated -->
+    <string name="common_translation_msg_updatedTranslationKeywords">"Updated"</string>
+    <string name="common_translation_msg_checked">"Checked"</string>
+    <string name="ipc_issueEntry_msg_smsMessage">"Your referral number is:"</string>
+    <string name="ipc_issueEntry_msg_smsMessageEndsWith">"."</string>
+    <string name="common_option_method_none">"None"</string>
+    <string name="common_option_method_other">"Other"</string>
+    <string name="common_option_pleaseSelect">"[Please select]"</string>
+    <string name="common_validation_numberOnly">"Enter numbers only."</string>
+    <string name="ipc_logCall_tabName_newCall">"New Call"</string>
+    <string name="ipc_logCall_tabName_previousContacts">"Previous Contacts"</string>
+    <string name="ipc_logCall_tab1_q_typeOfContact">"Type Of Contact"</string>
+    <string name="ipc_logCall_tab1_q_output">"Output"</string>
+    <string name="ipc_logCall_tab1_q_comment">"Comment"</string>
+    <string name="ipc_logCall_tab1_btn_logCall">"Log Call"</string>
+    <string name="common_option_typeOfContact_phone">"Phone"</string>
+    <string name="common_option_typeOfContact_inPerson">"In-Person"</string>
+    <string name="common_option_callOutput_noReach">"Not Reached/ No Response"</string>
+    <string name="common_option_callOutput_nonPSI">"Took service at non-PSI facility"</string>
+    <string name="common_option_callOutput_PSI">"Took service at PSI facility(not redeemed)"</string>
+    <string name="common_option_callOutput_attend">"Promised to attend"</string>
+    <string name="common_option_callOutput_noAttend">"Will not attend"</string>
+    <string name="provider_redeemEntry_msg_redeemedAldready">"This voucher was aldready redeemed"</string>
+    <string name="provider_redeemEntry_msg_redeemedNotExist">"This voucher is not exist"</string>
+    <string name="login_msg_wrongUsernamePassword">"Wrong Username / Password"</string>
+
+    <!-- You are not IPC or Provider -->
+    <string name="login_msg_userNotIPCOrProvider">"You are not IPC or Provider"</string>
+
+    <!-- Please enter username / password -->
+    <string name="login_msg_enterUserNameOrPassword">"Please enter UserName / Password"</string>
+
+    <!-- Please enter exactly -->
+    <string name="common_validation_exactLength">"Please enter exactly"</string>
+
+    <!-- characters -->
+    <string name="common_validation_exactCharacter">"characters."</string>
+
+    <!-- If you need help, please contact Rehema at PSI Tanzania at 071234567 -->
+    <string name="login_notice">"If you need help, please contact Rehema at PSI Tanzania at 071234567"</string>
+
+    <!-- Full name -->
+    <string name="ipc_openReferralsList_tableHeader_fullName">"Full name"</string>
+
+    <!-- Full name -->
+    <string name="provider_redeemList_tableHeader_fullname">"Full name"</string>
+
+    <!-- Client -->
+    <string name="ipc_openReferralsList_tableHeader_client">"Client"</string>
+
+    <!-- Client -->
+    <string name="provider_redeemList_tableHeader_client">"Client"</string>
+
+    <!-- Issued Date -->
+    <string name="ipc_referralsRedeemedList_tableHeader_issuedDate">"Issued Date"</string>
+
+    <!-- Logging -->
+    <string name="login_msg_logging">"Logging"</string>
+
+    <!-- no voucher pending actions exist - you can view all vouchers by switching the view above to ‘all unredeemed’ -->
+    <string name="ipc_openReferralsList_msg_noActionVoucher">"No voucher pending actions exist - you can view all vouchers by switching the view above to 'all unredeemed'"</string>
+
+    <!-- Full name -->
+    <string name="ipc_referralsRedeemedList_tableHeader_fullName">"Full name"</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_issueEntry_msg_voucherSentToClient">"Voucher sent to client"</string>
+
+    <!-- Loading translation keywords -->
+    <string name="settings_translation_msg_loading">"Loading translation keywords"</string>
+
+    <!-- Update -->
+    <string name="about_btn_translationUpdate">"Update"</string>
+
+    <!-- Fuzzy -->
+    <string name="login_msg_loginFailed">"Login failed or session is expired"</string>
+    <string name="common_msg_mainLoadingInProgress">"In Progress..."</string>
+
+    <!-- Fuzzy -->
+    <string name="ipc_msg_retrievingOpenReferrals">"Retrieving Open Referrals..."</string>
+    <string name="common_msg_issueInDataRetrieval">"Issue occurred during data retrieval"</string>
+    <string name="ipc_msg_retrievingCompletedReferrals">"Retrieving Completed Referrals..."</string>
+    <string name="provider_msg_retrievingRedeemedReferrals">"Retrieving Redeemed Referrrals..."</string>
+    <string name="provider_msg_retrievingSearchedReferrals">"Retrieving Referrals..."</string>
 </resources>

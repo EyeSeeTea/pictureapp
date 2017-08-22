@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -17,21 +18,24 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.ConnectivityManager;
-import org.eyeseetea.malariacare.data.remote.ports.FileDownloader;
+import org.eyeseetea.malariacare.data.io.FileDownloader;
+import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.ports.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
+import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
@@ -39,28 +43,14 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.utils.Constants;
 
-import java.util.HashMap;
-
+import java.io.File;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
 
     static final int REQUEST_AUTHORIZATION = 101;
-
-    public interface Callback {
-        void onCancel(Exception ex);
-
-        void showToast(String format);
-
-        void acquireGooglePlayServices();
-
-        void onSuccess(HashMap<String, String> syncedFiles);
-
-        void onRemove(String uid);
-
-        void save(Media media);
-    }
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
@@ -79,78 +69,24 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager();
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        String path =
+                PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath() + "/"
+                        + Constants.MEDIA_FOLDER;
+        final MediaRepository mediaRepository = new MediaRepository();
         IFileDownloader fileDownloader = new FileDownloader(
-                mDashboardActivity.getApplicationContext().getFilesDir(),
+                new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
                         R.raw.driveserviceprivatekey));
-        final MediaRepository mediaRepository = new MediaRepository();
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
-                mConnectivity, mediaRepository, mDashboardActivity.getApplicationContext(),
+                mConnectivity, programRepository, mediaRepository);
 
-                new Callback() {
-                    @Override
-                    public void onCancel(Exception ex) {
 
-                        //Need to complete credentials (ack from user first time)
-                        if (ex instanceof UserRecoverableAuthIOException) {
-                            DashboardActivity.dashboardActivity.startActivityForResult(
-                                    ((UserRecoverableAuthIOException) ex).getIntent(),
-                                    REQUEST_AUTHORIZATION);
-                            return;
-                        }
+    }
 
-                        //Real connection google error
-                        if (ex instanceof GooglePlayServicesAvailabilityIOException) {
-                            showDialog(
-                                    ((GooglePlayServicesAvailabilityIOException) ex)
-                                            .getConnectionStatusCode());
-                            return;
-                        }
-                    }
-
-                    @Override
-                    public void showToast(String message) {
-                        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void acquireGooglePlayServices() {
-                        /**
-                         * Attempt to resolve a missing, out-of-date, invalid or disabled Google
-                         * Play Services installation via a user dialog, if possible.
-                         */
-                        GoogleApiAvailability apiAvailability =
-                                GoogleApiAvailability.getInstance();
-                        final int connectionStatusCode =
-                                apiAvailability.isGooglePlayServicesAvailable(
-                                        PreferencesState.getInstance().getContext());
-                        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-                            showDialog(connectionStatusCode);
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess(HashMap<String, String> syncedFiles) {
-                        int correctSyncedFiles = mediaRepository.updateSyncedFiles(syncedFiles);
-                        if (correctSyncedFiles > 0) {
-                            showToast(String.format("%d files synced", correctSyncedFiles));
-                            avFragment.reloadData();
-                        }
-                    }
-
-                    @Override
-                    public void onRemove(String uid) {
-                        System.out.println(
-                                "downloadFile error (file extension not supported)" + uid);
-                        mediaRepository.deleteModel(mediaRepository.findByUid(uid));
-                    }
-
-                    @Override
-                    public void save(Media media) {
-                        mediaRepository.updateNotDownloadedMedia(media);
-                    }
-                });
+    private void showToast(String message) {
+        Toast.makeText(mDashboardActivity.getApplicationContext(), message,
+                Toast.LENGTH_LONG).show();
     }
 
     private void showDialog(int connectionStatusCode) {
@@ -348,7 +284,54 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
 
     public void onResume() {
-        mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+        downloadMedia();
+    }
+
+    private void downloadMedia() {
+        mDownloadMediaUseCase.execute(new DownloadMediaUseCase.Callback() {
+            @Override
+            public void onError(FileDownloadException ex) {
+                //Need to complete credentials (ack from user first time)
+                if (ex.getCause() instanceof UserRecoverableAuthIOException) {
+                    showToast(ex.getCause().getMessage());
+                    DashboardActivity.dashboardActivity.startActivityForResult(
+                            ((UserRecoverableAuthIOException) ex.getCause()).getIntent(),
+                            REQUEST_AUTHORIZATION);
+                    return;
+                }
+                //Real connection google error
+                else if (ex.getCause() instanceof GooglePlayServicesAvailabilityIOException) {
+                    showDialog(
+                            ((GooglePlayServicesAvailabilityIOException) ex.getCause())
+                                    .getConnectionStatusCode());
+                    return;
+                } else if (ex.getCause() instanceof GooglePlayAppNotAvailableException) {
+                    /**
+                     * Attempt to resolve a missing, out-of-date, invalid or disabled Google
+                     * Play Services installation via a user dialog, if possible.
+                     */
+                    GoogleApiAvailability apiAvailability =
+                            GoogleApiAvailability.getInstance();
+                    final int connectionStatusCode =
+                            apiAvailability.isGooglePlayServicesAvailable(
+                                    PreferencesState.getInstance().getContext());
+                    if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+                        showDialog(connectionStatusCode);
+                    }
+                } else {
+                    Log.e(this.getClass().getSimpleName(), "Unexpected error to download Media");
+                }
+            }
+
+            @Override
+            public void onSuccess(int syncedFiles) {
+                //the fragment should be updated to represent the removed data
+                avFragment.reloadData();
+                if (syncedFiles > 0) {
+                    showToast(String.format("%d files synced", syncedFiles));
+                }
+            }
+        });
     }
 
     /**
@@ -371,7 +354,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                                     R.string.google_play_required),
                             Toast.LENGTH_LONG);
                 } else {
-                    mDownloadMediaUseCase.execute(mDashboardActivity.getApplicationContext());
+                    downloadMedia();
                 }
                 break;
         }

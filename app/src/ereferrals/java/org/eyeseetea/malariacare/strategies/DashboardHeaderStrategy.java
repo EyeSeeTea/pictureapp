@@ -21,7 +21,9 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
     @Override
     public View loadHeader(Integer headerLayout, LayoutInflater inflater) {
-        return null;
+        View header = inflater.inflate(headerLayout, null, false);
+        header.setVisibility(View.GONE);
+        return header;
     }
 
     @Override

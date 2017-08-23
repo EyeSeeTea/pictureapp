@@ -64,6 +64,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
+    private DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
@@ -85,6 +86,10 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         viewCreated = true;
 
         View view= inflater.inflate(R.layout.unsent_list_fragment, container, false);
+
+        dashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy();
+        dashboardUnsentFragmentStrategy.onCreateView(view);
+
         return view;
     }
 
@@ -147,10 +152,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
         final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-
-        DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy =
-                new DashboardUnsentFragmentStrategy();
-        dashboardUnsentFragmentStrategy.initFooter(getView().findViewById(R.id.plusButton));
 
         ListView listView = getListView();
         if (header != null) {

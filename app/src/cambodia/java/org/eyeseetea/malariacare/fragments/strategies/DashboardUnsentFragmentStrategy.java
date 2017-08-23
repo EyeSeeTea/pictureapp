@@ -5,7 +5,7 @@ import android.view.View;
 public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStrategy {
 
     @Override
-    public void initFooter(View footer) {
+    public void onCreateView(View rootView) {
 
     }
 }

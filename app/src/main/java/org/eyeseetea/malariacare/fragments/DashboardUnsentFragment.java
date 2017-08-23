@@ -150,7 +150,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy =
                 new DashboardUnsentFragmentStrategy();
-        dashboardUnsentFragmentStrategy.initFooter(footer);
+        dashboardUnsentFragmentStrategy.initFooter(getView().findViewById(R.id.plusButton));
 
         ListView listView = getListView();
         if (header != null) {

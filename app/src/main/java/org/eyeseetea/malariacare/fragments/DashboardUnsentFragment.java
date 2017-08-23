@@ -64,6 +64,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
+    private DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
@@ -84,7 +85,12 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         }
         viewCreated = true;
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view= inflater.inflate(R.layout.unsent_list_fragment, container, false);
+
+        dashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy();
+        dashboardUnsentFragmentStrategy.onCreateView(view);
+
+        return view;
     }
 
     @Override
@@ -147,10 +153,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 inflater);
         final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
-        DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy =
-                new DashboardUnsentFragmentStrategy();
-        dashboardUnsentFragmentStrategy.initFooter(footer);
-
         ListView listView = getListView();
         if (header != null) {
             listView.addHeaderView(header);
@@ -207,9 +209,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
-
-
-        setListShown(false);
     }
 
 
@@ -267,7 +266,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
             LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
-            setListShown(true);
         }
     }
 
@@ -323,7 +321,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         protected void onPreExecute() {
             super.onPreExecute();
             //spinner
-            setListShown(false);
         }
 
         @Override
@@ -335,7 +332,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         @Override
         protected void onPostExecute(PushResult pushResult) {
             super.onPostExecute(pushResult);
-            setListShown(true);
             showResponse(pushResult);
         }
 

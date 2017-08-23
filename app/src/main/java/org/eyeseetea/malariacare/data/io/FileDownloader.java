@@ -4,6 +4,7 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,6 +34,7 @@ import java.util.List;
 
 public class FileDownloader implements IFileDownloader {
 
+    private static String TAG = ".FileDownloader";
     private List<Media> filesInDrive;
     private GoogleCredential serviceCredential;
     private static final String[] SCOPES = {DriveScopes.DRIVE};
@@ -44,20 +46,20 @@ public class FileDownloader implements IFileDownloader {
         mFileDir = required(fileDir, "File dir is required");
         mPrivateJsonStream = required(privateJsonStream,
                 "Private Json stream with google play key is required");
+        changeFileDownloaderIProgress(false);
     }
 
     @Override
     public void download(List<Media> currentMedias, String rootUid, String program,
             final Callback mCallback) {
-
+        changeFileDownloaderIProgress(true);
         filesInDrive = new ArrayList<>();
 
         if (!isGooglePlayServicesAvailable()) {
             if (!isGooglePlayAppAvailable()) {
+                mCallback.onError(new FileDownloadException(new GooglePlayAppNotAvailableException()));
                 return;
             }
-            mCallback.onError(new FileDownloadException(new GooglePlayAppNotAvailableException()));
-            return;
         }
 
         initializeDrive();
@@ -87,6 +89,19 @@ public class FileDownloader implements IFileDownloader {
                         mCallback.onSuccess(filesInDrive);
                     }
                 }).execute();
+    }
+
+
+    @Override
+    public boolean isFileDownloaderIProgress() {
+        Log.d(TAG, "File downloader in progress is "+ PreferencesState.getInstance().isFileDownloaderInProgress());
+        return PreferencesState.getInstance().isFileDownloaderInProgress();
+    }
+
+    @Override
+    public void changeFileDownloaderIProgress(boolean inProgress) {
+        Log.d(TAG, "File downloader change file downloader in progress to " + inProgress);
+        PreferencesState.getInstance().setFileDownloaderInProgress(inProgress);
     }
 
     @Nullable

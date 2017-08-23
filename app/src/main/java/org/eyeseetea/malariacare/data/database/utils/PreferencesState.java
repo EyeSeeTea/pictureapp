@@ -379,6 +379,21 @@ public class PreferencesState {
         editor.commit();
     }
 
+    public boolean isFileDownloaderInProgress() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.file_downloader_in_progress), false);
+    }
+
+    public void setFileDownloaderInProgress(boolean inProgress) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.file_downloader_in_progress), inProgress);
+        editor.commit();
+    }
+
     public Date getDateStarDateLimitFilter() {
         DateFilter dateFilter = new DateFilter();
 

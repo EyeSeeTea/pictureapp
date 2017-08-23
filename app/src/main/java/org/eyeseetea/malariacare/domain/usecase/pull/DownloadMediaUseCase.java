@@ -53,6 +53,10 @@ public class DownloadMediaUseCase implements UseCase {
         final List<Media> currentMedias = mMediaRepository.getAll();
 
         if (mConnectivityManager.isDeviceOnline()) {
+            if(mFileDownloader.isFileDownloaderIProgress()) {
+                System.out.println("File downloader is already downloading");
+                return;
+            }
             mFileDownloader.download(currentMedias,
                     PreferencesState.getInstance().getDriveRootFolderUid(),
                     mProgramRepository.getUserProgram().getCode(),
@@ -60,6 +64,7 @@ public class DownloadMediaUseCase implements UseCase {
                         @Override
                         public void onError(FileDownloadException ex) {
                             mCallback.onError(ex);
+                            mFileDownloader.changeFileDownloaderIProgress(false);
                         }
 
                         @Override
@@ -68,12 +73,14 @@ public class DownloadMediaUseCase implements UseCase {
 
                             removeNotDownloadedMedia(syncMedias, currentMedias);
                             mCallback.onSuccess(numOfSyncedFiles);
+                            mFileDownloader.changeFileDownloaderIProgress(false);
                         }
 
                     });
         } else {
             System.out.println(this.getClass().getSimpleName()
                     + ": No wifi connection available. Media will not be synced");
+            mFileDownloader.changeFileDownloaderIProgress(false);
         }
     }
 

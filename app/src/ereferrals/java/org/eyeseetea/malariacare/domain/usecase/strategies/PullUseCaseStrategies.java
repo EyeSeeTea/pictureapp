@@ -34,7 +34,7 @@ public class PullUseCaseStrategies extends APullUseCaseStrategy {
         }
         Media media = mediaList.get(0);
         if(media!=null && media.getProgram()!=null && !media.getProgram()
-                .equals(programRepository.getUserProgram().getId())){
+                .equals(programRepository.getUserProgram().getCode())){
             System.out.println("The media data will be removed");
             mediaRepository.deleteAll();
             FileUtils.removeDir(

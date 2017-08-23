@@ -13,4 +13,8 @@ public interface IFileDownloader {
     }
 
     void download(List<Media> currentMedias, String rootUid, String program, Callback callback);
+
+    boolean isFileDownloaderIProgress();
+
+    void changeFileDownloaderIProgress(boolean inProgress);
 }

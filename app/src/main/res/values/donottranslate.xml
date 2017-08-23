@@ -93,6 +93,7 @@
     <string name="regular_font_name" translatable="false">@string/medium_font_name</string>
 
     <string name="push_in_progress" translatable="false">push_in_progress</string>
+    <string name="file_downloader_in_progress" translatable="false">file_downloader_in_progress</string>
     <string name="yes_option_identifier" translatable="false">Yes</string>
     <string name="no_option_identifier" translatable="false">No</string>
     <string name="true_option_id" translatable="false">true_option_identifier</string>

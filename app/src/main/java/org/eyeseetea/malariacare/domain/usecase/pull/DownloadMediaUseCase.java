@@ -55,7 +55,7 @@ public class DownloadMediaUseCase implements UseCase {
         if (mConnectivityManager.isDeviceOnline()) {
             mFileDownloader.download(currentMedias,
                     PreferencesState.getInstance().getDriveRootFolderUid(),
-                    mProgramRepository.getUserProgram().getCode(),
+                    mProgramRepository.getUserProgram().getId(),
                     new IFileDownloader.Callback() {
                         @Override
                         public void onError(FileDownloadException ex) {

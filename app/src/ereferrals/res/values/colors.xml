@@ -28,4 +28,5 @@
     <color name="pageIndicator_completed">@color/dark_purple</color>
     <color name="pageIndicator_pending">@color/light_purple</color>
     <color name="monitor_background">@color/myanmar_orange</color>
+    <color name="create_button_background">#4fabd2</color>
 </resources>

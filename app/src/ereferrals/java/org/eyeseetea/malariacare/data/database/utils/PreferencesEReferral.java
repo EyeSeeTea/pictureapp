@@ -129,6 +129,4 @@ public class PreferencesEReferral {
         editor.putString(context.getString(R.string.web_service_url), url);
         editor.commit();
     }
-
-
 }

@@ -20,19 +20,19 @@ public class MediaPresenter {
     public void attachView(final View view) {
         this.mView = view;
 
-        loadData(view);
+        loadData();
     }
 
     public void detachView() {
         mView = null;
     }
 
-    private void loadData(final View view) {
+    private void loadData() {
         mGetMediaUseCase.execute(new GetMediaUseCase.Callback() {
             @Override
             public void onSuccess(List<Media> medias) {
                 mMediaList = medias;
-                if (view != null) {
+                if (mView != null) {
                     showMediaItems();
                 }
             }
@@ -57,9 +57,17 @@ public class MediaPresenter {
         showMediaItems();
     }
 
+    public void onClickMedia(Media media) {
+        if (mView != null) {
+            mView.OpenMedia(media.getResourcePath());
+        }
+    }
+
     public interface View {
         void showMediaGridMode(List<Media> medias);
 
         void showMediaListMode(List<Media> medias);
+
+        void OpenMedia(String resourcePath);
     }
 }

@@ -41,4 +41,6 @@
     <color name="button_login_state_pressed">#FF0C243C</color>
     <color name="orange">#FF9900</color>
     <color name="White">#FFFFFF</color>
+    <color name="create_button_background">#4fabd2</color>
+
 </resources>

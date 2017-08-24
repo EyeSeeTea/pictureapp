@@ -34,8 +34,8 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
-import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
@@ -94,6 +94,7 @@ public class PopulateDB {
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
     public static final String STRING_KEY_CSV = "StringKeys.csv";
     public static final String TRANSLATION_CSV = "Translations.csv";
+    public static final String VERSIONS_CSV = "Versions.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";

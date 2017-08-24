@@ -217,6 +217,10 @@ public class QuestionDB extends BaseModel {
         return new Select().from(QuestionDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        deleteQuestions(getAllQuestions());
+    }
+
     public static List<QuestionDB> getAllQuestionsWithOrgUnitDropdownList() {
         return new Select().from(QuestionDB.class)
                 .where(QuestionDB_Table.output.eq(Constants.DROPDOWN_OU_LIST))
@@ -1776,6 +1780,7 @@ public class QuestionDB extends BaseModel {
                         id_question)).queryList();
         return mPropagationQuestionDB;
     }
+
 
     private static class QuestionOrderComparator implements Comparator {
 

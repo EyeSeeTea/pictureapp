@@ -152,4 +152,5 @@ public class Constants {
     public static final int MEDIA_TYPE_VIDEO = 1;
     public static final String MEDIA_SEPARATOR="#";
     public static final int NO_MEDIA_ID=-1;
+    public static final String MEDIA_FOLDER = "media";
 }

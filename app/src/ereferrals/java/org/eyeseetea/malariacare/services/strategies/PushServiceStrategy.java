@@ -66,7 +66,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
                     iInvalidLoginAttemptsRepository);
             final Credentials oldCredentials =
                     credentialsLocalDataSoruce.getOrganisationCredentials();
-            loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
+                loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
                 @Override
                 public void onLoginSuccess() {
                     PushServiceStrategy.this.onCorrectCredentials();

@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
@@ -32,5 +33,15 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         for (SurveyDB surveyDB : surveyDBs) {
             surveyDB.delete();
         }
+    }
+
+    @Override
+    public void getUnsentSurveys(IDataSourceCallback<List<Survey>> callback) {
+        List<Survey> unsentSurveys = new ArrayList<>();
+        for (SurveyDB surveyDB : SurveyDB.getAllUnsentSurveys()) {
+            Survey survey = new Survey(surveyDB.getEventDate());
+            unsentSurveys.add(survey);
+        }
+        callback.onSuccess(unsentSurveys);
     }
 }

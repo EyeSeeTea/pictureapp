@@ -100,6 +100,10 @@ public class QuestionThresholdDB extends BaseModel {
         return new Select().from(QuestionThresholdDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        deleteQuestionThresholds(getAllQuestionThresholds());
+    }
+
     /**
      * Method to get the mMatchDBs with a mQuestionDB id and a value between or equal min max
      * @param id_question The id of the mQuestionDB.

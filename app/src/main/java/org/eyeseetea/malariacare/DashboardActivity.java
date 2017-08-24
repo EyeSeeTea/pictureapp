@@ -130,11 +130,11 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getString(R.string.sent_data));
+                    context.getResources().getString(R.string.tab_stock));
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.server_name));
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getString(R.string.monitoring_title));
@@ -155,7 +155,7 @@ public class DashboardActivity extends BaseActivity {
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.sent_data));
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));

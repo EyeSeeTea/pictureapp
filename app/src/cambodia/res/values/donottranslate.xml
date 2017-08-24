@@ -35,4 +35,5 @@
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
     <string name="authority" translatable="false">CAMBODIA_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="google_play_required" translatable="false"></string>
+    <string name="feedback_view_image" translatable="false"></string>
 </resources>

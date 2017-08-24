@@ -54,6 +54,8 @@ public class UserDB extends BaseModel {
     Date close_date;
     @Column
     Date last_updated;
+    @Column
+    boolean canAddSurveys;
 
 
     /**
@@ -95,6 +97,8 @@ public class UserDB extends BaseModel {
         if (userDBDB == null) {
             user.save();
         } else {
+            userDBDB.setCanAddSurveys(user.canAddSurveys());
+            userDBDB.save();
             System.out.println("UserDB already saved" + user.toString());
         }
     }
@@ -174,6 +178,14 @@ public class UserDB extends BaseModel {
 
     public void setLastUpdated(Date last_updated) {
         this.last_updated = last_updated;
+    }
+
+    public boolean canAddSurveys() {
+        return canAddSurveys;
+    }
+
+    public void setCanAddSurveys(boolean canAddSurveys) {
+        this.canAddSurveys = canAddSurveys;
     }
 
     public List<SurveyDB> getSurveyDBs() {

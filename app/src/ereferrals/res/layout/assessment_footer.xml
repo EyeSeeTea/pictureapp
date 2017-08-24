@@ -17,22 +17,11 @@
   ~  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:measureWithLargestChild="false"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/plusButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/ic_menu_add"
-        android:onClick="newSurvey"
-        tools:showIn="@layout/dashboard_row" />
 
 </RelativeLayout>

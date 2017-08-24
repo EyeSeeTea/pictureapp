@@ -75,6 +75,12 @@ public class HeaderDB extends BaseModel {
         return new Select().from(HeaderDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        for (HeaderDB headerDB : getAllHeaders()) {
+            headerDB.delete();
+        }
+    }
+
     public static HeaderDB findById(Long id) {
         return new Select()
         .from(HeaderDB.class)

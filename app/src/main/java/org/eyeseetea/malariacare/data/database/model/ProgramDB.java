@@ -80,6 +80,12 @@ public class ProgramDB extends BaseModel {
         return new Select().from(ProgramDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        for (ProgramDB programDB : getAllPrograms()) {
+            programDB.delete();
+        }
+    }
+
     public static ProgramDB getFirstProgram() {
         return new Select().from(ProgramDB.class).querySingle();
     }
@@ -257,4 +263,5 @@ public class ProgramDB extends BaseModel {
         return new Select().from(ProgramDB.class)
                 .where(ProgramDB_Table.id_program.is(id)).querySingle();
     }
+
 }

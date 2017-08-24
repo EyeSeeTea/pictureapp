@@ -12,13 +12,16 @@ public class UserAccountDataSource implements IUserRepository {
         UserAccount userAccount = null;
         if (userDB != null) {
             userAccount = new UserAccount(userDB.getName(), userDB.getUid(), false);
+            userAccount.setCanAddSurveys(userDB.canAddSurveys());
         }
+
         return userAccount;
     }
 
     @Override
     public void saveLoggedUser(UserAccount userAccount) {
         UserDB userDB = new UserDB(userAccount.getUserUid(), userAccount.getUserName());
+        userDB.setCanAddSurveys(userAccount.canAddSurveys());
         UserDB.insertLoggedUser(userDB);
     }
 }

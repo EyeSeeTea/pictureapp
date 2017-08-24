@@ -183,6 +183,7 @@
     <string name="ws_unknown_exception">Unknown exception.</string>
     <string name="feedback_view_image">Öppna bild med...</string>
     <string name="drive_title">Kör rotmapp</string>
+    <string name="new_survey_disable">The new survey button temporarily disable</string>
 
     <!-- TERMS FROM POEDITOR -->
     <string name="login_userName">"Jina la mtumiaji"</string>

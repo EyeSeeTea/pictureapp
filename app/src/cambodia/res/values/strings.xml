@@ -207,4 +207,5 @@
 <string name="empty_review_value">"No Phone Number"</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+<string name="av_progress">Downloading content... please wait</string>
 </resources>

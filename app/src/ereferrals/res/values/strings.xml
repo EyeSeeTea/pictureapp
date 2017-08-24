@@ -178,6 +178,8 @@
     <string name="ws_unknown_exception">Unknown exception.</string>
     <string name="feedback_view_image">Open image with...</string>
     <string name="drive_title">Drive root folder</string>
+    <string name="av_progress">Downloading content... please wait</string>
+
 
     <!-- TERMS FROM POEDITOR -->
     <!-- Fuzzy -->

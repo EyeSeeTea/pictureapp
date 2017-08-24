@@ -80,8 +80,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         R.raw.driveserviceprivatekey));
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
                 mConnectivity, programRepository, mediaRepository);
-
-
     }
 
     private void showToast(String message) {

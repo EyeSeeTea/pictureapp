@@ -13,8 +13,8 @@ public class ForgotPasswordDataSource implements IForgotPasswordDataSource {
     }
 
     @Override
-    public void forgotPassword(String username,
-            final IDataSourceCallback<ForgotPasswordMessage> callback) {
+    public void forgotPassword(String username, String language,
+            IDataSourceCallback<ForgotPasswordMessage> callback) {
 
     }
 }

@@ -4,6 +4,7 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,5 +44,14 @@ public class SurveyLocalDataSource implements ISurveyRepository {
             unsentSurveys.add(survey);
         }
         callback.onSuccess(unsentSurveys);
+    }
+
+    @Override
+    public void updateAllQuarantineSurveysAsComplete() {
+        List<SurveyDB> surveyDBs = SurveyDB.getAllQuarantineSurveys();
+        for(SurveyDB surveyDB: surveyDBs){
+            surveyDB.setStatus(Constants.SURVEY_COMPLETED);
+            surveyDB.update();
+        }
     }
 }

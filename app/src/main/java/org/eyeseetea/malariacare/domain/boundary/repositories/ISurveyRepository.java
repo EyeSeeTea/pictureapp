@@ -12,4 +12,6 @@ public interface ISurveyRepository {
     void deleteSurveys();
 
     void getUnsentSurveys(IDataSourceCallback<List<Survey>> callback);
+
+    void updateAllQuarantineSurveysAsComplete();
 }

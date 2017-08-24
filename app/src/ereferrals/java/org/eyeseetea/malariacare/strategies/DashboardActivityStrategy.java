@@ -329,6 +329,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     showToast(String.format("%d files synced", syncedFiles));
                 }
             }
+
+            @Override
+            public void onProgress() {
+                avFragment.showProgress();
+            }
         });
     }
 

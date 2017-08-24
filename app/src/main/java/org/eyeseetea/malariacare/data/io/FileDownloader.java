@@ -88,6 +88,11 @@ public class FileDownloader implements IFileDownloader {
                         }
                         mCallback.onSuccess(filesInDrive);
                     }
+
+                    @Override
+                    public void onProgress() {
+                        mCallback.onProgress();
+                    }
                 }).execute();
     }
 

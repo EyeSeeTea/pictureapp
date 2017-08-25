@@ -1,6 +1,10 @@
 package org.eyeseetea.malariacare.strategies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -40,5 +44,12 @@ public abstract class ABaseActivityStrategy {
 
     public void onDestroy() {
 
+    }
+
+    public void showAbout(int titleId, int rawId, Context context) {
+        String stringMessage = mBaseActivity.getMessageWithCommit(rawId, context);
+        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+        mBaseActivity.showAlertWithLogoAndVersion(titleId, linkedMessage, context);
     }
 }

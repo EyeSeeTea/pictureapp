@@ -22,6 +22,7 @@ public class UserAccountDataSource implements IUserRepository {
             userAccount.setCanAddSurveys(userDB.canAddSurveys());
             userAccount.setPhone(getUserPhone());
             userAccount.setAppVersion(userAccount.getAppVersion());
+            userAccount.setMetadataVersion(userDB.getMetadataVersion());
         }
 
         return userAccount;
@@ -31,6 +32,7 @@ public class UserAccountDataSource implements IUserRepository {
     public void saveLoggedUser(UserAccount userAccount) {
         UserDB userDB = new UserDB(userAccount.getUserUid(), userAccount.getUserName());
         userDB.setCanAddSurveys(userAccount.canAddSurveys());
+        userDB.setMetadataVersion(userAccount.getMetadataVersion());
         UserDB.insertLoggedUser(userDB);
     }
 

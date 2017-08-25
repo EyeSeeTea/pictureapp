@@ -175,6 +175,7 @@
     <string name="ws_unknown_exception">Unknown exception.</string>
     <string name="feedback_view_image">Open image with...</string>
     <string name="drive_title">Drive root folder</string>
+    <string name="new_survey_disable">The new version of metadata could not be installed because there are pending surveys to send. The new survey button temporarily disable</string>
 
     <!-- TERMS FROM POEDITOR -->
     <!-- Fuzzy -->

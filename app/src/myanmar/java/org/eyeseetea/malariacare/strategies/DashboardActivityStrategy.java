@@ -86,6 +86,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockSurvey.save();
         Session.setStockSurveyDB(stockSurvey);
         prepareLocationListener(activity, survey);
+        mDashboardActivity.initSurvey();
     }
 
     @Override

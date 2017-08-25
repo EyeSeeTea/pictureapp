@@ -56,8 +56,6 @@ public class UserDB extends BaseModel {
     Date last_updated;
     @Column
     boolean canAddSurveys;
-    @Column
-    String metadataVersion;
 
 
     /**
@@ -80,7 +78,6 @@ public class UserDB extends BaseModel {
             user.save();
         } else {
             userDBDB.setCanAddSurveys(user.canAddSurveys());
-            userDBDB.setMetadataVersion(user.getMetadataVersion());
             userDBDB.save();
             System.out.println("UserDB already saved" + user.toString());
         }
@@ -194,14 +191,6 @@ public class UserDB extends BaseModel {
 
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
-    }
-
-    public String getMetadataVersion() {
-        return metadataVersion;
-    }
-
-    public void setMetadataVersion(String metadataVersion) {
-        this.metadataVersion = metadataVersion;
     }
 
     public List<SurveyDB> getSurveyDBs() {

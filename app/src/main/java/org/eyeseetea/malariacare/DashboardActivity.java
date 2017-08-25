@@ -531,7 +531,6 @@ public class DashboardActivity extends BaseActivity {
      */
     public void newSurvey(View view) {
         mDashboardActivityStrategy.newSurvey(this);
-        initSurvey();
     }
 
     /**

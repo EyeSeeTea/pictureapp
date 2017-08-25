@@ -44,6 +44,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Session.setMalariaSurveyDB(survey);
         //Look for coordinates
         prepareLocationListener(activity, survey);
+        mDashboardActivity.initSurvey();
     }
 
     @Override

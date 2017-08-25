@@ -13,5 +13,7 @@ public interface ISurveyRepository {
 
     void getUnsentSurveys(IDataSourceCallback<List<Survey>> callback);
 
-    void updateAllQuarantineSurveysAsComplete();
+    List<Survey> getAllQuarantineSurveys();
+
+    void updateSurveyState(Survey survey);
 }

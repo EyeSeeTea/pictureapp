@@ -19,6 +19,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
@@ -34,10 +35,13 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -126,7 +130,25 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void newSurvey(Activity activity) {
+    public void newSurvey(final Activity activity) {
+
+        IUserRepository userReposit = new UserAccountDataSource();
+        GetUserUserAccountUseCase getUserUserAccountUseCase =
+                new GetUserUserAccountUseCase(userReposit);
+        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
+            @Override
+            public void onGetUserAccount(UserAccount userAccount) {
+                if (userAccount.canAddSurveys()) {
+                    openNewSurvey(activity);
+                } else {
+                    showToast(activity.getResources().getString(R.string.new_survey_disable));
+                }
+            }
+        });
+
+    }
+
+    private void openNewSurvey(Activity activity) {
         ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
         // Put new survey in session
         SurveyDB survey = new SurveyDB(null, programDB, Session.getUserDB());
@@ -134,6 +156,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Session.setMalariaSurveyDB(survey);
         //Look for coordinates
         prepareLocationListener(activity, survey);
+        mDashboardActivity.initSurvey();
     }
 
     @Override

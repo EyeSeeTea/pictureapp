@@ -41,7 +41,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.fragments.strategies.DashboardUnsentFragmentStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -64,7 +63,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
-    private DashboardUnsentFragmentStrategy dashboardUnsentFragmentStrategy;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
@@ -86,10 +84,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         viewCreated = true;
 
         View view= inflater.inflate(R.layout.unsent_list_fragment, container, false);
-
-        dashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy();
-        dashboardUnsentFragmentStrategy.onCreateView(view);
-
         return view;
     }
 

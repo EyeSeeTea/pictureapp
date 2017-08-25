@@ -175,7 +175,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 new PushUseCase(pushController, asyncExecutor, mainExecutor,
                         surveysThresholds, surveyRepository, orgUnitRepository);
 
-        surveyRepository.updateAllQuarantineSurveysAsComplete();
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override

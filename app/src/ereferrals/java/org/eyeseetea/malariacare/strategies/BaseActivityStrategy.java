@@ -23,12 +23,14 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
-import org.eyeseetea.malariacare.domain.entity.UserAccount;
-import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
@@ -221,23 +223,22 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void showAbout(final int titleId, int rawId, final Context context) {
         final String stringMessage = mBaseActivity.getMessageWithCommit(rawId, context);
-        IUserRepository userDataSource = new UserAccountDataSource();
-        GetUserUserAccountUseCase getUserUserAccountUseCase = new GetUserUserAccountUseCase(
-                userDataSource);
-        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
+        IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        GetAppInfoUseCase getAppInfoUseCase = new GetAppInfoUseCase(mainExecutor,
+                appInfoDataSource);
+        getAppInfoUseCase.execute(new GetAppInfoUseCase.Callback() {
             @Override
-            public void onGetUserAccount(UserAccount userAccount) {
-                String metadataVersion = userAccount.getMetadataVersion();
+            public void onGetAppInfo(AppInfo appInfo) {
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
                         String.format(context.getResources().getString(R.string.csv_version),
-                                metadataVersion));
+                                appInfo.getMetadataVersion()));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(
                         Html.fromHtml(aboutBuilder.toString()));
                 Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
                 mBaseActivity.showAlertWithLogoAndVersion(titleId, linkedMessage, context);
-
             }
         });
 

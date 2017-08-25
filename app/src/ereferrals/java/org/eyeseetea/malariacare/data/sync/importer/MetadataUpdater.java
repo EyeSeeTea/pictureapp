@@ -19,6 +19,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvsStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -77,17 +78,18 @@ public class MetadataUpdater {
     }
 
 
-    public int getPhoneCSVersion() throws IOException {
+    public static int getPhoneCSVersion() throws IOException {
         String version = null;
         CSVReader reader = null;
+        Context context = PreferencesState.getInstance().getContext();
         try {
-            if (FileUtils.fileExists(PopulateDB.VERSIONS_CSV, mContext)) {
+            if (FileUtils.fileExists(PopulateDB.VERSIONS_CSV, context)) {
                 reader = new CSVReader(
                         new InputStreamReader(
-                                new PopulateDBStrategy().openFile(mContext,
+                                new PopulateDBStrategy().openFile(context,
                                         PopulateDB.VERSIONS_CSV)));
             } else {
-                AssetManager assetMgr = mContext.getAssets();
+                AssetManager assetMgr = context.getAssets();
                 reader = new CSVReader(
                         new InputStreamReader(assetMgr.open(PopulateDB.VERSIONS_CSV)));
             }

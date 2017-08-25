@@ -43,7 +43,6 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         UserDB userDB = new UserDB(userUid, credentials.getUsername());
         if (loggedUserDB != null) {
             userDB.setCanAddSurveys(loggedUserDB.canAddSurveys());
-            userDB.setMetadataVersion(loggedUserDB.getMetadataVersion());
         } else {
             userDB.setCanAddSurveys(true);
         }

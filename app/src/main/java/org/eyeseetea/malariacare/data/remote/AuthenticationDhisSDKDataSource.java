@@ -86,10 +86,6 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                             UserAccount userAccount = new UserAccount(credentials.getUsername(),
                                     dhisUserAccount.getUId(),
                                     credentials.isDemoCredentials());
-                            UserDB loggedUser = UserDB.getLoggedUser();
-                            if (loggedUser != null) {
-                                userAccount.setMetadataVersion(loggedUser.getMetadataVersion());
-                            }
                             callback.onSuccess(userAccount);
                         }
                     }, new Action1<Throwable>() {

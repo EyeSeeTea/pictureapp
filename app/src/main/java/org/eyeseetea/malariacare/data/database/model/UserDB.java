@@ -56,6 +56,8 @@ public class UserDB extends BaseModel {
     Date last_updated;
     @Column
     boolean canAddSurveys;
+    @Column
+    String metadataVersion;
 
 
     /**
@@ -69,6 +71,19 @@ public class UserDB extends BaseModel {
     public UserDB(String uid, String name) {
         this.uid_user = uid;
         this.name = name;
+    }
+
+    public static void insertLoggedUser(UserDB user) {
+        UserDB userDBDB = UserDB.getUserFromDB(user);
+
+        if (userDBDB == null) {
+            user.save();
+        } else {
+            userDBDB.setCanAddSurveys(user.canAddSurveys());
+            userDBDB.setMetadataVersion(user.getMetadataVersion());
+            userDBDB.save();
+            System.out.println("UserDB already saved" + user.toString());
+        }
     }
 
     public UserDB(long id_user, String uid, String name, long organisation, long supervisor,
@@ -91,16 +106,9 @@ public class UserDB extends BaseModel {
         return null;
     }
 
-    public static void insertLoggedUser(UserDB user) {
-        UserDB userDBDB = UserDB.getUserFromDB(user);
-
-        if (userDBDB == null) {
-            user.save();
-        } else {
-            userDBDB.setCanAddSurveys(user.canAddSurveys());
-            userDBDB.save();
-            System.out.println("UserDB already saved" + user.toString());
-        }
+    @Override
+    public void save() {
+        super.save();
     }
 
     public static UserDB getUserFromDB(UserDB userDB) {
@@ -186,6 +194,14 @@ public class UserDB extends BaseModel {
 
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
+    }
+
+    public String getMetadataVersion() {
+        return metadataVersion;
+    }
+
+    public void setMetadataVersion(String metadataVersion) {
+        this.metadataVersion = metadataVersion;
     }
 
     public List<SurveyDB> getSurveyDBs() {

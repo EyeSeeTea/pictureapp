@@ -111,6 +111,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         } else {
             IUserRepository userDataSource = new UserAccountDataSource();
             UserAccount userAccount = userDataSource.getLoggedUser();
+            userAccount.setMetadataVersion(String.valueOf(mMetadataUpdater.getPhoneCSVersion()));
             userAccount.setCanAddSurveys(true);
             userDataSource.saveLoggedUser(userAccount);
             mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
@@ -128,10 +129,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     currentUser.setCanAddSurveys(false);
                     userDataSource.saveLoggedUser(currentUser);
                 } else {
-                    currentUser.setCanAddSurveys(true);
-                    userDataSource.saveLoggedUser(currentUser);
                     try {
-                        downloadCsvsAndRepopulateDB();
+                        downloadCsvsAndRepopulateDB(userDataSource, currentUser);
                     } catch (IOException e) {
                         e.printStackTrace();
                         callback.onError(e);
@@ -146,9 +145,13 @@ public class PullControllerStrategy extends APullControllerStrategy {
         });
     }
 
-    private void downloadCsvsAndRepopulateDB()
+    private void downloadCsvsAndRepopulateDB(IUserRepository userDataSource,
+            UserAccount currentUser)
             throws IOException {
         mMetadataUpdater.updateMetadata();
+        currentUser.setMetadataVersion(String.valueOf(mMetadataUpdater.getPhoneCSVersion()));
+        currentUser.setCanAddSurveys(true);
+        userDataSource.saveLoggedUser(currentUser);
     }
 
     private boolean isNetworkAvailable() {

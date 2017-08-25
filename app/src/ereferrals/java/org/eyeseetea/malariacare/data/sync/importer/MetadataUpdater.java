@@ -77,7 +77,7 @@ public class MetadataUpdater {
     }
 
 
-    private int getPhoneCSVersion() throws IOException {
+    public int getPhoneCSVersion() throws IOException {
         String version = null;
         CSVReader reader = null;
         try {

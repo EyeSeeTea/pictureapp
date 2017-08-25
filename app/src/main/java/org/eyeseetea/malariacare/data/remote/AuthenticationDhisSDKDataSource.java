@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -85,6 +86,10 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                             UserAccount userAccount = new UserAccount(credentials.getUsername(),
                                     dhisUserAccount.getUId(),
                                     credentials.isDemoCredentials());
+                            UserDB loggedUser = UserDB.getLoggedUser();
+                            if (loggedUser != null) {
+                                userAccount.setMetadataVersion(loggedUser.getMetadataVersion());
+                            }
                             callback.onSuccess(userAccount);
                         }
                     }, new Action1<Throwable>() {

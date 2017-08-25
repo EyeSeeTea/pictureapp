@@ -6,6 +6,7 @@ public class UserAccount {
     private String userUid;
     private boolean isDemo;
     private boolean canAddSurveys = true;
+    private String metadataVersion;
 
     public UserAccount(String userName, String userUid, boolean isDemo) {
         this.userName = userName;
@@ -18,6 +19,15 @@ public class UserAccount {
         this.isDemo = isDemo;
         this.userUid = userUid;
         this.canAddSurveys = canAddSurveys;
+    }
+
+    public UserAccount(String userName, String userUid, boolean isDemo, boolean canAddSurveys,
+            String metadataVersion) {
+        this.userName = userName;
+        this.userUid = userUid;
+        this.isDemo = isDemo;
+        this.canAddSurveys = canAddSurveys;
+        this.metadataVersion = metadataVersion;
     }
 
     public String getUserName() {
@@ -42,5 +52,13 @@ public class UserAccount {
 
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
+    }
+
+    public String getMetadataVersion() {
+        return metadataVersion;
+    }
+
+    public void setMetadataVersion(String metadataVersion) {
+        this.metadataVersion = metadataVersion;
     }
 }

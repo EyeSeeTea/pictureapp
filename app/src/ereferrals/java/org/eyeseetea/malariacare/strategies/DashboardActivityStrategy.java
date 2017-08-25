@@ -50,6 +50,7 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
+import java.util.Date;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
@@ -164,7 +165,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
         malariaSurvey.updateSurveyStatus();
         if (malariaSurvey.isCompleted()) {
-            malariaSurvey.setEventUid(String.valueOf(UIDGenerator.generateUID()));
+            UIDGenerator uidGenerator = new UIDGenerator();
+            malariaSurvey.setEventUid(String.valueOf(uidGenerator.generateUID()));
+            malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
             malariaSurvey.save();
         }
     }

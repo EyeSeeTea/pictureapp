@@ -7,6 +7,7 @@ public class Voucher {
     private String id;
 
     public Voucher(String id) {
+        type = TYPE_PAPER;
         this.id = id;
     }
 

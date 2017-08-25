@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,9 @@ public class SurveySendAction {
     private String actionId;
     private List<AttributeValueWS> dataValues;
     private Voucher voucher;
+    private String program;
+    @JsonProperty("EventDateTime")
+    private String eventDateTime;
 
     public SurveySendAction() {
         dataValues = new ArrayList<>();
@@ -44,5 +49,21 @@ public class SurveySendAction {
 
     public void setVoucher(Voucher voucher) {
         this.voucher = voucher;
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
+    }
+
+    public String getEventDateTime() {
+        return eventDateTime;
+    }
+
+    public void setEventDateTime(String eventDateTime) {
+        this.eventDateTime = eventDateTime;
     }
 }

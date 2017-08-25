@@ -227,7 +227,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
             @Override
             public void onGetUserAccount(UserAccount userAccount) {
-                String metadataVersion = userAccount.getMetadataVersion();
+
+                String metadataVersion = "";
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
                         String.format(context.getResources().getString(R.string.csv_version),

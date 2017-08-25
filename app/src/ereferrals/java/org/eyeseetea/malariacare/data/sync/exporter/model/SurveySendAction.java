@@ -6,10 +6,11 @@ import java.util.List;
 public class SurveySendAction {
     private String type;
     private String actionId;
-    private List<AttributeValueWS> attributeValues;
+    private List<AttributeValueWS> dataValues;
+    private Voucher voucher;
 
     public SurveySendAction() {
-        attributeValues = new ArrayList<>();
+        dataValues = new ArrayList<>();
     }
 
     public String getType() {
@@ -28,12 +29,20 @@ public class SurveySendAction {
         this.actionId = actionId;
     }
 
-    public List<AttributeValueWS> getAttributeValues() {
-        return attributeValues;
+    public List<AttributeValueWS> getDataValues() {
+        return dataValues;
     }
 
-    public void setAttributeValues(
-            List<AttributeValueWS> attributeValues) {
-        this.attributeValues = attributeValues;
+    public void setDataValues(
+            List<AttributeValueWS> dataValues) {
+        this.dataValues = dataValues;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
     }
 }

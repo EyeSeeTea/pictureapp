@@ -2,19 +2,20 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
+import org.eyeseetea.malariacare.data.sync.exporter.model.Voucher;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
@@ -30,24 +31,26 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     public ConvertToWSVisitor() {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         ISettingsRepository currentLanguageRepository = new SettingsDataSource();
-        IUserRepository userDataSource = new UserAccountDataSource();
-        UserAccount userAccount = userDataSource.getLoggedUser();
+        IDeviceRepository deviceDataSource = new DeviceDataSource();
+        Device device = deviceDataSource.getDevice();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
         language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.ws_version), PreferencesState.getInstance().getContext().getString(
                 R.string.ws_source), credentials.getUsername(),
-                credentials.getPassword(), language, getAndroidInfo(userAccount), "");
+                credentials.getPassword(), language, getAndroidInfo(device),
+                "");
     }
 
-    private String getAndroidInfo(UserAccount userAccount) {
+    private String getAndroidInfo(Device device) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(userAccount.getPhone().getIMEI());
+        stringBuilder.append(device.getIMEI());
         stringBuilder.append(", ");
-        stringBuilder.append(userAccount.getPhone().getValue());
+        stringBuilder.append(device.getPhone());
         stringBuilder.append(", ");
-        stringBuilder.append(userAccount.getAppVersion());
+        //TODO put the app version here
+//        stringBuilder.append(userAccount.getAppVersion());
 
         return stringBuilder.toString();
     }
@@ -75,7 +78,8 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         SurveySendAction surveySendAction = new SurveySendAction();
         surveySendAction.setActionId(CodeGenerator.generateCode());
         surveySendAction.setType(SURVEY_ACTION_ID);
-        surveySendAction.setAttributeValues(getValuesWSFromSurvey(survey));
+        surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
+        surveySendAction.setVoucher(new Voucher(survey.getEventUid()));
         mSurveyContainerWSObject.getActions().add(surveySendAction);
     }
 

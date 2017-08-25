@@ -111,7 +111,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
         } else {
             IUserRepository userDataSource = new UserAccountDataSource();
             UserAccount userAccount = userDataSource.getLoggedUser();
-            userAccount.setMetadataVersion(String.valueOf(mMetadataUpdater.getPhoneCSVersion()));
             userAccount.setCanAddSurveys(true);
             userDataSource.saveLoggedUser(userAccount);
             mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
@@ -149,7 +148,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
             UserAccount currentUser)
             throws IOException {
         mMetadataUpdater.updateMetadata();
-        currentUser.setMetadataVersion(String.valueOf(mMetadataUpdater.getPhoneCSVersion()));
         currentUser.setCanAddSurveys(true);
         userDataSource.saveLoggedUser(currentUser);
     }

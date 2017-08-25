@@ -6,9 +6,6 @@ public class UserAccount {
     private String userUid;
     private boolean isDemo;
     private boolean canAddSurveys = true;
-    private Phone phone;
-    private String appVersion;
-    private String metadataVersion;
 
     public UserAccount(String userName, String userUid, boolean isDemo) {
         this.userName = userName;
@@ -21,17 +18,6 @@ public class UserAccount {
         this.isDemo = isDemo;
         this.userUid = userUid;
         this.canAddSurveys = canAddSurveys;
-    }
-
-    public UserAccount(String userName, String userUid, boolean isDemo, boolean canAddSurveys,
-            Phone phone, String appVersion,String metadataVersion) {
-        this.userName = userName;
-        this.userUid = userUid;
-        this.isDemo = isDemo;
-        this.canAddSurveys = canAddSurveys;
-        this.phone = phone;
-        this.appVersion = appVersion;
-        this.metadataVersion = metadataVersion;
     }
 
     public String getUserName() {
@@ -56,29 +42,5 @@ public class UserAccount {
 
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
-    }
-
-    public Phone getPhone() {
-        return phone;
-    }
-
-    public void setPhone(Phone phone) {
-        this.phone = phone;
-    }
-
-    public String getAppVersion() {
-        return appVersion;
-    }
-
-    public void setAppVersion(String appVersion) {
-        this.appVersion = appVersion;
-    }
-
-    public String getMetadataVersion() {
-        return metadataVersion;
-    }
-
-    public void setMetadataVersion(String metadataVersion) {
-        this.metadataVersion = metadataVersion;
     }
 }

@@ -7,7 +7,6 @@ import utils.PhoneMask;
 public class Phone {
 
     private String value;
-    private String IMEI;
 
     public Phone(String value) throws InvalidPhoneException {
         if (!isValid(value)) {
@@ -15,11 +14,6 @@ public class Phone {
         }
 
         this.value = applyTransformations(value);
-    }
-
-    public Phone(String value, String IMEI) {
-        this.value = value;
-        this.IMEI = IMEI;
     }
 
     private String applyTransformations(String value){
@@ -43,10 +37,6 @@ public class Phone {
         if (!this.value.equals(other.value)) return false;
 
         return true;
-    }
-
-    public String getIMEI() {
-        return IMEI;
     }
 
     @Override

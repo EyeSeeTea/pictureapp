@@ -88,7 +88,6 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                                     credentials.isDemoCredentials());
                             UserDB loggedUser = UserDB.getLoggedUser();
                             if (loggedUser != null) {
-                                userAccount.setMetadataVersion(loggedUser.getMetadataVersion());
                             }
                             callback.onSuccess(userAccount);
                         }

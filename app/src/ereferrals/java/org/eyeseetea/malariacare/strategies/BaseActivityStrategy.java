@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.v4.app.ActivityCompat;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +23,16 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
@@ -210,4 +221,32 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         MenuItem item = menu.findItem(R.id.demo_mode);
         item.setVisible(false);
     }
+
+    @Override
+    public void showAbout(final int titleId, int rawId, final Context context) {
+        final String stringMessage = mBaseActivity.getMessageWithCommit(rawId, context);
+        IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        GetAppInfoUseCase getAppInfoUseCase = new GetAppInfoUseCase(mainExecutor, asyncExecutor,
+                appInfoDataSource);
+        getAppInfoUseCase.execute(new GetAppInfoUseCase.Callback() {
+            @Override
+            public void onAppInfoLoaded(AppInfo appInfo) {
+                StringBuilder aboutBuilder = new StringBuilder();
+                aboutBuilder.append(
+                        String.format(context.getResources().getString(R.string.csv_version),
+                                appInfo.getMetadataVersion()));
+                aboutBuilder.append(stringMessage);
+                final SpannableString linkedMessage = new SpannableString(
+                        Html.fromHtml(aboutBuilder.toString()));
+                Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+                mBaseActivity.showAlertWithLogoAndVersion(titleId, linkedMessage, context);
+            }
+        });
+
+
+    }
+
+
 }

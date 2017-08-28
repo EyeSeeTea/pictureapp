@@ -19,7 +19,7 @@ public class DownloadMediaUseCase implements UseCase {
 
         void onSuccess(int syncedFiles);
 
-        void onProgress();
+        void showDownloadProgress(boolean value);
     }
 
     private Callback mCallback;
@@ -67,11 +67,12 @@ public class DownloadMediaUseCase implements UseCase {
                         public void onError(FileDownloadException ex) {
                             mCallback.onError(ex);
                             mFileDownloader.changeFileDownloaderIProgress(false);
+                            mCallback.showDownloadProgress(false);
                         }
 
                         @Override
-                        public void onProgress() {
-                            mCallback.onProgress();
+                        public void showDownloadProgress(boolean value) {
+                            mCallback.showDownloadProgress(value);
                         }
 
                         @Override
@@ -81,6 +82,7 @@ public class DownloadMediaUseCase implements UseCase {
                             removeNotDownloadedMedia(syncMedias, currentMedias);
                             mCallback.onSuccess(numOfSyncedFiles);
                             mFileDownloader.changeFileDownloaderIProgress(false);
+                            mCallback.showDownloadProgress(false);
                         }
 
                     });

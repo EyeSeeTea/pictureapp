@@ -65,6 +65,12 @@ public class FileDownloader implements IFileDownloader {
         initializeDrive();
 
         List<String> uids = getResourceUrlsToDownload(currentMedias, rootUid, program, mCallback);
+        if(uids == null || uids.isEmpty()){
+            Log.d(TAG, String.format("DownloadMediaTask nothing to sync"));
+            return;
+        }
+
+        mCallback.showDownloadProgress(true);
 
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {
@@ -87,11 +93,6 @@ public class FileDownloader implements IFileDownloader {
                             }
                         }
                         mCallback.onSuccess(filesInDrive);
-                    }
-
-                    @Override
-                    public void onProgress() {
-                        mCallback.onProgress();
                     }
                 }).execute();
     }

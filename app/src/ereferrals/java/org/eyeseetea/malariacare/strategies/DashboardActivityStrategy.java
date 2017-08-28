@@ -354,8 +354,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
 
             @Override
-            public void onProgress() {
-                avFragment.showProgress();
+            public void showDownloadProgress(boolean value) {
+                avFragment.showProgress(value);
             }
         });
     }

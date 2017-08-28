@@ -11,7 +11,7 @@ public interface IFileDownloader {
 
         void onError(FileDownloadException throwable);
 
-        void onProgress();
+        void showDownloadProgress(boolean value);
     }
 
     void download(List<Media> currentMedias, String rootUid, String program, Callback callback);

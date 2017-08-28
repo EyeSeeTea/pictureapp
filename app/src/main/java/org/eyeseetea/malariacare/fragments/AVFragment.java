@@ -90,7 +90,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
                 mediaRepository);
         mPresenter = new MediaPresenter(getMediaUseCase);
         mPresenter.attachView(this);
-        showProgress();
+        showProgress(PreferencesState.getInstance().isFileDownloaderInProgress());
     }
 
     private void initializeRecyclerView() {
@@ -157,16 +157,11 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         initializePresenter();
     }
 
-    public void showProgress() {
-        mainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                if(PreferencesState.getInstance().isFileDownloaderInProgress()) {
-                    mTextProgressView.setVisibility(android.view.View.VISIBLE);
-                }else{
-                    mTextProgressView.setVisibility(android.view.View.GONE);
-                }
-            }
-        });
+    public void showProgress(final  boolean isInProgress) {
+        if(isInProgress) {
+            mTextProgressView.setVisibility(android.view.View.VISIBLE);
+        }else{
+            mTextProgressView.setVisibility(android.view.View.GONE);
+        }
     }
 }

@@ -14,7 +14,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         List<Survey> surveys = new ArrayList<>();
 
         List<SurveyDB> surveysInDB =
-                SurveyDB.getAllHideAndSentSurveys(
+                SurveyDB.getSentSurveys(
                         count);
 
         for (SurveyDB surveyDBDB : surveysInDB) {

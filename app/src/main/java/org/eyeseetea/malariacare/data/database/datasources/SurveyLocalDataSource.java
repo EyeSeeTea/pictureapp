@@ -44,4 +44,21 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         }
         callback.onSuccess(unsentSurveys);
     }
+
+    @Override
+    public List<Survey> getAllQuarantineSurveys() {
+        List<SurveyDB> surveyDBs = SurveyDB.getAllQuarantineSurveys();
+        List<Survey> surveys = new ArrayList<>();
+        for(SurveyDB surveyDB : surveyDBs){
+            surveys.add(new Survey(surveyDB.getId_survey(), surveyDB.getStatus(), null));
+        }
+        return surveys;
+    }
+
+    @Override
+    public void save(Survey survey) {
+        SurveyDB surveyDB = SurveyDB.findById(survey.getId());
+        surveyDB.setStatus(survey.getStatus());
+        surveyDB.update();
+    }
 }

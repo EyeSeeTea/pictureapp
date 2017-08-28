@@ -22,7 +22,7 @@ public abstract class APushUseCaseStrategy {
     protected IPushController mPushController;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
     private SurveysThresholds mSurveysThresholds;
-    private ISurveyRepository mSurveyRepository;
+    public ISurveyRepository mSurveyRepository;
     private IMainExecutor mMainExecutor;
     protected PushUseCase.Callback mCallback;
 

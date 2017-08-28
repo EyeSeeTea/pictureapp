@@ -4,7 +4,7 @@
 "</string>
 <string name="no">"ບໍ່ແມ່ນ
 "</string>
-<string name="ok">"ຕົກລົງ
+    <string name="provider_redeemEntry_msg_matchingOk">"ຕົກລົງ
 "</string>
     <string name="cancel">"ຍົກເລີກ"</string>
 <string name="survey_review">"ເບິ່ງຄືນ
@@ -82,7 +82,7 @@
 <string name="dhis_url_error_bad_credentials">"ໂປຣແກມນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ນຳໃຊ້ຢູ່ໃນເຊີເວີດັ່ງກ່າວ"</string>
 <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
 <string name="monitoring_title_dropdown">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
-<string name="monitoring_title">ການຕິດຕາມ</string>
+    <string name="common_menu_statistics">ການຕິດຕາມ</string>
 <string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
 <string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
 <string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
@@ -199,7 +199,7 @@
 <string name="dynamic_error_number">ຈໍານວນທີ່ບໍ່ຖືກຕ້ອງ</string>
 
 <string name="settings_menu_logout_message">ການປ່ຽນແປງເຄື່ອງແມ່ຂ່າຍຫຼື orgunit ຕ້ອງການທີ່ຈະ Re: ເຂົ້າສູ່ລະບົບ. ທຸກການສໍາຫຼວດບໍ່ສົ່ງຈະໄດ້ຮັບການລຶບ. ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະສືບຕໍ່?</string>
-<string name="app_logout">ອກ​ຈາກ​ລະ​ບົບ</string>
+    <string name="common_menu_logOff">ອກ​ຈາກ​ລະ​ບົບ</string>
 <string name="network_error">ມີບັນຫາກັບເຄືອຂ່າຍໄດ້, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ.</string>
 <string name="login_invalid_credentials">ຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ</string>
 <string name="login_unexpected_error">"ມີຂໍ້ຜິດຜາດເກີດຂຶ້ນ, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ"</string>
@@ -224,4 +224,6 @@
 <string name="clean_demo_db">"ຖານຂໍ້ມູນຕົວຢ່າງທີ່ສະອາດ"</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+
+    <string name="login_userName">Username</string>
 </resources>

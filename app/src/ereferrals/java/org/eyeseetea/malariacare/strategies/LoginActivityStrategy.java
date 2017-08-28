@@ -112,7 +112,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_userName));
 
         username = (EditText) loginActivity.findViewById(R.id.edittext_username);
 
@@ -350,7 +350,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         AlertDialog.Builder builder = new AlertDialog.Builder(loginActivity);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();

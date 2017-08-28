@@ -2,7 +2,7 @@
 <resources>
 <string name="malaria_case_based_reporting">"Malaria Case-based Reporting"</string>
 <string name="volunteer_label">"Volunteer:"</string>
-<string name="new_case_title">"NEW CASE"</string>
+    <string name="ipc_menu_issueReferral">"NEW CASE"</string>
 <string name="patient_profile_subtitle">"Patient profile"</string>
 <string name="patient_name">"Patient name"</string>
 <string name="patient_name_enter_helptext">"Enter full patient name"</string>
@@ -128,7 +128,7 @@
 <string name="app_copyright">"Copyright"</string>
 <string name="app_software_licenses">"Software licenses"</string>
 <string name="app_EULA">"EULA"</string>
-<string name="app_logout">"Logout"</string>
+    <string name="common_menu_logOff">"Logout"</string>
 <string name="settings_menu_logout_message">"Changing the server requires you to log out. All unsent surveys will be deleted. Are you sure you want to continue?"</string>
 <string name="dashboard_menu_logout_message">"All unsent surveys will be deleted. Are you sure you want to continue?"</string>
 <string name="common_menu_about">"About"</string>
@@ -137,7 +137,7 @@
 <string name="unsent_data">"Unsent Data"</string>
 <string name="stock_control">"STOCK CONTROL"</string>
 <string name="receipts_balances">"Receipts &amp; balances"</string>
-<string name="monitoring_title">"MONITORING"</string>
+    <string name="common_menu_statistics">"MONITORING"</string>
 <string name="monitoring_time_period">"Time period"</string>
 <string name="monitoring_label_option_months">"Last 6 months"</string>
 <string name="monitoring_label_option_days">"Last 6 days"</string>
@@ -173,7 +173,7 @@
 <string name="Cq">"Cq"</string>
 <string name="Pq">"Pq"</string>
 <string name="monitoring_title_dropdown">"Please select a time period."</string>
-<string name="ok">"Ok"</string>
+    <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
 <string name="cancel">"Cancel"</string>
 <string name="dialog_title_delete_survey">"Delete survey"</string>
 <string name="dialog_info_delete_survey">"Are you sure you want to delete this survey?"</string>
@@ -234,7 +234,7 @@
 <string name="not_tested">"Not tested"</string>
 <string name="system_defined">"System defined"</string>
 <string name="no_data">"no data"</string>
-<string name="error_compulsory_question_unanswered">"Please provide an answer for every compulsory question."</string>
+    <string name="provider_redeemEntry_msg_warning">"Please provide an answer for every compulsory question."</string>
 <string name="patient_name_review_title">"Name"</string>
 <string name="patient_age_review_title">"Age"</string>
 <string name="patient_phone_review_title">"Phone"</string>
@@ -344,4 +344,6 @@
 <string name="error_exporting_data">"Error metadata could not be exported."</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+
+    <string name="login_userName">Username</string>
 </resources>

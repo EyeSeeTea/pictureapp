@@ -30,7 +30,7 @@ public class PushUseCaseStrategy extends APushUseCaseStrategy {
         List<Survey> surveyList = mSurveyRepository.getAllQuarantineSurveys();
         for(Survey survey : surveyList){
             survey.setStatus(Constants.SURVEY_COMPLETED);
-            mSurveyRepository.updateSurveyState(survey);
+            mSurveyRepository.save(survey);
         }
 
         if (pushController.isPushInProgress()) {

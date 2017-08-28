@@ -56,7 +56,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     }
 
     @Override
-    public void updateSurveyState(Survey survey) {
+    public void save(Survey survey) {
         SurveyDB surveyDB = SurveyDB.findById(survey.getId());
         surveyDB.setStatus(survey.getStatus());
         surveyDB.update();

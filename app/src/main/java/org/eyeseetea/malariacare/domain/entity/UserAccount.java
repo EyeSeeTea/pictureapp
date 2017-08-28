@@ -19,7 +19,6 @@ public class UserAccount {
         this.userUid = userUid;
         this.canAddSurveys = canAddSurveys;
     }
-
     public String getUserName() {
         return userName;
     }

@@ -71,6 +71,18 @@ public class UserDB extends BaseModel {
         this.name = name;
     }
 
+    public static void insertLoggedUser(UserDB user) {
+        UserDB userDBDB = UserDB.getUserFromDB(user);
+
+        if (userDBDB == null) {
+            user.save();
+        } else {
+            userDBDB.setCanAddSurveys(user.canAddSurveys());
+            userDBDB.save();
+            System.out.println("UserDB already saved" + user.toString());
+        }
+    }
+
     public UserDB(long id_user, String uid, String name, long organisation, long supervisor,
             List<SurveyDB> surveyDBs) {
         this.id_user = id_user;
@@ -91,16 +103,9 @@ public class UserDB extends BaseModel {
         return null;
     }
 
-    public static void insertLoggedUser(UserDB user) {
-        UserDB userDBDB = UserDB.getUserFromDB(user);
-
-        if (userDBDB == null) {
-            user.save();
-        } else {
-            userDBDB.setCanAddSurveys(user.canAddSurveys());
-            userDBDB.save();
-            System.out.println("UserDB already saved" + user.toString());
-        }
+    @Override
+    public void save() {
+        super.save();
     }
 
     public static UserDB getUserFromDB(UserDB userDB) {

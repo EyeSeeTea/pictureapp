@@ -128,10 +128,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     currentUser.setCanAddSurveys(false);
                     userDataSource.saveLoggedUser(currentUser);
                 } else {
-                    currentUser.setCanAddSurveys(true);
-                    userDataSource.saveLoggedUser(currentUser);
                     try {
-                        downloadCsvsAndRepopulateDB();
+                        downloadCsvsAndRepopulateDB(userDataSource, currentUser);
                     } catch (IOException e) {
                         e.printStackTrace();
                         callback.onError(e);
@@ -146,9 +144,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
         });
     }
 
-    private void downloadCsvsAndRepopulateDB()
+    private void downloadCsvsAndRepopulateDB(IUserRepository userDataSource,
+            UserAccount currentUser)
             throws IOException {
         mMetadataUpdater.updateMetadata();
+        currentUser.setCanAddSurveys(true);
+        userDataSource.saveLoggedUser(currentUser);
     }
 
     private boolean isNetworkAvailable() {

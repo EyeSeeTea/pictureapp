@@ -328,4 +328,5 @@
 <string name="db_migration_error">"请通知管理员，申请可能需要重新安装"</string>
 <string name="error_exporting_data">"无法导出错误元数据。"</string>
 <string name="tab_av">"AV"</string>
+<string name="av_progress">正在下载内容...请稍候</string>
 </resources>

@@ -11,6 +11,11 @@ public class FileDownloadException extends Exception {
         System.out.println(ERROR_MESSAGE);
     }
 
+    public FileDownloadException(String message) {
+        super(ERROR_MESSAGE);
+        System.out.println(ERROR_MESSAGE + message);
+    }
+
     public FileDownloadException(Throwable t, String message) {
         super(ERROR_MESSAGE);
         t.printStackTrace();

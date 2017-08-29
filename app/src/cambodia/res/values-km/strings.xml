@@ -209,4 +209,5 @@
 <string name="db_migration_error">"សូមជូនដំណឹងអ្នកគ្រប់គ្រងកម្មវិធីនេះអាចត្រូវការដើម្បីត្រូវបានដំឡើងឡើងវិញ"</string>
 <string name="error_exporting_data">"កំហុសក្នុងទិន្នន័យមេតាមិនអាចនាំចេញ»។"</string>
 <string name="tab_av">"AV"</string>
+<string name="av_progress">កំពុងទាញយកមាតិកា ... សូមរង់ចាំ</string>
 </resources>

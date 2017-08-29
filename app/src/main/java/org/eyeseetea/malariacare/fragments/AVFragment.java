@@ -44,6 +44,7 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.MediaPresenter;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.io.File;
 import java.util.List;
@@ -54,6 +55,8 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     protected AVAdapter mAdapter;
     private RecyclerView recyclerView;
     private MediaPresenter mPresenter;
+    CustomTextView mTextProgressView;
+    IMainExecutor mainExecutor;
 
     View rootView;
 
@@ -63,10 +66,11 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         rootView = inflater.inflate(R.layout.av_fragment, container, false);
 
+        mTextProgressView = (CustomTextView)rootView.findViewById(R.id.progress_text);
+
         initializeRecyclerView();
         initializeChangeModeButton();
         initializePresenter();
-
         return rootView;
     }
 
@@ -78,13 +82,12 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     }
 
     private void initializePresenter() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
+        mainExecutor= new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMediaRepository mediaRepository = new MediaRepository();
 
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
-
         mPresenter = new MediaPresenter(getMediaUseCase);
         mPresenter.attachView(this);
     }
@@ -151,5 +154,13 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
     public void reloadData() {
         initializePresenter();
+    }
+
+    public void showProgress(final  boolean isInProgress) {
+        if(isInProgress) {
+            mTextProgressView.setVisibility(android.view.View.VISIBLE);
+        }else{
+            mTextProgressView.setVisibility(android.view.View.GONE);
+        }
     }
 }

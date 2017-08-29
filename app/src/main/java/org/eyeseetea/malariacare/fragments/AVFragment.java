@@ -90,7 +90,6 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
                 mediaRepository);
         mPresenter = new MediaPresenter(getMediaUseCase);
         mPresenter.attachView(this);
-        showProgress(PreferencesState.getInstance().isFileDownloaderInProgress());
     }
 
     private void initializeRecyclerView() {

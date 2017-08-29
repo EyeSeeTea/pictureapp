@@ -10,8 +10,6 @@ public interface IFileDownloader {
         void onSuccess(List<Media> syncedFiles);
 
         void onError(FileDownloadException throwable);
-
-        void showDownloadProgress(boolean value);
     }
 
     void download(List<Media> currentMedias, String rootUid, String program, Callback callback);

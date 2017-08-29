@@ -53,7 +53,6 @@ public class FileDownloader implements IFileDownloader {
     @Override
     public void download(List<Media> currentMedias, String rootUid, String program,
             final Callback mCallback) {
-        changeFileDownloaderIProgress(true);
         filesInDrive = new ArrayList<>();
 
         if (!isGooglePlayServicesAvailable()) {
@@ -71,8 +70,6 @@ public class FileDownloader implements IFileDownloader {
             mCallback.onError(new NoFilesException());
             return;
         }
-
-        mCallback.showDownloadProgress(true);
 
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {

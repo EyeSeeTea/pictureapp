@@ -13,6 +13,7 @@ public class SurveySendAction {
     private String program;
     @JsonProperty("EventDateTime")
     private String eventDateTime;
+    private Coordinate coordinate;
 
     public SurveySendAction() {
         dataValues = new ArrayList<>();
@@ -65,5 +66,13 @@ public class SurveySendAction {
 
     public void setEventDateTime(String eventDateTime) {
         this.eventDateTime = eventDateTime;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 }

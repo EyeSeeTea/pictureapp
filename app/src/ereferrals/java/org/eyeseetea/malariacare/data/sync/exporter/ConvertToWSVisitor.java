@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+import android.location.Location;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
@@ -8,8 +10,10 @@ import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSourc
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
+import org.eyeseetea.malariacare.data.sync.exporter.model.Coordinate;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Voucher;
@@ -90,6 +94,9 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
         surveySendAction.setEventDateTime(getEventDateTimeString(survey.getEventDate()));
+        Location location = LocationMemory.get(survey.getId_survey());
+        surveySendAction.setCoordinate(
+                new Coordinate(location.getLatitude(), location.getLongitude()));
         mSurveyContainerWSObject.getActions().add(surveySendAction);
     }
 

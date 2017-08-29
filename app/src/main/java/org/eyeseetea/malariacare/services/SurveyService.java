@@ -28,11 +28,9 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
-import org.eyeseetea.malariacare.data.database.model.MediaDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -40,8 +38,6 @@ import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +71,6 @@ public class SurveyService extends IntentService {
     public static final String ALL_SENT_SURVEYS_ACTION =
             "org.eyeseetea.malariacare.services.SurveyService.ALL_SENT_SURVEYS_ACTION";
 
-    /**
-     * Name of 'remove list completed' action
-     */
-    public static final String REMOVE_SENT_SURVEYS_ACTION =
-            "org.eyeseetea.malariacare.services.SurveyService.REMOVE_SENT_SURVEYS_ACTION";
 
     /**
      * Name of 'reload' action which returns both lists (unsent, sent)
@@ -147,9 +138,6 @@ public class SurveyService extends IntentService {
             case ALL_SENT_SURVEYS_ACTION:
                 getAllSentSurveys();
                 break;
-            case REMOVE_SENT_SURVEYS_ACTION:
-                removeAllSentSurveys();
-                break;
             case RELOAD_DASHBOARD_ACTION:
                 reloadDashboard();
                 break;
@@ -192,7 +180,7 @@ public class SurveyService extends IntentService {
                 //Load %completion in every survey (it takes a while so it can NOT be done in UI
                 // Thread)
                 for (SurveyDB surveyDB : surveyDBs) {
-                    if (!surveyDB.isSent() && !surveyDB.isHide() && !surveyDB.isConflict()) {
+                    if (!surveyDB.isSent() && !surveyDB.isConflict()) {
                         surveyDB.getAnsweredQuestionRatio();
                         unsentSurveyDBs.add(surveyDB);
                     }
@@ -225,32 +213,6 @@ public class SurveyService extends IntentService {
                 //Returning result to anyone listening
                 Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
-            }
-        });
-    }
-
-    /**
-     * Remove all sent surveys from database
-     */
-    private void removeAllSentSurveys() {
-        Log.d(TAG, "removeAllSentSurveys (Thread:" + Thread.currentThread().getId() + ")");
-        getProgramUID(new Callback() {
-            @Override
-            public void onSuccess(String uid) {
-                //Select all sent surveys from sql and delete.
-                List<SurveyDB> surveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
-                for (int i = surveyDBs.size() - 1; i >= 0; i--) {
-                    //If is over limit the survey be delete, if is in the limit the survey change
-                    // the
-                    // state to STATE_HIDE
-                    if (Utils.isDateOverLimit(Utils.DateToCalendar(surveyDBs.get(i).getEventDate()),
-                            1)) {
-                        surveyDBs.get(i).delete();
-                    } else {
-                        surveyDBs.get(i).setStatus(Constants.SURVEY_HIDE);
-                        surveyDBs.get(i).save();
-                    }
-                }
             }
         });
     }

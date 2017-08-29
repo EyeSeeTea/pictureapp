@@ -335,6 +335,7 @@
 <string name="error_exporting_data">"မှားယွင်းနေသည် metadata ကိုတင်ပို့လို့မရပါ။ "</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+<string name="av_progress">အကြောင်းအရာကိုဒေါင်းလုဒ် ... စောင့်ဆိုင်းကျေးဇူးပြုပြီး</string>
 
     <string name="login_userName">Username</string>
 </resources>

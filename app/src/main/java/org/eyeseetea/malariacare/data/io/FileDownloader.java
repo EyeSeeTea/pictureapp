@@ -22,6 +22,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
+import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.sdk.data.DownloadMediaTask;
 
 import java.io.File;
@@ -52,7 +53,6 @@ public class FileDownloader implements IFileDownloader {
     @Override
     public void download(List<Media> currentMedias, String rootUid, String program,
             final Callback mCallback) {
-        changeFileDownloaderIProgress(true);
         filesInDrive = new ArrayList<>();
 
         if (!isGooglePlayServicesAvailable()) {
@@ -65,6 +65,11 @@ public class FileDownloader implements IFileDownloader {
         initializeDrive();
 
         List<String> uids = getResourceUrlsToDownload(currentMedias, rootUid, program, mCallback);
+        if(uids == null || uids.isEmpty()){
+            Log.d(TAG, String.format("DownloadMediaTask nothing to sync"));
+            mCallback.onError(new NoFilesException());
+            return;
+        }
 
         new DownloadMediaTask(mFileDir, drive, uids,
                 new DownloadMediaTask.Callback() {

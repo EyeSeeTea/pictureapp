@@ -175,6 +175,7 @@
     <string name="feedback_view_image">Öppna bild med...</string>
     <string name="drive_title">Kör rotmapp</string>
     <string name="csv_version">CVS Version: %s \n</string>
+    <string name="av_progress">Hämtar innehåll ... vänligen vänta</string>
     <string name="new_survey_disable">Toleo jipya la metadata halikuweza kufungwa kwa sababu kuna tafiti zinazojitokeza kutuma. Kipindi kipya cha utafiti kinazima</string>
 
 

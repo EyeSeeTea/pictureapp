@@ -224,6 +224,7 @@
 <string name="clean_demo_db">"ຖານຂໍ້ມູນຕົວຢ່າງທີ່ສະອາດ"</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+<string name="av_progress">ດາວໂຫລດເນື້ອຫາ ... ກະລຸນາລໍຖ້າ</string>
 
     <string name="login_userName">Username</string>
 </resources>

@@ -108,6 +108,14 @@ public class WSPushController implements IPushController {
                         responseAction.getMessage(), responseAction.getResponse().getMsg());
                 mCallback.onInformativeError(new PushValueException(message));
             }
+            SurveyDB surveyDB = SurveyDB.getSurveyByWSGeneratedCode(responseAction.getActionId());
+            String voucherId = responseAction.getResponse().getData().getVoucherId();
+            if (!surveyDB.getEventUid().equals(voucherId)) {
+                Log.d(TAG, "Changing the UID of the survey old:" + surveyDB.getEventUid() + " new:"
+                        + voucherId);
+                surveyDB.setEventUid(voucherId);
+                surveyDB.save();
+            }
         }
         for (SurveyDB survey : mSurveys) {
             survey.setStatus(Constants.SURVEY_SENT);

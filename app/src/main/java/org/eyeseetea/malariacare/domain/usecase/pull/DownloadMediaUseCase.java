@@ -18,6 +18,8 @@ public class DownloadMediaUseCase implements UseCase {
         void onError(FileDownloadException ex);
 
         void onSuccess(int syncedFiles);
+
+        void onDownloadInProgressChanged(boolean value);
     }
 
     private Callback mCallback;
@@ -57,6 +59,10 @@ public class DownloadMediaUseCase implements UseCase {
                 System.out.println("File downloader is already downloading");
                 return;
             }
+
+            mCallback.onDownloadInProgressChanged(true);
+            mFileDownloader.changeFileDownloaderIProgress(true);
+
             mFileDownloader.download(currentMedias,
                     PreferencesState.getInstance().getDriveRootFolderUid(),
                     mProgramRepository.getUserProgram().getCode(),
@@ -65,6 +71,7 @@ public class DownloadMediaUseCase implements UseCase {
                         public void onError(FileDownloadException ex) {
                             mCallback.onError(ex);
                             mFileDownloader.changeFileDownloaderIProgress(false);
+                            mCallback.onDownloadInProgressChanged(false);
                         }
 
                         @Override
@@ -74,6 +81,7 @@ public class DownloadMediaUseCase implements UseCase {
                             removeNotDownloadedMedia(syncMedias, currentMedias);
                             mCallback.onSuccess(numOfSyncedFiles);
                             mFileDownloader.changeFileDownloaderIProgress(false);
+                            mCallback.onDownloadInProgressChanged(false);
                         }
 
                     });

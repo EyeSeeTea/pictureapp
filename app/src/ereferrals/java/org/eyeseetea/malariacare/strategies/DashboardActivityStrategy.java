@@ -343,7 +343,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         showDialog(connectionStatusCode);
                     }
                 } else {
-                    Log.e(this.getClass().getSimpleName(), "Unexpected error to download Media");
+                    Log.e(this.getClass().getSimpleName(), ex.getMessage());
                 }
             }
 
@@ -354,6 +354,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 if (syncedFiles > 0) {
                     showToast(String.format("%d files synced", syncedFiles));
                 }
+            }
+
+            @Override
+            public void onDownloadInProgressChanged(boolean value) {
+                avFragment.showProgress(value);
             }
         });
     }

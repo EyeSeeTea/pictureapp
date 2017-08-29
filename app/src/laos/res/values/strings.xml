@@ -216,4 +216,5 @@
 <string name="clean_demo_db">"Clean demo DB"</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+<string name="av_progress">Downloading content... please wait</string>
 </resources>

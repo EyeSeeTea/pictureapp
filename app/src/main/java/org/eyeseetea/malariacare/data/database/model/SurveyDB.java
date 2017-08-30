@@ -121,9 +121,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     @Column
     String uid_event_fk;
 
-    @Column
-    String ws_generated_code;
-
     /**
      * List of values for this survey
      */
@@ -308,18 +305,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
     public void setEventUid(String eventuid) {
         this.uid_event_fk = eventuid;
-    }
-
-    public static SurveyDB getSurveyByWSGeneratedCode(String WSGeneratedCode) {
-        return new Select()
-                .from(SurveyDB.class)
-                .where(SurveyDB_Table.ws_generated_code
-                        .eq(WSGeneratedCode))
-                .querySingle();
-    }
-
-    public String getWs_generated_code() {
-        return ws_generated_code;
     }
 
     /**
@@ -1081,10 +1066,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
             }
         }
         return totalPages;
-    }
-
-    public void setWs_generated_code(String ws_generated_code) {
-        this.ws_generated_code = ws_generated_code;
     }
 
     @Override

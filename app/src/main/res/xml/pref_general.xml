@@ -91,6 +91,6 @@
             android:key="@string/language_code"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
-            android:title="@string/settings_select_language" />
+            android:title="@string/common_about_rowHeader_language" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -15,8 +15,6 @@
     <string name="sent_data">"Kufungwa"</string>
     <string name="status_subtitle">""</string>
     <string name="unsent_data">"Fungua"</string>
-    <string name="monitoring_title">"Hali"</string>
-    <string name="new_case_title">"KESI MPYA"</string>
     <string name="open_tab_title">"FUNGUA"</string>
     <string name="closed_tab_title">"KUFUNGWA"</string>
     <string name="status_tab_title">"HALI"</string>
@@ -29,15 +27,12 @@
     <string name="font_medium">"Kati"</string>
     <string name="font_large">"Kubwa"</string>
     <string name="font_extra_large">"Kubwa sana"</string>
-    <string name="settings_select_language">"Lugha"</string>
     <string name="developer_option_title">"Onyesha chaguo la msanidi"</string>
     <string name="developer_option_summary">"Kipengele hiki Kinaamilisha chaguo la msanidi."</string>
-    <string name="app_about">"Kuhusu"</string>
     <string name="app_legal">"Kisheria"</string>
     <string name="app_copyright">"Hati miliki"</string>
     <string name="app_software_licenses">"Leseni ya programu"</string>
     <string name="app_EULA">"EULA"</string>
-    <string name="app_logout">"Kutoka"</string>
     <string name="app_visual">"Picha:"</string>
     <string name="error_message_push">"Tukio na UID: %s . ilipakiwa bila tarehe. Tafadhali wasiliana na msimamizi."</string>
     <string name="survey_error">"Survey na kitambulisho: %1$s ina migogoro: %2$s . Undani ujumbe: %3$s"</string>
@@ -46,7 +41,6 @@
     <string name="offline_status">Programu ni nje ya mtandao, tafadhali kwenda online na kuona habari hii</string>
     <string name="ws_conversion_error">"PUSHUSECASE ERROR Kosa limetokea kwa uongofu katika kushinikiza mchakato"</string>
     <string name="server_url">URL ya seva</string>
-    <string name="username">jina la mtumiaji</string>
     <string name="log_in">Ingia</string>
     <string name="progress_pull_downloading">"metadata Refreshing (hii inaweza kuchukua dakika chache)"</string>
     <string name="progress_pull_done">"yamekamilika"</string>
@@ -55,7 +49,6 @@
     <string name="cancel">"kufuta"</string>
     <string name="settings_menu_logout_message">"Kubadilisha server inahitaji kuingia nje. Tafiti zote ambazo hazijatumwa yatafutwa. Una uhakika unataka kuendelea?"</string>
     <string name="dashboard_menu_logout_message">"Tafiti zote ambazo hazijatumwa yatafutwa. Una uhakika unataka kuendelea?"</string>
-    <string name="settings_menu_about">"kuhusu"</string>
     <string name="review_title">"Tafadhali angalia kabla"</string>
     <string name="review_subtitle">"maambukizi"</string>
     <string name="survey_completed">"Utafiti imekamilika"</string>
@@ -68,7 +61,6 @@
     <string name="export_data_option_title">"Hamisha hifadhidata"</string>
     <string name="confirmation_really_exit_title">"Toka kweli?"</string>
     <string name="confirmation_really_exit">"Una uhakika unataka kutoka kwenye programu?"</string>
-    <string name="error_compulsory_question_unanswered">"Tafadhali kutoa jibu kwa kila swali lazima."</string>
     <string name="negative_test_review_title">"Hasi"</string>
     <string name="dynamic_error_number">"Namba batili"</string>
     <string name="network_error">"Kuna tatizo la mtandao, Tafadhali jaribu tena baadaye."</string>
@@ -108,7 +100,6 @@
     <string name="consumption">"matumizi"</string>
     <string name="RDT">"RDT"</string>
     <string name="monitoring_title_dropdown">"Tafadhali kuchagua kipindi."</string>
-    <string name="ok">"Sawa"</string>
     <string name="dialog_title_error">"Kosa"</string>
     <string name="toast_push_is_pushing">"Kutuma uchunguzi kabla ya kuingia mazingira."</string>
     <string name="create_info_organization_unit">"kitengo cha shirika"</string>
@@ -186,6 +177,7 @@
     <string name="csv_version">CVS Version: %s \n</string>
     <string name="av_progress">Hämtar innehåll ... vänligen vänta</string>
     <string name="new_survey_disable">Toleo jipya la metadata halikuweza kufungwa kwa sababu kuna tafiti zinazojitokeza kutuma. Kipindi kipya cha utafiti kinazima</string>
+
 
     <!-- TERMS FROM POEDITOR -->
     <string name="login_userName">"Jina la mtumiaji"</string>

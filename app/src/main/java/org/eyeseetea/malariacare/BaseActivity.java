@@ -203,7 +203,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.action_about:
                 debugMessage("User asked for about");
-                showAlertWithHtmlMessageAndLastCommit(R.string.app_about, R.raw.about,
+                showAlertWithHtmlMessageAndLastCommit(R.string.common_menu_about, R.raw.about,
                         BaseActivity.this);
                 break;
             case R.id.action_copyright:

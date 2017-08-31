@@ -117,7 +117,6 @@
     <string name="common_menu_logOff">"登出"</string>
 <string name="settings_menu_logout_message">"更改服务器或组织单位需要重新登录。 每个未发送的调查将被删除。 您确定要继续吗？"</string>
 <string name="dashboard_menu_logout_message">"每个未发送的调查将被删除。 您确定要继续吗？"</string>
-<string name="common_menu_about">"关于"</string>
 <string name="past_cases">"未发送数据"</string>
 <string name="sent_data">"已发送数据"</string>
 <string name="unsent_data">"未发送数据"</string>

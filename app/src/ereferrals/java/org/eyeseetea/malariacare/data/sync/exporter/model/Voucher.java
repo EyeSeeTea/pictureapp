@@ -2,12 +2,13 @@ package org.eyeseetea.malariacare.data.sync.exporter.model;
 
 public class Voucher {
     private static String TYPE_PAPER = "paper";
+    private static String TYPE_PHONE = "phone";
 
     private String type;
     private String id;
 
-    public Voucher(String id) {
-        type = TYPE_PAPER;
+    public Voucher(String id, boolean isPhone) {
+        type = isPhone ? TYPE_PHONE : TYPE_PAPER;
         this.id = id;
     }
 

@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+import android.content.Context;
 import android.location.Location;
 
 import org.eyeseetea.malariacare.R;
@@ -90,7 +91,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         surveySendAction.setActionId(CodeGenerator.generateCode());
         surveySendAction.setType(SURVEY_ACTION_ID);
         surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
-        surveySendAction.setVoucher(new Voucher(survey.getEventUid()));
+        surveySendAction.setVoucher(new Voucher(survey.getEventUid(), hasPhone(survey)));
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
         surveySendAction.setEventDateTime(getEventDateTimeString(survey.getEventDate()));
@@ -101,11 +102,21 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private String getEventDateTimeString(Date eventDate) {
-        Date nowDate = new Date();
-        String ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS zzz";
+        String ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
-        return Utils.parseDateToString(nowDate, ISO_FORMAT, timeZone) + " + "
-                + Utils.parseDateToString(eventDate, ISO_FORMAT, timeZone);
+        return Utils.parseDateToString(eventDate, ISO_FORMAT, timeZone);
+    }
+
+    private boolean hasPhone(SurveyDB survey) {
+        Context context = PreferencesState.getInstance().getContext();
+        for (ValueDB value : survey.getValueDBs()) {
+            if (value.getQuestionDB().getCode().equals(
+                    context.getString(R.string.phone_ownership_qc))) {
+                return !(value.getOptionDB().getCode().equals(
+                        context.getString(R.string.no_phone_oc)));
+            }
+        }
+        return false;
     }
 
     public SurveyContainerWSObject getSurveyContainerWSObject() {

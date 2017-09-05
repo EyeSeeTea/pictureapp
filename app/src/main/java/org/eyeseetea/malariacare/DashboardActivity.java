@@ -499,7 +499,7 @@ public class DashboardActivity extends BaseActivity {
             showUnsentFragment();
         } else {
             showUnsentFragment();
-            mDashboardActivityStrategy.reloadStockFragment(this);
+            mDashboardActivityStrategy.reloadFirstFragment();
         }
     }
 
@@ -632,7 +632,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isFragmentActive(Fragment fragment, int layout) {
         Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
-        if (currentFragment.equals(fragment)) {
+        if (currentFragment != null && currentFragment.equals(fragment)) {
             return true;
         }
         return false;
@@ -742,6 +742,8 @@ public class DashboardActivity extends BaseActivity {
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
                     mDashboardActivityStrategy.reloadFourthFragment();
+                } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_av))) {
+                    mDashboardActivityStrategy.reloadAVFragment();
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));

@@ -28,11 +28,11 @@ public class LayoutUtils extends BaseLayoutUtils {
     }
 
     public static void setTabHosts(DashboardActivity dashboardActivity) {
-        dashboardActivity.setTabHostsWithText();
+        dashboardActivity.setTabHostsWithImages();
     }
 
     public static void setTabDivider(DashboardActivity dashboardActivity) {
-        dashboardActivity.setTabDivider();
+
     }
 
     public static void setActionBarAppAndUser(ActionBar actionBar) {

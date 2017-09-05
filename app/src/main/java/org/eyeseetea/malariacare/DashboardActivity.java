@@ -155,7 +155,7 @@ public class DashboardActivity extends BaseActivity {
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.tab_av));
+                    context.getResources().getDrawable(R.drawable.statics));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));

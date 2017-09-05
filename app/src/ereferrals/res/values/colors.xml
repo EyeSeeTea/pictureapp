@@ -9,10 +9,10 @@
     <color name="actionbar_background">@color/medium_light_purple</color>
     <color name="second_actionbar_background">@color/myanmar_orange</color>
     <color name="general_background">@color/light_purple</color>
-    <color name="tab_pressed_background">@color/myanmar_orange</color>
-    <color name="tab_unpressed_background">@color/dark_purple</color>
+    <color name="tab_pressed_background">@color/tab_green_monitor</color>
+    <color name="tab_unpressed_background">@color/light_grey</color>
 
-    <color name="main_window_background">@color/myanmar_orange</color>
+    <color name="main_window_background">@color/white</color>
     <color name="headerColor">@color/myanmar_orange</color>
     <color name="rowBackgroundColor">@color/myanmar_orange</color>
     <color name="fragment_header_title">@color/text_first_color</color>
@@ -27,6 +27,6 @@
 
     <color name="pageIndicator_completed">@color/dark_purple</color>
     <color name="pageIndicator_pending">@color/light_purple</color>
-    <color name="monitor_background">@color/myanmar_orange</color>
+    <color name="monitor_background">@color/white</color>
     <color name="create_button_background">#4fabd2</color>
 </resources>

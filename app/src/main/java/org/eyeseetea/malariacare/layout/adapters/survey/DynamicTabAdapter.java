@@ -659,7 +659,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void initializeNavigationButtons(View navigationButtonsHolder) {
-        ImageButton button = (ImageButton) navigationButtonsHolder.findViewById(R.id.next_btn);
+        View button = (View) navigationButtonsHolder.findViewById(R.id.next_btn);
 
         ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override

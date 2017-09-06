@@ -1,12 +1,8 @@
 package org.eyeseetea.malariacare.layout.utils;
 
-import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -17,6 +13,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -36,44 +33,26 @@ public class LayoutUtils extends BaseLayoutUtils {
     }
 
     public static void setActionBarAppAndUser(ActionBar actionBar) {
-        Context context = PreferencesState.getInstance().getContext();
         actionBar.setLogo(R.drawable.pictureapp_logo);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        int color = ContextCompat.getColor(context, R.color.text_first_color);
-        String colorString = String.format("%X", color).substring(2);
-        Spanned spannedTitle = Html.fromHtml(
-                String.format("<font color=\"#%s\" size=\"10\"><b>%s</b></font>", colorString,
-                        context.getString(R.string.malaria_case_based_reporting)));
-        color = ContextCompat.getColor(context, R.color.text_second_color);
-        colorString = String.format("%X", color).substring(2);
-
-
+        actionBar.setCustomView(R.layout.action_bar_layout);
+        ColorDrawable myColor = new ColorDrawable(
+                PreferencesState.getInstance().getContext().getResources().getColor(
+                        R.color.orange));
+        actionBar.setBackgroundDrawable(myColor);
+        TextView userName = (TextView) actionBar.getCustomView().findViewById(
+                R.id.action_bar_user);
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-
         Credentials credentials = credentialsLocalDataSource.getOrganisationCredentials();
-        String userName = credentials.getUsername();
-
-        String volunteer = context.getString(R.string.volunteer_label);
-
-        Spanned spannedSubTitle = Html.fromHtml(
-                String.format("<font color=\"#%s\"><b>%s</b></font>", colorString,
-                        volunteer + " " + userName + ""));
-        actionBar.setCustomView(R.layout.custom_action_bar);
-        TextView title = (TextView) actionBar.getCustomView().findViewById(
-                R.id.action_bar_multititle_title);
-        title.setText(spannedTitle);
-        Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                "fonts/" + context.getString(R.string.light_font));
-        title.setTypeface(tf);
-        TextView subtitle = (TextView) actionBar.getCustomView().findViewById(
-                R.id.action_bar_multititle_subtitle);
-        subtitle.setText(spannedSubTitle);
-        tf = Typeface.createFromAsset(context.getAssets(),
-                "fonts/" + context.getString(R.string.light_font));
-        subtitle.setTypeface(tf);
-
+        userName.setText(credentials.getUsername());
+        TextView connection =
+                (TextView) actionBar.getCustomView().findViewById(
+                        R.id.action_bar_connection_status);
+        connection.setText(
+                !ConnectivityStatus.isConnected(PreferencesState.getInstance().getContext())
+                        ? R.string.action_bar_offline : R.string.action_bar_online);
     }
 
 

@@ -911,4 +911,7 @@
     <string name="ipc_msg_retrievingCompletedReferrals">"Retrieving Completed Referrals..."</string>
     <string name="provider_msg_retrievingRedeemedReferrals">"Retrieving Redeemed Referrrals..."</string>
     <string name="provider_msg_retrievingSearchedReferrals">"Retrieving Referrals..."</string>
+    <string name="action_bar_connect">Connect</string>
+    <string name="action_bar_online">Online</string>
+    <string name="action_bar_offline">Offline</string>
 </resources>

@@ -808,4 +808,7 @@ Ameahidi kuhudhuria"</string>
     <string name="ipc_msg_retrievingCompletedReferrals">"Inaepua Rufaa zilizokamilika ..."</string>
     <string name="provider_msg_retrievingRedeemedReferrals">"Inaepua Redeemed Referrrals..."</string>
     <string name="provider_msg_retrievingSearchedReferrals">"Inaepua Referrrals..."</string>
+    <string name="action_bar_connect">Connect</string>
+    <string name="action_bar_online">Online</string>
+    <string name="action_bar_offline">Offline</string>
 </resources>

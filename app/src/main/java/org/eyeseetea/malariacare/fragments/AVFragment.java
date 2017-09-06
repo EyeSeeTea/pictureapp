@@ -44,6 +44,7 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.MediaPresenter;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.io.File;
@@ -162,5 +163,9 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         }else{
             mTextProgressView.setVisibility(android.view.View.GONE);
         }
+    }
+
+    public void hideHeader() {
+        DashboardHeaderStrategy.getInstance().hideHeader(getActivity());
     }
 }

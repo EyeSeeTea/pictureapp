@@ -104,6 +104,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadStockFragment(Activity activity) {
         closeFragment.reloadData();
+        closeFragment.hideHeader();
     }
 
     @Override
@@ -119,6 +120,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
                         closeFragment.setArguments(bundle);
                         closeFragment.reloadData();
+                        closeFragment.hideHeader();
                         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                                 closeFragment);
                     }
@@ -203,6 +205,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardUnsentFragment = new DashboardUnsentFragment();
         mDashboardUnsentFragment.setArguments(mDashboardActivity.getIntent().getExtras());
         mDashboardUnsentFragment.reloadData();
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
 
         FragmentTransaction ft = mDashboardActivity.getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
@@ -220,12 +223,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadFirstFragment() {
         mDashboardUnsentFragment.reloadData();
-        mDashboardUnsentFragment.reloadHeader(mDashboardActivity, R.string.tab_tag_stock);
     }
 
     @Override
     public void reloadFirstFragmentHeader() {
-        openFragment.reloadHeader(mDashboardActivity);
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
     }
 
     @Override
@@ -241,7 +244,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
                         openFragment.setArguments(bundle);
                         openFragment.reloadData();
-                        openFragment.reloadHeader(mDashboardActivity, R.string.tab_tag_assess);
+                        openFragment.hideHeader();
                         mDashboardActivity.replaceFragment(R.id.dashboard_completed_container,
                                 openFragment);
                     }
@@ -251,6 +254,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadSecondFragment() {
         openFragment.reloadData();
+        openFragment.hideHeader();
     }
 
     @Override
@@ -268,6 +272,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         statusFragment.reloadData();
                         mDashboardActivity.replaceFragment(R.id.dashboard_av_container,
                                 statusFragment);
+                        statusFragment.hideHeader();
                     }
                 });
     }
@@ -286,7 +291,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             avFragment = new AVFragment();
         }
         mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, avFragment);
-
+        avFragment.hideHeader();
     }
 
     @Override
@@ -298,6 +303,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void showUnsentFragment() {
         mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
                 mDashboardUnsentFragment);
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
     }
 
     @Override
@@ -397,5 +403,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadAVFragment() {
         statusFragment.reloadData();
+        statusFragment.hideHeader();
     }
 }

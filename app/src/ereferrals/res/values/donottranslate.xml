@@ -44,4 +44,8 @@
     <string name="ws_base_url">https://james.psi-mis.org/</string>
     <string name="error_web_resource" translatable="false">file:///android_asset/web_view_error/%1$s</string>
     <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
+    <string name="first_name_qc" translatable="false">firstName</string>
+    <string name="surname_qc" translatable="false">lastName</string>
+    <string name="phone_qc" translatable="false">phoneNumber</string>
+    <string name="program_qc" translatable="false">program</string>
 </resources>

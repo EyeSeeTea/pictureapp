@@ -85,7 +85,7 @@ public class LayoutUtils extends BaseLayoutUtils {
     public static void setListRowBackgroundColor(View row) {
         int myColor = ContextCompat.getColor(
                 PreferencesState.getInstance().getContext(),
-                R.color.rowBackgroundColor
+                android.R.color.transparent
         );
         row.setBackgroundColor(myColor);
     }
@@ -94,21 +94,21 @@ public class LayoutUtils extends BaseLayoutUtils {
     public static void setDashboardActionBar(ActionBar actionBar) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.actionbar_background));
+                        R.color.orange));
         actionBar.setBackgroundDrawable(myColor);
     }
 
     public static void setSurveyActionBar(ActionBar actionBar) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.myanmar_orange));
+                        R.color.orange));
         actionBar.setBackgroundDrawable(myColor);
     }
 
     public static void setRowDivider(ListView listView) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.headerColor)
+                        R.color.text_first_color)
         );
         listView.setDivider(myColor);
         listView.setDividerHeight(0);
@@ -120,8 +120,6 @@ public class LayoutUtils extends BaseLayoutUtils {
 
     // Given a index, this method return a background color
     public static void fixRowViewBackground(View row, int index) {
-        if (index < 1) {
-            row.findViewById(R.id.dotted_line).setVisibility(View.GONE);
-        }
+
     }
 }

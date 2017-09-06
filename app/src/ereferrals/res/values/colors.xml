@@ -4,7 +4,7 @@
     <color name="questionHeaderTextColor">@color/dark_purple</color>
     <color name="questionLayoutBackground">@color/myanmar_grey</color>
     <color name="dynamicProgressBarColor">@color/myanmar_orange</color>
-    <color name="text_first_color">@color/dark_purple</color>
+    <color name="text_first_color">@color/light_grey_purple</color>
     <color name="text_second_color">@color/white</color>
     <color name="actionbar_background">@color/medium_light_purple</color>
     <color name="second_actionbar_background">@color/myanmar_orange</color>

@@ -24,12 +24,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
@@ -70,7 +71,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         mTextProgressView = (CustomTextView)rootView.findViewById(R.id.progress_text);
 
         initializeRecyclerView();
-        initializeChangeModeButton();
+        initializeChangeModeButtons();
         initializePresenter();
         return rootView;
     }
@@ -101,12 +102,19 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         recyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    private void initializeChangeModeButton() {
-        Button changeModeButton = (Button) rootView.findViewById(R.id.change_mode_button);
-        changeModeButton.setOnClickListener(new View.OnClickListener() {
+    private void initializeChangeModeButtons() {
+        ImageButton gridMode = (ImageButton) rootView.findViewById(R.id.av_grid_mode);
+        ImageButton listMode = (ImageButton) rootView.findViewById(R.id.av_list_mode);
+        gridMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.onClickChangeMode();
+                mPresenter.onClickChangeMode(false);
+            }
+        });
+        listMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.onClickChangeMode(true);
             }
         });
     }
@@ -149,8 +157,15 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
                 mPresenter.onClickMedia(media);
             }
         });
-
+        RecyclerView.LayoutManager listLayoutManager = null;
+        if (viewType == AVAdapter.ViewType.GRID) {
+            listLayoutManager = new GridLayoutManager(getActivity(), 2);
+        } else {
+            listLayoutManager = new LinearLayoutManager(getActivity());
+        }
+        recyclerView.setLayoutManager(listLayoutManager);
         recyclerView.setAdapter(mAdapter);
+
     }
 
     public void reloadData() {

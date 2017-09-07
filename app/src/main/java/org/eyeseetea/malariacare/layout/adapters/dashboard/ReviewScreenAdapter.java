@@ -120,6 +120,6 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
                     }
                 });
 
-        return reviewFragmentStrategy.createViewRow(rowView, value);
+        return reviewFragmentStrategy.createViewRow(rowView, value, position);
     }
 }

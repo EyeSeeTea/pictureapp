@@ -24,12 +24,10 @@ public class WSPushController implements IPushController {
 
     private ConvertToWSVisitor mConvertToWSVisitor;
     private List<SurveyDB> mSurveys;
-    private WSClient mWSClient;
     private IPushControllerCallback mCallback;
 
 
     public WSPushController() throws IllegalArgumentException {
-        mWSClient = new WSClient();
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }
 
@@ -84,6 +82,7 @@ public class WSPushController implements IPushController {
     }
 
     private void pushSurveys() {
+        WSClient mWSClient = new WSClient(getTimeout(mSurveys.size()));
         mWSClient.pushSurveys(mConvertToWSVisitor.getSurveyContainerWSObject(),
                 new WSClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
@@ -97,6 +96,10 @@ public class WSPushController implements IPushController {
                         mCallback.onError(e);
                     }
                 });
+    }
+
+    private int getTimeout(int vouchers) {
+        return vouchers * 2000;
     }
 
     private void checkPushResult(SurveyWSResult surveyWSResult) {

@@ -25,7 +25,7 @@
     <item
         android:id="@+id/action_about"
         android:orderInCategory="102"
-        android:title="@string/app_about" />
+        android:title="@string/common_menu_about" />
     <item
         android:orderInCategory="103"
         android:title="@string/app_legal">

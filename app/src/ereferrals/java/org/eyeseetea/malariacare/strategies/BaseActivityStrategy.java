@@ -86,7 +86,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_ITEM_LOGOUT, MENU_ITEM_LOGOUT_ORDER,
-                mBaseActivity.getResources().getString(R.string.app_logout));
+                mBaseActivity.getResources().getString(R.string.common_menu_logOff));
     }
 
     @Override
@@ -96,7 +96,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         switch (id) {
             case MENU_ITEM_LOGOUT:
                 new AlertDialog.Builder(mBaseActivity)
-                        .setTitle(mBaseActivity.getString(R.string.app_logout))
+                        .setTitle(mBaseActivity.getString(R.string.common_menu_logOff))
                         .setMessage(mBaseActivity.getString(R.string.dashboard_menu_logout_message))
                         .setPositiveButton(android.R.string.yes,
                                 new DialogInterface.OnClickListener() {

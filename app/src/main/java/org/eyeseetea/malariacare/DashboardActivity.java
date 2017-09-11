@@ -137,7 +137,7 @@ public class DashboardActivity extends BaseActivity {
                     context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitoring_title));
+                context.getResources().getString(R.string.common_menu_statistics));
         if (GradleVariantConfig.isStockFragmentActive()) {
             initStock();
         }

@@ -42,7 +42,7 @@
                 android:layout_marginLeft="@dimen/top_separator_line"
                 android:layout_marginRight="@dimen/top_separator_line"
                 android:gravity="left|top"
-                android:text="@string/new_case_title"
+                android:text="@string/ipc_menu_issueReferral"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/question_header_title"
                 android:textSize="?attr/font_medium"

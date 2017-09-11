@@ -33,7 +33,7 @@ public class LogoutAndLoginRequiredOnPreferenceClickListener implements
     @Override
     public boolean onPreferenceClick(final Preference preference) {
         new AlertDialog.Builder(settingsActivity)
-                .setTitle(settingsActivity.getString(R.string.app_logout))
+                .setTitle(settingsActivity.getString(R.string.common_menu_logOff))
                 .setMessage(settingsActivity.getString(R.string.settings_menu_logout_message))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {

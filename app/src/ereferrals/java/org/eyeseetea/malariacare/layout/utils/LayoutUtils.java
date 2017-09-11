@@ -40,7 +40,7 @@ public class LayoutUtils extends BaseLayoutUtils {
         actionBar.setCustomView(R.layout.action_bar_layout);
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.orange));
+                        R.color.action_bar_color));
         actionBar.setBackgroundDrawable(myColor);
         TextView userName = (TextView) actionBar.getCustomView().findViewById(
                 R.id.action_bar_user);
@@ -94,14 +94,14 @@ public class LayoutUtils extends BaseLayoutUtils {
     public static void setDashboardActionBar(ActionBar actionBar) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.orange));
+                        R.color.action_bar_color));
         actionBar.setBackgroundDrawable(myColor);
     }
 
     public static void setSurveyActionBar(ActionBar actionBar) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.orange));
+                        R.color.action_bar_color));
         actionBar.setBackgroundDrawable(myColor);
     }
 

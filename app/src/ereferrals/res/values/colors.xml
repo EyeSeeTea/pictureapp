@@ -3,18 +3,18 @@
     <color name="questionHeaderColor">@color/light_purple</color>
     <color name="questionHeaderTextColor">@color/dark_purple</color>
     <color name="questionLayoutBackground">@color/myanmar_grey</color>
-    <color name="dynamicProgressBarColor">@color/myanmar_orange</color>
-    <color name="text_first_color">@color/light_grey_purple</color>
+    <color name="dynamicProgressBarColor">@color/orange_header_ereferrals</color>
+    <color name="text_first_color">@color/gray_text_ereferrals</color>
     <color name="text_second_color">@color/white</color>
     <color name="actionbar_background">@color/medium_light_purple</color>
     <color name="second_actionbar_background">@color/myanmar_orange</color>
     <color name="general_background">@color/light_purple</color>
-    <color name="tab_pressed_background">@color/tab_green_monitor</color>
-    <color name="tab_unpressed_background">@color/light_grey</color>
+    <color name="tab_pressed_background">@color/green_tab_selected_ereferrals</color>
+    <color name="tab_unpressed_background">@color/headerColor</color>
 
     <color name="main_window_background">@color/white</color>
-    <color name="headerColor">@color/myanmar_orange</color>
-    <color name="rowBackgroundColor">@color/myanmar_orange</color>
+    <color name="headerColor">#EFEFEF</color>
+    <color name="rowBackgroundColor">@color/orange_header_ereferrals</color>
     <color name="fragment_header_title">@color/text_first_color</color>
     <color name="fragment_header_subtitle">@color/white</color>
     <color name="question_header_title">@color/text_first_color</color>
@@ -29,4 +29,5 @@
     <color name="pageIndicator_pending">@color/light_purple</color>
     <color name="monitor_background">@color/white</color>
     <color name="create_button_background">#4fabd2</color>
+    <color name="action_bar_color">@color/orange_header_ereferrals</color>
 </resources>

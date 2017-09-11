@@ -919,4 +919,9 @@
     <string name="av_library">Library</string>
     <string name="date_survey_format">"dd/MMM/yy"</string>
     <string name="hour_survey_format">"hh:mm a"</string>
+    <string name="new_survey_title">"New Referral"</string>
+    <string name="tanzania_program_eref">"Tanzania"</string>
+    <string name="uganda_program_eref">"Uganda"</string>
+    <string name="tanzania_program">"Tanzania"</string>
+    <string name="uganda_program">"Uganda"</string>
 </resources>

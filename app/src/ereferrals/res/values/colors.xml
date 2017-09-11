@@ -30,4 +30,5 @@
     <color name="monitor_background">@color/white</color>
     <color name="create_button_background">#4fabd2</color>
     <color name="action_bar_color">@color/orange_header_ereferrals</color>
+    <color name="background_text_grid_av">#80000000</color>
 </resources>

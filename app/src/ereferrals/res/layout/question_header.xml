@@ -34,7 +34,7 @@
                 android:layout_gravity="left|center_vertical"
                 android:layout_marginRight="@dimen/top_separator_line"
                 android:gravity="left|top"
-                android:text="@string/ipc_menu_issueReferral"
+                android:text="@string/new_survey_title"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_medium"

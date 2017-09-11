@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+import static io.fabric.sdk.android.services.common.AbstractSpiCall.DEFAULT_TIMEOUT;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -17,6 +19,7 @@ import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -30,15 +33,23 @@ public class WSClient {
     private Retrofit mRetrofit;
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
+    private final int DEFAULT_TIMEOUT = 10000;
 
+    public WSClient() throws IllegalArgumentException {
+        new WSClient(DEFAULT_TIMEOUT);
+    }
 
-    public WSClient() throws IllegalArgumentException{
+    public WSClient(int numberOfTimeoutSeconds) throws IllegalArgumentException {
         mContext = PreferencesState.getInstance().getContext();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
+                    .connectTimeout(numberOfTimeoutSeconds, TimeUnit.MILLISECONDS)
+                    .readTimeout(numberOfTimeoutSeconds, TimeUnit.MILLISECONDS)
+                    .writeTimeout(numberOfTimeoutSeconds, TimeUnit.MILLISECONDS)
+                    .build();
 
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(PreferencesEReferral.getWSURL())

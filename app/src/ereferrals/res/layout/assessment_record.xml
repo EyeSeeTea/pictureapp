@@ -48,7 +48,7 @@
                 app:font_name="@string/medium_font_name" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
-                android:id="@+id/survey_name"
+                android:id="@+id/important_visible_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -84,7 +84,7 @@
                 app:font_name="@string/light_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
-                android:id="@+id/survey_phone"
+                android:id="@+id/visible_first"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -96,7 +96,7 @@
                 app:font_name="@string/light_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
-                android:id="@+id/survey_program"
+                android:id="@+id/visible_second"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

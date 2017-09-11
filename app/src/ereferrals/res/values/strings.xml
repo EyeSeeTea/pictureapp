@@ -917,4 +917,6 @@
     <string name="unsent_dashboard_header_offline">You are offline - client will not receive her voucher until you connect to the internet and data is sent.</string>
     <string name="survey_submit">Submit</string>
     <string name="av_library">Library</string>
+    <string name="date_survey_format">"dd/MMM/yy"</string>
+    <string name="hour_survey_format">"hh:mm a"</string>
 </resources>

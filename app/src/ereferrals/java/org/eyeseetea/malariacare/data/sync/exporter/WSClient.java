@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
-import static io.fabric.sdk.android.services.common.AbstractSpiCall.DEFAULT_TIMEOUT;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -39,17 +37,17 @@ public class WSClient {
         new WSClient(DEFAULT_TIMEOUT);
     }
 
-    public WSClient(int numberOfTimeoutSeconds) throws IllegalArgumentException {
+    public WSClient(int timeoutMillis) throws IllegalArgumentException {
         mContext = PreferencesState.getInstance().getContext();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
-                    .connectTimeout(numberOfTimeoutSeconds, TimeUnit.MILLISECONDS)
-                    .readTimeout(numberOfTimeoutSeconds, TimeUnit.MILLISECONDS)
-                    .writeTimeout(numberOfTimeoutSeconds, TimeUnit.MILLISECONDS)
-                    .build();
+                .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .build();
 
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(PreferencesEReferral.getWSURL())

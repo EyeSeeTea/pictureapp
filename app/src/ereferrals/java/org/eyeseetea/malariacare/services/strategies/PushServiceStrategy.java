@@ -78,6 +78,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
                 @Override
                 public void onInvalidCredentials() {
+                    Log.e(TAG, "Error credentials not valid ");
                     logout();
                 }
 

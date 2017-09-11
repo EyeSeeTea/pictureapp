@@ -22,22 +22,20 @@ package org.eyeseetea.malariacare.layout.adapters.general;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-/**
- * Created by adrian on 30/04/15.
- */
 public class TabArrayAdapter extends AddlArrayAdapter<Tab> {
 
     public TabArrayAdapter(Context context, List<Tab> tabs) {
         super(context, R.layout.main_spinner_item, tabs);
     }
 
-    @Override public void drawText(TextCard textCard, Tab tab) {
-        textCard.setText(tab.getName());
+    @Override
+    public void drawText(CustomTextView customTextView, Tab tab) {
+        customTextView.setText(tab.getName());
     }
 
 }

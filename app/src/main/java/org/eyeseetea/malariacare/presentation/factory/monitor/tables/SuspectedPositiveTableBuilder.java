@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2015.
+ *
+ * This file is part of QIS Surveillance App.
+ *
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.eyeseetea.malariacare.presentation.factory.monitor.tables;
+
+import android.content.Context;
+
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorTableBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
+        .ISuspectedPositiveTableBuilderStrategy;
+import org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
+        .SuspectedPositiveTableBuilderStrategy;
+
+import java.util.List;
+
+public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
+
+    public SuspectedPositiveTableBuilder(Context context) {
+        super(context, context.getString(R.string.monitor_table_title_suspected_header));
+    }
+
+    @Override
+    protected List<MonitorRowBuilder> defineRowBuilders() {
+        ISuspectedPositiveTableBuilderStrategy suspectedPositiveTableBuilderStrategy =
+                new SuspectedPositiveTableBuilderStrategy(context);
+
+        return suspectedPositiveTableBuilderStrategy.defineSuspectedRows();
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "httpStatus": "OK",
+  "httpStatusCode": "200",
+  "message": "Import was successful.",
+  "status": "OK",
+  "response": {
+    "responseType": "ImportSummaries",
+    "status": "SUCCESS",
+    "importSummaries": [{
+      "responseType": "ImportSummary",
+      "status": "SUCCESS",
+      "description": "",
+      "importCount": {
+        "imported": "0 ",
+        "updated": "4 ",
+        "ignored": "4 ",
+        "deleted": "4 "
+      },
+      "reference": "DSifqmkzKfJ",
+      "href": "https://old-staging.psi-mis.org/api/events/DSifqmkzKfJ"
+    }]
+  }
+}

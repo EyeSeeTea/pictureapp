@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~
   ~ This file is part of Facility QA Tool App.
@@ -18,14 +17,14 @@
   ~  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dashboard_scroll"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_header" />
 
     <TabHost
         android:id="@+id/tabHost"
@@ -42,7 +41,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@color/custom_background_grey"></TabWidget>
+                android:background="@color/custom_background_grey"/>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -58,20 +57,20 @@
                     android:orientation="vertical">
 
                     <FrameLayout
-                        android:orientation="vertical"
+                        android:id="@+id/dashboard_details_container"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/dashboard_details_container">
+                        android:orientation="vertical">
 
                         <TableLayout
+                            android:id="@+id/dashboard_details_table"
                             android:layout_width="fill_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/dashboard_details_table">
+                            android:layout_height="match_parent">
 
                             <ListView
+                                android:id="@+id/dashboard_details_list"
                                 android:layout_width="fill_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/dashboard_details_list"/>
+                                android:layout_height="match_parent" />
 
                         </TableLayout>
                     </FrameLayout>
@@ -82,33 +81,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <FrameLayout
-                        android:orientation="vertical"
+                        android:id="@+id/dashboard_completed_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/dashboard_completed_container">
-                    </FrameLayout>
+                        android:orientation="vertical" />
                     <!-- list view will be automatically added here by the list fragment -->
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab_stock_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/dashboard_stock_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                    <!-- stock content view will be automatically added here by the fragment -->
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/tab_monitor_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <FrameLayout
-                        android:orientation="vertical"
+                        android:id="@+id/dashboard_charts_container"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/dashboard_charts_container">
+                        android:orientation="vertical">
 
                         <WebView
                             android:id="@+id/dashboard_monitor"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:background="@color/light_grey"
-                            android:focusable="true"
-                            >
-                        </WebView>
+                            android:background="@color/monitor_background"
+                            android:focusable="true" />
                     </FrameLayout>
                 </LinearLayout>
             </FrameLayout>

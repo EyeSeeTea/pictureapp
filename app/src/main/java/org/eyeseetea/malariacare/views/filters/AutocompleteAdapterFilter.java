@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.views.filters;
 
 
-
 import android.content.Context;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.IdRes;
@@ -81,7 +80,7 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
     /**
      * Constructor
      *
-     * @param context The current context.
+     * @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
      */
@@ -92,70 +91,90 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
     /**
      * Constructor
      *
-     * @param context The current context.
-     * @param resource The resource ID for a layout file containing a layout to use when
-     *                 instantiating views.
+     * @param context            The current context.
+     * @param resource           The resource ID for a layout file containing a layout to use when
+     *                           instantiating views.
      * @param textViewResourceId The id of the TextView within the layout resource to be populated
      */
-    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource, @IdRes int textViewResourceId) {
+    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource,
+            @IdRes int textViewResourceId) {
         this(context, resource, textViewResourceId, new ArrayList<T>());
     }
 
     /**
      * Constructor
      *
-     * @param context The current context.
+     * @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
-     * @param objects The objects to represent in the ListView.
+     * @param objects  The objects to represent in the ListView.
      */
-    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource, @NonNull T[] objects) {
+    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource,
+            @NonNull T[] objects) {
         this(context, resource, 0, Arrays.asList(objects));
     }
 
     /**
      * Constructor
      *
-     * @param context The current context.
-     * @param resource The resource ID for a layout file containing a layout to use when
-     *                 instantiating views.
+     * @param context            The current context.
+     * @param resource           The resource ID for a layout file containing a layout to use when
+     *                           instantiating views.
      * @param textViewResourceId The id of the TextView within the layout resource to be populated
-     * @param objects The objects to represent in the ListView.
+     * @param objects            The objects to represent in the ListView.
      */
-    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource, @IdRes int textViewResourceId,
-                                     @NonNull T[] objects) {
+    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource,
+            @IdRes int textViewResourceId,
+            @NonNull T[] objects) {
         this(context, resource, textViewResourceId, Arrays.asList(objects));
     }
 
     /**
      * Constructor
      *
-     * @param context The current context.
+     * @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
-     * @param objects The objects to represent in the ListView.
+     * @param objects  The objects to represent in the ListView.
      */
-    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource, @NonNull List<T> objects) {
+    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource,
+            @NonNull List<T> objects) {
         this(context, resource, 0, objects);
     }
 
     /**
      * Constructor
      *
-     * @param context The current context.
-     * @param resource The resource ID for a layout file containing a layout to use when
-     *                 instantiating views.
+     * @param context            The current context.
+     * @param resource           The resource ID for a layout file containing a layout to use when
+     *                           instantiating views.
      * @param textViewResourceId The id of the TextView within the layout resource to be populated
-     * @param objects The objects to represent in the ListView.
+     * @param objects            The objects to represent in the ListView.
      */
-    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource, @IdRes int textViewResourceId,
-                                     @NonNull List<T> objects) {
-        super(context,resource,textViewResourceId,objects);
+    public AutocompleteAdapterFilter(Context context, @LayoutRes int resource,
+            @IdRes int textViewResourceId,
+            @NonNull List<T> objects) {
+        super(context, resource, textViewResourceId, objects);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mResource = mDropDownResource = resource;
         mObjects = objects;
         mFieldId = textViewResourceId;
+    }
+
+    /**
+     * Creates a new ArrayAdapter from external resources. The content of the array is
+     * obtained through {@link android.content.res.Resources#getTextArray(int)}.
+     *
+     * @param context        The application's environment.
+     * @param textArrayResId The identifier of the array to use as the data source.
+     * @param textViewResId  The identifier of the layout used to create views.
+     * @return An ArrayAdapter<CharSequence>.
+     */
+    public static ArrayAdapter<CharSequence> createFromResource(Context context,
+            @ArrayRes int textArrayResId, @LayoutRes int textViewResId) {
+        CharSequence[] strings = context.getResources().getTextArray(textArrayResId);
+        return new ArrayAdapter<CharSequence>(context, textViewResId, strings);
     }
 
     /**
@@ -195,7 +214,7 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
      *
      * @param items The items to add at the end of the array.
      */
-    public void addAll(T ... items) {
+    public void addAll(T... items) {
         synchronized (mLock) {
             if (mOriginalValues != null) {
                 Collections.addAll(mOriginalValues, items);
@@ -210,7 +229,7 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
      * Inserts the specified object at the specified index in the array.
      *
      * @param object The object to insert into the array.
-     * @param index The index at which the object must be inserted.
+     * @param index  The index at which the object must be inserted.
      */
     public void insert(T object, int index) {
         synchronized (mLock) {
@@ -257,7 +276,7 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
      * Sorts the content of this adapter using the specified comparator.
      *
      * @param comparator The comparator used to sort the objects contained
-     *        in this adapter.
+     *                   in this adapter.
      */
     public void sort(Comparator<? super T> comparator) {
         synchronized (mLock) {
@@ -325,7 +344,6 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
      * Returns the position of the specified item in the array.
      *
      * @param item The item to retrieve the position of.
-     *
      * @return The position of the specified item.
      */
     public int getPosition(T item) {
@@ -347,7 +365,7 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
     }
 
     private View createViewFromResource(LayoutInflater inflater, int position, View convertView,
-                                        ViewGroup parent, int resource) {
+            ViewGroup parent, int resource) {
         View view;
         TextView text;
 
@@ -373,7 +391,7 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
 
         T item = getItem(position);
         if (item instanceof CharSequence) {
-            text.setText((CharSequence)item);
+            text.setText((CharSequence) item);
         } else {
             text.setText(item.toString());
         }
@@ -391,27 +409,10 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
         this.mDropDownResource = resource;
     }
 
-
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         final LayoutInflater inflater = mDropDownInflater == null ? mInflater : mDropDownInflater;
         return createViewFromResource(inflater, position, convertView, parent, mDropDownResource);
-    }
-
-    /**
-     * Creates a new ArrayAdapter from external resources. The content of the array is
-     * obtained through {@link android.content.res.Resources#getTextArray(int)}.
-     *
-     * @param context The application's environment.
-     * @param textArrayResId The identifier of the array to use as the data source.
-     * @param textViewResId The identifier of the layout used to create views.
-     *
-     * @return An ArrayAdapter<CharSequence>.
-     */
-    public static ArrayAdapter<CharSequence> createFromResource(Context context,
-                                                                @ArrayRes int textArrayResId, @LayoutRes int textViewResId) {
-        CharSequence[] strings = context.getResources().getTextArray(textArrayResId);
-        return new ArrayAdapter<CharSequence>(context, textViewResId, strings);
     }
 
     /**

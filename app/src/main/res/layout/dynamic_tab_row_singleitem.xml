@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_weight="1">
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:scaleType="centerInside">
+
         <ImageView
             android:id="@+id/option1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"/>
-        <org.eyeseetea.malariacare.views.TextCard
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/textoption1"
-            android:padding="5dip"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_width="fill_parent"
-            app:tFontName="@string/specific_language_font"
-            app:tDimension="@string/font_size_level1"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:textSize="40dp"
-            android:text="" />
-        <org.eyeseetea.malariacare.views.TextCard
-            android:id="@+id/counter1"
-            android:visibility="gone"
             android:padding="5dip"
-            android:gravity="bottom"
-            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="?attr/font_medium"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:id="@+id/counter1"
             android:layout_width="fill_parent"
-            app:tFontName="@string/specific_language_font"
-            app:tDimension="@string/font_size_level1"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:gravity="bottom"
+            android:padding="5dip"
             android:textColor="@color/black"
-            android:textSize="20dp"/>
+            android:textSize="?attr/font_small"
+            android:visibility="gone"
+            app:font_name="@string/specific_language_font" />
     </FrameLayout>
 </TableRow>

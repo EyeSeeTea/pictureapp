@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dp"
+        android:clipToPadding="false"
+        android:layout_above="@+id/new_receipt_balance_footer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="94dp"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/date"
+                    android:textColor="@color/dark_purple"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:id="@+id/new_receipt_balance_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/light_purple_rounded_background"
+                    android:hint="@string/date_format_forward_slash"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/dark_purple"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/RDT"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_rdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:inputType="number"
+                    android:hint="0"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/ACT_x_6"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_act6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/ACT_x_12"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_act12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/ACT_x_18"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_act18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/ACT_x_24"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_act24"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/Pq"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_pq"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/medium_purple_rounded_background"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/Cq"
+                    android:textColor="@color/white"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_cq"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom_border"
+                    android:hint="0"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/dark_purple"
+                    android:textColorHint="@color/hint"
+                    android:textSize="?attr/font_small"
+                    app:font_name="@string/specific_language_font" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/medium_light_purple" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <ImageButton
+                    android:id="@+id/new_receipt_balance_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/footer_navigation_size"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/back_background_button"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/back_button"
+                    android:textColor="@color/dark_purple"
+                    android:textSize="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/new_receipt_balance_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/footer_navigation_size"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/dark_purple_rounded_background"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="2dp">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="30dp"
+                        android:adjustViewBounds="true"
+                        android:clickable="false"
+                        android:text="@string/submit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="?attr/font_small"
+                        app:font_name="@string/specific_language_font" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/footer_navigation_size"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:gravity="center"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
+                        android:paddingTop="2dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/next_button" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/new_receipt_balance_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/dark_purple">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:padding="15dp"
+            android:src="@drawable/stockselected"
+            android:background="@color/myanmar_orange"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

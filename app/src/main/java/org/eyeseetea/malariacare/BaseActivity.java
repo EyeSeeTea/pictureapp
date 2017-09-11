@@ -24,10 +24,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -39,23 +38,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.TabGroup;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.ExportData;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.ExportDataException;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
@@ -67,41 +67,92 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Extra param to annotate the activity to return after settings
      */
-    public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
-
-    protected static String TAG=".BaseActivity";
-
+    private static final int DUMP_REQUEST_CODE = 0;
+    protected static String TAG = ".BaseActivity";
     private AlarmPushReceiver alarmPush;
+
+    private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
+
+        if (EyeSeeTeaApplication.permissions == null) {
+            EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
+        }
+
+        if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
+            EyeSeeTeaApplication.permissions.requestNextPermission();
+        }
 
         initView(savedInstanceState);
-        if(PushController.getInstance().isPushInProgress()) {
-            List<Survey> surveys=Survey.getAllSendingSurveys();
-            Log.d(TAG,"The app was closed in the middle of a push. Surveys sending: "+surveys.size());
-            for(Survey survey:surveys){
-                survey.setStatus(Constants.SURVEY_QUARANTINE);
-                survey.save();
-            }
-            PushController.getInstance().setPushInProgress(false);
+        PreferencesState.getInstance().setPushInProgress(false);
+        List<Survey> surveys = Survey.getAllSendingSurveys();
+        Log.d(TAG, "Surveys sending: " + surveys.size());
+        for (Survey survey : surveys) {
+            survey.setStatus(Constants.SURVEY_QUARANTINE);
+            survey.save();
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
+
+        mBaseActivityStrategy.onCreate();
+    }
+
+    /**
+     * Its called on the requestPermission results, if the user accepts the permissions it request
+     * the Phone permission and gets the phoneMetadata
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            String permissions[], int[] grantResults) {
+        if (Permissions.processAnswer(requestCode, permissions, grantResults)) {
+            EyeSeeTeaApplication.permissions.requestNextPermission();
+            if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
+                PhoneMetaData phoneMetaData = getPhoneMetadata();
+                Session.setPhoneMetaData(phoneMetaData);
+            }
+        } else {
+            onDestroy();
+        }
+    }
+
+    PhoneMetaData getPhoneMetadata() {
+        PhoneMetaData phoneMetaData = new PhoneMetaData();
+        TelephonyManager phoneManagerMetaData = (TelephonyManager) getSystemService(
+                Context.TELEPHONY_SERVICE);
+        String imei = phoneManagerMetaData.getDeviceId();
+        String phone = phoneManagerMetaData.getLine1Number();
+        String serial = phoneManagerMetaData.getSimSerialNumber();
+        phoneMetaData.setImei(imei);
+        phoneMetaData.setPhone_number(phone);
+        phoneMetaData.setPhone_serial(serial);
+        phoneMetaData.setBuild_number(Utils.getCommitHash(getApplicationContext()));
+
+        return phoneMetaData;
+    }
+
+    @Override
+    protected void onStop() {
+        mBaseActivityStrategy.onStop();
+        super.onStop();
     }
 
     /**
      * Common styling
      */
-    private void initView(Bundle savedInstanceState){
+    private void initView(Bundle savedInstanceState) {
         setTheme(R.style.EyeSeeTheme);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBar(actionBar);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             initTransition();
         }
     }
@@ -109,13 +160,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Adds actionbar to the activity
      */
-    public void createActionBar(){
+    public void createActionBar() {
         Program program = Program.getFirstProgram();
 
         if (program != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name));
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
+                    this.getResources().getString(R.string.malaria_case_based_reporting));
         }
     }
 
@@ -123,12 +175,16 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Customize transitions for these activities
      */
     protected void initTransition() {
-        this.overridePendingTransition(R.transition.anim_slide_in_left, R.transition.anim_slide_out_left);
+        this.overridePendingTransition(R.transition.anim_slide_in_left,
+                R.transition.anim_slide_out_left);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_general, menu);
+
+        mBaseActivityStrategy.onCreateOptionsMenu(menu);
+
         return true;
     }
 
@@ -140,37 +196,65 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
-                if(PushController.getInstance().isPushInProgress()) {
-                    Log.d(TAG,"Click in settings true "+PushController.getInstance().isPushInProgress());
+                if (PreferencesState.getInstance().isPushInProgress()) {
+                    Log.d(TAG, "Click in settings true "
+                            + PreferencesState.getInstance().isPushInProgress());
                     Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Log.d(TAG,"Click in settings false "+PushController.getInstance().isPushInProgress());
+                } else {
+                    Log.d(TAG, "Click in settings false "
+                            + PreferencesState.getInstance().isPushInProgress());
                     goSettings();
                 }
                 break;
             case R.id.action_about:
                 debugMessage("User asked for about");
-                showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about, BaseActivity.this);
+                showAlertWithHtmlMessageAndLastCommit(R.string.app_about, R.raw.about,
+                        BaseActivity.this);
                 break;
             case R.id.action_copyright:
                 debugMessage("User asked for copyright");
-                showAlertWithMessage(R.string.settings_menu_copyright, R.raw.copyright);
+                mBaseActivityStrategy.showCopyRight(R.string.app_copyright, R.raw.copyright);
                 break;
             case R.id.action_licenses:
                 debugMessage("User asked for software licenses");
-                showAlertWithHtmlMessage(R.string.settings_menu_licenses, R.raw.licenses);
+                showAlertWithHtmlMessage(R.string.app_software_licenses, R.raw.licenses);
                 break;
             case R.id.action_eula:
                 debugMessage("User asked for EULA");
-                showAlertWithHtmlMessage(R.string.settings_menu_eula, R.raw.eula);
+                showAlertWithHtmlMessage(R.string.app_EULA, R.raw.eula);
                 break;
             case android.R.id.home:
                 debugMessage("Go back");
                 onBackPressed();
                 break;
+            case R.id.export_db:
+                debugMessage("Export db");
+                Intent emailIntent = null;
+                try {
+                    emailIntent = ExportData.dumpAndSendToAIntent(this);
+                } catch (ExportDataException e) {
+                    Toast.makeText(this, R.string.error_exporting_data, Toast.LENGTH_LONG).show();
+                }
+                if (emailIntent != null) {
+                    startActivityForResult(emailIntent, DUMP_REQUEST_CODE);
+                }
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                if (!mBaseActivityStrategy.onOptionsItemSelected(item)) {
+                    return super.onOptionsItemSelected(item);
+                }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        mBaseActivityStrategy.hideMenuItems(menu);
+        if (!PreferencesState.getInstance().isDevelopOptionActive()
+                || !BuildConfig.developerOptions) {
+            MenuItem item = menu.findItem(R.id.export_db);
+            item.setVisible(false);
         }
         return true;
     }
@@ -178,17 +262,20 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
-    public void onBackPressed(){
+    public void onBackPressed() {
+        mBaseActivityStrategy.onBackPressed();
         finishAndGo(DashboardActivity.class);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Intent intent;
-        intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName()) : getIntent();
+        intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName())
+                : getIntent();
 
-        if (intent.getStringExtra("activity") != null && getCallingActivity() != null && intent.getStringExtra("activity").equals("settings")){
+        if (intent.getStringExtra("activity") != null && getCallingActivity() != null
+                && intent.getStringExtra("activity").equals("settings")) {
             Log.i(".onResume", "coming from settings");
             overridePendingTransition(0, 0);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -204,95 +291,66 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    protected void goSettings(){
-        Intent intentSettings=new Intent(this,SettingsActivity.class);
-        intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
-        startActivity(new Intent(this, SettingsActivity.class));
-    }
-
-
-
-    public void prepareLocationListener(Survey survey){
-
-        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-        LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
-
-
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via NETWORK");
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        }
-        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via GPS");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        }
-        else {
-            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if(lastLocation != null) {
-                Log.d(TAG, "location not available via GPS|NETWORK, last know: "+lastLocation);
-                locationListener.saveLocation(lastLocation);
-            }else{
-                String defaultLatitude  = getApplicationContext().getString(R.string.GPS_LATITUDE_DEFAULT);
-                String defaultLongitude = getApplicationContext().getString(R.string.GPS_LONGITUDE_DEFAULT);
-                Location defaultLocation = new Location(getApplicationContext().getString(R.string.GPS_PROVIDER_DEFAULT));
-                defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
-                defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
-                Log.d(TAG, "location not available via GPS|NETWORK, default: "+defaultLocation);
-                locationListener.saveLocation(defaultLocation);
-            }
-        }
+    protected void goSettings() {
+        mBaseActivityStrategy.goSettings();
     }
 
     /**
      * Finish current activity and launches an activity with the given class
+     *
      * @param targetActivityClass Given target activity class
      */
-    public void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
+    public void finishAndGo(Class targetActivityClass) {
+        Intent targetActivityIntent = new Intent(this, targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }
 
     /**
      * Launches an activity with the given class
+     *
      * @param targetActivityClass Given target activity class
      */
-    public void go(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
+    public void go(Class targetActivityClass) {
+        Intent targetActivityIntent = new Intent(this, targetActivityClass);
         startActivity(targetActivityIntent);
     }
 
     /**
      * Shows an alert dialog with a big message inside based on a raw resource
+     *
      * @param titleId Id of the title resource
-     * @param rawId Id of the raw text resource
+     * @param rawId   Id of the raw text resource
      */
-    private void showAlertWithMessage(int titleId, int rawId){
+    public void showAlertWithMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
         new AlertDialog.Builder(this)
                 .setTitle(getApplicationContext().getString(titleId))
                 .setMessage(Utils.convertFromInputStreamToString(message))
                 .setNeutralButton(android.R.string.ok, null).create().show();
     }
+
     /**
      * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
+     *
      * @param titleId Id of the title resource
-     * @param rawId Id of the raw text resource in HTML format
+     * @param rawId   Id of the raw text resource in HTML format
      */
-    private void showAlertWithHtmlMessage(int titleId, int rawId){
+    public void showAlertWithHtmlMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
-        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
+        final SpannableString linkedMessage = new SpannableString(
+                Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
         Linkify.addLinks(linkedMessage, Linkify.ALL);
         showAlert(titleId, linkedMessage);
     }
 
     /**
-            * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
-    * @param titleId Id of the title resource
-    * @param rawId Id of the raw text resource in HTML format
-    */
-    public void showAlertWithHtmlMessageAndLastCommit(int titleId, int rawId, Context context){
+     * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
+     *
+     * @param titleId Id of the title resource
+     * @param rawId   Id of the raw text resource in HTML format
+     */
+    public void showAlertWithHtmlMessageAndLastCommit(int titleId, int rawId, Context context) {
         String stringMessage = getMessageWithCommit(rawId, context);
         final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
         Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
@@ -303,25 +361,25 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Merge the lastcommit into the raw file
+     *
      * @param rawId Id of the raw text resource in HTML format
      */
     public String getMessageWithCommit(int rawId, Context context) {
         InputStream message = context.getResources().openRawResource(rawId);
 
         String stringCommit = Utils.getCommitHash(context);
-        String stringMessage= Utils.convertFromInputStreamToString(message).toString();
-        if(stringCommit.contains(context.getString(R.string.unavailable))){
-            stringCommit=String.format(context.getString(R.string.lastcommit),stringCommit);
-            stringCommit=stringCommit+" "+context.getText(R.string.lastcommit_unavailable);
-        }
-        else {
+        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+        if (stringCommit.contains(context.getString(R.string.unavailable))) {
+            stringCommit = String.format(context.getString(R.string.lastcommit), stringCommit);
+            stringCommit = stringCommit + " " + context.getText(R.string.lastcommit_unavailable);
+        } else {
             stringCommit = String.format(context.getString(R.string.lastcommit), stringCommit);
         }
-        stringMessage=String.format(stringMessage,stringCommit);
+        stringMessage = String.format(stringMessage, stringCommit);
         return stringMessage;
     }
 
-    public void showAlertWithLogoAndVersion(int titleId, CharSequence text, Context context){
+    public void showAlertWithLogoAndVersion(int titleId, CharSequence text, Context context) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_about);
         dialog.setTitle(titleId);
@@ -354,29 +412,49 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Shows an alert dialog with a given string
+     *
      * @param titleId Id of the title resource
-     * @param text String of the message
+     * @param text    String of the message
      */
-    private void showAlert(int titleId, CharSequence text){
+    private void showAlert(int titleId, CharSequence text) {
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getApplicationContext().getString(titleId))
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null).create();
         dialog.show();
-        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(
+                LinkMovementMethod.getInstance());
     }
+
     /**
      * Logs a debug message using current activity SimpleName as tag. Ex:
-     *   SurveyActivity => ".SurveyActivity"
-     * @param message
+     * SurveyActivity => ".SurveyActivity"
      */
-    private void debugMessage(String message){
+    private void debugMessage(String message) {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 
     @Override
     protected void onDestroy() {
+        mBaseActivityStrategy.onDestroy();
         super.onDestroy();
         alarmPush.cancelPushAlarm(this);
     }
+
+    @Override
+    protected void onStart() {
+        mBaseActivityStrategy.onStart();
+        super.onStart();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        mBaseActivityStrategy.onWindowFocusChanged(hasFocus);
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    public BaseActivityStrategy getBaseActivityStrategy() {
+        return mBaseActivityStrategy;
+    }
+
 }

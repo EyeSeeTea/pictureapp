@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.eyeseetea.malariacare">
+
+    <application
+        android:name=".EyeSeeTeaApplication"
+        android:allowBackup="false"
+        android:icon="@drawable/pictureapp_logo"
+        android:label="@string/malaria_case_based_reporting"
+        android:theme="@style/EyeSeeTheme"
+        tools:replace="android:allowBackup, android:icon, android:theme">
+
+        <provider
+            android:name=".data.database.utils.REFDBProvider"
+            android:authorities="org.eyeseetea.malariacare.data.database.utils.REFDBProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:node="merge">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".LoginActivity"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/malaria_case_based_reporting"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+
+    </application>
+</manifest>

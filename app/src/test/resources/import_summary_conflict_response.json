@@ -1,0 +1,30 @@
+{
+  "httpStatus": "Conflict",
+  "httpStatusCode": 409,
+  "status": "WARNING",
+  "message": "One more conflicts encountered, please check import summary.",
+  "response": {
+    "responseType": "ImportSummaries",
+    "status": "SUCCESS",
+    "imported": 3,
+    "updated": 0,
+    "deleted": 0,
+    "ignored": 1,
+    "importSummaries": [{
+      "responseType": "ImportSummary",
+      "status": "SUCCESS",
+      "importCount": {
+        "imported": 3,
+        "updated": 0,
+        "ignored": 1,
+        "deleted": 0
+      },
+      "conflicts": [{
+        "object": "qWMb2UM2ikL",
+        "value": "value_not_valid_datetime"
+      }],
+      "reference": "DSifqmkzKfJ",
+      "href": "https://old-staging.psi-mis.org/api/events/DSifqmkzKfJ"
+    }]
+  }
+}

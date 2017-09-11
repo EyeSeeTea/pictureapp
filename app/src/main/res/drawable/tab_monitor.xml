@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~
   ~ This file is part of QA App.
@@ -21,10 +20,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-        <item
-            android:state_selected="true"
-            android:state_pressed="false"
-            android:drawable="@drawable/monitorselected" />
-        <item
-            android:drawable="@drawable/monitor" />
+    <item android:drawable="@drawable/monitorselected" android:state_pressed="false" android:state_selected="true" />
+    <item android:drawable="@drawable/monitor" />
 </selector>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/question_padding_image_top"
+    android:layout_marginRight="@dimen/question_padding_image_top">
+
+    <include layout="@layout/top_view"></include>
+</LinearLayout>

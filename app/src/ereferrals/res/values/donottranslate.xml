@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
+    <string name="user_push" translatable="false">Android_eRef</string>
+    <string name="pass_push" translatable="false">DduPx352i9BRRGpa</string>
+    <string name="rdtPositive" translatable="false">1</string>
+    <string name="rdtNegative" translatable="false">0</string>
+    <string name="rdtNotTested" translatable="false">Not Tested</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://sandbox.psi-mis.org</string>
+    <string name="url_server_demo_login" translatable="false">demo.server</string>
+    <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
+    <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
+    <string name="monitor_table_title_suspected_header" translatable="false">" "</string>
+    <string name="monitor_table_title_stock_header" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
+    <string name="tab_tag_offline" translatable="false">tab_tag_offline</string>
+
+    <string name="control_data_element_phone_metadata" translatable="false">LRYXAP3Lfcu</string>
+    <string name="control_data_element_datetime_capture" translatable="false">wSRDoeLTAyv</string>
+    <string name="control_data_element_datetime_sent" translatable="false">sKPamHqCASp</string>
+    <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
+    <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
+    <string name="test_organisation_name">test_organisation</string>
+    <string name="test_organisation_uid">9fV2JoHmO94</string>
+    <string name="authority">EREFERRALS_DHIS2_DEFAULT_AUTHORITY</string>
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">-0.996961</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">33.932726</string>
+    <string name="logged_user_username">logged_user_username</string>
+    <string name="logged_user_pin">logged_user_pin</string>
+    <string name="attribute_pin_code">OU_PIN</string>
+    <string name="logged_user_program">logged_user_program</string>
+    <string name="ancestor_level">3</string>
+    <string name="number_bad_login">number_bad_login</string>
+    <string name="time_enable_login">time_enable_login</string>
+    <item name="web_service_url" translatable="false" type="string">web_service_url</item>
+
+    <string name="url_status_fragment">ipcStats</string>
+    <string name="url_open_fragment">ipcOpenReferrals</string>
+    <string name="url_closed_fragment">ipcRedeemedReferrals</string>
+    <string name="base_web_view_url">https://james.psi-mis.org/eReferralsDev/pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s</string>
+    <string name="ws_version">1.0</string>
+    <string name="ws_source">Android v1.1</string>
+    <string name="ws_base_url">https://james.psi-mis.org/</string>
+    <string name="error_web_resource" translatable="false">file:///android_asset/web_view_error/%1$s</string>
+</resources>

@@ -19,40 +19,31 @@
 
 package org.eyeseetea.malariacare.test.utils;
 
-import android.view.View;
-
-import org.eyeseetea.malariacare.views.UncheckeableRadioButton;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.google.android.apps.common.testing.deps.guava.base.Preconditions.checkNotNull;
-
 /**
  * Created by arrizabalaga on 25/05/15.
  */
-public class UncheckeableRadioButtonScaleMatcher extends TypeSafeMatcher<View> {
+public class UncheckeableRadioButtonScaleMatcher{ /*extends TypeSafeMatcher<View> {
     private final String scale;
 
     private UncheckeableRadioButtonScaleMatcher(String scale) {
         this.scale = checkNotNull(scale);
     }
 
+    public static Matcher<? super View> hasRadioButtonScale(String scale) {
+        return new UncheckeableRadioButtonScaleMatcher(scale);
+    }
+
     @Override
     public boolean matchesSafely(View view) {
-        if (!(view instanceof UncheckeableRadioButton)) {
+        if (!(view instanceof CustomRadioButton)) {
             return false;
         }
-        UncheckeableRadioButton button = (UncheckeableRadioButton) view;
+        CustomRadioButton button = (CustomRadioButton) view;
         return scale.equals(button.getmScale());
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("with scale: " + scale);
-    }
-
-    public static Matcher<? super View> hasRadioButtonScale(String scale) {
-        return new UncheckeableRadioButtonScaleMatcher(scale);
-    }
+    }*/
 }

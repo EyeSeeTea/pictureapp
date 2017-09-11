@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~
   ~ This file is part of QIS Surveillance App.
@@ -19,12 +18,8 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_enabled="true"
-        android:state_pressed="true" android:drawable="@color/custom_blue_light" />
-    <item android:state_enabled="true"
-        android:state_focused="true" android:drawable="@color/custom_blue_light" />
-    <item android:state_enabled="true"
-        android:state_selected="true" android:drawable="@color/custom_blue_light" />
-    <item
-        android:drawable="@drawable/button_blue_selector" />
+    <item android:drawable="@color/custom_blue_light" android:state_enabled="true" android:state_pressed="true" />
+    <item android:drawable="@color/custom_blue_light" android:state_enabled="true" android:state_focused="true" />
+    <item android:drawable="@color/custom_blue_light" android:state_enabled="true" android:state_selected="true" />
+    <item android:drawable="@drawable/button_blue_selector" />
 </selector>

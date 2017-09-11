@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
-    <string name="user_push" translatable="false">LAMCS</string>
-    <string name="pass_push" translatable="false">LAMCSadmin1</string>
-    <string name="monitor_row_title_act6x1" translatable="false">ACT6x1</string>
-    <string name="monitor_row_title_act6x2" translatable="false">ACT6x2</string>
-    <string name="monitor_row_title_act6x3" translatable="false">ACT6x3</string>
-    <string name="monitor_row_title_act6x4" translatable="false">ACT6x4</string>
+    <string name="ACT_x_6" translatable="false">ACT6x1</string>
+    <string name="ACT_x_12" translatable="false">ACT6x2</string>
+    <string name="ACT_x_18" translatable="false">ACT6x3</string>
+    <string name="ACT_x_24" translatable="false">ACT6x4</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dev.psi-mis.org</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org</string>
+    <string name="work_in_progress" translatable="false">Work in progress</string>
+
+
+
+    <string name="control_data_element_phone_metadata" translatable="false">RuNZUhiAmlv</string>
+    <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
+    <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">18.560019</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">107.345912</string>
+    <string name="authority">LAOS_DHIS2_DEFAULT_AUTHORITY</string>
+    <string name="monitor_row_title" translatable="false">%1$s</string>
+
 </resources>

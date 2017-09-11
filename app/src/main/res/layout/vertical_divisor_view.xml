@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="@dimen/top_separator_header_line"
+        android:layout_marginTop="@dimen/top_separator_header_line"
+        android:background="@drawable/vertical_bar"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/top_separator_line"
+        android:paddingTop="@dimen/top_separator_line" />
+</merge>

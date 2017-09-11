@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/imageOptionContainer"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="0.5">
+
+    <ImageView
+        android:id="@+id/optionImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/optionText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="5dip"
+        android:textColor="@color/white"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/specific_language_font" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/optionCounterText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:padding="5dip"
+        android:textColor="@color/black"
+        android:textSize="?attr/font_small"
+        android:visibility="gone"
+        app:font_name="@string/specific_language_font" />
+</FrameLayout>

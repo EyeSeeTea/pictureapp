@@ -18,19 +18,38 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_settings" android:title="@string/settings_menu_configuration"
-        android:orderInCategory="100"/>
-    <item android:id="@+id/action_about" android:title="@string/settings_menu_about"
-        android:orderInCategory="102"/>
-    <item android:title="@string/settings_menu_legal" android:orderInCategory="103">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/app_settings" />
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="102"
+        android:title="@string/app_about" />
+    <item
+        android:orderInCategory="103"
+        android:title="@string/app_legal">
         <menu>
-            <item android:id="@+id/action_copyright" android:title="@string/settings_menu_copyright"
-                android:orderInCategory="103" />
-            <item android:id="@+id/action_licenses" android:title="@string/settings_menu_licenses"
-                android:orderInCategory="104" />
-            <item android:id="@+id/action_eula" android:title="@string/settings_menu_eula"
-                android:orderInCategory="105" />
+            <item
+                android:id="@+id/action_copyright"
+                android:orderInCategory="103"
+                android:title="@string/app_copyright" />
+            <item
+                android:id="@+id/action_licenses"
+                android:orderInCategory="104"
+                android:title="@string/app_software_licenses" />
+            <item
+                android:id="@+id/action_eula"
+                android:orderInCategory="105"
+                android:title="@string/app_EULA" />
         </menu>
     </item>
-
+    <item
+        android:id="@+id/export_db"
+        android:orderInCategory="106"
+        android:title="@string/export_data_option_title" />
+    <item
+        android:id="@+id/demo_mode"
+        android:orderInCategory="107"
+        android:title="@string/run_in_demo_mode" />
 </menu>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/questionHeaderColor"
+    android:orientation="vertical">
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/answer_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/myanmar_orange"
+        android:gravity="center"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dip"
+        android:text="@string/review_subtitle"
+        android:textColor="@color/white"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/light_font" />
+</LinearLayout>

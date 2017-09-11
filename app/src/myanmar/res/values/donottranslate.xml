@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
+    <string name="specific_language_font" translatable="false">@string/normal_myanmar</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>

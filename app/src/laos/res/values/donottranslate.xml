@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
+    <string name="specific_language_font" translatable="false">@string/normal_lao</string>
     <string name="ACT_x_6" translatable="false">ACT6x1</string>
     <string name="ACT_x_12" translatable="false">ACT6x2</string>
     <string name="ACT_x_18" translatable="false">ACT6x3</string>

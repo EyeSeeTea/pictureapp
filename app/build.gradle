@@ -138,7 +138,7 @@ android {
         }
 
     }
-    
+
     lintOptions {
         disable 'RtlSymmetry', 'RtlHardcoded'
         checkReleaseBuilds false

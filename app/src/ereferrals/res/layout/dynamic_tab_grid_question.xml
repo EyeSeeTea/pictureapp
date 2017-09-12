@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:id="@+id/dynamic_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/snackbar"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <!--Question-->
+        <include layout="@layout/question_header"></include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/questionImage"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/question_horizontal_margin"
+                android:layout_marginRight="@dimen/question_horizontal_margin"
+                android:layout_weight="0.2"
+                android:paddingTop="@dimen/question_padding_image_top"
+                android:visibility="gone"
+                tools:showIn="@layout/dynamic_tab_grid_question" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+
+                <include layout="@layout/scrolled_table"></include>
+
+                <include layout="@layout/no_scrolled_table"></include>
+
+                <include layout="@layout/confirm_table" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--Question-->
+    </LinearLayout>
+
+    <include layout="@layout/snackbar"></include>
+
+</RelativeLayout>

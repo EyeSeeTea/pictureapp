@@ -22,54 +22,22 @@
     android:id="@+id/common_header"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_header"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/dashboard_row_padding"
-    android:paddingRight="@dimen/dashboard_row_padding"
-    android:paddingTop="@dimen/dashboard_row_padding"
-    android:visibility="gone">
+    android:orientation="vertical">
 
-    <include layout="@layout/top_view" />
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/headerColor"
+        android:padding="6dp"
+        android:text="@string/unsent_dashboard_header_offline"
+        android:textColor="@color/text_first_color"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/light_font" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal">
-
-        <org.eyeseetea.sdk.presentation.views.CustomTextView
-            android:id="@+id/header_title"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_weight="0.5"
-            android:background="@drawable/background_header"
-            android:gravity="left|center_vertical"
-            android:padding="5dip"
-            android:text="@string/sent_data"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/fragment_header_title"
-            android:textSize="?attr/font_small"
-            app:font_name="@string/condensed_font_name" />
-
-        <include layout="@layout/vertical_divisor_view" />
-
-        <org.eyeseetea.sdk.presentation.views.CustomTextView
-            android:id="@+id/header_subtitle"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:layout_weight="0.5"
-            android:autoText="false"
-            android:background="@drawable/background_header"
-            android:gravity="right|center_vertical"
-            android:padding="5dip"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/fragment_header_subtitle"
-            android:textSize="?attr/font_small"
-            android:textStyle="bold"
-            app:font_name="@string/condensed_font_name" />
-    </LinearLayout>
-
-    <include layout="@layout/header_bottom_view" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_first_color" />
 
 </LinearLayout>

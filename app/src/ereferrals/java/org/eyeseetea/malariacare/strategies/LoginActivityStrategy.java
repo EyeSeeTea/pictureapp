@@ -112,7 +112,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_userName));
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
 
         username = (EditText) loginActivity.findViewById(R.id.edittext_username);
 

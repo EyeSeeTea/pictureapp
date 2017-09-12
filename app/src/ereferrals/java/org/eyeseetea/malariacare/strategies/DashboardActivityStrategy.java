@@ -43,6 +43,7 @@ import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerExc
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
+import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -102,30 +103,28 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-        mDashboardUnsentFragment.reloadData();
-        mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
+        closeFragment.reloadData();
+        closeFragment.hideHeader();
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        mDashboardUnsentFragment = new DashboardUnsentFragment();
-        mDashboardUnsentFragment.setArguments(activity.getIntent().getExtras());
-        mDashboardUnsentFragment.reloadData();
-
-        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-        if (isMoveToLeft) {
-            isMoveToLeft = false;
-            ft.setCustomAnimations(R.animator.anim_slide_in_right, R.animator.anim_slide_out_right);
-        } else {
-            ft.setCustomAnimations(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
-        }
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.dashboard_stock_container, mDashboardUnsentFragment);
-
-        ft.commit();
-        if (BuildConfig.translations) {
-            PreferencesState.getInstance().loadsLanguageInActivity();
-        }
+        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.CLOSED_TYPE,
+                new GetUrlForWebViewsUseCase.Callback() {
+                    @Override
+                    public void onGetUrl(String url) {
+                        closeFragment = new WebViewFragment();
+                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
+                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
+                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
+                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
+                        closeFragment.setArguments(bundle);
+                        closeFragment.reloadData();
+                        closeFragment.hideHeader();
+                        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+                                closeFragment);
+                    }
+                });
         return isMoveToLeft;
     }
 
@@ -203,6 +202,37 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showFirstFragment() {
+        mDashboardUnsentFragment = new DashboardUnsentFragment();
+        mDashboardUnsentFragment.setArguments(mDashboardActivity.getIntent().getExtras());
+        mDashboardUnsentFragment.reloadData();
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+
+        FragmentTransaction ft = mDashboardActivity.getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
+
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.dashboard_details_container, mDashboardUnsentFragment);
+
+        ft.commit();
+        if (BuildConfig.translations) {
+            PreferencesState.getInstance().loadsLanguageInActivity();
+        }
+
+    }
+
+    @Override
+    public void reloadFirstFragment() {
+        mDashboardUnsentFragment.reloadData();
+    }
+
+    @Override
+    public void reloadFirstFragmentHeader() {
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+    }
+
+    @Override
+    public void showSecondFragment() {
         mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.OPEN_TYPE,
                 new GetUrlForWebViewsUseCase.Callback() {
                     @Override
@@ -214,50 +244,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
                         openFragment.setArguments(bundle);
                         openFragment.reloadData();
-                        openFragment.reloadHeader(mDashboardActivity, R.string.tab_tag_assess);
-                        mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
+                        openFragment.hideHeader();
+                        mDashboardActivity.replaceFragment(R.id.dashboard_completed_container,
                                 openFragment);
                     }
                 });
     }
 
     @Override
-    public void reloadFirstFragment() {
-        openFragment.reloadData();
-    }
-
-    @Override
-    public void reloadFirstFragmentHeader() {
-        openFragment.reloadHeader(mDashboardActivity);
-    }
-
-    @Override
-    public void showSecondFragment() {
-        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.CLOSED_TYPE,
-                new GetUrlForWebViewsUseCase.Callback() {
-                    @Override
-                    public void onGetUrl(String url) {
-                        closeFragment = new WebViewFragment();
-                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
-                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
-                        closeFragment.setArguments(bundle);
-                        closeFragment.reloadData();
-                        mDashboardActivity.replaceFragment(R.id.dashboard_completed_container,
-                                closeFragment);
-                    }
-                });
-    }
-
-    @Override
     public void reloadSecondFragment() {
-        closeFragment.reloadData();
-        closeFragment.reloadHeader(mDashboardActivity);
+        openFragment.reloadData();
+        openFragment.hideHeader();
     }
 
     @Override
-    public void showFourthFragment() {
+    public void showAVFragment() {
         mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.STATUS_TYPE,
                 new GetUrlForWebViewsUseCase.Callback() {
                     @Override
@@ -269,27 +270,40 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_monitor);
                         statusFragment.setArguments(bundle);
                         statusFragment.reloadData();
-                        mDashboardActivity.replaceFragment(R.id.dashboard_charts_container,
+                        mDashboardActivity.replaceFragment(R.id.dashboard_av_container,
                                 statusFragment);
+                        statusFragment.hideHeader();
                     }
                 });
     }
 
     @Override
+    public void showFourthFragment() {
+        if (avFragment == null) {
+            avFragment = new AVFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, avFragment);
+    }
+
+    @Override
     public void reloadFourthFragment() {
-        statusFragment.reloadData();
-        statusFragment.reloadHeader(mDashboardActivity);
+        if (avFragment == null) {
+            avFragment = new AVFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, avFragment);
+        avFragment.hideHeader();
     }
 
     @Override
     public int getSurveyContainer() {
-        return R.id.dashboard_stock_container;
+        return R.id.dashboard_details_container;
     }
 
     @Override
     public void showUnsentFragment() {
-        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+        mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
                 mDashboardUnsentFragment);
+        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
     }
 
     @Override
@@ -384,5 +398,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void reloadAVFragment() {
+        statusFragment.reloadData();
+        statusFragment.hideHeader();
     }
 }

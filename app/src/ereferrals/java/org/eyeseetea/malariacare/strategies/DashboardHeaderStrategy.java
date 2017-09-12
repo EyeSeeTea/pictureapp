@@ -1,18 +1,28 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
+import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+
 import java.util.List;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
+    private TextView headerText;
 
     private static void setTitle(View view, int keyId, int titleString) {
         CustomTextView title = (CustomTextView) view.findViewById(keyId);
@@ -22,14 +32,16 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
     @Override
     public View loadHeader(Integer headerLayout, LayoutInflater inflater) {
         View header = inflater.inflate(headerLayout, null, false);
-        header.setVisibility(View.GONE);
+        header.setVisibility(View.VISIBLE);
         return header;
     }
 
     @Override
     public void init(Activity activity, int tabTag) {
         View headerView = getHeaderView(activity);
-        headerView.setVisibility(View.GONE);
+        headerView.setVisibility(View.VISIBLE);
+        activity.registerReceiver(connectionReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -47,6 +59,11 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         if (headerView == null) {
             return null;
         }
+        boolean notConnected = !ConnectivityStatus.isConnected(
+                PreferencesState.getInstance().getContext());
+        headerText = (TextView) headerView.findViewById(R.id.header_text);
+        headerText.setText(
+                notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status);
         return headerView;
     }
 
@@ -58,4 +75,17 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
             List<SurveyDB> surveysFromService) {
         return;
     }
+
+    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean notConnected = !ConnectivityStatus.isConnected(
+                    PreferencesState.getInstance().getContext());
+            if (headerText != null) {
+                headerText.setText(
+                        notConnected ? R.string.unsent_dashboard_header_offline
+                                : R.string.online_status);
+            }
+        }
+    };
 }

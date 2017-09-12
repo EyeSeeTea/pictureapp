@@ -822,4 +822,5 @@ Ameahidi kuhudhuria"</string>
     <string name="uganda_program_eref">"Uganda"</string>
     <string name="tanzania_program">"Tanzania"</string>
     <string name="uganda_program">"Uganda"</string>
+    <string name="give_voucher">"Please give this voucher number to the client: %s"</string>
 </resources>

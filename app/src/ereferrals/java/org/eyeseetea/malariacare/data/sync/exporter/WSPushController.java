@@ -1,13 +1,17 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
+import org.eyeseetea.malariacare.data.sync.exporter.model.Voucher;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -25,6 +29,7 @@ public class WSPushController implements IPushController {
     private ConvertToWSVisitor mConvertToWSVisitor;
     private List<SurveyDB> mSurveys;
     private IPushControllerCallback mCallback;
+    private SurveyContainerWSObject mSurveyContainerWSObject;
 
 
     public WSPushController() throws IllegalArgumentException {
@@ -83,7 +88,8 @@ public class WSPushController implements IPushController {
 
     private void pushSurveys() {
         WSClient mWSClient = new WSClient(getTimeout(mSurveys.size()));
-        mWSClient.pushSurveys(mConvertToWSVisitor.getSurveyContainerWSObject(),
+        mSurveyContainerWSObject = mConvertToWSVisitor.getSurveyContainerWSObject();
+        mWSClient.pushSurveys(mSurveyContainerWSObject,
                 new WSClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
                     public void onSuccess(SurveyWSResult surveyWSResult) {
@@ -123,14 +129,32 @@ public class WSPushController implements IPushController {
                 Log.d(TAG, "Changing the UID of the survey old:" + surveyDB.getEventUid() + " new:"
                         + voucherId);
                 surveyDB.setEventUid(voucherId);
+                Context context = PreferencesState.getInstance().getContext();
+                if (voucherIsPaper(voucherId)) {
+                    mCallback.onInformativeMessage(String.format(
+                            context.getResources().getString(R.string.give_voucher),
+                            voucherId));
+                }
                 surveyDB.save();
             }
+
         }
         for (SurveyDB survey : mSurveys) {
             survey.setStatus(Constants.SURVEY_SENT);
             survey.save();
         }
         mCallback.onComplete();
+    }
+
+    private boolean voucherIsPaper(String voucherId) {
+        for (SurveySendAction action : mSurveyContainerWSObject.getActions()) {
+            if (voucherId.contains(action.getVoucher().getId())
+                    && action.getVoucher().getType().equals(
+                    Voucher.TYPE_PAPER)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

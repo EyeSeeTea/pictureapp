@@ -30,9 +30,9 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -671,7 +671,8 @@ public class ServerAPIController {
 
     static String getOrganisationUnitsCredentialsUrl(String code) {
         String url = PreferencesState.getInstance().getDhisURL()
-                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,code,ancestors[id,"
+                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,name,description,code,"
+                + "ancestors[id,"
                 + "code,level],attributeValues[value,attribute[code]";
         url = String.format(url, code);
         return url;

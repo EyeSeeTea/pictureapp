@@ -125,15 +125,6 @@ public class OrganisationUnitTest {
     }
 
     @Test
-    public void throw_exception_if_description_not_provided_third_constructor() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Description is required");
-
-        new OrganisationUnit("uid", "name", "code", null, new Date(), "pin",
-                new Program("code", "id"));
-    }
-
-    @Test
     public void throw_exception_if_pin_not_provided_third_constructor() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Pin is required");

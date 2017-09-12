@@ -782,6 +782,7 @@
     <string name="provider_findVoucher_q_gender">"Gender"</string>
     <string name="common_option_gender_male">"Male"</string>
     <string name="common_option_gender_female">"Female"</string>
+    <string name="common_option_gender_t">"T"</string>
     <string name="common_option_language_english">"English"</string>
     <string name="common_option_language_swahili">"Swahili"</string>
     <string name="common_option_program_familyPlanning">"Family Planning"</string>

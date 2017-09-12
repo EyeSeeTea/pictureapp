@@ -682,6 +682,7 @@ Tafuta namba ya rufaa"</string>
     <string name="provider_findVoucher_q_gender">"Jinsia"</string>
     <string name="common_option_gender_male">"Kiume"</string>
     <string name="common_option_gender_female">"Kike"</string>
+    <string name="common_option_gender_t">"T"</string>
     <string name="common_option_language_english">"English"</string>
     <string name="common_option_language_swahili">"Swahili"</string>
     <string name="common_option_program_familyPlanning">"Uzazi wa mpango"</string>

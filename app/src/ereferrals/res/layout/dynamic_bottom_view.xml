@@ -8,5 +8,8 @@
     android:layout_marginLeft="@dimen/question_padding_image_top"
     android:layout_marginRight="@dimen/question_padding_image_top">
 
-    <include layout="@layout/top_view"></include>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_first_color" />
 </LinearLayout>

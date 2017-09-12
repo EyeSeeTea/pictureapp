@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.google.common.collect.Iterables;
@@ -26,7 +25,9 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.ReviewPresenter;
+import org.eyeseetea.malariacare.strategies.AReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,11 +43,13 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     ListView listView;
     ReviewPresenter mReviewPresenter;
     private OnEndReviewListener mOnEndReviewListener;
+    private AReviewFragmentStrategy mReviewFragmentStrategy;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        mReviewFragmentStrategy = new ReviewFragmentStrategy();
     }
 
     @Override
@@ -102,18 +105,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
      */
     @Override
     public void initListView() {
-        //inflate headers
-        View header = lInflater.inflate(this.adapter.getHeaderLayout(), null, false);
-        View subHeader = lInflater.inflate(
-                ((ReviewScreenAdapter) this.adapter).getSubHeaderLayout(), null, false);
-
-        //set headers and list in the listview
-        listView.addHeaderView(header);
-        listView.addHeaderView(subHeader);
-        listView.setAdapter((BaseAdapter) adapter);
-
-        //remove spaces between rows in the listview
-        listView.setDividerHeight(0);
+        mReviewFragmentStrategy.initListView(lInflater, adapter, listView);
     }
 
 

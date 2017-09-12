@@ -2,14 +2,12 @@ package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
@@ -100,18 +98,8 @@ public class AVAdapter extends RecyclerView.Adapter {
             if (media.getName() != null) {
                 mediaViewHolder.fileName.setText(media.getName());
             }
-            if (media.getSize() != null) {
-                mediaViewHolder.size.setText(media.getSize());
-            }
-            if (media.isPicture()) {
-                mediaViewHolder.icon.setImageDrawable(
-                        ContextCompat.getDrawable(context, R.drawable.ic_image_black_18dp));
-            }
-            if (media.isVideo()) {
-                mediaViewHolder.icon.setImageDrawable(
-                        ContextCompat.getDrawable(context, R.drawable.ic_movie_black_18dp));
-            }
-            ((TableRow) mediaViewHolder.icon.getParent()).setOnClickListener(new ImageView.OnClickListener() {
+            ((View) mediaViewHolder.refresh.getParent()).setOnClickListener(
+                    new ImageView.OnClickListener() {
                 public void onClick(View v)
                 {
                     if (mOnClickMediaListener != null) {
@@ -143,15 +131,13 @@ public class AVAdapter extends RecyclerView.Adapter {
 
 
     public class ListItemMediaViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView icon;
+        private final ImageView refresh;
         private final CustomTextView fileName;
-        private final CustomTextView size;
 
         public ListItemMediaViewHolder(View itemView) {
             super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
+            refresh = (ImageView) itemView.findViewById(R.id.refresh);
             fileName = (CustomTextView) itemView.findViewById(R.id.filename);
-            size = (CustomTextView) itemView.findViewById(R.id.size);
         }
     }
 }

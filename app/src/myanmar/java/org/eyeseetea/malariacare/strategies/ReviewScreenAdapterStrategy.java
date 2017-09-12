@@ -22,7 +22,7 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
 
     final String TITLE_SEPARATOR = ": ";
 
-    public TableRow createViewRow(TableRow rowView, Value value) {
+    public TableRow createViewRow(TableRow rowView, Value value, int position) {
 
         rowView.setTag(getCorrectQuestion(value.getQuestionUId()));
 

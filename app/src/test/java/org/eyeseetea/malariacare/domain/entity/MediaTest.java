@@ -70,7 +70,7 @@ public class MediaTest {
     }
 
     @Test
-    public void throw_exception_if_type_not_provided_in_simple_media_constructor() {
+    public void should_throw_exception_if_type_not_provided_in_simple_media_constructor() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("type is required");
 
@@ -78,11 +78,23 @@ public class MediaTest {
     }
 
     @Test
-    public void throw_exception_if_program_not_provided_in_simple_media_constructor() {
+    public void should_throw_exception_if_program_not_provided_in_simple_media_constructor() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("program is required");
 
         new Media("resourceUrl", "localPath", Media.MediaType.PICTURE, null);
     }
 
+    @Test
+    public void should_return_null_if_get_filename_from_path_is_called_with_null_value() {
+        assertTrue(Media.getFilenameFromPath(null)==null);
+    }
+
+    @Test
+    public void should_return_filename_if_get_filename_from_path_is_called_with_valid_path() {
+        String filename="filename.avi";
+        String path="path/dir/dir2/"+filename;
+
+        assertTrue(Media.getFilenameFromPath(path).equals(filename));
+    }
 }

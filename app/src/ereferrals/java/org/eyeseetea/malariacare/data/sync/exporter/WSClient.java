@@ -14,8 +14,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
-import org.eyeseetea.malariacare.domain.exception.InvalidCreedentialsOnPushException;
+import org.eyeseetea.malariacare.domain.exception.InvalidHardcodedCredentialsException;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -79,8 +78,8 @@ public class WSClient {
             ConversionException conversionException = new ConversionException(null);
             wsClientCallBack.onError(conversionException);
         } else if (response != null && response.code() == 402) {
-            InvalidCreedentialsOnPushException invalidCredentialsException =
-                    new InvalidCreedentialsOnPushException();
+            InvalidHardcodedCredentialsException invalidCredentialsException =
+                    new InvalidHardcodedCredentialsException();
             wsClientCallBack.onError(invalidCredentialsException);
         } else if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());

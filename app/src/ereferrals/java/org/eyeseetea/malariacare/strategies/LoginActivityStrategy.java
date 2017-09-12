@@ -382,6 +382,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         new ALoginUseCase.Callback() {
                             @Override
                             public void onLoginSuccess() {
+                                Log.e(this.getClass().getSimpleName(), "onLoginSuccess");
                                 executePullDemo();
                             }
 
@@ -393,6 +394,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             @Override
                             public void onInvalidCredentials() {
                                 Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                            }
+
+                            @Override
+                            public void onServerPinChanged() {
+                                Log.e(this.getClass().getSimpleName(), "Invalid saved Pin");
                             }
 
                             @Override

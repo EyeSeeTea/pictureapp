@@ -169,13 +169,22 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                         && !insertedCredentials.getPassword().equals(credentials.getPassword())
                         && (fromNetWorkError || insertedCredentials.getServerURL().equals(
                         credentials.getServerURL()))){
-                    System.out.println("Pin changed!!!");
-                    notifyUnexpectedError();
+                    notifyOnServerPinChanged();
                 }else{
                     notifyInvalidCredentials();
                 }
             }
         }
+    }
+
+    private void notifyOnServerPinChanged() {
+
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onServerPinChanged();
+            }
+        });
     }
 
     public void notifyLoginSuccess() {

@@ -6,5 +6,5 @@ import org.eyeseetea.malariacare.domain.entity.Value;
 
 public abstract class AReviewScreenAdapterStrategy {
 
-    public abstract TableRow createViewRow(TableRow rowView, Value value);
+    public abstract TableRow createViewRow(TableRow rowView, Value value, int position);
 }

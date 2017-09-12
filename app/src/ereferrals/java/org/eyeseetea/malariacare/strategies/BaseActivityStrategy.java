@@ -14,6 +14,7 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BaseActivity;
@@ -24,6 +25,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -55,7 +57,15 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
+            boolean notConnected = !ConnectivityStatus.isConnected(
+                    PreferencesState.getInstance().getContext());
+            android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
+            TextView connection =
+                    (TextView) actionBar.getCustomView().findViewById(
+                            R.id.action_bar_connection_status);
+            connection.setText(notConnected
+                    ? R.string.action_bar_offline : R.string.action_bar_online);
+            if (notConnected) {
                 Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();

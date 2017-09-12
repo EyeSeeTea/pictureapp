@@ -38,6 +38,7 @@ public class WSClient {
     }
 
     public WSClient(int timeoutMillis) throws IllegalArgumentException {
+        timeoutMillis += DEFAULT_TIMEOUT;
         mContext = PreferencesState.getInstance().getContext();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

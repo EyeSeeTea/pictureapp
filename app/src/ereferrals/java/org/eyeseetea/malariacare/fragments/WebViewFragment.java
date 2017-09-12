@@ -78,11 +78,11 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     @Override
     public void reloadHeader(Activity activity) {
-        DashboardHeaderStrategy.getInstance().init(activity, title);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     public void reloadHeader(Activity activity, int id) {
-        DashboardHeaderStrategy.getInstance().init(activity, id);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     @Override
@@ -153,4 +153,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     };
 
 
+    public void hideHeader() {
+        DashboardHeaderStrategy.getInstance().hideHeader(getActivity());
+    }
 }

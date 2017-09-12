@@ -1,13 +1,15 @@
 
 package org.eyeseetea.malariacare.strategies;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.view.View;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -23,23 +25,26 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
     final String TITLE_SEPARATOR = ": ";
 
     @Override
-    public TableRow createViewRow(TableRow rowView, Value value) {
+    public TableRow createViewRow(TableRow rowView, Value value, int position) {
+        Context context = PreferencesState.getInstance().getContext();
 
         rowView.setTag(value.getQuestionUId());
 
         //Sets the value text in the row and add the question as tag.
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(
                 R.id.review_title_text);
+        TextView answerText = (TextView) rowView.findViewById(R.id.review_answer);
 
         if ((value.getQuestionUId() != null)) {
-            String rowText = (QuestionDB.findByUID(
-                    value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR)
-                    + ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
-                    : value.getValue());
-
-            questionTextView.setText(rowText);
+            String question = (QuestionDB.findByUID(
+                    value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
+            String answer =
+                    ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
+                            : value.getValue());
+            questionTextView.setText(question);
+            answerText.setText(answer);
             //Adds click listener to hide the fragment and go to the clicked question.
-            questionTextView.setOnClickListener(new View.OnClickListener() {
+            rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(!DynamicTabAdapter.isClicked) {
@@ -51,8 +56,9 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
                 }
             });
 
-            questionTextView.setBackgroundColor(
-                    Color.parseColor(value.getBackgroundColor()));
+            rowView.setBackgroundColor(
+                    position % 2 != 0 ? context.getResources().getColor(R.color.light_grey) :
+                            context.getResources().getColor(R.color.white));
         }
         return rowView;
     }

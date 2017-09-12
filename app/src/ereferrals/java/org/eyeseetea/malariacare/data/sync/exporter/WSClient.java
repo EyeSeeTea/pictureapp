@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.InvalidHardcodedCredentialsException;
+import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -78,8 +78,9 @@ public class WSClient {
             ConversionException conversionException = new ConversionException(null);
             wsClientCallBack.onError(conversionException);
         } else if (response != null && response.code() == 402) {
-            InvalidHardcodedCredentialsException invalidCredentialsException =
-                    new InvalidHardcodedCredentialsException();
+            //This exception is created when the the hardcoded credentials was invalid.
+            InvalidCredentialsException invalidCredentialsException =
+                    new InvalidCredentialsException();
             wsClientCallBack.onError(invalidCredentialsException);
         } else if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());

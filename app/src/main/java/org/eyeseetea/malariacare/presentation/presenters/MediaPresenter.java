@@ -52,8 +52,8 @@ public class MediaPresenter {
         }
     }
 
-    public void onClickChangeMode() {
-        isListMode = !isListMode;
+    public void onClickChangeMode(boolean isListMode) {
+        this.isListMode = isListMode;
         showMediaItems();
     }
 

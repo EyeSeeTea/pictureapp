@@ -19,6 +19,6 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/stockselected" android:state_pressed="false" android:state_selected="true" />
-    <item android:drawable="@drawable/stock" />
+    <item android:drawable="@drawable/closed" android:state_pressed="false" android:state_selected="true" />
+    <item android:drawable="@drawable/closed" />
 </selector>

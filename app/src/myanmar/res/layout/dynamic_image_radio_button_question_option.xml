@@ -55,5 +55,5 @@
         android:textColor="@color/black"
         android:visibility="gone"
         android:textSize="?attr/font_small"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

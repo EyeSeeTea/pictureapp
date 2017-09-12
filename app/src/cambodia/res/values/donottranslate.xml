@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="specific_language_font" translatable="false">@string/normal_khmer</string>
     <string name="rdtPositive" translatable="false">Positive</string>
     <string name="rdtNegative" translatable="false">Negative</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>

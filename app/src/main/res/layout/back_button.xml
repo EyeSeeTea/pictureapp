@@ -36,5 +36,5 @@
         android:text=""
         android:textColor="@color/dark_purple"
         android:textSize="?attr/font_xsmall"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

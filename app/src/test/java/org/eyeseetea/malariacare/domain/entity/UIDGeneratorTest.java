@@ -11,13 +11,15 @@ public class UIDGeneratorTest {
 
     @Test
     public void uid_generated_greater_than_first_uid() {
-        long uid = UIDGenerator.generateUID();
+        UIDGenerator uidGenerator = new UIDGenerator();
+        long uid = uidGenerator.generateUID();
         assertThat(true, is(uid > FIRST_UID));
     }
 
     @Test
     public void deciseconds_from_uid_lower_or_equal_than_deciseconds_from_after() {
-        long uid = UIDGenerator.generateUID();
+        UIDGenerator uidGenerator = new UIDGenerator();
+        long uid = uidGenerator.generateUID();
         long time_deciseconds = System.currentTimeMillis() / 100;
         long uidToDeciseconds = uid + STARTING_DATE_DECISECONDS - FIRST_UID;
         assertThat(true, is(time_deciseconds >= uidToDeciseconds));
@@ -26,7 +28,8 @@ public class UIDGeneratorTest {
     @Test
     public void deciseconds_from_uid_greater_or_equal_than_deciseconds_from_before() {
         long time_deciseconds = System.currentTimeMillis() / 100;
-        long uid = UIDGenerator.generateUID();
+        UIDGenerator uidGenerator = new UIDGenerator();
+        long uid = uidGenerator.generateUID();
         long uidToDeciseconds = uid + STARTING_DATE_DECISECONDS - FIRST_UID;
         assertThat(true, is(time_deciseconds <= uidToDeciseconds));
     }

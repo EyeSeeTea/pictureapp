@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Utils {
 
@@ -178,6 +179,13 @@ public class Utils {
 
     public static String parseDateToString(Date date, String dateFormat) {
         DateFormat df = new SimpleDateFormat(dateFormat);
+        return df.format(date);
+
+    }
+
+    public static String parseDateToString(Date date, String dateFormat, TimeZone timeZone) {
+        DateFormat df = new SimpleDateFormat(dateFormat);
+        df.setTimeZone(timeZone);
         return df.format(date);
 
     }

@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:indeterminate="true"/>
 
-            <org.hisp.dhis.client.sdk.ui.views.FontTextView
+            <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -105,7 +105,7 @@
                     android:layout_height="56dp"
                     android:layout_marginBottom="8dp">
 
-                    <org.hisp.dhis.client.sdk.ui.views.FontTextInputEditText
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
                         android:id="@+id/edittext_server_url"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -121,7 +121,7 @@
                     android:layout_height="56dp"
                     android:layout_marginBottom="8dp">
 
-                    <org.hisp.dhis.client.sdk.ui.views.FontTextInputEditText
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
                         android:id="@+id/edittext_username"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -138,7 +138,7 @@
                     android:layout_height="56dp"
                     android:layout_marginBottom="16dp">
 
-                    <org.hisp.dhis.client.sdk.ui.views.FontTextInputEditText
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
                         android:id="@+id/edittext_password"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -149,7 +149,7 @@
                         app:font_name="@string/normal_font"/>
                 </android.support.design.widget.TextInputLayout>
 
-                <org.hisp.dhis.client.sdk.ui.views.FontButton
+                <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/button_log_in"
                     android:layout_width="196dp"
                     android:layout_height="40dp"
@@ -162,7 +162,7 @@
                     android:textSize="17sp"
                     app:font_name="@string/normal_font"/>
 
-                <org.hisp.dhis.client.sdk.ui.views.FontButton
+                <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/button_log_out"
                     android:layout_width="196dp"
                     android:layout_height="40dp"

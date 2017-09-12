@@ -24,12 +24,10 @@ public class WSPushController implements IPushController {
 
     private ConvertToWSVisitor mConvertToWSVisitor;
     private List<SurveyDB> mSurveys;
-    private WSClient mWSClient;
     private IPushControllerCallback mCallback;
 
 
     public WSPushController() throws IllegalArgumentException {
-        mWSClient = new WSClient();
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }
 
@@ -84,6 +82,7 @@ public class WSPushController implements IPushController {
     }
 
     private void pushSurveys() {
+        WSClient mWSClient = new WSClient(getTimeout(mSurveys.size()));
         mWSClient.pushSurveys(mConvertToWSVisitor.getSurveyContainerWSObject(),
                 new WSClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
@@ -99,14 +98,37 @@ public class WSPushController implements IPushController {
                 });
     }
 
+    private int getTimeout(int vouchers) {
+        return vouchers * 2000;
+    }
+
     private void checkPushResult(SurveyWSResult surveyWSResult) {
         for (SurveyWSResponseAction responseAction : surveyWSResult.getActions()) {
             if (!responseAction.isSuccess()) {
-                String message = String.format(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.survey_error), responseAction.getActionId(),
-                        responseAction.getMessage(), responseAction.getResponse().getMsg());
+                String message;
+                if (responseAction.getResponse().getMsg() != null) {
+                    message = String.format(
+                            PreferencesState.getInstance().getContext().getString(
+                                    R.string.survey_error), responseAction.getActionId(),
+                            responseAction.getMessage(), responseAction.getResponse().getMsg());
+                } else {
+                    message = responseAction.getMessage();
+                }
                 mCallback.onInformativeError(new PushValueException(message));
+            }
+            SurveyDB surveyDB = null;
+            String voucherId = responseAction.getResponse().getData().getVoucherCode();
+            for (SurveyDB survey : mSurveys) {
+                if (voucherId.contains(survey.getEventUid())) {
+                    surveyDB = survey;
+                    break;
+                }
+            }
+            if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
+                Log.d(TAG, "Changing the UID of the survey old:" + surveyDB.getEventUid() + " new:"
+                        + voucherId);
+                surveyDB.setEventUid(voucherId);
+                surveyDB.save();
             }
         }
         for (SurveyDB survey : mSurveys) {

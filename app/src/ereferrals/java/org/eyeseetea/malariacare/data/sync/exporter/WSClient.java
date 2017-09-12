@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCreedentialsOnPushException;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -31,15 +32,24 @@ public class WSClient {
     private Retrofit mRetrofit;
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
+    private final int DEFAULT_TIMEOUT = 10000;
 
+    public WSClient() throws IllegalArgumentException {
+        new WSClient(DEFAULT_TIMEOUT);
+    }
 
-    public WSClient() throws IllegalArgumentException{
+    public WSClient(int timeoutMillis) throws IllegalArgumentException {
+        timeoutMillis += DEFAULT_TIMEOUT;
         mContext = PreferencesState.getInstance().getContext();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
+                .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .build();
 
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(PreferencesEReferral.getWSURL())

@@ -21,11 +21,6 @@ package utils;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 
 /**
  * Created by rhardjono on 08/11/2016
@@ -36,30 +31,30 @@ public class ProgressUtils {
 
     public static void updateProgressBarStatus(View view, int currentPage, int totalPages) {
 
-        LinearLayout pager_indicator = (LinearLayout) view.findViewById(R.id.page_progress);
+//        LinearLayout pager_indicator = (LinearLayout) view.findViewById(R.id.page_progress);
 
-        int maxTotalPages = (Session.getMaxTotalQuestions() > 0 ? Session.getMaxTotalQuestions()
-                : DEFAULT_MAX_TOTALPAGES);
-        float dotsDistribution = 1.0f / maxTotalPages;
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, dotsDistribution
-        );
-
-        ImageView[] dots = new ImageView[totalPages];
-        for (int i = 0; i < totalPages; i++) {
-            dots[i] = new ImageView(view.getContext());
-            ImageView imageView;
-            if (i <= currentPage) {
-                imageView = (ImageView) pager_indicator.inflate(view.getContext(),
-                        R.layout.navigation_dot_completed, null);
-            } else {
-                imageView = (ImageView) pager_indicator.inflate(view.getContext(),
-                        R.layout.navigation_dot_pending, null);
-            }
-            dots[i] = imageView;
-            pager_indicator.addView(dots[i], layoutParams);
-        }
+//        int maxTotalPages = (Session.getMaxTotalQuestions() > 0 ? Session.getMaxTotalQuestions()
+//                : DEFAULT_MAX_TOTALPAGES);
+//        float dotsDistribution = 1.0f / maxTotalPages;
+//
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+//                0, LinearLayout.LayoutParams.WRAP_CONTENT, dotsDistribution
+//        );
+//
+//        ImageView[] dots = new ImageView[totalPages];
+//        for (int i = 0; i < totalPages; i++) {
+//            dots[i] = new ImageView(view.getContext());
+//            ImageView imageView;
+//            if (i <= currentPage) {
+//                imageView = (ImageView) pager_indicator.inflate(view.getContext(),
+//                        R.layout.navigation_dot_completed, null);
+//            } else {
+//                imageView = (ImageView) pager_indicator.inflate(view.getContext(),
+//                        R.layout.navigation_dot_pending, null);
+//            }
+//            dots[i] = imageView;
+//            pager_indicator.addView(dots[i], layoutParams);
+//        }
     }
 
     public static void setProgressBarText(View view, String newText) {

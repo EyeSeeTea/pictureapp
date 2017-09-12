@@ -22,7 +22,7 @@
             android:text="@string/av_library"
             android:textColor="@color/text_first_color"
             android:textSize="?attr/font_small"
-            app:font_name="@string/condensed_font_name" />
+            app:font_name="@string/normal_font" />
 
         <LinearLayout
             android:layout_width="wrap_content"

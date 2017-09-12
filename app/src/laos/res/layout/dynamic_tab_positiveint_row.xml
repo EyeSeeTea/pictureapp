@@ -22,7 +22,7 @@
         android:maxLength="2"
         android:textColor="@color/intColor"
         android:textSize="?attr/font_medium"
-        app:font_name="@string/condensed_font_name" />
+        app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/dynamic_positiveInt_btn"

@@ -12,4 +12,4 @@
     android:text="@string/demo_login"
     android:textColor="@color/white"
     android:textSize="@dimen/medium_text_size"
-    app:font="@string/bold_font_name" />
+    app:font_name="@string/bold_font" />

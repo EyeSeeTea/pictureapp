@@ -22,14 +22,7 @@ public class Media {
     MediaType type;
     String size;
 
-    public Media(String resourceUrl, MediaType type) {
-        this.id = required(id,"id is required");
-        this.resourceUrl = required(resourceUrl,"resourceUrl is required");
-        this.type = required(type,"type is required");
-    }
-
     public Media(String resourceUrl, String resourcePath, MediaType type, String program) {
-        this.id = required(id,"id is required");
         this.resourceUrl = required(resourceUrl,"resourceUrl is required");
         this.resourcePath = resourcePath;
         this.type = required(type,"type is required");
@@ -37,7 +30,7 @@ public class Media {
     }
 
     public Media(long id, String name, String resourcePath, String resourceUrl, MediaType type, String size, String program) {
-        this.id = required(id,"id is required");
+        this.id = id;
         this.resourcePath = resourcePath;
         this.name = name;
         this.resourceUrl = required(resourceUrl,"resourceUrl is required");

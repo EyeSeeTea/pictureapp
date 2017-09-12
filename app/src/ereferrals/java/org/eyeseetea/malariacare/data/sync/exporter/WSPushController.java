@@ -105,10 +105,15 @@ public class WSPushController implements IPushController {
     private void checkPushResult(SurveyWSResult surveyWSResult) {
         for (SurveyWSResponseAction responseAction : surveyWSResult.getActions()) {
             if (!responseAction.isSuccess()) {
-                String message = String.format(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.survey_error), responseAction.getActionId(),
-                        responseAction.getMessage(), responseAction.getResponse().getMsg());
+                String message;
+                if (responseAction.getResponse().getMsg() != null) {
+                    message = String.format(
+                            PreferencesState.getInstance().getContext().getString(
+                                    R.string.survey_error), responseAction.getActionId(),
+                            responseAction.getMessage(), responseAction.getResponse().getMsg());
+                } else {
+                    message = responseAction.getMessage();
+                }
                 mCallback.onInformativeError(new PushValueException(message));
             }
             SurveyDB surveyDB = null;

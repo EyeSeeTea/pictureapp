@@ -15,9 +15,9 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
@@ -214,4 +214,6 @@ public abstract class ADashboardActivityStrategy {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
+
+    public abstract void reloadAVFragment();
 }

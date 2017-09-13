@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- TERMS FROM EYESEETEA -->
-    <string name="malaria_case_based_reporting">"eReferrals"</string>
+    <string name="malaria_case_based_reporting">"Connect"</string>
     <string name="volunteer_label">"IPC:"</string>
     <string name="open_tab_title">"OPEN"</string>
     <string name="closed_tab_title">"CLOSED"</string>
@@ -912,7 +912,6 @@
     <string name="ipc_msg_retrievingCompletedReferrals">"Retrieving Completed Referrals..."</string>
     <string name="provider_msg_retrievingRedeemedReferrals">"Retrieving Redeemed Referrrals..."</string>
     <string name="provider_msg_retrievingSearchedReferrals">"Retrieving Referrals..."</string>
-    <string name="action_bar_connect">Connect</string>
     <string name="action_bar_online">Online</string>
     <string name="action_bar_offline">Offline</string>
     <string name="unsent_dashboard_header_offline">You are offline - client will not receive her voucher until you connect to the internet and data is sent.</string>

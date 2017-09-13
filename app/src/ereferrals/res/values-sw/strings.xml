@@ -823,6 +823,6 @@ Ameahidi kuhudhuria"</string>
     <string name="tanzania_program">"Tanzania"</string>
     <string name="uganda_program">"Uganda"</string>
     <string name="give_voucher">"Please give this voucher number to the client: %s"</string>
-    <string name="voucher_id_changed">"Nambari ya Voucher% s imebadilishwa hadi% s"</string>
+    <string name="voucher_id_changed">"Nambari ya Voucher %1$s imebadilishwa hadi %2$s"</string>
 
 </resources>

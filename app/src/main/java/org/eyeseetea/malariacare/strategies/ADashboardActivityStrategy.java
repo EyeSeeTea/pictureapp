@@ -216,4 +216,8 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public abstract void reloadAVFragment();
+
+    public void showEndSurveyMessage(SurveyDB surveyDB) {
+
+    }
 }

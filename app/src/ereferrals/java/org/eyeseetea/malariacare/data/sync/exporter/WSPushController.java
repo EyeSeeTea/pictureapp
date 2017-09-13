@@ -131,11 +131,14 @@ public class WSPushController implements IPushController {
             if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
                 Log.d(TAG, "Changing the UID of the survey old:" + surveyDB.getEventUid() + " new:"
                         + voucherId);
-                surveyDB.setEventUid(voucherId);
                 Context context = PreferencesState.getInstance().getContext();
+
                 mCallback.onInformativeMessage(String.format(
-                            context.getResources().getString(R.string.give_voucher),
-                            voucherId));
+                        context.getResources().getString(R.string.voucher_id_changed),
+                        surveyDB.getEventUid(),voucherId));
+
+                surveyDB.setEventUid(voucherId);
+
                 surveyDB.save();
             }
 

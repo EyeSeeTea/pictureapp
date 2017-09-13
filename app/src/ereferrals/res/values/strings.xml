@@ -926,4 +926,5 @@
     <string name="tanzania_program">"Tanzania"</string>
     <string name="uganda_program">"Uganda"</string>
     <string name="give_voucher">"Please give this voucher number to the client: %s"</string>
+    <string name="voucher_id_changed">"Voucher number %s has changed to %s"</string>
 </resources>

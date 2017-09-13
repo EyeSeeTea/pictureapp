@@ -1,4 +1,4 @@
-<p><b>SCMM’s Malaria Case Based Reporting Application (MCS)</b></p>
+<p><b>Connect</b></p>
 
 <p><b>Build %s</b></p>
 

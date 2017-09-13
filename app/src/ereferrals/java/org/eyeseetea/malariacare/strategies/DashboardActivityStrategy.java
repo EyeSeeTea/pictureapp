@@ -104,8 +104,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-        closeFragment.reloadData();
-        closeFragment.hideHeader();
+        if (closeFragment.isAdded()) {
+            closeFragment.reloadData();
+            closeFragment.hideHeader();
+        } else {
+            showStockFragment(activity, false);
+        }
     }
 
     @Override
@@ -225,7 +229,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadFirstFragment() {
-        mDashboardUnsentFragment.reloadData();
+        if (mDashboardUnsentFragment.isAdded()) {
+            mDashboardUnsentFragment.reloadData();
+        } else {
+            showFirstFragment();
+        }
     }
 
     @Override
@@ -256,8 +264,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadSecondFragment() {
-        openFragment.reloadData();
-        openFragment.hideHeader();
+        if (openFragment.isAdded()) {
+            openFragment.reloadData();
+            openFragment.hideHeader();
+        } else {
+            showSecondFragment();
+        }
     }
 
     @Override
@@ -405,7 +417,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadAVFragment() {
-        statusFragment.reloadData();
-        statusFragment.hideHeader();
+        if (statusFragment.isAdded()) {
+            statusFragment.reloadData();
+            statusFragment.hideHeader();
+        } else {
+            showAVFragment();
+        }
     }
 }

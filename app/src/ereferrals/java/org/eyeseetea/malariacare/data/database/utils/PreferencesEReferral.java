@@ -22,7 +22,12 @@ public class PreferencesEReferral {
                 context.getString(R.string.logged_user_username), null);
         String password = sharedPreferences.getString(context.getString(R.string.logged_user_pin),
                 null);
-        if (url == null || username == null || password == null) return null;
+        if (url == null || url.isEmpty() ||
+                username == null || username.isEmpty() ||
+                password == null || password.isEmpty()) {
+            return null;
+        }
+
         Credentials credentials = new Credentials(url, username, password);
 
         return credentials;

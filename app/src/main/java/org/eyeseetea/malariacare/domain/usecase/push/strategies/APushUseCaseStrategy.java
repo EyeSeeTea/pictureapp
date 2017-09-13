@@ -114,6 +114,11 @@ public abstract class APushUseCaseStrategy {
             }
 
             @Override
+            public void onInformativeMessage(String message) {
+                notifyInformativeMessage(message);
+            }
+
+            @Override
             public void onError(Throwable throwable) {
                 mPushController.changePushInProgress(false);
                 System.out.println("PusUseCase error");
@@ -220,6 +225,15 @@ public abstract class APushUseCaseStrategy {
             @Override
             public void run() {
                 mCallback.onInformativeError(message);
+            }
+        });
+    }
+
+    private void notifyInformativeMessage(final String message) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInformativeMessage(message);
             }
         });
     }

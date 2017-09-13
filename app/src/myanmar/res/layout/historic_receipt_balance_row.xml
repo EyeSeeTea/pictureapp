@@ -22,7 +22,7 @@
             android:text="Jan 12/16"
             android:textColor="@color/white"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_rdt"
@@ -34,7 +34,7 @@
             android:text="@string/RDT"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_x6"
@@ -46,7 +46,7 @@
             android:text="@string/x6"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_x12"
             android:layout_width="0dp"
@@ -57,7 +57,7 @@
             android:text="@string/x12"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_x18"
@@ -69,7 +69,7 @@
             android:text="@string/x18"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_x24"
@@ -81,7 +81,7 @@
             android:text="@string/x24"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_cq"
@@ -93,7 +93,7 @@
             android:text="@string/Cq"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_pq"
@@ -105,7 +105,7 @@
             android:text="@string/Pq"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
     </LinearLayout>
 
 </LinearLayout>

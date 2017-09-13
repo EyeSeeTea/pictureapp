@@ -1,8 +1,8 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
 public class Voucher {
-    private static String TYPE_PAPER = "paper";
-    private static String TYPE_PHONE = "phone";
+    public static String TYPE_PAPER = "paper";
+    public static String TYPE_PHONE = "phone";
 
     private String type;
     private String id;

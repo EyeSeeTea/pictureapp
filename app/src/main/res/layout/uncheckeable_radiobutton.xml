@@ -33,4 +33,4 @@
     android:paddingTop="2dip"
     android:text=""
     android:textSize="?attr/font_medium"
-    app:font_name="@string/specific_language_font" />
+    app:font_name="@string/normal_font" />

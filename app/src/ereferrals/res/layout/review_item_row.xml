@@ -22,7 +22,7 @@
         android:background="@android:color/transparent"
         android:textColor="@color/text_first_color"
         android:textSize="?attr/font_small"
-        app:font_name="@string/light_font" />
+        app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/review_answer"
@@ -35,7 +35,7 @@
         android:text="@string/empty_string"
         android:textColor="@color/text_first_color"
         android:textSize="?attr/font_small"
-        app:font_name="@string/light_font" />
+        app:font_name="@string/normal_font" />
 
 
 </TableRow>

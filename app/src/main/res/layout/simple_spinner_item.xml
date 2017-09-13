@@ -13,4 +13,4 @@
     android:textColor="@color/black"
     android:textAppearance="?android:attr/textAppearanceSmall"
     android:textSize="?attr/font_small"
-    app:font_name="@string/condensed_font_name" />
+    app:font_name="@string/normal_font" />

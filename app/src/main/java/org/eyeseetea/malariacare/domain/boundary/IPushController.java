@@ -31,6 +31,8 @@ public interface IPushController {
 
         void onInformativeError(Throwable throwable);
 
+        void onInformativeMessage(String message);
+
         void onError(Throwable throwable);
     }
 }

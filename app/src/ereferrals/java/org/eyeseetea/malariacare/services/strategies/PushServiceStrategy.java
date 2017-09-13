@@ -231,6 +231,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
 
             @Override
+            public void onInformativeMessage(String message) {
+                showInDialog("", message);
+            }
+
+            @Override
             public void onBannedOrgUnit() {
                 showInDialog("", PreferencesState.getInstance().getContext().getString(
                         R.string.exception_org_unit_banned));

@@ -27,7 +27,7 @@
             android:padding="5dip"
             android:textColor="@color/white"
             android:textSize="?attr/font_medium"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/counter1"
@@ -39,7 +39,7 @@
             android:textColor="@color/black"
             android:textSize="?attr/font_small"
             android:visibility="gone"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
     </FrameLayout>
 
     <FrameLayout
@@ -64,7 +64,7 @@
             android:padding="5dip"
             android:text=""
             android:textColor="@color/white"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/counter2"
@@ -76,6 +76,6 @@
             android:padding="5dip"
             android:textColor="@color/black"
             android:visibility="gone"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
     </FrameLayout>
 </TableRow>

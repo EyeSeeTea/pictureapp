@@ -25,7 +25,7 @@
             android:paddingRight="@dimen/input_edit_text_right_padding"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_small"
-            app:font_name="@string/light_font" />
+            app:font_name="@string/normal_font" />
 
         <ImageView
             android:id="@+id/row_header_compulsory"

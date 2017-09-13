@@ -34,7 +34,7 @@
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="?attr/font_small"
-                app:font_name="@string/light_font" />
+                app:font_name="@string/normal_font" />
 
             <ImageView
                 android:id="@+id/refresh"

@@ -45,7 +45,7 @@
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
                 android:textStyle="bold"
-                app:font_name="@string/medium_font_name" />
+                app:font_name="@string/normal_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/important_visible_text"
@@ -58,7 +58,21 @@
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
                 android:textStyle="bold"
-                app:font_name="@string/medium_font_name" />
+                app:font_name="@string/normal_font" />
+
+            <org.eyeseetea.sdk.presentation.views.CustomTextView
+                android:id="@+id/survey_uid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/text_first_color"
+                android:textSize="?attr/font_small"
+                android:textStyle="bold"
+                app:font_name="@string/normal_font" />
+
 
         </LinearLayout>
 
@@ -81,7 +95,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
-                app:font_name="@string/light_font" />
+                app:font_name="@string/normal_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/visible_first"
@@ -93,7 +107,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
-                app:font_name="@string/light_font" />
+                app:font_name="@string/normal_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/visible_second"
@@ -105,7 +119,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
-                app:font_name="@string/light_font" />
+                app:font_name="@string/normal_font" />
 
         </LinearLayout>
 

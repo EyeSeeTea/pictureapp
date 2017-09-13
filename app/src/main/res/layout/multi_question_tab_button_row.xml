@@ -27,7 +27,7 @@
             android:text="@string/survey_send"
             android:textColor="@color/intColor"
             android:textSize="?attr/font_medium"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
     </LinearLayout>
 
 </TableRow>

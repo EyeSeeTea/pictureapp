@@ -157,7 +157,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         CustomTextView info = (CustomTextView) rowView.findViewById(viewId);
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                "fonts/" + context.getString(R.string.specific_language_font));
+                "fonts/" + context.getString(R.string.normal_font));
         info.setTypeface(tf);
 
         info.setText(infoValue);

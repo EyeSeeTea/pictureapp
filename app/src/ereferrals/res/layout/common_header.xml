@@ -33,7 +33,7 @@
         android:text="@string/unsent_dashboard_header_offline"
         android:textColor="@color/text_first_color"
         android:textSize="?attr/font_small"
-        app:font_name="@string/light_font" />
+        app:font_name="@string/normal_font" />
 
     <View
         android:layout_width="match_parent"

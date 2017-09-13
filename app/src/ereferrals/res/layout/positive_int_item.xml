@@ -23,5 +23,5 @@
         android:textColor="@color/text_first_color"
         android:textColorHint="@color/text_first_color"
         android:textSize="?attr/font_small"
-        app:font_name="@string/light_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

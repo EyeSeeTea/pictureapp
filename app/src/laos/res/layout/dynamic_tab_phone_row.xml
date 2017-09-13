@@ -23,7 +23,7 @@
         android:singleLine="true"
         android:textColor="@color/intColor"
         android:textSize="?attr/font_medium"
-        app:font_name="@string/condensed_font_name" />
+        app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/row_phone_btn"
@@ -36,5 +36,5 @@
         android:text="@string/survey_send"
         android:textColor="@color/intColor"
         android:textSize="?attr/font_medium"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

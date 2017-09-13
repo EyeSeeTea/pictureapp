@@ -76,5 +76,5 @@
         android:textColor="@color/white"
         android:textSize="?attr/font_medium"
         android:textStyle="bold"
-        app:font_name="@string/bold_font_name" />
+        app:font_name="@string/bold_font" />
 </RelativeLayout>

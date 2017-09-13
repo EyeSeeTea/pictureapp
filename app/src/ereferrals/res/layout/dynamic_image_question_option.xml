@@ -22,7 +22,7 @@
         android:padding="5dip"
         android:textColor="@color/white"
         android:textSize="?attr/font_small"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/optionCounterText"
@@ -34,5 +34,5 @@
         android:textColor="@color/black"
         android:textSize="?attr/font_small"
         android:visibility="gone"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font" />
 </FrameLayout>

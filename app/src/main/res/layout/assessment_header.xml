@@ -39,7 +39,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/fragment_header_title_text"
         android:textSize="?attr/font_small"
-        app:font_name="@string/condensed_font_name" />
+        app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:layout_width="0dip"
@@ -54,7 +54,7 @@
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/fragment_header_title_text"
         android:textSize="?attr/font_small"
-        app:font_name="@string/condensed_font_name" />
+        app:font_name="@string/normal_font"/>
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:layout_width="0dip"
@@ -69,5 +69,5 @@
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/fragment_header_title_text"
         android:textSize="?attr/font_small"
-        app:font_name="@string/condensed_font_name" />
+        app:font_name="@string/normal_font" />
 </TableRow>

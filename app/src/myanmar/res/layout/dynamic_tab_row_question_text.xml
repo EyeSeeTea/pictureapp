@@ -23,7 +23,7 @@
             android:text="@android:string/yes"
             android:textColor="@color/question_title"
             android:textSize="?attr/font_small"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/questionSubText"
@@ -33,7 +33,7 @@
             android:layout_marginRight="@dimen/question_horizontal_margin"
             android:textColor="@color/question_subtitle"
             android:textSize="?attr/font_small"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font"/>
 
         <include layout="@layout/top_view" />
 

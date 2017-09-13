@@ -433,7 +433,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                "fonts/" + context.getString(R.string.specific_language_font));
+                "fonts/" + context.getString(R.string.normal_font));
         headerView.setTypeface(tf);
         int tabType = questionDBItem.getHeaderDB().getTabDB().getType();
         if (TabDB.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(

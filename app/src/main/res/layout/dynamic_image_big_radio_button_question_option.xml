@@ -42,7 +42,7 @@
             android:paddingRight="4dp"
             android:paddingTop="4dp"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
     </LinearLayout>
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
@@ -55,5 +55,5 @@
         android:textColor="@color/black"
         android:textSize="?attr/font_small"
         android:visibility="gone"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

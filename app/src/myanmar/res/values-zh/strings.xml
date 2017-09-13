@@ -2,7 +2,7 @@
 <resources>
 <string name="malaria_case_based_reporting">"疟疾病例报告"</string>
 <string name="volunteer_label">"志愿者："</string>
-<string name="new_case_title">"新病例"</string>
+    <string name="ipc_menu_issueReferral">"新病例"</string>
 <string name="patient_profile_subtitle">"病人信息"</string>
 <string name="patient_name">"病人姓名"</string>
 <string name="patient_name_enter_helptext">"填写病人全名"</string>
@@ -72,7 +72,7 @@
 <string name="patient_advice_side_effects_helptext">"如果你小便变深色，请停止服用伯氨喹，并到最近的诊所就医。"</string>
 <string name="patient_advice_title_help">"什么时候获取帮助"</string>
 <string name="patient_advice_helptext">"如果你在3天内没有缓解，并感觉更糟糕，请到最近的诊所获取进一步的治疗。"</string>
-<string name="follow_up">"跟进问询"</string>
+<string name="provider_findVoucher_result_tableHeader_FollowUp">"跟进问询"</string>
 <string name="follow_up_travelling_question">"外出史"</string>
 <string name="follow_up_travelling_helptext">"过去两周内病人是否有外出史？"</string>
 <string name="follow_up_travelling_yes">"是"</string>
@@ -106,24 +106,23 @@
 <string name="font_medium">"中"</string>
 <string name="font_large">"大"</string>
 <string name="font_extra_large">"超大"</string>
-<string name="settings_select_language">"语言"</string>
+<string name="common_about_rowHeader_language">"语言"</string>
 <string name="developer_option_title">"显示开发者选项"</string>
 <string name="developer_option_summary">"此功能激活开发人员选项"</string>
-<string name="app_about">"关于"</string>
+<string name="common_menu_about">"关于"</string>
 <string name="app_legal">"法律"</string>
 <string name="app_copyright">"版权"</string>
 <string name="app_software_licenses">"软件许可"</string>
 <string name="app_EULA">"EULA"</string>
-<string name="app_logout">"登出"</string>
+    <string name="common_menu_logOff">"登出"</string>
 <string name="settings_menu_logout_message">"更改服务器或组织单位需要重新登录。 每个未发送的调查将被删除。 您确定要继续吗？"</string>
 <string name="dashboard_menu_logout_message">"每个未发送的调查将被删除。 您确定要继续吗？"</string>
-<string name="settings_menu_about">"关于"</string>
 <string name="past_cases">"未发送数据"</string>
 <string name="sent_data">"已发送数据"</string>
 <string name="unsent_data">"未发送数据"</string>
 <string name="stock_control">"库存控制"</string>
 <string name="receipts_balances">"入库及库存"</string>
-<string name="monitoring_title">"督导"</string>
+    <string name="common_menu_statistics">"督导"</string>
 <string name="monitoring_time_period">"选时间段"</string>
 <string name="monitoring_label_option_months">"最近6个月"</string>
 <string name="monitoring_label_option_days">"最近6天"</string>
@@ -159,7 +158,7 @@
 <string name="Cq">"氯喹"</string>
 <string name="Pq">"伯氨喹"</string>
 <string name="monitoring_title_dropdown">"请选择一个时间段"</string>
-<string name="ok">"好"</string>
+    <string name="provider_redeemEntry_msg_matchingOk">"好"</string>
 <string name="cancel">"取消"</string>
 <string name="dialog_title_delete_survey">"删除调查"</string>
 <string name="dialog_info_delete_survey">"您确定要完全删除此调查吗？"</string>
@@ -220,13 +219,13 @@
 <string name="not_tested">"未测试"</string>
 <string name="system_defined">"系统定义"</string>
 <string name="no_data">"没有数据"</string>
-<string name="error_compulsory_question_unanswered">"請為每一個問題必須回答。"</string>
+    <string name="provider_redeemEntry_msg_warning">"請為每一個問題必須回答。"</string>
 <string name="patient_name_review_title">"名稱"</string>
 <string name="patient_age_review_title">"年齡"</string>
 <string name="patient_phone_review_title">"電話"</string>
 <string name="patient_residence_village_review_title">"住宅"</string>
 <string name="patient_residence_village_other_review_title">"其他"</string>
-<string name="patient_sex_pregnancy_review_title">"性別"</string>
+<string name="provider_findVoucher_q_gender">"性別"</string>
 <string name="symptoms_fever_review_title">"發熱"</string>
 <string name="symptoms_care_sought_review_title">"護理要求"</string>
 <string name="symptoms_servere_review_title">"嚴重"</string>
@@ -328,4 +327,7 @@
 <string name="db_migration_error">"请通知管理员，申请可能需要重新安装"</string>
 <string name="error_exporting_data">"无法导出错误元数据。"</string>
 <string name="tab_av">"AV"</string>
+<string name="av_progress">正在下载内容...请稍候</string>
+
+    <string name="login_userName">Username</string>
 </resources>

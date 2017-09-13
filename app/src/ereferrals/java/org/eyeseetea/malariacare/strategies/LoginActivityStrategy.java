@@ -46,7 +46,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
-import org.hisp.dhis.client.sdk.ui.views.FontButton;
+import org.eyeseetea.sdk.presentation.views.CustomButton;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -112,7 +112,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
 
         username = (EditText) loginActivity.findViewById(R.id.edittext_username);
 
@@ -350,7 +350,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         AlertDialog.Builder builder = new AlertDialog.Builder(loginActivity);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
@@ -368,7 +369,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
                 true);
 
-        FontButton demoButton = (FontButton) loginActivity.findViewById(R.id.demo_login_button);
+        Button demoButton = (Button) loginActivity.findViewById(R.id.demo_login_button);
 
         demoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -381,6 +382,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         new ALoginUseCase.Callback() {
                             @Override
                             public void onLoginSuccess() {
+                                Log.e(this.getClass().getSimpleName(), "onLoginSuccess");
                                 executePullDemo();
                             }
 
@@ -392,6 +394,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             @Override
                             public void onInvalidCredentials() {
                                 Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                            }
+
+                            @Override
+                            public void onServerPinChanged() {
+                                Log.e(this.getClass().getSimpleName(), "Invalid saved Pin");
                             }
 
                             @Override

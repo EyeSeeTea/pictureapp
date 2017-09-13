@@ -22,7 +22,7 @@ public abstract class APushUseCaseStrategy {
     protected IPushController mPushController;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
     private SurveysThresholds mSurveysThresholds;
-    private ISurveyRepository mSurveyRepository;
+    public ISurveyRepository mSurveyRepository;
     private IMainExecutor mMainExecutor;
     protected PushUseCase.Callback mCallback;
 
@@ -111,6 +111,11 @@ public abstract class APushUseCaseStrategy {
                 mPushController.changePushInProgress(false);
                 notifyInformativeError(throwable.getMessage());
                 banOrgUnitIfRequired();
+            }
+
+            @Override
+            public void onInformativeMessage(String message) {
+                notifyInformativeMessage(message);
             }
 
             @Override
@@ -220,6 +225,15 @@ public abstract class APushUseCaseStrategy {
             @Override
             public void run() {
                 mCallback.onInformativeError(message);
+            }
+        });
+    }
+
+    private void notifyInformativeMessage(final String message) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInformativeMessage(message);
             }
         });
     }

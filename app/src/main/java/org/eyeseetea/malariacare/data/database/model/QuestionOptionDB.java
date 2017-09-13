@@ -137,6 +137,10 @@ public class QuestionOptionDB extends BaseModel {
         return new Select().from(QuestionOptionDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        deleteQuestionOptions(listAll());
+    }
+
     public long getId_question_option() {
         return id_question_option;
     }
@@ -266,6 +270,4 @@ public class QuestionOptionDB extends BaseModel {
                 ", id_match_fk=" + id_match_fk +
                 '}';
     }
-
-
 }

@@ -9,6 +9,7 @@ public class SurveyWSResponseAction {
     private String status;
     private String type;
     private SurveyWSResponse response;
+    private String timeOnQueue;
 
     public SurveyWSResponseAction() {
     }
@@ -64,5 +65,13 @@ public class SurveyWSResponseAction {
 
     public boolean isSuccess() {
         return status.equals(SUCCESS);
+    }
+
+    public String getTimeOnQueue() {
+        return timeOnQueue;
+    }
+
+    public void setTimeOnQueue(String timeOnQueue) {
+        this.timeOnQueue = timeOnQueue;
     }
 }

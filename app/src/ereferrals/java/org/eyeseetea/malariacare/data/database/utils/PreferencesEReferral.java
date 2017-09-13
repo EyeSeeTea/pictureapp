@@ -22,7 +22,12 @@ public class PreferencesEReferral {
                 context.getString(R.string.logged_user_username), null);
         String password = sharedPreferences.getString(context.getString(R.string.logged_user_pin),
                 null);
-        if (url == null || username == null || password == null) return null;
+        if (url == null || url.isEmpty() ||
+                username == null || username.isEmpty() ||
+                password == null || password.isEmpty()) {
+            return null;
+        }
+
         Credentials credentials = new Credentials(url, username, password);
 
         return credentials;
@@ -119,5 +124,14 @@ public class PreferencesEReferral {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         return sharedPreferences.getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
+    }
+
+    public static void setWSURL(String url){
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.web_service_url), url);
+        editor.commit();
     }
 }

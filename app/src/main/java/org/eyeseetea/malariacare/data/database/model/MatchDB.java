@@ -71,6 +71,10 @@ public class MatchDB extends BaseModel {
         return new Select().from(MatchDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        deleteMatches(listAll());
+    }
+
     public List<QuestionOptionDB> getQuestionOptionDBs() {
         if (mQuestionOptionDBs == null) {
             this.mQuestionOptionDBs = new Select().from(QuestionOptionDB.class)

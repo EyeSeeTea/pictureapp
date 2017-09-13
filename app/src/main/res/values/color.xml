@@ -41,4 +41,10 @@
     <color name="button_login_state_pressed">#FF0C243C</color>
     <color name="orange">#FF9900</color>
     <color name="White">#FFFFFF</color>
+    <color name="create_button_background">#4fabd2</color>
+    <color name="orange_header_ereferrals">#EA9D01</color>
+    <color name="gray_text_ereferrals">#808080</color>
+    <color name="green_tab_selected_ereferrals">#65962B</color>
+    <color name="grey_tab_unselected_ereferrals">#B5B5B5</color>
+
 </resources>

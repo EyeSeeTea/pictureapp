@@ -37,7 +37,7 @@
                     android:text="@string/date"
                     android:textColor="@color/dark_purple"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/new_receipt_balance_date"
@@ -50,7 +50,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/dark_purple"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
             </LinearLayout>
 
             <View
@@ -80,7 +80,7 @@
                     android:text="@string/RDT"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_rdt"
@@ -94,7 +94,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
             </LinearLayout>
 
             <View
@@ -123,7 +123,7 @@
                     android:text="@string/ACT_x_6"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_act6"
@@ -137,7 +137,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
             </LinearLayout>
 
             <View
@@ -166,7 +166,7 @@
                     android:text="@string/ACT_x_12"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_act12"
@@ -180,7 +180,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
             </LinearLayout>
 
             <View
@@ -209,7 +209,7 @@
                     android:text="@string/ACT_x_18"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_act18"
@@ -223,7 +223,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
             </LinearLayout>
 
             <View
@@ -252,7 +252,7 @@
                     android:text="@string/ACT_x_24"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_act24"
@@ -266,7 +266,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
             </LinearLayout>
 
             <View
@@ -295,7 +295,7 @@
                     android:text="@string/Pq"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_pq"
@@ -309,7 +309,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font"/>
             </LinearLayout>
 
             <View
@@ -338,7 +338,7 @@
                     android:text="@string/Cq"
                     android:textColor="@color/white"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/new_receipt_balance_cq"
@@ -353,7 +353,7 @@
                     android:textColor="@color/dark_purple"
                     android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
-                    app:font_name="@string/specific_language_font" />
+                    app:font_name="@string/normal_font" />
             </LinearLayout>
 
             <View
@@ -410,7 +410,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="?attr/font_small"
-                        app:font_name="@string/specific_language_font" />
+                        app:font_name="@string/normal_font"/>
 
                     <ImageButton
                         android:layout_width="wrap_content"

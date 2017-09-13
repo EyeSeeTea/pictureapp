@@ -2,7 +2,7 @@
 <resources>
 <string name="yes">"Yes"</string>
 <string name="no">"No"</string>
-<string name="ok">"Ok"</string>
+    <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
 <string name="cancel">"Cancel"</string>
 <string name="settings_menu_licence">"License"</string>
 <string name="dialog_title_delete_surveys">"Are you sure that you want to remove all sent surveys?"</string>
@@ -85,7 +85,7 @@
 <string name="last_6_weeks">"Latest 6 weeks"</string>
 <string name="last_6_months">"Latest 6 months"</string>
 <string name="download">"Download:"</string>
-<string name="settings_select_language">"Language"</string>
+<string name="common_about_rowHeader_language">"Language"</string>
 <string name="system_defined">"System defined"</string>
 <string name="developer_option_summary">"This feature activates the developer options"</string>
 <string name="developer_option_title">"Show developer options"</string>
@@ -93,7 +93,7 @@
 <string name="malaria_case_based_reporting">"Malaria Case Surveillance"</string>
 <string name="survey_review">"Review"</string>
 <string name="survey_send">"Send"</string>
-<string name="app_about">"About"</string>
+<string name="common_menu_about">"About"</string>
 <string name="survey_completed">"Survey completed"</string>
 <string name="survey_completed_text">"The survey has been successfully completed"</string>
 <string name="app_settings">"Settings"</string>
@@ -103,7 +103,7 @@
 <string name="server">"Server"</string>
 <string name="app_visual">"Visual"</string>
 <string name="monitoring_title_dropdown">"Please, select a time period"</string>
-<string name="monitoring_title">"MONITORING"</string>
+    <string name="common_menu_statistics">"MONITORING"</string>
 <string name="monitoring_label_option_months">"Latest 6 months"</string>
 <string name="monitoring_label_option_days">"Latest 6 days"</string>
 <string name="monitoring_label_option_weeks">"Latest 6 weeks"</string>
@@ -131,7 +131,7 @@
 <string name="mixed">"Pf/Pv"</string>
 <string name="dynamic_error_number">"Invalid Number"</string>
 <string name="settings_menu_logout_message">"Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
-<string name="app_logout">"Logout"</string>
+    <string name="common_menu_logOff">"Logout"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>
@@ -207,4 +207,7 @@
 <string name="empty_review_value">"No Phone Number"</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Stock"</string>
+<string name="av_progress">Downloading content... please wait</string>
+
+    <string name="login_userName">Username</string>
 </resources>

@@ -130,14 +130,14 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getString(R.string.sent_data));
+                    context.getResources().getString(R.string.tab_stock));
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.server_name));
+                    context.getResources().getString(R.string.tab_av));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitoring_title));
+                context.getResources().getString(R.string.common_menu_statistics));
         if (GradleVariantConfig.isStockFragmentActive()) {
             initStock();
         }
@@ -155,7 +155,7 @@ public class DashboardActivity extends BaseActivity {
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getString(R.string.sent_data));
+                    context.getResources().getDrawable(R.drawable.statics));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
@@ -487,7 +487,8 @@ public class DashboardActivity extends BaseActivity {
         LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        if (Session.getMalariaSurveyDB() != null) {
+        SurveyDB lastSurvey = Session.getMalariaSurveyDB();
+        if (lastSurvey != null) {
             isSent = Session.getMalariaSurveyDB().isSent();
         }
         if (isBackPressed) {
@@ -499,7 +500,8 @@ public class DashboardActivity extends BaseActivity {
             showUnsentFragment();
         } else {
             showUnsentFragment();
-            mDashboardActivityStrategy.reloadStockFragment(this);
+            mDashboardActivityStrategy.reloadFirstFragment();
+            mDashboardActivityStrategy.showEndSurveyMessage(lastSurvey);
         }
     }
 
@@ -531,7 +533,6 @@ public class DashboardActivity extends BaseActivity {
      */
     public void newSurvey(View view) {
         mDashboardActivityStrategy.newSurvey(this);
-        initSurvey();
     }
 
     /**
@@ -633,7 +634,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isFragmentActive(Fragment fragment, int layout) {
         Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
-        if (currentFragment.equals(fragment)) {
+        if (currentFragment != null && currentFragment.equals(fragment)) {
             return true;
         }
         return false;
@@ -743,6 +744,8 @@ public class DashboardActivity extends BaseActivity {
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
                     mDashboardActivityStrategy.reloadFourthFragment();
+                } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_av))) {
+                    mDashboardActivityStrategy.reloadAVFragment();
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));

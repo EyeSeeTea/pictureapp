@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -29,26 +30,44 @@ public class eReferralsAPIClient {
     private Retrofit mRetrofit;
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
-
+    private OkHttpClient mOkHttpClient;
+    public String mBaseAddress;
+    private final int DEFAULT_TIMEOUT = 10000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
-        mContext = PreferencesState.getInstance().getContext();
-
-        initializeDependencies(baseAddress);
+        new eReferralsAPIClient(baseAddress, DEFAULT_TIMEOUT);
     }
 
-    private void initializeDependencies(String baseAddress) {
+    public eReferralsAPIClient(String baseAddress, int timeoutMillis) throws IllegalArgumentException {
+        mBaseAddress = baseAddress;
+        mContext = PreferencesState.getInstance().getContext();
+
+        initializeDependencies(timeoutMillis);
+    }
+
+    private void initializeDependencies(int timeoutMillis) {
+        timeoutMillis += DEFAULT_TIMEOUT;
+
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        mOkHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor)
+                .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .build();
 
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(baseAddress)
+                .baseUrl(mBaseAddress)
                 .addConverterFactory(JacksonConverterFactory.create())
-                .client(client)
+                .client(mOkHttpClient)
                 .build();
 
         mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
+    }
+
+    public void setTimeoutMillis(int timeoutMillis){
+        initializeDependencies(timeoutMillis);
     }
 
     public void pushSurveys(SurveyContainerWSObject surveyContainerWSObject,
@@ -69,6 +88,7 @@ public class eReferralsAPIClient {
             ConversionException conversionException = new ConversionException(null);
             wsClientCallBack.onError(conversionException);
         } else if (response != null && response.code() == 402) {
+            //This exception is created when the the hardcoded credentials was invalid.
             InvalidCredentialsException invalidCredentialsException =
                     new InvalidCredentialsException();
             wsClientCallBack.onError(invalidCredentialsException);

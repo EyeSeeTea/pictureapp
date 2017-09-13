@@ -41,6 +41,11 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         String userUid = loggedUserDB != null ? loggedUserDB.getUid() : null;
 
         UserDB userDB = new UserDB(userUid, credentials.getUsername());
+        if (loggedUserDB != null) {
+            userDB.setCanAddSurveys(loggedUserDB.canAddSurveys());
+        } else {
+            userDB.setCanAddSurveys(true);
+        }
 
         UserDB.insertLoggedUser(userDB);
 

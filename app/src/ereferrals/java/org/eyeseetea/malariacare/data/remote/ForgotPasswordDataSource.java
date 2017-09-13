@@ -22,17 +22,16 @@ public class ForgotPasswordDataSource implements IForgotPasswordDataSource {
     }
 
     @Override
-    public void forgotPassword(String username,
+    public void forgotPassword(String username, String language,
             final IDataSourceCallback<ForgotPasswordMessage> callback) {
         {
             if (!isNetworkAvailable()) {
                 callback.onError(new NetworkException());
             }
 
-            //TODO hardcoded language change when introduce language in all queries to WS
             ForgotPasswordPayload forgotPasswordPayload = new ForgotPasswordPayload(
                     PreferencesState.getInstance().getContext().getString(
-                            R.string.ws_version), username, "en");
+                            R.string.ws_version), username, language);
 
             eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
                     PreferencesEReferral.getWSURL());

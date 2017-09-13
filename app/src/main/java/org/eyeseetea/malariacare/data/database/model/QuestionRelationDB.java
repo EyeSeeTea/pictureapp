@@ -111,6 +111,10 @@ public class QuestionRelationDB extends BaseModel {
         return new Select().from(QuestionRelationDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        deleteQuestionRelations(listAll());
+    }
+
     /**
      * Method to delete in cascade the mQuestionDBs passed.
      */
@@ -263,6 +267,5 @@ public class QuestionRelationDB extends BaseModel {
                 ", operation=" + operation +
                 '}';
     }
-
 
 }

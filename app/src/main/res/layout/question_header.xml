@@ -16,5 +16,5 @@
         android:textSize="?attr/font_medium"
         android:textStyle="bold"
         android:typeface="sans"
-        app:font_name="@string/condensed_font_name" />
+        app:font_name="@string/normal_font" />
 </merge>

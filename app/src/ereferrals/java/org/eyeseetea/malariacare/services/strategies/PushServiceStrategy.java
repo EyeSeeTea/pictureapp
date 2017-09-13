@@ -32,7 +32,6 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
-import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -69,6 +68,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
             loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
                 @Override
                 public void onLoginSuccess() {
+                    Log.e(TAG, "onLoginSuccess");
                     PushServiceStrategy.this.onCorrectCredentials();
                 }
 
@@ -78,7 +78,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 }
 
                 @Override
+                public void onServerPinChanged() {
+                    Log.e(TAG, "Error onServerPinChanged");
+                    moveToLoginActivity();
+                }
+
+                @Override
                 public void onInvalidCredentials() {
+                    Log.e(TAG, "Error credentials not valid.");
                     logout();
                 }
 
@@ -99,7 +106,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
                 @Override
                 public void onMaxLoginAttemptsReachedError() {
-
+                    Log.e(TAG, "onMaxLoginAttemptsReachedError");
                 }
             });
         }
@@ -137,11 +144,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                if (!EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-                    Intent loginIntent = new Intent(mPushService, LoginActivity.class);
-                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mPushService.startActivity(loginIntent);
-                }
+                moveToLoginActivity();
             }
 
             @Override
@@ -149,6 +152,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 Log.d(TAG, message);
             }
         });
+    }
+
+    private void moveToLoginActivity() {
+        if (!EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+            Intent loginIntent = new Intent(mPushService, LoginActivity.class);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mPushService.startActivity(loginIntent);
+        }
     }
 
     protected void executePush() {
@@ -176,7 +187,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 new PushUseCase(pushController, asyncExecutor, mainExecutor,
                         surveysThresholds, surveyRepository, orgUnitRepository);
 
-        SurveyChecker.launchQuarantineChecker();
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
@@ -218,6 +228,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
                         R.string.error_conflict_title), "PUSHUSECASE ERROR " + message
                         + PreferencesState.getInstance().isPushInProgress());
+            }
+
+            @Override
+            public void onInformativeMessage(String message) {
+                showInDialog("", message);
             }
 
             @Override

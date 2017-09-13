@@ -2,7 +2,7 @@
 <resources>
 <string name="yes">"បាទ/ចាស"</string>
 <string name="no">"ទេ"</string>
-<string name="ok">"យល់ព្រម"</string>
+    <string name="provider_redeemEntry_msg_matchingOk">"យល់ព្រម"</string>
 <string name="cancel">"បោះបង់"</string>
 <string name="settings_menu_licence">"អាជ្ញាប័ណ្ណ"</string>
 <string name="dialog_title_delete_surveys">"តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?"</string>
@@ -87,7 +87,7 @@
 <string name="last_6_weeks">"៦ សប្ដាហ៍ចុងក្រោយ"</string>
 <string name="last_6_months">"៦ ខែចុងក្រោយ"</string>
 <string name="download">" ទាញយក:"</string>
-<string name="settings_select_language">"ភាសា"</string>
+<string name="common_about_rowHeader_language">"ភាសា"</string>
 <string name="system_defined">"ដែលបានកំណត់ប្រព័ន្ធ"</string>
 <string name="developer_option_summary">"ជម្រើសនេះអនុញ្ញាតជម្រើសអភិវឌ្ឍន៍"</string>
 <string name="developer_option_title">"បង្ហាញជាជម្រើសអភិវឌ្ឍន៍"</string>
@@ -95,7 +95,7 @@
 <string name="malaria_case_based_reporting">"ឃ្លាំមើលករណីគ្រុនចាញ់"</string>
 <string name="survey_review">"ពិនិត្យឡើងវិញ"</string>
 <string name="survey_send">"ផ្ញើ"</string>
-<string name="app_about">"អំពី"</string>
+<string name="common_menu_about">"អំពី"</string>
 <string name="survey_completed">"ការស្ទង់មតិបានបញ្ចប់"</string>
 <string name="survey_completed_text">"ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ"</string>
 <string name="app_settings">"ការកំណត់"</string>
@@ -105,7 +105,7 @@
 <string name="server">"ម៉ាស៊ីនបម្រើ"</string>
 <string name="app_visual">"ដែលមើលឃើញ"</string>
 <string name="monitoring_title_dropdown">"សូមធ្វើការជ្រើសរើសរយៈពេលមួយ៖"</string>
-<string name="monitoring_title">"ការតាមដាន"</string>
+    <string name="common_menu_statistics">"ការតាមដាន"</string>
 <string name="monitoring_label_option_months">"៦ ខែចុងក្រោយ"</string>
 <string name="monitoring_label_option_days">"៦ ថ្ងៃចុងក្រោយ"</string>
 <string name="monitoring_label_option_weeks">"៦ សប្ដាហ៍ចុងក្រោយ"</string>
@@ -133,7 +133,7 @@
 <string name="mixed">"ចំរុះ (Mixed)"</string>
 <string name="dynamic_error_number">"លេខមិនត្រឹមត្រូវ"</string>
 <string name="settings_menu_logout_message">"ការផ្លាស់ប្តូរម៉ាស៊ីនបម្រើឬ orgunit ត្រូវការដើម្បីឡើងវិញការចូល។ រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?"</string>
-<string name="app_logout">"ចាកចេញ"</string>
+    <string name="common_menu_logOff">"ចាកចេញ"</string>
 <string name="network_error">"មានបញ្ហាជាមួយនឹងបណ្តាញនេះគឺជាការ, សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។"</string>
 <string name="login_invalid_credentials">"លិខិត​សម្គាល់​មិន​ត្រឹមត្រូវ"</string>
     <string name="login_unexpected_error">"មានកំហុសបានកើតឡើងសូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ"</string>
@@ -209,4 +209,7 @@
 <string name="db_migration_error">"សូមជូនដំណឹងអ្នកគ្រប់គ្រងកម្មវិធីនេះអាចត្រូវការដើម្បីត្រូវបានដំឡើងឡើងវិញ"</string>
 <string name="error_exporting_data">"កំហុសក្នុងទិន្នន័យមេតាមិនអាចនាំចេញ»។"</string>
 <string name="tab_av">"AV"</string>
+<string name="av_progress">កំពុងទាញយកមាតិកា ... សូមរង់ចាំ</string>
+
+    <string name="login_userName">Username</string>
 </resources>

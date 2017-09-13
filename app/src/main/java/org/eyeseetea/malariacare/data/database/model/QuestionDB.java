@@ -81,6 +81,10 @@ public class QuestionDB extends BaseModel {
      */
     public static final int QUESTION_INVISIBLE = 0;
     /**
+     * Constant that reflects a visible important question
+     */
+    public static final int QUESTION_IMPORTANT = 2;
+    /**
      * Constant that reflects a visible mQuestionDB in information
      */
     public static final int QUESTION_COMPULSORY = 1;
@@ -215,6 +219,10 @@ public class QuestionDB extends BaseModel {
 
     public static List<QuestionDB> getAllQuestions() {
         return new Select().from(QuestionDB.class).queryList();
+    }
+
+    public static void deleteAll() {
+        deleteQuestions(getAllQuestions());
     }
 
     public static List<QuestionDB> getAllQuestionsWithOrgUnitDropdownList() {
@@ -648,6 +656,10 @@ public class QuestionDB extends BaseModel {
 
     public Boolean isVisible() {
         return (this.visible == QUESTION_VISIBLE);
+    }
+
+    public Boolean isImportant() {
+        return (this.visible == QUESTION_IMPORTANT);
     }
 
     public void setVisible(Integer visible) {
@@ -1777,7 +1789,8 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
-    private static class QuestionOrderComparator implements Comparator {
+
+    public static class QuestionOrderComparator implements Comparator {
 
         @Override
         public int compare(Object o1, Object o2) {

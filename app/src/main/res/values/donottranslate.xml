@@ -90,9 +90,10 @@
     <!--oldSdk-->
     <string name="description" translatable="false">ImageView description</string>
     <string name="login" translatable="false">Log in</string>
-    <string name="regular_font_name" translatable="false">@string/medium_font_name</string>
+    <string name="regular_font_name" translatable="false">@string/normal_font</string>
 
     <string name="push_in_progress" translatable="false">push_in_progress</string>
+    <string name="file_downloader_in_progress" translatable="false">file_downloader_in_progress</string>
     <string name="yes_option_identifier" translatable="false">Yes</string>
     <string name="no_option_identifier" translatable="false">No</string>
     <string name="true_option_id" translatable="false">true_option_identifier</string>
@@ -101,4 +102,6 @@
     <string name="user_accept_key" translatable="false">user_accept_key</string>
     <string name="show_announcement_key" translatable="false">show_announcement_key</string>
     <string name="phone_meta_data_key" translatable="false">phone_meta_data_key</string>
+    <string name="default_drive_folder" translatable="false">0B7TXlu17DcAbNHNvRUxnSDd4LUk</string>
+    <string name="drive_key" translatable="false">drive_key</string>
 </resources>

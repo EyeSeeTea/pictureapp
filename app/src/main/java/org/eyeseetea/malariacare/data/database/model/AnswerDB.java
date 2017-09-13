@@ -69,6 +69,12 @@ public class AnswerDB extends BaseModel {
         return new Select().from(AnswerDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        for (AnswerDB answerDB : getAllAnswers()) {
+            answerDB.delete();
+        }
+    }
+
     public static AnswerDB findById(Long id) {
         return new Select()
                 .from(AnswerDB.class)
@@ -141,4 +147,6 @@ public class AnswerDB extends BaseModel {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+
 }

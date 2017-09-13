@@ -1,18 +1,20 @@
 package org.eyeseetea.malariacare.domain.boundary.io;
 
+import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface IFileDownloader {
-
     interface Callback {
-        void onSuccess(HashMap<String, String>syncedFiles);
+        void onSuccess(List<Media> syncedFiles);
 
         void onError(FileDownloadException throwable);
-
-        void onRemove(String uid);
     }
-    void download(List<String> uids, Callback callback);
+
+    void download(List<Media> currentMedias, String rootUid, String program, Callback callback);
+
+    boolean isFileDownloaderIProgress();
+
+    void changeFileDownloaderIProgress(boolean inProgress);
 }

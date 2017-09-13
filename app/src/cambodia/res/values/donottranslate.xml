@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="specific_language_font" translatable="false">KhmerOS.ttf</string>
     <string name="rdtPositive" translatable="false">Positive</string>
     <string name="rdtNegative" translatable="false">Negative</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
@@ -35,4 +34,5 @@
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
     <string name="authority" translatable="false">CAMBODIA_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="google_play_required" translatable="false"></string>
+    <string name="feedback_view_image" translatable="false"></string>
 </resources>

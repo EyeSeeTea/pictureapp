@@ -14,7 +14,7 @@ public class UIMessagesStrategy extends AUIMessagesStrategy {
     public void showCompulsoryUnansweredToast() {
         Toast.makeText(PreferencesState.getInstance().getContext(),
                 PreferencesState.getInstance().getContext().getString(
-                        R.string.error_compulsory_question_unanswered),
+                        R.string.provider_redeemEntry_msg_warning),
                 Toast.LENGTH_LONG).show();
     }
 }

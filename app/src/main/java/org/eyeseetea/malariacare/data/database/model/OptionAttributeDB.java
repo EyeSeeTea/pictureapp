@@ -103,6 +103,12 @@ public class OptionAttributeDB extends BaseModel {
         return new Select().from(OptionAttributeDB.class).queryList();
     }
 
+    public static void deleteAll() {
+        for (OptionAttributeDB optionAttributeDB : getAllOptionAttributes()) {
+            optionAttributeDB.delete();
+        }
+    }
+
     public static OptionAttributeDB findById(Long id) {
         return new Select()
                 .from(OptionAttributeDB.class)
@@ -270,4 +276,6 @@ public class OptionAttributeDB extends BaseModel {
                 ", default_option=" + default_option +
                 '}';
     }
+
+
 }

@@ -1,37 +1,27 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Device {
     private String phone;
     private String IMEI;
     private String androidVersion;
 
     public Device(String phone, String IMEI, String androidVersion) {
-        this.phone = phone;
-        this.IMEI = IMEI;
-        this.androidVersion = androidVersion;
+        this.phone = required(phone, "phone is required");
+        this.IMEI = required(IMEI, "IMEI is required");
+        this.androidVersion = required(androidVersion, "androidVersion is required");
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getIMEI() {
         return IMEI;
     }
 
-    public void setIMEI(String IMEI) {
-        this.IMEI = IMEI;
-    }
-
     public String getAndroidVersion() {
         return androidVersion;
-    }
-
-    public void setAndroidVersion(String androidVersion) {
-        this.androidVersion = androidVersion;
     }
 }

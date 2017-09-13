@@ -15,4 +15,12 @@ public class RequiredChecker {
 
         return obj;
     }
+
+    public static String required(String value, String message) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+
+        return value;
+    }
 }

@@ -1,20 +1,21 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Settings {
-    private static final String DEFAULT_LANGUAGE = "en";
+    private String systemLanguage;
+    private String currentLanguage;
 
-    private String language;
-
-    public Settings(String language) {
-        this.language = language;
+    public Settings(String systemLanguage, String currentLanguage) {
+        this.systemLanguage = required(systemLanguage, "systemLanguage is required");
+        this.currentLanguage = currentLanguage;
     }
 
     public String getLanguage() {
-        if (language == null || language.isEmpty()) language = DEFAULT_LANGUAGE;
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
+        if (currentLanguage == null || currentLanguage.isEmpty()) {
+            return systemLanguage;
+        } else {
+            return currentLanguage;
+        }
     }
 }

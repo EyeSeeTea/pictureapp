@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -407,5 +409,26 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void reloadAVFragment() {
         statusFragment.reloadData();
         statusFragment.hideHeader();
+    }
+
+    @Override
+    public void showEndSurveyMessage(SurveyDB surveyDB) {
+        if (surveyDB != null && !hasPhone(surveyDB)) {
+            mDashboardActivity.showException("", String.format(
+                    mDashboardActivity.getResources().getString(R.string.give_voucher),
+                    surveyDB.getEventUid()));
+        }
+    }
+
+    private boolean hasPhone(SurveyDB survey) {
+        Context context = PreferencesState.getInstance().getContext();
+        for (ValueDB value : survey.getValueDBs()) {
+            if (value.getQuestionDB().getCode().equals(
+                    context.getString(R.string.phone_ownership_qc))) {
+                return !(value.getOptionDB().getCode().equals(
+                        context.getString(R.string.no_phone_oc)));
+            }
+        }
+        return false;
     }
 }

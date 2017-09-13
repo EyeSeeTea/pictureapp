@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
-    <string name="user_push" translatable="false">eref.webapp</string>
-    <string name="pass_push" translatable="false">8frhKmMe</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>

@@ -13,6 +13,8 @@ public abstract class ALoginUseCase {
 
         void onInvalidCredentials();
 
+        void onServerPinChanged();
+
         void onNetworkError();
 
         void onConfigJsonInvalid();

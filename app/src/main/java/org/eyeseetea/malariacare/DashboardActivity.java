@@ -487,7 +487,8 @@ public class DashboardActivity extends BaseActivity {
         LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        if (Session.getMalariaSurveyDB() != null) {
+        SurveyDB lastSurvey = Session.getMalariaSurveyDB();
+        if (lastSurvey != null) {
             isSent = Session.getMalariaSurveyDB().isSent();
         }
         if (isBackPressed) {
@@ -500,6 +501,7 @@ public class DashboardActivity extends BaseActivity {
         } else {
             showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
+            mDashboardActivityStrategy.showEndSurveyMessage(lastSurvey);
         }
     }
 

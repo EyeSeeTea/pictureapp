@@ -53,7 +53,7 @@
                 android:paddingRight="@dimen/question_padding_all"
                 android:textColor="@color/question_header_title"
                 android:textSize="?attr/font_medium"
-                app:font_name="@string/condensed_font_name" />
+                app:font_name="@string/normal_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/row_help_text"
@@ -63,7 +63,7 @@
                 android:paddingRight="@dimen/question_padding_all"
                 android:textColor="@color/question_header_subtitle"
                 android:textSize="?attr/font_medium"
-                app:font_name="@string/condensed_font_name" />
+                app:font_name="@string/normal_font" />
 
             <LinearLayout
                 android:id="@+id/switch_answer"
@@ -83,7 +83,7 @@
                     android:paddingRight="@dimen/question_padding_all"
                     android:textColor="@color/intColor"
                     android:textSize="?attr/font_medium"
-                    app:font_name="@string/condensed_font_name" />
+                    app:font_name="@string/normal_font" />
 
                 <Switch
                     android:id="@+id/answer"
@@ -104,7 +104,7 @@
                     android:paddingRight="@dimen/question_padding_all"
                     android:textColor="@color/intColor"
                     android:textSize="?attr/font_medium"
-                    app:font_name="@string/condensed_font_name" />
+                    app:font_name="@string/normal_font" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

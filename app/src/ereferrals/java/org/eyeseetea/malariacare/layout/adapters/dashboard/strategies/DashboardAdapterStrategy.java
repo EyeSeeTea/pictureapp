@@ -29,7 +29,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     @Override
     public void renderSurveySummary(View rowView, SurveyDB survey) {
-        String firstRowBuilder = mContext.getString(R.string.uid) +
+        String uid = mContext.getString(R.string.uid) +
                 ":" +
                 survey.getEventUid();
         String firstImportant = "", secondImportant = "", firstVisible = "", secondVisible = "";
@@ -40,10 +40,12 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         TextView nameText = (TextView) rowView.findViewById(R.id.important_visible_text);
         TextView phoneText = (TextView) rowView.findViewById(R.id.visible_first);
         TextView programText = (TextView) rowView.findViewById(R.id.visible_second);
+        TextView uidText = (TextView) rowView.findViewById(R.id.survey_uid);
         dateText.setText(Utils.parseDateToString(survey.getEventDate(),
                 context.getString(R.string.date_survey_format)));
         hourText.setText(Utils.parseDateToString(survey.getEventDate(),
                 context.getString(R.string.hour_survey_format)));
+        uidText.setText(uid);
 
         List<QuestionDB> important = new ArrayList<>();
         List<QuestionDB> visible = new ArrayList<>();

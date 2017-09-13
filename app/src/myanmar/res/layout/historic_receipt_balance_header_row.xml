@@ -20,7 +20,7 @@
             android:text="@string/received"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -32,7 +32,7 @@
             android:text="@string/RDT"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -44,7 +44,7 @@
             android:layout_gravity="bottom"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -56,7 +56,7 @@
             android:layout_gravity="bottom"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -68,7 +68,7 @@
             android:layout_gravity="bottom"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -80,7 +80,7 @@
             android:layout_gravity="bottom"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -92,7 +92,7 @@
             android:layout_gravity="bottom"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:layout_width="0dp"
@@ -104,7 +104,7 @@
             android:text="@string/Pq"
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
-            app:font_name="@string/specific_language_font" />
+            app:font_name="@string/normal_font" />
 
     </LinearLayout>
 

@@ -18,5 +18,5 @@
         android:text="@string/review_subtitle"
         android:textColor="@color/questionHeaderTextColor"
         android:textSize="?attr/font_large"
-        app:font_name="@string/specific_language_font" />
+        app:font_name="@string/normal_font"/>
 </LinearLayout>

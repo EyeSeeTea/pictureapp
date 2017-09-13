@@ -79,7 +79,6 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                                 } else if (throwable instanceof NetworkException) {
                                     checkUserCredentialsWithOrgUnit(
                                             mCredentialsLocalDataSource.getOrganisationCredentials(),
-
                                             true);
                                 } else {
                                     throwable.printStackTrace();
@@ -166,9 +165,26 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             if (fromNetWorkError) {
                 notifyNetworkError();
             } else {
-                notifyInvalidCredentials();
+                if (insertedCredentials.getUsername().equals(credentials.getUsername())
+                        && !insertedCredentials.getPassword().equals(credentials.getPassword())
+                        && (fromNetWorkError || insertedCredentials.getServerURL().equals(
+                        credentials.getServerURL()))){
+                    notifyOnServerPinChanged();
+                }else{
+                    notifyInvalidCredentials();
+                }
             }
         }
+    }
+
+    private void notifyOnServerPinChanged() {
+
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onServerPinChanged();
+            }
+        });
     }
 
     public void notifyLoginSuccess() {

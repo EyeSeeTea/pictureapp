@@ -78,6 +78,7 @@ public class WSClient {
             ConversionException conversionException = new ConversionException(null);
             wsClientCallBack.onError(conversionException);
         } else if (response != null && response.code() == 402) {
+            //This exception is created when the the hardcoded credentials was invalid.
             InvalidCredentialsException invalidCredentialsException =
                     new InvalidCredentialsException();
             wsClientCallBack.onError(invalidCredentialsException);

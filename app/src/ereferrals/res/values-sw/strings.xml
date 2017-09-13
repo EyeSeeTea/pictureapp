@@ -825,4 +825,25 @@ Ameahidi kuhudhuria"</string>
     <string name="give_voucher">"Please give this voucher number to the client: %s"</string>
     <string name="voucher_id_changed">"Nambari ya Voucher %1$s imebadilishwa hadi %2$s"</string>
 
+    <string name="common_option_method_icud">"ICUD"</string>
+    <string name="common_option_method_ppiud">"PPUID"</string>
+    <string name="common_option_method_depo">"Depo"</string>
+    <string name="common_option_method_ma">"MA"</string>
+    <string name="ipc_issueEntry_q_sourceOfInformation">"Source of information"</string>
+    <string name="ipc_issueEntry_q_phoneContactConsent">"Phone contact consent"</string>
+    <string name="common_option_phoeContactConsent_no">"No"</string>
+    <string name="common_option_phoeContactConsent_yesp">"Yes - PSI"</string>
+    <string name="common_option_phoeContactConsent_yespp">"Yes - PSI &amp; Partner"</string>
+    <string name="ipc_issueEntry_q_isClientReferred">"Is client referred?"</string>
+    <string name="common_option_isClientReferred_yes">"Yes"</string>
+    <string name="common_option_isClientReferred_no">"No"</string>
+    <string name="ipc_issueEntry_q_serviceDate">"Service date"</string>
+    <string name="ipc_issueEntry_q_serviceDesired">"Service desired"</string>
+    <string name="ipc_issueEntry_q_healthFacilityCode">"Health facility code"</string>
+    <string name="nepal_program">Nepal</string>
+    <string name="mozambique_program">Mozambique</string>
+    <string name="ipc_issueEntry_q_householdDelivery">Household delivery</string>
+    <string name="common_option_householdDelivery_yes">yes</string>
+    <string name="common_option_householdDelivery_no">no</string>
+    <string name="ipc_issueEntry_q_address">Address</string>
 </resources>

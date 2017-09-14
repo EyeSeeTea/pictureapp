@@ -197,6 +197,7 @@ dependencies {
 
     // Unit testing dependencies
     testCompile "junit:junit:${libs.jUnitVersion}"
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
 
     // Instrumented tests dependencies
     // Android Testing Support Library's runner and rules

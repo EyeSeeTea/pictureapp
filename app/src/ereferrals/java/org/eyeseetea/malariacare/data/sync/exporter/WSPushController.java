@@ -6,6 +6,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
@@ -26,10 +27,12 @@ public class WSPushController implements IPushController {
 
     private ConvertToWSVisitor mConvertToWSVisitor;
     private List<SurveyDB> mSurveys;
+    private eReferralsAPIClient mEReferralsAPIClient;
     private IPushControllerCallback mCallback;
 
 
     public WSPushController() throws IllegalArgumentException {
+        mEReferralsAPIClient = new eReferralsAPIClient(PreferencesEReferral.getWSURL());
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }
 
@@ -84,11 +87,11 @@ public class WSPushController implements IPushController {
     }
 
     private void pushSurveys() {
-        WSClient mWSClient = new WSClient(getTimeout(mSurveys.size()));
+        mEReferralsAPIClient.setTimeoutMillis(getTimeout(mSurveys.size()));
         SurveyContainerWSObject surveyContainerWSObject =
                 mConvertToWSVisitor.getSurveyContainerWSObject();
-        mWSClient.pushSurveys(surveyContainerWSObject,
-                new WSClient.WSClientCallBack<SurveyWSResult>() {
+        mEReferralsAPIClient.pushSurveys(surveyContainerWSObject,
+                new eReferralsAPIClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
                     public void onSuccess(SurveyWSResult surveyWSResult) {
                         checkPushResult(surveyWSResult);
@@ -149,7 +152,6 @@ public class WSPushController implements IPushController {
         }
         mCallback.onComplete();
     }
-
 
 
     private void putSurveysAsCompleted() {

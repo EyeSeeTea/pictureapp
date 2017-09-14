@@ -424,7 +424,8 @@ public class LoginActivity extends Activity {
     }
 
     public void enableLogin(boolean enable) {
-        if (loginButton != null) {
+        if (loginButton != null && !usernameEditText.getText().toString().isEmpty()
+                && !passwordEditText.getText().toString().isEmpty()) {
             loginButton.setEnabled(enable);
         }
     }

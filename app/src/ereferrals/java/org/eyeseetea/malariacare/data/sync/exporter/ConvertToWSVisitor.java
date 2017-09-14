@@ -62,7 +62,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
             stringBuilder.append(device.getIMEI());
             stringBuilder.append(", ");
         }
-        if(device.getPhone()!=null) {
+        if(device.getPhone()!=null && !device.getPhone().isEmpty()) {
             stringBuilder.append(device.getPhone());
             stringBuilder.append(", ");
         }

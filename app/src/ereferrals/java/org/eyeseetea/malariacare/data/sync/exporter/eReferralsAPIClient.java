@@ -35,35 +35,35 @@ public class eReferralsAPIClient {
     private final int DEFAULT_TIMEOUT = 10000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
-        new eReferralsAPIClient(baseAddress, DEFAULT_TIMEOUT);
-    }
-
-    public eReferralsAPIClient(String baseAddress, int timeoutMillis) throws IllegalArgumentException {
         mBaseAddress = baseAddress;
         mContext = PreferencesState.getInstance().getContext();
 
-        initializeDependencies(timeoutMillis);
+        initializeDependencies(DEFAULT_TIMEOUT);
     }
 
     private void initializeDependencies(int timeoutMillis) {
-        timeoutMillis += DEFAULT_TIMEOUT;
+        try {
+            timeoutMillis += DEFAULT_TIMEOUT;
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        mOkHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor)
-                .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
-                .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
-                .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
-                .build();
+            mOkHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor)
+                    .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                    .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                    .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                    .build();
 
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(mBaseAddress)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .client(mOkHttpClient)
-                .build();
+            mRetrofit = new Retrofit.Builder()
+                    .baseUrl(mBaseAddress)
+                    .addConverterFactory(JacksonConverterFactory.create())
+                    .client(mOkHttpClient)
+                    .build();
 
-        mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
+            mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setTimeoutMillis(int timeoutMillis){

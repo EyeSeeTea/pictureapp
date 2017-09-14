@@ -46,7 +46,6 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
-import org.eyeseetea.sdk.presentation.views.CustomButton;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 

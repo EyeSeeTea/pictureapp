@@ -1,11 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -40,8 +35,6 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
     public void init(Activity activity, int tabTag) {
         View headerView = getHeaderView(activity);
         headerView.setVisibility(View.VISIBLE);
-        activity.registerReceiver(connectionReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -75,17 +68,4 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
             List<SurveyDB> surveysFromService) {
         return;
     }
-
-    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            boolean notConnected = !ConnectivityStatus.isConnected(
-                    PreferencesState.getInstance().getContext());
-            if (headerText != null) {
-                headerText.setText(
-                        notConnected ? R.string.unsent_dashboard_header_offline
-                                : R.string.online_status);
-            }
-        }
-    };
 }

@@ -810,6 +810,10 @@ public class DashboardActivity extends BaseActivity {
                 DashboardActivity.dashboardActivity);
     }
 
+    public void refreshStatus() {
+        mDashboardActivityStrategy.reloadFirstFragmentHeader();
+    }
+
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
         UserDB mLoggedUserDB;
 

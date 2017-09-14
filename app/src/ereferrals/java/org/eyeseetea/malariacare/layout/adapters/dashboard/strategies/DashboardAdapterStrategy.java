@@ -29,6 +29,10 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     @Override
     public void renderSurveySummary(View rowView, SurveyDB survey) {
+        String asterisk="";
+        if(survey.isCompleted()){
+            asterisk="*";
+        }
         String uid = mContext.getString(R.string.uid) +
                 ":" +
                 survey.getEventUid();
@@ -72,7 +76,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         } else if (!visible.isEmpty()) {
             secondVisible = visible.get(0).getValueBySurvey(survey).getValue();
         }
-        nameText.setText(firstImportant + " " + secondImportant);
+        nameText.setText(asterisk + firstImportant + " " + secondImportant);
         phoneText.setText(firstVisible);
         programText.setText(secondVisible);
 

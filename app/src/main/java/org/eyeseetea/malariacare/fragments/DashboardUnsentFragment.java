@@ -26,7 +26,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -48,6 +47,7 @@ import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +63,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
+    private DashboardUnsentFragmentStrategy mDashboardUnsentFragmentStrategy;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
+        mDashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy();
     }
 
     @Override
@@ -214,8 +216,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
-                    new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
+            mDashboardUnsentFragmentStrategy.registerSurveyReceiver(getActivity(), surveyReceiver);
         }
     }
 
@@ -267,7 +268,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     /**
      * Inner private class that receives the result from the service
      */
-    private class SurveyReceiver extends BroadcastReceiver {
+    public class SurveyReceiver extends BroadcastReceiver {
         private SurveyReceiver() {
         }
 
@@ -284,21 +285,36 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 } finally {
                     Session.valuesLock.readLock().unlock();
                 }
-                reloadSurveys(surveysUnsentFromService);
-                LayoutUtils.setRowDivider(getListView());
-                // Measure the screen height
-                int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
+                reloadSurveysFromService(surveysUnsentFromService);
+            } else if(SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION.equals(intent.getAction())){
 
-                // Get the unsent list height, measured when reloading the surveys
-                int unsentHeight = LayoutUtils.getUnsentListHeight();
-
-                // Set the variable that establish the unsent list is shown or not
-                if (unsentHeight >= screenHeight) {
-                    Session.setFullOfUnsent(getActivity());
-                } else {
-                    Session.setNotFullOfUnsent(getActivity());
+                List<SurveyDB> surveysUnsentFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
+                            SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
                 }
+                reloadSurveysFromService(surveysUnsentFromService);
             }
+        }
+    }
+
+    private void reloadSurveysFromService(List<SurveyDB> surveysUnsentFromService) {
+        reloadSurveys(surveysUnsentFromService);
+        LayoutUtils.setRowDivider(getListView());
+        // Measure the screen height
+        int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
+
+        // Get the unsent list height, measured when reloading the surveys
+        int unsentHeight = LayoutUtils.getUnsentListHeight();
+
+        // Set the variable that establish the unsent list is shown or not
+        if (unsentHeight >= screenHeight) {
+            Session.setFullOfUnsent(getActivity());
+        } else {
+            Session.setNotFullOfUnsent(getActivity());
         }
     }
 

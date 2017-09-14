@@ -35,14 +35,10 @@ public class eReferralsAPIClient {
     private final int DEFAULT_TIMEOUT = 10000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
-        new eReferralsAPIClient(baseAddress, DEFAULT_TIMEOUT);
-    }
-
-    public eReferralsAPIClient(String baseAddress, int timeoutMillis) throws IllegalArgumentException {
         mBaseAddress = baseAddress;
         mContext = PreferencesState.getInstance().getContext();
 
-        initializeDependencies(timeoutMillis);
+        initializeDependencies(DEFAULT_TIMEOUT);
     }
 
     private void initializeDependencies(int timeoutMillis) {
@@ -66,7 +62,7 @@ public class eReferralsAPIClient {
         mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
     }
 
-    public void setTimeoutMillis(int timeoutMillis){
+    public void setTimeoutMillis(int timeoutMillis) {
         initializeDependencies(timeoutMillis);
     }
 

@@ -58,10 +58,14 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private String getAndroidInfo(Device device, AppInfo appInfo) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(device.getIMEI());
-        stringBuilder.append(", ");
-        stringBuilder.append(device.getPhone());
-        stringBuilder.append(", ");
+        if(device.getIMEI()!=null) {
+            stringBuilder.append(device.getIMEI());
+            stringBuilder.append(", ");
+        }
+        if(device.getPhone()!=null) {
+            stringBuilder.append(device.getPhone());
+            stringBuilder.append(", ");
+        }
         stringBuilder.append(appInfo.getAppVersion());
 
         return stringBuilder.toString();

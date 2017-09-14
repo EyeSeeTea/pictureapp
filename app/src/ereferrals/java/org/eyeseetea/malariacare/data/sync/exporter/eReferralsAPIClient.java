@@ -42,31 +42,27 @@ public class eReferralsAPIClient {
     }
 
     private void initializeDependencies(int timeoutMillis) {
-        try {
-            timeoutMillis += DEFAULT_TIMEOUT;
+        timeoutMillis += DEFAULT_TIMEOUT;
 
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            mOkHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor)
-                    .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
-                    .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
-                    .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
-                    .build();
+        mOkHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor)
+                .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
+                .build();
 
-            mRetrofit = new Retrofit.Builder()
-                    .baseUrl(mBaseAddress)
-                    .addConverterFactory(JacksonConverterFactory.create())
-                    .client(mOkHttpClient)
-                    .build();
+        mRetrofit = new Retrofit.Builder()
+                .baseUrl(mBaseAddress)
+                .addConverterFactory(JacksonConverterFactory.create())
+                .client(mOkHttpClient)
+                .build();
 
-            mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
     }
 
-    public void setTimeoutMillis(int timeoutMillis){
+    public void setTimeoutMillis(int timeoutMillis) {
         initializeDependencies(timeoutMillis);
     }
 

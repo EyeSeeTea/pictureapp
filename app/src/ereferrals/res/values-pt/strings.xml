@@ -122,7 +122,7 @@
     <string name="review_title">"Please check before"</string>
     <string name="review_subtitle">"transmission"</string>
     <string name="not_tested">"Not tested"</string>
-    <string name="system_defined">"System defined"</string>
+    <string name="system_defined">"Sistema definido"</string>
     <string name="no_data">"no data"</string>
     <string name="negative_test_review_title">"Negative"</string>
     <string name="dynamic_error_number">"Invalid number"</string>

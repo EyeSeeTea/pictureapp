@@ -39,9 +39,9 @@ public class OrganisationUnit {
         this.uid = required(uid,"UID is required");
         this.name = required(name,"Name is required");
         this.code = required(code,"Code is required");
-        this.description = required(description,"Description is required");
-        this.closedDate = closedDate;
         this.pin = required(pin,"Pin is required");
+        this.description = description;
+        this.closedDate = closedDate;
         mProgram = required(program,"Program is required");
     }
 

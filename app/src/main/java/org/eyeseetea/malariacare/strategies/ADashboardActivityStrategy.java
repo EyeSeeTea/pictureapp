@@ -210,6 +210,11 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public void onResume() {
+        DashboardHeaderStrategy.getInstance().onResume(mDashboardActivity);
+    }
+
+    public void onStop() {
+        DashboardHeaderStrategy.getInstance().onStop(mDashboardActivity);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

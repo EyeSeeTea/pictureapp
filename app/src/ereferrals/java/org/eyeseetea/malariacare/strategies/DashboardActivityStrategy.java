@@ -241,7 +241,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadFirstFragmentHeader() {
         mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
-        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
     }
 
     @Override

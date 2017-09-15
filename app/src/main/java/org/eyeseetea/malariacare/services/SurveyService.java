@@ -54,6 +54,11 @@ public class SurveyService extends IntentService {
     public static final String SERVICE_METHOD = "serviceMethod";
 
     /**
+     * Name of 'list unsent' action in ereferrals
+     */
+    public static final String ALL_UNSENT_AND_SENT_SURVEYS_ACTION =
+            "org.eyeseetea.malariacare.services.SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION";
+    /**
      * Name of 'list unsent' action
      */
     public static final String ALL_UNSENT_SURVEYS_ACTION =
@@ -132,6 +137,9 @@ public class SurveyService extends IntentService {
             case ALL_UNSENT_SURVEYS_ACTION:
                 getAllUnsentSurveys();
                 break;
+            case ALL_UNSENT_AND_SENT_SURVEYS_ACTION:
+                getAllUnsentAndSentSurveys();
+                break;
             case ALL_UNCOMPLETED_SURVEYS_ACTION:
                 getAllUncompletedSurveys();
                 break;
@@ -144,6 +152,25 @@ public class SurveyService extends IntentService {
         }
     }
 
+    private void getAllUnsentAndSentSurveys() {
+        Log.d(TAG, "getAllUnsentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
+//Select surveys from sql
+        getProgramUID(new Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
+                List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
+                surveyDBs.addAll(sentSurveyDBs);
+                //Since intents does NOT admit NON serializable as values we use Session instead
+                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, surveyDBs);
+
+                //Returning result to anyone listening
+                Intent resultIntent = new Intent(ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
+            }
+        });
+    }
+
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
         getProgramUID(new Callback() {
@@ -151,16 +178,22 @@ public class SurveyService extends IntentService {
             public void onSuccess(String uid) {
                 List<SurveyDB> unsentSurveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
                 List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
+                List<SurveyDB> allSurveyDBs = new ArrayList<SurveyDB>();
+                allSurveyDBs.addAll(unsentSurveyDBs);
+                allSurveyDBs.addAll(sentSurveyDBs);
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
                 Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
                 Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveyDBs);
+                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, allSurveyDBs);
 
                 //Returning result to anyone listening
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_UNSENT_SURVEYS_ACTION));
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_SENT_SURVEYS_ACTION));
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
+                        new Intent(ALL_UNSENT_AND_SENT_SURVEYS_ACTION));
             }
         });
     }

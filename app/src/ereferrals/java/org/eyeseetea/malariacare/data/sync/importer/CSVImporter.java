@@ -18,7 +18,10 @@ public class CSVImporter {
 
     private Retrofit mRetrofit;
     private CSVImporterRetrofit mCSVImporterRetrofit;
-    private final static String BASE_URL = "https://github.com/EyeSeeTea/EReferralsApp/";
+
+    private final static String BASE_URL =
+            "https://raw.githubusercontent"
+                    + ".com/EyeSeeTea/EReferralsApp/development/app/src/ereferrals/assets/";
 
     public CSVImporter() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

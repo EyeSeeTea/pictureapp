@@ -29,26 +29,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/refresh"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:gravity="left"
         android:textStyle="bold"
         android:padding="8dp"
         android:textColor="@color/text_first_color"
         android:textSize="?attr/font_medium"
-        app:font_name="@string/normal_font" />
-
-    <ImageView
-        android:id="@+id/refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/refresh_av"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        app:font_name="@string/bold_font" />
 
     <View
         android:layout_width="match_parent"

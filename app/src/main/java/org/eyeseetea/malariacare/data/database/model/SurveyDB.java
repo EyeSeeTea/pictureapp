@@ -338,7 +338,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
     }
-
     /**
      * Returns all the malaria surveys with status put to "Sent"
      */

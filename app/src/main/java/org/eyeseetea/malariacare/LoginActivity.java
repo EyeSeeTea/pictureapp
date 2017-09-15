@@ -326,6 +326,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onServerPinChanged() {
                 Log.d(TAG, "onServerPinChanged");
+                mLoginActivityStrategy.onBadCredentials();
             }
 
             @Override

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -445,6 +447,29 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     context.getString(R.string.phone_ownership_qc))) {
                 return !(value.getOptionDB().getCode().equals(
                         context.getString(R.string.no_phone_oc)));
+            }
+        }
+        return false;
+    }
+
+    public boolean onWebViewBackPressed(TabHost tabHost) {
+        View view = tabHost.getCurrentTabView();
+        if (openFragment != null && mDashboardActivity.isFragmentActive(openFragment,
+                R.id.dashboard_completed_container) && tabHost.getCurrentTab() == 1) {
+            if (openFragment.onBackPressed()) {
+                return true;
+            }
+        }
+        if (closeFragment != null && mDashboardActivity.isFragmentActive(closeFragment,
+                R.id.dashboard_stock_container) && tabHost.getCurrentTab() == 2) {
+            if (closeFragment.onBackPressed()) {
+                return true;
+            }
+        }
+        if (statusFragment != null && mDashboardActivity.isFragmentActive(statusFragment,
+                R.id.dashboard_av_container) && tabHost.getCurrentTab() == 3) {
+            if (statusFragment.onBackPressed()) {
+                return true;
             }
         }
         return false;

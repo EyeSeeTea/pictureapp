@@ -48,70 +48,80 @@ public class PushServiceStrategy extends APushServiceStrategy {
     @Override
     public void push() {
 
-        if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
-            PushServiceStrategy.this.onCorrectCredentials();
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+
+        Credentials credentials = credentialsLocalDataSource.getCredentials();
+
+        if (credentials != null) {
+            if (credentials.isDemoCredentials()) {
+                PushServiceStrategy.this.onCorrectCredentials();
+            } else {
+                IAuthenticationManager authenticationManager = new AuthenticationManager(
+                        PreferencesState.getInstance().getContext());
+                IMainExecutor mainExecutor = new UIThreadExecutor();
+                IAsyncExecutor asyncExecutor = new AsyncExecutor();
+
+                IOrganisationUnitRepository organisationDataSource =
+                        new OrganisationUnitRepository();
+                IInvalidLoginAttemptsRepository
+                        iInvalidLoginAttemptsRepository =
+                        new InvalidLoginAttemptsRepositoryLocalDataSource();
+                LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                        asyncExecutor, organisationDataSource, credentialsLocalDataSource,
+                        iInvalidLoginAttemptsRepository);
+                final Credentials oldCredentials =
+                        credentialsLocalDataSource.getOrganisationCredentials();
+                loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        Log.e(TAG, "onLoginSuccess");
+                        PushServiceStrategy.this.onCorrectCredentials();
+                    }
+
+                    @Override
+                    public void onServerURLNotValid() {
+                        Log.e(TAG, "Error getting user credentials: URL not valid ");
+                    }
+
+                    @Override
+                    public void onServerPinChanged() {
+                        Log.e(TAG, "Error onServerPinChanged");
+                        AlarmPushReceiver.cancelPushAlarm(mPushService);
+                        moveToLoginActivity();
+                    }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.e(TAG, "Error credentials not valid.");
+                        AlarmPushReceiver.cancelPushAlarm(mPushService);
+                        logout();
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        Log.e(TAG, "Error getting user credentials: NetworkError");
+                    }
+
+                    @Override
+                    public void onConfigJsonInvalid() {
+                        Log.e(TAG, "Error getting user credentials: JsonInvalid");
+                    }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.e(TAG, "Error getting user credentials: unexpectedError ");
+                    }
+
+                    @Override
+                    public void onMaxLoginAttemptsReachedError() {
+                        Log.e(TAG, "onMaxLoginAttemptsReachedError");
+                    }
+                });
+            }
         } else {
-            IAuthenticationManager authenticationManager = new AuthenticationManager(
-                    PreferencesState.getInstance().getContext());
-            IMainExecutor mainExecutor = new UIThreadExecutor();
-            IAsyncExecutor asyncExecutor = new AsyncExecutor();
-            ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
-            IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
-            IInvalidLoginAttemptsRepository
-                    iInvalidLoginAttemptsRepository =
-                    new InvalidLoginAttemptsRepositoryLocalDataSource();
-            LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                    asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
-                    iInvalidLoginAttemptsRepository);
-            final Credentials oldCredentials =
-                    credentialsLocalDataSoruce.getOrganisationCredentials();
-            loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
-                @Override
-                public void onLoginSuccess() {
-                    Log.e(TAG, "onLoginSuccess");
-                    PushServiceStrategy.this.onCorrectCredentials();
-                }
-
-                @Override
-                public void onServerURLNotValid() {
-                    Log.e(TAG, "Error getting user credentials: URL not valid ");
-                }
-
-                @Override
-                public void onServerPinChanged() {
-                    Log.e(TAG, "Error onServerPinChanged");
-                    AlarmPushReceiver.cancelPushAlarm(mPushService);
-                    moveToLoginActivity();
-                }
-
-                @Override
-                public void onInvalidCredentials() {
-                    Log.e(TAG, "Error credentials not valid.");
-                    AlarmPushReceiver.cancelPushAlarm(mPushService);
-                    logout();
-                }
-
-                @Override
-                public void onNetworkError() {
-                    Log.e(TAG, "Error getting user credentials: NetworkError");
-                }
-
-                @Override
-                public void onConfigJsonInvalid() {
-                    Log.e(TAG, "Error getting user credentials: JsonInvalid");
-                }
-
-                @Override
-                public void onUnexpectedError() {
-                    Log.e(TAG, "Error getting user credentials: unexpectedError ");
-                }
-
-                @Override
-                public void onMaxLoginAttemptsReachedError() {
-                    Log.e(TAG, "onMaxLoginAttemptsReachedError");
-                }
-            });
+            Log.w(TAG, "Push cancelled because does not exist user credentials, possible logout");
         }
+
     }
 
     protected void executeMockedPush() {

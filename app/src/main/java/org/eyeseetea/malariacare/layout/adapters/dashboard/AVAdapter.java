@@ -84,7 +84,7 @@ public class AVAdapter extends RecyclerView.Adapter {
                             VideoUtils.getVideoPreview(media.getResourcePath(), context));
                 }
             }
-            mediaViewHolder.filename.setOnClickListener(new ImageView.OnClickListener() {
+            mediaViewHolder.itemView.setOnClickListener(new ImageView.OnClickListener() {
                 public void onClick(View v)
                 {
                     if (mOnClickMediaListener != null) {
@@ -98,7 +98,7 @@ public class AVAdapter extends RecyclerView.Adapter {
             if (media.getName() != null) {
                 mediaViewHolder.fileName.setText(media.getName());
             }
-            ((View) mediaViewHolder.refresh.getParent()).setOnClickListener(
+            ((View) mediaViewHolder.itemView).setOnClickListener(
                     new ImageView.OnClickListener() {
                 public void onClick(View v)
                 {
@@ -131,12 +131,10 @@ public class AVAdapter extends RecyclerView.Adapter {
 
 
     public class ListItemMediaViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView refresh;
         private final CustomTextView fileName;
 
         public ListItemMediaViewHolder(View itemView) {
             super(itemView);
-            refresh = (ImageView) itemView.findViewById(R.id.refresh);
             fileName = (CustomTextView) itemView.findViewById(R.id.filename);
         }
     }

@@ -48,9 +48,9 @@ public class PushServiceStrategy extends APushServiceStrategy {
     @Override
     public void push() {
 
-        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
 
-        Credentials credentials = credentialsLocalDataSoruce.getCredentials();
+        Credentials credentials = credentialsLocalDataSource.getCredentials();
 
         if (credentials != null) {
             if (credentials.isDemoCredentials()) {
@@ -67,10 +67,10 @@ public class PushServiceStrategy extends APushServiceStrategy {
                         iInvalidLoginAttemptsRepository =
                         new InvalidLoginAttemptsRepositoryLocalDataSource();
                 LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                        asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
+                        asyncExecutor, organisationDataSource, credentialsLocalDataSource,
                         iInvalidLoginAttemptsRepository);
                 final Credentials oldCredentials =
-                        credentialsLocalDataSoruce.getOrganisationCredentials();
+                        credentialsLocalDataSource.getOrganisationCredentials();
                 loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
                     @Override
                     public void onLoginSuccess() {

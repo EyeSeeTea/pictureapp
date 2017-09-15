@@ -113,7 +113,14 @@ public class MetadataUpdater {
 
     private int getGithubCSVVersion() throws IOException {
         CSVImporter csvImporter = new CSVImporter();
-        return Integer.parseInt(csvImporter.getCSVVersion().replace("\n", ""));
+        String version = null;
+        try {
+            version = csvImporter.getCSVVersion().replace("\n", "");
+        } catch (Exception e) {
+            Log.e(TAG, "Can't download csv version: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return version == null || version.isEmpty() ? 0 : Integer.parseInt(version);
     }
 
     private void deleteDB() {

@@ -955,4 +955,24 @@
     <string name="common_option_ageYoungest_1_2Y">"1 - 2 Meses"</string>
     <string name="common_option_ageYoungest_2Y">"Acima de 2 Anos"</string>
     <string name="ipc_issueEntry_q_numberOfLivingChildren">"Número de filhos vivos"</string>
+    <string name="common_option_numberOfLivingChildren_1">1</string>
+    <string name="common_option_numberOfLivingChildren_2">2</string>
+    <string name="common_option_numberOfLivingChildren_3">3</string>
+    <string name="common_option_numberOfLivingChildren_4">4</string>
+    <string name="common_option_numberOfLivingChildren_5">5</string>
+    <string name="common_option_numberOfLivingChildren_6">6</string>
+    <string name="common_option_numberOfLivingChildren_7">7</string>
+    <string name="common_option_numberOfLivingChildren_8">8</string>
+    <string name="common_option_numberOfLivingChildren_9">9</string>
+    <string name="common_option_numberOfLivingChildren_10">10</string>
+    <string name="common_option_numberOfLivingChildren_11">11</string>
+    <string name="common_option_numberOfLivingChildren_12">12</string>
+    <string name="common_option_numberOfLivingChildren_13">13</string>
+    <string name="common_option_numberOfLivingChildren_14">14</string>
+    <string name="common_option_numberOfLivingChildren_15">15</string>
+    <string name="common_option_numberOfLivingChildren_16">16</string>
+    <string name="common_option_numberOfLivingChildren_17">17</string>
+    <string name="common_option_numberOfLivingChildren_18">18</string>
+    <string name="common_option_numberOfLivingChildren_19">19</string>
+    <string name="common_option_numberOfLivingChildren_20">20</string>
 </resources>

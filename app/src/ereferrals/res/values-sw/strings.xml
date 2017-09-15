@@ -831,9 +831,9 @@ Ameahidi kuhudhuria"</string>
     <string name="common_option_method_ma">"MA"</string>
     <string name="ipc_issueEntry_q_sourceOfInformation">"Source of information"</string>
     <string name="ipc_issueEntry_q_phoneContactConsent">"Phone contact consent"</string>
-    <string name="common_option_phoeContactConsent_no">"No"</string>
-    <string name="common_option_phoeContactConsent_yesp">"Yes - PSI"</string>
-    <string name="common_option_phoeContactConsent_yespp">"Yes - PSI &amp; Partner"</string>
+    <string name="common_option_phoneContactConsent_no">"No"</string>
+    <string name="common_option_phoneContactConsent_yesp">"Yes - PSI"</string>
+    <string name="common_option_phoneContactConsent_yespp">"Yes - PSI &amp; Partner"</string>
     <string name="ipc_issueEntry_q_isClientReferred">"Is client referred?"</string>
     <string name="common_option_isClientReferred_yes">"Yes"</string>
     <string name="common_option_isClientReferred_no">"No"</string>

@@ -19,3 +19,4 @@
 19;'patient_facility_code'
 20;'patient_household_delivery'
 21;'patient_address'
+22;'patient_age_youngest'

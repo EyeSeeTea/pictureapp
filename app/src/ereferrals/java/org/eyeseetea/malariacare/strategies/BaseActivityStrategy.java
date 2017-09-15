@@ -70,6 +70,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             } else {
                 Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
             }
+            DashboardActivity.dashboardActivity.refreshStatus();
         }
     };
 

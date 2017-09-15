@@ -21,7 +21,7 @@
         android:text="@string/review_title"
         android:textColor="@color/text_first_color"
         android:textSize="?attr/font_small"
-        app:font_name="@string/normal_font" />
+        app:font_name="@string/bold_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/answer_subtitle"

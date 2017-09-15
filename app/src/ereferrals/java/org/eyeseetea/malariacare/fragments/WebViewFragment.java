@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -60,6 +61,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
+        mWebView.setWebViewClient(new WebViewClient());
         loadUrlInWebView();
     }
 
@@ -73,7 +75,6 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     public void reloadData() {
         loadUrlInWebView();
     }
-
 
 
     @Override
@@ -131,7 +132,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void loadValidUrl() {
         if (mWebView != null) {
-            if(PreferencesState.getCredentialsFromPreferences().isDemoCredentials()){
+            if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
                         getString(R.string.demo_web)));
                 return;
@@ -155,5 +156,13 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     public void hideHeader() {
         DashboardHeaderStrategy.getInstance().hideHeader(getActivity());
+    }
+
+    public boolean onBackPressed() {
+        if (mWebView != null && mWebView.canGoBack()) {
+            mWebView.goBack();
+            return true;
+        }
+        return false;
     }
 }

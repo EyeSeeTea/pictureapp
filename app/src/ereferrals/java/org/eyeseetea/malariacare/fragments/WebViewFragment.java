@@ -77,7 +77,6 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     }
 
 
-
     @Override
     public void reloadHeader(Activity activity) {
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
@@ -133,7 +132,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void loadValidUrl() {
         if (mWebView != null) {
-            if(PreferencesState.getCredentialsFromPreferences().isDemoCredentials()){
+            if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
                         getString(R.string.demo_web)));
                 return;
@@ -160,7 +159,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     }
 
     public boolean onBackPressed() {
-        if (mWebView!=null && mWebView.canGoBack()) {
+        if (mWebView != null && mWebView.canGoBack()) {
             mWebView.goBack();
             return true;
         }

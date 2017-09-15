@@ -101,6 +101,7 @@ public class DashboardActivity extends BaseActivity {
     public boolean isInForeground() {
         return mIsInForegroundMode;
     }
+
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
         String dialogTitle = "", dialogMessage = "";
@@ -117,6 +118,7 @@ public class DashboardActivity extends BaseActivity {
                 .setNeutralButton(android.R.string.ok, null)
                 .create().show();
     }
+
     //Show dialog exception from class without activity.
     public static void closeUserFromService(final int title, final String errorMessage) {
         AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
@@ -325,12 +327,13 @@ public class DashboardActivity extends BaseActivity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(BuildConfig.translations) {
+        if (BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
     }
+
     @NonNull
     private FragmentTransaction getFragmentTransaction() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -417,10 +420,9 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isNewHistoricReceiptBalanceFragmentActive()) {
             closeReceiptBalanceFragment();
-        } else{
-
-            if(!mDashboardActivityStrategy.onWebViewBackPressed(tabHost)){
-            confirmExitApp();
+        } else {
+            if (!mDashboardActivityStrategy.onWebViewBackPressed(tabHost)) {
+                confirmExitApp();
             }
         }
     }
@@ -764,7 +766,7 @@ public class DashboardActivity extends BaseActivity {
         if (BuildConfig.multiuser) {
             try {
                 initNavigationController();
-            }catch (LoadingNavigationControllerException ex){
+            } catch (LoadingNavigationControllerException ex) {
                 ex.printStackTrace();
             }
         }
@@ -783,7 +785,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void initNavigationController() throws LoadingNavigationControllerException{
+    private void initNavigationController() throws LoadingNavigationControllerException {
         mDashboardActivityStrategy.initNavigationController();
     }
 
@@ -805,7 +807,8 @@ public class DashboardActivity extends BaseActivity {
 
     public void closeUser() {
         AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
-                PreferencesState.getInstance().getContext().getString(R.string.user_close), DashboardActivity.dashboardActivity);
+                PreferencesState.getInstance().getContext().getString(R.string.user_close),
+                DashboardActivity.dashboardActivity);
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
@@ -817,7 +820,7 @@ public class DashboardActivity extends BaseActivity {
             if (mLoggedUserDB != null) {
                 try {
                     mLoggedUserDB = ServerAPIController.pullUserAttributes(mLoggedUserDB);
-                }catch (ApiCallException e){
+                } catch (ApiCallException e) {
                     return null;
                 }
             }
@@ -836,7 +839,8 @@ public class DashboardActivity extends BaseActivity {
                             mLoggedUserDB.getAnnouncement(),
                             DashboardActivity.this);
                 } else {
-                    AnnouncementMessageDialog.checkUserClosed(mLoggedUserDB, DashboardActivity.this);
+                    AnnouncementMessageDialog.checkUserClosed(mLoggedUserDB,
+                            DashboardActivity.this);
                 }
             }
         }

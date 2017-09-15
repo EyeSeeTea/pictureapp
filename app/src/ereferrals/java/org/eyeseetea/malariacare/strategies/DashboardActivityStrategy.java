@@ -451,18 +451,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     public boolean onWebViewBackPressed(TabHost tabHost) {
-        View view= tabHost.getCurrentTabView();
-        if(openFragment!=null && mDashboardActivity.isFragmentActive(openFragment, R.id.dashboard_completed_container) && tabHost.getCurrentTab()==1){
-            if(openFragment.onBackPressed()){
+        View view = tabHost.getCurrentTabView();
+        if (openFragment != null && mDashboardActivity.isFragmentActive(openFragment,
+                R.id.dashboard_completed_container) && tabHost.getCurrentTab() == 1) {
+            if (openFragment.onBackPressed()) {
                 return true;
             }
         }
-        if(closeFragment != null && mDashboardActivity.isFragmentActive(closeFragment, R.id.dashboard_stock_container) && tabHost.getCurrentTab()==2) {
+        if (closeFragment != null && mDashboardActivity.isFragmentActive(closeFragment,
+                R.id.dashboard_stock_container) && tabHost.getCurrentTab() == 2) {
             if (closeFragment.onBackPressed()) {
                 return true;
             }
         }
-        if(statusFragment != null && mDashboardActivity.isFragmentActive(statusFragment, R.id.dashboard_av_container) && tabHost.getCurrentTab()==3) {
+        if (statusFragment != null && mDashboardActivity.isFragmentActive(statusFragment,
+                R.id.dashboard_av_container) && tabHost.getCurrentTab() == 3) {
             if (statusFragment.onBackPressed()) {
                 return true;
             }

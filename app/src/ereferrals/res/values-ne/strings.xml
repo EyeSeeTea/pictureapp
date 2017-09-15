@@ -306,7 +306,7 @@
 
     <!-- # Children -->
     <!-- Fuzzy -->
-    <string name="ipc_issueEntry_q_numberOfChildren">"# Children"</string>
+    <string name="ipc_issueEntry_q_numberOfChildren">"बच्चाहरूको संख्या"</string>
 
     <!-- Current method -->
     <!-- Fuzzy -->
@@ -948,4 +948,10 @@
     <string name="common_option_householdDelivery_yes">yes</string>
     <string name="common_option_householdDelivery_no">no</string>
     <string name="ipc_issueEntry_q_address">Address</string>
+    <string name="ipc_issueEntry_q_ageYoungest">"सबैभन्दा सानो बच्चाको उमेर"</string>
+    <string name="common_option_ageYoungest_0_6M">"0 - 6 महिना"</string>
+    <string name="common_option_ageYoungest_6_12M">"6 - 12 महिना"</string>
+    <string name="common_option_ageYoungest_1_2Y">"1 - 2 महिना"</string>
+    <string name="common_option_ageYoungest_2Y">"माथि 2 वर्ष"</string>
+    <string name="ipc_issueEntry_q_numberOfLivingChildren">जीवित बच्चाहरु को संख्या</string>
 </resources>

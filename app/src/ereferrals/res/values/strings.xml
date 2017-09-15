@@ -307,7 +307,7 @@
 
     <!-- # Children -->
     <!-- Fuzzy -->
-    <string name="ipc_issueEntry_q_numberOfChildren">"# Children"</string>
+    <string name="ipc_issueEntry_q_numberOfChildren">"Number of children"</string>
 
     <!-- Current method -->
     <!-- Fuzzy -->
@@ -953,4 +953,5 @@
     <string name="common_option_ageYoungest_6_12M">"6 - 12 Months"</string>
     <string name="common_option_ageYoungest_1_2Y">"1 - 2 Years"</string>
     <string name="common_option_ageYoungest_2Y">"Above 2 Years"</string>
+    <string name="ipc_issueEntry_q_numberOfLivingChildren">Number of living children</string>
 </resources>

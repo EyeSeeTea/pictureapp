@@ -286,7 +286,7 @@
     <string name="ipc_issueEntry_q_yearOfBirth">"Mwaka wa kuzaliwa"</string>
 
     <!-- # Children -->
-    <string name="ipc_issueEntry_q_numberOfChildren">"# Idadi ya Watoto"</string>
+    <string name="ipc_issueEntry_q_numberOfChildren">"Idadi ya watoto"</string>
 
     <!-- Current method -->
     <string name="ipc_issueEntry_q_currentMethod">"Njia anayotumia sasa"</string>
@@ -846,4 +846,10 @@ Ameahidi kuhudhuria"</string>
     <string name="common_option_householdDelivery_yes">yes</string>
     <string name="common_option_householdDelivery_no">no</string>
     <string name="ipc_issueEntry_q_address">Address</string>
+    <string name="ipc_issueEntry_q_ageYoungest">"Umri wa mtoto mdogo zaidi"</string>
+    <string name="common_option_ageYoungest_0_6M">"Miezi 0 - 6"</string>
+    <string name="common_option_ageYoungest_6_12M">"Miezi 6 - 12"</string>
+    <string name="common_option_ageYoungest_1_2Y">"Miaka 1 - 2"</string>
+    <string name="common_option_ageYoungest_2Y">"Zaidi ya Miaka 2"</string>
+    <string name="ipc_issueEntry_q_numberOfLivingChildren">"Idadi ya watoto wanaoishi"</string>
 </resources>

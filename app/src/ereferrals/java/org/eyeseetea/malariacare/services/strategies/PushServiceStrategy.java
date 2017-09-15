@@ -80,12 +80,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 @Override
                 public void onServerPinChanged() {
                     Log.e(TAG, "Error onServerPinChanged");
+                    AlarmPushReceiver.cancelPushAlarm(mPushService);
                     moveToLoginActivity();
                 }
 
                 @Override
                 public void onInvalidCredentials() {
                     Log.e(TAG, "Error credentials not valid.");
+                    AlarmPushReceiver.cancelPushAlarm(mPushService);
                     logout();
                 }
 
@@ -140,7 +142,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
         LogoutUseCase logoutUseCase;
         authenticationManager = new AuthenticationManager(mPushService);
         logoutUseCase = new LogoutUseCase(authenticationManager);
-        AlarmPushReceiver.cancelPushAlarm(mPushService);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

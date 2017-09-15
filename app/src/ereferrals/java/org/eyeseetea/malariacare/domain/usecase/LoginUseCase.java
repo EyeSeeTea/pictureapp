@@ -179,12 +179,28 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
     private void notifyOnServerPinChanged() {
 
+        InvalidLoginAttempts invalidLoginAttempts =
+                mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+
+        try {
+            invalidLoginAttempts.addFailedAttempts();
+        } catch (ActionNotAllowed actionNotAllowed) {
+            actionNotAllowed.printStackTrace();
+            notifyMaxLoginAttemptsReached();
+        }
+
+        mInvalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
+
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
                 mCallback.onServerPinChanged();
             }
         });
+
+        if (!invalidLoginAttempts.isLoginEnabled()) {
+            notifyMaxLoginAttemptsReached();
+        }
     }
 
     public void notifyLoginSuccess() {

@@ -45,7 +45,7 @@
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
                 android:textStyle="bold"
-                app:font_name="@string/normal_font" />
+                app:font_name="@string/bold_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/important_visible_text"
@@ -58,7 +58,7 @@
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
                 android:textStyle="bold"
-                app:font_name="@string/normal_font" />
+                app:font_name="@string/bold_font" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/survey_uid"
@@ -71,7 +71,7 @@
                 android:textColor="@color/text_first_color"
                 android:textSize="?attr/font_small"
                 android:textStyle="bold"
-                app:font_name="@string/normal_font" />
+                app:font_name="@string/bold_font" />
 
 
         </LinearLayout>

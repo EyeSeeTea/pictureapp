@@ -8,8 +8,8 @@ public class Device {
     private String androidVersion;
 
     public Device(String phone, String IMEI, String androidVersion) {
-        this.phone = required(phone, "phone is required");
-        this.IMEI = required(IMEI, "IMEI is required");
+        this.phone = phone;
+        this.IMEI = IMEI;
         this.androidVersion = required(androidVersion, "androidVersion is required");
     }
 

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -33,7 +34,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         if(survey.isCompleted()){
             asterisk="*";
         }
-        String uid = mContext.getString(R.string.uid) +
+        String uid = mContext.getString(R.string.voucher) +
                 ":" +
                 survey.getEventUid();
         String firstImportant = "", secondImportant = "", firstVisible = "", secondVisible = "";
@@ -72,9 +73,17 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         }
         if (visible.size() > 1) {
             firstVisible = visible.get(0).getValueBySurvey(survey).getValue();
-            secondVisible = visible.get(1).getValueBySurvey(survey).getValue();
+            OptionDB optionSelected = OptionDB.findByCode(visible.get(1).getValueBySurvey(
+                    survey).getValue());
+            secondVisible = optionSelected != null ? optionSelected.getInternationalizedName() :
+                    visible.get(1).getValueBySurvey(
+                            survey).getValue();
         } else if (!visible.isEmpty()) {
-            secondVisible = visible.get(0).getValueBySurvey(survey).getValue();
+            OptionDB optionSelected = OptionDB.findByCode(visible.get(0).getValueBySurvey(
+                    survey).getValue());
+            secondVisible = optionSelected != null ? optionSelected.getInternationalizedName() :
+                    visible.get(0).getValueBySurvey(
+                            survey).getValue();
         }
         nameText.setText(asterisk + firstImportant + " " + secondImportant);
         phoneText.setText(firstVisible);

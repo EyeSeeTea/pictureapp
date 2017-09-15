@@ -176,6 +176,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             malariaSurvey.setEventUid(String.valueOf(uidGenerator.generateUID()));
             malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
             malariaSurvey.save();
+            showEndSurveyMessage(malariaSurvey);
         }
     }
 
@@ -431,7 +432,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         }
     }
 
-    @Override
     public void showEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !hasPhone(surveyDB)) {
             mDashboardActivity.showException("", String.format(

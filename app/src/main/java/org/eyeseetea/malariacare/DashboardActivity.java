@@ -506,7 +506,6 @@ public class DashboardActivity extends BaseActivity {
         } else {
             showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
-            mDashboardActivityStrategy.showEndSurveyMessage(lastSurvey);
         }
     }
 

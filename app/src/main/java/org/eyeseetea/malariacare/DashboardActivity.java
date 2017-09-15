@@ -417,8 +417,11 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isNewHistoricReceiptBalanceFragmentActive()) {
             closeReceiptBalanceFragment();
-        } else {
+        } else{
+
+            if(!mDashboardActivityStrategy.onWebViewBackPressed(tabHost)){
             confirmExitApp();
+            }
         }
     }
 
@@ -632,7 +635,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Checks if a dashboardUnsentFragment is active
      */
-    private boolean isFragmentActive(Fragment fragment, int layout) {
+    public boolean isFragmentActive(Fragment fragment, int layout) {
         Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
         if (currentFragment != null && currentFragment.equals(fragment)) {
             return true;

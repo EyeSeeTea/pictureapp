@@ -4,9 +4,9 @@
 4;'motherName';'ipc_issueEntry_q_motherName';;'ipc_issueEntry_q_motherName';'fake_uid_mn';5;0;0;1;4;0;4;1;0;;1
 5;'birthDistrict';'ipc_issueEntry_q_birthDistrict';;'ipc_issueEntry_q_birthDistrict';'fake_uid_bd';6;0;0;1;5;0;4;1;0;;1
 6;'yearOfBirth';'ipc_issueEntry_q_yearOfBirth';;'ipc_issueEntry_q_yearOfBirth';'fake_uid_yob';7;0;0;1;6;0;30;1;0;;1
-7;'currentMethod';'ipc_issueEntry_q_currentMethod';;'ipc_issueEntry_q_currentMethod';'fake_uid_cm';8;0;0;1;8;0;19;1;0;;1
-8;'channelOfReferral';'ipc_issueEntry_q_channelOfReferral';;'ipc_issueEntry_q_channelOfReferral';'fake_uid_cor';9;0;0;1;9;0;19;1;0;;1
-9;'civilStatus';'ipc_issueEntry_q_civilStatus';;'ipc_issueEntry_q_civilStatus';'fake_uid_cs';10;0;0;1;10;0;19;1;0;;1
+7;'currentMethod';'ipc_issueEntry_q_currentMethod';;'ipc_issueEntry_q_currentMethod';'fake_uid_cm';9;0;0;1;9;0;19;1;0;;1
+8;'channelOfReferral';'ipc_issueEntry_q_channelOfReferral';;'ipc_issueEntry_q_channelOfReferral';'fake_uid_cor';10;0;0;1;9;0;19;1;0;;1
+9;'civilStatus';'ipc_issueEntry_q_civilStatus';;'ipc_issueEntry_q_civilStatus';'fake_uid_cs';8;0;0;1;10;0;19;1;0;;1
 10;'phoneOwnership';'ipc_issueEntry_q_ownershipOfPhone';;'ipc_issueEntry_q_ownershipOfPhone';'fake_uid_oop';11;0;0;1;11;0;19;1;0;;1
 11;'phoneNumber';'ipc_issueEntry_q_phoneNumber';;'ipc_issueEntry_q_phoneNumber';'fake_uid_pn';12;0;0;1;12;0;13;1;1;;1
 12;'phoneContactConsent';'ipc_issueEntry_q_phoneContactConsent';;'ipc_issueEntry_q_phoneContactConsent';'fake_uid_fcc';13;0;0;1;16;0;19;1;0;;1

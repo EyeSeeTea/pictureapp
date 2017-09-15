@@ -161,7 +161,7 @@
     <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
     <string name="error_exporting_data">"Error metadata could not be exported."</string>
     <string name="google_play_required">This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.</string>
-    <string name="uid">UID</string>
+    <string name="voucher">"Voucher"</string>
     <string name="forgot_password">I forgot my password</string>
     <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
@@ -782,7 +782,7 @@
     <string name="provider_findVoucher_q_gender">"Gender"</string>
     <string name="common_option_gender_male">"Male"</string>
     <string name="common_option_gender_female">"Female"</string>
-    <string name="common_option_gender_t">"T"</string>
+    <string name="common_option_gender_t">"Transgender"</string>
     <string name="common_option_language_english">"English"</string>
     <string name="common_option_language_swahili">"Swahili"</string>
     <string name="common_option_program_familyPlanning">"Family Planning"</string>

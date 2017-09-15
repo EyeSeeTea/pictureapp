@@ -84,7 +84,9 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                dateText.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+                String date=year + "-" + monthOfYear + "-" + dayOfMonth;
+                dateText.setText(date);
+                notifyAnswerChanged(date);
             }
         });
         dateText.setOnClickListener(new View.OnClickListener() {

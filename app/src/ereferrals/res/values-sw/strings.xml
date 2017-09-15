@@ -286,7 +286,7 @@
     <string name="ipc_issueEntry_q_yearOfBirth">"Mwaka wa kuzaliwa"</string>
 
     <!-- # Children -->
-    <string name="ipc_issueEntry_q_numberOfChildren">"# Idadi ya Watoto"</string>
+    <string name="ipc_issueEntry_q_numberOfChildren">"Idadi ya watoto"</string>
 
     <!-- Current method -->
     <string name="ipc_issueEntry_q_currentMethod">"Njia anayotumia sasa"</string>
@@ -825,4 +825,31 @@ Ameahidi kuhudhuria"</string>
     <string name="give_voucher">"Please give this voucher number to the client: %s"</string>
     <string name="voucher_id_changed">"Nambari ya Voucher %1$s imebadilishwa hadi %2$s"</string>
 
+    <string name="common_option_method_icud">"ICUD"</string>
+    <string name="common_option_method_ppiud">"PPUID"</string>
+    <string name="common_option_method_depo">"Depo"</string>
+    <string name="common_option_method_ma">"MA"</string>
+    <string name="ipc_issueEntry_q_sourceOfInformation">"Source of information"</string>
+    <string name="ipc_issueEntry_q_phoneContactConsent">"Phone contact consent"</string>
+    <string name="common_option_phoneContactConsent_no">"No"</string>
+    <string name="common_option_phoneContactConsent_yesp">"Yes - PSI"</string>
+    <string name="common_option_phoneContactConsent_yespp">"Yes - PSI &amp; Partner"</string>
+    <string name="ipc_issueEntry_q_isClientReferred">"Is client referred?"</string>
+    <string name="common_option_isClientReferred_yes">"Yes"</string>
+    <string name="common_option_isClientReferred_no">"No"</string>
+    <string name="ipc_issueEntry_q_serviceDate">"Service date"</string>
+    <string name="ipc_issueEntry_q_serviceDesired">"Service desired"</string>
+    <string name="ipc_issueEntry_q_healthFacilityCode">"Health facility code"</string>
+    <string name="nepal_program">Nepal</string>
+    <string name="mozambique_program">Mozambique</string>
+    <string name="ipc_issueEntry_q_householdDelivery">Household delivery</string>
+    <string name="common_option_householdDelivery_yes">yes</string>
+    <string name="common_option_householdDelivery_no">no</string>
+    <string name="ipc_issueEntry_q_address">Address</string>
+    <string name="ipc_issueEntry_q_ageYoungest">"Umri wa mtoto mdogo zaidi"</string>
+    <string name="common_option_ageYoungest_0_6M">"Miezi 0 - 6"</string>
+    <string name="common_option_ageYoungest_6_12M">"Miezi 6 - 12"</string>
+    <string name="common_option_ageYoungest_1_2Y">"Miaka 1 - 2"</string>
+    <string name="common_option_ageYoungest_2Y">"Zaidi ya Miaka 2"</string>
+    <string name="ipc_issueEntry_q_numberOfLivingChildren">"Idadi ya watoto wanaoishi"</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- TERMS FROM EYESEETEA -->
-    <string name="malaria_case_based_reporting">"Connect"</string>
+    <string name="malaria_case_based_reporting">"eReferrals"</string>
     <string name="volunteer_label">"IPC:"</string>
     <string name="open_tab_title">"OPEN"</string>
     <string name="closed_tab_title">"CLOSED"</string>
@@ -122,7 +122,7 @@
     <string name="review_title">"Please check before"</string>
     <string name="review_subtitle">"transmission"</string>
     <string name="not_tested">"Not tested"</string>
-    <string name="system_defined">"System defined"</string>
+    <string name="system_defined">"Sistema definido"</string>
     <string name="no_data">"no data"</string>
     <string name="negative_test_review_title">"Negative"</string>
     <string name="dynamic_error_number">"Invalid number"</string>
@@ -161,7 +161,7 @@
     <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
     <string name="error_exporting_data">"Error metadata could not be exported."</string>
     <string name="google_play_required">This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app.</string>
-    <string name="voucher">"Voucher"</string>
+    <string name="uid">UID</string>
     <string name="forgot_password">I forgot my password</string>
     <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
@@ -307,7 +307,7 @@
 
     <!-- # Children -->
     <!-- Fuzzy -->
-    <string name="ipc_issueEntry_q_numberOfChildren">"Number of children"</string>
+    <string name="ipc_issueEntry_q_numberOfChildren">"Número de crianças"</string>
 
     <!-- Current method -->
     <!-- Fuzzy -->
@@ -782,7 +782,7 @@
     <string name="provider_findVoucher_q_gender">"Gender"</string>
     <string name="common_option_gender_male">"Male"</string>
     <string name="common_option_gender_female">"Female"</string>
-    <string name="common_option_gender_t">"Transgender"</string>
+    <string name="common_option_gender_t">"T"</string>
     <string name="common_option_language_english">"English"</string>
     <string name="common_option_language_swahili">"Swahili"</string>
     <string name="common_option_program_familyPlanning">"Family Planning"</string>
@@ -912,6 +912,7 @@
     <string name="ipc_msg_retrievingCompletedReferrals">"Retrieving Completed Referrals..."</string>
     <string name="provider_msg_retrievingRedeemedReferrals">"Retrieving Redeemed Referrrals..."</string>
     <string name="provider_msg_retrievingSearchedReferrals">"Retrieving Referrals..."</string>
+    <string name="action_bar_connect">Connect</string>
     <string name="action_bar_online">Online</string>
     <string name="action_bar_offline">Offline</string>
     <string name="unsent_dashboard_header_offline">You are offline - client will not receive her voucher until you connect to the internet and data is sent.</string>
@@ -948,10 +949,10 @@
     <string name="common_option_householdDelivery_yes">yes</string>
     <string name="common_option_householdDelivery_no">no</string>
     <string name="ipc_issueEntry_q_address">Address</string>
-    <string name="ipc_issueEntry_q_ageYoungest">Age of youngest child</string>
-    <string name="common_option_ageYoungest_0_6M">"0 - 6 Months"</string>
-    <string name="common_option_ageYoungest_6_12M">"6 - 12 Months"</string>
-    <string name="common_option_ageYoungest_1_2Y">"1 - 2 Years"</string>
-    <string name="common_option_ageYoungest_2Y">"Above 2 Years"</string>
-    <string name="ipc_issueEntry_q_numberOfLivingChildren">Number of living children</string>
+    <string name="ipc_issueEntry_q_ageYoungest">Número de filhos vivos"</string>
+    <string name="common_option_ageYoungest_0_6M">"0 - 6 Meses"</string>
+    <string name="common_option_ageYoungest_6_12M">"6 - 12 Meses"</string>
+    <string name="common_option_ageYoungest_1_2Y">"1 - 2 Meses"</string>
+    <string name="common_option_ageYoungest_2Y">"Acima de 2 Anos"</string>
+    <string name="ipc_issueEntry_q_numberOfLivingChildren">"Número de filhos vivos"</string>
 </resources>

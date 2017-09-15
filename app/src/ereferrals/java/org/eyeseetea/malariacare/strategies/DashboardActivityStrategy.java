@@ -169,7 +169,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void sendSurvey() {
         SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
         malariaSurvey.updateSurveyStatus();
-        if (malariaSurvey.isCompleted()) {
+        if (malariaSurvey.isCompleted() && malariaSurvey.getEventUid() == null) {
             UIDGenerator uidGenerator = new UIDGenerator();
             malariaSurvey.setEventUid(String.valueOf(uidGenerator.generateUID()));
             malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));

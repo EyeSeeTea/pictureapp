@@ -373,6 +373,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 } else {
                     Log.e(this.getClass().getSimpleName(), ex.getMessage());
                 }
+                avFragment.showProgress(false);
             }
 
             @Override
@@ -382,6 +383,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 if (syncedFiles > 0) {
                     showToast(String.format("%d files synced", syncedFiles));
                 }
+                avFragment.showProgress(false);
             }
 
             @Override

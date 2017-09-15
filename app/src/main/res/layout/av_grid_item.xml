@@ -30,19 +30,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/refresh"
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="?attr/font_small"
                 app:font_name="@string/normal_font" />
-
-            <ImageView
-                android:id="@+id/refresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/refresh_av" />
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

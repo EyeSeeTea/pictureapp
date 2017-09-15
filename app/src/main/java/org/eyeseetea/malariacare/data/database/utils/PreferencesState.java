@@ -98,6 +98,13 @@ public class PreferencesState {
         String username = sharedPreferences.getString(context.getString(R.string.dhis_user), "");
         String password = sharedPreferences.getString(context.getString(R.string.dhis_password),
                 "");
+
+        if (url == null || url.isEmpty() ||
+                username == null || username.isEmpty() ||
+                password == null || password.isEmpty()) {
+            return null;
+        }
+
         Credentials credentials = new Credentials(url, username, password);
 
         return credentials;

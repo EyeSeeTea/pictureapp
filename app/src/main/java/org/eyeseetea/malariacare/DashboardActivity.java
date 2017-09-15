@@ -58,6 +58,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
@@ -791,6 +792,7 @@ public class DashboardActivity extends BaseActivity {
     public void executeLogout() {
         IAuthenticationManager iAuthenticationManager = new AuthenticationManager(this);
         LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        AlarmPushReceiver.cancelPushAlarm(this);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

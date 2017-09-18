@@ -12,11 +12,13 @@ import android.preference.PreferenceScreen;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
@@ -67,6 +69,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         settingsActivity.getResources().getString(R.string.pref_cat_server));
         preferenceCategory.removePreference(preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.org_unit)));
+        if (!PreferencesState.getInstance().isDevelopOptionActive()
+                || !BuildConfig.developerOptions) {
+            preferenceCategory.removePreference(preferenceScreen.findPreference(
+                    settingsActivity.getResources().getString(R.string.drive_key)));
+        }
     }
 
     @Override
@@ -85,7 +92,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        if (key.equals(
+                PreferencesState.getInstance().getContext().getString(R.string.developer_option))) {
+            settingsActivity.restartActivity();
+        }
     }
 
     @Override

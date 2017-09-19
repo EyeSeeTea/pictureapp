@@ -42,10 +42,10 @@
 42;'common_option_isClientReferred_no';'NO';0;17;7
 43;'common_option_householdDelivery_yes';'YES';0;20;7
 44;'common_option_householdDelivery_no';'NO';0;20;7
-45;'common_option_ageYoungest_0-6M';'0-6M';0;22;7
-46;'common_option_ageYoungest_6-12M';'6-12M';0;22;7
-47;'common_option_ageYoungest_0-6M';'1-2Y';0;22;7
-48;'common_option_ageYoungest_0-6M';'2+Y';0;22;7
+45;'common_option_ageYoungest_0_6M';'0-6M';0;22;7
+46;'common_option_ageYoungest_6_12M';'6-12M';0;22;7
+47;'common_option_ageYoungest_1_2Y';'1-2Y';0;22;7
+48;'common_option_ageYoungest_2Y';'2+Y';0;22;7
 49;'common_option_numberOfLivingChildren_0';0;0;7;7
 50;'common_option_numberOfLivingChildren_1';1;0;7;7
 51;'common_option_numberOfLivingChildren_2';2;0;7;7

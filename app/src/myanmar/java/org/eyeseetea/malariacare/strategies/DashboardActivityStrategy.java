@@ -7,8 +7,8 @@ import android.app.FragmentTransaction;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
@@ -73,31 +73,32 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
-        Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
+        ProgramDB myanmarProgram = ProgramDB.findByUID(activity.getString(R.string.malariaProgramUID));
+        ProgramDB stockProgram = ProgramDB.findByUID(activity.getString(R.string.stockProgramUID));
         // Put new survey in session
-        Survey survey = new Survey(null, myanmarProgram, Session.getUser());
+        SurveyDB survey = new SurveyDB(null, myanmarProgram, Session.getUserDB());
         survey.save();
-        Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(),
+        Session.setMalariaSurveyDB(survey);
+        SurveyDB stockSurvey = new SurveyDB(null, stockProgram, Session.getUserDB(),
                 Constants.SURVEY_ISSUE);
         stockSurvey.setEventDate(
                 survey.getEventDate());//asociate the malaria survey to the stock survey
         stockSurvey.save();
-        Session.setStockSurvey(stockSurvey);
+        Session.setStockSurveyDB(stockSurvey);
         prepareLocationListener(activity, survey);
+        mDashboardActivity.initSurvey();
     }
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
-        Survey stockSurvey = Session.getStockSurvey();
+        Session.getMalariaSurveyDB().updateSurveyStatus();
+        SurveyDB stockSurvey = Session.getStockSurveyDB();
         if (stockSurvey != null) {
-            Session.getStockSurvey().complete();
+            Session.getStockSurveyDB().complete();
             Date eventDate = new Date();
-            saveEventDate(Session.getMalariaSurvey(), eventDate);
-            saveEventDate(Session.getStockSurvey(), eventDate);
-            new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+            saveEventDate(Session.getMalariaSurveyDB(), eventDate);
+            saveEventDate(Session.getStockSurveyDB(), eventDate);
+            new CompletionSurveyUseCase().execute(Session.getMalariaSurveyDB().getId_survey());
         }
     }
 
@@ -105,27 +106,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void completeSurvey() {
         Date eventDate = new Date();
         //Complete malariaSurvey
-        Survey survey = Session.getMalariaSurvey();
+        SurveyDB survey = Session.getMalariaSurveyDB();
         saveEventDate(survey, eventDate);
         survey.updateSurveyStatus();
         //Complete stockSurvey
-        survey = Session.getStockSurvey();
+        survey = Session.getStockSurveyDB();
         saveEventDate(survey, eventDate);
         survey.complete();
     }
 
     //The eventDate is used to identify the stock survey for each malaria survey
     //and in quarantine to set the endDate in api queries.
-    private void saveEventDate(Survey survey, Date eventDate) {
+    private void saveEventDate(SurveyDB survey, Date eventDate) {
         survey.setEventDate(eventDate);
         survey.save();
     }
 
     @Override
     public boolean beforeExit(boolean isBackPressed) {
-        Survey malariaSurvey = Session.getMalariaSurvey();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
         boolean isMalariaBackPressed = beforeExitSurvey(isBackPressed, malariaSurvey);
-        Survey stockSurvey = Session.getStockSurvey();
+        SurveyDB stockSurvey = Session.getStockSurveyDB();
         boolean isStockBackPressed = beforeExitSurvey(isBackPressed, stockSurvey);
         if (!isMalariaBackPressed || !isStockBackPressed) {
             return false;
@@ -133,7 +134,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         return isBackPressed;
     }
 
-    private boolean beforeExitSurvey(boolean isBackPressed, Survey survey) {
+    private boolean beforeExitSurvey(boolean isBackPressed, SurveyDB survey) {
         if (survey != null) {
             boolean isInProgress = survey.isInProgress();
             survey.getValuesFromDB();

@@ -7,14 +7,8 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/dashboard_row_padding"
     android:paddingRight="@dimen/dashboard_row_padding"
-    android:paddingTop="@dimen/dashboard_row_padding">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:layout_marginLeft="@dimen/top_separator_line"
-        android:layout_marginRight="@dimen/top_separator_line"
-        android:background="@drawable/top_border" />
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -31,7 +25,6 @@
             android:layout_marginRight="@dimen/top_separator_line"
             android:gravity="top"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/top_separator_line"
             android:paddingRight="@dimen/top_separator_line">
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
@@ -39,16 +32,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
-                android:layout_marginLeft="@dimen/top_separator_line"
                 android:layout_marginRight="@dimen/top_separator_line"
                 android:gravity="left|top"
-                android:text="@string/new_case_title"
+                android:text="@string/new_survey_title"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/question_header_title"
-                android:textSize="?attr/font_medium"
-                app:font_name="@string/condensed_font_name" />
-
-            <include layout="@layout/vertical_divisor_view" />
+                android:textColor="@color/text_first_color"
+                android:textSize="?attr/font_small"
+                app:font_name="@string/bold_font" />
 
         </LinearLayout>
 
@@ -61,8 +51,8 @@
             android:gravity="right|top"
             android:paddingRight="@dimen/top_separator_line"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/question_header_subtitle"
+            android:textColor="@color/text_first_color"
             android:textSize="?attr/font_small"
-            app:font_name="@string/condensed_font_name" />
+            app:font_name="@string/normal_font" />
     </LinearLayout>
 </LinearLayout>

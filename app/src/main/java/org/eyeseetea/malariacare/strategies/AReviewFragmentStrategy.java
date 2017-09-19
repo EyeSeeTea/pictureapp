@@ -1,24 +1,29 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
-import android.widget.TableRow;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 
-import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.domain.entity.Value;
-
-import java.util.List;
 
 public abstract class AReviewFragmentStrategy {
 
-    public abstract TableRow createViewRow(TableRow rowView, Value value);
+    public void initListView(LayoutInflater lInflater, IDashboardAdapter adapter,
+            ListView listView) {
+        //inflate headers
+        View header = lInflater.inflate(adapter.getHeaderLayout(), null, false);
+        View subHeader = lInflater.inflate(
+                ((ReviewScreenAdapter) adapter).getSubHeaderLayout(), null, false);
 
-    public static boolean shouldShowReviewScreen() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
-    }
+        //set headers and list in the listview
+        listView.addHeaderView(header);
+        listView.addHeaderView(subHeader);
+        listView.setAdapter((BaseAdapter) adapter);
 
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        return values;
+        //remove spaces between rows in the listview
+        listView.setDividerHeight(0);
     }
 }

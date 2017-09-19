@@ -98,9 +98,28 @@ public class PreferencesState {
         String username = sharedPreferences.getString(context.getString(R.string.dhis_user), "");
         String password = sharedPreferences.getString(context.getString(R.string.dhis_password),
                 "");
+
+        if (url == null || url.isEmpty() ||
+                username == null || username.isEmpty() ||
+                password == null || password.isEmpty()) {
+            return null;
+        }
+
         Credentials credentials = new Credentials(url, username, password);
 
         return credentials;
+    }
+
+    /**
+     * Get credentials from sharedPreferences.
+     */
+    public static String getDriveRootFolderUid() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        String value = sharedPreferences.getString(context.getString(R.string.drive_key), context.getString(R.string.default_drive_folder));
+
+        return value;
     }
 
     public void init(Context context) {
@@ -252,6 +271,13 @@ public class PreferencesState {
         prefEditor.commit(); // finally save changes
     }
 
+    public String getPreference() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getString(
+                instance.getContext().getString(R.string.data_limited_by_date), "");
+    }
+
     public String getDataLimitedByDate() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
@@ -357,6 +383,21 @@ public class PreferencesState {
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(context.getResources().getString(R.string.push_in_progress), inProgress);
+        editor.commit();
+    }
+
+    public boolean isFileDownloaderInProgress() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.file_downloader_in_progress), false);
+    }
+
+    public void setFileDownloaderInProgress(boolean inProgress) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.file_downloader_in_progress), inProgress);
         editor.commit();
     }
 

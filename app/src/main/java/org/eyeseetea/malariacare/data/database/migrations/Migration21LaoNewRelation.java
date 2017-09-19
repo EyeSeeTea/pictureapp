@@ -60,7 +60,7 @@ public class Migration21LaoNewRelation extends BaseMigration {
  *//*
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return ProgramDB.getFirstProgram() != null;
     }
 
 }*/

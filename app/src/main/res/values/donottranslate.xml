@@ -6,6 +6,7 @@
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet</string>
 
     <item name="show_num_dems" translatable="false" type="string">show_num_dems</item>
+    <item name="pref_visual" translatable="false" type="string">pref_visual</item>
     <item name="customize_fonts" translatable="false" type="string">customize_fonts</item>
     <item name="font_sizes" translatable="false" type="string">font_sizes</item>
     <item name="dhis_url" translatable="false" type="string">dhis_url</item>
@@ -61,6 +62,7 @@
     <string name="tab_tag_assess" translatable="false">tab_assess</string>
     <string name="tab_tag_improve" translatable="false">tab_improve</string>
     <string name="tab_tag_stock" translatable="false">tab_stock</string>
+    <string name="tab_tag_av"  translatable="false">"tab_av"</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
     <string name="fragment_new_receipt" translatable="false">fragment_new_receipt</string>
     <string name="fragment_new_reset" translatable="false">fragment_new_balance</string>
@@ -88,9 +90,10 @@
     <!--oldSdk-->
     <string name="description" translatable="false">ImageView description</string>
     <string name="login" translatable="false">Log in</string>
-    <string name="regular_font_name" translatable="false">@string/medium_font_name</string>
+    <string name="regular_font_name" translatable="false">@string/normal_font</string>
 
     <string name="push_in_progress" translatable="false">push_in_progress</string>
+    <string name="file_downloader_in_progress" translatable="false">file_downloader_in_progress</string>
     <string name="yes_option_identifier" translatable="false">Yes</string>
     <string name="no_option_identifier" translatable="false">No</string>
     <string name="true_option_id" translatable="false">true_option_identifier</string>
@@ -98,4 +101,7 @@
 
     <string name="user_accept_key" translatable="false">user_accept_key</string>
     <string name="show_announcement_key" translatable="false">show_announcement_key</string>
+    <string name="phone_meta_data_key" translatable="false">phone_meta_data_key</string>
+    <string name="default_drive_folder" translatable="false">0B7TXlu17DcAbNHNvRUxnSDd4LUk</string>
+    <string name="drive_key" translatable="false">drive_key</string>
 </resources>

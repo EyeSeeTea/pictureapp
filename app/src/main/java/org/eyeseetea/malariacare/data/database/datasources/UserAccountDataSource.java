@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
@@ -8,17 +8,20 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 public class UserAccountDataSource implements IUserRepository {
     @Override
     public UserAccount getLoggedUser() {
-        User user = User.getLoggedUser();
+        UserDB userDB = UserDB.getLoggedUser();
         UserAccount userAccount = null;
-        if (user != null) {
-            userAccount = new UserAccount(user.getName(), user.getUid(), false);
+        if (userDB != null) {
+            userAccount = new UserAccount(userDB.getName(), userDB.getUid(), false);
+            userAccount.setCanAddSurveys(userDB.canAddSurveys());
         }
+
         return userAccount;
     }
 
     @Override
     public void saveLoggedUser(UserAccount userAccount) {
-        User user = new User(userAccount.getUserUid(), userAccount.getUserName());
-        User.insertLoggedUser(user);
+        UserDB userDB = new UserDB(userAccount.getUserUid(), userAccount.getUserName());
+        userDB.setCanAddSurveys(userAccount.canAddSurveys());
+        UserDB.insertLoggedUser(userDB);
     }
 }

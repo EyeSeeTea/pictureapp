@@ -89,6 +89,11 @@ public abstract class APushServiceStrategy {
             }
 
             @Override
+            public void onInformativeMessage(String message) {
+                showInDialog("", message);
+            }
+
+            @Override
             public void onBannedOrgUnit() {
                 showInDialog("", PreferencesState.getInstance().getContext().getString(
                         R.string.exception_org_unit_banned));
@@ -110,7 +115,9 @@ public abstract class APushServiceStrategy {
             @Override
             public void onClosedUser() {
                 onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
-                closeUserLogout();
+                if(DashboardActivity.dashboardActivity != null && DashboardActivity.dashboardActivity.isInForeground()) {
+                    closeUserLogout();
+                }
             }
 
             @Override
@@ -126,7 +133,9 @@ public abstract class APushServiceStrategy {
     }
 
     public void showInDialog(String title, String message) {
-        DashboardActivity.dashboardActivity.showException(title, message);
+        if(DashboardActivity.dashboardActivity != null && DashboardActivity.dashboardActivity.isInForeground()) {
+            DashboardActivity.dashboardActivity.showException(title, message);
+        }
     }
 
     public void closeUserLogout() {

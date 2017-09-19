@@ -27,9 +27,9 @@ import android.util.Log;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -38,8 +38,6 @@ import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +53,11 @@ public class SurveyService extends IntentService {
      */
     public static final String SERVICE_METHOD = "serviceMethod";
 
+    /**
+     * Name of 'list unsent' action in ereferrals
+     */
+    public static final String ALL_UNSENT_AND_SENT_SURVEYS_ACTION =
+            "org.eyeseetea.malariacare.services.SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION";
     /**
      * Name of 'list unsent' action
      */
@@ -73,11 +76,6 @@ public class SurveyService extends IntentService {
     public static final String ALL_SENT_SURVEYS_ACTION =
             "org.eyeseetea.malariacare.services.SurveyService.ALL_SENT_SURVEYS_ACTION";
 
-    /**
-     * Name of 'remove list completed' action
-     */
-    public static final String REMOVE_SENT_SURVEYS_ACTION =
-            "org.eyeseetea.malariacare.services.SurveyService.REMOVE_SENT_SURVEYS_ACTION";
 
     /**
      * Name of 'reload' action which returns both lists (unsent, sent)
@@ -139,14 +137,14 @@ public class SurveyService extends IntentService {
             case ALL_UNSENT_SURVEYS_ACTION:
                 getAllUnsentSurveys();
                 break;
+            case ALL_UNSENT_AND_SENT_SURVEYS_ACTION:
+                getAllUnsentAndSentSurveys();
+                break;
             case ALL_UNCOMPLETED_SURVEYS_ACTION:
                 getAllUncompletedSurveys();
                 break;
             case ALL_SENT_SURVEYS_ACTION:
                 getAllSentSurveys();
-                break;
-            case REMOVE_SENT_SURVEYS_ACTION:
-                removeAllSentSurveys();
                 break;
             case RELOAD_DASHBOARD_ACTION:
                 reloadDashboard();
@@ -154,23 +152,48 @@ public class SurveyService extends IntentService {
         }
     }
 
+    private void getAllUnsentAndSentSurveys() {
+        Log.d(TAG, "getAllUnsentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
+//Select surveys from sql
+        getProgramUID(new Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
+                List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
+                surveyDBs.addAll(sentSurveyDBs);
+                //Since intents does NOT admit NON serializable as values we use Session instead
+                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, surveyDBs);
+
+                //Returning result to anyone listening
+                Intent resultIntent = new Intent(ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
+            }
+        });
+    }
+
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
         getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-                List<Survey> unsentSurveys = Survey.getAllUnsentMalariaSurveys(uid);
-                List<Survey> sentSurveys = Survey.getAllSentMalariaSurveys(uid);
+                List<SurveyDB> unsentSurveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
+                List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
+                List<SurveyDB> allSurveyDBs = new ArrayList<SurveyDB>();
+                allSurveyDBs.addAll(unsentSurveyDBs);
+                allSurveyDBs.addAll(sentSurveyDBs);
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
-                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);
-                Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveys);
+                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
+                Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveyDBs);
+                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, allSurveyDBs);
 
                 //Returning result to anyone listening
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_UNSENT_SURVEYS_ACTION));
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_SENT_SURVEYS_ACTION));
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
+                        new Intent(ALL_UNSENT_AND_SENT_SURVEYS_ACTION));
             }
         });
     }
@@ -184,20 +207,20 @@ public class SurveyService extends IntentService {
         getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-                List<Survey> surveys = Survey.getAllUnsentMalariaSurveys(uid);
-                List<Survey> unsentSurveys = new ArrayList<Survey>();
+                List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
+                List<SurveyDB> unsentSurveyDBs = new ArrayList<SurveyDB>();
 
                 //Load %completion in every survey (it takes a while so it can NOT be done in UI
                 // Thread)
-                for (Survey survey : surveys) {
-                    if (!survey.isSent() && !survey.isHide() && !survey.isConflict()) {
-                        survey.getAnsweredQuestionRatio();
-                        unsentSurveys.add(survey);
+                for (SurveyDB surveyDB : surveyDBs) {
+                    if (!surveyDB.isSent() && !surveyDB.isConflict()) {
+                        surveyDB.getAnsweredQuestionRatio();
+                        unsentSurveyDBs.add(surveyDB);
                     }
                 }
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
-                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);
+                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
 
                 //Returning result to anyone listening
                 Intent resultIntent = new Intent(ALL_UNSENT_SURVEYS_ACTION);
@@ -215,10 +238,10 @@ public class SurveyService extends IntentService {
             @Override
             public void onSuccess(String uid) {
                 //Select surveys from sql
-                List<Survey> surveys = Survey.getAllSentMalariaSurveys(uid);
+                List<SurveyDB> surveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
-                Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, surveys);
+                Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, surveyDBs);
 
                 //Returning result to anyone listening
                 Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
@@ -227,45 +250,19 @@ public class SurveyService extends IntentService {
         });
     }
 
-    /**
-     * Remove all sent surveys from database
-     */
-    private void removeAllSentSurveys() {
-        Log.d(TAG, "removeAllSentSurveys (Thread:" + Thread.currentThread().getId() + ")");
-        getProgramUID(new Callback() {
-            @Override
-            public void onSuccess(String uid) {
-                //Select all sent surveys from sql and delete.
-                List<Survey> surveys = Survey.getAllSentMalariaSurveys(uid);
-                for (int i = surveys.size() - 1; i >= 0; i--) {
-                    //If is over limit the survey be delete, if is in the limit the survey change
-                    // the
-                    // state to STATE_HIDE
-                    if (Utils.isDateOverLimit(Utils.DateToCalendar(surveys.get(i).getEventDate()),
-                            1)) {
-                        surveys.get(i).delete();
-                    } else {
-                        surveys.get(i).setStatus(Constants.SURVEY_HIDE);
-                        surveys.get(i).save();
-                    }
-                }
-            }
-        });
-    }
-
     private void getAllUncompletedSurveys() {
         Log.d(TAG, "getAllUncompletedSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
         //Select surveys from sql
-        List<Survey> surveys = Survey.getAllUncompletedSurveys();
+        List<SurveyDB> surveyDBs = SurveyDB.getAllUncompletedSurveys();
 
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
-        for (Survey survey : surveys) {
-            survey.getAnsweredQuestionRatio();
+        for (SurveyDB surveyDB : surveyDBs) {
+            surveyDB.getAnsweredQuestionRatio();
         }
 
         //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(ALL_UNCOMPLETED_SURVEYS_ACTION, surveys);
+        Session.putServiceValue(ALL_UNCOMPLETED_SURVEYS_ACTION, surveyDBs);
 
         //Returning result to anyone listening
         Intent resultIntent = new Intent(ALL_UNCOMPLETED_SURVEYS_ACTION);
@@ -276,15 +273,15 @@ public class SurveyService extends IntentService {
         Log.d(TAG, "getAllCompletedSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
         //Select surveys from sql
-        List<Survey> surveys = Survey.getAllCompletedSurveys();
+        List<SurveyDB> surveyDBs = SurveyDB.getAllCompletedSurveys();
 
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
-        for (Survey survey : surveys) {
-            survey.getAnsweredQuestionRatio();
+        for (SurveyDB surveyDB : surveyDBs) {
+            surveyDB.getAnsweredQuestionRatio();
         }
 
         //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, surveys);
+        Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, surveyDBs);
 
         //Returning result to anyone listening
         Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
@@ -298,17 +295,17 @@ public class SurveyService extends IntentService {
         Log.d(TAG, "prepareSurveyInfo (Thread:" + Thread.currentThread().getId() + ")");
 
         //Get composite scores for current program & register them (scores)
-        List<CompositeScore> compositeScores = new Select().from(
-                CompositeScore.class).queryList();
-        ScoreRegister.registerCompositeScores(compositeScores);
+        List<CompositeScoreDB> compositeScoreDBs = new Select().from(
+                CompositeScoreDB.class).queryList();
+        ScoreRegister.registerCompositeScores(compositeScoreDBs);
 
         //Get tabs for current program & register them (scores)
-        List<Tab> tabs = new Select().from(Tab.class).queryList();
-        ScoreRegister.registerTabScores(tabs);
+        List<TabDB> tabDBs = new Select().from(TabDB.class).queryList();
+        ScoreRegister.registerTabScores(tabDBs);
 
         //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(PREPARE_SURVEY_ACTION_COMPOSITE_SCORES, compositeScores);
-        Session.putServiceValue(PREPARE_SURVEY_ACTION_TABS, tabs);
+        Session.putServiceValue(PREPARE_SURVEY_ACTION_COMPOSITE_SCORES, compositeScoreDBs);
+        Session.putServiceValue(PREPARE_SURVEY_ACTION_TABS, tabDBs);
 
         //Returning result to anyone listening
         Intent resultIntent = new Intent(PREPARE_SURVEY_ACTION);

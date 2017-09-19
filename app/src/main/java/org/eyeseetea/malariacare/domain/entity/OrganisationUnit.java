@@ -1,15 +1,17 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class OrganisationUnit {
-    private static final String CLOSE_DATE_DESCRIPTION =
+    public static final String CLOSE_DATE_DESCRIPTION =
             "[%s] - Android Surveillance App set the closing date to %s because over 30 surveys "
                     + "were pushed within 1 hour.";
-    private static final String CLOSE_DATE_FORMAT = "dd-MM-yyyy";
+    public static final String CLOSE_DATE_FORMAT = "dd-MM-yyyy";
     private String uid;
     private String name;
     private String code;
@@ -20,27 +22,27 @@ public class OrganisationUnit {
     private Program mProgram;
 
     public OrganisationUnit(String uid, String name, String description, Date closedDate) {
-        this.uid = uid;
-        this.name = name;
-        this.description = description;
+        this.uid = required(uid,"UID is required");
+        this.name = required(name,"Name is required");
+        this.description = required(description,"Description is required");
         this.closedDate = closedDate;
     }
 
     public OrganisationUnit(String uid, String name, boolean banned) {
-        this.uid = uid;
-        this.name = name;
+        this.uid = required(uid,"UID is required");
+        this.name = required(name,"Name is required");
         this.banned = banned;
     }
 
     public OrganisationUnit(String uid, String name, String code, String description,
             Date closedDate, String pin, Program program) {
-        this.uid = uid;
-        this.name = name;
-        this.code = code;
+        this.uid = required(uid,"UID is required");
+        this.name = required(name,"Name is required");
+        this.code = required(code,"Code is required");
+        this.pin = required(pin,"Pin is required");
         this.description = description;
         this.closedDate = closedDate;
-        this.pin = pin;
-        mProgram = program;
+        mProgram = required(program,"Program is required");
     }
 
     public String getUid() {

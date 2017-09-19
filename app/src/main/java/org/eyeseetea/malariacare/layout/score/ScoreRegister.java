@@ -21,11 +21,11 @@ package org.eyeseetea.malariacare.layout.score;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.ArrayList;
@@ -47,40 +47,40 @@ public class ScoreRegister {
     /**
      * Map of scores for each compositescore
      */
-    private static final Map<CompositeScore, CompositeNumDenRecord> compositeScoreMap =
-            new HashMap<CompositeScore, CompositeNumDenRecord>();
+    private static final Map<CompositeScoreDB, CompositeNumDenRecord> compositeScoreMap =
+            new HashMap<CompositeScoreDB, CompositeNumDenRecord>();
 
     /**
      * Map of scores for each tab
      */
-    private static final Map<Tab, TabNumDenRecord> tabScoreMap =
-            new HashMap<Tab, TabNumDenRecord>();
+    private static final Map<TabDB, TabNumDenRecord> tabScoreMap =
+            new HashMap<TabDB, TabNumDenRecord>();
 
-    public static void initScoresForQuestions(List<Question> questions, Survey survey) {
-        for (Question question : questions) {
-            if (!question.isHiddenBySurvey(survey.getId_survey())) {
-                question.initScore(survey);
+    public static void initScoresForQuestions(List<QuestionDB> questionDBs, SurveyDB surveyDB) {
+        for (QuestionDB questionDB : questionDBs) {
+            if (!questionDB.isHiddenBySurvey(surveyDB.getId_survey())) {
+                questionDB.initScore(surveyDB);
             } else {
-                addRecord(question, 0F, calcDenum(question));
+                addRecord(questionDB, 0F, calcDenum(questionDB));
             }
         }
     }
 
-    public static void addRecord(Question question, Float num, Float den) {
-        if (question.getCompositeScore() != null) {
-            compositeScoreMap.get(question.getCompositeScore()).addRecord(question, num, den);
+    public static void addRecord(QuestionDB questionDB, Float num, Float den) {
+        if (questionDB.getCompositeScoreDB() != null) {
+            compositeScoreMap.get(questionDB.getCompositeScoreDB()).addRecord(questionDB, num, den);
         }
-        tabScoreMap.get(question.getHeader().getTab()).addRecord(question, num, den);
+        tabScoreMap.get(questionDB.getHeaderDB().getTabDB()).addRecord(questionDB, num, den);
     }
 
-    public static void deleteRecord(Question question) {
-        if (question.getCompositeScore() != null) {
-            compositeScoreMap.get(question.getCompositeScore()).deleteRecord(question);
+    public static void deleteRecord(QuestionDB questionDB) {
+        if (questionDB.getCompositeScoreDB() != null) {
+            compositeScoreMap.get(questionDB.getCompositeScoreDB()).deleteRecord(questionDB);
         }
-        tabScoreMap.get(question.getHeader().getTab()).deleteRecord(question);
+        tabScoreMap.get(questionDB.getHeaderDB().getTabDB()).deleteRecord(questionDB);
     }
 
-    private static List<Float> getRecursiveScore(CompositeScore cScore, List<Float> result) {
+    private static List<Float> getRecursiveScore(CompositeScoreDB cScore, List<Float> result) {
 
         if (!cScore.hasChildren()) {
 
@@ -91,18 +91,18 @@ public class ScoreRegister {
                 return Arrays.asList(new Float(0f), new Float(0f));
             }
         } else {
-            for (CompositeScore cScoreChildren : cScore.getCompositeScoreChildren()) {
+            for (CompositeScoreDB cScoreChildren : cScore.getCompositeScoreDBChildren()) {
                 result = getRecursiveScore(cScoreChildren, result);
             }
             return result;
         }
     }
 
-    public static List<Float> getNumDenum(Question question) {
-        return tabScoreMap.get(question.getHeader().getTab()).getNumDenRecord().get(question);
+    public static List<Float> getNumDenum(QuestionDB questionDB) {
+        return tabScoreMap.get(questionDB.getHeaderDB().getTabDB()).getNumDenRecord().get(questionDB);
     }
 
-    public static Float getCompositeScore(CompositeScore cScore) {
+    public static Float getCompositeScore(CompositeScoreDB cScore) {
 
         List<Float> result = compositeScoreMap.get(cScore).calculateNumDenTotal(
                 new ArrayList<Float>(Arrays.asList(0F, 0F)));
@@ -113,29 +113,29 @@ public class ScoreRegister {
     }
 
 
-    public static List<Float> calculateGeneralScore(Tab tab) {
-        return tabScoreMap.get(tab).calculateTotal();
+    public static List<Float> calculateGeneralScore(TabDB tabDB) {
+        return tabScoreMap.get(tabDB).calculateTotal();
     }
 
     /**
      * Resets compositescores and initializes a new set of them
      */
-    public static void registerCompositeScores(List<CompositeScore> compositeScores) {
+    public static void registerCompositeScores(List<CompositeScoreDB> compositeScoreDBs) {
         compositeScoreMap.clear();
-        for (CompositeScore compositeScore : compositeScores) {
-            Log.i(TAG, "Register composite score: " + compositeScore.getHierarchical_code());
-            compositeScoreMap.put(compositeScore, new CompositeNumDenRecord());
+        for (CompositeScoreDB compositeScoreDB : compositeScoreDBs) {
+            Log.i(TAG, "Register composite score: " + compositeScoreDB.getHierarchical_code());
+            compositeScoreMap.put(compositeScoreDB, new CompositeNumDenRecord());
         }
     }
 
     /**
      * Resets generalScores and initializes a new set ot them
      */
-    public static void registerTabScores(List<Tab> tabs) {
+    public static void registerTabScores(List<TabDB> tabDBs) {
         tabScoreMap.clear();
-        for (Tab tab : tabs) {
-            Log.i(TAG, "Register tab score: " + tab.getName());
-            tabScoreMap.put(tab, new TabNumDenRecord());
+        for (TabDB tabDB : tabDBs) {
+            Log.i(TAG, "Register tabDB score: " + tabDB.getName());
+            tabScoreMap.put(tabDB, new TabNumDenRecord());
         }
     }
 
@@ -148,56 +148,56 @@ public class ScoreRegister {
     }
 
     /**
-     * Calculates the numerator of the given question in the current survey
+     * Calculates the numerator of the given questionDB in the current survey
      */
-    public static float calcNum(Question question) {
-        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
-        return calcNum(question, survey);
+    public static float calcNum(QuestionDB questionDB) {
+        SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(questionDB);
+        return calcNum(questionDB, surveyDB);
     }
 
     /**
-     * Calculates the numerator of the given question & survey
+     * Calculates the numerator of the given questionDB & survey
      */
-    public static float calcNum(Question question, Survey survey) {
-        if (survey == null || question == null) {
+    public static float calcNum(QuestionDB questionDB, SurveyDB surveyDB) {
+        if (surveyDB == null || questionDB == null) {
             return 0;
         }
 
-        Option option = question.getOptionBySurvey(survey);
-        if (option == null) {
+        OptionDB optionDB = questionDB.getOptionBySurvey(surveyDB);
+        if (optionDB == null) {
             return 0;
         }
-        return question.getNumerator_w() * option.getFactor();
+        return questionDB.getNumerator_w() * optionDB.getFactor();
     }
 
     /**
-     * Calculates the numerator of the given question in the current survey
+     * Calculates the numerator of the given questionDB in the current survey
      */
-    public static float calcDenum(Question question) {
-        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
-        return calcDenum(question, survey);
+    public static float calcDenum(QuestionDB questionDB) {
+        SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(questionDB);
+        return calcDenum(questionDB, surveyDB);
     }
 
     /**
-     * Calculates the denominator of the given question & survey
+     * Calculates the denominator of the given questionDB & survey
      */
-    public static float calcDenum(Question question, Survey survey) {
+    public static float calcDenum(QuestionDB questionDB, SurveyDB surveyDB) {
         float result = 0;
 
-        if (!question.isScored()) {
+        if (!questionDB.isScored()) {
             return 0;
         }
 
-        Option option = question.getOptionBySurvey(survey);
-        if (option == null) {
-            return calcDenum(0, question);
+        OptionDB optionDB = questionDB.getOptionBySurvey(surveyDB);
+        if (optionDB == null) {
+            return calcDenum(0, questionDB);
         }
-        return calcDenum(option.getFactor(), question);
+        return calcDenum(optionDB.getFactor(), questionDB);
     }
 
-    private static float calcDenum(float factor, Question question) {
-        float num = question.getNumerator_w();
-        float denum = question.getDenominator_w();
+    private static float calcDenum(float factor, QuestionDB questionDB) {
+        float num = questionDB.getNumerator_w();
+        float denum = questionDB.getDenominator_w();
 
         if (num == denum) {
             return denum;
@@ -211,23 +211,24 @@ public class ScoreRegister {
     /**
      * Cleans, prepares, calculates and returns all the scores info for the given survey
      */
-    public static List<CompositeScore> loadCompositeScores(Survey survey) {
+    public static List<CompositeScoreDB> loadCompositeScores(SurveyDB surveyDB) {
         //Cleans score
         ScoreRegister.clear();
 
         //Register scores for tabs
-        List<Tab> tabs = survey.getProgram().getTabs();
-        ScoreRegister.registerTabScores(tabs);
+        List<TabDB> tabDBs = surveyDB.getProgramDB().getTabDBs();
+        ScoreRegister.registerTabScores(tabDBs);
 
         //Register scores for composites
-        List<CompositeScore> compositeScoreList = CompositeScore.listByProgram(
-                survey.getProgram());
-        ScoreRegister.registerCompositeScores(compositeScoreList);
+        List<CompositeScoreDB> compositeScoreDBList = CompositeScoreDB.listByProgram(
+                surveyDB.getProgramDB());
+        ScoreRegister.registerCompositeScores(compositeScoreDBList);
 
         //Initialize scores x question
-        ScoreRegister.initScoresForQuestions(Question.listByProgram(survey.getProgram()), survey);
+        ScoreRegister.initScoresForQuestions(QuestionDB.listByProgram(surveyDB.getProgramDB()),
+                surveyDB);
 
-        return compositeScoreList;
+        return compositeScoreDBList;
     }
 
 }

@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.presentation.factory.stock.utils;
 
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SurveyStock {
 
-    private Survey mSurvey;
+    private SurveyDB mSurvey;
     private int[] surveyValues;
     public static final int RDT_VALUE = 0,
             ACT6_VALUE = 1,
@@ -22,14 +22,14 @@ public class SurveyStock {
             CQ_VALUE = 5,
             PQ_VALUE = 6;
 
-    public SurveyStock(Survey survey) {
+    public SurveyStock(SurveyDB survey) {
         mSurvey = survey;
         surveyValues = new int[7];
         createSurveyValues();
     }
 
 
-    public Survey getSurvey() {
+    public SurveyDB getSurvey() {
         return mSurvey;
     }
 
@@ -38,24 +38,24 @@ public class SurveyStock {
     }
 
     private void createSurveyValues() {
-        List<Value> values = mSurvey.getValuesFromDB();
-        for (Value value : values) {
-            if(value.getQuestion()==null) {
+        List<ValueDB> values = mSurvey.getValuesFromDB();
+        for (ValueDB value : values) {
+            if(value.getQuestionDB()==null) {
                 continue;//ignore values without question for example control dataelements
             }
-            if (TreatmentQueries.isStockRDT(value.getQuestion().getUid())) {
+            if (TreatmentQueries.isStockRDT(value.getQuestionDB().getUid())) {
                 surveyValues[RDT_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (TreatmentQueries.isACT6(value.getQuestion().getUid())) {
+            } else if (TreatmentQueries.isACT6(value.getQuestionDB().getUid())) {
                 surveyValues[ACT6_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (TreatmentQueries.isACT12(value.getQuestion().getUid())) {
+            } else if (TreatmentQueries.isACT12(value.getQuestionDB().getUid())) {
                 surveyValues[ACT12_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (TreatmentQueries.isACT18(value.getQuestion().getUid())) {
+            } else if (TreatmentQueries.isACT18(value.getQuestionDB().getUid())) {
                 surveyValues[ACT18_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (TreatmentQueries.isACT24(value.getQuestion().getUid())) {
+            } else if (TreatmentQueries.isACT24(value.getQuestionDB().getUid())) {
                 surveyValues[ACT24_VALUE] =(int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (TreatmentQueries.isPq(value.getQuestion().getUid())) {
+            } else if (TreatmentQueries.isPq(value.getQuestionDB().getUid())) {
                 surveyValues[PQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (TreatmentQueries.isCq(value.getQuestion().getUid())) {
+            } else if (TreatmentQueries.isCq(value.getQuestionDB().getUid())) {
                 surveyValues[CQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             }
         }

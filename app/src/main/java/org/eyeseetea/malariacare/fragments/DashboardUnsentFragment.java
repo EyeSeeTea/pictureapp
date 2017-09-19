@@ -26,7 +26,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -38,7 +37,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
@@ -48,6 +47,7 @@ import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +61,13 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     public static final String TAG = ".UnsentFragment";
     protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
-    private List<Survey> surveys;
+    private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
+    private DashboardUnsentFragmentStrategy mDashboardUnsentFragmentStrategy;
 
     public DashboardUnsentFragment() {
-        this.surveys = new ArrayList();
+        this.mSurveyDBs = new ArrayList();
+        mDashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy();
     }
 
     @Override
@@ -83,7 +85,8 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         }
         viewCreated = true;
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view= inflater.inflate(R.layout.unsent_list_fragment, container, false);
+        return view;
     }
 
     @Override
@@ -113,14 +116,14 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
      */
     private void initAdapter() {
         this.adapter = new AssessmentAdapter(getString(R.string.unsent_data),
-                this.surveys, getActivity());
+                this.mSurveyDBs, getActivity());
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
-        adapter.onClick(l, position, surveys);
+        adapter.onClick(l, position, mSurveyDBs);
     }
 
     @Override
@@ -144,7 +147,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
-        View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+        final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
         ListView listView = getListView();
         if (header != null) {
@@ -163,7 +166,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                         new SwipeDismissListViewTouchListener.DismissCallbacks() {
                             @Override
                             public boolean canDismiss(int position) {
-                                return position > 0 && position <= surveys.size();
+                                return position > 0 && position <= mSurveyDBs.size();
                             }
 
                             @Override
@@ -178,7 +181,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface arg0,
                                                                 int arg1) {
-                                                            ((Survey) adapter.getItem(
+                                                            ((SurveyDB) adapter.getItem(
                                                                     position - 1)).delete();
                                                             //Reload data using service
                                                             Intent surveysIntent = new Intent(
@@ -202,9 +205,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
-
-
-        setListShown(false);
     }
 
 
@@ -216,8 +216,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
-                    new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
+            mDashboardUnsentFragmentStrategy.registerSurveyReceiver(getActivity(), surveyReceiver);
         }
     }
 
@@ -253,16 +252,15 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 surveysIntent);
     }
 
-    public void reloadSurveys(List<Survey> newListSurveys) {
+    public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
         Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): "
-                + newListSurveys.size());
-        this.surveys.clear();
-        this.surveys.addAll(newListSurveys);
+                + newListSurveyDBs.size());
+        this.mSurveyDBs.clear();
+        this.mSurveyDBs.addAll(newListSurveyDBs);
 
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
             LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
-            setListShown(true);
         }
     }
 
@@ -270,7 +268,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     /**
      * Inner private class that receives the result from the service
      */
-    private class SurveyReceiver extends BroadcastReceiver {
+    public class SurveyReceiver extends BroadcastReceiver {
         private SurveyReceiver() {
         }
 
@@ -279,58 +277,71 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if (SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysUnsentFromService;
+                List<SurveyDB> surveysUnsentFromService;
                 Session.valuesLock.readLock().lock();
                 try {
-                    surveysUnsentFromService = (List<Survey>) Session.popServiceValue(
+                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
                             SurveyService.ALL_UNSENT_SURVEYS_ACTION);
                 } finally {
                     Session.valuesLock.readLock().unlock();
                 }
-                reloadSurveys(surveysUnsentFromService);
-                LayoutUtils.setRowDivider(getListView());
-                // Measure the screen height
-                int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
+                reloadSurveysFromService(surveysUnsentFromService);
+            } else if(SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION.equals(intent.getAction())){
 
-                // Get the unsent list height, measured when reloading the surveys
-                int unsentHeight = LayoutUtils.getUnsentListHeight();
-
-                // Set the variable that establish the unsent list is shown or not
-                if (unsentHeight >= screenHeight) {
-                    Session.setFullOfUnsent(getActivity());
-                } else {
-                    Session.setNotFullOfUnsent(getActivity());
+                List<SurveyDB> surveysUnsentFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
+                            SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
                 }
+                reloadSurveysFromService(surveysUnsentFromService);
             }
+        }
+    }
+
+    private void reloadSurveysFromService(List<SurveyDB> surveysUnsentFromService) {
+        reloadSurveys(surveysUnsentFromService);
+        LayoutUtils.setRowDivider(getListView());
+        // Measure the screen height
+        int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
+
+        // Get the unsent list height, measured when reloading the surveys
+        int unsentHeight = LayoutUtils.getUnsentListHeight();
+
+        // Set the variable that establish the unsent list is shown or not
+        if (unsentHeight >= screenHeight) {
+            Session.setFullOfUnsent(getActivity());
+        } else {
+            Session.setNotFullOfUnsent(getActivity());
         }
     }
 
     public class AsyncPush extends AsyncTask<Void, Integer, PushResult> {
 
-        private Survey survey;
+        private SurveyDB mSurveyDB;
 
 
-        public AsyncPush(Survey survey) {
-            this.survey = survey;
+        public AsyncPush(SurveyDB surveyDB) {
+            this.mSurveyDB = surveyDB;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             //spinner
-            setListShown(false);
         }
 
         @Override
         protected PushResult doInBackground(Void... params) {
-            PushClient pushClient = new PushClient(survey, getActivity());
+            PushClient pushClient = new PushClient(mSurveyDB, getActivity());
             return pushClient.push();
         }
 
         @Override
         protected void onPostExecute(PushResult pushResult) {
             super.onPostExecute(pushResult);
-            setListShown(true);
             showResponse(pushResult);
         }
 

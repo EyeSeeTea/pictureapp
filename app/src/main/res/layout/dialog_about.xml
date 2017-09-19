@@ -60,7 +60,7 @@
         android:background="@color/transparent"
         android:color="@color/dialog_button_text"
         android:gravity="center_vertical|center_horizontal"
-        android:text="@string/ok"
+        android:text="@string/provider_redeemEntry_msg_matchingOk"
         android:textColor="@color/dialog_button_text" />
 
 </RelativeLayout>

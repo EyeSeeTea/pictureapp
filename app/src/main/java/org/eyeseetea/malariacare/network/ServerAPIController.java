@@ -26,14 +26,10 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.PullConversionException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
@@ -107,18 +103,18 @@ public class ServerAPIController {
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
-     * Endpoint to patch closeDate to an OrgUnit
+     * Endpoint to patch closeDate to an OrgUnitDB
      */
     private static final String DHIS_PATCH_URL_CLOSED_DATE = "/api/organisationUnits/%s/closedDate";
 
     /**
-     * Endpoint to patch description to an OrgUnit
+     * Endpoint to patch description to an OrgUnitDB
      */
     private static final String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE =
             "/api/organisationUnits/%s/description";
 
     /**
-     * New Description to a closed OrgUnit
+     * New Description to a closed OrgUnitDB
      */
     private static final String DHIS_PATCH_DESCRIPTIONCLOSED_DATE =
             "[%s] - Android Surveillance App set the closing date to %s because over 30 surveys "
@@ -163,7 +159,7 @@ public class ServerAPIController {
      */
     public static String getProgramUID() {
         if (programUID == null) {
-            programUID = Program.getFirstProgram().getUid();
+            programUID = ProgramDB.getFirstProgram().getUid();
         }
         return programUID;
     }
@@ -447,9 +443,9 @@ public class ServerAPIController {
         return parseOrgUnit(jsonObject);
     }
 
-    public static User pullUserAttributes(User loggedUser) throws ApiCallException {
-        String lastMessage = loggedUser.getAnnouncement();
-        String uid = loggedUser.getUid();
+    public static UserDB pullUserAttributes(UserDB loggedUserDB) throws ApiCallException {
+        String lastMessage = loggedUserDB.getAnnouncement();
+        String uid = loggedUserDB.getUid();
         String url =
                 PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, uid);
@@ -462,27 +458,27 @@ public class ServerAPIController {
         String closeDate = "";
         for (int i = 0; i < jsonNodeArray.size(); i++) {
             if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
-                    User.ATTRIBUTE_USER_ANNOUNCEMENT)) {
+                    UserDB.ATTRIBUTE_USER_ANNOUNCEMENT)) {
                 newMessage = jsonNodeArray.get(i).get(VALUE).textValue();
             }
             if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
-                    User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    UserDB.ATTRIBUTE_USER_CLOSE_DATE)) {
                 closeDate = jsonNodeArray.get(i).get(VALUE).textValue();
             }
         }
         if ((lastMessage == null && newMessage != null) || (newMessage != null
                 && !newMessage.equals("") && !lastMessage.equals(newMessage))) {
-            loggedUser.setAnnouncement(newMessage);
+            loggedUserDB.setAnnouncement(newMessage);
             PreferencesState.getInstance().setUserAccept(false);
         }
         if (closeDate == null || closeDate.equals("")) {
-            loggedUser.setCloseDate(null);
+            loggedUserDB.setCloseDate(null);
         } else {
-            loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
+            loggedUserDB.setCloseDate(Utils.parseStringToCalendar(closeDate,
                     DHIS2_GMT_NEW_DATE_FORMAT).getTime());
         }
-        loggedUser.save();
-        return loggedUser;
+        loggedUserDB.save();
+        return loggedUserDB;
     }
 
     public static boolean isUserClosed(String userUid) throws ApiCallException {
@@ -504,7 +500,7 @@ public class ServerAPIController {
         String closeDateAsString = "";
         for (int i = 0; i < jsonNodeArray.size(); i++) {
             if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
-                    User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    UserDB.ATTRIBUTE_USER_CLOSE_DATE)) {
                 closeDateAsString = jsonNodeArray.get(i).get(VALUE).textValue();
             }
         }
@@ -675,7 +671,8 @@ public class ServerAPIController {
 
     static String getOrganisationUnitsCredentialsUrl(String code) {
         String url = PreferencesState.getInstance().getDhisURL()
-                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,code,ancestors[id,"
+                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,name,description,code,"
+                + "ancestors[id,"
                 + "code,level],attributeValues[value,attribute[code]";
         url = String.format(url, code);
         return url;

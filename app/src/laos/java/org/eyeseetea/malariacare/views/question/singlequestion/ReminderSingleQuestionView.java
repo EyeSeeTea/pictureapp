@@ -3,9 +3,9 @@ package org.eyeseetea.malariacare.views.question.singlequestion;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -22,7 +22,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
     }
 
     @Override
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<OptionDB> options) {
 
         //Question "header" is in the first option in Options.csv
         if (options != null && options.size() > 0) {
@@ -34,8 +34,9 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         }
     }
 
+
     @Override
-    public void setQuestion(Question question) {
+    public void setQuestionDB(QuestionDB question) {
 
     }
 
@@ -50,7 +51,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
     }
 
     @Override
-    public void setValue(Value value) {
+    public void setValue(ValueDB valueDB) {
     }
 
     private void init(Context context) {
@@ -58,7 +59,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         inflate(context, R.layout.dynamic_tab_reminder_row, this);
     }
 
-    public void notifyAnswerChanged(Option option) {
+    public void notifyAnswerChanged(OptionDB option) {
         super.notifyAnswerChanged(option);
     }
 }

@@ -8,9 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.v4.app.ActivityCompat;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BaseActivity;
@@ -20,10 +24,20 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -43,11 +57,20 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
+            boolean notConnected = !ConnectivityStatus.isConnected(
+                    PreferencesState.getInstance().getContext());
+            android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
+            TextView connection =
+                    (TextView) actionBar.getCustomView().findViewById(
+                            R.id.action_bar_connection_status);
+            connection.setText(notConnected
+                    ? R.string.action_bar_offline : R.string.action_bar_online);
+            if (notConnected) {
                 Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
             }
+            DashboardActivity.dashboardActivity.refreshStatus();
         }
     };
 
@@ -74,7 +97,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_ITEM_LOGOUT, MENU_ITEM_LOGOUT_ORDER,
-                mBaseActivity.getResources().getString(R.string.app_logout));
+                mBaseActivity.getResources().getString(R.string.common_menu_logOff));
     }
 
     @Override
@@ -84,7 +107,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         switch (id) {
             case MENU_ITEM_LOGOUT:
                 new AlertDialog.Builder(mBaseActivity)
-                        .setTitle(mBaseActivity.getString(R.string.app_logout))
+                        .setTitle(mBaseActivity.getString(R.string.common_menu_logOff))
                         .setMessage(mBaseActivity.getString(R.string.dashboard_menu_logout_message))
                         .setPositiveButton(android.R.string.yes,
                                 new DialogInterface.OnClickListener() {
@@ -131,8 +154,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
-                //// FIXME: 30/05/2017 Uncomment this line to reactivate the disable login feature
-                //showLogin();
+                if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
+                    showLogin();
+                }
             }
         }
     };
@@ -154,7 +178,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onStop() {
         applicationdidenterbackground();
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+                mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
         }
         mBaseActivity.unregisterReceiver(connectionReceiver);
@@ -207,4 +232,32 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         MenuItem item = menu.findItem(R.id.demo_mode);
         item.setVisible(false);
     }
+
+    @Override
+    public void showAbout(final int titleId, int rawId, final Context context) {
+        final String stringMessage = mBaseActivity.getMessageWithCommit(rawId, context);
+        IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        GetAppInfoUseCase getAppInfoUseCase = new GetAppInfoUseCase(mainExecutor, asyncExecutor,
+                appInfoDataSource);
+        getAppInfoUseCase.execute(new GetAppInfoUseCase.Callback() {
+            @Override
+            public void onAppInfoLoaded(AppInfo appInfo) {
+                StringBuilder aboutBuilder = new StringBuilder();
+                aboutBuilder.append(
+                        String.format(context.getResources().getString(R.string.csv_version),
+                                appInfo.getMetadataVersion()));
+                aboutBuilder.append(stringMessage);
+                final SpannableString linkedMessage = new SpannableString(
+                        Html.fromHtml(aboutBuilder.toString()));
+                Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+                mBaseActivity.showAlertWithLogoAndVersion(titleId, linkedMessage, context);
+            }
+        });
+
+
+    }
+
+
 }

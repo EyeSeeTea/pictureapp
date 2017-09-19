@@ -32,34 +32,34 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
-import org.eyeseetea.malariacare.data.database.model.Header;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelation;
-import org.eyeseetea.malariacare.data.database.model.Partner;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.Score;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.SurveySchedule;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.TabGroup;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
+import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitLevelDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelationDB;
+import org.eyeseetea.malariacare.data.database.model.PartnerDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.ScoreDB;
+import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyScheduleDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TabGroupDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -94,6 +94,7 @@ public class PopulateDB {
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
     public static final String STRING_KEY_CSV = "StringKeys.csv";
     public static final String TRANSLATION_CSV = "Translations.csv";
+    public static final String VERSIONS_CSV = "Versions.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
@@ -101,34 +102,34 @@ public class PopulateDB {
     public static final char QUOTECHAR = '\'';
 
     public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
-            CompositeScore.class,
-            OrgUnitProgramRelation.class,
-            Score.class,
-            SurveySchedule.class,
-            TabGroup.class,
-            Survey.class,
-            Value.class,
-            User.class,
-            StringKey.class,
-            Translation.class,
-            Program.class,
-            Tab.class,
-            Header.class,
-            Answer.class,
-            OptionAttribute.class,
-            Option.class,
-            Question.class,
-            QuestionRelation.class,
-            Match.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
-            Drug.class,
-            Partner.class,
-            Treatment.class,
-            DrugCombination.class,
-            TreatmentMatch.class,
-            OrgUnitLevel.class,
-            OrgUnit.class
+            CompositeScoreDB.class,
+            OrgUnitProgramRelationDB.class,
+            ScoreDB.class,
+            SurveyScheduleDB.class,
+            TabGroupDB.class,
+            SurveyDB.class,
+            ValueDB.class,
+            UserDB.class,
+            StringKeyDB.class,
+            TranslationDB.class,
+            ProgramDB.class,
+            TabDB.class,
+            HeaderDB.class,
+            AnswerDB.class,
+            OptionAttributeDB.class,
+            OptionDB.class,
+            QuestionDB.class,
+            QuestionRelationDB.class,
+            MatchDB.class,
+            QuestionOptionDB.class,
+            QuestionThresholdDB.class,
+            DrugDB.class,
+            PartnerDB.class,
+            TreatmentDB.class,
+            DrugCombinationDB.class,
+            TreatmentMatchDB.class,
+            OrgUnitLevelDB.class,
+            OrgUnitDB.class
     );
 
     private static final List<String> tables2populate = Arrays.asList(
@@ -162,23 +163,23 @@ public class PopulateDB {
             ORG_UNIT_CSV);
     private static final String TAG = "PopulateDB";
 
-    static Map<Integer, Program> programList = new LinkedHashMap<Integer, Program>();
-    static Map<Integer, Tab> tabList = new LinkedHashMap<Integer, Tab>();
-    static Map<Integer, Header> headerList = new LinkedHashMap<Integer, Header>();
-    static Map<Integer, Question> questionList = new LinkedHashMap<Integer, Question>();
-    static Map<Integer, OptionAttribute> optionAttributeList =
-            new LinkedHashMap<Integer, OptionAttribute>();
-    static Map<Integer, Option> optionList = new LinkedHashMap<Integer, Option>();
-    static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
-    static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
-    static HashMap<Long, Match> matchList = new HashMap();
+    static Map<Integer, ProgramDB> programList = new LinkedHashMap<Integer, ProgramDB>();
+    static Map<Integer, TabDB> tabList = new LinkedHashMap<Integer, TabDB>();
+    static Map<Integer, HeaderDB> headerList = new LinkedHashMap<Integer, HeaderDB>();
+    static Map<Integer, QuestionDB> questionList = new LinkedHashMap<Integer, QuestionDB>();
+    static Map<Integer, OptionAttributeDB> optionAttributeList =
+            new LinkedHashMap<Integer, OptionAttributeDB>();
+    static Map<Integer, OptionDB> optionList = new LinkedHashMap<Integer, OptionDB>();
+    static Map<Integer, AnswerDB> answerList = new LinkedHashMap<Integer, AnswerDB>();
+    static Map<Integer, QuestionRelationDB> questionRelationList = new LinkedHashMap();
+    static HashMap<Long, MatchDB> matchList = new HashMap();
 
-    static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
-    static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
-    static HashMap<Long, Drug> drugList = new HashMap<>();
-    static HashMap<Long, Partner> organisationList = new HashMap<>();
-    static HashMap<Long, Treatment> treatmentList = new HashMap<>();
-    static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
+    static Map<Integer, OrgUnitLevelDB> orgUnitLevelList = new LinkedHashMap();
+    static Map<Integer, OrgUnitDB> orgUnitList = new LinkedHashMap();
+    static HashMap<Long, DrugDB> drugList = new HashMap<>();
+    static HashMap<Long, PartnerDB> organisationList = new HashMap<>();
+    static HashMap<Long, TreatmentDB> treatmentList = new HashMap<>();
+    static HashMap<Long, StringKeyDB> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
         if (PopulateDB.hasMandatoryTables()) {
@@ -191,7 +192,7 @@ public class PopulateDB {
 
         PopulateDB.populateDB(context);
         //Get maximum total of questions
-        Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
+        Session.setMaxTotalQuestions(ProgramDB.getMaxTotalQuestions());
 
         Log.i(TAG, "DB Loaded ...DONE");
     }
@@ -228,165 +229,165 @@ public class PopulateDB {
             while ((line = reader.readNext()) != null && !line[0].isEmpty()) {
                 switch (table) {
                     case PROGRAMS_CSV:
-                        Program program = new Program();
-                        program.setUid(line[1]);
-                        program.setName(line[2]);
-                        program.setStageUid(line[3]);
-                        program.save();
-                        programList.put(Integer.valueOf(line[0]), program);
+                        ProgramDB programDB = new ProgramDB();
+                        programDB.setUid(line[1]);
+                        programDB.setName(line[2]);
+                        programDB.setStageUid(line[3]);
+                        programDB.save();
+                        programList.put(Integer.valueOf(line[0]), programDB);
                         break;
                     case TABS_CSV:
-                        Tab tab = new Tab();
-                        tab.setName(line[1]);
-                        tab.setOrder_pos(Integer.valueOf(line[2]));
-                        tab.setProgram(programList.get(Integer.valueOf(line[3])));
-                        tab.setType(Integer.valueOf(line[4]));
-                        tab.save();
-                        tabList.put(Integer.valueOf(line[0]), tab);
+                        TabDB tabDB = new TabDB();
+                        tabDB.setName(line[1]);
+                        tabDB.setOrder_pos(Integer.valueOf(line[2]));
+                        tabDB.setProgram(programList.get(Integer.valueOf(line[3])));
+                        tabDB.setType(Integer.valueOf(line[4]));
+                        tabDB.save();
+                        tabList.put(Integer.valueOf(line[0]), tabDB);
                         break;
                     case HEADERS_CSV:
-                        Header header = new Header();
-                        header.setShort_name(line[1]);
-                        header.setName(line[2]);
-                        header.setOrder_pos(Integer.valueOf(line[3]));
-                        header.setTab(tabList.get(Integer.valueOf(line[4])));
-                        header.save();
-                        headerList.put(Integer.valueOf(line[0]), header);
+                        HeaderDB headerDB = new HeaderDB();
+                        headerDB.setShort_name(line[1]);
+                        headerDB.setName(line[2]);
+                        headerDB.setOrder_pos(Integer.valueOf(line[3]));
+                        headerDB.setTabDB(tabList.get(Integer.valueOf(line[4])));
+                        headerDB.save();
+                        headerList.put(Integer.valueOf(line[0]), headerDB);
                         break;
                     case ANSWERS_CSV:
-                        Answer answer = new Answer();
-                        answer.setName(line[1]);
-                        answer.save();
-                        answerList.put(Integer.valueOf(line[0]), answer);
+                        AnswerDB answerDB = new AnswerDB();
+                        answerDB.setName(line[1]);
+                        answerDB.save();
+                        answerList.put(Integer.valueOf(line[0]), answerDB);
                         break;
                     case OPTION_ATTRIBUTES_CSV:
-                        OptionAttribute optionAttribute = new OptionAttribute();
-                        optionAttribute.setBackground_colour(line[1]);
-                        optionAttribute.setPath(line[2]);
+                        OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
+                        optionAttributeDB.setBackground_colour(line[1]);
+                        optionAttributeDB.setPath(line[2]);
                         if (line.length > 3 && !line[3].equals("")) {
-                            optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                            optionAttributeDB.setHorizontal_alignment(Integer.valueOf(line[3]));
                         } else {
-                            optionAttribute.setHorizontal_alignment(
-                                    OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+                            optionAttributeDB.setHorizontal_alignment(
+                                    OptionAttributeDB.DEFAULT_HORIZONTAL_ALIGNMENT);
                         }
                         if (line.length > 4 && !line[4].equals("")) {
-                            optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                            optionAttributeDB.setVertical_alignment(Integer.valueOf(line[4]));
                         } else {
-                            optionAttribute.setHorizontal_alignment(
-                                    OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                            optionAttributeDB.setHorizontal_alignment(
+                                    OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
                         }
                         if (line.length > 5 && !line[5].equals("")) {
-                            optionAttribute.setText_size(Integer.valueOf(line[5]));
+                            optionAttributeDB.setText_size(Integer.valueOf(line[5]));
                         } else {
-                            optionAttribute.setText_size(Integer.parseInt(
+                            optionAttributeDB.setText_size(Integer.parseInt(
                                     PreferencesState.getInstance().getContext().getResources()
                                             .getString(
                                                     R.string.default_option_text_size)));
                         }
                         if (line.length > 6 && !line[6].equals("")) {
-                            optionAttribute.setDefaultOption(Integer.valueOf(line[6]));
+                            optionAttributeDB.setDefaultOption(Integer.valueOf(line[6]));
                         } else {
-                            optionAttribute.setDefaultOption(0);
+                            optionAttributeDB.setDefaultOption(0);
                         }
-                        optionAttribute.save();
-                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+                        optionAttributeDB.save();
+                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttributeDB);
                         break;
                     case OPTIONS_CSV:
-                        Option option = new Option();
-                        option.setName(line[1]);
-                        option.setCode(line[2]);
-                        option.setFactor(Float.valueOf(line[3]));
-                        option.setAnswer(answerList.get(Integer.valueOf(line[4])));
+                        OptionDB optionDB = new OptionDB();
+                        optionDB.setName(line[1]);
+                        optionDB.setCode(line[2]);
+                        optionDB.setFactor(Float.valueOf(line[3]));
+                        optionDB.setAnswerDB(answerList.get(Integer.valueOf(line[4])));
                         if (line[5] != null && !line[5].isEmpty()) {
-                            option.setOptionAttribute(
+                            optionDB.setOptionAttributeDB(
                                     optionAttributeList.get(Integer.valueOf(line[5])));
                         }
-                        option.save();
-                        optionList.put(Integer.valueOf(line[0]), option);
+                        optionDB.save();
+                        optionList.put(Integer.valueOf(line[0]), optionDB);
                         break;
                     case QUESTIONS_CSV:
-                        Question question = new Question();
-                        question.setCode(line[1]);
-                        question.setDe_name(line[2]);
-                        question.setHelp_text(line[3]);
-                        question.setForm_name(line[4]);
-                        question.setUid(line[5]);
-                        question.setOrder_pos(Integer.valueOf(line[6]));
-                        question.setNumerator_w(Float.valueOf(line[7]));
-                        question.setDenominator_w(Float.valueOf(line[8]));
-                        question.setHeader(headerList.get(Integer.valueOf(line[9])));
+                        QuestionDB questionDB = new QuestionDB();
+                        questionDB.setCode(line[1]);
+                        questionDB.setDe_name(line[2]);
+                        questionDB.setHelp_text(line[3]);
+                        questionDB.setForm_name(line[4]);
+                        questionDB.setUid(line[5]);
+                        questionDB.setOrder_pos(Integer.valueOf(line[6]));
+                        questionDB.setNumerator_w(Float.valueOf(line[7]));
+                        questionDB.setDenominator_w(Float.valueOf(line[8]));
+                        questionDB.setHeader(headerList.get(Integer.valueOf(line[9])));
                         if (!line[10].equals("")) {
-                            question.setAnswer(answerList.get(Integer.valueOf(line[10])));
+                            questionDB.setAnswer(answerList.get(Integer.valueOf(line[10])));
                         }
                         if (!line[11].equals("")) {
-                            question.setQuestion(questionList.get(Integer.valueOf(line[11])));
+                            questionDB.setQuestion(questionList.get(Integer.valueOf(line[11])));
                         }
-                        question.setOutput(Integer.valueOf(line[12]));
-                        question.setTotalQuestions(Integer.valueOf(line[13]));
-                        question.setVisible(Integer.valueOf(line[14]));
+                        questionDB.setOutput(Integer.valueOf(line[12]));
+                        questionDB.setTotalQuestions(Integer.valueOf(line[13]));
+                        questionDB.setVisible(Integer.valueOf(line[14]));
                         if (line.length > 15 && !line[15].equals("")) {
-                            question.setPath((line[15]));
+                            questionDB.setPath((line[15]));
                         }
                         if (line.length > 16 && !line[16].equals("")) {
-                            question.setCompulsory(Integer.valueOf(line[16]));
+                            questionDB.setCompulsory(Integer.valueOf(line[16]));
                         } else {
-                            question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+                            questionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
                         }
-                        question.save();
-                        questionList.put(Integer.valueOf(line[0]), question);
+                        questionDB.save();
+                        questionList.put(Integer.valueOf(line[0]), questionDB);
                         break;
                     case QUESTION_RELATIONS_CSV:
-                        QuestionRelation questionRelation = new QuestionRelation();
-                        questionRelation.setOperation(Integer.valueOf(line[1]));
-                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
-                        questionRelation.save();
-                        questionRelationList.put(Integer.valueOf(line[0]), questionRelation);
+                        QuestionRelationDB questionRelationDB = new QuestionRelationDB();
+                        questionRelationDB.setOperation(Integer.valueOf(line[1]));
+                        questionRelationDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionRelationDB.save();
+                        questionRelationList.put(Integer.valueOf(line[0]), questionRelationDB);
                         break;
                     case MATCHES:
-                        Match match = new Match();
-                        match.setQuestionRelation(
+                        MatchDB matchDB = new MatchDB();
+                        matchDB.setQuestionRelationDB(
                                 questionRelationList.get(Integer.valueOf(line[1])));
-                        match.save();
-                        matchList.put(Long.valueOf(line[0]), match);
+                        matchDB.save();
+                        matchList.put(Long.valueOf(line[0]), matchDB);
                         break;
                     case QUESTION_OPTIONS_CSV:
-                        QuestionOption questionOption = new QuestionOption();
-                        questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
+                        QuestionOptionDB questionOptionDB = new QuestionOptionDB();
+                        questionOptionDB.setQuestion(questionList.get(Integer.valueOf(line[1])));
                         if (!line[2].equals("")) {
-                            questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                            questionOptionDB.setOption(optionList.get(Integer.valueOf(line[2])));
                         }
                         if (!line[3].equals("")) {
-                            questionOption.setMatch(matchList.get(Long.valueOf(line[3])));
+                            questionOptionDB.setMatch(matchList.get(Long.valueOf(line[3])));
                         }
-                        questionOption.save();
+                        questionOptionDB.save();
                         break;
                     case QUESTION_THRESHOLDS_CSV:
-                        QuestionThreshold questionThreshold = new QuestionThreshold();
-                        questionThreshold.setMatch(matchList.get(Long.valueOf(line[1])));
-                        questionThreshold.setQuestion(questionList.get(Integer.valueOf(line[2])));
+                        QuestionThresholdDB questionThresholdDB = new QuestionThresholdDB();
+                        questionThresholdDB.setMatchDB(matchList.get(Long.valueOf(line[1])));
+                        questionThresholdDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
-                            questionThreshold.setMinValue(Integer.valueOf(line[3]));
+                            questionThresholdDB.setMinValue(Integer.valueOf(line[3]));
                         }
                         if (!line[4].equals("")) {
-                            questionThreshold.setMaxValue(Integer.valueOf(line[4]));
+                            questionThresholdDB.setMaxValue(Integer.valueOf(line[4]));
                         }
-                        questionThreshold.save();
+                        questionThresholdDB.save();
                         break;
                     case DRUGS_CSV:
-                        Drug drug = PopulateRow.populateDrugs(line, null);
-                        drug.insert();
-                        drugList.put(Long.parseLong(line[0]), drug);
+                        DrugDB drugDB = PopulateRow.populateDrugs(line, null);
+                        drugDB.insert();
+                        drugList.put(Long.parseLong(line[0]), drugDB);
                         break;
                     case PARTNER_CSV:
-                        Partner partner = PopulateRow.populateOrganisations(line, null);
-                        partner.insert();
-                        organisationList.put(Long.parseLong(line[0]), partner);
+                        PartnerDB partnerDB = PopulateRow.populateOrganisations(line, null);
+                        partnerDB.insert();
+                        organisationList.put(Long.parseLong(line[0]), partnerDB);
                         break;
                     case TREATMENT_CSV:
-                        Treatment treatment = PopulateRow.populateTreatments(line, organisationList,
+                        TreatmentDB treatmentDB = PopulateRow.populateTreatments(line, organisationList,
                                 stringKeyList, null);
-                        treatment.insert();
-                        treatmentList.put(Long.parseLong(line[0]), treatment);
+                        treatmentDB.insert();
+                        treatmentList.put(Long.parseLong(line[0]), treatmentDB);
                         break;
                     case DRUG_COMBINATIONS_CSV:
                         PopulateRow.populateDrugCombinations(line, drugList, treatmentList,
@@ -397,9 +398,9 @@ public class PopulateDB {
                                 null).insert();
                         break;
                     case STRING_KEY_CSV:
-                        StringKey stringKey = PopulateRow.populateStringKey(line, null);
-                        stringKey.insert();
-                        stringKeyList.put(Long.valueOf(line[0]), stringKey);
+                        StringKeyDB stringKeyDB = PopulateRow.populateStringKey(line, null);
+                        stringKeyDB.insert();
+                        stringKeyList.put(Long.valueOf(line[0]), stringKeyDB);
                         break;
                     case TRANSLATION_CSV:
                         PopulateRow.populateTranslation(line, stringKeyList, null).insert();
@@ -430,19 +431,19 @@ public class PopulateDB {
             while ((line = reader.readNext()) != null) {
                 switch (table) {
                     case ORG_UNIT_LEVEL_CSV:
-                        OrgUnitLevel orgUnitLevel = new OrgUnitLevel();
-                        orgUnitLevel.setName(line[1]);
-                        orgUnitLevel.save();
-                        orgUnitLevelList.put(Integer.valueOf(line[0]), orgUnitLevel);
+                        OrgUnitLevelDB orgUnitLevelDB = new OrgUnitLevelDB();
+                        orgUnitLevelDB.setName(line[1]);
+                        orgUnitLevelDB.save();
+                        orgUnitLevelList.put(Integer.valueOf(line[0]), orgUnitLevelDB);
                         break;
                     case ORG_UNIT_CSV:
-                        OrgUnit orgUnit = new OrgUnit();
-                        orgUnit.setUid(line[1]);
-                        orgUnit.setName(line[2]);
-                        orgUnit.setOrgUnit(Long.valueOf(line[3]));
-                        orgUnit.setOrgUnitLevel(orgUnitLevelList.get(Integer.valueOf(line[4])));
-                        orgUnit.save();
-                        orgUnitList.put(Integer.valueOf(line[0]), orgUnit);
+                        OrgUnitDB orgUnitDB = new OrgUnitDB();
+                        orgUnitDB.setUid(line[1]);
+                        orgUnitDB.setName(line[2]);
+                        orgUnitDB.setOrgUnit(Long.valueOf(line[3]));
+                        orgUnitDB.setOrgUnitLevelDB(orgUnitLevelList.get(Integer.valueOf(line[4])));
+                        orgUnitDB.save();
+                        orgUnitList.put(Integer.valueOf(line[0]), orgUnitDB);
                         break;
                 }
             }
@@ -504,13 +505,13 @@ public class PopulateDB {
      */
     public static void wipeSurveys() {
         Delete.tables(
-                Value.class,
-                Score.class,
-                Survey.class
+                ValueDB.class,
+                ScoreDB.class,
+                SurveyDB.class
         );
     }
 
-    public static void addTotalQuestions(Context context, List<Question> questions)
+    public static void addTotalQuestions(Context context, List<QuestionDB> questionDBs)
             throws IOException {
         //Reset inner references
         CSVReader reader = new CSVReader(
@@ -519,10 +520,10 @@ public class PopulateDB {
 
         String[] line;
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
-                    question.setTotalQuestions(Integer.valueOf(line[13]));
-                    question.save();
+            for (QuestionDB questionDB : questionDBs) {
+                if (questionDB.getUid().equals(line[5])) {
+                    questionDB.setTotalQuestions(Integer.valueOf(line[13]));
+                    questionDB.save();
                     break;
                 }
             }
@@ -532,18 +533,18 @@ public class PopulateDB {
 
     public static void addImagePathQuestions(Context context) throws IOException {
         //Reset inner references,
-        List<Question> questions = Question.getAllQuestions();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestions();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(QUESTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String[] line;
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
+            for (QuestionDB questionDB : questionDBs) {
+                if (questionDB.getUid().equals(line[5])) {
                     if (line.length > 15 && !line[15].equals("")) {
-                        question.setPath(line[15]);
-                        question.save();
+                        questionDB.setPath(line[15]);
+                        questionDB.save();
                     }
                     break;
                 }
@@ -552,7 +553,7 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addVisibleQuestions(Context context, List<Question> questions)
+    public static void addVisibleQuestions(Context context, List<QuestionDB> questionDBs)
             throws IOException {
         //Reset inner references
         CSVReader reader = new CSVReader(
@@ -561,10 +562,10 @@ public class PopulateDB {
 
         String[] line;
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
-                    question.setVisible(Integer.valueOf(line[14]));
-                    question.save();
+            for (QuestionDB questionDB : questionDBs) {
+                if (questionDB.getUid().equals(line[5])) {
+                    questionDB.setVisible(Integer.valueOf(line[14]));
+                    questionDB.save();
                     break;
                 }
             }
@@ -576,7 +577,7 @@ public class PopulateDB {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTION_ATTRIBUTES_CSV);
         fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
-        List<Option> options = Option.getAllOptions();
+        List<OptionDB> optionDBs = OptionDB.getAllOptions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(
@@ -585,51 +586,51 @@ public class PopulateDB {
         CSVReader readerOptions = new CSVReader(
                 new InputStreamReader(context.openFileInput(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
         //Remove bad optionAttributes.
-        Delete.tables(OptionAttribute.class);
+        Delete.tables(OptionAttributeDB.class);
         String[] line;
 
         //save new optionattributes
         while ((line = reader.readNext()) != null) {
-            OptionAttribute optionAttribute = new OptionAttribute();
-            optionAttribute.setBackground_colour(line[1]);
-            optionAttribute.setPath(line[2]);
+            OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
+            optionAttributeDB.setBackground_colour(line[1]);
+            optionAttributeDB.setPath(line[2]);
             if (line.length > 3 && !line[3].equals("")) {
-                optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                optionAttributeDB.setHorizontal_alignment(Integer.valueOf(line[3]));
             } else {
-                optionAttribute.setHorizontal_alignment(
-                        OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+                optionAttributeDB.setHorizontal_alignment(
+                        OptionAttributeDB.DEFAULT_HORIZONTAL_ALIGNMENT);
             }
             if (line.length > 4 && !line[4].equals("")) {
-                optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                optionAttributeDB.setVertical_alignment(Integer.valueOf(line[4]));
             } else {
-                optionAttribute.setVertical_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttributeDB.setVertical_alignment(OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
             }
             if (line.length > 5 && !line[5].equals("")) {
-                optionAttribute.setText_size(Integer.valueOf(line[5]));
+                optionAttributeDB.setText_size(Integer.valueOf(line[5]));
             } else {
-                optionAttribute.setText_size(Integer.parseInt(
+                optionAttributeDB.setText_size(Integer.parseInt(
                         PreferencesState.getInstance().getContext().getResources().getString(
                                 R.string.default_option_text_size)));
             }
             if (line.length > 6 && !line[6].equals("")) {
-                optionAttribute.setDefaultOption(Integer.valueOf(line[6]));
+                optionAttributeDB.setDefaultOption(Integer.valueOf(line[6]));
             } else {
-                optionAttribute.setDefaultOption(0);
+                optionAttributeDB.setDefaultOption(0);
             }
-            optionAttribute.save();
-            optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+            optionAttributeDB.save();
+            optionAttributeList.put(Integer.valueOf(line[0]), optionAttributeDB);
         }
 
         line = null;
 
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
-            for (Option option : options) {
-                if (String.valueOf(option.getId_option()).equals(line[0])) {
+            for (OptionDB optionDB : optionDBs) {
+                if (String.valueOf(optionDB.getId_option()).equals(line[0])) {
                     if (!line[5].equals("")) {
-                        option.setOptionAttribute(
+                        optionDB.setOptionAttributeDB(
                                 optionAttributeList.get(Integer.valueOf(line[5])));
-                        option.save();
+                        optionDB.save();
                     }
                     break;
                 }
@@ -639,7 +640,7 @@ public class PopulateDB {
     }
 
     public static void addOptionTextSize(Context context) throws IOException {
-        List<Option> options = Option.getAllOptions();
+        List<OptionDB> optionDBs = OptionDB.getAllOptions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(
@@ -648,51 +649,51 @@ public class PopulateDB {
         CSVReader readerOptions = new CSVReader(
                 new InputStreamReader(context.openFileInput(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
         //Remove bad optionAttributes.
-        Delete.tables(OptionAttribute.class);
+        Delete.tables(OptionAttributeDB.class);
         String[] line;
 
         //save new optionattributes
         while ((line = reader.readNext()) != null) {
-            OptionAttribute optionAttribute = new OptionAttribute();
-            optionAttribute.setBackground_colour(line[1]);
-            optionAttribute.setPath(line[2]);
+            OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
+            optionAttributeDB.setBackground_colour(line[1]);
+            optionAttributeDB.setPath(line[2]);
             if (line.length > 3 && !line[3].equals("")) {
-                optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                optionAttributeDB.setHorizontal_alignment(Integer.valueOf(line[3]));
             } else {
-                optionAttribute.setHorizontal_alignment(
-                        OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+                optionAttributeDB.setHorizontal_alignment(
+                        OptionAttributeDB.DEFAULT_HORIZONTAL_ALIGNMENT);
             }
             if (line.length > 4 && !line[4].equals("")) {
-                optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                optionAttributeDB.setVertical_alignment(Integer.valueOf(line[4]));
             } else {
-                optionAttribute.setVertical_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttributeDB.setVertical_alignment(OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
             }
             if (line.length > 5 && !line[5].equals("")) {
-                optionAttribute.setText_size(Integer.valueOf(line[5]));
+                optionAttributeDB.setText_size(Integer.valueOf(line[5]));
             } else {
-                optionAttribute.setText_size(Integer.parseInt(
+                optionAttributeDB.setText_size(Integer.parseInt(
                         PreferencesState.getInstance().getContext().getResources().getString(
                                 R.string.default_option_text_size)));
             }
             if (line.length > 6 && !line[6].equals("")) {
-                optionAttribute.setDefaultOption(Integer.valueOf(line[6]));
+                optionAttributeDB.setDefaultOption(Integer.valueOf(line[6]));
             } else {
-                optionAttribute.setDefaultOption(0);
+                optionAttributeDB.setDefaultOption(0);
             }
-            optionAttribute.save();
-            optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+            optionAttributeDB.save();
+            optionAttributeList.put(Integer.valueOf(line[0]), optionAttributeDB);
         }
 
         line = null;
 
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
-            for (Option option : options) {
-                if (String.valueOf(option.getId_option()).equals(line[0])) {
+            for (OptionDB optionDB : optionDBs) {
+                if (String.valueOf(optionDB.getId_option()).equals(line[0])) {
                     if (!line[5].equals("")) {
-                        option.setOptionAttribute(
+                        optionDB.setOptionAttributeDB(
                                 optionAttributeList.get(Integer.valueOf(line[5])));
-                        option.save();
+                        optionDB.save();
                     }
                     break;
                 }
@@ -702,7 +703,7 @@ public class PopulateDB {
     }
 
     public static void updateOptionNames(Context context) throws IOException {
-        List<Option> options = Option.getAllOptions();
+        List<OptionDB> optionDBs = OptionDB.getAllOptions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(new InputStreamReader(context.openFileInput(OPTIONS_CSV)),
@@ -711,11 +712,11 @@ public class PopulateDB {
         String line[];
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
-            for (Option option : options) {
-                if (String.valueOf(option.getId_option()).equals(line[0])) {
-                    option.setName(line[1]);
-                    option.setCode(line[2]);
-                    option.save();
+            for (OptionDB optionDB : optionDBs) {
+                if (String.valueOf(optionDB.getId_option()).equals(line[0])) {
+                    optionDB.setName(line[1]);
+                    optionDB.setCode(line[2]);
+                    optionDB.save();
                     break;
                 }
             }
@@ -724,7 +725,7 @@ public class PopulateDB {
     }
 
     public static void updateQuestions(Context context) throws IOException {
-        List<Question> questions = Question.getAllQuestions();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(
@@ -734,28 +735,28 @@ public class PopulateDB {
         String line[];
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
-            for (Question question : questions) {
-                if (String.valueOf(question.getId_question()).equals((line[0]))) {
-                    question.setCode(line[1]);
-                    question.setDe_name(line[2]);
-                    question.setHelp_text(line[3]);
-                    question.setForm_name(line[4]);
+            for (QuestionDB questionDB : questionDBs) {
+                if (String.valueOf(questionDB.getId_question()).equals((line[0]))) {
+                    questionDB.setCode(line[1]);
+                    questionDB.setDe_name(line[2]);
+                    questionDB.setHelp_text(line[3]);
+                    questionDB.setForm_name(line[4]);
                     //Update necessary from migration22 in myanmar
-                    question.setOutput(Integer.valueOf(line[12]));
+                    questionDB.setOutput(Integer.valueOf(line[12]));
                     //Update necessary from migration3
-                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    questionDB.setTotalQuestions(Integer.valueOf(line[13]));
                     //Update necessary from migration4
-                    question.setVisible(Integer.valueOf(line[14]));
+                    questionDB.setVisible(Integer.valueOf(line[14]));
                     //Update necessary from migration7
                     if (line.length > 15 && !line[15].equals("")) {
-                        question.setPath(line[15]);
+                        questionDB.setPath(line[15]);
                     }
                     if (line.length > 16 && !line[16].equals("")) {
-                        question.setCompulsory(Integer.valueOf(line[16]));
+                        questionDB.setCompulsory(Integer.valueOf(line[16]));
                     } else {
-                        question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+                        questionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
                     }
-                    question.save();
+                    questionDB.save();
                     break;
                 }
             }
@@ -767,12 +768,12 @@ public class PopulateDB {
     public static void addNotTestedRemminder(Context context) throws IOException {
         //Reset inner references
         cleanInnerLists();
-        List<Option> actualOptions = Option.getAllOptions();
-        List<Question> actualQuestions = Question.getAllQuestions();
+        List<OptionDB> actualOptionDBs = OptionDB.getAllOptions();
+        List<QuestionDB> actualQuestionDBs = QuestionDB.getAllQuestions();
 
-        questionList = new LinkedHashMap<Integer, Question>();
-        optionAttributeList = new LinkedHashMap<Integer, OptionAttribute>();
-        optionList = new LinkedHashMap<Integer, Option>();
+        questionList = new LinkedHashMap<Integer, QuestionDB>();
+        optionAttributeList = new LinkedHashMap<Integer, OptionAttributeDB>();
+        optionList = new LinkedHashMap<Integer, OptionDB>();
         questionRelationList = new LinkedHashMap();
         matchList = new LinkedHashMap();
         int updateQRFromPosition = 24;
@@ -791,146 +792,146 @@ public class PopulateDB {
                 boolean isNew = true;
                 switch (table) {
                     case OPTION_ATTRIBUTES_CSV:
-                        OptionAttribute optionAttribute = new OptionAttribute();
-                        optionAttribute.setBackground_colour(line[1]);
-                        optionAttribute.setPath(line[2]);
+                        OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
+                        optionAttributeDB.setBackground_colour(line[1]);
+                        optionAttributeDB.setPath(line[2]);
                         if (line.length > 3 && !line[3].equals("")) {
-                            optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                            optionAttributeDB.setHorizontal_alignment(Integer.valueOf(line[3]));
                         } else {
-                            optionAttribute.setHorizontal_alignment(
-                                    OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+                            optionAttributeDB.setHorizontal_alignment(
+                                    OptionAttributeDB.DEFAULT_HORIZONTAL_ALIGNMENT);
                         }
                         if (line.length > 4 && !line[4].equals("")) {
-                            optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                            optionAttributeDB.setVertical_alignment(Integer.valueOf(line[4]));
                         } else {
-                            optionAttribute.setHorizontal_alignment(
-                                    OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                            optionAttributeDB.setHorizontal_alignment(
+                                    OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
                         }
                         if (line.length > 5 && !line[5].equals("")) {
-                            optionAttribute.setText_size(Integer.valueOf(line[5]));
+                            optionAttributeDB.setText_size(Integer.valueOf(line[5]));
                         } else {
-                            optionAttribute.setText_size(Integer.parseInt(
+                            optionAttributeDB.setText_size(Integer.parseInt(
                                     PreferencesState.getInstance().getContext().getResources()
                                             .getString(
                                                     R.string.default_option_text_size)));
                         }
                         if (line.length > 6 && !line[6].equals("")) {
-                            optionAttribute.setDefaultOption(Integer.valueOf(line[6]));
+                            optionAttributeDB.setDefaultOption(Integer.valueOf(line[6]));
                         } else {
-                            optionAttribute.setDefaultOption(0);
+                            optionAttributeDB.setDefaultOption(0);
                         }
-                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttributeDB);
                         break;
                     case OPTIONS_CSV:
-                        //Ignore if the option already exists.
-                        for (Option option : actualOptions) {
-                            if (String.valueOf(option.getId_option()).equals(line[0])) {
+                        //Ignore if the optionDB already exists.
+                        for (OptionDB optionDB : actualOptionDBs) {
+                            if (String.valueOf(optionDB.getId_option()).equals(line[0])) {
                                 isNew = false;
                             }
                         }
-                        Option option;
+                        OptionDB optionDB;
                         if (isNew) {
-                            option = new Option();
-                            option.setName(line[1]);
-                            option.setCode(line[2]);
-                            option.setFactor(Float.valueOf(line[3]));
-                            option.setAnswer(Answer.findById(Long.valueOf(line[4])));
+                            optionDB = new OptionDB();
+                            optionDB.setName(line[1]);
+                            optionDB.setCode(line[2]);
+                            optionDB.setFactor(Float.valueOf(line[3]));
+                            optionDB.setAnswerDB(AnswerDB.findById(Long.valueOf(line[4])));
                             if (line[5] != null && !line[5].isEmpty()) {
-                                OptionAttribute localOptionAttribute = OptionAttribute.findById(
+                                OptionAttributeDB localOptionAttributeDB = OptionAttributeDB.findById(
                                         Long.valueOf(line[5]));
-                                if (localOptionAttribute == null) {
-                                    localOptionAttribute = optionAttributeList.get(
+                                if (localOptionAttributeDB == null) {
+                                    localOptionAttributeDB = optionAttributeList.get(
                                             Integer.valueOf(line[5]));
-                                    localOptionAttribute.save();
+                                    localOptionAttributeDB.save();
                                 }
-                                option.setOptionAttribute(localOptionAttribute);
+                                optionDB.setOptionAttributeDB(localOptionAttributeDB);
                             }
-                            option.save();
+                            optionDB.save();
                         } else {
-                            option = Option.findById(Long.valueOf(line[0]));
+                            optionDB = OptionDB.findById(Long.valueOf(line[0]));
                         }
-                        optionList.put(Integer.valueOf(line[0]), option);
+                        optionList.put(Integer.valueOf(line[0]), optionDB);
                         break;
                     case QUESTIONS_CSV:
-                        //Ignore if the question already exists.
-                        for (Question question : actualQuestions) {
-                            if (String.valueOf(question.getId_question()).equals(line[0])) {
+                        //Ignore if the questionDB already exists.
+                        for (QuestionDB questionDB : actualQuestionDBs) {
+                            if (String.valueOf(questionDB.getId_question()).equals(line[0])) {
                                 isNew = false;
                             }
                         }
-                        Question question;
+                        QuestionDB questionDB;
                         if (isNew) {
-                            question = new Question();
-                            question.setCode(line[1]);
-                            question.setDe_name(line[2]);
-                            question.setHelp_text(line[3]);
-                            question.setForm_name(line[4]);
-                            question.setUid(line[5]);
-                            question.setOrder_pos(Integer.valueOf(line[6]));
-                            question.setNumerator_w(Float.valueOf(line[7]));
-                            question.setDenominator_w(Float.valueOf(line[8]));
-                            question.setHeader(Header.findById(Long.valueOf(line[9])));
+                            questionDB = new QuestionDB();
+                            questionDB.setCode(line[1]);
+                            questionDB.setDe_name(line[2]);
+                            questionDB.setHelp_text(line[3]);
+                            questionDB.setForm_name(line[4]);
+                            questionDB.setUid(line[5]);
+                            questionDB.setOrder_pos(Integer.valueOf(line[6]));
+                            questionDB.setNumerator_w(Float.valueOf(line[7]));
+                            questionDB.setDenominator_w(Float.valueOf(line[8]));
+                            questionDB.setHeader(HeaderDB.findById(Long.valueOf(line[9])));
                             if (!line[10].equals("")) {
-                                question.setAnswer(Answer.findById(Long.valueOf(line[10])));
+                                questionDB.setAnswer(AnswerDB.findById(Long.valueOf(line[10])));
                             }
                             if (!line[11].equals("")) {
-                                question.setQuestion(questionList.get(Integer.valueOf(line[11])));
+                                questionDB.setQuestion(questionList.get(Integer.valueOf(line[11])));
                             }
-                            question.setOutput(Integer.valueOf(line[12]));
-                            question.setTotalQuestions(Integer.valueOf(line[13]));
-                            question.setVisible(Integer.valueOf(line[14]));
+                            questionDB.setOutput(Integer.valueOf(line[12]));
+                            questionDB.setTotalQuestions(Integer.valueOf(line[13]));
+                            questionDB.setVisible(Integer.valueOf(line[14]));
                             if (line.length > 15 && !line[15].equals("")) {
-                                question.setPath((line[15]));
+                                questionDB.setPath((line[15]));
                             }
                             if (line.length > 16 && !line[16].equals("")) {
-                                question.setCompulsory(Integer.valueOf(line[16]));
+                                questionDB.setCompulsory(Integer.valueOf(line[16]));
                             } else {
-                                question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+                                questionDB.setCompulsory(QuestionDB.QUESTION_NOT_COMPULSORY);
                             }
-                            question.save();
+                            questionDB.save();
                         } else {
-                            question = Question.findByUID(line[5]);
+                            questionDB = QuestionDB.findByUID(line[5]);
                         }
 
-                        questionList.put(Integer.valueOf(line[0]), question);
+                        questionList.put(Integer.valueOf(line[0]), questionDB);
                         break;
                     case QUESTION_RELATIONS_CSV:
-                        //Ignore if the option already exists.
+                        //Ignore if the optionDB already exists.
                         QRRow++;
                         if (updateQRFromPosition > QRRow) {
                             break;
                         }
-                        QuestionRelation questionRelation = new QuestionRelation();
-                        questionRelation.setOperation(Integer.valueOf(line[1]));
-                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
-                        questionRelation.save();
-                        questionRelationList.put(Integer.valueOf(line[0]), questionRelation);
+                        QuestionRelationDB questionRelationDB = new QuestionRelationDB();
+                        questionRelationDB.setOperation(Integer.valueOf(line[1]));
+                        questionRelationDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionRelationDB.save();
+                        questionRelationList.put(Integer.valueOf(line[0]), questionRelationDB);
                         break;
                     case MATCHES:
-                        //Ignore if the match already exists.
+                        //Ignore if the matchDB already exists.
                         MatchRow++;
                         if (updateMatchFromPosition > MatchRow) {
                             break;
                         }
-                        Match match = new Match();
-                        match.setQuestionRelation(
+                        MatchDB matchDB = new MatchDB();
+                        matchDB.setQuestionRelationDB(
                                 questionRelationList.get(Integer.valueOf(line[1])));
-                        match.save();
-                        matchList.put(Long.valueOf(line[0]), match);
+                        matchDB.save();
+                        matchList.put(Long.valueOf(line[0]), matchDB);
                         break;
                     case QUESTION_OPTIONS_CSV:
-                        //Ignore if the question option already exists.
+                        //Ignore if the questionDB optionDB already exists.
                         QORow++;
                         if (updateQOFromPosition > QORow) {
                             break;
                         }
-                        QuestionOption questionOption = new QuestionOption();
-                        questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
-                        questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                        QuestionOptionDB questionOptionDB = new QuestionOptionDB();
+                        questionOptionDB.setQuestion(questionList.get(Integer.valueOf(line[1])));
+                        questionOptionDB.setOption(optionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
-                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                            questionOptionDB.setMatch(matchList.get(Integer.valueOf(line[3])));
                         }
-                        questionOption.save();
+                        questionOptionDB.save();
                         break;
                 }
             }
@@ -942,36 +943,37 @@ public class PopulateDB {
      * Migration used to add a new parent-child relation in lao
      */
     public static void createMissingRelationInLao() {
-        //new match relation in csv
+        //new matchDB relation in csv
         //29;29
-        //new QuestionOption in csv
+        //new QuestionOptionDB in csv
         //45;5;13;29
         //new QuestionRelation in csv
         //29;1;6
         Long childId = 6l;
         Long parentId = 5l;
         Long optionId = 13l;
-        QuestionRelation questionRelation = new QuestionRelation(Question.findByID(childId),
-                QuestionRelation.PARENT_CHILD);
-        questionRelation.save();
-        Match match = new Match(questionRelation);
-        match.save();
-        QuestionOption questionOption
-                = new QuestionOption(Option.findById(optionId), Question.findByID(parentId), match);
-        questionOption.save();
+        QuestionRelationDB questionRelationDB = new QuestionRelationDB(QuestionDB.findByID(childId),
+                QuestionRelationDB.PARENT_CHILD);
+        questionRelationDB.save();
+        MatchDB matchDB = new MatchDB(questionRelationDB);
+        matchDB.save();
+        QuestionOptionDB questionOptionDB
+                = new QuestionOptionDB(OptionDB.findById(optionId), QuestionDB.findByID(parentId),
+                matchDB);
+        questionOptionDB.save();
     }
 
     public static void initDBQuery() {
-        Tab.getAllTabs();
+        TabDB.getAllTabs();
     }
 
     public static void wipeOrgUnitsAndEvents() {
         wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
-                OrgUnit.class,
-                Survey.class,
-                Value.class,
-                Score.class,
-                SurveySchedule.class,
-                User.class).toArray());
+                OrgUnitDB.class,
+                SurveyDB.class,
+                ValueDB.class,
+                ScoreDB.class,
+                SurveyScheduleDB.class,
+                UserDB.class).toArray());
     }
 }

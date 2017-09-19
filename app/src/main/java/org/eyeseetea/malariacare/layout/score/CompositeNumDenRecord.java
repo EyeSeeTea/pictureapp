@@ -19,19 +19,19 @@
 
 package org.eyeseetea.malariacare.layout.score;
 
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 
 import java.util.List;
 
 public class CompositeNumDenRecord extends ANumDenRecord {
 
 
-    public List<Float> readNumDen(CompositeScore compositeScore, List<Float> numDenTotal) {
+    public List<Float> readNumDen(CompositeScoreDB compositeScoreDB, List<Float> numDenTotal) {
         numDenTotal = this.calculateNumDenTotal(numDenTotal);
 
-        if (compositeScore.hasChildren()) {
-            for (CompositeScore compositeScoreChild : compositeScore.getCompositeScoreChildren()) {
-                numDenTotal = readNumDen(compositeScoreChild, numDenTotal);
+        if (compositeScoreDB.hasChildren()) {
+            for (CompositeScoreDB compositeScoreDBChild : compositeScoreDB.getCompositeScoreDBChildren()) {
+                numDenTotal = readNumDen(compositeScoreDBChild, numDenTotal);
             }
         }
 

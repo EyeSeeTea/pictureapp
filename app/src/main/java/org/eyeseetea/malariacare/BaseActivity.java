@@ -41,15 +41,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.ExportDataException;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -69,7 +66,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     private static final int DUMP_REQUEST_CODE = 0;
     protected static String TAG = ".BaseActivity";
-    private AlarmPushReceiver alarmPush;
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
@@ -93,14 +89,13 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         initView(savedInstanceState);
         PreferencesState.getInstance().setPushInProgress(false);
-        List<Survey> surveys = Survey.getAllSendingSurveys();
-        Log.d(TAG, "Surveys sending: " + surveys.size());
-        for (Survey survey : surveys) {
-            survey.setStatus(Constants.SURVEY_QUARANTINE);
-            survey.save();
+        List<SurveyDB> surveyDBs = SurveyDB.getAllSendingSurveys();
+        Log.d(TAG, "Surveys sending: " + surveyDBs.size());
+        for (SurveyDB surveyDB : surveyDBs) {
+            surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
+            surveyDB.save();
         }
-        alarmPush = new AlarmPushReceiver();
-        alarmPush.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
 
         mBaseActivityStrategy.onCreate();
     }
@@ -161,9 +156,9 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Adds actionbar to the activity
      */
     public void createActionBar() {
-        Program program = Program.getFirstProgram();
+        ProgramDB programDB = ProgramDB.getFirstProgram();
 
-        if (program != null) {
+        if (programDB != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
             LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
@@ -208,7 +203,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.action_about:
                 debugMessage("User asked for about");
-                showAlertWithHtmlMessageAndLastCommit(R.string.app_about, R.raw.about,
+                showAlertWithHtmlMessageAndLastCommit(R.string.common_menu_about, R.raw.about,
                         BaseActivity.this);
                 break;
             case R.id.action_copyright:
@@ -351,11 +346,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param rawId   Id of the raw text resource in HTML format
      */
     public void showAlertWithHtmlMessageAndLastCommit(int titleId, int rawId, Context context) {
-        String stringMessage = getMessageWithCommit(rawId, context);
-        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
-        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
-
-        showAlertWithLogoAndVersion(titleId, linkedMessage, context);
+        mBaseActivityStrategy.showAbout(titleId, rawId, context);
     }
 
 
@@ -438,7 +429,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onDestroy() {
         mBaseActivityStrategy.onDestroy();
         super.onDestroy();
-        alarmPush.cancelPushAlarm(this);
     }
 
     @Override

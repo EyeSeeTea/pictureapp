@@ -7,10 +7,10 @@ import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.strategies
         .AuthenticationLocalDataSourceStrategy;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -37,14 +37,19 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
     @Override
     public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
-        User loggedUser = User.getLoggedUser();
-        String userUid = loggedUser != null ? loggedUser.getUid() : null;
+        UserDB loggedUserDB = UserDB.getLoggedUser();
+        String userUid = loggedUserDB != null ? loggedUserDB.getUid() : null;
 
-        User user = new User(userUid, credentials.getUsername());
+        UserDB userDB = new UserDB(userUid, credentials.getUsername());
+        if (loggedUserDB != null) {
+            userDB.setCanAddSurveys(loggedUserDB.canAddSurveys());
+        } else {
+            userDB.setCanAddSurveys(true);
+        }
 
-        User.insertLoggedUser(user);
+        UserDB.insertLoggedUser(userDB);
 
-        Session.setUser(user);
+        Session.setUserDB(userDB);
 
         Session.setCredentials(credentials);
 
@@ -75,14 +80,14 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
 
     public void deleteOrgUnitQuestionOptions() {
-        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
-        for (Question question : questions) {
-            if (question.getAnswer() != null) {
-                List<Option> options = question.getAnswer().getOptions();
-                for (Option option : options) {
-                    if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
-                        option.delete();
+        for (QuestionDB questionDB : questionDBs) {
+            if (questionDB.getAnswerDB() != null) {
+                List<OptionDB> optionDBs = questionDB.getAnswerDB().getOptionDBs();
+                for (OptionDB optionDB : optionDBs) {
+                    if (QuestionOptionDB.findByQuestionAndOption(questionDB, optionDB).size() == 0) {
+                        optionDB.delete();
                     }
                 }
             }

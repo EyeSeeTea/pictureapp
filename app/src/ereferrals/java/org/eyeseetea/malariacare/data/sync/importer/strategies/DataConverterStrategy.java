@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -45,7 +45,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
     private void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
-        Question orgUnitQuestion = Question.findByUID(ORG_UNIT_QUESTION_UID);
+        QuestionDB orgUnitQuestion = QuestionDB.findByUID(ORG_UNIT_QUESTION_UID);
 
         if (orgUnitQuestion == null) {
             throw new QuestionNotFoundException(
@@ -63,7 +63,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
     private void convertPatientSexPregnancyDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
-        Question sexPregnancyQuestion = Question.findByUID(SEX_PREGNANCY_QUESTION_UID);
+        QuestionDB sexPregnancyQuestion = QuestionDB.findByUID(SEX_PREGNANCY_QUESTION_UID);
 
         if (sexPregnancyQuestion == null) {
             Log.d(TAG, event.getUid() + "With invalid sexPregnancy question");

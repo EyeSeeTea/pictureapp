@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 /**
  * POJO that represents a counter question, is never shown but its value is increased
@@ -16,24 +16,24 @@ public class QuestionCounter {
     /**
      * The question whose value will be increased
      */
-    private Question counterQuestion;
+    private QuestionDB mCounterQuestionDB;
 
-    public QuestionCounter(Question counterQuestion) {
-        this.counterQuestion = counterQuestion;
+    public QuestionCounter(QuestionDB counterQuestionDB) {
+        this.mCounterQuestionDB = counterQuestionDB;
     }
 
     public void increaseRepetitions() {
-        String currentRepetitionsStr = counterQuestion.getQuestionValueBySession();
+        String currentRepetitionsStr = mCounterQuestionDB.getQuestionValueBySession();
         Integer increasedRepetitions = toInteger(currentRepetitionsStr) + 1;
-        counterQuestion.saveValuesText(increasedRepetitions.toString());
-        Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
+        mCounterQuestionDB.saveValuesText(increasedRepetitions.toString());
+        Log.i(TAG, String.format("Counter %s updated, current value %d", mCounterQuestionDB.getCode(),
                 increasedRepetitions));
     }
 
     //Limits the counter by a number of failed attempts.
     public boolean isMaxCounterLimit(Integer limit) {
-        Integer currentRepetitions = toInteger(counterQuestion.getQuestionValueBySession());
-        Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
+        Integer currentRepetitions = toInteger(mCounterQuestionDB.getQuestionValueBySession());
+        Log.i(TAG, String.format("Counter %s updated, current value %d", mCounterQuestionDB.getCode(),
                 currentRepetitions));
         return !(limit == infinite_counter_number || currentRepetitions < limit);
     }
@@ -47,7 +47,7 @@ public class QuestionCounter {
         } catch (NumberFormatException ex) {
             Log.e(TAG,
                     String.format("Counter %s cannot be updated, current value '%s' not a integer",
-                            counterQuestion.getCode(), currentRepetitions));
+                            mCounterQuestionDB.getCode(), currentRepetitions));
             return 0;
         }
     }

@@ -62,7 +62,7 @@
 
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="pref_visual"
+        android:key="@string/pref_visual"
         android:title="@string/app_visual">
         <!--<CheckBoxPreference-->
         <!--android:key="@string/show_num_dems"-->
@@ -91,6 +91,6 @@
             android:key="@string/language_code"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
-            android:title="@string/settings_select_language" />
+            android:title="@string/common_about_rowHeader_language" />
     </PreferenceCategory>
 </PreferenceScreen>

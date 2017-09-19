@@ -21,8 +21,7 @@ package org.eyeseetea.malariacare.data.sync.importer.models;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramFlow_Table;
@@ -51,7 +50,7 @@ public class ProgramExtended {
     /**
      * Reference to app program (useful to create relationships with orgunits)
      */
-    Program appProgram;
+    ProgramDB mAppProgramDB;
 
     public ProgramExtended() {
     }
@@ -64,12 +63,12 @@ public class ProgramExtended {
         return this.program;
     }
 
-    public void setAppProgram(Program appProgram) {
-        this.appProgram = appProgram;
+    public void setAppProgramDB(ProgramDB appProgramDB) {
+        this.mAppProgramDB = appProgramDB;
     }
 
-    public Program getAppProgram() {
-        return this.appProgram;
+    public ProgramDB getAppProgramDB() {
+        return this.mAppProgramDB;
     }
 
     public static ProgramFlow getProgram(String id) {

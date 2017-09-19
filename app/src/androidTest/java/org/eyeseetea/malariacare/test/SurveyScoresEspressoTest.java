@@ -30,9 +30,9 @@
 //import org.eyeseetea.malariacare.DashboardActivity;
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.data.database.model.Option;
-//import org.eyeseetea.malariacare.data.database.model.Question;
-//import org.eyeseetea.malariacare.data.database.model.Tab;
+//import org.eyeseetea.malariacare.data.database.model.OptionDB;
+//import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+//import org.eyeseetea.malariacare.data.database.model.TabDB;
 //import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 //import org.eyeseetea.malariacare.services.SurveyService;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;
@@ -206,7 +206,7 @@
 //        whenTabSelected(1);
 //
 //        //THEN: Check font size has properly changed
-//        onData(is(instanceOf(Question.class))).inAdapterView(withId(R.id.listView)).atPosition(1)
+//        onData(is(instanceOf(QuestionDB.class))).inAdapterView(withId(R.id.listView)).atPosition(1)
 //                .onChildView(withId(R.id.answer))
 //                .check(matches(hasEditCardScale(res.getString(R.string.font_size_level3))));
 //    }
@@ -230,7 +230,7 @@
 //     */
 //    private void whenTabSelected(int num){
 //        onView(withId(R.id.tabSpinner)).perform(click());
-//        onData(is(instanceOf(Tab.class))).atPosition(num).perform(click());
+//        onData(is(instanceOf(TabDB.class))).atPosition(num).perform(click());
 //    }
 //
 //    /**
@@ -239,13 +239,13 @@
 //     * @param answer True (Yes), False (No)
 //     */
 //    private void whenDropDownAnswered(int position,boolean answer){
-//        onData(is(instanceOf(Question.class))).
+//        onData(is(instanceOf(QuestionDB.class))).
 //                inAdapterView(withId(R.id.listView)).
 //                atPosition(position).
 //                onChildView(withId(R.id.answer))
 //                .perform(click());
 //        int indexAnswer=answer?1:2;
-//        onData(is(instanceOf(Option.class))).atPosition(indexAnswer).perform(click());
+//        onData(is(instanceOf(OptionDB.class))).atPosition(indexAnswer).perform(click());
 //    }
 //
 //    private void unregisterSurveyReceiver(){

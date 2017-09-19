@@ -7,9 +7,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
@@ -24,14 +24,14 @@ public abstract class AQuestionAnswerChangedListener {
     }
 
     /**
-     * Returns the option selected for the given question and boolean value or by position
+     * Returns the option selected for the given questionDB and boolean value or by position
      */
-    public static Option findSwitchOption(Question question, boolean isChecked) {
+    public static OptionDB findSwitchOption(QuestionDB questionDB, boolean isChecked) {
         //Search option by position
         if (isChecked) {
-            return question.getAnswer().getOptions().get(0);
+            return questionDB.getAnswerDB().getOptionDBs().get(0);
         } else {
-            return question.getAnswer().getOptions().get(1);
+            return questionDB.getAnswerDB().getOptionDBs().get(1);
         }
     }
 
@@ -39,46 +39,46 @@ public abstract class AQuestionAnswerChangedListener {
     //code in DynamicTabAdapter will be delete when DynamicTabAdapter refactoring will be completed
 
     /**
-     * Returns the boolean selected for the given question (by boolean value or position option,
+     * Returns the boolean selected for the given questionDB (by boolean value or position option,
      * position 1=true 0=false)
      */
-    public static Boolean findSwitchBoolean(Question question) {
-        Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+    public static Boolean findSwitchBoolean(QuestionDB questionDB) {
+        ValueDB valueDB = questionDB.getValueBySession();
+        if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(0).getCode())) {
             return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
+        } else if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(1).getCode())) {
             return false;
         }
         return false;
     }
 
     protected void saveValue(View view, String newValue) {
-        Question question = (Question) view.findViewById(R.id.answer).getTag();
-        question.saveValuesText(newValue);
+        QuestionDB questionDB = (QuestionDB) view.findViewById(R.id.answer).getTag();
+        questionDB.saveValuesText(newValue);
 
-        showOrHideChildren(question);
+        showOrHideChildren(questionDB);
     }
 
 
-    protected void saveValue(View view, Option option) {
-        Question question = (Question) view.findViewById(R.id.answer).getTag();
-        question.saveValuesDDL(option, question.getValueBySession());
+    protected void saveValue(View view, OptionDB optionDB) {
+        QuestionDB questionDB = (QuestionDB) view.findViewById(R.id.answer).getTag();
+        questionDB.saveValuesDDL(optionDB, questionDB.getValueBySession());
 
-        showOrHideChildren(question);
+        showOrHideChildren(questionDB);
     }
 
     /**
-     * Hide or show the children question from a given question,  if is necessary  it reloads the
+     * Hide or show the children questionDB from a given questionDB,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
      *
      * TODO: Duplicate code in DynamicTabAdapter line 1094
      * code in DynamicTabAdapter will be delete when DynamicTabAdapter refactoring will be
      * completed
      *
-     * @param question is the parent question
+     * @param questionDB is the parent questionDB
      */
-    protected void showOrHideChildren(Question question) {
-        if (!question.hasChildren()) {
+    protected void showOrHideChildren(QuestionDB questionDB) {
+        if (!questionDB.hasChildren()) {
             return;
         }
 
@@ -90,15 +90,15 @@ public abstract class AQuestionAnswerChangedListener {
                 if (answerView == null) {
                     continue;
                 }
-                Question rowQuestion = (Question) answerView.getTag();
-                if (rowQuestion == null) {
+                QuestionDB rowQuestionDB = (QuestionDB) answerView.getTag();
+                if (rowQuestionDB == null) {
                     continue;
                 }
-                List<Question> questionChildren = question.getChildren();
-                if (questionChildren != null && questionChildren.size() > 0) {
-                    for (Question childQuestion : questionChildren) {
-                        //if the table row question is child of the modified question...
-                        toggleChild(row, rowQuestion, childQuestion);
+                List<QuestionDB> questionDBChildren = questionDB.getChildren();
+                if (questionDBChildren != null && questionDBChildren.size() > 0) {
+                    for (QuestionDB childQuestionDB : questionDBChildren) {
+                        //if the table row questionDB is child of the modified questionDB...
+                        toggleChild(row, rowQuestionDB, childQuestionDB);
                     }
                 }
             }
@@ -109,17 +109,17 @@ public abstract class AQuestionAnswerChangedListener {
      * find and toggle the child question
      *
      * @param row           is the child question view
-     * @param rowQuestion   is the question in the view
-     * @param childQuestion is the posible child
+     * @param rowQuestionDB   is the question in the view
+     * @param childQuestionDB is the posible child
      */
-    private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
-        if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            if (rowQuestion.isHiddenBySurveyAndHeader(Session.getMalariaSurvey())) {
+    private boolean toggleChild(TableRow row, QuestionDB rowQuestionDB, QuestionDB childQuestionDB) {
+        if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
+            if (rowQuestionDB.isHiddenBySurveyAndHeader(Session.getMalariaSurveyDB())) {
                 row.setVisibility(View.GONE);
-                hideDefaultValue(rowQuestion);
+                hideDefaultValue(rowQuestionDB);
             } else {
                 row.setVisibility(View.VISIBLE);
-                showDefaultValue(row, rowQuestion);
+                showDefaultValue(row, rowQuestionDB);
             }
             return true;
         }
@@ -129,10 +129,10 @@ public abstract class AQuestionAnswerChangedListener {
     /**
      * removes or modify the value with a correct value when the question is hide
      *
-     * @param rowQuestion is the question in the view
+     * @param rowQuestionDB is the question in the view
      */
-    private void hideDefaultValue(Question rowQuestion) {
-        switch (rowQuestion.getOutput()) {
+    private void hideDefaultValue(QuestionDB rowQuestionDB) {
+        switch (rowQuestionDB.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.INT:
@@ -140,17 +140,17 @@ public abstract class AQuestionAnswerChangedListener {
             case Constants.SHORT_TEXT:
             case Constants.DROPDOWN_LIST:
             case Constants.DROPDOWN_OU_LIST:
-                rowQuestion.deleteValueBySession();
+                rowQuestionDB.deleteValueBySession();
                 break;
             case Constants.SWITCH_BUTTON:
                 //the 0 option is the left option and is false in the switch, the 1 option is the
                 // right option and is true
                 boolean isChecked = false;
-                if (rowQuestion.getAnswer().getOptions().get(
-                        1).getOptionAttribute().getDefaultOption() == 1) {
+                if (rowQuestionDB.getAnswerDB().getOptionDBs().get(
+                        1).getOptionAttributeDB().getDefaultOption() == 1) {
                     isChecked = true;
                 }
-                saveSwitchOption(rowQuestion, isChecked);
+                saveSwitchOption(rowQuestionDB, isChecked);
                 break;
         }
     }
@@ -158,13 +158,13 @@ public abstract class AQuestionAnswerChangedListener {
     /**
      * when a question is shown this method set the correct value.
      *
-     * @param rowQuestion is the question in the view
+     * @param rowQuestionDB is the question in the view
      */
-    private void showDefaultValue(TableRow tableRow, Question rowQuestion) {
-        if (rowQuestion.getValueBySession() != null) {
+    private void showDefaultValue(TableRow tableRow, QuestionDB rowQuestionDB) {
+        if (rowQuestionDB.getValueBySession() != null) {
             return;
         }
-        switch (rowQuestion.getOutput()) {
+        switch (rowQuestionDB.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.INT:
@@ -180,20 +180,20 @@ public abstract class AQuestionAnswerChangedListener {
                 break;
             case Constants.SWITCH_BUTTON:
                 Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
-                Option selectedOption = rowQuestion.getOptionBySession();
-                if (selectedOption == null) {
+                OptionDB selectedOptionDB = rowQuestionDB.getOptionBySession();
+                if (selectedOptionDB == null) {
                     //the 0 option is the left option and is false in the switch, the 1 option is
                     // the right option and is true
                     boolean isChecked = false;
-                    if (rowQuestion.getAnswer().getOptions().get(
-                            1).getOptionAttribute().getDefaultOption() == 1) {
+                    if (rowQuestionDB.getAnswerDB().getOptionDBs().get(
+                            1).getOptionAttributeDB().getDefaultOption() == 1) {
                         isChecked = true;
                     }
-                    saveSwitchOption(rowQuestion, isChecked);
+                    saveSwitchOption(rowQuestionDB, isChecked);
                     switchView.setChecked(isChecked);
                     break;
                 }
-                switchView.setChecked(findSwitchBoolean(rowQuestion));
+                switchView.setChecked(findSwitchBoolean(rowQuestionDB));
                 break;
         }
     }
@@ -201,17 +201,17 @@ public abstract class AQuestionAnswerChangedListener {
     /**
      * Save the switch option and check children questions
      *
-     * @param question  is the question in the view
+     * @param questionDB  is the questionDB in the view
      * @param isChecked is the value to be saved
      */
-    private void saveSwitchOption(Question question, boolean isChecked) {
+    private void saveSwitchOption(QuestionDB questionDB, boolean isChecked) {
         //Take option
-        Option selectedOption = findSwitchOption(question, isChecked);
-        if (selectedOption == null) {
+        OptionDB selectedOptionDB = findSwitchOption(questionDB, isChecked);
+        if (selectedOptionDB == null) {
             return;
         }
-        question.saveValuesDDL(selectedOption, question.getValueBySession());
-        showOrHideChildren(question);
+        questionDB.saveValuesDDL(selectedOptionDB, questionDB.getValueBySession());
+        showOrHideChildren(questionDB);
     }
 
     protected boolean isMultipleQuestionTab(int tabType) {

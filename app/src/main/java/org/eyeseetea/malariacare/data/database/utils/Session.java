@@ -21,13 +21,12 @@ package org.eyeseetea.malariacare.data.database.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
@@ -52,23 +51,19 @@ public class Session {
     /**
      * The current selected malariaSurvey
      */
-    private static Survey malariaSurvey;
+    private static SurveyDB sMalariaSurveyDB;
     /**
      * The current stock malariaSurvey
      */
-    private static Survey stockSurvey;
+    private static SurveyDB sStockSurveyDB;
     /**
      * The current user
      */
-    private static User user;
+    private static UserDB sUserDB;
     /**
      * The current credentials
      */
     private static Credentials sCredentials;
-    /**
-     * The current location
-     */
-    private static Location location;
     /**
      * The current phone metadata
      */
@@ -92,20 +87,20 @@ public class Session {
      */
     private static Map<String, Object> serviceValues = new HashMap<>();
 
-    public static Survey getMalariaSurvey() {
-        return malariaSurvey;
+    public static SurveyDB getMalariaSurveyDB() {
+        return sMalariaSurveyDB;
     }
 
-    public static synchronized void setMalariaSurvey(Survey malariaSurvey) {
-        Session.malariaSurvey = malariaSurvey;
+    public static synchronized void setMalariaSurveyDB(SurveyDB malariaSurveyDB) {
+        Session.sMalariaSurveyDB = malariaSurveyDB;
     }
 
-    public static Survey getStockSurvey() {
-        return stockSurvey;
+    public static SurveyDB getStockSurveyDB() {
+        return sStockSurveyDB;
     }
 
-    public static synchronized void setStockSurvey(Survey stockSurvey) {
-        Session.stockSurvey = stockSurvey;
+    public static synchronized void setStockSurveyDB(SurveyDB stockSurveyDB) {
+        Session.sStockSurveyDB = stockSurveyDB;
     }
 
     public static Credentials getCredentials() {
@@ -119,12 +114,12 @@ public class Session {
         sCredentials = credentials;
     }
 
-    public static User getUser() {
-        return user;
+    public static UserDB getUserDB() {
+        return sUserDB;
     }
 
-    public static synchronized void setUser(User user) {
-        Session.user = user;
+    public static synchronized void setUserDB(UserDB userDB) {
+        Session.sUserDB = userDB;
     }
 
     public static synchronized void setFullOfUnsent(Context context) {
@@ -154,8 +149,8 @@ public class Session {
      * Closes the current session when the user logs out
      */
     public static void logout() {
-        Session.setUser(null);
-        Session.setMalariaSurvey(null);
+        Session.setUserDB(null);
+        Session.setMalariaSurveyDB(null);
         Session.serviceValues.clear();
     }
 
@@ -191,19 +186,18 @@ public class Session {
         serviceValues.clear();
     }
 
-    public static Location getLocation() {
-        return location;
-    }
-
-    public static synchronized void setLocation(Location location) {
-        Session.location = location;
-    }
-
-    public static PhoneMetaData getPhoneMetaData() {
-        return phoneMetaData;
+    public static String getPhoneMetaDataValue() {
+        if(phoneMetaData==null || phoneMetaData.getPhone_metaData()==null){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                    PreferencesState.getInstance().getContext());
+            return sharedPreferences.getString(
+                    PreferencesState.getInstance().getContext().getString(R.string.phone_meta_data_key), "");
+        }
+        return phoneMetaData.getPhone_metaData();
     }
 
     public static synchronized void setPhoneMetaData(PhoneMetaData phoneMetaData) {
+        PreferencesState.getInstance().saveStringPreference(R.string.phone_meta_data_key, phoneMetaData.getPhone_metaData());
         Session.phoneMetaData = phoneMetaData;
     }
 

@@ -4,13 +4,13 @@
 
 <string name="yes">"Yes"</string>
 <string name="no">"No"</string>
-<string name="ok">"Ok"</string>
+    <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
 <string name="cancel">"Cancel"</string>
 <string name="survey_review">"Review"</string>
 
 <!-- Is this the string for the orange button "send" or for "Survey Complete Review/Send"? -->
 <string name="survey_send">"Send"</string>
-<string name="app_about">"About"</string>
+<string name="common_menu_about">"About"</string>
 <string name="app_settings">"Settings"</string>
 <string name="settings_menu_licence">"License"</string>
 <string name="dialog_title_delete_surveys">"Are you sure that you want to remove all sent surveys?"</string>
@@ -35,7 +35,7 @@
 <string name="fonts_customise">"Customize font?"</string>
 <string name="font_size">"Font size"</string>
 <string name="server_name">"DHIS Server URL"</string>
-<string name="settings_select_language">"Language"</string>
+<string name="common_about_rowHeader_language">"Language"</string>
 <string name="pref_header_general">"General"</string>
 <string name="dialog_title_push">"Pushing data"</string>
 <string name="dialog_title_push_response">"Push response"</string>
@@ -77,7 +77,7 @@
 <string name="dhis_url_error_bad_credentials">"This app is not authorized in the given server"</string>
 <string name="settings_menu_monitoring">"Monitor"</string>
 <string name="monitoring_title_dropdown">"Please, select a time period"</string>
-<string name="monitoring_title">Monitoring</string>
+    <string name="common_menu_statistics">Monitoring</string>
 <string name="monitoring_label_option_months">"Last 6 months"</string>
 <string name="monitoring_label_option_days">"Last 6 days"</string>
 <string name="monitoring_label_option_weeks">"Last 6 weeks"</string>
@@ -191,7 +191,7 @@
 <string name="rdt_pf">Pf</string>
 <string name="rdt_pv">Pv</string>
 <string name="settings_menu_logout_message">Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?</string>
-<string name="app_logout">Logout</string>
+    <string name="common_menu_logOff">Logout</string>
 <string name="network_error">There is a problem with the network, please try again later.</string>
 <string name="login_invalid_credentials">Invalid credentials</string>
 <string name="login_unexpected_error">"An error has occurred, please try again later"</string>
@@ -214,4 +214,9 @@
 <string name="Option_Text_Reason_Child">"Children under 2 year old"</string>
 <string name="Option_Text_Reason_Calendar">"Treated within the last 28 days"</string>
 <string name="clean_demo_db">"Clean demo DB"</string>
+<string name="tab_av">"AV"</string>
+<string name="tab_stock">"Stock"</string>
+<string name="av_progress">Downloading content... please wait</string>
+
+    <string name="login_userName">Username</string>
 </resources>

@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.presentation.factory.stock.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -51,8 +51,8 @@ public class StatusRowBuilder extends StockRowBuilder {
     @Override
     protected Object updateColumn(Object oldValue, int surveyValue, SurveyStock surveyStock,
             int position) {
-        Survey survey = surveyStock.getSurvey();
-        Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_RESET);
+        SurveyDB survey = surveyStock.getSurvey();
+        Date maxBalanceDate = SurveyDB.getLastDateForSurveyType(Constants.SURVEY_RESET);
         if (maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
                 survey.getEventDate())) {
             if (survey.getType() == Constants.SURVEY_RESET) {

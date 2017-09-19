@@ -6,9 +6,10 @@ import android.view.View;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+
 import java.util.List;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
@@ -30,7 +31,7 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         int titleResource = 0, subtitleResource = 0;
         switch (tabTag) {
             case R.string.tab_tag_assess:
-                titleResource = R.string.new_case_title;
+                titleResource = R.string.ipc_menu_issueReferral;
                 subtitleResource = R.string.unsent_data;
                 break;
             case R.string.tab_tag_improve:
@@ -42,7 +43,7 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
                 subtitleResource = R.string.receipts_balances;
                 break;
             case R.string.tab_tag_monitor:
-                titleResource = R.string.monitoring_title;
+                titleResource = R.string.common_menu_statistics;
                 subtitleResource = R.string.monitoring_time_period;
                 break;
             case R.string.fragment_new_receipt:
@@ -90,7 +91,7 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
     }
 
     public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView,
-            List<Survey> surveysFromService) {
+            List<SurveyDB> surveysFromService) {
         return;
     }
 }

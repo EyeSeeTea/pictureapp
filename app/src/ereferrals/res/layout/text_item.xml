@@ -14,14 +14,14 @@
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
         android:layout_marginTop="@dimen/input_edit_text_top_bottom"
-        android:background="@drawable/edit_text_bottom_border"
+        android:background="@android:color/transparent"
         android:gravity="left"
         android:hint="@string/positive_hint"
         android:inputType="text"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_left_padding"
-        android:textColor="@color/intColor"
-        android:textColorHint="@color/hint"
+        android:textColor="@color/text_first_color"
+        android:textColorHint="@color/text_first_color"
         android:textSize="?attr/font_small"
-        app:font_name="@string/light_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

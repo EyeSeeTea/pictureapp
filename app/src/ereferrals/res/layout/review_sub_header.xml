@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="0dp"
     android:background="@color/questionHeaderColor"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/answer_subtitle"
@@ -18,5 +19,5 @@
         android:text="@string/review_subtitle"
         android:textColor="@color/white"
         android:textSize="?attr/font_small"
-        app:font_name="@string/light_font" />
+        app:font_name="@string/normal_font" />
 </LinearLayout>

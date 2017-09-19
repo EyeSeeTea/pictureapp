@@ -74,7 +74,7 @@ public class Migration23ModifyValuesLastMigration extends BaseMigration {
  *//*
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return ProgramDB.getFirstProgram() != null;
     }
 
 }*/

@@ -41,7 +41,7 @@ public class SdkQueries {
     }
 
     public static ProgramFlow getProgram(String assignedProgramID) {
-        //return MetaDataController.getProgram(assignedProgramID);
+        //return MetaDataController.getProgramDB(assignedProgramID);
         return new Select().from(ProgramFlow.class).where(
                 ProgramFlow_Table.uId.eq(assignedProgramID)).querySingle();
     }
@@ -131,23 +131,23 @@ public class SdkQueries {
     public static void createDBIndexes() {
 
         /*
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_QUESTION).enable();
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_MATCH_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_MATCH).enable();
+        new Index<QuestionOptionDB>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOptionDB.class,
+                QuestionOptionDB$Table.ID_QUESTION).enable();
+        new Index<QuestionOptionDB>(Constants.QUESTION_OPTION_MATCH_IDX).on(QuestionOptionDB.class,
+                QuestionOptionDB$Table.ID_MATCH).enable();
 
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_OPERATION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
+        new Index<QuestionRelationDB>(Constants.QUESTION_RELATION_OPERATION_IDX).on(
+                QuestionRelationDB.class, QuestionRelationDB$Table.OPERATION).enable();
+        new Index<QuestionRelationDB>(Constants.QUESTION_RELATION_QUESTION_IDX).on(
+                QuestionRelationDB.class, QuestionRelationDB$Table.ID_QUESTION).enable();
 
-        new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class,
-                Match$Table.ID_QUESTION_RELATION).enable();
+        new Index<MatchDB>(Constants.MATCH_QUESTION_RELATION_IDX).on(MatchDB.class,
+                MatchDB$Table.ID_QUESTION_RELATION).enable();
 
-        new Index<QuestionThreshold>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
-                QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();
+        new Index<QuestionThresholdDB>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
+                QuestionThresholdDB.class, QuestionThresholdDB$Table.ID_QUESTION).enable();
 
-        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
+        new Index<ValueDB>(Constants.VALUE_IDX).on(ValueDB.class, ValueDB$Table.ID_SURVEY).enable();
         */
     }
 

@@ -7,8 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.PostMigration;
-import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -23,7 +22,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
 public class SplashScreenActivity extends Activity {
@@ -41,8 +39,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void init() {
-        LocationMemory.getInstance().init(getApplicationContext());
-
         D2.init(this);
         SdkQueries.createDBIndexes();
         //Added to execute a query in DB, because DBFLow doesn't do any migration until a query
@@ -76,7 +72,7 @@ public class SplashScreenActivity extends Activity {
                 public void onComplete() {
                     Log.d(this.getClass().getSimpleName(), "pull complete");
                     try {
-                        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+                        NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
                     }catch (LoadingNavigationControllerException ex){
                         onError(ex.getMessage());
                     }

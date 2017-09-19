@@ -23,14 +23,14 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -51,9 +51,9 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     private Context mContext;
 
     Map<String, Object> appMapObjects;
-    List<Survey> surveys;
-    List<Value> values;
-    List<OrgUnit> orgUnits;
+    List<SurveyDB> mSurveyDBs;
+    List<ValueDB> mValueDBs;
+    List<OrgUnitDB> mOrgUnitDBs;
 
     private ConvertFromSDKVisitorStrategy mConvertFromSDKVisitorStrategy;
 
@@ -61,9 +61,9 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     public ConvertFromSDKVisitor(Context context) {
         mContext = context;
         appMapObjects = new HashMap();
-        surveys = new ArrayList<>();
-        values = new ArrayList<>();
-        orgUnits = new ArrayList<>();
+        mSurveyDBs = new ArrayList<>();
+        mValueDBs = new ArrayList<>();
+        mOrgUnitDBs = new ArrayList<>();
 
         mConvertFromSDKVisitorStrategy = new ConvertFromSDKVisitorStrategy(context);
     }
@@ -76,41 +76,41 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         this.appMapObjects = appMapObjects;
     }
 
-    public List<Survey> getSurveys() {
-        return surveys;
+    public List<SurveyDB> getSurveyDBs() {
+        return mSurveyDBs;
     }
 
-    public List<OrgUnit> getOrgUnits() {
-        return orgUnits;
+    public List<OrgUnitDB> getOrgUnitDBs() {
+        return mOrgUnitDBs;
     }
 
-    public void setSurveys(List<Survey> surveys) {
-        this.surveys = surveys;
+    public void setSurveyDBs(List<SurveyDB> surveyDBs) {
+        this.mSurveyDBs = surveyDBs;
     }
 
-    public List<Value> getValues() {
-        return values;
+    public List<ValueDB> getValueDBs() {
+        return mValueDBs;
     }
 
-    public void setValues(List<Value> values) {
-        this.values = values;
+    public void setValueDBs(List<ValueDB> valueDBs) {
+        this.mValueDBs = valueDBs;
     }
 
     /**
-     * Turns a sdk organisationUnit into an app OrgUnit
+     * Turns a sdk organisationUnit into an app OrgUnitDB
      */
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
-        OrgUnit appOrgUnit = new OrgUnit();
+        OrgUnitDB appOrgUnitDB = new OrgUnitDB();
 
-        appOrgUnit.setName(sdkOrganisationUnitExtended.getLabel());
-        appOrgUnit.setUid(sdkOrganisationUnitExtended.getId());
+        appOrgUnitDB.setName(sdkOrganisationUnitExtended.getLabel());
+        appOrgUnitDB.setUid(sdkOrganisationUnitExtended.getId());
 
-        appOrgUnit.save();
+        appOrgUnitDB.save();
 
-        orgUnits.add(appOrgUnit);
+        mOrgUnitDBs.add(appOrgUnitDB);
 
-        appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnit);
+        appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnitDB);
     }
 
     /**
@@ -118,11 +118,11 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(UserAccountExtended sdkUserAccountExtended) {
-        User appUser = new User();
-        appUser.setUid(sdkUserAccountExtended.getUid());
-        appUser.setName(sdkUserAccountExtended.getName());
-        appUser.setLastUpdated(null);
-        appUser.save();
+        UserDB appUserDB = new UserDB();
+        appUserDB.setUid(sdkUserAccountExtended.getUid());
+        appUserDB.setName(sdkUserAccountExtended.getName());
+        appUserDB.setLastUpdated(null);
+        appUserDB.save();
     }
 
     /**
@@ -130,41 +130,41 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(EventExtended sdkEventExtended) {
-        OrgUnit orgUnit = (OrgUnit) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
-        Program program = Program.getProgram(sdkEventExtended.getProgramUId());
+        OrgUnitDB orgUnitDB = (OrgUnitDB) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
+        ProgramDB programDB = ProgramDB.getProgram(sdkEventExtended.getProgramUId());
 
-        Survey survey = new Survey();
+        SurveyDB surveyDB = new SurveyDB();
 
         //Any survey that comes from the pull has been sent
-        survey.setStatus(Constants.SURVEY_SENT);
+        surveyDB.setStatus(Constants.SURVEY_SENT);
 
         //Set dates
-        survey.setCreationDate(sdkEventExtended.getCreationDate());
-        survey.setCompletionDate(sdkEventExtended.getEventDate());
-        survey.setEventDate(sdkEventExtended.getEventDate());
-        survey.setScheduledDate(sdkEventExtended.getScheduledDate());
+        surveyDB.setCreationDate(sdkEventExtended.getCreationDate());
+        surveyDB.setCompletionDate(sdkEventExtended.getEventDate());
+        surveyDB.setEventDate(sdkEventExtended.getEventDate());
+        surveyDB.setScheduledDate(sdkEventExtended.getScheduledDate());
 
         //Set fks
-        survey.setOrgUnit(orgUnit);
-        survey.setProgram(program);
-        survey.setEventUid(sdkEventExtended.getUid());
+        surveyDB.setOrgUnit(orgUnitDB);
+        surveyDB.setProgram(programDB);
+        surveyDB.setEventUid(sdkEventExtended.getUid());
 
-        mConvertFromSDKVisitorStrategy.visit(sdkEventExtended, survey);
+        mConvertFromSDKVisitorStrategy.visit(sdkEventExtended, surveyDB);
 
-        surveys.add(survey);
+        mSurveyDBs.add(surveyDB);
 
         //Annotate object in map
-        appMapObjects.put(sdkEventExtended.getUid(), survey);
+        appMapObjects.put(sdkEventExtended.getUid(), surveyDB);
     }
 
 
     @Override
     public void visit(DataValueExtended sdkDataValueExtended) {
-        Survey survey = (Survey) appMapObjects.get(sdkDataValueExtended.getEvent());
+        SurveyDB surveyDB = (SurveyDB) appMapObjects.get(sdkDataValueExtended.getEvent());
         String questionUID = sdkDataValueExtended.getDataElement();
 
-        //Data value is a value from compositeScore -> ignore
-        if (appMapObjects.get(questionUID) instanceof CompositeScore) {
+        //Data valueDB is a valueDB from compositeScore -> ignore
+        if (appMapObjects.get(questionUID) instanceof CompositeScoreDB) {
             return;
         }
 
@@ -173,35 +173,35 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
             return;
         }
 
-        //Datavalue is a value from a question
-        Question question = Question.findByUID(questionUID);
+        //Datavalue is a valueDB from a questionDB
+        QuestionDB questionDB = QuestionDB.findByUID(questionUID);
 
-        if (question == null) {
+        if (questionDB == null) {
             Log.e(TAG, "Question not found with dataelement uid " + questionUID);
         }
 
-        Value value = new Value();
-        value.setQuestion(question);
-        value.setSurvey(survey);
+        ValueDB valueDB = new ValueDB();
+        valueDB.setQuestionDB(questionDB);
+        valueDB.setSurveyDB(surveyDB);
 
-        Option option =
-                sdkDataValueExtended.findOptionByQuestion(question);
-        value.setOption(option);
-        //No option -> text question (straight value)
-        if (option == null) {
-            value.setValue(sdkDataValueExtended.getValue());
+        OptionDB optionDB =
+                sdkDataValueExtended.findOptionByQuestion(questionDB);
+        valueDB.setOptionDB(optionDB);
+        //No optionDB -> text questionDB (straight valueDB)
+        if (optionDB == null) {
+            valueDB.setValue(sdkDataValueExtended.getValue());
         } else {
-            //Option -> extract value from code
-            value.setValue(sdkDataValueExtended.getDataValue().getValue());
+            //OptionDB -> extract valueDB from code
+            valueDB.setValue(sdkDataValueExtended.getDataValue().getValue());
         }
-        values.add(value);
+        mValueDBs.add(valueDB);
     }
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
         ConvertFromSDKVisitorStrategy.visit(categoryOptionGroupExtended);
     }
 
-    public void setOrgUnits(List<OrgUnit> allOrgUnitsInDB) {
-        orgUnits = allOrgUnitsInDB;
+    public void setOrgUnitDBs(List<OrgUnitDB> allOrgUnitsInDBDB) {
+        mOrgUnitDBs = allOrgUnitsInDBDB;
     }
 }

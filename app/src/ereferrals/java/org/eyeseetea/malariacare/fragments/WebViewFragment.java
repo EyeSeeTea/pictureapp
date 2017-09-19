@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
@@ -59,6 +61,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
+        mWebView.setWebViewClient(new WebViewClient());
         loadUrlInWebView();
     }
 
@@ -74,14 +77,13 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     }
 
 
-
     @Override
     public void reloadHeader(Activity activity) {
-        DashboardHeaderStrategy.getInstance().init(activity, title);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     public void reloadHeader(Activity activity, int id) {
-        DashboardHeaderStrategy.getInstance().init(activity, id);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     @Override
@@ -130,6 +132,11 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void loadValidUrl() {
         if (mWebView != null) {
+            if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
+                mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
+                        getString(R.string.demo_web)));
+                return;
+            }
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setDomStorageEnabled(true);
             clearCookies(getActivity());
@@ -147,4 +154,15 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     };
 
 
+    public void hideHeader() {
+        DashboardHeaderStrategy.getInstance().hideHeader(getActivity());
+    }
+
+    public boolean onBackPressed() {
+        if (mWebView != null && mWebView.canGoBack()) {
+            mWebView.goBack();
+            return true;
+        }
+        return false;
+    }
 }

@@ -32,7 +32,6 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
-import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -49,55 +48,80 @@ public class PushServiceStrategy extends APushServiceStrategy {
     @Override
     public void push() {
 
-        IAuthenticationManager authenticationManager = new AuthenticationManager(
-                PreferencesState.getInstance().getContext());
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
-        IInvalidLoginAttemptsRepository
-                iInvalidLoginAttemptsRepository =
-                new InvalidLoginAttemptsRepositoryLocalDataSource();
-        LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
-                iInvalidLoginAttemptsRepository);
-        final Credentials oldCredentials = credentialsLocalDataSoruce.getOrganisationCredentials();
-        loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
-            @Override
-            public void onLoginSuccess() {
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+
+        Credentials credentials = credentialsLocalDataSource.getCredentials();
+
+        if (credentials != null) {
+            if (credentials.isDemoCredentials()) {
                 PushServiceStrategy.this.onCorrectCredentials();
-            }
+            } else {
+                IAuthenticationManager authenticationManager = new AuthenticationManager(
+                        PreferencesState.getInstance().getContext());
+                IMainExecutor mainExecutor = new UIThreadExecutor();
+                IAsyncExecutor asyncExecutor = new AsyncExecutor();
 
-            @Override
-            public void onServerURLNotValid() {
-                Log.e(TAG, "Error getting user credentials: URL not valid ");
-            }
+                IOrganisationUnitRepository organisationDataSource =
+                        new OrganisationUnitRepository();
+                IInvalidLoginAttemptsRepository
+                        iInvalidLoginAttemptsRepository =
+                        new InvalidLoginAttemptsRepositoryLocalDataSource();
+                LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                        asyncExecutor, organisationDataSource, credentialsLocalDataSource,
+                        iInvalidLoginAttemptsRepository);
+                final Credentials oldCredentials =
+                        credentialsLocalDataSource.getOrganisationCredentials();
+                loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        Log.e(TAG, "onLoginSuccess");
+                        PushServiceStrategy.this.onCorrectCredentials();
+                    }
 
-            @Override
-            public void onInvalidCredentials() {
-                logout();
-            }
+                    @Override
+                    public void onServerURLNotValid() {
+                        Log.e(TAG, "Error getting user credentials: URL not valid ");
+                    }
 
-            @Override
-            public void onNetworkError() {
-                Log.e(TAG, "Error getting user credentials: NetworkError");
-            }
+                    @Override
+                    public void onServerPinChanged() {
+                        Log.e(TAG, "Error onServerPinChanged");
+                        AlarmPushReceiver.cancelPushAlarm(mPushService);
+                        moveToLoginActivity();
+                    }
 
-            @Override
-            public void onConfigJsonInvalid() {
-                Log.e(TAG, "Error getting user credentials: JsonInvalid");
-            }
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.e(TAG, "Error credentials not valid.");
+                        AlarmPushReceiver.cancelPushAlarm(mPushService);
+                        logout();
+                    }
 
-            @Override
-            public void onUnexpectedError() {
-                Log.e(TAG, "Error getting user credentials: unexpectedError ");
-            }
+                    @Override
+                    public void onNetworkError() {
+                        Log.e(TAG, "Error getting user credentials: NetworkError");
+                    }
 
-            @Override
-            public void onMaxLoginAttemptsReachedError() {
+                    @Override
+                    public void onConfigJsonInvalid() {
+                        Log.e(TAG, "Error getting user credentials: JsonInvalid");
+                    }
 
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.e(TAG, "Error getting user credentials: unexpectedError ");
+                    }
+
+                    @Override
+                    public void onMaxLoginAttemptsReachedError() {
+                        Log.e(TAG, "onMaxLoginAttemptsReachedError");
+                    }
+                });
             }
-        });
+        } else {
+            Log.w(TAG, "Push cancelled because does not exist user credentials, possible logout");
+        }
+
     }
 
     protected void executeMockedPush() {
@@ -115,7 +139,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     private void onCorrectCredentials() {
-        executePush();
+        if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
+            executeMockedPush();
+        } else {
+            executePush();
+        }
     }
 
 
@@ -124,15 +152,10 @@ public class PushServiceStrategy extends APushServiceStrategy {
         LogoutUseCase logoutUseCase;
         authenticationManager = new AuthenticationManager(mPushService);
         logoutUseCase = new LogoutUseCase(authenticationManager);
-        AlarmPushReceiver.cancelPushAlarm(mPushService);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                if (!EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-                    Intent loginIntent = new Intent(mPushService, LoginActivity.class);
-                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mPushService.startActivity(loginIntent);
-                }
+                moveToLoginActivity();
             }
 
             @Override
@@ -140,6 +163,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 Log.d(TAG, message);
             }
         });
+    }
+
+    private void moveToLoginActivity() {
+        if (!EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+            Intent loginIntent = new Intent(mPushService, LoginActivity.class);
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mPushService.startActivity(loginIntent);
+        }
     }
 
     protected void executePush() {
@@ -167,7 +198,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 new PushUseCase(pushController, asyncExecutor, mainExecutor,
                         surveysThresholds, surveyRepository, orgUnitRepository);
 
-        SurveyChecker.launchQuarantineChecker();
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
@@ -188,7 +218,8 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onSurveysNotFoundError() {
-                onError("PUSHUSECASE ERROR Pending surveys not found");}
+                onError("PUSHUSECASE ERROR Pending surveys not found");
+            }
 
             @Override
             public void onConversionError() {
@@ -200,12 +231,19 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onNetworkError() {
-                onError("PUSHUSECASE ERROR Network not available");}
+                onError("PUSHUSECASE ERROR Network not available");
+            }
 
             @Override
             public void onInformativeError(String message) {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
-                        R.string.error_conflict_title), "PUSHUSECASE ERROR "+message + PreferencesState.getInstance().isPushInProgress());
+                        R.string.error_conflict_title), "PUSHUSECASE ERROR " + message
+                        + PreferencesState.getInstance().isPushInProgress());
+            }
+
+            @Override
+            public void onInformativeMessage(String message) {
+                showInDialog("", message);
             }
 
             @Override
@@ -229,13 +267,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onApiCallError(ApiCallException e) {
-                onError("PUSHUSECASE ERROR "+e.getMessage());
+                onError("PUSHUSECASE ERROR " + e.getMessage());
                 e.printStackTrace();
             }
 
             @Override
             public void onClosedUser() {
-                onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
+                onError("PUSHUSECASE ERROR on closedUser "
+                        + PreferencesState.getInstance().isPushInProgress());
                 closeUserLogout();
             }
         });

@@ -10,7 +10,10 @@
     android:paddingLeft="@dimen/question_padding"
     android:paddingRight="@dimen/question_padding">
 
-    <include layout="@layout/bottom_view" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_first_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,13 +23,8 @@
         <ImageView
             android:id="@+id/question_image_row"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/image_size"
-            android:layout_gravity="left"
-            android:adjustViewBounds="true"
-            android:gravity="left"
-            android:paddingBottom="@dimen/image_padding"
-            android:paddingTop="@dimen/image_padding"
-            android:scaleType="fitCenter" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,8 +36,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_marginBottom="@dimen/input_edit_text_top_bottom"
-                android:layout_marginLeft="@dimen/input_edit_text_margin"
-                android:layout_marginRight="@dimen/input_edit_text_margin"
                 android:layout_marginTop="@dimen/input_edit_text_top_bottom"
                 android:gravity="right"
                 android:orientation="horizontal"
@@ -55,9 +51,9 @@
                     android:gravity="left"
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
-                    android:textColor="@color/dark_purple"
-                    android:textSize="?attr/font_small"
-                    app:font_name="@string/light_font" />
+                    android:textColor="@color/text_first_color"
+                    android:textSize="?attr/font_xsmall"
+                    app:font_name="@string/normal_font" />
 
                 <ImageView
                     android:id="@+id/row_header_compulsory"
@@ -80,23 +76,22 @@
                 android:layout_marginLeft="@dimen/input_edit_text_margin"
                 android:layout_marginRight="@dimen/input_edit_text_margin"
                 android:layout_marginTop="@dimen/input_edit_text_top_bottom"
-                android:background="@color/light_purple">
+                android:background="@android:color/transparent">
 
-                <Spinner
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/input_edit_text_margin"
                     android:layout_marginRight="@dimen/input_edit_text_margin"
-                    android:backgroundTint="@color/dark_purple"
-                    android:backgroundTintMode="add"
-                    android:gravity="right"
+                    android:gravity="left"
+                    android:textColor="@color/text_first_color"
                     android:paddingBottom="2dip"
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:paddingTop="2dip"
                     android:spinnerMode="dropdown"
-                    android:textColor="@color/dark_purple" />
+                    app:backgroundTint="@color/black" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,19 +11,27 @@ public class SurveyContainerWSObject {
     private String userName;
     private String password;
     private List<SurveySendAction> actions;
+    private String language;
+    @JsonProperty("Android info")
+    private String androidInfo;
+    @JsonProperty("CSV version")
+    private String csvVersion;
+
 
     public SurveyContainerWSObject() {
         actions = new ArrayList<>();
     }
 
     public SurveyContainerWSObject(String version, String source, String userName,
-            String password) {
+            String password, String language, String androidInfo, String csvVersion) {
         this.version = version;
         this.source = source;
         this.userName = userName;
         this.password = password;
         actions = new ArrayList<>();
-
+        this.language = language;
+        this.androidInfo = androidInfo;
+        this.csvVersion = csvVersion;
     }
 
     public String getVersion() {
@@ -62,6 +72,30 @@ public class SurveyContainerWSObject {
 
     public void setActions(List<SurveySendAction> actions) {
         this.actions = actions;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getAndroidInfo() {
+        return androidInfo;
+    }
+
+    public void setAndroidInfo(String androidInfo) {
+        this.androidInfo = androidInfo;
+    }
+
+    public String getCsvVersion() {
+        return csvVersion;
+    }
+
+    public void setCsvVersion(String csvVersion) {
+        this.csvVersion = csvVersion;
     }
 }
 

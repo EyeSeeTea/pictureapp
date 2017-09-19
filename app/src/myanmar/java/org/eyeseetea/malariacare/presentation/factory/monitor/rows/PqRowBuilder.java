@@ -18,6 +18,6 @@ public class PqRowBuilder extends CounterRowBuilder {
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return Math.round(Float.parseFloat(
-                new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getPqValue()));
+                new SurveyQuestionTreatmentValue(surveyMonitor.getSurveyDB()).getPqValue()));
     }
 }

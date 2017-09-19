@@ -93,7 +93,6 @@ public class Constants {
     public static final int SURVEY_IN_PROGRESS = 0,
             SURVEY_COMPLETED = 1,
             SURVEY_SENT = 2,
-            SURVEY_HIDE = 3,
             SURVEY_CONFLICT = 4,
             SURVEY_QUARANTINE = 5,
             SURVEY_SENDING = 6;
@@ -144,4 +143,13 @@ public class Constants {
      * server
      */
     public static final int REQUEST_CODE_ON_EULA_ACCEPTED = 1;
+
+
+    //############# MEDIA TYPE ##############
+    // Values to identify image/video on media_type column in the DB
+    public static final int MEDIA_TYPE_IMAGE = 0;
+    public static final int MEDIA_TYPE_VIDEO = 1;
+    public static final String MEDIA_SEPARATOR="#";
+    public static final int NO_MEDIA_ID=-1;
+    public static final String MEDIA_FOLDER = "media";
 }

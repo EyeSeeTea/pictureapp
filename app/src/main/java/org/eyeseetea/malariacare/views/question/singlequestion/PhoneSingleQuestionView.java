@@ -7,7 +7,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
@@ -42,9 +42,9 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     }
 
     @Override
-    public void setValue(Value value) {
-        if (value != null) {
-            mCustomEditText.setText(value.getValue());
+    public void setValue(ValueDB valueDB) {
+        if (valueDB != null) {
+            mCustomEditText.setText(valueDB.getValue());
         }
     }
 

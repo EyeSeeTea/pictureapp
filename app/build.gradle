@@ -80,9 +80,11 @@ android {
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "boolean", "activeAVFragment", "false"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.KHDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
+            buildConfigField "boolean", "customfont", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -96,9 +98,11 @@ android {
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "boolean", "activeAVFragment", "false"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.LADBProvider\""
             buildConfigField "int", "LimitSurveysCount", "30"
             buildConfigField "int", "LimitSurveysTimeHours", "1"
+            buildConfigField "boolean", "customfont", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -112,13 +116,15 @@ android {
             buildConfigField "boolean", "multiuser", "true"
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
+            buildConfigField "boolean", "activeAVFragment", "false"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
+            buildConfigField "boolean", "customfont", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
-            versionName "0.1.1"
+            versionName "1.0.0"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
@@ -128,9 +134,29 @@ android {
             buildConfigField "boolean", "multiuser", "true"
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
+            buildConfigField "boolean", "activeAVFragment", "true"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.REFDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
+            buildConfigField "boolean", "customfont", "false"
+        }
+        cnm {
+            applicationId 'org.eyeseetea.surveillance_cnm_bb'
+            versionName "0.1.0"
+            buildConfigField "boolean", "reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
+            buildConfigField "boolean", "translations", "true"
+            buildConfigField "boolean", "developerOptions", "true"
+            buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
+            buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "boolean", "activeAVFragment", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.CNMDBProvider\""
+            buildConfigField "int", "LimitSurveysCount", "0"
+            buildConfigField "int", "LimitSurveysTimeHours", "0"
+            buildConfigField "boolean", "customfont", "true"
         }
 
     }
@@ -189,6 +215,7 @@ dependencies {
 
     // Unit testing dependencies
     testCompile "junit:junit:${libs.jUnitVersion}"
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
 
     // Instrumented tests dependencies
     // Android Testing Support Library's runner and rules
@@ -203,6 +230,8 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
     // Espresso-web for WebView support
     androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
+    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+
 
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {

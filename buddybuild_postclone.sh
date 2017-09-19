@@ -10,12 +10,11 @@ sh ${gitPath}/generate_last_commit.sh
 
 # Use the EST SDK branch
 cd sdk
-git checkout v1.2_la
-cd -
-
-cd EyeSeeTea-sdk
-git checkout v1.2_la
+git checkout 2.25_EyeSeeTea
 cd -
 
 mkdir app/src/"${EST_FLAVOR}"/res/raw
 cp ${BUDDYBUILD_SECURE_FILES}/config_${EST_FLAVOR}.json app/src/${EST_FLAVOR}/res/raw/config.json
+
+## To be uncommented in case of multimedia variant
+# cp ${BUDDYBUILD_SECURE_FILES}/driveserviceprivatekey.json app/src/${EST_FLAVOR}/res/raw/driveserviceprivatekey.json

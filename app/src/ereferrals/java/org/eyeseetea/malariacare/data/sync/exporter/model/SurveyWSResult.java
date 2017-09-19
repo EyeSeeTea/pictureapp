@@ -7,16 +7,18 @@ public class SurveyWSResult {
     private SurveyWSResponseOrgUnit response;
     private String version;
     private List<SurveyWSResponseAction> actions;
+    private String versionWS;
 
     public SurveyWSResult() {
     }
 
     public SurveyWSResult(
             SurveyWSResponseOrgUnit response, String version,
-            List<SurveyWSResponseAction> actions) {
+            List<SurveyWSResponseAction> actions, String versionWS) {
         this.response = response;
         this.version = version;
         this.actions = actions;
+        this.versionWS = versionWS;
     }
 
     public SurveyWSResponseOrgUnit getResponse() {
@@ -43,5 +45,13 @@ public class SurveyWSResult {
     public void setActions(
             List<SurveyWSResponseAction> actions) {
         this.actions = actions;
+    }
+
+    public String getVersionWS() {
+        return versionWS;
+    }
+
+    public void setVersionWS(String versionWS) {
+        this.versionWS = versionWS;
     }
 }

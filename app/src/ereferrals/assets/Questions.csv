@@ -4,7 +4,7 @@
 4;'motherName';'ipc_issueEntry_q_motherName';;'ipc_issueEntry_q_motherName';'fake_uid_mn';5;0;0;1;4;0;4;1;0;;1
 5;'birthDistrict';'ipc_issueEntry_q_birthDistrict';;'ipc_issueEntry_q_birthDistrict';'fake_uid_bd';6;0;0;1;5;0;4;1;0;;1
 6;'yearOfBirth';'ipc_issueEntry_q_yearOfBirth';;'ipc_issueEntry_q_yearOfBirth';'fake_uid_yob';7;0;0;1;6;0;30;1;0;;1
-7;'currentMethod';'ipc_issueEntry_q_currentMethod';;'ipc_issueEntry_q_currentMethod';'fake_uid_cm';9;0;0;1;9;0;19;1;0;;1
+7;'currentMethod';'ipc_issueEntry_q_currentMethod';;'ipc_issueEntry_q_currentMethod';'fake_uid_cm';9;0;0;1;8;0;19;1;0;;1
 8;'channelOfReferral';'ipc_issueEntry_q_channelOfReferral';;'ipc_issueEntry_q_channelOfReferral';'fake_uid_cor';10;0;0;1;9;0;19;1;0;;1
 9;'civilStatus';'ipc_issueEntry_q_civilStatus';;'ipc_issueEntry_q_civilStatus';'fake_uid_cs';8;0;0;1;10;0;19;1;0;;1
 10;'phoneOwnership';'ipc_issueEntry_q_ownershipOfPhone';;'ipc_issueEntry_q_ownershipOfPhone';'fake_uid_oop';11;0;0;1;11;0;19;1;0;;1
@@ -72,7 +72,7 @@
 72;'yearOfBirth';'ipc_issueEntry_q_yearOfBirth';;'ipc_issueEntry_q_yearOfBirth';'fake_uid_yob';6;0;0;6;6;0;30;1;0;;1
 73;'civilStatus';'ipc_issueEntry_q_civilStatus';;'ipc_issueEntry_q_civilStatus';'fake_uid_cs';7;0;0;6;10;0;19;1;0;;1
 74;'noOfChildren';'ipc_issueEntry_q_numberOfChildren';;'ipc_issueEntry_q_numberOfChildren';'fake_uid_noc';8;0;0;6;7;0;26;1;0;;1
-75;'currentMethod';'ipc_issueEntry_q_currentMethod';;'ipc_issueEntry_q_currentMethod';'fake_uid_cm';9;0;0;6;8;0;19;1;0;;1
+75;'currentMethod';'ipc_issueEntry_q_currentMethod';;'ipc_issueEntry_q_currentMethod';'fake_uid_cm';9;0;0;6;23;0;19;1;0;;1
 76;'householdDelivery';'ipc_issueEntry_q_householdDelivery';;'ipc_issueEntry_q_householdDelivery';'fake_uid_hd';10;0;0;6;20;0;19;1;0;;1
 77;'address';'ipc_issueEntry_q_address';;'ipc_issueEntry_q_address';'fake_uid_ad';11;0;0;6;21;0;3;1;0;;1
 78;'channelOfReferral';'ipc_issueEntry_q_channelOfReferral';;'ipc_issueEntry_q_channelOfReferral';'fake_uid_cor';12;0;0;6;9;0;19;1;0;;1

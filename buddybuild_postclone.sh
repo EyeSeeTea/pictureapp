@@ -15,4 +15,6 @@ cd -
 
 mkdir app/src/"${EST_FLAVOR}"/res/raw
 cp ${BUDDYBUILD_SECURE_FILES}/config_${EST_FLAVOR}.json app/src/${EST_FLAVOR}/res/raw/config.json
-cp ${BUDDYBUILD_SECURE_FILES}/driveserviceprivatekey.json app/src/${EST_FLAVOR}/res/raw/driveserviceprivatekey.json
+
+## To be uncommented in case of multimedia variant
+# cp ${BUDDYBUILD_SECURE_FILES}/driveserviceprivatekey.json app/src/${EST_FLAVOR}/res/raw/driveserviceprivatekey.json

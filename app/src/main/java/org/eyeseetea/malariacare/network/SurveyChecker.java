@@ -204,7 +204,7 @@ public class SurveyChecker {
                     && dataValue.getValue().equals(EventExtended.format(surveyDB.getCompletionDate(),
                     EventExtended.DHIS2_GMT_DATE_FORMAT))) {
                 Log.d(TAG, "Found survey" + surveyDB.getId_survey() + "date "
-                        + surveyDB.getCompletionDate() + "dateevent" + dataValue.getValue());
+                        + surveyDB.getCreationDate() + "dateevent" + dataValue.getValue());
                 return true;
             }
         }

@@ -10,7 +10,11 @@ sh ${gitPath}/generate_last_commit.sh
 
 # Use the EST SDK branch
 cd sdk
-git checkout 2.25_EyeSeeTea
+git checkout v1.2_la
+cd -
+
+cd EyeSeeTea-sdk
+git checkout v1.2_la
 cd -
 
 mkdir app/src/"${EST_FLAVOR}"/res/raw

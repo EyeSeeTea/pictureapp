@@ -68,7 +68,7 @@
     <string name="create_info_organization_unit">"Organization unit"</string>
     <string name="assessment_sent_date">"Date"</string>
     <string name="assessment_title_info">"Info"</string>
-    <string name="survey_info_exit">"Are you sure you want to exit?"</string>
+    <string name="survey_info_exit">"Are you sure you want to exit the form?"</string>
     <string name="survey_info_exit_delete">"The survey in progress will be deleted."</string>
     <string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact at xxx xxxx xxxx"</string>
     <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact at xxx xxxx xxxx"</string>

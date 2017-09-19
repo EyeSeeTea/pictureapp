@@ -33,12 +33,12 @@
 33;'common_option_phoneContactConsent_no';'NO';0;16;7;;;;
 34;'common_option_phoneContactConsent_yesp';'YESP';0;16;7;;;;
 35;'common_option_phoneContactConsent_yespp';'YESPP';0;16;7;;;;
-36;'common_option_isClientReferred_yes3';'YES';0;17;7;;;;
+36;'common_option_isClientReferred_yes';'YES';0;17;7;;;;
 37;'common_option_isClientReferred_no';'NO';0;17;7;;;;
 38;'common_option_householdDelivery_yes';'YES';0;20;7;;;;
 39;'common_option_householdDelivery_no';'NO';0;20;7;;;;
-40;'common_option_ageYoungest_0-6M';'0-6M';0;22;7;;;;
-41;'common_option_ageYoungest_6-12M';'6-12M';0;22;7;;;;
+40;'common_option_ageYoungest_0_6M';'0-6M';0;22;7;;;;
+41;'common_option_ageYoungest_6_12M';'6-12M';0;22;7;;;;
 42;'common_option_ageYoungest_1_2Y';'1-2Y';0;22;7;;;;
 43;'common_option_ageYoungest_2Y';'2+Y';0;22;7;;;;
 44;'common_option_numberOfLivingChildren_0';0;0;7;7;;;;

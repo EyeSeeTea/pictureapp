@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -52,6 +53,7 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
@@ -78,6 +80,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 iCredentialsRepository);
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager();
         IProgramRepository programRepository = new ProgramLocalDataSource();
         String path =
@@ -88,7 +91,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
                         R.raw.driveserviceprivatekey));
-        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
+        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mainExecutor,
+                fileDownloader,
                 mConnectivity, programRepository, mediaRepository);
     }
 

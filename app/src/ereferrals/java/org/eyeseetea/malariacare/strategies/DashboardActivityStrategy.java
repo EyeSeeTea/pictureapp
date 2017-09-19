@@ -53,6 +53,7 @@ import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.fragments.AVFragment;
 
 import java.io.File;
 import java.util.Date;
@@ -66,6 +67,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private WebViewFragment openFragment, closeFragment, statusFragment;
     private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
     private DownloadMediaUseCase mDownloadMediaUseCase;
+    public AVFragment avFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -472,5 +474,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         }
         return false;
+    }
+
+    public void showAVFragment() {
+        if (avFragment == null) {
+            avFragment = new AVFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_av_container, avFragment);
     }
 }

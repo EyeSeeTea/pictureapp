@@ -18,6 +18,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
+    public void reloadAVFragment() {
+
+    }
+
+    @Override
     public void reloadStockFragment(Activity activity) {
 
     }

@@ -138,6 +138,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     }
 
                     @Override
+                    public void onServerPinChanged() {
+
+                    }
+
+                    @Override
                     public void onNetworkError() {
                         Log.d(TAG, "onNetworkError");
                     }

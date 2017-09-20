@@ -24,7 +24,7 @@ public class LoginUseCase extends ALoginUseCase {
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        if (!credentials.isDemoCredentials()) {
+                        if (credentials == null && !credentials.isDemoCredentials()) {
                             logoutAndHardcodedLogin(credentials, loginCallback);
                         } else {
                             loginCallback.onLoginSuccess();

@@ -34,7 +34,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     @Override
     public void login(final Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        if (credentials.isDemoCredentials()) {
+        if (credentials == null || credentials.isDemoCredentials()) {
             localLogin(credentials, callback);
         } else {
             remoteLogin(credentials, callback);
@@ -56,7 +56,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         //TODO: jsanchez fix find out IsDemo from current UserAccount getting from DataSource
         Credentials credentials = Session.getCredentials();
 
-        if (credentials.isDemoCredentials() || credentials.isEmpty()) {
+        if (credentials == null || credentials.isDemoCredentials() || credentials.isEmpty()) {
             localLogout(callback);
         } else {
             remoteLogout(callback);

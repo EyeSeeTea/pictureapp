@@ -125,7 +125,8 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        launchPull(Session.getCredentials().isDemoCredentials());
+        launchPull(
+                Session.getCredentials() == null || Session.getCredentials().isDemoCredentials());
     }
 
     private void launchPull(boolean isDemo) {

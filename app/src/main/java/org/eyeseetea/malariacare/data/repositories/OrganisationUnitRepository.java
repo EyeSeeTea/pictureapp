@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -79,6 +80,16 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     public void setBanOrgUnitChangeListener(
             BanOrgUnitChangeListener listener) {
         mBanOrgUnitChangeListener = listener;
+    }
+
+    @Override
+    public OrganisationUnit getOrganisationUnitByPhone(Device device) {
+        String IMEI = device.getIMEI();
+        if (IMEI == null || IMEI.isEmpty()) {
+            return null;
+        }
+        OrganisationUnit organisationUnit = ServerAPIController.getOrgUnitByPhone(IMEI);
+        return null;
     }
 
     private boolean isNetworkAvailable() {

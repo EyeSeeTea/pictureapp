@@ -695,5 +695,37 @@ public class ServerAPIController {
         String endpoint = url + String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE, orguid);
         return ServerApiUtils.encodeBlanks(endpoint);
     }
+
+    public static OrganisationUnit getOrgUnitByPhone(String imei) throws ApiCallException {
+        String url = PreferencesState.getInstance().getDhisURL()
+                + "/api/organisationUnits.json?filter=phoneNumber:like:%s&fields=id,name,"
+                + "description,"
+                + "code,"
+                + "ancestors[id,"
+                + "code,level],attributeValues[value,attribute[code]";
+        url = String.format(url, imei);
+        try {
+            if (!isNetworkAvailable()) {
+                throw new NetworkException();
+            }
+            Response response = ServerApiCallExecution.executeCall(null, url, "GET");
+
+            JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+            //{"organisationUnits":[{}]}
+            JSONArray orgUnitsArray = (JSONArray) body.get(TAG_ORGANISATIONUNITS);
+
+            //0| >1 matches -> Error
+            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+                Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", imei,
+                        orgUnitsArray.length()));
+                return null;
+            }
+
+            JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
+            return parseOrgUnit(orgUnitJO);
+        } catch (Exception ex) {
+            throw new ApiCallException(ex);
+        }
+    }
 }
 

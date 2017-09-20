@@ -38,7 +38,7 @@ ext {
             minSdkVersion    : 15,
             compileSdkVersion: 25,
             targetSdkVersion : 25,
-            versionCode      : 36,
+            versionCode      : 38,
             versionName      : "QAApp"
     ]
     libraries = [
@@ -84,7 +84,7 @@ ext {
     ]
 
     // Old App dependencies versions
-    okhttpVersion = '2.2.0'
+    okhttpVersion = '2.7.5'
 }
 
 task clean(type: Delete) {

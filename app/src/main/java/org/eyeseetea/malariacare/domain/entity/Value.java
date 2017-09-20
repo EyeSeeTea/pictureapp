@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.domain.entity;
 
 public class Value {
     String value;
-    String internationalizatedCode;
+    String internationalizatedName;
     String backgroundColor;
     String questionUId;
     String optionCode;
@@ -35,12 +35,12 @@ public class Value {
         this.questionUId = questionUId;
     }
 
-    public String getInternationalizedCode() {
-        return internationalizatedCode;
+    public String getInternationalizedName() {
+        return internationalizatedName;
     }
 
-    public void setInternationalizedCode(String internationalizatedCode) {
-        this.internationalizatedCode = internationalizatedCode;
+    public void setInternationalizedName(String internationalizatedName) {
+        this.internationalizatedName = internationalizatedName;
     }
 
     public String getOptionCode() {

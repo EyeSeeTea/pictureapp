@@ -54,9 +54,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Jose on 20/06/2015.
- */
+
 public class PushClient {
 
     /**
@@ -214,7 +212,7 @@ public class PushClient {
         object.put(TAG_ORG_UNIT, ServerAPIController.getOrgUnitUID());
         object.put(TAG_EVENTDATE,
                 android.text.format.DateFormat.format("yyyy-MM-dd",
-                        mSurveyDB.getCompletionDate()));
+                        mSurveyDB.getEventDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, mSurveyDB.getUserDB().getName());
         //TODO: put it in the object.
@@ -289,7 +287,7 @@ public class PushClient {
         values.put(prepareDataElementValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue()));
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals("")) {
             values.put(prepareDataElementValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
-                    EventExtended.format(mSurveyDB.getCompletionDate(),
+                    EventExtended.format(mSurveyDB.getCreationDate(),
                             EventExtended.AMERICAN_DATE_FORMAT)));
         }
         if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent).equals("")) {

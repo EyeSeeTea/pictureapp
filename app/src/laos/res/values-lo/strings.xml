@@ -64,15 +64,15 @@
 <string name="dhis_url_error_bad_credentials">"ໂປຣແກມນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ນຳໃຊ້ຢູ່ໃນເຊີເວີດັ່ງກ່າວ"</string>
 <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
 <string name="monitor_row_title_period">"ໄລຍະເວລາ"</string>
-<string name="monitor_row_title_suspected">"ກໍລະນີສົງໄສວ່າເປັນໄຂ້ຍຸງ"</string>
-<string name="monitor_row_title_positive">"ເປັນໄຂ້ຍຸງ"</string>
-<string name="monitor_row_title_negative">"ບໍ່ເປັນໄຂ້ຍຸງ"</string>
+<string name="monitor_row_title_suspected">"ກໍລະນີສົງໄສວ່າເປັນໄຂ້ມາລາເຣຍ"</string>
+<string name="monitor_row_title_positive">"ເປັນໄຂ້ມາລາເຣຍ"</string>
+<string name="monitor_row_title_negative">"ບໍ່ເປັນໄຂ້ມາລາເຣຍ"</string>
 <string name="monitor_row_title_not_tested">"ບໍ່ໄດ້ກວດເລືອດ"</string>
 <string name="monitor_row_title_referral">"ນຳສົ່ງ"</string>
 
 <!-- I think this is from Cambodia. Does it need to be removed? -->
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
-<string name="monitor_row_title_positivity_rate">"ອັດຕາການຕິດເຊື້ອໄຂ້ຍຸງ"</string>
+<string name="monitor_row_title_positivity_rate">"ອັດຕາການຕິດເຊື້ອໄຂ້ມາລາເຣຍ"</string>
 <string name="monitor_row_title_month">"ເດືອນ"</string>
 <string name="unrecognized_option">"ບໍ່ຮູ້ຈັກ"</string>
 <string name="progress_pull_building_survey">"ການດຳເນີນການສຳຫຼວດ "</string>
@@ -147,7 +147,7 @@
 <string name="last_6_weeks">"ທີ່ຜ່ານມາ 6 ອາທິດ"</string>
 <string name="last_6_months">"ສຸດທ້າຍ 6 ເດືອນທີ່"</string>
 <string name="download">"Download:"</string>
-<string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
+<string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ມາລາເຣຍ"</string>
 <string name="survey_review">"ເບິ່ງຄືນ
 "</string>
 
@@ -170,7 +170,7 @@
 <string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
 <string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
 <string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
-<string name="monitoring_case_stats">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
+<string name="monitoring_case_stats">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ມາລາເຣຍ"</string>
 <string name="consumption">"ຈຳນວນທີ່ນຳໃຊ້"</string>
 <string name="monitoring_row_title_week">"ອາທິດ"</string>
 <string name="negative">"ຜົນລົບ"</string>
@@ -208,8 +208,8 @@
 <string name="login_error_json">"ມີສິ່ງຜິດພາດການອ່ານເອກະສານ json config. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານຂອງທ່ານ."</string>
 <string name="error_conflict_message">"ໃນກໍລະນີທີ່ມີ UID:%1$s. ໄດ້ອັບກັບຂໍ້ຂັດແຍ່ງໃນ UID ອົງປະກອບຂໍ້ມູນ:%2$s ທີ່ມີຂໍ້ຄວາມ:%3$s. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ."</string>
 <string name="error_conflict_title">"Error"</string>
-<string name="confirmation_really_exit_title">"ແທ້ອອກຈາກ?"</string>
-<string name="confirmation_really_exit">"ທ່ານທີ່ທ່ານກໍາລັງໃຫ້ແນ່ໃຈວ່າຕ້ອງການທີ່ຈະອອກຈາກ app ໄດ້?"</string>
+<string name="confirmation_really_exit_title">"ຕ້ອງການອອກແທ້ບໍ?"</string>
+<string name="confirmation_really_exit">"ທ່ານຕ້ອງການອອກຈາກລະບົບແທ້ບໍ?"</string>
 <string name="run_in_demo_mode">"ດໍາເນີນການໃນຮູບແບບຕົວຢ່າງ"</string>
 <string name="survey_first_step">"ສະແດງຄໍາຖາມ ..."</string>
 <string name="survey_second_step">"ຄໍາຖາມກໍ່ສ້າງ ..."</string>

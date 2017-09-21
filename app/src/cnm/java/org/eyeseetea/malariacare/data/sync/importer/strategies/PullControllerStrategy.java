@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -26,7 +27,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         try {
 
             callback.onStep(PullStep.METADATA);
-            mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
+            mPullController.populateMetadataFromCsvs(pullFilters.isAutoConfig());
             OrganisationUnit organisationUnit = null;
             if(pullFilters.isAutoConfig()) {
                 organisationUnit = getOrgUnitByPhone();
@@ -38,6 +39,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
+            ex.printStackTrace();
             callback.onError(ex);
         }
     }
@@ -47,7 +49,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
         IOrganisationUnitRepository organisationUnitRepository = new OrganisationUnitRepository();
         IDeviceRepository deviceRepository = new DeviceDataSource();
 
-        return organisationUnitRepository.getOrganisationUnitByPhone(deviceRepository.getDevice());
+        OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
+                ReadPolicy.CACHE);
+        if (organisationUnit == null) {
+            organisationUnit = organisationUnitRepository.getOrganisationUnitByPhone(
+                    deviceRepository.getDevice());
+            organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
+        }
+        return organisationUnit;
     }
 
     @Override

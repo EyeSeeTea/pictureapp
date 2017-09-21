@@ -83,14 +83,25 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     }
 
     @Override
-    public OrganisationUnit getOrganisationUnitByPhone(Device device) {
+    public OrganisationUnit getOrganisationUnitByPhone(Device device) throws ApiCallException {
         String IMEI = device.getIMEI();
         if (IMEI == null || IMEI.isEmpty()) {
             return null;
         }
         OrganisationUnit organisationUnit = ServerAPIController.getOrgUnitByPhone(IMEI);
-        return null;
+        return organisationUnit;
     }
+
+    @Override
+    public void saveCurrentOrganisationUnit(OrganisationUnit organisationUnit) {
+        if (OrgUnitDB.getByName(organisationUnit.getName()) == null) {
+            OrgUnitDB orgUnitDB = new OrgUnitDB(organisationUnit.getUid(),
+                    organisationUnit.getName(), null, null);
+            orgUnitDB.save();
+        }
+        PreferencesState.getInstance().setOrgUnit(organisationUnit.getName());
+    }
+
 
     private boolean isNetworkAvailable() {
         ConnectivityManager cm =
@@ -99,4 +110,5 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
 }

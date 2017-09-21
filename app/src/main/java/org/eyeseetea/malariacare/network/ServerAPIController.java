@@ -601,8 +601,13 @@ public class ServerAPIController {
                     }
                 }
 
-            return new OrganisationUnit(uid, name, code, description,
-                    closedDate, pin, program);
+                if (pin == null || pin.isEmpty()) {
+                    return new OrganisationUnit(uid, name, code, description,
+                            closedDate);
+                } else {
+                    return new OrganisationUnit(uid, name, code, description,
+                            closedDate, pin, program);
+                }
             } catch (JSONException e) {
                 throw new ApiCallException(e);
             }

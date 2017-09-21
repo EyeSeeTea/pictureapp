@@ -210,4 +210,7 @@
 <string name="av_progress">Downloading content... please wait</string>
 
     <string name="login_userName">Username</string>
+
+    <string name="error_auto_configuration">"No OU found for this phone"</string>
+    <string name="auto_configuring">"Auto-configuring OU, please wait…"</string>
 </resources>

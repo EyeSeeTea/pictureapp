@@ -4,12 +4,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.PullConversionException;
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public interface IOrganisationUnitRepository {
 
@@ -28,6 +23,8 @@ public interface IOrganisationUnitRepository {
 
     void setBanOrgUnitChangeListener(BanOrgUnitChangeListener listener);
 
-    OrganisationUnit getOrganisationUnitByPhone(Device device);
+    OrganisationUnit getOrganisationUnitByPhone(Device device) throws ApiCallException;
+
+    void saveCurrentOrganisationUnit(OrganisationUnit organisationUnit);
 
 }

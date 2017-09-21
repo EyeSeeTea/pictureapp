@@ -6,14 +6,7 @@
 "</string>
 <string name="ok">"ຕົກລົງ
 "</string>
-    <string name="cancel">"ຍົກເລີກ"</string>
-<string name="survey_review">"ເບິ່ງຄືນ
-"</string>
-<string name="survey_send">"ສົ່ງ
-"</string>
-<string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
-
-<string name="app_about">"ກ່ຽວກັບ"</string>
+<string name="cancel">"ຍົກເລີກ"</string>
 <string name="settings_menu_licence">"ການໄດ້ຮັບອະນຸຍາດ"</string>
 <string name="dialog_title_delete_surveys">"ທ່ານຕ້ອງການຈະລຶບຂໍ້ມູນທັງໝົດທີ່ສົ່ງໄປແລ້ວບໍ?"</string>
 <string name="dialog_title_delete_survey">"ລຶບຂໍ້ມູນ"</string>
@@ -26,21 +19,12 @@
 <string name="assessment_title_info">"ຂໍ້ຄວາມເຕືອນ"</string>
 <string name="survey_info_exit">"ທ່ານຕ້ອງການອອກຈາກລະບົບບໍ?"</string>
 <string name="survey_info_exit_delete">"ຂໍ້ມູນກຳລັງຈະຖືກລຶບ"</string>
-<string name="survey_completed">"ການປ້ອນຂໍ້ມູນ"</string>
-<string name="survey_completed_text">"ການປ້ອນຂໍ້ມູນສຳເລັດແລ້ວ"</string>
 <string name="exception_org_unit_not_valid">"ລະຫັດຮ້ານບໍ່ຖືກຕ້ອງ. 
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
 <string name="exception_org_unit_banned">"ຮ້ານປິດ.
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
-<string name="dialog_reopen_org_unit">"ຮ້ານປິດ %s ແມ່ນເປີດ."</string>
 <string name="dynamic_error_phone_format">"ເບີໂທບໍ່ຖືກຕ້ອງ (xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"ອາຍຸບໍ່ຖືກ"</string>
-<string name="dynamic_error_pregnant_month">"ເດືອນຖືພາບໍ່ຖືກຕ້ອງ"</string>
-<string name="app_settings">"ການຕັ້ງຄ່າ"</string>
-<string name="fonts_customise">"ຂະໜາດຕົວອັກສອນ"</string>
-<string name="font_size">"ຂະໜາດຕົວອັກສອນ"</string>
-<string name="server_name">"DHIS URL ເຄື່ອງແມ່ຂ່າຍຂອງ"</string>
-<string name="settings_select_language">"ພາສາ"</string>
 <string name="pref_header_general">"ທົ່ວໄປ"</string>
 <string name="dialog_title_push">"ກຳລັງໂຫຼດຂໍ້ມູນເຂົ້າໃນລະບົບ"</string>
 <string name="dialog_title_push_response">"ການຕອບສະຫນອງ"</string>
@@ -48,8 +32,6 @@
 <string name="dialog_info_push_bad_credentials">"ກະລຸນາເຂົ້າລະບົບຄືນໃໝ່"</string>
 <string name="dialog_error_push_no_uid">"ບໍ່ມີຂໍ້ມູນ UID ຢູ່ໃນລະບົບ"</string>
 <string name="dialog_error_push_no_location">"ບໍ່ມີສະຖານທີ່"</string>
-<string name="server">"ເຊີເວີ"</string>
-<string name="app_visual">"ກວດເບິ່ງ"</string>
 <string name="number_0">"0"</string>
 <string name="number_1">"1"</string>
 <string name="number_2">"2"</string>
@@ -81,15 +63,7 @@
 <string name="dhis_url_error_bad_version">"ລະບົບ DHIS ບໍ່ຕອບສະໜອງ (ໃຊ້ສະເພາະກັບລຸ້ນ: 2.20, 2.21, 2.22)"</string>
 <string name="dhis_url_error_bad_credentials">"ໂປຣແກມນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ນຳໃຊ້ຢູ່ໃນເຊີເວີດັ່ງກ່າວ"</string>
 <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
-<string name="monitoring_title_dropdown">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
-<string name="monitoring_title">ການຕິດຕາມ</string>
-<string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
-<string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
-<string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
-<string name="monitoring_case_stats">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
-<string name="consumption">"ຈຳນວນທີ່ນຳໃຊ້"</string>
 <string name="monitor_row_title_period">"ໄລຍະເວລາ"</string>
-<string name="monitoring_row_title_week">"ອາທິດ"</string>
 <string name="monitor_row_title_suspected">"ກໍລະນີສົງໄສວ່າເປັນໄຂ້ຍຸງ"</string>
 <string name="monitor_row_title_positive">"ເປັນໄຂ້ຍຸງ"</string>
 <string name="monitor_row_title_negative">"ບໍ່ເປັນໄຂ້ຍຸງ"</string>
@@ -98,16 +72,7 @@
 
 <!-- I think this is from Cambodia. Does it need to be removed? -->
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
-<string name="RDT">"RDTs"</string>
 <string name="monitor_row_title_positivity_rate">"ອັດຕາການຕິດເຊື້ອໄຂ້ຍຸງ"</string>
-<string name="Pf">"Pf"</string>
-<string name="Pv">"Pv"</string>
-<string name="mixed">"Pf+Pv"</string>
-<string name="app_legal">"ຂໍ້ກຳນົດດ້ານນິຕິກຳ"</string>
-<string name="app_copyright">"ສະຫງວນລິຂະສິດ"</string>
-<string name="app_software_licenses">"ການອະນຸຍາດໃຫ້ນຳໃຊ້ໂປຣແກມ"</string>
-<string name="app_EULA">"EULA"</string>
-<string name="monitoring_row_title_day">"ວັນທີ"</string>
 <string name="monitor_row_title_month">"ເດືອນ"</string>
 <string name="unrecognized_option">"ບໍ່ຮູ້ຈັກ"</string>
 <string name="progress_pull_building_survey">"ການດຳເນີນການສຳຫຼວດ "</string>
@@ -118,15 +83,7 @@
 <string name="number_10">"10"</string>
 <string name="number_11">"11"</string>
 <string name="number_12">"12"</string>
-<string name="unsent_data">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
-<string name="sent_data">"ສົ່ງແລ້ວ"</string>
 <string name="monitor_button">"ການຕິດຕາມ"</string>
-
-<string name="font_extra_small">"ນ້ອຍສຸດ"</string>
-<string name="font_small">"ນ້ອຍ"</string>
-<string name="font_medium">"ປານກາງ"</string>
-<string name="font_large">"ໃຫ່ຍ"</string>
-<string name="font_extra_large">"ໃຫ່ຍສຸດ"</string>
 <string name="toast_push_is_pushing">"ສົ່ງຂໍ້ມູນກ່ອນທີ່ຈະເຂົ້າໄປຕັ້ງຄ່າ."</string>
 <string name="dhis_url_error_generic">"ເຊີເວີຂອງລະບົບ DHIS ຂັດຂ້ອງ, ບໍ່ສາມາດທຳງານປົກກະຕິໄດ້"</string>
 <string name="option_counter">"ຍັງມີຄວາມຜິດຢູ່"</string>
@@ -142,10 +99,9 @@
 <string name="review_subtitle">"ສົ່ງ"</string>
 <string name="monitor_row_title_tested">"ໄດ້ກວດເລືອດ"</string>
 <string name="monitor_row_title_act_stockout">"ຈໍານວນຜູ້ທີ່ບໍ່ໄດ້ຮັບການປິ່ນປົວ ຍ້ອນຢາ ACT ໝົດ"</string>
-<string name="referrals">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
 <string name="monitor_row_title_rdt_testing">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການກວດເລືອດດ້ວຍ RDT"</string>
 <string name="not_tested">"ບໍ່ໄດ້ກວດເລືອດ"</string>
-
+<string name="settings_select_language">"ພາສາ"</string>
 <string name="Question_Title_RDT">"ການກວດ"</string>
 <string name="Question_Title_Reason">"ບໍ່ຖືກກວດດ້ວຍເຫດຜົນ"</string>
 <string name="Question_Title_Gender">"ເພດ"</string>
@@ -157,7 +113,6 @@
 <string name="Question_Title_Hospital_Reminder">"ນຳສົ່ງ"</string>
 <string name="Question_Title_Phone">"ເບີໂທຂອງຄົນເຈັບ"</string>
 <string name="Question_Title_Not_Tested_Reminder">"ນຳສົ່ງ"</string>
-
 <string name="Option_Text_Test_Yes">"ຖືກກວດ"</string>
 <string name="Option_Text_Test_No">"ບໍ່ຖືກກວດ"</string>
 <string name="Option_Text_Reason_Severe">"ໄຂ້ມາລາເຣຍຮ້າຍແຮງ"</string>
@@ -186,33 +141,79 @@
 <string name="Warning_Button_Refer_Hospital">"ຕໍ່ໄປ"</string>
 <string name="Warning_Text_Refer_Not_Tested">"ກະລຸນານຳສົ່ງຄົນເຈັບໄປສະຖານທີ່ປິ່ນປົວຂອງພາກລັດທີ່ໃກ້ທີ່ສຸດ ຖ້າຫາກວ່າຄົນເຈັບເປັນໄຂ້ມາລາເຣຍຮ້າຍແຮງ, ຄົນເຈັບຖືພາ ຫຼື ເຈ້ຍຈຸ່ມໝົດ"</string>
 <string name="Warning_Button_Refer_Not_Tested">"ສົ່ງ"</string>
-
 <string name="system_defined">"ລະບົບກໍານົດໄວ້"</string>
-<string name="no_data">ບໍ່​ມີ​ຂໍ້​ມູນ</string>
-<string name="last_6_days">6 ວັນ</string>
-<string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>
-<string name="last_6_months">ສຸດທ້າຍ 6 ເດືອນທີ່</string>
-<string name="download">Download:</string>
-<string name="developer_option_summary">ຄຸນນະສົມບັດນີ້ເປີດໃຊ້ວຽກທາງເລືອກການພັດທະນາ</string>
-<string name="developer_option_title">ທາງເລືອກໃນການສະແດງໃຫ້ເຫັນການພັດທະນາ</string>
-<string name="export_data_option_title">ຖານຂໍ້ມູນການສົ່ງອອກ</string>
-<string name="dynamic_error_number">ຈໍານວນທີ່ບໍ່ຖືກຕ້ອງ</string>
+<string name="no_data">"ບໍ່​ມີ​ຂໍ້​ມູນ"</string>
+<string name="last_6_days">"6 ວັນ"</string>
+<string name="last_6_weeks">"ທີ່ຜ່ານມາ 6 ອາທິດ"</string>
+<string name="last_6_months">"ສຸດທ້າຍ 6 ເດືອນທີ່"</string>
+<string name="download">"Download:"</string>
+<string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
+<string name="survey_review">"ເບິ່ງຄືນ
+"</string>
 
-<string name="settings_menu_logout_message">ການປ່ຽນແປງເຄື່ອງແມ່ຂ່າຍຫຼື orgunit ຕ້ອງການທີ່ຈະ Re: ເຂົ້າສູ່ລະບົບ. ທຸກການສໍາຫຼວດບໍ່ສົ່ງຈະໄດ້ຮັບການລຶບ. ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະສືບຕໍ່?</string>
-<string name="app_logout">ອກ​ຈາກ​ລະ​ບົບ</string>
-<string name="network_error">ມີບັນຫາກັບເຄືອຂ່າຍໄດ້, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ.</string>
-<string name="login_invalid_credentials">ຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ</string>
+<!-- Is this the string for the orange button "send" or for "Survey Complete Review/Send"? -->
+<string name="survey_send">"ສົ່ງ
+"</string>
+<string name="app_about">"ກ່ຽວກັບ"</string>
+<string name="app_settings">"ການຕັ້ງຄ່າ"</string>
+<string name="survey_completed">"ການປ້ອນຂໍ້ມູນ"</string>
+<string name="survey_completed_text">"ການປ້ອນຂໍ້ມູນສຳເລັດແລ້ວ"</string>
+<string name="dialog_reopen_org_unit">"ຮ້ານປິດ %s ແມ່ນເປີດ."</string>
+<string name="dynamic_error_pregnant_month">"ເດືອນຖືພາບໍ່ຖືກຕ້ອງ"</string>
+<string name="fonts_customise">"ຂະໜາດຕົວອັກສອນ"</string>
+<string name="font_size">"ຂະໜາດຕົວອັກສອນ"</string>
+<string name="server_name">"DHIS URL ເຄື່ອງແມ່ຂ່າຍຂອງ"</string>
+<string name="server">"ເຊີເວີ"</string>
+<string name="app_visual">"ກວດເບິ່ງ"</string>
+<string name="monitoring_title_dropdown">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
+<string name="monitoring_title">"ການຕິດຕາມ"</string>
+<string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
+<string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
+<string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
+<string name="monitoring_case_stats">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
+<string name="consumption">"ຈຳນວນທີ່ນຳໃຊ້"</string>
+<string name="monitoring_row_title_week">"ອາທິດ"</string>
+<string name="negative">"ຜົນລົບ"</string>
+<string name="RDT">"RDTs"</string>
+<string name="positivity_rate">"ອັດຕາທີ່ພົບເຊື້ອ"</string>
+<string name="Pf">"Pf"</string>
+<string name="Pv">"Pv"</string>
+<string name="mixed">"Pf+Pv"</string>
+<string name="app_legal">"ຂໍ້ກຳນົດດ້ານນິຕິກຳ"</string>
+<string name="app_copyright">"ສະຫງວນລິຂະສິດ"</string>
+<string name="app_software_licenses">"ການອະນຸຍາດໃຫ້ນຳໃຊ້ໂປຣແກມ"</string>
+<string name="app_EULA">"EULA"</string>
+<string name="monitoring_row_title_day">"ວັນທີ"</string>
+<string name="unsent_data">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
+<string name="sent_data">"ສົ່ງແລ້ວ"</string>
+<string name="font_extra_small">"ນ້ອຍສຸດ"</string>
+<string name="font_small">"ນ້ອຍ"</string>
+<string name="font_medium">"ປານກາງ"</string>
+<string name="font_large">"ໃຫ່ຍ"</string>
+<string name="font_extra_large">"ໃຫ່ຍສຸດ"</string>
+<string name="referrals">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
+<string name="developer_option_summary">"ຄຸນນະສົມບັດນີ້ເປີດໃຊ້ວຽກທາງເລືອກການພັດທະນາ"</string>
+<string name="developer_option_title">"ທາງເລືອກໃນການສະແດງໃຫ້ເຫັນການພັດທະນາ"</string>
+<string name="export_data_option_title">"ຖານຂໍ້ມູນການສົ່ງອອກ"</string>
+<string name="dynamic_error_number">"ຈໍານວນທີ່ບໍ່ຖືກຕ້ອງ"</string>
+<string name="rdt_mixed">"Mixed"</string>
+<string name="rdt_pf">"Pf"</string>
+<string name="rdt_pv">"Pv"</string>
+<string name="settings_menu_logout_message">"ການປ່ຽນແປງເຄື່ອງແມ່ຂ່າຍຫຼື orgunit ຕ້ອງການທີ່ຈະ Re: ເຂົ້າສູ່ລະບົບ. ທຸກການສໍາຫຼວດບໍ່ສົ່ງຈະໄດ້ຮັບການລຶບ. ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະສືບຕໍ່?"</string>
+<string name="app_logout">"ອກ​ຈາກ​ລະ​ບົບ"</string>
+<string name="network_error">"ມີບັນຫາກັບເຄືອຂ່າຍໄດ້, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ."</string>
+<string name="login_invalid_credentials">"ຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ"</string>
 <string name="login_unexpected_error">"ມີຂໍ້ຜິດຜາດເກີດຂຶ້ນ, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ"</string>
-<string name="login_invalid_server_url">URL Server ບໍ່ຖືກຕ້ອງ</string>
-<string name="login_error_json">ມີສິ່ງຜິດພາດການອ່ານເອກະສານ json config. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານຂອງທ່ານ.</string>
-<string name="error_conflict_message">ໃນກໍລະນີທີ່ມີ UID:%1$s. ໄດ້ອັບກັບຂໍ້ຂັດແຍ່ງໃນ UID ອົງປະກອບຂໍ້ມູນ:%2$s ທີ່ມີຂໍ້ຄວາມ:%3$s. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ.</string>
+<string name="login_invalid_server_url">"URL Server ບໍ່ຖືກຕ້ອງ"</string>
+<string name="login_error_json">"ມີສິ່ງຜິດພາດການອ່ານເອກະສານ json config. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານຂອງທ່ານ."</string>
+<string name="error_conflict_message">"ໃນກໍລະນີທີ່ມີ UID:%1$s. ໄດ້ອັບກັບຂໍ້ຂັດແຍ່ງໃນ UID ອົງປະກອບຂໍ້ມູນ:%2$s ທີ່ມີຂໍ້ຄວາມ:%3$s. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ."</string>
 <string name="error_conflict_title">"Error"</string>
 <string name="confirmation_really_exit_title">"ແທ້ອອກຈາກ?"</string>
 <string name="confirmation_really_exit">"ທ່ານທີ່ທ່ານກໍາລັງໃຫ້ແນ່ໃຈວ່າຕ້ອງການທີ່ຈະອອກຈາກ app ໄດ້?"</string>
 <string name="run_in_demo_mode">"ດໍາເນີນການໃນຮູບແບບຕົວຢ່າງ"</string>
 <string name="survey_first_step">"ສະແດງຄໍາຖາມ ..."</string>
- <string name="survey_second_step">"ຄໍາຖາມກໍ່ສ້າງ ..."</string> 
-<string name="survey_third_step">"ຕົ້ນໄມ້ຖາມກໍ່ສ້າງ ..."</string> 
+<string name="survey_second_step">"ຄໍາຖາມກໍ່ສ້າງ ..."</string>
+<string name="survey_third_step">"ຕົ້ນໄມ້ຖາມກໍ່ສ້າງ ..."</string>
 <string name="survey_fourth_step">"ສ້າງຫນ້າຈໍ ..."</string>
 <string name="admin_announcement">"ປະກາດບໍລິຫານ"</string>
 <string name="user_close">"ຜູ້ໃຊ້ນີ້ໄດ້ປິດລົງໂດຍບໍລິຫານ."</string>

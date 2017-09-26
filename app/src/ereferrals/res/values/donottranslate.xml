@@ -31,14 +31,16 @@
     <string name="number_bad_login">number_bad_login</string>
     <string name="time_enable_login">time_enable_login</string>
     <item name="web_service_url" translatable="false" type="string">web_service_url</item>
+    <item name="web_view_url" translatable="false" type="string">web_view_url</item>
 
     <string name="url_status_fragment">ipcStats</string>
     <string name="url_open_fragment">ipcOpenReferrals</string>
     <string name="url_closed_fragment">ipcRedeemedReferrals</string>
-    <string name="base_web_view_url">https://apps.psi-mis.org/connect-train/pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s</string>
+    <string name="base_web_view_url">https://apps.psi-mis.org/connect-train/</string>
+    <string name="composed_web_view_url">pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s</string>
     <string name="ws_version">1.0</string>
     <string name="ws_source">Android v1.1</string>
-    <string name="ws_base_url">https://apps.psi-mis.org/</string>
+    <string name="ws_base_url">https://apps.psi-mis.org/eRefWSTrain/</string>
     <string name="error_web_resource" translatable="false">file:///android_asset/web_view_error/%1$s</string>
     <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
     <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>

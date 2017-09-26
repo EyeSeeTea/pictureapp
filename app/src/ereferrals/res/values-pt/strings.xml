@@ -976,4 +976,5 @@
     <string name="common_option_numberOfLivingChildren_19">19</string>
     <string name="common_option_numberOfLivingChildren_20">20</string>
     <string name="common_option_numberOfLivingChildren_0">0</string>
+    <string name="unsent_vouchers">"* vouchers não enviados"</string>
 </resources>

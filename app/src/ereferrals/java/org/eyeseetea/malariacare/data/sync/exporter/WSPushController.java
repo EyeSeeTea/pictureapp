@@ -99,6 +99,7 @@ public class WSPushController implements IPushController {
 
                     @Override
                     public void onError(Exception e) {
+                        Log.e(TAG, "Error pushing surveys: " + e.getMessage());
                         putSurveysAsCompleted();
                         mCallback.onError(e);
                     }

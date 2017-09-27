@@ -70,6 +70,15 @@
             android:title="@string/web_service_name" />
 
         <EditTextPreference
+            android:defaultValue="@string/base_web_view_url"
+            android:inputType="textUri"
+            android:key="@string/web_view_url"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/web_view_name" />
+
+        <EditTextPreference
             android:defaultValue="@string/default_drive_folder"
             android:inputType="textUri"
             android:key="@string/drive_key"

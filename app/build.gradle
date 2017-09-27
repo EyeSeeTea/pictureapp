@@ -85,6 +85,7 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
+            buildConfigField "String", "defaultLocale", "\"en\""
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -103,6 +104,7 @@ android {
             buildConfigField "int", "LimitSurveysCount", "30"
             buildConfigField "int", "LimitSurveysTimeHours", "1"
             buildConfigField "boolean", "customfont", "true"
+            buildConfigField "String", "defaultLocale", "\"en\""
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -121,6 +123,7 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
+            buildConfigField "String", "defaultLocale", "\"en\""
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
@@ -139,6 +142,7 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "false"
+            buildConfigField "String", "defaultLocale", "\"en\""
         }
 
     }

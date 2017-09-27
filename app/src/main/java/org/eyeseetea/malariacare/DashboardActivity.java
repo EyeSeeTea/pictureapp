@@ -544,10 +544,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview() {
-        if (!DynamicTabAdapter.isClicked) {
-            DynamicTabAdapter.isClicked = true;
-            reviewShowDone();
-        }
+       mDashboardActivityStrategy.exitReview();
     }
 
     public void sendSurvey(View view) {

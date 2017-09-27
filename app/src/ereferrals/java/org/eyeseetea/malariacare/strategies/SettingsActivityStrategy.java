@@ -128,6 +128,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void addExtraPreferences() {
         settingsActivity.bindPreferenceSummaryToValue(settingsActivity.findPreference(
                 settingsActivity.getString(R.string.web_service_url)));
+        settingsActivity.bindPreferenceSummaryToValue(
+                settingsActivity.findPreference(settingsActivity.getString(R.string.web_view_url)));
     }
 
     @Override

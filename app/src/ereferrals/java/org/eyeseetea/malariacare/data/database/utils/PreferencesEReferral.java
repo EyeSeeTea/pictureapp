@@ -134,4 +134,19 @@ public class PreferencesEReferral {
         editor.putString(context.getString(R.string.web_service_url), url);
         editor.commit();
     }
+
+    public static String getWebViewURL(){
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.web_view_url), context.getString(R.string.base_web_view_url));
+    }
+    public static void setWebViewURL(String url){
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.web_view_url), url);
+        editor.commit();
+    }
 }

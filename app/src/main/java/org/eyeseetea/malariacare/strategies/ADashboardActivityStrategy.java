@@ -21,6 +21,7 @@ import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
@@ -213,4 +214,11 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public abstract void reloadAVFragment();
+
+    public void exitReview(){
+        if (!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            mDashboardActivity.reviewShowDone();
+        }
+    }
 }

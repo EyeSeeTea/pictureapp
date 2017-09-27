@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.data.database.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -76,6 +77,8 @@ public class PreferencesState {
 
     private boolean userAccept;
 
+    private String phoneLanguage;
+
     private PreferencesState() {
     }
 
@@ -123,6 +126,9 @@ public class PreferencesState {
     }
 
     public void init(Context context) {
+        if (phoneLanguage == null) {
+            phoneLanguage = Locale.getDefault().getLanguage();
+        }
         this.context = context;
         reloadPreferences();
     }
@@ -342,12 +348,11 @@ public class PreferencesState {
     }
 
     public void loadsLanguageInActivity() {
+        String temLanguageCode = languageCode;
         if (languageCode.equals("")) {
-            Locale locale = Resources.getSystem().getConfiguration().locale;
-            setLocale(locale.getLanguage());
-            return;
+            temLanguageCode = phoneLanguage;
         }else {
-            setLocale(languageCode);
+            setLocale(temLanguageCode);
         }
     }
 
@@ -356,8 +361,17 @@ public class PreferencesState {
         // Change locale settings in the app.
         DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
-        conf.locale = new Locale(languageCode);
-        res.updateConfiguration(conf, dm);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            conf.setLocale(new Locale(languageCode));
+        } else {
+            conf.locale = new Locale(languageCode);
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            res.updateConfiguration(conf, dm);
+        } else {
+            context.createConfigurationContext(conf);
+
+        }
     }
 
     /**
@@ -453,5 +467,9 @@ public class PreferencesState {
 
     public void setDataLimitedByPreferenceOrgUnit(boolean value) {
         setDataFilteredByOrgUnit(value);
+    }
+
+    public String getPhoneLanguage() {
+        return phoneLanguage;
     }
 }

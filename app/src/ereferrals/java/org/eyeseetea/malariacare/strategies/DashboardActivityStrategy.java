@@ -51,6 +51,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -476,5 +477,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         }
         return false;
+    }
+
+    @Override
+    public void exitReview() {
+        if (!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            sendSurvey();
+            mDashboardActivity.closeSurveyFragment();
+            DynamicTabAdapter.isClicked = false;
+        }
     }
 }

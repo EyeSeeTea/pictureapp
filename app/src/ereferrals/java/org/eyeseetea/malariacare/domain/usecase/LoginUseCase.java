@@ -148,9 +148,11 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
         if (orgUnitCredentials != null) {
             mCredentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
+            checkUserCredentialsWithOrgUnit(orgUnitCredentials, false);
+        } else {
+            notifyUnexpectedError();
         }
 
-        checkUserCredentialsWithOrgUnit(orgUnitCredentials, false);
     }
 
 

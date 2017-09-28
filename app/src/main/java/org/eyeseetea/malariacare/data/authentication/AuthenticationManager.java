@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 public class AuthenticationManager implements IAuthenticationManager {
     IAuthenticationDataSource userAccountLocalDataSource;
@@ -34,7 +35,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     @Override
     public void login(final Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        if (credentials == null || credentials.isDemoCredentials()) {
+        if (credentials.isDemoCredentials()) {
             localLogin(credentials, callback);
         } else {
             remoteLogin(credentials, callback);
@@ -55,8 +56,9 @@ public class AuthenticationManager implements IAuthenticationManager {
 
         //TODO: jsanchez fix find out IsDemo from current UserAccount getting from DataSource
         Credentials credentials = Session.getCredentials();
-
-        if (credentials == null || credentials.isDemoCredentials() || credentials.isEmpty()) {
+        if (credentials == null) {
+            callback.onError(new InvalidCredentialsException());
+        } else if (credentials.isDemoCredentials() || credentials.isEmpty()) {
             localLogout(callback);
         } else {
             remoteLogout(callback);

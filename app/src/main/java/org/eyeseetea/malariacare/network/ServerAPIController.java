@@ -482,7 +482,7 @@ public class ServerAPIController {
     }
 
     public static boolean isUserClosed(String userUid) throws ApiCallException {
-        if (Session.getCredentials() == null || Session.getCredentials().isDemoCredentials()) {
+        if (Session.getCredentials().isDemoCredentials()) {
             return false;
         }
 

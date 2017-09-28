@@ -37,14 +37,13 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         String uid = mContext.getString(R.string.voucher) +
                 ":" +
                 survey.getEventUid();
-        String firstImportant = "", secondImportant = "", firstVisible = "", secondVisible = "";
+        String firstImportant = "", secondImportant = "", visibleValues = "";
 
         Context context = PreferencesState.getInstance().getContext();
         TextView dateText = (TextView) rowView.findViewById(R.id.completion_date);
         TextView hourText = (TextView) rowView.findViewById(R.id.survey_hour);
-        TextView nameText = (TextView) rowView.findViewById(R.id.important_visible_text);
-        TextView phoneText = (TextView) rowView.findViewById(R.id.visible_first);
-        TextView programText = (TextView) rowView.findViewById(R.id.visible_second);
+        TextView importantText = (TextView) rowView.findViewById(R.id.important_visible_text);
+        TextView visibleValuesText = (TextView) rowView.findViewById(R.id.visible_values);
         TextView uidText = (TextView) rowView.findViewById(R.id.survey_uid);
         dateText.setText(Utils.parseDateToString(survey.getEventDate(),
                 context.getString(R.string.date_survey_format)));
@@ -71,23 +70,25 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         } else if (!important.isEmpty()) {
             firstImportant = important.get(0).getValueBySurvey(survey).getValue();
         }
-        if (visible.size() > 1) {
-            firstVisible = visible.get(0).getValueBySurvey(survey).getValue();
-            OptionDB optionSelected = OptionDB.findByCode(visible.get(1).getValueBySurvey(
+        boolean first = true;
+        for (QuestionDB question : visible) {
+            OptionDB optionSelected = OptionDB.findByCode(question.getValueBySurvey(
                     survey).getValue());
-            secondVisible = optionSelected != null ? optionSelected.getInternationalizedName() :
-                    visible.get(1).getValueBySurvey(
-                            survey).getValue();
-        } else if (!visible.isEmpty()) {
-            OptionDB optionSelected = OptionDB.findByCode(visible.get(0).getValueBySurvey(
-                    survey).getValue());
-            secondVisible = optionSelected != null ? optionSelected.getInternationalizedName() :
-                    visible.get(0).getValueBySurvey(
-                            survey).getValue();
+            String valueToShow;
+            if (optionSelected != null) {
+                valueToShow = optionSelected.getInternationalizedName();
+            } else {
+                valueToShow = question.getValueBySurvey(survey).getValue();
+            }
+            if (first) {
+                visibleValues = valueToShow;
+                first = false;
+            } else {
+                visibleValues += ", " + valueToShow;
+            }
         }
-        nameText.setText(asterisk + firstImportant + " " + secondImportant);
-        phoneText.setText(firstVisible);
-        programText.setText(secondVisible);
+        importantText.setText(asterisk + firstImportant + " " + secondImportant);
+        visibleValuesText.setText(visibleValues);
 
     }
     @Override

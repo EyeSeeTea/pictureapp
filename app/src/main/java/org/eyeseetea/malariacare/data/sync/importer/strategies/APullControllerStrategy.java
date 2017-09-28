@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
@@ -20,7 +21,8 @@ public abstract class APullControllerStrategy {
 
     public abstract void convertMetadata(ConvertFromSDKVisitor converter);
 
-    public void pull(final PullFilters pullFilters, final IPullController.Callback callback) {
+    public void pull(final PullFilters pullFilters, final IPullController.Callback callback,
+            Context context) {
         Log.d(TAG, "Starting PULL process...");
         try {
 

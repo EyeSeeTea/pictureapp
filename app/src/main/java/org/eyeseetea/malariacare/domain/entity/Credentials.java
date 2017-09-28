@@ -5,6 +5,7 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 public class Credentials {
     private static final String DEMO_USER = "demo";
     private static final String DEMO_SERVER = "demo.server";
+    private static final String AUTOCONFIGURED_CREDNTIALS = "autoconfigured";
 
     private String username;
     private String password;
@@ -22,6 +23,12 @@ public class Credentials {
         return credentials;
     }
 
+    public static Credentials createAutoconfiguredCredentials(String serverURL) {
+        Credentials credentials = new Credentials(serverURL, AUTOCONFIGURED_CREDNTIALS,
+                AUTOCONFIGURED_CREDNTIALS);
+        return credentials;
+    }
+
     public String getServerURL() {
         return serverURL;
     }
@@ -36,6 +43,11 @@ public class Credentials {
 
     public boolean isDemoCredentials() {
         return this.equals(Credentials.createDemoCredentials());
+    }
+
+    public boolean isAutoconfiguredCredntials() {
+        return (username.equals(AUTOCONFIGURED_CREDNTIALS) && password.equals(
+                AUTOCONFIGURED_CREDNTIALS));
     }
 
     public void clear() {

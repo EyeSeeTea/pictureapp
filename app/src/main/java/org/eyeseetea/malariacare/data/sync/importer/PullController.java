@@ -63,7 +63,7 @@ public class PullController implements IPullController {
 
     @Override
     public void pull(final PullFilters pullFilters, final Callback callback) {
-        mPullControllerStrategy.pull(pullFilters, callback);
+        mPullControllerStrategy.pull(pullFilters, callback, mContext);
     }
 
     @Override

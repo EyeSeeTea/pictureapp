@@ -213,4 +213,5 @@
 
     <string name="error_auto_configuration">"No OU found for this phone"</string>
     <string name="auto_configuring">"Auto-configuring OU, please wait…"</string>
+    <string name="error_initialize_app">"Error while initializing the application"</string>
 </resources>

@@ -69,4 +69,8 @@ public abstract class ASplashActivityStrategy {
         });
     }
 
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            int[] grantResults) {
+
+    }
 }

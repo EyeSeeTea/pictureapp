@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.PostMigration;
@@ -90,5 +91,11 @@ public class SplashScreenActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             splashActivityStrategy.finishAndGo();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        splashActivityStrategy.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

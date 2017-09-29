@@ -65,7 +65,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private boolean isDemoModeActivated() {
-        return Session.getCredentials().isDemoCredentials();
+        return Session.getCredentials() != null && Session.getCredentials().isDemoCredentials();
     }
 
     @Override
@@ -135,6 +135,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     @Override
                     public void onInvalidCredentials() {
                         Log.d(TAG, "onInvalidCredentials");
+                    }
+
+                    @Override
+                    public void onServerPinChanged() {
+
                     }
 
                     @Override

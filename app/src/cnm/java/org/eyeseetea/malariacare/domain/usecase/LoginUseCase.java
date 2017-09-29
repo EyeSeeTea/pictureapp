@@ -20,22 +20,27 @@ public class LoginUseCase extends ALoginUseCase {
 
     @Override
     public void execute(final Credentials credentials, final Callback loginCallback) {
-        mAuthenticationManager.login(credentials,
-                new IAuthenticationManager.Callback<UserAccount>() {
-                    @Override
-                    public void onSuccess(UserAccount userAccount) {
-                        if (!credentials.isDemoCredentials()) {
-                            logoutAndHardcodedLogin(credentials, loginCallback);
-                        } else {
-                            loginCallback.onLoginSuccess();
+        if (credentials == null) {
+            onErrorCallback(loginCallback,
+                    new IllegalArgumentException("Credentials could not be null"));
+        } else {
+            mAuthenticationManager.login(credentials,
+                    new IAuthenticationManager.Callback<UserAccount>() {
+                        @Override
+                        public void onSuccess(UserAccount userAccount) {
+                            if (!credentials.isDemoCredentials()) {
+                                logoutAndHardcodedLogin(credentials, loginCallback);
+                            } else {
+                                loginCallback.onLoginSuccess();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        onErrorCallback(loginCallback, throwable);
-                    }
-                });
+                        @Override
+                        public void onError(Throwable throwable) {
+                            onErrorCallback(loginCallback, throwable);
+                        }
+                    });
+        }
     }
 
     private void logoutAndHardcodedLogin(final Credentials credentials,

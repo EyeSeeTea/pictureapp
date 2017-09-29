@@ -26,7 +26,7 @@ public class ValueLocalDataSource implements IValueRepository {
                 value.setQuestionUId(dBValue.getQuestionDB().getUid());
             }
             if (dBValue.getOptionDB() != null) {
-                value.setInternationalizedCode(
+                value.setInternationalizedName(
                         dBValue.getOptionDB().getInternationalizedCode());
                 value.setOptionCode(dBValue.getOptionDB().getCode());
             }

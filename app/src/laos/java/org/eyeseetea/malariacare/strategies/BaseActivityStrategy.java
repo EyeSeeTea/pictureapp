@@ -65,7 +65,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private boolean isDemoModeActivated() {
-        return Session.getCredentials().isDemoCredentials();
+        return Session.getCredentials() != null && Session.getCredentials().isDemoCredentials();
     }
 
     @Override

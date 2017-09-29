@@ -25,8 +25,8 @@ import android.support.v4.content.FileProvider;
  * Created by nacho on 05/10/16.
  */
 
-public class KHDBProvider extends FileProvider {
-    public KHDBProvider() {
+public class CNMDBProvider extends FileProvider {
+    public CNMDBProvider() {
         super();
     }
 }

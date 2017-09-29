@@ -35,4 +35,5 @@
     <string name="authority" translatable="false">CAMBODIA_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="google_play_required" translatable="false"></string>
     <string name="feedback_view_image" translatable="false"></string>
+    <string name="autoconfigure_preference" translatable="false">autoconfigure_preference</string>
 </resources>

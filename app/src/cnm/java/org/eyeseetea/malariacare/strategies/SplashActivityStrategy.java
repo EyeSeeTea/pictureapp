@@ -35,6 +35,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 != null) {
             Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
                     Permissions.PHONE_STATE_REQUEST_CODE);
+
             EyeSeeTeaApplication.permissions.requestPermission(permission.getDefinition(),
                     permission.getCode());
         }
@@ -143,7 +144,9 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         } else {
             if (requestCode == Permissions.PHONE_STATE_REQUEST_CODE) {
                 showErrorAutoConfiguration();
-            } else {
+            } else if (EyeSeeTeaApplication.permissions.getPermission(
+                    Permissions.PHONE_STATE_REQUEST_CODE)
+                    != null) {
                 EyeSeeTeaApplication.permissions.requestNextPermission();
             }
         }

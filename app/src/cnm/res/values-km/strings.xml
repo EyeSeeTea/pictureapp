@@ -215,4 +215,5 @@
     <string name="error_auto_configuration">"រកមិនឃើញ OU សម្រាប់ទូរស័ព្ទនេះទេ"</string>
     <string name="auto_configuring">"កំពុងកំណត់រចនាសម្ព័ន្ធដោយស្វ័យប្រវត្តិ OU សូមរង់ចាំ …"</string>
     <string name="error_initialize_app">"មានកំហុសនៅពេលចាប់ផ្តើមកម្មវិធី"</string>
+    <string name="autoconfigure_preference_title">"កំណត់រចនាសម្ព័ន្ធអ្នកប្រើដោយស្វ័យប្រវត្តិ"</string>
 </resources>

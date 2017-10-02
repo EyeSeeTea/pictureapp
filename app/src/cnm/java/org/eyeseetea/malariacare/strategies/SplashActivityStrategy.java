@@ -8,12 +8,8 @@ import android.util.Log;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -117,7 +113,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 .setMessage(R.string.error_auto_configuration)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        continueWithDemoUser();
+                        continueWithPull();
                     }
                 }).create().show();
     }
@@ -152,58 +148,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         }
     }
 
-    private void continueWithDemoUser() {
-        Credentials demoCredentials = Credentials.createDemoCredentials();
-        AuthenticationManager authenticationManager = new AuthenticationManager(mActivity);
-        LoginUseCase loginUseCase = new LoginUseCase(authenticationManager);
-        loginUseCase.execute(demoCredentials, new ALoginUseCase.Callback() {
-            @Override
-            public void onLoginSuccess() {
-                PullFilters pullFilters = new PullFilters();
-                pullFilters.setDemo(true);
-                if (mPullUseCase != null) {
-                    executePull(mPullUseCase, pullFilters);
-                } else {
-                    showErrorInitApp();
-                }
-            }
-
-            @Override
-            public void onServerURLNotValid() {
-                showErrorInitApp();
-            }
-
-            @Override
-            public void onInvalidCredentials() {
-                showErrorInitApp();
-            }
-
-            @Override
-            public void onServerPinChanged() {
-                showErrorInitApp();
-            }
-
-            @Override
-            public void onNetworkError() {
-                showErrorInitApp();
-            }
-
-            @Override
-            public void onConfigJsonInvalid() {
-                showErrorInitApp();
-            }
-
-            @Override
-            public void onUnexpectedError() {
-                showErrorInitApp();
-            }
-
-            @Override
-            public void onMaxLoginAttemptsReachedError() {
-                showErrorInitApp();
-            }
-        });
-
-
+    private void continueWithPull() {
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setDemo(true);
+        if (mPullUseCase != null) {
+            executePull(mPullUseCase, pullFilters);
+        } else {
+            showErrorInitApp();
+        }
     }
 }

@@ -12,8 +12,8 @@
         tools:replace="android:allowBackup, android:icon, android:theme">
 
         <provider
-            android:name=".data.database.utils.KHDBProvider"
-            android:authorities="org.eyeseetea.malariacare.data.database.utils.KHDBProvider"
+            android:name=".data.database.utils.CNMDBProvider"
+            android:authorities="org.eyeseetea.malariacare.data.database.utils.CNMDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">

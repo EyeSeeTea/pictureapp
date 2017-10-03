@@ -8,6 +8,8 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
 public interface IOrganisationUnitRepository {
 
+    void removeCurrentOrganisationUnit();
+
     interface BanOrgUnitChangeListener{
         void onBanOrgUnitChanged(OrganisationUnit organisationUnit);
     }

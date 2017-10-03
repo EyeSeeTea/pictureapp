@@ -111,4 +111,13 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    @Override
+    public void removeCurrentOrganisationUnit() {
+        if (OrgUnitDB.getByName(PreferencesState.getInstance().getOrgUnit()) != null) {
+            OrgUnitDB orgUnitDB = OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
+            orgUnitDB.delete();
+        }
+        PreferencesState.getInstance().setOrgUnit(null);
+    }
+
 }

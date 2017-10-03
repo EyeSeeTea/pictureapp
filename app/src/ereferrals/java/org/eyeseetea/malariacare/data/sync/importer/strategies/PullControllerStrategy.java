@@ -55,7 +55,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     }
 
     @Override
-    public void pull(PullFilters pullFilters, IPullController.Callback callback) {
+    public void pull(PullFilters pullFilters, IPullController.Callback callback, Context context) {
         Log.d(TAG, "Starting PULL process...");
         callback.onStep(PullStep.METADATA);
 

@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.domain.AutoconfigureException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -20,6 +21,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     private PullUseCase mPullUseCase;
     private PullFilters mPullFilters;
     private Activity mActivity;
+    private boolean hasAutoconfigureError;
     public SplashActivityStrategy(Activity mActivity) {
         super(mActivity);
         this.mActivity = mActivity;
@@ -58,11 +60,8 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 @Override
                 public void onComplete() {
                     Log.d(this.getClass().getSimpleName(), "pull complete");
-                    try {
-                        NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
-                        SplashActivityStrategy.this.finishAndGo(DashboardActivity.class);
-                    } catch (LoadingNavigationControllerException ex) {
-                        onError(ex.getMessage());
+                    if (!hasAutoconfigureError) {
+                        goNextActivity();
                     }
                 }
 
@@ -72,40 +71,35 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 }
 
                 @Override
-                public void onError(String message) {
-                    Log.e(this.getClass().getSimpleName(), message);
-                    onPullCancelOrError(pullFilters);
+                public void onError(Throwable throwable) {
+                    Log.e(this.getClass().getSimpleName(),
+                            "error message" + throwable.getMessage());
+                    if (throwable instanceof AutoconfigureException) {
+                        showErrorAutoConfiguration();
+                        hasAutoconfigureError = true;
+                    }
                 }
 
                 @Override
                 public void onNetworkError() {
                     Log.e(this.getClass().getSimpleName(), "Network Error");
-                    onPullCancelOrError(pullFilters);
+                    goNextActivity();
                 }
 
                 @Override
                 public void onPullConversionError() {
                     Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
-                    onPullCancelOrError(pullFilters);
+                    goNextActivity();
                 }
 
                 @Override
                 public void onCancel() {
                     Log.e(this.getClass().getSimpleName(), "Pull oncancel");
-                    onPullCancelOrError(pullFilters);
+                    goNextActivity();
                 }
             });
         }
     }
-
-    public void onPullCancelOrError(PullFilters pullFilters) {
-        if (pullFilters.isAutoConfig()) {
-            showErrorAutoConfiguration();
-        } else {
-            showErrorInitApp();
-        }
-    }
-
 
     private void showErrorAutoConfiguration() {
         new AlertDialog.Builder(activity)
@@ -113,20 +107,18 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 .setMessage(R.string.error_auto_configuration)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        continueWithPull();
+                        goNextActivity();
                     }
                 }).create().show();
     }
 
-    private void showErrorInitApp() {
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.error_message)
-                .setMessage(R.string.error_initialize_app)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        mActivity.finish();
-                    }
-                }).create().show();
+    private void goNextActivity() {
+        try {
+            NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
+            SplashActivityStrategy.this.finishAndGo(DashboardActivity.class);
+        } catch (LoadingNavigationControllerException ex) {
+            Log.e(this.getClass().getSimpleName(), ex.getMessage());
+        }
     }
 
     @Override
@@ -145,16 +137,6 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                     != null) {
                 EyeSeeTeaApplication.permissions.requestNextPermission();
             }
-        }
-    }
-
-    private void continueWithPull() {
-        PullFilters pullFilters = new PullFilters();
-        pullFilters.setDemo(true);
-        if (mPullUseCase != null) {
-            executePull(mPullUseCase, pullFilters);
-        } else {
-            showErrorInitApp();
         }
     }
 }

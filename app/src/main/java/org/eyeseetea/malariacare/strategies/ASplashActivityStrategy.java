@@ -38,7 +38,7 @@ public abstract class ASplashActivityStrategy {
                 try {
                     NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
                 } catch (LoadingNavigationControllerException ex) {
-                    onError(ex.getMessage());
+                    onError(ex);
                 }
             }
 
@@ -48,8 +48,8 @@ public abstract class ASplashActivityStrategy {
             }
 
             @Override
-            public void onError(String message) {
-                Log.e(this.getClass().getSimpleName(), message);
+            public void onError(Throwable throwable) {
+                Log.e(this.getClass().getSimpleName(), throwable.getMessage());
             }
 
             @Override

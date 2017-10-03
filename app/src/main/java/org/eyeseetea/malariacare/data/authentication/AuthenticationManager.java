@@ -34,8 +34,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     @Override
     public void login(final Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        if (credentials == null || credentials.isDemoCredentials()
-                || credentials.isAutoconfiguredCredntials()) {
+        if (credentials == null || credentials.isDemoCredentials()) {
             localLogin(credentials, callback);
         } else {
             remoteLogin(credentials, callback);

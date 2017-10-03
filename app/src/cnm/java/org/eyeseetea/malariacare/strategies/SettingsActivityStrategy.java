@@ -10,8 +10,15 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.usecase.DeleteOrgUnitUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -55,7 +62,18 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        launchAutoconfigure();
+                        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+                        IMainExecutor mainExecutor = new UIThreadExecutor();
+                        IOrganisationUnitRepository organisationUnitRepository =
+                                new OrganisationUnitRepository();
+                        DeleteOrgUnitUseCase deleteOrgUnitUseCase = new DeleteOrgUnitUseCase(
+                                mainExecutor, asyncExecutor, organisationUnitRepository);
+                        deleteOrgUnitUseCase.excute(new DeleteOrgUnitUseCase.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                launchAutoconfigure();
+                            }
+                        });
                         return true;
                     }
                 });

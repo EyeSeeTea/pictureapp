@@ -79,7 +79,7 @@ public class Permissions {
         return permissions.isEmpty();
     }
 
-    private class Permission {
+    public class Permission {
         private int code;
         private String definition;
 

@@ -39,7 +39,7 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
             String question = (QuestionDB.findByUID(
                     value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
             String answer =
-                    ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
+                    ((value.getInternationalizedName() != null) ? value.getInternationalizedName()
                             : value.getValue());
             questionTextView.setText(question);
             answerText.setText(answer);

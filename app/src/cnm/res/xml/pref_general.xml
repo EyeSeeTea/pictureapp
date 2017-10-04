@@ -59,6 +59,9 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/create_info_organization_unit" />
+        <Preference
+            android:key="@string/autoconfigure_preference"
+            android:title="@string/autoconfigure_preference_title" />
 
     </PreferenceCategory>
     <PreferenceCategory

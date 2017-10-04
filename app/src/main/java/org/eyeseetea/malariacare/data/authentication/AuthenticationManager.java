@@ -25,7 +25,6 @@ public class AuthenticationManager implements IAuthenticationManager {
     AAuthenticationManagerStrategy mAuthenticationManagerStrategy;
 
     public AuthenticationManager(Context context) {
-
         userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
         userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
         mUserRepository = new UserAccountDataSource();
@@ -35,7 +34,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     @Override
     public void login(final Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        if (credentials.isDemoCredentials()) {
+        if (credentials == null || credentials.isDemoCredentials()) {
             localLogin(credentials, callback);
         } else {
             remoteLogin(credentials, callback);

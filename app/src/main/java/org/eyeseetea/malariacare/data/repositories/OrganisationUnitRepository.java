@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -81,6 +82,27 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         mBanOrgUnitChangeListener = listener;
     }
 
+    @Override
+    public OrganisationUnit getOrganisationUnitByPhone(Device device) throws ApiCallException {
+        String IMEI = device.getIMEI();
+        if (IMEI == null || IMEI.isEmpty()) {
+            return null;
+        }
+        OrganisationUnit organisationUnit = ServerAPIController.getOrgUnitByPhone(IMEI);
+        return organisationUnit;
+    }
+
+    @Override
+    public void saveCurrentOrganisationUnit(OrganisationUnit organisationUnit) {
+        if (OrgUnitDB.getByName(organisationUnit.getName()) == null) {
+            OrgUnitDB orgUnitDB = new OrgUnitDB(organisationUnit.getUid(),
+                    organisationUnit.getName(), null, null);
+            orgUnitDB.save();
+        }
+        PreferencesState.getInstance().setOrgUnit(organisationUnit.getName());
+    }
+
+
     private boolean isNetworkAvailable() {
         ConnectivityManager cm =
                 (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
@@ -88,4 +110,14 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
+    @Override
+    public void removeCurrentOrganisationUnit() {
+        if (OrgUnitDB.getByName(PreferencesState.getInstance().getOrgUnit()) != null) {
+            OrgUnitDB orgUnitDB = OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
+            orgUnitDB.delete();
+        }
+        PreferencesState.getInstance().setOrgUnit(null);
+    }
+
 }

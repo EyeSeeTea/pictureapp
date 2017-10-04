@@ -977,5 +977,25 @@
     <string name="common_option_numberOfLivingChildren_0">0</string>
     <string name="web_view_name">"Web URL"</string>
     <string name="unsent_vouchers">"* unsent vouchers"</string>
+    <string name="ipc_issueEntry_q_eventType">"Filled during"</string>
+    <string name="ipc_issueEntry_q_heardAbout">"Source of information"</string>
+    <string name="common_option_eventType_HHV">"Household Visit"</string>
+    <string name="common_option_eventType_BHA">"Bhalakusari"</string>
+    <string name="common_option_eventType_MME">"Mid Media Events"</string>
+    <string name="common_option_heardAbout_HHV">"Household Visit"</string>
+    <string name="common_option_heardAbout_BHA">"Bhalakusari"</string>
+    <string name="common_option_heardAbout_PROV">"Provider"</string>
+    <string name="common_option_heardAbout_FRFA">"Friend/Family"</string>
+    <string name="common_option_heardAbout_SU">"Satisfied user"</string>
+    <string name="common_option_heardAbout_HL">"Hotline"</string>
+    <string name="common_option_heardAbout_TV">"TV"</string>
+    <string name="common_option_heardAbout_RA">"Radio"</string>
+    <string name="common_option_heardAbout_MME">"Mid Media"</string>
+    <string name="common_option_heardAbout_OTH">"Other"</string>
+    <string name="ipc_issueEntry_q_addressDistrict">"Address - District"</string>
+    <string name="ipc_issueEntry_q_addressMunVDC">"Address - Municipality/VDC"</string>
+    <string name="ipc_issueEntry_q_addressWard">"Address - Ward"</string>
+    <string name="ipc_issueEntry_q_addressLoc">"Address - Locality"</string>
+
 
 </resources>

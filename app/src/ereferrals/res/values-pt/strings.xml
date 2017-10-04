@@ -978,4 +978,23 @@
     <string name="common_option_numberOfLivingChildren_0">0</string>
     <string name="web_view_name">"URL da Web"</string>
     <string name="unsent_vouchers">"* vouchers não enviados"</string>
+    <string name="ipc_issueEntry_q_eventType">"Preenchido durante"</string>
+    <string name="ipc_issueEntry_q_heardAbout">"Fonte de informação"</string>
+    <string name="common_option_eventType_HHV">"Visita ao lar"</string>
+    <string name="common_option_eventType_BHA">"Bhalakusari"</string>
+    <string name="common_option_eventType_MME">"Eventos Mid Media"</string>
+    <string name="common_option_heardAbout_HHV">"Visita ao lar"</string>
+    <string name="common_option_heardAbout_BHA">"Bhalakusari"</string>
+    <string name="common_option_heardAbout_PROV">"Fornecedor"</string>
+    <string name="common_option_heardAbout_FRFA">"Amigo / família"</string>
+    <string name="common_option_heardAbout_SU">"Usuário satisfeito"</string>
+    <string name="common_option_heardAbout_HL">"Hotline"</string>
+    <string name="common_option_heardAbout_TV">"Televisão"</string>
+    <string name="common_option_heardAbout_RA">"Rádio"</string>
+    <string name="common_option_heardAbout_MME">"Mid Media"</string>
+    <string name="common_option_heardAbout_OTH">"De outros"</string>
+    <string name="ipc_issueEntry_q_addressDistrict">"Endereço - Distrito"</string>
+    <string name="ipc_issueEntry_q_addressMunVDC">"Endereço - Município / VDC"</string>
+    <string name="ipc_issueEntry_q_addressWard">"Endereço - Ward"</string>
+    <string name="ipc_issueEntry_q_addressLoc">"Endereço - Localidade"</string>
 </resources>

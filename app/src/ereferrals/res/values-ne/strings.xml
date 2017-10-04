@@ -977,4 +977,23 @@
     <string name="common_option_numberOfLivingChildren_0">0</string>
     <string name="web_view_name">"वेब URL"</string>
     <string name="unsent_vouchers">"* अनुपयुक्त वाउचरहरू"</string>
+    <string name="ipc_issueEntry_q_eventType">"भरिएको भरिएको"</string>
+    <string name="ipc_issueEntry_q_heardAbout">"जानकारी स्रोत"</string>
+    <string name="common_option_eventType_HHV">"घरेलू भ्रमण"</string>
+    <string name="common_option_eventType_BHA">"Bhalakusari"</string>
+    <string name="common_option_eventType_MME">"मिडिया मिडिया घटनाक्रमहरू"</string>
+    <string name="common_option_heardAbout_HHV">"घरेलू भ्रमण"</string>
+    <string name="common_option_heardAbout_BHA">"Bhalakusari"</string>
+    <string name="common_option_heardAbout_PROV">"प्रदायक"</string>
+    <string name="common_option_heardAbout_FRFA">"मित्र / परिवार"</string>
+    <string name="common_option_heardAbout_SU">"सन्तुष्ट प्रयोगकर्ता"</string>
+    <string name="common_option_heardAbout_HL">"हटलाइन"</string>
+    <string name="common_option_heardAbout_TV">"टिभि"</string>
+    <string name="common_option_heardAbout_RA">"रेडियो"</string>
+    <string name="common_option_heardAbout_MME">"मध्य मिडिया"</string>
+    <string name="common_option_heardAbout_OTH">"अन्य"</string>
+    <string name="ipc_issueEntry_q_addressDistrict">"ठेगाना - जिल्ला"</string>
+    <string name="ipc_issueEntry_q_addressMunVDC">"ठेगाना - नगरपालिका / गाविस"</string>
+    <string name="ipc_issueEntry_q_addressWard">"ठेगाना - वार्ड"</string>
+    <string name="ipc_issueEntry_q_addressLoc">"ठेगाना - लोकल"</string>
 </resources>

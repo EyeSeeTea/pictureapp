@@ -1,71 +1,161 @@
-1;'common_option_method_none';'NON';0;8;1;;;;
-2;'common_option_method_condom';'CON';0;8;2;;;;
-3;'common_option_method_injection';'INJ';0;8;3;;;;
-4;'common_option_method_pills';'PIL';0;8;4;;;;
-5;'common_option_method_implant';'IMP';0;8;5;;;;
-6;'common_option_method_iud';'IUD';0;8;6;;;;
-7;'common_option_method_other';'OTH';0;8;7;;;;
-8;'common_option_method_counselling';'COUNS';0;8;7;;;;
-9;'common_option_channelOfReferral_healthFacility';'HF';0;9;8;;;;
-10;'common_option_channelOfReferral_groupSession';'GS';0;9;9;;;;
-11;'common_option_channelOfReferral_doorToDoor';'DD';0;9;10;;;;
-12;'common_option_civilStatus_unmarried';'UNMAR';0;10;11;;;;
-13;'common_option_civilStatus_divorced';'DIV';0;10;12;;;;
-14;'common_option_civilStatus_married';'MAR';0;10;13;;;;
-15;'common_option_civilStatus_widowed';'WID';0;10;14;;;;
-16;'common_option_ownershipOfPhone_noMobile';'NO';0;11;15;;;;
-17;'common_option_ownershipOfPhone_herNumber';'HER';0;11;16;;;;
-18;'common_option_ownershipOfPhone_husbandPartner';'PAR';0;11;17;;;;
-19;'common_option_ownershipOfPhone_shared';'SHA';0;11;18;;;;
-20;'common_option_program_familyPlanning';'FPL';0;13;19;;;;
-21;'common_option_gender_male';'M';0;3;22;;;;
-22;'common_option_gender_female';'F';0;3;23;;;;
-23;'common_option_method_none';'NON';0;14;1;;;;
-24;'common_option_method_condom';'CON';0;14;2;;;;
-25;'common_option_method_pills';'PIL';0;14;4;;;;
-26;'common_option_method_implant';'IMP';0;14;5;;;;
-27;'common_option_method_other';'OTH';0;14;7;;;;
-28;'common_option_method_icud';'ICUD';0;14;7;;;;'l'
-29;'common_option_method_ppiud';'PPIUD';0;14;7;;;;
-30;'common_option_method_depo';'DEPO';0;14;7;;;;
-31;'common_option_method_ma';'MA';0;14;7;;;;
-32;'common_option_method_counselling';'COUNS';0;14;7;;;;
-33;'common_option_phoneContactConsent_no';'NO';0;16;7;;;;
-34;'common_option_phoneContactConsent_yesp';'YESP';0;16;7;;;;
-35;'common_option_phoneContactConsent_yespp';'YESPP';0;16;7;;;;
-36;'common_option_isClientReferred_yes';'YES';0;17;7;;;;
-37;'common_option_isClientReferred_no';'NO';0;17;7;;;;
-38;'common_option_householdDelivery_yes';'YES';0;20;7;;;;
-39;'common_option_householdDelivery_no';'NO';0;20;7;;;;
-40;'common_option_ageYoungest_0_6M';'0-6M';0;22;7;;;;
-41;'common_option_ageYoungest_6_12M';'6-12M';0;22;7;;;;
-42;'common_option_ageYoungest_1_2Y';'1-2Y';0;22;7;;;;
-43;'common_option_ageYoungest_2Y';'2+Y';0;22;7;;;;
-44;'common_option_numberOfLivingChildren_0';0;0;7;7;;;;
-45;'common_option_numberOfLivingChildren_1';1;0;7;7;;;;
-46;'common_option_numberOfLivingChildren_2';2;0;7;7;;;;
-47;'common_option_numberOfLivingChildren_3';3;0;7;7;;;;
-48;'common_option_numberOfLivingChildren_4';4;0;7;7;;;;
-49;'common_option_numberOfLivingChildren_5';5;0;7;7;;;;
-50;'common_option_numberOfLivingChildren_6';6;0;7;7;;;;
-51;'common_option_numberOfLivingChildren_7';7;0;7;7;;;;
-52;'common_option_numberOfLivingChildren_8';8;0;7;7;;;;
-53;'common_option_numberOfLivingChildren_9';9;0;7;7;;;;
-54;'common_option_numberOfLivingChildren_10';10;0;7;7;;;;
-55;'common_option_numberOfLivingChildren_11';11;0;7;7;;;;
-56;'common_option_numberOfLivingChildren_12';12;0;7;7;;;;
-57;'common_option_numberOfLivingChildren_13';13;0;7;7;;;;
-58;'common_option_numberOfLivingChildren_14';14;0;7;7;;;;
-59;'common_option_numberOfLivingChildren_15';15;0;7;7;;;;
-60;'common_option_numberOfLivingChildren_16';16;0;7;7;;;;
-61;'common_option_numberOfLivingChildren_17';17;0;7;7;;;;
-62;'common_option_numberOfLivingChildren_18';18;0;7;7;;;;
-63;'common_option_numberOfLivingChildren_19';19;0;7;7;;;;
-64;'common_option_numberOfLivingChildren_20';20;0;7;7;;;;
-65;'common_option_method_none';'NON';0;23;1;;;;
-66;'common_option_method_condom';'CON';0;23;2;;;;
-67;'common_option_method_injection';'INJ';0;23;3;;;;
-68;'common_option_method_pills';'PIL';0;23;4;;;;
-69;'common_option_method_implant';'IMP';0;23;5;;;;
-70;'common_option_method_iud';'IUD';0;23;6;;;;
-71;'common_option_method_other';'OTH';0;23;7;;;;
+1;'common_option_method_none';'NON';0;8;1
+2;'common_option_method_condom';'CON';0;8;2
+3;'common_option_method_injection';'INJ';0;8;3
+4;'common_option_method_pills';'PIL';0;8;4
+5;'common_option_method_implant';'IMP';0;8;5
+6;'common_option_method_iud';'IUD';0;8;6
+7;'common_option_method_other';'OTH';0;8;7
+8;'common_option_method_counselling';'COUNS';0;8;7
+9;'common_option_channelOfReferral_healthFacility';'HF';0;9;8
+10;'common_option_channelOfReferral_groupSession';'GS';0;9;9
+11;'common_option_channelOfReferral_doorToDoor';'DD';0;9;10
+12;'common_option_civilStatus_unmarried';'UNMAR';0;10;11
+13;'common_option_civilStatus_divorced';'DIV';0;10;12
+14;'common_option_civilStatus_married';'MAR';0;10;13
+15;'common_option_civilStatus_widowed';'WID';0;10;14
+16;'common_option_ownershipOfPhone_noMobile';'NO';0;11;15
+17;'common_option_ownershipOfPhone_herNumber';'HER';0;11;16
+18;'common_option_ownershipOfPhone_husbandPartner';'PAR';0;11;17
+19;'common_option_ownershipOfPhone_shared';'SHA';0;11;18
+20;'common_option_program_familyPlanning';'FPL';0;13;19
+21;'common_option_gender_male';'M';0;3;22
+22;'common_option_gender_female';'F';0;3;23
+23;'common_option_method_none';'NON';0;14;1
+24;'common_option_method_condom';'CON';0;1;2
+25;'common_option_method_pills';'PIL';0;14;4
+26;'common_option_method_implant';'IMP';0;14;5
+27;'common_option_method_other';'OTH';0;14;7
+28;'common_option_method_icud';'ICUD';0;14;7
+29;'common_option_method_ppiud';'PPIUD';0;1;7
+30;'common_option_method_depo';'DEPO';0;14;7
+31;'common_option_method_ma';'MA';0;1;7
+32;'common_option_method_counselling';'COUNS';0;1;7
+33;'common_option_phoneContactConsent_no';'NO';0;16;7
+34;'common_option_phoneContactConsent_yesp';'YESP';0;16;7
+35;'common_option_phoneContactConsent_yespp';'YESPP';0;16;7
+36;'common_option_isClientReferred_yes';'YES';0;17;7
+37;'common_option_isClientReferred_no';'NO';0;17;7
+38;'common_option_householdDelivery_yes';'YES';0;20;7
+39;'common_option_householdDelivery_no';'NO';0;20;7
+40;'common_option_ageYoungest_0_6M';'0-6M';0;22;7
+41;'common_option_ageYoungest_6_12M';'6-12M';0;22;7
+42;'common_option_ageYoungest_1_2Y';'1-2Y';0;22;7
+43;'common_option_ageYoungest_2Y';'2+Y';0;22;7
+44;'common_option_numberOfLivingChildren_0';0;0;7;7
+45;'common_option_numberOfLivingChildren_1';1;0;7;7
+46;'common_option_numberOfLivingChildren_2';2;0;7;7
+47;'common_option_numberOfLivingChildren_3';3;0;7;7
+48;'common_option_numberOfLivingChildren_4';4;0;7;7
+49;'common_option_numberOfLivingChildren_5';5;0;7;7
+50;'common_option_numberOfLivingChildren_6';6;0;7;7
+51;'common_option_numberOfLivingChildren_7';7;0;7;7
+52;'common_option_numberOfLivingChildren_8';8;0;7;7
+53;'common_option_numberOfLivingChildren_9';9;0;7;7
+54;'common_option_numberOfLivingChildren_10';10;0;7;7
+55;'common_option_numberOfLivingChildren_11';11;0;7;7
+56;'common_option_numberOfLivingChildren_12';12;0;7;7
+57;'common_option_numberOfLivingChildren_13';13;0;7;7
+58;'common_option_numberOfLivingChildren_14';14;0;7;7
+59;'common_option_numberOfLivingChildren_15';15;0;7;7
+60;'common_option_numberOfLivingChildren_16';16;0;7;7
+61;'common_option_numberOfLivingChildren_17';17;0;7;7
+62;'common_option_numberOfLivingChildren_18';18;0;7;7
+63;'common_option_numberOfLivingChildren_19';19;0;7;7
+64;'common_option_numberOfLivingChildren_20';20;0;7;7
+65;'common_option_method_none';'NON';0;23;1
+66;'common_option_method_condom';'CON';0;23;2
+67;'common_option_method_injection';'INJ';0;23;3
+68;'common_option_method_pills';'PIL';0;23;4
+69;'common_option_method_implant';'IMP';0;23;5
+70;'common_option_method_iud';'IUD';0;23;6
+71;'common_option_method_other';'OTH';0;23;7
+72;'common_option_eventType_HHV';'HHV';0;24;7
+73;'common_option_eventType_BHA';'BHA';0;24;7
+74;'common_option_eventType_MME';'MME';0;24;7
+75;'common_option_heardAbout_HHV';'HHV';0;25;7
+76;'common_option_heardAbout_BHA';'BHA';0;25;7
+77;'common_option_heardAbout_PROV';'PROV';0;25;7
+78;'common_option_heardAbout_FRFA';'FRFA';0;25;7
+79;'common_option_heardAbout_SU';'SU';0;25;7
+80;'common_option_heardAbout_HL';'HL';0;25;7
+81;'common_option_heardAbout_TV';'TV';0;25;7
+82;'common_option_heardAbout_RA';'RA';0;25;7
+83;'common_option_heardAbout_MME';'MME';0;25;7
+84;'common_option_heardAbout_OTH';'OTH';0;25;7
+85;'Morang (DIS-10)';'NP-DIS-10';0;26;7
+86;'Sarlahi (DIS-20)';'NP-DIS-20';0;26;7
+87;'Makwanpur (DIS-32)';'NP-DIS-32';0;26;7
+88;'Nawalparasi (DIS-48)';'NP-DIS-48';0;26;7
+89;'Kailali (DIS-71)';'NP-DIS-71';0;26;7
+90;'Budhiganga Rural Municipality (RUR-62)';'NP-DIS-10-RUR-62';0;27;7
+91;'Dhanpalthan Rural Municipality (RUR-63)';'NP-DIS-10-RUR-63';0;27;7
+92;'Gramthan Rural Municipality (RUR-64)';'NP-DIS-10-RUR-64';0;27;7
+93;'Jahada Rural Municipality (RUR-65)';'NP-DIS-10-RUR-65';0;27;7
+94;'Kanepokhari Rural Municipality (RUR-66)';'NP-DIS-10-RUR-66';0;27;7
+95;'Katahari Rural Municipality (RUR-67)';'NP-DIS-10-RUR-67';0;27;7
+96;'Kerabari Rural Municipality (RUR-68)';'NP-DIS-10-RUR-68';0;27;7
+97;'Miklajung Rural Municipality (RUR-69)';'NP-DIS-10-RUR-69';0;27;7
+98;'Belbari Municipality (MUN-70)';'NP-DIS-10-MUN-70';0;27;7
+99;'Biratnagar Metropolitan City (MUN-71)';'NP-DIS-10-MUN-71';0;27;7
+100;'Letang Municipality (MUN-72)';'NP-DIS-10-MUN-72';0;27;7
+101;'Patahrishanishchare Municipality (MUN-73)';'NP-DIS-10-MUN-73';0;27;7
+102;'Rangeli Municipality (MUN-74)';'NP-DIS-10-MUN-74';0;27;7
+103;'Ratuwamai Municipality (MUN-75)';'NP-DIS-10-MUN-75';0;27;7
+104;'Sundarharaicha Municipality (MUN-76)';'NP-DIS-10-MUN-76';0;27;7
+105;'Sunwarshi Municipality (MUN-77)';'NP-DIS-10-MUN-77';0;27;7
+106;'Uralabari Municipality (MUN-78)';'NP-DIS-10-MUN-78';0;27;7
+107;'Bishnu Rural Municipality (RUR-97)';'NP-DIS-20-RUR-97';0;27;7
+108;'Brahmapuri Rural Municipality (RUR-98)';'NP-DIS-20-RUR-98';0;27;7
+109;'Chakraghatta Rural Municipality (RUR-99)';'NP-DIS-20-RUR-99';0;27;7
+110;'Chandranagar Rural Municipality (RUR-100)';'NP-DIS-20-RUR-100';0;27;7
+111;'Dhankaul Rural Municipality (RUR-101)';'NP-DIS-20-RUR-101';0;27;7
+112;'Kabilasi Rural Municipality (RUR-102)';'NP-DIS-20-RUR-102';0;27;7
+113;'Ramnagar Rural Municipality (RUR-103)';'NP-DIS-20-RUR-103';0;27;7
+114;'Bagmati Municipality (MUN-104)';'NP-DIS-20-MUN-104';0;27;7
+115;'Balara Municipality (MUN-105)';'NP-DIS-20-MUN-105';0;27;7
+116;'Barahathawa Municipality (MUN-106)';'NP-DIS-20-MUN-106';0;27;7
+117;'Godaita Municipality (MUN-107)';'NP-DIS-20-MUN-107';0;27;7
+118;'Haripur Municipality (MUN-108)';'NP-DIS-20-MUN-108';0;27;7
+119;'Haripurwa Municipality (MUN-109)';'NP-DIS-20-MUN-109';0;27;7
+120;'Hariwan Municipality (MUN-110)';'NP-DIS-20-MUN-110';0;27;7
+121;'Ishworpur Municipality (MUN-111)';'NP-DIS-20-MUN-111';0;27;7
+122;'Lalbandi Municipality (MUN-112)';'NP-DIS-20-MUN-112';0;27;7
+123;'Malangawa Municipality (MUN-113)';'NP-DIS-20-MUN-113';0;27;7
+124;'Bagmati Rural Municipality (RUR-45)';'NP-DIS-32-RUR-45';0;27;7
+125;'Bakaiya Rural Municipality (RUR-46)';'NP-DIS-32-RUR-46';0;27;7
+126;'Bhimphedi Rural Municipality (RUR-47)';'NP-DIS-32-RUR-47';0;27;7
+127;'Indrasarowar Rural Municipality (RUR-48)';'NP-DIS-32-RUR-48';0;27;7
+128;'Kailash Rural Municipality (RUR-49)';'NP-DIS-32-RUR-49';0;27;7
+129;'Makawanpurgadhi Rural Municipality (RUR-50)';'NP-DIS-32-RUR-50';0;27;7
+130;'Manahari Rural Municipality (RUR-51)';'NP-DIS-32-RUR-51';0;27;7
+131;'Raksirang Rural Municipality (RUR-52)';'NP-DIS-32-RUR-52';0;27;7
+132;'Hetauda Sub-Metropolitan City (MUN-53)';'NP-DIS-32-MUN-53';0;27;7
+133;'Thaha Municipality (MUN-54)';'NP-DIS-32-MUN-54';0;27;7
+134;'inayee Triveni Rural Municipality (RUR-74)';'NP-DIS-48-RUR-74';0;27;7
+135;'Bungdikali Rural Municipality (RUR-75)';'NP-DIS-48-RUR-75';0;27;7
+136;'Hupsekot Rural Municipality (RUR-76';'NP-DIS-48-RUR-76';0;27;7
+137;'Palhi Nandan Rural Municipality (RUR-77)';'NP-DIS-48-RUR-77';0;27;7
+138;'Pratappur Rural Municipality (RUR-78)';'NP-DIS-48-RUR-78';0;27;7
+139;'Sarawal Rural Municipality (RUR-79)';'NP-DIS-48-RUR-79';0;27;7
+140;'Susta Rural Municipality (RUR-80)';'NP-DIS-48-RUR-80';0;27;7
+141;'Bardaghat Municipality (MUN-81)';'NP-DIS-48-MUN-81';0;27;7
+142;'Bulingtar Rural Municipality (RUR-82)';'NP-DIS-48-RUR-82';0;27;7
+143;'Devchuli Municipality (MUN-83)';'NP-DIS-48-MUN-83';0;27;7
+144;'Gaidakot Municipality (MUN-84)';'NP-DIS-48-MUN-84';0;27;7
+145;'Kawaswoti Municipality (MUN-85)';'NP-DIS-48-MUN-85';0;27;7
+146;'Madhyabindu Municipality (MUN-86)';'NP-DIS-48-MUN-86';0;27;7
+147;'Ramgram Municipality (MUN-87)';'NP-DIS-48-MUN-87';0;27;7
+148;'Sunwal Municipality (MUN-88)';'NP-DIS-48-MUN-88';0;27;7
+149;'Bardagoriya Rural Municipality (RUR-40)';'NP-DIS-71-RUR-40';0;27;7
+150;'Chure Rural Municipality (RUR-41)';'NP-DIS-71-RUR-41';0;27;7
+151;'Janaki Rural Municipality (RUR-42)';'NP-DIS-71-RUR-42';0;27;7
+152;'Joshipur Rural Municipality (RUR-43)';'NP-DIS-71-RUR-43';0;27;7
+153;'Kailari Rural Municipality (RUR-44)';'NP-DIS-71-RUR-44';0;27;7
+154;'Mohanyal Rural Municipality (RUR-45)';'NP-DIS-71-RUR-45';0;27;7
+155;'Bhajani Municipality (MUN-46)';'NP-DIS-71-MUN-46';0;27;7
+156;'Dhangadhi Sub-Metropolitan City (MUN-47)';'NP-DIS-71-MUN-47';0;27;7
+157;'Gauriganga Municipality (MUN-48)';'NP-DIS-71-MUN-48';0;27;7
+158;'Ghodaghodi Municipality (MUN-49)';'NP-DIS-71-MUN-49';0;27;7
+159;'Godawari Municipality (MUN-50)';'NP-DIS-71-MUN-50';0;27;7
+160;'Lamki-Chuha Municipality (MUN-51)';'NP-DIS-71-MUN-51';0;27;7
+161;'Tikapur Municipality (MUN-52)';'NP-DIS-71-MUN-52';0;27;7

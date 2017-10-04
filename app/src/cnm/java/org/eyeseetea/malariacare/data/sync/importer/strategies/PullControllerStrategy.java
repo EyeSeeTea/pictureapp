@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
@@ -26,6 +25,11 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 public class PullControllerStrategy extends APullControllerStrategy {
+
+    IOrganisationUnitRepository organisationUnitRepository;
+    IDeviceRepository deviceRepository;
+    AuthenticationManager authenticationManager;
+
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
     }
@@ -38,14 +42,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
             callback.onStep(PullStep.METADATA);
             mPullController.populateMetadataFromCsvs(pullFilters.isAutoConfig());
             OrganisationUnit organisationUnit = null;
-            if(pullFilters.isAutoConfig()) {
+            if (pullFilters.isAutoConfig()) {
                 try {
                     organisationUnit = getOrgUnitByPhone(context, callback);
                 } catch (ApiCallException e) {
                     throw new AutoconfigureException();
                 }
             }
-            if (organisationUnit != null|| pullFilters.isDemo()) {
+            if (organisationUnit != null || pullFilters.isDemo()) {
                 callback.onComplete();
             } else {
                 mPullController.pullMetada(pullFilters, callback);
@@ -61,9 +65,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
             final IPullController.Callback callback)
             throws NetworkException, ApiCallException {
 
-        IOrganisationUnitRepository organisationUnitRepository = new OrganisationUnitRepository();
-        IDeviceRepository deviceRepository = new DeviceDataSource();
-        AuthenticationManager authenticationManager = new AuthenticationManager(context);
+        organisationUnitRepository = new OrganisationUnitRepository();
+        deviceRepository = new DeviceDataSource();
+        authenticationManager = new AuthenticationManager(context);
 
         OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
                 ReadPolicy.CACHE);
@@ -76,35 +80,44 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 callback.onError(new AutoconfigureException());
                 return null;
             }
-            String username = null;
-            String password = null;
-            try {
-                username = AuthenticationApi.getHardcodedApiUser();
-                password = AuthenticationApi.getHardcodedApiPass();
-            } catch (ConfigJsonIOException e) {
-                e.printStackTrace();
-                callback.onError(e);
-            }
 
             if (organisationUnit != null) {
-                authenticationManager.login(
-                        new Credentials(ServerAPIController.getServerUrl(), username,
-                                password),
-                        new IAuthenticationManager.Callback<UserAccount>() {
-                            @Override
-                            public void onSuccess(UserAccount result) {
-                                Log.d(TAG, "Create autoconfigured user");
-                            }
 
-                            @Override
-                            public void onError(Throwable throwable) {
-                                Log.e(TAG, "Create autoconfigured user error");
-                                callback.onError(throwable);
-                            }
-                        });
+                Credentials hardcodedCredentials = getHardcodedCredentials(callback);
+
+                if (hardcodedCredentials != null) {
+                    authenticationManager.login(hardcodedCredentials,
+                            new IAuthenticationManager.Callback<UserAccount>() {
+                                @Override
+                                public void onSuccess(UserAccount result) {
+                                    Log.d(TAG, "Create autoconfigured user");
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    Log.e(TAG, "Create autoconfigured user error");
+                                    callback.onError(throwable);
+                                }
+                            });
+                }
             }
         }
         return organisationUnit;
+    }
+
+    private Credentials getHardcodedCredentials(IPullController.Callback callback) {
+        Credentials hardcodedCredentials = null;
+
+        try {
+            hardcodedCredentials =
+                    authenticationManager.getHardcodedServerCredentials(
+                            ServerAPIController.getServerUrl());
+        } catch (ConfigJsonIOException e) {
+            e.printStackTrace();
+            callback.onError(e);
+        }
+
+        return hardcodedCredentials;
     }
 
     @Override

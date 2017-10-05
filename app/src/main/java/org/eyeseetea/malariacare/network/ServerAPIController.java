@@ -92,14 +92,14 @@ public class ServerAPIController {
      * Endpoint to retrieve orgUnits info filtering by CODE (API)
      */
     private static final String DHIS_PULL_ORG_UNIT_API =
-            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,code,closedDate,"
                     + "description&filter=code:eq:%s&filter:programs:id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
      */
     private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME =
-            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,code,closedDate,"
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
@@ -482,7 +482,7 @@ public class ServerAPIController {
     }
 
     public static boolean isUserClosed(String userUid) throws ApiCallException {
-        if (Session.getCredentials().isDemoCredentials()) {
+        if (Session.getCredentials() != null && Session.getCredentials().isDemoCredentials()) {
             return false;
         }
 
@@ -601,8 +601,13 @@ public class ServerAPIController {
                     }
                 }
 
-            return new OrganisationUnit(uid, name, code, description,
-                    closedDate, pin, program);
+                if (pin == null || pin.isEmpty()) {
+                    return new OrganisationUnit(uid, name, code, description,
+                            closedDate);
+                } else {
+                    return new OrganisationUnit(uid, name, code, description,
+                            closedDate, pin, program);
+                }
             } catch (JSONException e) {
                 throw new ApiCallException(e);
             }
@@ -694,6 +699,38 @@ public class ServerAPIController {
     static String getPatchClosedDescriptionUrl(String url, String orguid) {
         String endpoint = url + String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE, orguid);
         return ServerApiUtils.encodeBlanks(endpoint);
+    }
+
+    public static OrganisationUnit getOrgUnitByPhone(String imei) throws ApiCallException {
+        String url = PreferencesState.getInstance().getDhisURL()
+                + "/api/organisationUnits.json?filter=phoneNumber:like:%s&fields=id,name,"
+                + "description,"
+                + "code,"
+                + "ancestors[id,"
+                + "code,level],attributeValues[value,attribute[code]";
+        url = String.format(url, imei);
+        try {
+            if (!isNetworkAvailable()) {
+                throw new NetworkException();
+            }
+            Response response = ServerApiCallExecution.executeCall(null, url, "GET");
+
+            JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+            //{"organisationUnits":[{}]}
+            JSONArray orgUnitsArray = (JSONArray) body.get(TAG_ORGANISATIONUNITS);
+
+            //0| >1 matches -> Error
+            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+                Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", imei,
+                        orgUnitsArray.length()));
+                return null;
+            }
+
+            JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
+            return parseOrgUnit(orgUnitJO);
+        } catch (Exception ex) {
+            throw new ApiCallException(ex);
+        }
     }
 }
 

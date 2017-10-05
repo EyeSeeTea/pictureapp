@@ -106,6 +106,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             }
 
                             @Override
+                            public void onServerPinChanged() {
+                                Log.e(this.getClass().getSimpleName(), "Server pin change");
+                            }
+
+                            @Override
                             public void onNetworkError() {
                                 Log.e(this.getClass().getSimpleName(), "Network Error");
                             }
@@ -154,9 +159,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
-            public void onError(String message) {
+            public void onError(Throwable throwable) {
                 loginActivity.hideProgressBar();
-                Log.e(this.getClass().getSimpleName(), message);
+                Log.e(this.getClass().getSimpleName(), throwable.getMessage());
             }
 
             @Override

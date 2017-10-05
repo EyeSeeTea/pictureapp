@@ -4,21 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.PostMigration;
-import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
@@ -28,11 +25,13 @@ public class SplashScreenActivity extends Activity {
 
 
     private static final String TAG = ".SplashScreenActivity";
+    private SplashActivityStrategy splashActivityStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        splashActivityStrategy = new SplashActivityStrategy(this);
         setContentView(R.layout.activity_splash);
         AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
         asyncInitApplication.execute((Void) null);
@@ -65,46 +64,9 @@ public class SplashScreenActivity extends Activity {
             PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
 
             PullFilters pullFilters = new PullFilters();
-            pullFilters.setDemo(true);
-
-            pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
-                @Override
-                public void onComplete() {
-                    Log.d(this.getClass().getSimpleName(), "pull complete");
-                    try {
-                        NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
-                    }catch (LoadingNavigationControllerException ex){
-                        onError(ex.getMessage());
-                    }
-                }
-
-                @Override
-                public void onStep(PullStep step) {
-                    Log.d(this.getClass().getSimpleName(), step.toString());
-                }
-
-                @Override
-                public void onError(String message) {
-                    Log.e(this.getClass().getSimpleName(), message);
-                }
-
-                @Override
-                public void onNetworkError() {
-                    Log.e(this.getClass().getSimpleName(), "Network Error");
-                }
-
-                @Override
-                public void onPullConversionError() {
-                    Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
-                }
-
-                @Override
-                public void onCancel() {
-                    Log.e(this.getClass().getSimpleName(), "Pull oncancel");
-                }
-            });
+            splashActivityStrategy.initPullFilters(pullFilters);
+            splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
-
     }
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
@@ -127,8 +89,13 @@ public class SplashScreenActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            SplashActivityStrategy splashActivityStrategy = new SplashActivityStrategy(activity);
             splashActivityStrategy.finishAndGo();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        splashActivityStrategy.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

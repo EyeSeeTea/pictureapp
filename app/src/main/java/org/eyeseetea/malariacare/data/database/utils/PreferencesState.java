@@ -243,6 +243,7 @@ public class PreferencesState {
     }
 
     public void setOrgUnit(String orgUnit) {
+        saveStringPreference(R.string.org_unit, orgUnit);
         this.orgUnit = orgUnit;
     }
 

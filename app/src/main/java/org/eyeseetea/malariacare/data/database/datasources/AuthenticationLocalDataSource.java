@@ -36,7 +36,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
     }
 
     @Override
-    public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
+    public void login(Credentials credentials, final IDataSourceCallback<UserAccount> callback) {
         UserDB loggedUserDB = UserDB.getLoggedUser();
         String userUid = loggedUserDB != null ? loggedUserDB.getUid() : null;
 

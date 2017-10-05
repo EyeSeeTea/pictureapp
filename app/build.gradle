@@ -89,7 +89,7 @@ android {
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
-            versionName "1.2.0"
+            versionName "1.2.3"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
@@ -143,6 +143,24 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "false"
             buildConfigField "String", "defaultLocale", "\"en\""
+        }
+        cnm {
+            applicationId 'org.eyeseetea.surveillance_cnm_bb'
+            versionName "0.1.0"
+            buildConfigField "boolean", "reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
+            buildConfigField "boolean", "translations", "true"
+            buildConfigField "boolean", "developerOptions", "true"
+            buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
+            buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "boolean", "activeAVFragment", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.CNMDBProvider\""
+            buildConfigField "int", "LimitSurveysCount", "0"
+            buildConfigField "int", "LimitSurveysTimeHours", "0"
+            buildConfigField "boolean", "customfont", "true"
         }
 
     }

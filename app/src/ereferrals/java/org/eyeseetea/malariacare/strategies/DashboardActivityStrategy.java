@@ -69,6 +69,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private WebViewFragment openFragment, closeFragment, statusFragment;
     private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
     private DownloadMediaUseCase mDownloadMediaUseCase;
+    public AVFragment avFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);

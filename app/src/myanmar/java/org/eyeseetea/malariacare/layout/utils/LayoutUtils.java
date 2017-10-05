@@ -61,13 +61,13 @@ public class LayoutUtils extends BaseLayoutUtils {
                 R.id.action_bar_multititle_title);
         title.setText(spannedTitle);
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
-                "fonts/" + context.getString(R.string.light_font));
+                "fonts/" + context.getString(R.string.font_name_light));
         title.setTypeface(tf);
         TextView subtitle = (TextView) actionBar.getCustomView().findViewById(
                 R.id.action_bar_multititle_subtitle);
         subtitle.setText(spannedSubTitle);
         tf = Typeface.createFromAsset(context.getAssets(),
-                "fonts/" + context.getString(R.string.light_font));
+                "fonts/" + context.getString(R.string.font_name_light));
         subtitle.setTypeface(tf);
 
     }

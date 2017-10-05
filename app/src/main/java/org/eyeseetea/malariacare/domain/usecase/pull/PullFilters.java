@@ -12,6 +12,7 @@ public class PullFilters {
     boolean downloadMetaData;
     String dataByOrgUnit;
     boolean pullDataAfterMetadata;
+    boolean isAutoConfig;
 
     public Date getStartDate() {
         return startDate;
@@ -74,5 +75,13 @@ public class PullFilters {
     }
     public boolean pullDataAfterMetadata() {
         return pullDataAfterMetadata;
+    }
+
+    public boolean isAutoConfig() {
+        return isAutoConfig;
+    }
+
+    public void setAutoConfig(boolean autoConfig) {
+        isAutoConfig = autoConfig;
     }
 }

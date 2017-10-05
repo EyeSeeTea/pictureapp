@@ -996,4 +996,5 @@
     <string name="ipc_issueEntry_q_addressMunVDC">"ठेगाना - नगरपालिका / गाविस"</string>
     <string name="ipc_issueEntry_q_addressWard">"ठेगाना - वार्ड"</string>
     <string name="ipc_issueEntry_q_addressLoc">"ठेगाना - लोकल"</string>
+    <string name="zimbawe_program">जिम्बाब्वे</string>
 </resources>

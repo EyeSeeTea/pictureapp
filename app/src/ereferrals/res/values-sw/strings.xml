@@ -894,4 +894,5 @@ Ameahidi kuhudhuria"</string>
     <string name="ipc_issueEntry_q_addressMunVDC">"Anwani - Manispaa / VDC"</string>
     <string name="ipc_issueEntry_q_addressWard">"Anwani - Kata"</string>
     <string name="ipc_issueEntry_q_addressLoc">"Anwani - Mahali"</string>
+    <string name="zimbawe_program">Zimbawe</string>
 </resources>

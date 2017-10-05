@@ -996,6 +996,6 @@
     <string name="ipc_issueEntry_q_addressMunVDC">"Address - Municipality/VDC"</string>
     <string name="ipc_issueEntry_q_addressWard">"Address - Ward"</string>
     <string name="ipc_issueEntry_q_addressLoc">"Address - Locality"</string>
-
+    <string name="zimbawe_program">Zimbawe</string>
 
 </resources>

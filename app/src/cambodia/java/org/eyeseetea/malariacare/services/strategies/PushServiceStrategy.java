@@ -17,7 +17,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        if (Session.getCredentials().isDemoCredentials()) {
+        if (Session.getCredentials() != null && Session.getCredentials().isDemoCredentials()) {
             Log.d(TAG, "execute mocked push");
             executeMockedPush();
         } else if (isLogged()) {

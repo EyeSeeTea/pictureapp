@@ -125,7 +125,9 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        launchPull(Session.getCredentials().isDemoCredentials());
+        if (Session.getCredentials() != null) {
+            launchPull(Session.getCredentials().isDemoCredentials());
+        }
     }
 
     private void launchPull(boolean isDemo) {
@@ -163,7 +165,7 @@ public class ProgressActivity extends Activity {
             }
 
             @Override
-            public void onError(String message) {
+            public void onError(Throwable message) {
                 showException(R.string.dialog_pull_error);
             }
 

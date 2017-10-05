@@ -274,7 +274,9 @@ public class OrgUnitDB extends BaseModel {
 
     public static OrganisationUnit getByName(String name) {
         OrgUnitDB orgUnitDB = findByName(name);
-
+        if (orgUnitDB == null) {
+            return null;
+        }
         return new OrganisationUnit(orgUnitDB.getUid(), orgUnitDB.getName(), orgUnitDB.isBanned());
     }
 

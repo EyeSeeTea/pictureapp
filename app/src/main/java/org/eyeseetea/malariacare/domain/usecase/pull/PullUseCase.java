@@ -11,18 +11,38 @@ import org.eyeseetea.malariacare.domain.usecase.strategies.PullUseCaseStrategies
 
 public class PullUseCase implements UseCase {
 
-    public interface Callback {
-        void onComplete();
+    @Override
+    public void run() {
+        mPullController.pull(mPullFilters, new IPullController.Callback() {
+            @Override
+            public void onComplete() {
+                //TODO jsanchez create OrgUnitRepository and when pull finish
+                //invoke remove current OrgUnitDB from here (only laos and cambodia)
 
-        void onStep(PullStep step);
+                mPullUseCaseStrategy.onPullComplete();
+            }
 
-        void onError(String message);
+            @Override
+            public void onStep(PullStep step) {
+                notifyStep(step);
+            }
 
-        void onNetworkError();
+            @Override
+            public void onError(Throwable throwable) {
+                if (throwable instanceof NetworkException) {
+                    mPullUseCaseStrategy.onOnNetworkError();
+                } else if (throwable instanceof PullConversionException) {
+                    notifyPullConversionError();
+                } else {
+                    notifyError(throwable);
+                }
+            }
 
-        void onPullConversionError();
-
-        void onCancel();
+            @Override
+            public void onCancel() {
+                mCallback.onCancel();
+            }
+        });
     }
 
     private IPullController mPullController;
@@ -49,36 +69,11 @@ public class PullUseCase implements UseCase {
         mAsyncExecutor.run(this);
     }
 
-    @Override
-    public void run() {
-        mPullController.pull(mPullFilters, new IPullController.Callback() {
+    public void notifyError(final Throwable throwable) {
+        mMainExecutor.run(new Runnable() {
             @Override
-            public void onComplete() {
-                //TODO jsanchez create OrgUnitRepository and when pull finish
-                //invoke remove current OrgUnitDB from here (only laos and cambodia)
-
-                mPullUseCaseStrategy.onPullComplete();
-            }
-
-            @Override
-            public void onStep(PullStep step) {
-                notifyStep(step);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                if (throwable instanceof NetworkException) {
-                    mPullUseCaseStrategy.onOnNetworkError();
-                } else if (throwable instanceof PullConversionException) {
-                    notifyPullConversionError();
-                } else {
-                    notifyError(throwable.getMessage());
-                }
-            }
-
-            @Override
-            public void onCancel() {
-                mCallback.onCancel();
+            public void run() {
+                mCallback.onError(throwable);
             }
         });
     }
@@ -124,12 +119,17 @@ public class PullUseCase implements UseCase {
         });
     }
 
-    public void notifyError(final String message) {
-        mMainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onError(message);
-            }
-        });
+    public interface Callback {
+        void onComplete();
+
+        void onStep(PullStep step);
+
+        void onError(Throwable throwable);
+
+        void onNetworkError();
+
+        void onPullConversionError();
+
+        void onCancel();
     }
 }

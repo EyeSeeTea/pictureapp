@@ -84,7 +84,7 @@ ext {
     ]
 
     // Old App dependencies versions
-    okhttpVersion = '2.2.0'
+    okhttpVersion = '2.7.5'
 }
 
 task clean(type: Delete) {

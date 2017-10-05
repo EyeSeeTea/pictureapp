@@ -320,7 +320,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
-            public void onError(java.lang.String message) {
+            public void onError(Throwable throwable) {
                 loginActivity.onFinishLoading(null);
                 loginActivity.showError(R.string.dialog_pull_error);
             }
@@ -449,9 +449,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
-            public void onError(String message) {
+            public void onError(Throwable throwable) {
                 loginActivity.hideProgressBar();
-                Log.e(this.getClass().getSimpleName(), message);
+                Log.e(this.getClass().getSimpleName(), throwable.getMessage());
             }
 
             @Override

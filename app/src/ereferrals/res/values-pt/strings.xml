@@ -799,7 +799,7 @@
     <string name="common_option_method_counselling">"Counselling"</string>
 
     <!-- Fuzzy -->
-    <string name="common_option_method_injection">"Injectable"</string>
+    <string name="common_option_method_injection">"Injection"</string>
     <string name="common_option_channelOfReferral_healthFacility">"Health Facility"</string>
     <string name="common_option_channelOfReferral_groupSession">"Group Session"</string>
     <string name="common_option_channelOfReferral_doorToDoor">"Door To Door"</string>

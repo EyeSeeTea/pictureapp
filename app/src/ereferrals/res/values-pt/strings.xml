@@ -998,4 +998,5 @@
     <string name="ipc_issueEntry_q_addressWard">"Endereço - Ward"</string>
     <string name="ipc_issueEntry_q_addressLoc">"Endereço - Localidade"</string>
     <string name="zimbawe_program">Zimbábue</string>
+    <string name="common_option_program_vmmc">VMMC</string>
 </resources>

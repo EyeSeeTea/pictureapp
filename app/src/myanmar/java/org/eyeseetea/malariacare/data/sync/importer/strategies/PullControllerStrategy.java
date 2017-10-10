@@ -11,12 +11,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
         super(pullController);
     }
     @Override
-    public void convertMetadata(ConvertFromSDKVisitor converter) {
+    public void convertMetadata(ConvertFromSDKVisitor converter,
+            IPullController.Callback callback) {
         for (CategoryOptionGroupFlow categoryOptionGroupFlow : SdkQueries.getCategoryOptionGroups
                 ()) {
             CategoryOptionGroupExtended categoryOptionGroupExtended =
                     new CategoryOptionGroupExtended(categoryOptionGroupFlow);
             categoryOptionGroupExtended.accept(converter);
         }
+        callback.onComplete();
     }
 }

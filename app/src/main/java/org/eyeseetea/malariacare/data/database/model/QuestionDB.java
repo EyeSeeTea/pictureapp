@@ -231,6 +231,12 @@ public class QuestionDB extends BaseModel {
                 .queryList();
     }
 
+    public static List<QuestionDB> getAllQuestionsWithOutput(int output) {
+        return new Select().from(QuestionDB.class)
+                .where(QuestionDB_Table.output.eq(output))
+                .queryList();
+    }
+
     public static List<QuestionDB> getAllQuestionsWithMatch() {
         return new Select(QuestionDB_Table.getAllColumnProperties()).distinct().from(
                 QuestionDB.class).as(questionName)

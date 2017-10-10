@@ -72,6 +72,9 @@ public class OptionDB extends BaseModel {
      */
     List<ValueDB> mValueDBs;
 
+    @Column
+    Long id_parent_fk;
+
     public OptionDB() {
     }
 
@@ -119,6 +122,13 @@ public class OptionDB extends BaseModel {
         return new Select()
                 .from(OptionDB.class)
                 .where(OptionDB_Table.code.eq(code)).querySingle();
+    }
+
+    public static OptionDB findByNameAndCode(String name, String code) {
+        return new Select()
+                .from(OptionDB.class)
+                .where(OptionDB_Table.name.eq(name))
+                .and(OptionDB_Table.code.eq(code)).querySingle();
     }
 
 
@@ -176,6 +186,20 @@ public class OptionDB extends BaseModel {
     public void setAnswerDB(AnswerDB answerDB) {
         this.mAnswerDB = answerDB;
         this.id_answer_fk = (answerDB != null) ? answerDB.getId_answer() : null;
+    }
+
+    public OptionDB getId_parent_fk() {
+        if (id_parent_fk == null) {
+            return null;
+        }
+        return new Select()
+                .from(OptionDB.class)
+                .where(OptionDB_Table.id_option
+                        .is(id_parent_fk)).querySingle();
+    }
+
+    public void setId_parent_fk(Long id_parent_fk) {
+        this.id_parent_fk = id_parent_fk;
     }
 
     public OptionAttributeDB getOptionAttributeDB() {
@@ -306,11 +330,26 @@ public class OptionDB extends BaseModel {
         if (id_option_attribute_fk != optionDB.id_option_attribute_fk) return false;
         if (code != null ? !code.equals(optionDB.code) : optionDB.code != null) return false;
         if (name != null ? !name.equals(optionDB.name) : optionDB.name != null) return false;
-        if (factor != null ? !factor.equals(optionDB.factor) : optionDB.factor != null) {
+        if (factor != null ? !factor.equals(optionDB.factor) : optionDB.factor != null)
+            return false;
+        if (id_answer_fk != null ? !id_answer_fk.equals(optionDB.id_answer_fk)
+                : optionDB.id_answer_fk != null) {
             return false;
         }
-        return !(id_answer_fk != null ? !id_answer_fk.equals(optionDB.id_answer_fk)
-                : optionDB.id_answer_fk != null);
+        if (mAnswerDB != null ? !mAnswerDB.equals(optionDB.mAnswerDB)
+                : optionDB.mAnswerDB != null) {
+            return false;
+        }
+        if (mOptionAttributeDB != null ? !mOptionAttributeDB.equals(optionDB.mOptionAttributeDB)
+                : optionDB.mOptionAttributeDB != null) {
+            return false;
+        }
+        if (mValueDBs != null ? !mValueDBs.equals(optionDB.mValueDBs)
+                : optionDB.mValueDBs != null) {
+            return false;
+        }
+        return id_parent_fk != null ? id_parent_fk.equals(optionDB.id_parent_fk)
+                : optionDB.id_parent_fk == null;
 
     }
 
@@ -321,7 +360,11 @@ public class OptionDB extends BaseModel {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (id_answer_fk != null ? id_answer_fk.hashCode() : 0);
+        result = 31 * result + (mAnswerDB != null ? mAnswerDB.hashCode() : 0);
         result = 31 * result + (int) (id_option_attribute_fk ^ (id_option_attribute_fk >>> 32));
+        result = 31 * result + (mOptionAttributeDB != null ? mOptionAttributeDB.hashCode() : 0);
+        result = 31 * result + (mValueDBs != null ? mValueDBs.hashCode() : 0);
+        result = 31 * result + (id_parent_fk != null ? id_parent_fk.hashCode() : 0);
         return result;
     }
 
@@ -333,7 +376,11 @@ public class OptionDB extends BaseModel {
                 ", name='" + name + '\'' +
                 ", factor=" + factor +
                 ", id_answer_fk=" + id_answer_fk +
+                ", mAnswerDB=" + mAnswerDB +
                 ", id_option_attribute_fk=" + id_option_attribute_fk +
+                ", mOptionAttributeDB=" + mOptionAttributeDB +
+                ", mValueDBs=" + mValueDBs +
+                ", id_parent_fk=" + id_parent_fk +
                 '}';
     }
 

@@ -105,6 +105,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
         appOrgUnitDB.setName(sdkOrganisationUnitExtended.getLabel());
         appOrgUnitDB.setUid(sdkOrganisationUnitExtended.getId());
+        appOrgUnitDB.setCoordinates(sdkOrganisationUnitExtended.getOrgUnit().getCoordinates());
 
         appOrgUnitDB.save();
 

@@ -19,7 +19,8 @@ public abstract class APullControllerStrategy {
         mPullController = pullController;
     }
 
-    public abstract void convertMetadata(ConvertFromSDKVisitor converter);
+    public abstract void convertMetadata(ConvertFromSDKVisitor converter,
+            IPullController.Callback callback);
 
     public void pull(final PullFilters pullFilters, final IPullController.Callback callback,
             Context context) {

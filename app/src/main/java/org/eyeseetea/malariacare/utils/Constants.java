@@ -54,7 +54,8 @@ public class Constants {
             IMAGE_3_NO_DATAELEMENT,
             IMAGE_RADIO_GROUP_NO_DATAELEMENT,
             IMAGE_RADIO_GROUP,
-            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON,
+            DROPDOWN_LIST_OU_TREE
     );
 
     public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT = Arrays.asList(
@@ -83,7 +84,8 @@ public class Constants {
             TAB_REPORTING = 8,
             TAB_DYNAMIC_AUTOMATIC_TAB = 9,
             TAB_MULTI_QUESTION = 10,
-            TAB_DYNAMIC_TREATMENT = 11;
+            TAB_DYNAMIC_TREATMENT = 11,
+            TAB_MULTI_QUESTION_EXCLUSIVE = 12;
 
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME = "Composite Scores";

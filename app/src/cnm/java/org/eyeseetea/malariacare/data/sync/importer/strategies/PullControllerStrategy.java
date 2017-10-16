@@ -144,10 +144,10 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 mAsyncExecutor.run(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d(TAG, "Converting orgUnitTree...");
                         ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
-                        for (OrgUnitTree orgUnitTree : result) {
-                            orgUnitTree.accept(convertFromApiVisitor);
-                        }
+                        OrgUnitTree orgUnitTree = new OrgUnitTree();
+                        orgUnitTree.accept(convertFromApiVisitor, result);
                         mMainExecutor.run(new Runnable() {
                             @Override
                             public void run() {

@@ -16,7 +16,7 @@ public class OrgUnitToOptionConverterStrategy extends AOrgUnitToOptionConverterS
             if (!existsOrgUnitAsOptionInQuestion(orgUnitDB, questionDB)) {
                 OptionDB optionDB = new OptionDB();
                 optionDB.setAnswerDB(questionDB.getAnswerDB());
-                optionDB.setCode(orgUnitDB.getUid());
+                optionDB.setCode(orgUnitDB.getName());
                 optionDB.setName(orgUnitDB.getName());
                 OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
                 optionAttributeDB.setPath(orgUnitDB.getCoordinates());

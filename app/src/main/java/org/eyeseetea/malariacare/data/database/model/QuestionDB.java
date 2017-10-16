@@ -330,6 +330,13 @@ public class QuestionDB extends BaseModel {
                 .querySingle();
     }
 
+    public static QuestionDB findByCode(String code) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.code.is(code))
+                .querySingle();
+    }
+
     /**
      * Finds a mQuestionDB by its ID
      */
@@ -751,6 +758,21 @@ public class QuestionDB extends BaseModel {
                     .queryList();
         }
         return this.mQuestionRelationDBs;
+    }
+
+
+    public List<QuestionRelationDB> getQuestionTriggeredRelationswithOption(OptionDB optionDB) {
+        return new Select().from(QuestionRelationDB.class).as(questionRelationName).join(
+                MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName).on(
+                QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias).eq(
+                        MatchDB_Table.id_question_relation_fk.withTable(matchAlias))).join(
+                QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(questionOptionName).on(
+                MatchDB_Table.id_match.withTable(matchAlias).eq(
+                        QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias))).where(
+                QuestionOptionDB_Table.id_question_fk.withTable(questionOptionAlias).eq(
+                        id_question)).and(
+                QuestionOptionDB_Table.id_option_fk.withTable(questionOptionAlias).eq(
+                        optionDB.getId_option())).queryList();
     }
 
     public List<QuestionOptionDB> getQuestionOption() {

@@ -188,7 +188,11 @@ public class OptionDB extends BaseModel {
         this.id_answer_fk = (answerDB != null) ? answerDB.getId_answer() : null;
     }
 
-    public OptionDB getId_parent_fk() {
+    public Long getId_parent_fk() {
+        return id_parent_fk;
+    }
+
+    public OptionDB get_parent() {
         if (id_parent_fk == null) {
             return null;
         }
@@ -268,6 +272,13 @@ public class OptionDB extends BaseModel {
         return idOption.equals(valueIdOption);
     }
 
+    public static List<OptionDB> getOptionWithParent(Long id_parent_fk) {
+        return new Select()
+                .from(OptionDB.class)
+                .where(OptionDB_Table.id_parent_fk
+                        .is(id_parent_fk)).queryList();
+    }
+
     /**
      * Gets the QuestionDB of this OptionDB in session
      */
@@ -326,30 +337,14 @@ public class OptionDB extends BaseModel {
 
         OptionDB optionDB = (OptionDB) o;
 
-        if (id_option != optionDB.id_option) return false;
         if (id_option_attribute_fk != optionDB.id_option_attribute_fk) return false;
         if (code != null ? !code.equals(optionDB.code) : optionDB.code != null) return false;
         if (name != null ? !name.equals(optionDB.name) : optionDB.name != null) return false;
-        if (factor != null ? !factor.equals(optionDB.factor) : optionDB.factor != null)
-            return false;
-        if (id_answer_fk != null ? !id_answer_fk.equals(optionDB.id_answer_fk)
-                : optionDB.id_answer_fk != null) {
+        if (factor != null ? !factor.equals(optionDB.factor) : optionDB.factor != null) {
             return false;
         }
-        if (mAnswerDB != null ? !mAnswerDB.equals(optionDB.mAnswerDB)
-                : optionDB.mAnswerDB != null) {
-            return false;
-        }
-        if (mOptionAttributeDB != null ? !mOptionAttributeDB.equals(optionDB.mOptionAttributeDB)
-                : optionDB.mOptionAttributeDB != null) {
-            return false;
-        }
-        if (mValueDBs != null ? !mValueDBs.equals(optionDB.mValueDBs)
-                : optionDB.mValueDBs != null) {
-            return false;
-        }
-        return id_parent_fk != null ? id_parent_fk.equals(optionDB.id_parent_fk)
-                : optionDB.id_parent_fk == null;
+        return !(id_answer_fk != null ? !id_answer_fk.equals(optionDB.id_answer_fk)
+                : optionDB.id_answer_fk != null);
 
     }
 
@@ -360,11 +355,7 @@ public class OptionDB extends BaseModel {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (id_answer_fk != null ? id_answer_fk.hashCode() : 0);
-        result = 31 * result + (mAnswerDB != null ? mAnswerDB.hashCode() : 0);
         result = 31 * result + (int) (id_option_attribute_fk ^ (id_option_attribute_fk >>> 32));
-        result = 31 * result + (mOptionAttributeDB != null ? mOptionAttributeDB.hashCode() : 0);
-        result = 31 * result + (mValueDBs != null ? mValueDBs.hashCode() : 0);
-        result = 31 * result + (id_parent_fk != null ? id_parent_fk.hashCode() : 0);
         return result;
     }
 

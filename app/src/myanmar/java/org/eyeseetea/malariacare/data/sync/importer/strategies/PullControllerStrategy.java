@@ -4,6 +4,7 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
+import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
 
 public class PullControllerStrategy extends APullControllerStrategy {

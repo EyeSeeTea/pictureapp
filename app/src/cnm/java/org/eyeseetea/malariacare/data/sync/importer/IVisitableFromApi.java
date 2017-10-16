@@ -1,5 +1,9 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
-public interface IVisitableFromApi {
+import java.util.List;
+
+public interface IVisitableFromApi <T>{
     void accept(IConvertFromApiVisitor iConvertFromApiVisitor);
+
+    void accept(IConvertFromApiVisitor iConvertFromApiVisitor, List<T> objects);
 }

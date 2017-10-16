@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertFromApiVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.IVisitableFromApi;
 
-public class OrgUnitTree implements IVisitableFromApi {
+import java.util.List;
+
+public class OrgUnitTree implements IVisitableFromApi<OrgUnitTree> {
     @JsonProperty("Code_Prov_T")
     private String Code_Prov_T;
     @JsonProperty("Name_Prov_E")
@@ -127,7 +129,13 @@ public class OrgUnitTree implements IVisitableFromApi {
     }
 
     @Override
+    public void accept(IConvertFromApiVisitor iConvertFromApiVisitor,
+            List<OrgUnitTree> orgUnitTrees) {
+        iConvertFromApiVisitor.visit(orgUnitTrees);
+    }
+
+    @Override
     public void accept(IConvertFromApiVisitor iConvertFromApiVisitor) {
-        iConvertFromApiVisitor.visit(this);
+
     }
 }

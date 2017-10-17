@@ -80,7 +80,6 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
                                     "[" + orgUnitTree.getLat() + "," + orgUnitTree.getLng()
                                             + "]");
                             villageOptionAttributes.add(optionAttributeDB);
-                            optionVill.setOptionAttributeDB(optionAttributeDB);
                             villageOptions.add(optionVill);
                         }
                     }
@@ -89,11 +88,11 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
         }
         Log.d("SAVING LIST", "saving optrionstree list");
         saveBatch(villageOptionAttributes);
+        int i=0;
         for (Model villageOption : villageOptions) {
-            for (Model villageAttribute : villageOptionAttributes) {
                 ((OptionDB) villageOption).setOptionAttributeDB(
-                        (OptionAttributeDB) villageAttribute);
-            }
+                        (OptionAttributeDB) villageOptionAttributes.get(i));
+            i++;
         }
         saveBatch(villageOptions);
 //TODO Not saving relations because dynamicTabAdapter not work well with to many relations. Do it

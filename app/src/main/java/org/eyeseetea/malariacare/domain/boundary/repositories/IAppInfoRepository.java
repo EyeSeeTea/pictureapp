@@ -4,4 +4,5 @@ import org.eyeseetea.malariacare.domain.entity.AppInfo;
 
 public interface IAppInfoRepository {
     AppInfo getAppInfo();
+    void saveAppInfo(AppInfo appInfo);
 }

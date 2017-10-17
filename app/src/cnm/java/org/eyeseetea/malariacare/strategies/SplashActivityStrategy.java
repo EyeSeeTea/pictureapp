@@ -8,13 +8,21 @@ import android.util.Log;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Permissions;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
@@ -46,8 +54,20 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     }
 
     @Override
-    public void initPullFilters(PullFilters pullFilters) {
+    public void initPullFilters(final PullFilters pullFilters) {
         pullFilters.setAutoConfig(true);
+        final IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        GetAppInfoUseCase getAppInfoUseCase = new GetAppInfoUseCase(mainExecutor, asyncExecutor,
+                appInfoDataSource);
+        getAppInfoUseCase.execute(new GetAppInfoUseCase.Callback() {
+            @Override
+            public void onAppInfoLoaded(AppInfo appInfo) {
+                pullFilters.setPullMetaData(!appInfo.isMetadataDownloaded());
+            }
+        });
+
     }
 
     @Override

@@ -10,7 +10,20 @@ import java.util.List;
 
 public class OrgUnitToOptionConverterStrategy extends AOrgUnitToOptionConverterStrategy {
 
-    public static void addOUOptionToQuestions(List<QuestionDB> questionDBs, OrgUnitDB orgUnitDB) {
+    @Override
+    public void convert() {
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOutput(
+                Constants.DROPDOWN_OU_LIST);
+
+        if (questionDBs.size() != 0) {
+            List<OrgUnitDB> orgUnitDBs = OrgUnitDB.getAllOrgUnit();
+            for (OrgUnitDB orgUnitDB : orgUnitDBs) {
+                addOUOptionToQuestions(questionDBs, orgUnitDB);
+            }
+        }
+    }
+
+    private static void addOUOptionToQuestions(List<QuestionDB> questionDBs, OrgUnitDB orgUnitDB) {
         // orgUnitDB
         for (QuestionDB questionDB : questionDBs) {
             if (!existsOrgUnitAsOptionInQuestion(orgUnitDB, questionDB)) {
@@ -40,16 +53,4 @@ public class OrgUnitToOptionConverterStrategy extends AOrgUnitToOptionConverterS
         return false;
     }
 
-    @Override
-    public void convert() {
-        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOutput(
-                Constants.DROPDOWN_OU_LIST);
-
-        if (questionDBs.size() != 0) {
-            List<OrgUnitDB> orgUnitDBs = OrgUnitDB.getAllOrgUnit();
-            for (OrgUnitDB orgUnitDB : orgUnitDBs) {
-                addOUOptionToQuestions(questionDBs, orgUnitDB);
-            }
-        }
-    }
 }

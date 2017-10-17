@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
+
+    private static String TAG = "ConvertFromApiVisitor";
     @Override
     public void visit(List<OrgUnitTree> orgUnitTrees) {
         List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOutput(
@@ -33,6 +35,7 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
         List<Model> villageOptions = new ArrayList<>();
         List<Model> villageOptionAttributes = new ArrayList<>();
         for (OrgUnitTree orgUnitTree : orgUnitTrees) {
+            Log.d(TAG, "Convert OrgUnitTree " + orgUnitTree.toString());
             if (orgUnitTree.getName_Prov_E() != null
                     && !orgUnitTree.getName_Prov_E().isEmpty()) {
                 OptionDB optionProb = new OptionDB(orgUnitTree.getName_Prov_E(),
@@ -86,7 +89,8 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
                 }
             }
         }
-        Log.d("SAVING LIST", "saving optrionstree list");
+        Log.d(TAG, "saving optionstree list");
+
         saveBatch(villageOptionAttributes);
         int i=0;
         for (Model villageOption : villageOptions) {

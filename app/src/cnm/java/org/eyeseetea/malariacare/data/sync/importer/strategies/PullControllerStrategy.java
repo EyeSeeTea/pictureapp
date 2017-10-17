@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
@@ -17,15 +18,18 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.usecase.SaveAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -59,16 +63,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
             OrganisationUnit organisationUnit = null;
             if (pullFilters.isAutoConfig()) {
                 try {
-                    organisationUnit = getOrgUnitByPhone(context, callback);
+                    organisationUnit = getOrgUnitByPhone(context, callback, pullFilters);
                 } catch (ApiCallException e) {
                     throw new AutoconfigureException();
                 }
             }
-            if (pullFilters.isDemo()) {
-                callback.onComplete();
-            } else {
-                mPullController.pullMetada(pullFilters, callback);
-            }
+
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
             ex.printStackTrace();
@@ -77,7 +77,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     }
 
     private OrganisationUnit getOrgUnitByPhone(Context context,
-            final IPullController.Callback callback)
+            final IPullController.Callback callback, final PullFilters pullFilters)
             throws NetworkException, ApiCallException {
 
         organisationUnitRepository = new OrganisationUnitRepository();
@@ -106,6 +106,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                                 @Override
                                 public void onSuccess(UserAccount result) {
                                     Log.d(TAG, "Create autoconfigured user");
+                                    downloadMetadata(pullFilters, callback);
                                 }
 
                                 @Override
@@ -116,8 +117,19 @@ public class PullControllerStrategy extends APullControllerStrategy {
                             });
                 }
             }
+        } else {
+            downloadMetadata(pullFilters, callback);
         }
         return organisationUnit;
+    }
+
+    private void downloadMetadata(PullFilters pullFilters,
+            final IPullController.Callback callback) {
+        if (pullFilters.isDemo()) {
+            callback.onComplete();
+        } else {
+            mPullController.pullMetada(pullFilters, callback);
+        }
     }
 
     private Credentials getHardcodedCredentials(IPullController.Callback callback) {
@@ -148,12 +160,16 @@ public class PullControllerStrategy extends APullControllerStrategy {
                         ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
                         OrgUnitTree orgUnitTree = new OrgUnitTree();
                         orgUnitTree.accept(convertFromApiVisitor, result);
-                        mMainExecutor.run(new Runnable() {
+
+                        final IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+                        SaveAppInfoUseCase saveAppInfoUseCase = new SaveAppInfoUseCase(
+                                mMainExecutor, mAsyncExecutor, appInfoDataSource);
+                        saveAppInfoUseCase.excute(new SaveAppInfoUseCase.Callback() {
                             @Override
-                            public void run() {
+                            public void onAppInfoSaved() {
                                 callback.onComplete();
                             }
-                        });
+                        }, new AppInfo(true));
                     }
                 });
 

@@ -219,4 +219,16 @@
     <string name="commune">Commune</string>
     <string name="district">District</string>
     <string name="province">Province</string>
+
+    <string name="ipc_issueEntry_q_diagnosisMethod">Diagnosis Method</string>
+    <string name="common_option_diagnosis_rdt">RDT</string>
+    <string name="common_option_diagnosis_microscope">Microscope</string>
+    <string name="ipc_issueEntry_q_result_rdt">Test Result RDT</string>
+    <string name="ipc_issueEntry_q_result_microscope">Test Result Microscope</string>
+    <string name="common_option_rdt_negative">Negative</string>
+    <string name="common_option_rdt_pf">Pf</string>
+    <string name="common_option_rdt_pv">Pv</string>
+    <string name="common_option_rdt_mixed">Mixed</string>
+    <string name="ipc_issueEntry_q_village">Village by HC:</string>
+    <string name="ipc_issueEntry_q__tree_village">Village by Province / District / Commune:</string>
 </resources>

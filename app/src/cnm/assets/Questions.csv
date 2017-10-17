@@ -1,15 +1,14 @@
-1;'RDT';'What is your patient\'s RDT result?';;'Question_Title_RDT';'OEdLEjF6Z8p';1;0;0;1;1;0;14;1;0;'';1
-2;'Reason';'Why was the patient not tested for malaria?';;'Question_Title_Reason';'fkBDnkiQbWY';1;0;0;1;2;0;14;2;1;'';1
-3;'Gender';'Male or Female?';;'Question_Title_Sex';'uuudizosfpU';1;0;0;1;3;0;10;10;1;'';1
-4;'Age';'How old is your patient (years)?';;'Question_Title_Age';'JMM92njKuSc';2;0;0;1;4;0;6;9;1;'';1
-5;'Specie';'What type of malaria does your patient have?';;'Question_Title_Specie';'X6RFHreAu0L';3;0;0;1;5;0;14;10;1;'';1
-6;'Treatment';'What type of treatment did you provide?';;'Question_Title_Treatment';'fNpYtVaL7OV';4;0;0;1;6;0;14;10;1;'';1
-7;'DHA-PIP';'How much Euratesim did you provide?';;'Question_Title_DHAPIP';'LRzOBn2rZA3';1;0;0;1;7;0;11;10;0;'';1
-8;'AS/MQ';'How much AS/MQ did you provide?';;'Question_Title_ASMQ';'mCSYUwYXnnj';1;0;0;1;8;0;14;10;0;'';1
-9;'Referral';'Why was the patient referred?';;'Question_Title_Referral';'Bi2NfBG8LGJ';1;0;0;1;9;0;11;10;0;'';1
-10;'Classification';'Has the patient slept overnight outside of the village in the past two weeks?';;'Question_Title_Classification';'ff3lAAW1VLh';5;0;0;1;10;0;10;10;0;'';1
-11;'Occupation';'What is the patient\'s occupation?';;'Question_Title_Occupation';'Zf8O1uzl3JJ';6;0;0;1;11;0;15;10;0;'';1
-12;'Phone';'Please enter your patient\'s phone number.';;'Question_Title_Phone';'rDubghVv1L8';7;0;0;1;12;0;13;10;0;'';0
-13;'test_orgUnit';'test_orgUnit';;'test_orgUnit';'uid_orgUnit';8;0;0;2;13;0;19;10;1;;0
-14;'test_orgUnitTree';'test_orgUnitTree';;'test_orgUnitTree';'uid_orgUnit';9;0;0;2;14;0;31;10;1;;0
-16;'Code: Org Unit Cords';'hidden_org_unit_cords';;'hidden_org_unit_cords';'hiden_orgunit_test_cords';10;0;0;2;16;0;21;10;0;;1
+1;'Code: Diagnosis Method';'ipc_issueEntry_q_diagnosisMethod';;'ipc_issueEntry_q_diagnosisMethod';'o7mG7zUBGsM';1;0;0;1;1;;10;8;0;;1
+2;'Code: Resul RDT';'ipc_issueEntry_q_result_rdt';;'ipc_issueEntry_q_result_rdt';'ZoHcPr1PJ6q';2;0;0;1;2;;11;8;1;;1
+3;'Code: Result Microscope';'ipc_issueEntry_q_result_microscope';;'ipc_issueEntry_q_result_microscope';'ZoHcPr1PJ6q';2;0;0;1;3;;11;8;1;;1
+4;'Code:  OU Village';'ipc_issueEntry_q_village';;'ipc_issueEntry_q_village';'k3gpW1Vm3Ov';3;0;0;2;4;;19;8;0;;0
+5;'Code: OU Tree Village';'ipc_issueEntry_q__tree_village';;'ipc_issueEntry_q__tree_village';'k3gpW1Vm3Ov';4;0;0;2;5;;31;8;0;;0
+6;'Code: Village cords';'ipc_issueEntry_q_village_coords';;'ipc_issueEntry_q_village_coords';'VzOmsEZChev';4;0;0;2;6;;21;8;0;;0
+7;'Code: Age';'ipc_issueEntry_q_patient_age';;'ipc_issueEntry_q_patient_age';'rwgzuR5oI1L';6;0;0;3;7;;6;8;0;;1
+8;'Code: gender Pregnant';'ipc_issueEntry_q_patient_gender_pregnant';;'ipc_issueEntry_q_patient_gender_pregnant';'NoDataElementSexPregnancy';7;0;0;3;8;;24;8;0;;0
+9;'Code: Gender';'ipc_issueEntry_q_patient_gender';;;'uA8F2A6w2Ex';8;0;0;3;9;;21;8;0;;1
+10;'Code: Pregnant';'ipc_issueEntry_q_patient_pregnant';;;'n0ZxPa2rJ58';9;0;0;3;10;;21;8;0;;1
+11;'Code: Diagnosis Type';'ipc_issueEntry_q_diagnosis_type';;'ipc_issueEntry_q_diagnosis_type';'o7mG7zUBGsM ';10;0;0;3;11;;10;8;0;;1
+12;'Code: Treatment';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'V8q06yRjHqg';11;0;0;3;12;;11;8;0;;1
+13;'Code: Other Treatment';'ipc_issueEntry_q_treatment_other';;'ipc_issueEntry_q_treatment_other';'zxEEyLrpMBG';12;0;0;3;13;;3;9;0;;1
+14;'Code: Referred Hospital';'ipc_issueEntry_q_referred_hospital';;'ipc_issueEntry_q_referred_hospital';'v52DTn3NYD2';13;0;0;3;14;;10;9;0;;1

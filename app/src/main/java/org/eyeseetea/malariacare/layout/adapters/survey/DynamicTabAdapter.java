@@ -512,11 +512,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             screenQuestionDBs = mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType,
                     screenQuestionDBs);
 
+            if (screenQuestionDBs == null) screenQuestionDBs = new ArrayList<>();
             if (TabDB.isMultiQuestionTab(tabType)
                     || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) {
                 screenQuestionDBs = questionDBItem.getQuestionsByTab(questionDBItem.getHeaderDB()
                         .getTabDB());
-            } else if (screenQuestionDBs.size() == 0) {
+            } else if (screenQuestionDBs.isEmpty()) {
                 //not have additionalQuestions(variant dependent) and is not multi question tab
                 screenQuestionDBs.add(questionDBItem);
             }

@@ -231,4 +231,22 @@
     <string name="common_option_rdt_mixed">Mixed</string>
     <string name="ipc_issueEntry_q_village">Village by HC:</string>
     <string name="ipc_issueEntry_q__tree_village">Village by Province / District / Commune:</string>
+    <string name="ipc_issueEntry_q_patient_age">Age of Patient</string>
+    <string name="ipc_issueEntry_q_patient_gender_pregnant">Gender</string>
+    <string name="common_option_male">Male</string>
+    <string name="common_option_female">Female</string>
+    <string name="common_option_female_pregnant">Female - Pregnant</string>
+    <string name="ipc_issueEntry_q_diagnosis_type">Diagnosis Type</string>
+    <string name="common_option_diagnosis_simple">Simple</string>
+    <string name="common_option_diagnosis_severe">Severe</string>
+    <string name="ipc_issueEntry_q_treatment">Treatment</string>
+    <string name="common_option_treatment_asmq">AS/MQ</string>
+    <string name="common_option_treatment_dha_pip">DHA-PIP</string>
+    <string name="common_option_treatment_pq">PQ</string>
+    <string name="common_option_treatment_other">Other</string>
+    <string name="ipc_issueEntry_q_treatment_other">Other Treatment</string>
+    <string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
+    <string name="common_option_referred_yes">Yes</string>
+    <string name="common_option_referred_no">No</string>
+
 </resources>

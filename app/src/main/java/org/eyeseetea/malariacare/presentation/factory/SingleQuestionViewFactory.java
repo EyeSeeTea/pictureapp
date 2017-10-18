@@ -9,11 +9,12 @@ import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingle
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.PositiveOrZeroNumberSingleQuestionView;
-
+import org.eyeseetea.malariacare.views.question.singlequestion
+        .PositiveOrZeroNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion
         .PregnantMonthNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ReminderSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.TextSingleQuestionView;
 
 
 public class SingleQuestionViewFactory implements IQuestionViewFactory {
@@ -48,6 +49,9 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                         new ImageOptionSingleQuestionView(context);
                 imageOptionSingleQuestionView.setColumnsCount(1);
                 return imageOptionSingleQuestionView;
+            case Constants.LONG_TEXT:
+            case Constants.SHORT_TEXT:
+                return new TextSingleQuestionView(context);
             default:
                 return SingleQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
         }

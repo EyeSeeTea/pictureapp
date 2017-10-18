@@ -60,13 +60,15 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
             callback.onStep(PullStep.METADATA);
             mPullController.populateMetadataFromCsvs(pullFilters.isAutoConfig());
-            OrganisationUnit organisationUnit = null;
+
             if (pullFilters.isAutoConfig()) {
                 try {
-                    organisationUnit = getOrgUnitByPhone(context, callback, pullFilters);
+                    autoconfigureByPhone(context, callback, pullFilters);
                 } catch (ApiCallException e) {
                     throw new AutoconfigureException();
                 }
+            } else {
+                downloadMetadata(pullFilters, callback);
             }
 
         } catch (Exception ex) {
@@ -76,7 +78,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
-    private OrganisationUnit getOrgUnitByPhone(Context context,
+    private OrganisationUnit autoconfigureByPhone(Context context,
             final IPullController.Callback callback, final PullFilters pullFilters)
             throws NetworkException, ApiCallException {
 

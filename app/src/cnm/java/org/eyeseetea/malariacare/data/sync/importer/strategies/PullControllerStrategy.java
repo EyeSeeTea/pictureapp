@@ -53,7 +53,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
             if (pullFilters.isAutoConfig()) {
                 try {
-                    autoconfigureByPhone(context, callback, pullFilters);
+                    autoConfigureByPhone(context, callback, pullFilters);
                 } catch (ApiCallException e) {
                     throw new AutoconfigureException();
                 }
@@ -68,7 +68,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
-    private OrganisationUnit autoconfigureByPhone(Context context,
+    private void autoConfigureByPhone(Context context,
             final IPullController.Callback callback, final PullFilters pullFilters)
             throws NetworkException, ApiCallException {
 
@@ -76,19 +76,18 @@ public class PullControllerStrategy extends APullControllerStrategy {
         deviceRepository = new DeviceDataSource();
         authenticationManager = new AuthenticationManager(context);
 
-        OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
-                ReadPolicy.CACHE);
-        if (organisationUnit == null) {
-            organisationUnit = organisationUnitRepository.getOrganisationUnitByPhone(
-                    deviceRepository.getDevice());
-            if (organisationUnit != null) {
-                organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
-            } else {
-                callback.onError(new AutoconfigureException());
-                return null;
-            }
+        if (isOrgUnitConfigured()) {
+            callback.onComplete();
+        } else {
+            OrganisationUnit organisationUnit =
+                    organisationUnitRepository.getOrganisationUnitByPhone(
+                            deviceRepository.getDevice());
 
-            if (organisationUnit != null) {
+            if (organisationUnit == null) {
+                callback.onError(new AutoconfigureException());
+
+            } else {
+                organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
 
                 Credentials hardcodedCredentials = getHardcodedCredentials(callback);
 
@@ -109,10 +108,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
                             });
                 }
             }
-        } else {
-            downloadMetadata(pullFilters, callback);
         }
-        return organisationUnit;
+    }
+
+    private boolean isOrgUnitConfigured() throws NetworkException, ApiCallException {
+        OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
+                ReadPolicy.CACHE);
+
+        return (organisationUnit != null);
     }
 
     private void downloadMetadata(PullFilters pullFilters,

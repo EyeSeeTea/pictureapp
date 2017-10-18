@@ -38,6 +38,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     IOrganisationUnitRepository organisationUnitRepository;
     IDeviceRepository deviceRepository;
     AuthenticationManager authenticationManager;
+    IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
@@ -120,7 +121,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
     private void downloadMetadata(PullFilters pullFilters,
             final IPullController.Callback callback) {
-        if (pullFilters.isDemo()) {
+        if (pullFilters.isDemo() || appInfoDataSource.getAppInfo().isMetadataDownloaded()) {
             callback.onComplete();
         } else {
             mPullController.pullMetada(pullFilters, callback);
@@ -153,7 +154,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 OrgUnitTree orgUnitTree = new OrgUnitTree();
                 orgUnitTree.accept(convertFromApiVisitor, result);
 
-                IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+
                 appInfoDataSource.saveAppInfo(new AppInfo(true));
                 callback.onComplete();
             }

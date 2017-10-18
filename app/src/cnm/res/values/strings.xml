@@ -215,4 +215,8 @@
     <string name="auto_configuring">"Auto-configuring OU, please wait…"</string>
     <string name="error_initialize_app">"Error while initializing the application"</string>
     <string name="autoconfigure_preference_title">"Auto-configure user"</string>
+    <string name="village">Village</string>
+    <string name="commune">Commune</string>
+    <string name="district">District</string>
+    <string name="province">Province</string>
 </resources>

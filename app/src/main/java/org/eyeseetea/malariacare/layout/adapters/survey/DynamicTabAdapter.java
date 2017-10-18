@@ -46,8 +46,8 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
@@ -251,32 +251,52 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         if (!selectedOptionDB.getCode().isEmpty()
                 && questionDB.getOutput() == Constants.DROPDOWN_OU_LIST) {
-            OrgUnitDB orgUnitDB = OrgUnitDB.findByUID(selectedOptionDB.getCode());
-
-            assignOrgUnitToSurvey(Session.getMalariaSurveyDB(), orgUnitDB);
-            assignOrgUnitToSurvey(Session.getStockSurveyDB(), orgUnitDB);
+            mDynamicTabAdapterStrategy.onOrgUnitDropdownAnswered(selectedOptionDB);
         }
 
 
         QuestionDB counterQuestionDB = questionDB.findCounterByOption(selectedOptionDB);
         if (counterQuestionDB == null) {
             saveOptionValue(view, selectedOptionDB, questionDB, moveToNextQuestion);
+            executeTabLogic(questionDB, selectedOptionDB);
         } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
             showConfirmCounter(view, selectedOptionDB, questionDB, counterQuestionDB);
         }
     }
 
-    private void assignOrgUnitToSurvey(SurveyDB surveyDB, OrgUnitDB orgUnitDB) {
-        if (surveyDB != null) {
-            surveyDB.setOrgUnit(orgUnitDB);
-            surveyDB.save();
+    private void executeTabLogic(QuestionDB question, OptionDB selectedOptionDB) {
+        TabDB tabDB = question.getHeaderDB().getTabDB();
+        if (tabDB.getType() == Constants.TAB_MULTI_QUESTION_EXCLUSIVE) {
+            deleteValuesIfExclusiveTab(question, selectedOptionDB);
         }
     }
+
+    private void deleteValuesIfExclusiveTab(QuestionDB question, OptionDB selectedOptionDB) {
+        List<QuestionDB> questionsInTab = QuestionDB.getQuestionsByTab(
+                question.getHeaderDB().getTabDB());
+        for (QuestionDB questionInTab : questionsInTab) {
+            if (!questionInTab.getId_question().equals(question.getId_question())
+                    && !(question.getOutput() == Constants.HIDDEN)) {
+                ValueDB valueDB = questionInTab.getValueBySurvey(getMalariaSurveyDB());
+                questionInTab.deleteValues(valueDB);
+            }
+            //TODO remove this if when doing relation with question relations
+            if (questionInTab.getOutput() == Constants.HIDDEN) {
+                if (selectedOptionDB != null) {
+                    OptionAttributeDB optionAttributeDB = selectedOptionDB.getOptionAttributeDB();
+                    ValueDB valueDB = new ValueDB(optionAttributeDB.getPath(), questionInTab,
+                            getMalariaSurveyDB());
+                    valueDB.save();
+                }
+            }
+        }
+    }
+
 
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
         questionDB.saveValuesText(newValue);
-
+        executeTabLogic(questionDB, null);
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
             finishOrNext();
@@ -302,6 +322,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 questionDB.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
             switchHiddenMatches(questionDB, selectedOptionDB);
         }
+        //TODO DynamicTab not working well when there are to many relations doing this in tab
+        // behaviour.
+//        evaluateQuestionRelations(questionDB, selectedOptionDB);
 
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -309,6 +332,27 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             showOrHideChildren(questionDB);
         }
+    }
+
+    private void evaluateQuestionRelations(QuestionDB questionDB, OptionDB selectedOptionDB) {
+        List<QuestionRelationDB> questionRelations =
+                questionDB.getQuestionTriggeredRelationswithOption(selectedOptionDB);
+        for (QuestionRelationDB questionRelation : questionRelations) {
+            int type = questionRelation.getOperation();
+            switch (type) {
+                case QuestionRelationDB.MATCH_WITH_OPTION_ATTRIBUTE:
+                    saveInQuestionRelatedValueInAttribute(selectedOptionDB,
+                            questionRelation);
+                    break;
+            }
+        }
+    }
+
+    private void saveInQuestionRelatedValueInAttribute(OptionDB selectedOptionDB,
+            QuestionRelationDB questionRelation) {
+        QuestionDB questionToSaveValue = questionRelation.getQuestionDB();
+        OptionAttributeDB attributeWithValueToSave = selectedOptionDB.getOptionAttributeDB();
+        questionToSaveValue.saveValuesText(attributeWithValueToSave.getPath());
     }
 
     private boolean goingBackwardAndModifiedValues(ValueDB valueDB, OptionDB answeredOptionDB,
@@ -468,7 +512,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             screenQuestionDBs = mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType,
                     screenQuestionDBs);
 
-            if (TabDB.isMultiQuestionTab(tabType)) {
+            if (TabDB.isMultiQuestionTab(tabType)
+                    || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) {
                 screenQuestionDBs = questionDBItem.getQuestionsByTab(questionDBItem.getHeaderDB()
                         .getTabDB());
             } else if (screenQuestionDBs.size() == 0) {

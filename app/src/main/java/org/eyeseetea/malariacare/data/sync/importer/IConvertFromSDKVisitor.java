@@ -35,4 +35,5 @@ public interface IConvertFromSDKVisitor {
     void visit(DataValueExtended sdkDataValueExtended);
 
     void visit(CategoryOptionGroupExtended categoryOptionGroupExtended);
+
 }

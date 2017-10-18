@@ -46,8 +46,9 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     }
 
     @Override
-    public void initPullFilters(PullFilters pullFilters) {
+    public void initPullFilters(final PullFilters pullFilters) {
         pullFilters.setAutoConfig(true);
+        pullFilters.setPullMetaData(true);
     }
 
     @Override

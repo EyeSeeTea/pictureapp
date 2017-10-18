@@ -62,6 +62,8 @@ public class QuestionRelationDB extends BaseModel {
 
     public static final int TREATMENT_MATCH = 5;
 
+    public static final int MATCH_WITH_OPTION_ATTRIBUTE=6;
+
     /**
      * This mMatchDB propagate the value from questionrelation mQuestionDB to the matched mQuestionDB
      */

@@ -170,4 +170,19 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     @Override
     public void addScrollToSwipeTouchListener(View rowView) {
     }
+
+    @Override
+    public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB){
+
+        OrgUnitDB orgUnitDB = OrgUnitDB.findByUID(selectedOptionDB.getCode());
+
+        assignOrgUnitToSurvey(Session.getMalariaSurveyDB(), orgUnitDB);
+        assignOrgUnitToSurvey(Session.getStockSurveyDB(), orgUnitDB);
+    }
+    private void assignOrgUnitToSurvey(SurveyDB surveyDB, OrgUnitDB orgUnitDB) {
+        if (surveyDB != null) {
+            surveyDB.setOrgUnit(orgUnitDB);
+            surveyDB.save();
+        }
+    }
 }

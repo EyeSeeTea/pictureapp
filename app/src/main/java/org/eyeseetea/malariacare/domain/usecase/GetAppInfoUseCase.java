@@ -23,7 +23,7 @@ public class GetAppInfoUseCase implements UseCase {
 
     public void execute(Callback callback) {
         mCallback = callback;
-        mAsyncExecutor.run(this);
+        mMainExecutor.run(this);
     }
 
     @Override

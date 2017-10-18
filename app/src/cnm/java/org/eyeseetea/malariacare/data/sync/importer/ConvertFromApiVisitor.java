@@ -35,7 +35,7 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
         List<Model> villageOptions = new ArrayList<>();
         List<Model> villageOptionAttributes = new ArrayList<>();
         for (OrgUnitTree orgUnitTree : orgUnitTrees) {
-            Log.d(TAG, "Convert OrgUnitTree " + orgUnitTree.toString());
+            Log.d(TAG, "Convert OrgUnitTree " + orgUnitTree.getName_Vill_E());
             if (orgUnitTree.getName_Prov_E() != null
                     && !orgUnitTree.getName_Prov_E().isEmpty()) {
                 OptionDB optionProb = new OptionDB(orgUnitTree.getName_Prov_E(),

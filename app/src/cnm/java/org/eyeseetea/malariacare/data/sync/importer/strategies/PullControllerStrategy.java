@@ -16,8 +16,6 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrgUnitTree;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -29,12 +27,9 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.usecase.SaveAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 import java.util.List;
 
@@ -43,14 +38,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
     IOrganisationUnitRepository organisationUnitRepository;
     IDeviceRepository deviceRepository;
     AuthenticationManager authenticationManager;
-    private IAsyncExecutor mAsyncExecutor;
-    private IMainExecutor mMainExecutor;
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
-
-        mAsyncExecutor = new AsyncExecutor();
-        mMainExecutor = new UIThreadExecutor();
     }
 
     @Override
@@ -155,26 +145,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
         pullOrganisationUnitTree(new CnmApiClient.CnmApiClientCallBack<List<OrgUnitTree>>() {
             @Override
             public void onSuccess(final List<OrgUnitTree> result) {
-                mAsyncExecutor.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "Converting orgUnitTree...");
-                        ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
-                        OrgUnitTree orgUnitTree = new OrgUnitTree();
-                        orgUnitTree.accept(convertFromApiVisitor, result);
+                Log.d(TAG, "Converting orgUnitTree...");
+                ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
+                OrgUnitTree orgUnitTree = new OrgUnitTree();
+                orgUnitTree.accept(convertFromApiVisitor, result);
 
-                        final IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
-                        SaveAppInfoUseCase saveAppInfoUseCase = new SaveAppInfoUseCase(
-                                mMainExecutor, mAsyncExecutor, appInfoDataSource);
-                        saveAppInfoUseCase.excute(new SaveAppInfoUseCase.Callback() {
-                            @Override
-                            public void onAppInfoSaved() {
-                                callback.onComplete();
-                            }
-                        }, new AppInfo(true));
-                    }
-                });
-
+                IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+                appInfoDataSource.saveAppInfo(new AppInfo(true));
+                callback.onComplete();
             }
 
             @Override

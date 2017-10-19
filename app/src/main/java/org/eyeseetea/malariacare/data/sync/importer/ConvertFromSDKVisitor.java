@@ -101,7 +101,13 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
-        OrgUnitDB appOrgUnitDB = new OrgUnitDB();
+        OrgUnitDB appOrgUnitDB = null;
+
+        appOrgUnitDB = OrgUnitDB.findByUID(sdkOrganisationUnitExtended.getOrgUnit().getUId());
+
+        if (appOrgUnitDB == null) {
+            appOrgUnitDB = new OrgUnitDB();
+        }
 
         appOrgUnitDB.setName(sdkOrganisationUnitExtended.getLabel());
         appOrgUnitDB.setUid(sdkOrganisationUnitExtended.getId());

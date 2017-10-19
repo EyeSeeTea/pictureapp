@@ -19,7 +19,10 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrgUnitTree;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
 
@@ -28,62 +31,70 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
     public void visit(List<OrgUnitTree> orgUnitTrees) {
         List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOutput(
                 Constants.DROPDOWN_LIST_OU_TREE);
+
         QuestionDB questionDB = questionDBs.get(0);
         List<OptionDB> provinceOptions = new ArrayList<>();
         List<OptionDB> districtOptions = new ArrayList<>();
         List<OptionDB> communeOptions = new ArrayList<>();
         List<Model> villageOptions = new ArrayList<>();
         List<Model> villageOptionAttributes = new ArrayList<>();
-        for (OrgUnitTree orgUnitTree : orgUnitTrees) {
-            Log.d(TAG, "Convert OrgUnitTree " + orgUnitTree.toString());
-            if (orgUnitTree.getName_Prov_E() != null
-                    && !orgUnitTree.getName_Prov_E().isEmpty()) {
-                OptionDB optionProb = new OptionDB(orgUnitTree.getName_Prov_E(),
-                        orgUnitTree.getName_Prov_E(), 0f, questionDB.getAnswerDB());
-                if (!provinceOptions.contains(optionProb)) {
-                    provinceOptions.add(optionProb);
-                    optionProb.save();
-                } else {
-                    optionProb = provinceOptions.get(provinceOptions.indexOf(optionProb));
-                }
 
-                if (orgUnitTree.getName_Dist_E() != null
-                        && !orgUnitTree.getName_Dist_E().isEmpty()) {
-                    OptionDB optionDist = new OptionDB(orgUnitTree.getName_Dist_E(),
-                            orgUnitTree.getName_Dist_E() + "", 0f, questionDB.getAnswerDB());
-                    optionDist.setId_parent_fk(optionProb.getId_option());
-                    if (!districtOptions.contains(optionDist)) {
-                        districtOptions.add(optionDist);
-                        optionDist.save();
+        Map<String, OptionDB> existedOptionsInDB = toMap(questionDB.getAnswerDB().getOptionDBs());
+
+        for (OrgUnitTree orgUnitTree : orgUnitTrees) {
+
+            if (!existedOptionsInDB.containsKey(orgUnitTree.getName_Vill_E())) {
+
+                Log.d(TAG, "Convert OrgUnitTree " + orgUnitTree.getName_Vill_E());
+                if (orgUnitTree.getName_Prov_E() != null
+                        && !orgUnitTree.getName_Prov_E().isEmpty()) {
+                    OptionDB optionProb = new OptionDB(orgUnitTree.getName_Prov_E(),
+                            orgUnitTree.getName_Prov_E(), 0f, questionDB.getAnswerDB());
+                    if (!provinceOptions.contains(optionProb)) {
+                        provinceOptions.add(optionProb);
+                        optionProb.save();
                     } else {
-                        optionDist = districtOptions.get(districtOptions.indexOf(optionDist));
+                        optionProb = provinceOptions.get(provinceOptions.indexOf(optionProb));
                     }
 
-                    if (orgUnitTree.getName_Comm_E() != null
-                            && !orgUnitTree.getName_Comm_E().isEmpty()) {
-                        OptionDB optionComm = new OptionDB(orgUnitTree.getName_Comm_E(),
-                                orgUnitTree.getName_Comm_E() + "", 0f,
-                                questionDB.getAnswerDB());
-                        optionComm.setId_parent_fk(optionDist.getId_option());
-                        if (!communeOptions.contains(optionComm)) {
-                            communeOptions.add(optionComm);
-                            optionComm.save();
+                    if (orgUnitTree.getName_Dist_E() != null
+                            && !orgUnitTree.getName_Dist_E().isEmpty()) {
+                        OptionDB optionDist = new OptionDB(orgUnitTree.getName_Dist_E(),
+                                orgUnitTree.getName_Dist_E() + "", 0f, questionDB.getAnswerDB());
+                        optionDist.setId_parent_fk(optionProb.getId_option());
+                        if (!districtOptions.contains(optionDist)) {
+                            districtOptions.add(optionDist);
+                            optionDist.save();
                         } else {
-                            optionComm = communeOptions.get(communeOptions.indexOf(optionComm));
+                            optionDist = districtOptions.get(districtOptions.indexOf(optionDist));
                         }
 
-                        if (orgUnitTree.getName_Vill_E() != null
-                                && !orgUnitTree.getName_Vill_E().isEmpty()) {
-                            OptionDB optionVill = new OptionDB(orgUnitTree.getName_Vill_E(),
-                                    orgUnitTree.getName_Vill_E() + "", 0f,
+                        if (orgUnitTree.getName_Comm_E() != null
+                                && !orgUnitTree.getName_Comm_E().isEmpty()) {
+                            OptionDB optionComm = new OptionDB(orgUnitTree.getName_Comm_E(),
+                                    orgUnitTree.getName_Comm_E() + "", 0f,
                                     questionDB.getAnswerDB());
-                            optionVill.setId_parent_fk(optionComm.getId_option());
-                            OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
-                            optionAttributeDB.setPath(
-                                    "[" + orgUnitTree.getLat() + "," + orgUnitTree.getLng()
-                                            + "]");
-                            villageOptionAttributes.add(optionAttributeDB);
-                            villageOptions.add(optionVill);
+                            optionComm.setId_parent_fk(optionDist.getId_option());
+                            if (!communeOptions.contains(optionComm)) {
+                                communeOptions.add(optionComm);
+                                optionComm.save();
+                            } else {
+                                optionComm = communeOptions.get(communeOptions.indexOf(optionComm));
+                            }
+
+                            if (orgUnitTree.getName_Vill_E() != null
+                                    && !orgUnitTree.getName_Vill_E().isEmpty()) {
+                                OptionDB optionVill = new OptionDB(orgUnitTree.getName_Vill_E(),
+                                        orgUnitTree.getName_Vill_E() + "", 0f,
+                                        questionDB.getAnswerDB());
+                                optionVill.setId_parent_fk(optionComm.getId_option());
+                                OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
+                                optionAttributeDB.setPath(
+                                        "[" + orgUnitTree.getLat() + "," + orgUnitTree.getLng()
+                                                + "]");
+                                villageOptionAttributes.add(optionAttributeDB);
+                                villageOptions.add(optionVill);
+                            }
                         }
                     }
                 }
@@ -156,4 +167,15 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
         });
     }
 
+    public static Map<String, OptionDB> toMap(Collection<OptionDB> options) {
+        Map<String, OptionDB> map = new HashMap<>();
+        if (options != null && options.size() > 0) {
+            for (OptionDB optionDB : options) {
+                if (optionDB.getCode() != null) {
+                    map.put(optionDB.getCode(), optionDB);
+                }
+            }
+        }
+        return map;
+    }
 }

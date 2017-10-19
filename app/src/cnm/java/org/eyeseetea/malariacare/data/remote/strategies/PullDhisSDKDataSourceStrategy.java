@@ -8,7 +8,6 @@ import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -23,7 +22,7 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
             final IDataSourceCallback<List<OrganisationUnit>> callback) {
         D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE)
                 .subscribeOn(Schedulers.io()).
-                observeOn(AndroidSchedulers.mainThread())
+                observeOn(Schedulers.io())
                 .subscribe(new Action1<List<OrganisationUnit>>() {
                     @Override
                     public void call(List<OrganisationUnit> organisationUnits) {

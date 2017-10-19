@@ -90,7 +90,7 @@
 <string name="developer_option_summary">"This feature activates the developer options"</string>
 <string name="developer_option_title">"Show developer options"</string>
 <string name="export_data_option_title">"Export database"</string>
-<string name="malaria_case_based_reporting">"Malaria Case Surveillance"</string>
+<string name="malaria_case_based_reporting">"CNM Malaria Case Surveillance"</string>
 <string name="survey_review">"Review"</string>
 <string name="survey_send">"Send"</string>
 <string name="common_menu_about">"About"</string>
@@ -248,5 +248,14 @@
     <string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
     <string name="common_option_referred_yes">Yes</string>
     <string name="common_option_referred_no">No</string>
+
+    <string name="date_survey_format">"dd-MMM-yy"</string>
+    <string name="hour_survey_format">"hh:mm a"</string>
+    <string name="new_cases">New Cases</string>
+    <string name="cases_pending">Cases Pending to be Uploaded</string>
+    <string name="past_cases">Past Cases</string>
+    <string name="cases_history">History - Cases Already Uploaded</string>
+    <string name="tab_village_residence">Village of Residence</string>
+
 
 </resources>

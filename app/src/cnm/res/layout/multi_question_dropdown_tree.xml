@@ -3,47 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="600dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@color/yellow">
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/row_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@color/transparent"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
-        android:textColor="@color/dark_purple"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
+
+
     <Spinner
         android:id="@+id/spinner_province"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/input_edit_text_margin"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="@dimen/input_edit_text_margin"
-        android:backgroundTint="@color/dark_purple"
-        android:backgroundTintMode="add"
+        android:background="@drawable/spinner_background"
+        android:spinnerMode="dropdown"
         android:paddingBottom="2dip"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:paddingTop="2dip"
-        android:spinnerMode="dropdown"
-        android:textColor="@color/dark_purple" />
+        android:textColor="@color/black" />
 
     <Spinner
         android:id="@+id/spinner_district"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
-        android:backgroundTint="@color/dark_purple"
-        android:backgroundTintMode="add"
         android:paddingBottom="2dip"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:paddingTop="2dip"
         android:spinnerMode="dropdown"
-        android:textColor="@color/dark_purple" />
+        android:background="@drawable/spinner_background"
+        android:textColor="@color/black" />
 
     <Spinner
         android:id="@+id/spinner_commune"
@@ -51,14 +60,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
-        android:backgroundTint="@color/dark_purple"
-        android:backgroundTintMode="add"
         android:paddingBottom="2dip"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:paddingTop="2dip"
         android:spinnerMode="dropdown"
-        android:textColor="@color/dark_purple" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/spinner_background"
+        android:textColor="@color/black" />
 
     <Spinner
         android:id="@+id/spinner_village"
@@ -66,13 +75,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
-        android:backgroundTint="@color/dark_purple"
-        android:backgroundTintMode="add"
         android:paddingBottom="2dip"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:paddingTop="2dip"
         android:spinnerMode="dropdown"
-        android:textColor="@color/dark_purple" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/spinner_background"
+        android:textColor="@color/black" />
 
 </LinearLayout>

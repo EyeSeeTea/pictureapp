@@ -1,14 +1,14 @@
 1;'Code: Diagnosis Method';'ipc_issueEntry_q_diagnosisMethod';;'ipc_issueEntry_q_diagnosisMethod';'o7mG7zUBGsM';1;0;0;1;1;;10;8;0;;1
-2;'Code: Resul RDT';'ipc_issueEntry_q_result_rdt';;'ipc_issueEntry_q_result_rdt';'ZoHcPr1PJ6q';2;0;0;1;2;;11;8;1;;1
-3;'Code: Result Microscope';'ipc_issueEntry_q_result_microscope';;'ipc_issueEntry_q_result_microscope';'ZoHcPr1PJ6q';2;0;0;1;3;;11;8;1;;1
-4;'Code:  OU Village';'ipc_issueEntry_q_village';;'ipc_issueEntry_q_village';'k3gpW1Vm3Ov';3;0;0;2;4;;19;8;0;;0
-5;'Code: OU Tree Village';'ipc_issueEntry_q__tree_village';;'ipc_issueEntry_q__tree_village';'k3gpW1Vm3Ov';4;0;0;2;5;;31;8;0;;0
+2;'Code: Resul RDT';'ipc_issueEntry_q_result_rdt';;'ipc_issueEntry_q_result_rdt';'ZoHcPr1PJ6q';2;0;0;1;2;;11;8;2;;1
+3;'Code: Result Microscope';'ipc_issueEntry_q_result_microscope';;'ipc_issueEntry_q_result_microscope';'ZoHcPr1PJ6q';2;0;0;1;3;;11;8;2;;1
+4;'Code:  OU Village';'ipc_issueEntry_q_village';;'ipc_issueEntry_q_village';'k3gpW1Vm3Ov';3;0;0;2;4;;19;8;1;;0
+5;'Code: OU Tree Village';'ipc_issueEntry_q__tree_village';;'ipc_issueEntry_q__tree_village';'k3gpW1Vm3Ov';4;0;0;2;5;;31;8;1;;0
 6;'Code: Village cords';'ipc_issueEntry_q_village_coords';;'ipc_issueEntry_q_village_coords';'VzOmsEZChev';4;0;0;2;6;;21;8;0;;0
 7;'Code: Age';'ipc_issueEntry_q_patient_age';;'ipc_issueEntry_q_patient_age';'rwgzuR5oI1L';6;0;0;3;7;;6;8;0;;1
 8;'Code: gender Pregnant';'ipc_issueEntry_q_patient_gender_pregnant';;'ipc_issueEntry_q_patient_gender_pregnant';'NoDataElementSexPregnancy';7;0;0;3;8;;24;8;0;;0
 9;'Code: Gender';'ipc_issueEntry_q_patient_gender';;;'uA8F2A6w2Ex';8;0;0;3;9;;21;8;0;;1
 10;'Code: Pregnant';'ipc_issueEntry_q_patient_pregnant';;;'n0ZxPa2rJ58';9;0;0;3;10;;21;8;0;;1
 11;'Code: Diagnosis Type';'ipc_issueEntry_q_diagnosis_type';;'ipc_issueEntry_q_diagnosis_type';'o7mG7zUBGsM ';10;0;0;3;11;;10;8;0;;1
-12;'Code: Treatment';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'V8q06yRjHqg';11;0;0;3;12;;11;8;0;;1
+12;'Code: Treatment';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'V8q06yRjHqg';11;0;0;3;12;;11;8;1;;1
 13;'Code: Other Treatment';'ipc_issueEntry_q_treatment_other';;'ipc_issueEntry_q_treatment_other';'zxEEyLrpMBG';12;0;0;3;13;;3;9;0;;1
 14;'Code: Referred Hospital';'ipc_issueEntry_q_referred_hospital';;'ipc_issueEntry_q_referred_hospital';'v52DTn3NYD2';13;0;0;3;14;;10;9;0;;1

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/orange"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="40dp">
+
+    <org.eyeseetea.sdk.presentation.views.CustomEditText
+        android:id="@+id/answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/edit_text_bottom_border"
+        android:gravity="center"
+        android:minLines="4"
+        android:inputType="textMultiLine"
+        android:textColor="@color/white"
+        android:minWidth="200dp"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/normal_font" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomButton
+        android:id="@+id/dynamic_positiveInt_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="@string/provider_redeemEntry_msg_matchingOk"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/normal_font" />
+
+</LinearLayout>

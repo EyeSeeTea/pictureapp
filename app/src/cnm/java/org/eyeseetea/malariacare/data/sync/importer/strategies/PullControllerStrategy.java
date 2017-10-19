@@ -16,8 +16,6 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrgUnitTree;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -29,12 +27,9 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.usecase.SaveAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 import java.util.List;
 
@@ -43,14 +38,10 @@ public class PullControllerStrategy extends APullControllerStrategy {
     IOrganisationUnitRepository organisationUnitRepository;
     IDeviceRepository deviceRepository;
     AuthenticationManager authenticationManager;
-    private IAsyncExecutor mAsyncExecutor;
-    private IMainExecutor mMainExecutor;
+    IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
-
-        mAsyncExecutor = new AsyncExecutor();
-        mMainExecutor = new UIThreadExecutor();
     }
 
     @Override
@@ -60,13 +51,15 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
             callback.onStep(PullStep.METADATA);
             mPullController.populateMetadataFromCsvs(pullFilters.isAutoConfig());
-            OrganisationUnit organisationUnit = null;
+
             if (pullFilters.isAutoConfig()) {
                 try {
-                    organisationUnit = getOrgUnitByPhone(context, callback, pullFilters);
+                    autoConfigureByPhone(context, callback, pullFilters);
                 } catch (ApiCallException e) {
                     throw new AutoconfigureException();
                 }
+            } else {
+                downloadMetadata(pullFilters, callback);
             }
 
         } catch (Exception ex) {
@@ -76,7 +69,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
-    private OrganisationUnit getOrgUnitByPhone(Context context,
+    private void autoConfigureByPhone(Context context,
             final IPullController.Callback callback, final PullFilters pullFilters)
             throws NetworkException, ApiCallException {
 
@@ -84,19 +77,18 @@ public class PullControllerStrategy extends APullControllerStrategy {
         deviceRepository = new DeviceDataSource();
         authenticationManager = new AuthenticationManager(context);
 
-        OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
-                ReadPolicy.CACHE);
-        if (organisationUnit == null) {
-            organisationUnit = organisationUnitRepository.getOrganisationUnitByPhone(
-                    deviceRepository.getDevice());
-            if (organisationUnit != null) {
-                organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
-            } else {
-                callback.onError(new AutoconfigureException());
-                return null;
-            }
+        if (isOrgUnitConfigured()) {
+            callback.onComplete();
+        } else {
+            OrganisationUnit organisationUnit =
+                    organisationUnitRepository.getOrganisationUnitByPhone(
+                            deviceRepository.getDevice());
 
-            if (organisationUnit != null) {
+            if (organisationUnit == null) {
+                callback.onError(new AutoconfigureException());
+
+            } else {
+                organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
 
                 Credentials hardcodedCredentials = getHardcodedCredentials(callback);
 
@@ -117,15 +109,19 @@ public class PullControllerStrategy extends APullControllerStrategy {
                             });
                 }
             }
-        } else {
-            downloadMetadata(pullFilters, callback);
         }
-        return organisationUnit;
+    }
+
+    private boolean isOrgUnitConfigured() throws NetworkException, ApiCallException {
+        OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
+                ReadPolicy.CACHE);
+
+        return (organisationUnit != null);
     }
 
     private void downloadMetadata(PullFilters pullFilters,
             final IPullController.Callback callback) {
-        if (pullFilters.isDemo()) {
+        if (pullFilters.isDemo() || appInfoDataSource.getAppInfo().isMetadataDownloaded()) {
             callback.onComplete();
         } else {
             mPullController.pullMetada(pullFilters, callback);
@@ -153,26 +149,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
         pullOrganisationUnitTree(new CnmApiClient.CnmApiClientCallBack<List<OrgUnitTree>>() {
             @Override
             public void onSuccess(final List<OrgUnitTree> result) {
-                mAsyncExecutor.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "Converting orgUnitTree...");
-                        ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
-                        OrgUnitTree orgUnitTree = new OrgUnitTree();
-                        orgUnitTree.accept(convertFromApiVisitor, result);
+                Log.d(TAG, "Converting orgUnitTree...");
+                ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
+                OrgUnitTree orgUnitTree = new OrgUnitTree();
+                orgUnitTree.accept(convertFromApiVisitor, result);
 
-                        final IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
-                        SaveAppInfoUseCase saveAppInfoUseCase = new SaveAppInfoUseCase(
-                                mMainExecutor, mAsyncExecutor, appInfoDataSource);
-                        saveAppInfoUseCase.excute(new SaveAppInfoUseCase.Callback() {
-                            @Override
-                            public void onAppInfoSaved() {
-                                callback.onComplete();
-                            }
-                        }, new AppInfo(true));
-                    }
-                });
 
+                appInfoDataSource.saveAppInfo(new AppInfo(true));
+                callback.onComplete();
             }
 
             @Override

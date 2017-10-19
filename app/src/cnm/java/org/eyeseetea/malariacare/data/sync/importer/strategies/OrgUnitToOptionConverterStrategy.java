@@ -45,7 +45,7 @@ public class OrgUnitToOptionConverterStrategy extends AOrgUnitToOptionConverterS
         List<OptionDB> optionDBs = questionDB.getAnswerDB().getOptionDBs();
 
         for (OptionDB optionDB : optionDBs) {
-            if (optionDB.getCode().equals(orgUnitDB.getUid())) {
+            if (optionDB.getCode().equals(orgUnitDB.getName())) {
                 return true;
             }
         }

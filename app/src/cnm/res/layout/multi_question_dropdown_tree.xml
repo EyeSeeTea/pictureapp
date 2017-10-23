@@ -84,4 +84,7 @@
         android:background="@drawable/spinner_background"
         android:textColor="@color/black" />
 
+    <View
+        android:layout_width="1000dp"
+        android:layout_height="1dp" />
 </LinearLayout>

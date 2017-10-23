@@ -96,4 +96,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static void onLogoutSuccess() {
         DashboardActivity.dashboardActivity.finishAndGo(SettingsActivity.class);
     }
+    public void openSentSurvey() {
+        mDashboardActivity.getTabHost().setCurrentTabByTag(
+                mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
+        mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.GONE);
+        mDashboardActivity.initSurvey();
+
+    }
 }

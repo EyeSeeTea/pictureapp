@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:text="@string/provider_redeemEntry_msg_matchingOk"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />

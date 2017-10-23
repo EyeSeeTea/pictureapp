@@ -166,6 +166,7 @@ public class ProgressActivity extends Activity {
 
             @Override
             public void onError(Throwable message) {
+                message.printStackTrace();
                 showException(R.string.dialog_pull_error);
             }
 

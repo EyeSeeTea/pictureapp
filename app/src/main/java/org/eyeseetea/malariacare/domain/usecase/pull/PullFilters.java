@@ -13,6 +13,7 @@ public class PullFilters {
     String dataByOrgUnit;
     boolean pullDataAfterMetadata;
     boolean isAutoConfig;
+    String activeOrgUnitUid;
 
     public Date getStartDate() {
         return startDate;
@@ -83,5 +84,13 @@ public class PullFilters {
 
     public void setAutoConfig(boolean autoConfig) {
         isAutoConfig = autoConfig;
+    }
+
+    public String getActiveOrgUnitUid() {
+        return activeOrgUnitUid;
+    }
+
+    public void setActiveOrgUnitUid(String activeOrgUnitUid) {
+        this.activeOrgUnitUid = activeOrgUnitUid;
     }
 }

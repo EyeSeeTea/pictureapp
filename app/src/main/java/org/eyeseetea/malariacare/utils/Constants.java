@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.utils;
 import java.util.Arrays;
 import java.util.List;
 
+import utils.strategies.ConstantsStrategy;
+
 public class Constants {
 
     // ############# QUESTION TYPE ###############
@@ -58,14 +60,8 @@ public class Constants {
             DROPDOWN_LIST_OU_TREE
     );
 
-    public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT = Arrays.asList(
-            DROPDOWN_OU_LIST,
-            IMAGE_RADIO_GROUP_NO_DATAELEMENT,
-            REMINDER,
-            QUESTION_LABEL,
-            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON,
-            WARNING
-    );
+    public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT =
+            ConstantsStrategy.QUESTION_TYPES_NO_DATA_ELEMENT;
 
 
     public static final String DEFAULT_SELECT_OPTION = "";

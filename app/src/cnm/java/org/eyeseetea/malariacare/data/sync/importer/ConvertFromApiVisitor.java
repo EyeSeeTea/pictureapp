@@ -47,7 +47,9 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
 
                 Log.d(TAG, "Convert OrgUnitTree " + orgUnitTree.getName_Vill_E());
                 if (orgUnitTree.getName_Prov_E() != null
-                        && !orgUnitTree.getName_Prov_E().isEmpty()) {
+                        && !orgUnitTree.getName_Prov_E().isEmpty()
+                        && orgUnitTree.getName_Vill_E() != null
+                        && !orgUnitTree.getName_Vill_E().isEmpty()) {
                     OptionDB optionProb = new OptionDB(orgUnitTree.getName_Prov_E(),
                             orgUnitTree.getName_Prov_E(), 0f, questionDB.getAnswerDB());
                     if (!provinceOptions.contains(optionProb)) {
@@ -90,7 +92,7 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
                                 optionVill.setId_parent_fk(optionComm.getId_option());
                                 OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
                                 optionAttributeDB.setPath(
-                                        "[" + orgUnitTree.getLat() + "," + orgUnitTree.getLng()
+                                        "[" + orgUnitTree.getLng() + "," + orgUnitTree.getLat()
                                                 + "]");
                                 villageOptionAttributes.add(optionAttributeDB);
                                 villageOptions.add(optionVill);

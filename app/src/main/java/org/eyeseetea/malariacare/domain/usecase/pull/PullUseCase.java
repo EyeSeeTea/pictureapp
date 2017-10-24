@@ -98,7 +98,6 @@ public class PullUseCase implements UseCase {
                 mCallback.onStep(step);
             }
         });
-
     }
 
     public void notifyOnNetworkError() {

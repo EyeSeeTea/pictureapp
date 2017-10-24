@@ -3,21 +3,18 @@ package org.eyeseetea.malariacare.data.sync.importer;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.AOrgUnitToOptionConverterStrategy;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.OrgUnitToOptionConverterStrategy;
 
 import java.util.List;
 
 public class OrgUnitToOptionConverter {
+
+
     public static void convert() {
-        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOrgUnitDropdownList();
-
-        if (questionDBs.size() == 0) {
-            return;
-        }
-
-        List<OrgUnitDB> orgUnitDBs = OrgUnitDB.getAllOrgUnit();
-        for (OrgUnitDB orgUnitDB : orgUnitDBs) {
-            addOUOptionToQuestions(questionDBs, orgUnitDB);
-        }
+        AOrgUnitToOptionConverterStrategy orgUnitToOptionConverterStrategy =
+                new OrgUnitToOptionConverterStrategy();
+        orgUnitToOptionConverterStrategy.convert();
     }
 
     public static void addOUOptionToQuestions(List<QuestionDB> questionDBs, OrgUnitDB orgUnitDB) {

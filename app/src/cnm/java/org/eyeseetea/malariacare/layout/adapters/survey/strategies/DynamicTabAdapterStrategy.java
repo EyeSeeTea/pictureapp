@@ -53,7 +53,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
 
     @Override
     public boolean isMultiQuestionByVariant(int tabType) {
-        return false;
+        return tabType == Constants.TAB_MULTI_QUESTION_EXCLUSIVE;
     }
 
     @Override

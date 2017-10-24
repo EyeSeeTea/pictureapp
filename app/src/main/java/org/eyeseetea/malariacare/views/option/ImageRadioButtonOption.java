@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.option;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -49,6 +50,13 @@ public class ImageRadioButtonOption extends CommonQuestionView {
         }
 
         mImageView.setImageDrawable(drawable);
+
+        if (mOptionDB != null) {
+            String backGColor = mOptionDB.getOptionAttributeDB() != null
+                    ? mOptionDB.getOptionAttributeDB().getBackground_colour()
+                    : mOptionDB.getBackground_colour();
+            ((View) mImageView.getParent()).setBackgroundColor(Color.parseColor("#" + backGColor));
+        }
     }
 
     public void setText(CharSequence text) {
@@ -99,6 +107,7 @@ public class ImageRadioButtonOption extends CommonQuestionView {
                 notifyCheckedChange(b);
             }
         });
+
     }
 
     private void init(final Context context, boolean bigText) {

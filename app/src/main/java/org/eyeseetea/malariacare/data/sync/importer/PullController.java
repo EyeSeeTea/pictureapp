@@ -83,7 +83,6 @@ public class PullController implements IPullController {
                         public void onSuccess(List<OrganisationUnit> organisationUnits) {
                             if (!pullFilters.downloadData() || pullFilters.pullDataAfterMetadata()) {
                                 convertMetaData(callback);
-                                callback.onComplete();
                             } else {
                                 convertMetaData(callback);
                                 pullData(pullFilters, organisationUnits, callback);
@@ -156,7 +155,7 @@ public class PullController implements IPullController {
             }
 
             OrgUnitToOptionConverter.convert();
-            mPullControllerStrategy.convertMetadata(mConverter);
+            mPullControllerStrategy.convertMetadata(mConverter, callback);
         } catch (NullPointerException ex) {
             callback.onError(new PullConversionException(ex));
         }

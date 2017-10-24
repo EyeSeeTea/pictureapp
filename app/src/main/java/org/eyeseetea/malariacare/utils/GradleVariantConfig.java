@@ -21,6 +21,13 @@ public class GradleVariantConfig {
         return false;
     }
 
+    public static boolean isMonitoringFragmentActive() {
+        if (BuildConfig.activeMonitoringFragment) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean isStockFragmentActive() {
         if (BuildConfig.activeStockFragment) {
             return true;

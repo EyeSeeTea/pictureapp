@@ -170,6 +170,10 @@ public abstract class ADashboardActivityStrategy {
         mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, monitorFragment);
     }
 
+    public void hideMonitoring(){
+        mDashboardActivity.findViewById(R.id.dashboard_charts_container).setVisibility(View.GONE);
+    }
+
     public void reloadFourthFragment() {
         monitorFragment.reloadData();
         monitorFragment.reloadHeader(mDashboardActivity);

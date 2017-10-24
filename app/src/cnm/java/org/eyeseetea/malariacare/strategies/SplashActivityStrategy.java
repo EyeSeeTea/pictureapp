@@ -34,7 +34,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
             if (EyeSeeTeaApplication.permissions.getPermission(Permissions.PHONE_STATE_REQUEST_CODE)
                     != null) {
                 Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
-                        Permissions.PHONE_STATE_REQUEST_CODE);
+                        Permissions.FINE_LOCATION_REQUEST_CODE);
 
                 EyeSeeTeaApplication.permissions.requestPermission(permission.getDefinition(),
                         permission.getCode());
@@ -134,14 +134,18 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
             if (EyeSeeTeaApplication.permissions.getPermission(Permissions.PHONE_STATE_REQUEST_CODE)
                     == null && mPullUseCase != null && mPullFilters != null) {
                 executePull(mPullUseCase, mPullFilters);
+            } else {
+                EyeSeeTeaApplication.permissions.requestNextPermission();
             }
         } else {
             if (requestCode == Permissions.PHONE_STATE_REQUEST_CODE) {
                 showErrorAutoConfiguration();
-            } else if (EyeSeeTeaApplication.permissions.getPermission(
-                    Permissions.PHONE_STATE_REQUEST_CODE)
-                    != null) {
-                EyeSeeTeaApplication.permissions.requestNextPermission();
+            } else {
+                Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
+                        Permissions.PHONE_STATE_REQUEST_CODE);
+
+                EyeSeeTeaApplication.permissions.requestPermission(permission.getDefinition(),
+                        permission.getCode());
             }
         }
     }

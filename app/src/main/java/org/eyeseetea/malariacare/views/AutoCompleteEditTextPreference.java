@@ -57,11 +57,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
     }
     SettingsActivity settingsActivity;
 
-    private void pullData() {
-        PreferencesState.getInstance().setMetaDataDownload(false);
-        PreferencesState.getInstance().setPullDataAfterMetadata(true);
-        PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
-
+    private void pull() {
         settingsActivity.startActivity(new Intent(settingsActivity, ProgressActivity.class));
     }
 
@@ -126,7 +122,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             //Super invokes changeListener
             callChangeListener(value);
             if(pullRequired){
-                pullData();
+                settingsActivity.mSettingsActivityStrategy.pullAfterChangeOuFlags();
+                pull();
             }
         }
     }

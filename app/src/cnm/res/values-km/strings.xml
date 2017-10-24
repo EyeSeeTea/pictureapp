@@ -249,5 +249,5 @@
 <string name="common_option_referred_yes">បាទ/ចាស៎</string>
 <string name="common_option_referred_no">ទេ</string>
 
-<string name="exists_more_than_one_org_unit_by_phone">ការព្រមាន: មានអង្គភាពច្រើនជាងមួយតាមរយៈទូរស័ព្ទ %s</string>
+<string name="exists_more_than_one_org_unit_by_phone">ការព្រមាន: អង្គភាពច្រើនជាងមួយត្រូវបានតំឡើងសម្រាប់ទូរស័ព្ទនេះ (IMEI: %s)</string>
 </resources>

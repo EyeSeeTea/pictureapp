@@ -257,8 +257,6 @@
 <string name="cases_history">History - Cases Already Uploaded</string>
 <string name="tab_village_residence">Village of Residence</string>
 
-
-
-<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone %s</string>
+<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
 
 </resources>

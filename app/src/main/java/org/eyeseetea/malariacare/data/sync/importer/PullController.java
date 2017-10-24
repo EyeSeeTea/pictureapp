@@ -28,6 +28,7 @@ import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
@@ -76,17 +77,24 @@ public class PullController implements IPullController {
             callback.onCancel();
             return;
         }
-        if(pullFilters.pullMetaData()) {
+        if (pullFilters.pullMetaData()) {
             mPullRemoteDataSource.pullMetadata(
                     new IDataSourceCallback<List<OrganisationUnit>>() {
                         @Override
                         public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                            if (!pullFilters.downloadData() || pullFilters.pullDataAfterMetadata()) {
-                                convertMetaData(callback);
-                            } else {
-                                convertMetaData(callback);
-                                pullData(pullFilters, organisationUnits, callback);
-                            }
+                                if(pullFilters.getDataByOrgUnit()!=null && !pullFilters.getDataByOrgUnit().equals("")) {
+                                    if (!pullFilters.downloadData()
+                                            || pullFilters.pullDataAfterMetadata()) {
+                                        pullAndConvertOuOptions(pullFilters.getDataByOrgUnit(),callback);
+                                        convertMetaData(callback);
+                                    } else {
+                                        pullAndConvertOuOptions(pullFilters.getDataByOrgUnit(),callback);
+                                        convertMetaData(callback);
+                                        pullData(pullFilters, organisationUnits, callback);
+                                    }
+                                }else{
+                                    convertMetaData(callback);
+                                }
                         }
 
                         @Override
@@ -94,16 +102,21 @@ public class PullController implements IPullController {
                             callback.onError(throwable);
                         }
                     });
-        }
-        else {
+        } else {
             if (pullFilters.downloadData()) {
-                List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
+                List<OrganisationUnit> organisationUnitsList =
+                        D2.me().organisationUnits().list().toBlocking().first();
                 pullData(pullFilters, organisationUnitsList, callback);
-            }
-            else{
+            } else {
                 callback.onComplete();
             }
         }
+    }
+
+    private void pullAndConvertOuOptions(final String orgUnitName, final Callback callback) {
+        OrganisationUnitRepository organisationUnitRepository = new OrganisationUnitRepository();
+        String orgUnituId = organisationUnitRepository.getOrganisationUnitByName(orgUnitName).getUid();
+        mPullControllerStrategy.pullAndCovertOuOptions(orgUnituId, callback);
     }
 
     public void populateMetadataFromCsvs(boolean isDemo) throws IOException {
@@ -154,7 +167,6 @@ public class PullController implements IPullController {
                 assignedOrganisationsUnit.accept(mConverter);
             }
 
-            OrgUnitToOptionConverter.convert();
             mPullControllerStrategy.convertMetadata(mConverter, callback);
         } catch (NullPointerException ex) {
             callback.onError(new PullConversionException(ex));

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
+import static org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow.MAPPER;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -13,6 +15,7 @@ import org.eyeseetea.malariacare.data.sync.importer.ConvertFromApiVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrgUnitTree;
+import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
@@ -30,8 +33,15 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.hisp.dhis.client.sdk.android.api.D2;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
+import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class PullControllerStrategy extends APullControllerStrategy {
 
@@ -39,6 +49,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     IDeviceRepository deviceRepository;
     AuthenticationManager authenticationManager;
     IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+    PullFilters mPullFilters;
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
@@ -47,6 +58,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     @Override
     public void pull(PullFilters pullFilters, IPullController.Callback callback, Context context) {
         Log.d(TAG, "Starting PULL process...");
+        mPullFilters = pullFilters;
         try {
 
             callback.onStep(PullStep.METADATA);
@@ -89,7 +101,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
             } else {
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
-
+                pullFilters.setDataByOrgUnit(organisationUnit.getName());
+                appInfoDataSource.saveAppInfo(new AppInfo(false));
                 Credentials hardcodedCredentials = getHardcodedCredentials(callback);
 
                 if (hardcodedCredentials != null) {
@@ -154,8 +167,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 OrgUnitTree orgUnitTree = new OrgUnitTree();
                 orgUnitTree.accept(convertFromApiVisitor, result);
 
-
-                appInfoDataSource.saveAppInfo(new AppInfo(true));
+                boolean isActiveOu = mPullFilters.getDataByOrgUnit()!=null && !mPullFilters.getDataByOrgUnit().equals("");
+                appInfoDataSource.saveAppInfo(new AppInfo(isActiveOu));
                 callback.onComplete();
             }
 
@@ -176,5 +189,42 @@ public class PullControllerStrategy extends APullControllerStrategy {
             cnmApiClientCallBack.onError(e);
         }
         cnmApiClient.getOrganisationUnitTree(cnmApiClientCallBack);
+    }
+
+    @Override
+    public void pullAndCovertOuOptions(final String selectedUid,
+            final IPullController.Callback callback) {
+        D2.organisationUnits().pullAllDescendants(SyncStrategy.NO_STORE, selectedUid).subscribeOn(
+                Schedulers.io()).
+                observeOn(Schedulers.io()).toBlocking()
+                .subscribe(new Action1<List<org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit>>() {
+                    @Override
+                    public void call(List<org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit> organisationUnitsDescendants) {
+                        List<OrganisationUnitExtended> organisationUnitExtendeds =
+                                new ArrayList<>();
+                        if (organisationUnitsDescendants != null
+                                && organisationUnitsDescendants.size() > 0) {
+                            for (OrganisationUnitFlow organisationUnitDescendant
+                                    : MAPPER.mapToDatabaseEntities(
+                                    organisationUnitsDescendants)) {
+                                if (!organisationUnitDescendant.getUId().equals(selectedUid)) {
+                                    OrganisationUnitExtended
+                                            organisationUnitExtended =
+                                            new OrganisationUnitExtended(
+                                                    organisationUnitDescendant);
+                                    organisationUnitExtendeds.add(
+                                            organisationUnitExtended);
+                                }
+                            }
+                            new OrgUnitToOptionConverterStrategy().convert(organisationUnitExtendeds);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                        callback.onError(throwable);
+                    }
+                });
     }
 }

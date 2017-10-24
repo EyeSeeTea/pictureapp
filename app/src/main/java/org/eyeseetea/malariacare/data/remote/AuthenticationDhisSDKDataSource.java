@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -78,7 +77,7 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                                 }
                             })
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(Schedulers.io())
                     .subscribe(new Action1<org.hisp.dhis.client.sdk.models.user.UserAccount>() {
                         @Override
                         public void call(

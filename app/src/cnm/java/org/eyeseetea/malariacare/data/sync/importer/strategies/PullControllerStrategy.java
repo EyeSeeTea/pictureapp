@@ -27,6 +27,8 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -80,9 +82,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         if (isOrgUnitConfigured()) {
             callback.onComplete();
         } else {
-            OrganisationUnit organisationUnit =
-                    organisationUnitRepository.getOrganisationUnitByPhone(
-                            deviceRepository.getDevice());
+            OrganisationUnit organisationUnit = getOrganisationUnitByPhone(callback);
 
             if (organisationUnit == null) {
                 callback.onError(new AutoconfigureException());
@@ -110,6 +110,22 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 }
             }
         }
+    }
+
+    private OrganisationUnit getOrganisationUnitByPhone(IPullController.Callback callback)
+            throws ApiCallException {
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit = organisationUnitRepository.getOrganisationUnitByPhone(
+                    deviceRepository.getDevice());
+        } catch (ExistsMoreThanOneOrgUnitByPhoneException
+                existsMoreThanOneOrgUnitByPhoneException) {
+            organisationUnit =
+                    existsMoreThanOneOrgUnitByPhoneException.getSelectedOrganisationUnit();
+            callback.onWarning(existsMoreThanOneOrgUnitByPhoneException);
+        }
+
+        return organisationUnit;
     }
 
     private boolean isOrgUnitConfigured() throws NetworkException, ApiCallException {

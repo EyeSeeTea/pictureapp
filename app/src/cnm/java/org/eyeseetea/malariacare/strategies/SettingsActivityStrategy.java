@@ -5,20 +5,26 @@ import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.SplashScreenActivity;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesCNM;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.usecase.DeleteOrgUnitUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -71,7 +77,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         deleteOrgUnitUseCase.excute(new DeleteOrgUnitUseCase.Callback() {
                             @Override
                             public void onSuccess() {
-                                launchAutoconfigure();
+                                executeLogout();
                             }
                         });
                         return true;
@@ -79,6 +85,22 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 });
     }
 
+    public void executeLogout() {
+        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(settingsActivity);
+        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        AlarmPushReceiver.cancelPushAlarm(settingsActivity);
+        logoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+               launchAutoconfigure();
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e("." + this.getClass().getSimpleName(), message);
+            }
+        });
+    }
 
     @Override
     public Preference.OnPreferenceClickListener getOnPreferenceClickListener() {
@@ -122,4 +144,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         settingsActivity.finish();
     }
 
+    @Override
+    public void pullAfterChangeOuFlags() {
+        PreferencesCNM.setMetadataDownloaded(false);
+        PreferencesState.getInstance().setMetaDataDownload(true);
+        PreferencesState.getInstance().setPullDataAfterMetadata(true);
+        PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
+    }
 }

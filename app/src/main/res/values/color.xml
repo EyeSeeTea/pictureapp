@@ -25,14 +25,14 @@
     <color name="myanmar_grey">#e7e7e7</color>
     <color name="myanmar_orange">#ed9c00</color>
     <color name="black_grey_purple">#3e3e3f</color>
-    <color name="main_window_background">@color/light_grey</color>
+    <color name="main_window_background">#cccccc</color>
     <color name="custom_background_grey">@color/black_grey_purple</color>
     <color name="actionbar_background">@color/navy_blue</color>
     <color name="text_first_color">@color/black</color>
     <color name="text_secondary_color">@color/white</color>
     <color name="fragment_header_title_text">@color/white</color>
-    <color name="tab_pressed_background">@color/light_grey</color>
-    <color name="tab_unpressed_background">@color/white</color>
+    <color name="tab_pressed_background">#cccccc</color>
+    <color name="tab_unpressed_background">#eecf00</color>
     <color name="spinner_color">@color/headerColor</color>
     <color name="monitor_background">@color/light_grey</color>
     <!-- Old sdk -->

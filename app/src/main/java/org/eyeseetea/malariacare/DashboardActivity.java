@@ -139,8 +139,14 @@ public class DashboardActivity extends BaseActivity {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
                     context.getResources().getString(R.string.tab_av));
         }
-        setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.common_menu_statistics));
+        if (GradleVariantConfig.isMonitoringFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_monitor),
+                    R.id.tab_monitor_layout,
+                    context.getResources().getString(R.string.common_menu_statistics));
+        }
+        if (GradleVariantConfig.isAVFragmentActive()) {
+
+        }
         if (GradleVariantConfig.isStockFragmentActive()) {
             initStock();
         }
@@ -160,8 +166,11 @@ public class DashboardActivity extends BaseActivity {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
                     context.getResources().getDrawable(R.drawable.statics));
         }
-        setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getDrawable(R.drawable.tab_monitor));
+        if(GradleVariantConfig.isMonitoringFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_monitor),
+                    R.id.tab_monitor_layout,
+                    context.getResources().getDrawable(R.drawable.tab_monitor));
+        }
     }
 
     /**
@@ -700,7 +709,11 @@ public class DashboardActivity extends BaseActivity {
         SurveyDB.removeInProgress();
         if (savedInstanceState == null) {
             initImprove();
-            initMonitor();
+            if(GradleVariantConfig.isMonitoringFragmentActive()) {
+                initMonitor();
+            }else{
+                mDashboardActivityStrategy.hideMonitoring();
+            }
             if (GradleVariantConfig.isStockFragmentActive()) {
                 initStock();
             }
@@ -749,7 +762,9 @@ public class DashboardActivity extends BaseActivity {
                     mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    mDashboardActivityStrategy.reloadFourthFragment();
+                    if(GradleVariantConfig.isMonitoringFragmentActive()) {
+                        mDashboardActivityStrategy.reloadFourthFragment();
+                    }
                 } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_av))) {
                     mDashboardActivityStrategy.reloadAVFragment();
                 }

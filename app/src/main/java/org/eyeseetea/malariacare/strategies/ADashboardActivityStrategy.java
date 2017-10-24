@@ -142,6 +142,7 @@ public abstract class ADashboardActivityStrategy {
         if (unsentFragment != null) {
             unsentFragment.reloadData();
         }
+        mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
     }
 
     public void reloadFirstFragmentHeader() {

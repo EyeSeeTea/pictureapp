@@ -94,9 +94,9 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
                 getContext());
         imageRadioButtonOption.setText(optionDB.getInternationalizedName());
+        imageRadioButtonOption.setOption(optionDB, mQuestionDB);
         putImageInImageRadioButton(optionDB.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
-        imageRadioButtonOption.setOption(optionDB, mQuestionDB);
         imageRadioButtonOption.setEnabled(super.isEnabled());
         return imageRadioButtonOption;
     }

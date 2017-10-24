@@ -85,12 +85,4 @@ public class PullFilters {
     public void setAutoConfig(boolean autoConfig) {
         isAutoConfig = autoConfig;
     }
-
-    public String getActiveOrgUnitUid() {
-        return activeOrgUnitUid;
-    }
-
-    public void setActiveOrgUnitUid(String activeOrgUnitUid) {
-        this.activeOrgUnitUid = activeOrgUnitUid;
-    }
 }

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrgUnitTree;
+import org.eyeseetea.malariacare.data.sync.importer.models.Version;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 
@@ -22,6 +23,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class CnmApiClient {
     public static final String ADMIN_NAMESPACE = "admin";
     public static final String HIERARCHY_KEY = "hierarchy";
+    public static final String VERSION_KEY = "version";
     private static final java.lang.String TAG = "CnmApiClient";
     public String mBaseAddress;
     private Retrofit mRetrofit;
@@ -69,6 +71,35 @@ public class CnmApiClient {
                     @Override
                     public void onFailure(Call<List<OrgUnitTree>> call, Throwable t) {
                         Log.e(TAG, "Failed response getting TreeOrgUnits");
+                        t.printStackTrace();
+                        cnmApiClientCallBack.onError((Exception) t);
+                    }
+                });
+    }
+
+    public void getMetadataVersion(CnmApiClientCallBack<Version> cnmApiClientCallBack) {
+        getMetadataVersion(ADMIN_NAMESPACE, VERSION_KEY, cnmApiClientCallBack);
+    }
+
+    public void getMetadataVersion(String namespace, String key,
+            final CnmApiClientCallBack<Version> cnmApiClientCallBack) {
+        mOrganisationUnitTreeApiClient.getMetadataVersion(namespace, key).enqueue(
+                new Callback<Version>() {
+                    @Override
+                    public void onResponse(Call<Version> call, Response<Version> response) {
+                        if (response != null && response.isSuccessful()) {
+                            cnmApiClientCallBack.onSuccess(response.body());
+                        } else {
+                            Log.e(TAG, "Failed response getting Version" + response != null
+                                    ? response.raw().toString() : "");
+                            cnmApiClientCallBack.onError(
+                                    new Exception("Failed response getting Version"));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Version> call, Throwable t) {
+                        Log.e(TAG, "Failed response getting Version");
                         t.printStackTrace();
                         cnmApiClientCallBack.onError((Exception) t);
                     }

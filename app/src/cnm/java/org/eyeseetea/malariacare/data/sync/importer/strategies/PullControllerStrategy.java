@@ -3,10 +3,17 @@ package org.eyeseetea.malariacare.data.sync.importer.strategies;
 import android.content.Context;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.structure.Model;
+
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.utils.DatabaseUtils;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.datasource.AppInfoRemoteDataSource;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.CnmApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromApiVisitor;
@@ -30,7 +37,9 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
@@ -39,6 +48,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     IDeviceRepository deviceRepository;
     AuthenticationManager authenticationManager;
     IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+    IAppInfoRepository appInfoRemoteDataSource = new AppInfoRemoteDataSource();
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
@@ -78,7 +88,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         authenticationManager = new AuthenticationManager(context);
 
         if (isOrgUnitConfigured()) {
-            callback.onComplete();
+            downloadMetadata(pullFilters, callback);
         } else {
             OrganisationUnit organisationUnit =
                     organisationUnitRepository.getOrganisationUnitByPhone(
@@ -119,13 +129,44 @@ public class PullControllerStrategy extends APullControllerStrategy {
         return (organisationUnit != null);
     }
 
-    private void downloadMetadata(PullFilters pullFilters,
+    private void downloadMetadata(final PullFilters pullFilters,
             final IPullController.Callback callback) {
-        if (pullFilters.isDemo() || appInfoDataSource.getAppInfo().isMetadataDownloaded()) {
-            callback.onComplete();
-        } else {
-            mPullController.pullMetada(pullFilters, callback);
+        appInfoRemoteDataSource.getAppInfo(new IDataSourceCallback<AppInfo>() {
+            @Override
+            public void onSuccess(AppInfo appInfoRemote) {
+                AppInfo appInfoLocal = appInfoDataSource.getAppInfo();
+                if (Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
+                        appInfoRemote.getMetadataVersion())) {
+                    appInfoDataSource.saveAppInfo(
+                            new AppInfo(false, appInfoRemote.getMetadataVersion()));
+                    deleteObsoleteMetadata();
+                }
+
+                if (pullFilters.isDemo() || appInfoDataSource.getAppInfo().isMetadataDownloaded()) {
+                    callback.onComplete();
+                } else {
+                    mPullController.pullMetada(pullFilters, callback);
         }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
+
+    }
+
+    private void deleteObsoleteMetadata() {
+        QuestionDB orgUnitTreeQuestion = QuestionDB.getAllQuestionsWithOutput(
+                Constants.DROPDOWN_LIST_OU_TREE).get(0);
+        List<Model> optionAttributes = new ArrayList<Model>(
+                OptionAttributeDB.getOptionAttributesFromQuestion(
+                        orgUnitTreeQuestion));
+        List<Model> options = new ArrayList<Model>(
+                QuestionDB.getOptions(orgUnitTreeQuestion));
+        DatabaseUtils.deleteBatch(optionAttributes);
+        DatabaseUtils.deleteBatch(options);
     }
 
     private Credentials getHardcodedCredentials(IPullController.Callback callback) {
@@ -153,9 +194,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 ConvertFromApiVisitor convertFromApiVisitor = new ConvertFromApiVisitor();
                 OrgUnitTree orgUnitTree = new OrgUnitTree();
                 orgUnitTree.accept(convertFromApiVisitor, result);
-
-
-                appInfoDataSource.saveAppInfo(new AppInfo(true));
+                AppInfo appInfo = appInfoDataSource.getAppInfo();
+                appInfo.setMetadataDownloaded(true);
+                appInfoDataSource.saveAppInfo(appInfo);
                 callback.onComplete();
             }
 

@@ -19,11 +19,17 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAttributeAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAttributeName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionName;
+
 import android.view.Gravity;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -206,6 +212,15 @@ public class OptionAttributeDB extends BaseModel {
 
     public boolean isVerticalMiddle() {
         return vertical_alignment == VERTICAL_ALIGNMENT_MIDDLE;
+    }
+
+    public static List<OptionAttributeDB> getOptionAttributesFromQuestion(QuestionDB questionDB) {
+        return new Select().from(OptionAttributeDB.class).as(optionAttributeName)
+                .join(OptionDB.class, Join.JoinType.LEFT_OUTER).as(optionName)
+                .on(OptionAttributeDB_Table.id_option_attribute.withTable(optionAttributeAlias)
+                        .eq(OptionDB_Table.id_option_attribute_fk.withTable(optionAlias)))
+                .where(OptionDB_Table.id_answer_fk.withTable(optionAlias).eq(
+                        questionDB.getAnswerDB().getId_answer())).queryList();
     }
 
     /**

@@ -92,7 +92,7 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
                                 optionVill.setId_parent_fk(optionComm.getId_option());
                                 OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
                                 optionAttributeDB.setPath(
-                                        "[" + orgUnitTree.getLat() + "," + orgUnitTree.getLng()
+                                        "[" + orgUnitTree.getLng() + "," + orgUnitTree.getLat()
                                                 + "]");
                                 villageOptionAttributes.add(optionAttributeDB);
                                 villageOptions.add(optionVill);

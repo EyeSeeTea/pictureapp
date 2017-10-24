@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
@@ -117,7 +118,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             }
 
             Log.d(TAG, "Saving control dataelements");
-            buildControlDataElements(surveyDB, event);
+            if (BuildConfig.buildControlDataelements) {
+                buildControlDataElements(surveyDB, event);
+            }
 
 
             if (SurveyDB.countSurveysByCompletiondate(surveyDB.getCompletionDate()) > 1) {

@@ -115,6 +115,9 @@ public class Session {
     }
 
     public static UserDB getUserDB() {
+        if (sUserDB == null) {
+            sUserDB = UserDB.getLoggedUser();
+        }
         return sUserDB;
     }
 

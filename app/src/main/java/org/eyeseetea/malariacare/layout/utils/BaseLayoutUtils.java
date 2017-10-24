@@ -190,7 +190,7 @@ public abstract class BaseLayoutUtils {
     /**
      * Puts a sort of dark shadow over the given view
      */
-    public static void overshadow(FrameLayout view) {
+    public static void overshadow(ViewGroup view) {
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
         view.getBackground().setColorFilter(Color.parseColor("#805a595b"),
                 PorterDuff.Mode.SRC_ATOP);
@@ -234,7 +234,7 @@ public abstract class BaseLayoutUtils {
             return;
         }
         try {
-            InputStream inputStream = PreferencesState.getInstance().getContext().getAssets().open(
+            InputStream inputStream = imageView.getContext().getAssets().open(
                     Utils.getInternationalizedString(path));
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
             imageView.setImageDrawable(

@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.TabHost;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -166,6 +167,10 @@ public abstract class ADashboardActivityStrategy {
             monitorFragment = new MonitorFragment();
         }
         mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, monitorFragment);
+    }
+
+    public void hideMonitoring(){
+        mDashboardActivity.findViewById(R.id.dashboard_charts_container).setVisibility(View.GONE);
     }
 
     public void reloadFourthFragment() {

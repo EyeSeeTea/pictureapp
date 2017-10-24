@@ -103,21 +103,30 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
         OrgUnitDB appOrgUnitDB = null;
 
-        appOrgUnitDB = OrgUnitDB.findByUID(sdkOrganisationUnitExtended.getOrgUnit().getUId());
-
-        if (appOrgUnitDB == null) {
-            appOrgUnitDB = new OrgUnitDB();
-        }
-
-        appOrgUnitDB.setName(sdkOrganisationUnitExtended.getLabel());
-        appOrgUnitDB.setUid(sdkOrganisationUnitExtended.getId());
-        appOrgUnitDB.setCoordinates(sdkOrganisationUnitExtended.getOrgUnit().getCoordinates());
+        appOrgUnitDB = convertOrganisationUnitExtended(sdkOrganisationUnitExtended);
 
         appOrgUnitDB.save();
 
         mOrgUnitDBs.add(appOrgUnitDB);
 
         appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnitDB);
+    }
+
+    public static OrgUnitDB convertOrganisationUnitExtended(
+            OrganisationUnitExtended organisationUnitExtended) {
+
+        OrgUnitDB appOrgUnitDB = null;
+
+        appOrgUnitDB = OrgUnitDB.findByUID(organisationUnitExtended.getOrgUnit().getUId());
+
+        if (appOrgUnitDB == null) {
+            appOrgUnitDB = new OrgUnitDB();
+        }
+
+        appOrgUnitDB.setName(organisationUnitExtended.getLabel());
+        appOrgUnitDB.setUid(organisationUnitExtended.getId());
+        appOrgUnitDB.setCoordinates(organisationUnitExtended.getOrgUnit().getCoordinates());
+        return appOrgUnitDB;
     }
 
     /**

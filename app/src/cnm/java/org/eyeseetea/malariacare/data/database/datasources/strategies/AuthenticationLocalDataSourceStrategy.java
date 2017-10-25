@@ -14,7 +14,6 @@ public class AuthenticationLocalDataSourceStrategy extends AAuthenticationLocalD
     @Override
     public void logout(IDataSourceCallback<Void> callback) {
         super.logout(callback);
-
         PreferencesCNM.setMetadataDownloaded(false);
     }
 }

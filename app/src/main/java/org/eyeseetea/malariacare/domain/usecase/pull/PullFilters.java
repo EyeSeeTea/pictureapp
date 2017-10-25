@@ -13,6 +13,7 @@ public class PullFilters {
     String dataByOrgUnit;
     boolean pullDataAfterMetadata;
     boolean isAutoConfig;
+    String activeOrgUnitUid;
 
     public Date getStartDate() {
         return startDate;

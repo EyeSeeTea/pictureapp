@@ -4,22 +4,29 @@ import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 
 import java.util.List;
 
 public class OrgUnitToOptionConverterStrategy extends AOrgUnitToOptionConverterStrategy {
 
     @Override
-    public void convert() {
-        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOutput(
-                Constants.DROPDOWN_OU_LIST);
+    public void convert(List<OrganisationUnitExtended> organisationUnitExtendeds) {
+        convertFromList(organisationUnitExtendeds);
+    }
 
-        if (questionDBs.size() != 0) {
-            List<OrgUnitDB> orgUnitDBs = OrgUnitDB.getAllOrgUnit();
-            for (OrgUnitDB orgUnitDB : orgUnitDBs) {
-                addOUOptionToQuestions(questionDBs, orgUnitDB);
-            }
+    public void convertFromList(List<OrganisationUnitExtended> organisationUnitExtendeds) {
+        List<QuestionDB> questionDBs = QuestionDB.getAllQuestionsWithOrgUnitDropdownList();
+
+        if (questionDBs.size() == 0) {
+            return;
+        }
+
+        for (OrganisationUnitExtended organisationUnitExtended : organisationUnitExtendeds) {
+            OrgUnitDB temporalOrgUnitDB = ConvertFromSDKVisitor.convertOrganisationUnitExtended(
+                    organisationUnitExtended);
+            addOUOptionToQuestions(questionDBs, temporalOrgUnitDB);
         }
     }
 

@@ -123,4 +123,7 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         PreferencesState.getInstance().setOrgUnit(null);
     }
 
+    public OrganisationUnit getOrganisationUnitByName(String name) {
+        return OrgUnitDB.getByName(name);
+    }
 }

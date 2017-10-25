@@ -1,9 +1,12 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.R.id.progress_message;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
@@ -11,6 +14,9 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -91,6 +97,21 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 public void onPullConversionError() {
                     Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
                     goNextActivity();
+                }
+
+                @Override
+                public void onWarning(WarningException warning) {
+                    if (warning instanceof ExistsMoreThanOneOrgUnitByPhoneException) {
+                        ExistsMoreThanOneOrgUnitByPhoneException exception =
+                                (ExistsMoreThanOneOrgUnitByPhoneException) warning;
+
+                        TextView infoTextView = (TextView) activity.findViewById(progress_message);
+
+                        infoTextView.setText(infoTextView.getText() + "\n" +
+                                infoTextView.getContext().getString(
+                                        R.string.exists_more_than_one_org_unit_by_phone,
+                                        exception.getPhone()));
+                    }
                 }
 
                 @Override

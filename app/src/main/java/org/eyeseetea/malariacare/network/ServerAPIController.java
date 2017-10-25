@@ -34,6 +34,8 @@ import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -701,7 +703,8 @@ public class ServerAPIController {
         return ServerApiUtils.encodeBlanks(endpoint);
     }
 
-    public static OrganisationUnit getOrgUnitByPhone(String imei) throws ApiCallException {
+    public static OrganisationUnit getOrgUnitByPhone(String imei)
+            throws ApiCallException, ExistsMoreThanOneOrgUnitByPhoneException {
         String url = PreferencesState.getInstance().getDhisURL()
                 + "/api/organisationUnits.json?filter=phoneNumber:like:%s&fields=id,name,"
                 + "description,"
@@ -720,14 +723,24 @@ public class ServerAPIController {
             JSONArray orgUnitsArray = (JSONArray) body.get(TAG_ORGANISATIONUNITS);
 
             //0| >1 matches -> Error
-            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+            if (orgUnitsArray.length() == 0) {
                 Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", imei,
                         orgUnitsArray.length()));
                 return null;
             }
 
             JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
-            return parseOrgUnit(orgUnitJO);
+            OrganisationUnit organisationUnit = parseOrgUnit(orgUnitJO);
+
+            if (orgUnitsArray.length() > 1) {
+                throw new ExistsMoreThanOneOrgUnitByPhoneException(imei, organisationUnit);
+            } else {
+                return organisationUnit;
+            }
+
+        } catch (ExistsMoreThanOneOrgUnitByPhoneException
+                existsMoreThanOneOrgUnitByPhoneException) {
+            throw existsMoreThanOneOrgUnitByPhoneException;
         } catch (Exception ex) {
             throw new ApiCallException(ex);
         }

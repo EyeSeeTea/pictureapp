@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -60,6 +61,11 @@ public abstract class ASplashActivityStrategy {
             @Override
             public void onPullConversionError() {
                 Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
+            }
+
+            @Override
+            public void onWarning(WarningException warning) {
+                Log.w(this.getClass().getSimpleName(), warning.getMessage());
             }
 
             @Override

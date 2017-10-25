@@ -5,6 +5,8 @@ import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 
 public interface IOrganisationUnitRepository {
 
@@ -25,7 +27,8 @@ public interface IOrganisationUnitRepository {
 
     void setBanOrgUnitChangeListener(BanOrgUnitChangeListener listener);
 
-    OrganisationUnit getOrganisationUnitByPhone(Device device) throws ApiCallException;
+    OrganisationUnit getOrganisationUnitByPhone(Device device)
+            throws ApiCallException, ExistsMoreThanOneOrgUnitByPhoneException;
 
     void saveCurrentOrganisationUnit(OrganisationUnit organisationUnit);
 

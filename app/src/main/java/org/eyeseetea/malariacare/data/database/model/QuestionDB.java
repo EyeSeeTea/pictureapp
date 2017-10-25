@@ -457,6 +457,12 @@ public class QuestionDB extends BaseModel {
         }
     }
 
+    public static List<OptionDB> getOptions(QuestionDB questionDB) {
+        return new Select().from(OptionDB.class)
+                .where(OptionDB_Table.id_answer_fk.eq(
+                        questionDB.getAnswerDB().getId_answer())).queryList();
+    }
+
     public static List<OptionDB> getOptions(String UID) {
         List<OptionDB> optionDBs = new Select().from(OptionDB.class).as(optionName)
                 .join(AnswerDB.class, Join.JoinType.LEFT_OUTER).as(answerName)

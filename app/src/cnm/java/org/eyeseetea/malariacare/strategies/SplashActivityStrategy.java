@@ -5,6 +5,7 @@ import static org.eyeseetea.malariacare.R.id.progress_message;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -31,17 +32,19 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
         super(mActivity);
         this.mActivity = mActivity;
-        if (EyeSeeTeaApplication.permissions == null) {
-            EyeSeeTeaApplication.permissions = Permissions.getInstance(mActivity);
-        }
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (EyeSeeTeaApplication.permissions == null) {
+                EyeSeeTeaApplication.permissions = Permissions.getInstance(mActivity);
+            }
 
-        if (EyeSeeTeaApplication.permissions.getPermission(Permissions.PHONE_STATE_REQUEST_CODE)
-                != null) {
-            Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
-                    Permissions.PHONE_STATE_REQUEST_CODE);
+            if (EyeSeeTeaApplication.permissions.getPermission(Permissions.PHONE_STATE_REQUEST_CODE)
+                    != null) {
+                Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
+                        Permissions.FINE_LOCATION_REQUEST_CODE);
 
-            EyeSeeTeaApplication.permissions.requestPermission(permission.getDefinition(),
-                    permission.getCode());
+                EyeSeeTeaApplication.permissions.requestPermission(permission.getDefinition(),
+                        permission.getCode());
+            }
         }
 
     }
@@ -61,8 +64,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public void executePull(PullUseCase pullUseCase, final PullFilters pullFilters) {
         mPullUseCase = pullUseCase;
         mPullFilters = pullFilters;
-        if (EyeSeeTeaApplication.permissions.getPermission(Permissions.PHONE_STATE_REQUEST_CODE)
-                == null || pullFilters.isDemo()) {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || EyeSeeTeaApplication.permissions.getPermission(
+                Permissions.PHONE_STATE_REQUEST_CODE)
+                == null) {
             pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
                 @Override
                 public void onComplete() {
@@ -150,14 +155,18 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
             if (EyeSeeTeaApplication.permissions.getPermission(Permissions.PHONE_STATE_REQUEST_CODE)
                     == null && mPullUseCase != null && mPullFilters != null) {
                 executePull(mPullUseCase, mPullFilters);
+            } else {
+                EyeSeeTeaApplication.permissions.requestNextPermission();
             }
         } else {
             if (requestCode == Permissions.PHONE_STATE_REQUEST_CODE) {
                 showErrorAutoConfiguration();
-            } else if (EyeSeeTeaApplication.permissions.getPermission(
-                    Permissions.PHONE_STATE_REQUEST_CODE)
-                    != null) {
-                EyeSeeTeaApplication.permissions.requestNextPermission();
+            } else {
+                Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
+                        Permissions.PHONE_STATE_REQUEST_CODE);
+
+                EyeSeeTeaApplication.permissions.requestPermission(permission.getDefinition(),
+                        permission.getCode());
             }
         }
     }

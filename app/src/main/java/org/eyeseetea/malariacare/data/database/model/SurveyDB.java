@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.programAlias;
@@ -1052,6 +1054,20 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
             surveyDB.delete();
         }
     }
+
+    public OptionDB getOptionSelectedForQuestionCode(String questionCode) {
+        return new Select().from(OptionDB.class).as(optionName)
+                .join(ValueDB.class, Join.JoinType.LEFT_OUTER).as(valueName)
+                .on(ValueDB_Table.id_option_fk.withTable(valueAlias)
+                        .eq(OptionDB_Table.id_option.withTable(optionAlias)))
+                .join(QuestionDB.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(QuestionDB_Table.id_question.withTable(questionAlias)
+                        .eq(ValueDB_Table.id_question_fk.withTable(valueAlias)))
+                .where(ValueDB_Table.id_survey_fk.withTable(valueAlias).eq(this.getId_survey()))
+                .and(QuestionDB_Table.code.withTable(questionAlias).eq(questionCode))
+                .querySingle();
+    }
+
     /**
      * This method get the return the highest number of total pages in the survey mQuestionDB values.
      */

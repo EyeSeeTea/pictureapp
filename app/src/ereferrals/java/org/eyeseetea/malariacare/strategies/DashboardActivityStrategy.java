@@ -26,7 +26,6 @@ import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -447,14 +446,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private boolean hasPhone(SurveyDB survey) {
         Context context = PreferencesState.getInstance().getContext();
-        for (ValueDB value : survey.getValueDBs()) {
-            if (value.getQuestionDB().getCode().equals(
-                    context.getString(R.string.phone_ownership_qc))) {
-                return !(value.getOptionDB().getCode().equals(
-                        context.getString(R.string.no_phone_oc)));
-            }
-        }
-        return false;
+        return !(survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc)).getName().equals(
+                context.getString(R.string.no_phone_on)));
     }
 
     public boolean onWebViewBackPressed(TabHost tabHost) {

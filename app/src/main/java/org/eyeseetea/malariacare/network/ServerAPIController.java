@@ -722,21 +722,17 @@ public class ServerAPIController {
             //{"organisationUnits":[{}]}
             JSONArray orgUnitsArray = (JSONArray) body.get(TAG_ORGANISATIONUNITS);
 
-            boolean moreThanOneOrgUnit = false;
-
             //0| >1 matches -> Error
             if (orgUnitsArray.length() == 0) {
                 Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", imei,
                         orgUnitsArray.length()));
                 return null;
-            } else if (orgUnitsArray.length() > 1) {
-                moreThanOneOrgUnit = true;
             }
 
             JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
             OrganisationUnit organisationUnit = parseOrgUnit(orgUnitJO);
 
-            if (moreThanOneOrgUnit) {
+            if (orgUnitsArray.length() > 1) {
                 throw new ExistsMoreThanOneOrgUnitByPhoneException(imei, organisationUnit);
             } else {
                 return organisationUnit;

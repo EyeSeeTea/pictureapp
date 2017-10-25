@@ -5,10 +5,17 @@ import static org.hisp.dhis.client.sdk.android.api.persistence.flow.Organisation
 import android.content.Context;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.structure.Model;
+
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.utils.DatabaseUtils;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.datasource.AppInfoRemoteDataSource;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.CnmApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromApiVisitor;
@@ -30,12 +37,15 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +60,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     AuthenticationManager authenticationManager;
     IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
     PullFilters mPullFilters;
+    IAppInfoRepository appInfoRemoteDataSource = new AppInfoRemoteDataSource();
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
@@ -90,11 +101,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
         authenticationManager = new AuthenticationManager(context);
 
         if (isOrgUnitConfigured()) {
-            callback.onComplete();
+            downloadMetadata(pullFilters, callback);
         } else {
-            OrganisationUnit organisationUnit =
-                    organisationUnitRepository.getOrganisationUnitByPhone(
-                            deviceRepository.getDevice());
+            OrganisationUnit organisationUnit = getOrganisationUnitByPhone(callback);
 
             if (organisationUnit == null) {
                 callback.onError(new AutoconfigureException());
@@ -102,7 +111,11 @@ public class PullControllerStrategy extends APullControllerStrategy {
             } else {
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
-                appInfoDataSource.saveAppInfo(new AppInfo(false));
+
+                AppInfo appInfo = appInfoDataSource.getAppInfo();
+                appInfo.setMetadataDownloaded(false);
+                appInfoDataSource.saveAppInfo(appInfo);
+
                 Credentials hardcodedCredentials = getHardcodedCredentials(callback);
 
                 if (hardcodedCredentials != null) {
@@ -125,6 +138,22 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
+    private OrganisationUnit getOrganisationUnitByPhone(IPullController.Callback callback)
+            throws ApiCallException {
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit = organisationUnitRepository.getOrganisationUnitByPhone(
+                    deviceRepository.getDevice());
+        } catch (ExistsMoreThanOneOrgUnitByPhoneException
+                existsMoreThanOneOrgUnitByPhoneException) {
+            organisationUnit =
+                    existsMoreThanOneOrgUnitByPhoneException.getSelectedOrganisationUnit();
+            callback.onWarning(existsMoreThanOneOrgUnitByPhoneException);
+        }
+
+        return organisationUnit;
+    }
+
     private boolean isOrgUnitConfigured() throws NetworkException, ApiCallException {
         OrganisationUnit organisationUnit = organisationUnitRepository.getCurrentOrganisationUnit(
                 ReadPolicy.CACHE);
@@ -132,13 +161,46 @@ public class PullControllerStrategy extends APullControllerStrategy {
         return (organisationUnit != null);
     }
 
-    private void downloadMetadata(PullFilters pullFilters,
+    private void downloadMetadata(final PullFilters pullFilters,
             final IPullController.Callback callback) {
-        if (pullFilters.isDemo() || appInfoDataSource.getAppInfo().isMetadataDownloaded()) {
-            callback.onComplete();
-        } else {
-            mPullController.pullMetada(pullFilters, callback);
-        }
+        appInfoRemoteDataSource.getAppInfo(new IDataSourceCallback<AppInfo>() {
+            @Override
+            public void onSuccess(AppInfo appInfoRemote) {
+                AppInfo appInfoLocal = appInfoDataSource.getAppInfo();
+                if (pullFilters.pullMetaData() &&
+                        Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
+                        appInfoRemote.getMetadataVersion())) {
+                    appInfoLocal.setMetadataDownloaded(false);
+                    appInfoLocal.setMetadataVersion(appInfoRemote.getMetadataVersion());
+                    appInfoDataSource.saveAppInfo(appInfoLocal);
+                    deleteObsoleteMetadata();
+                }
+
+                if (pullFilters.isDemo() || appInfoLocal.isMetadataDownloaded()) {
+                    callback.onComplete();
+                } else {
+                    mPullController.pullMetada(pullFilters, callback);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
+
+    }
+
+    private void deleteObsoleteMetadata() {
+        QuestionDB orgUnitTreeQuestion = QuestionDB.getAllQuestionsWithOutput(
+                Constants.DROPDOWN_LIST_OU_TREE).get(0);
+        List<Model> optionAttributes = new ArrayList<Model>(
+                OptionAttributeDB.getOptionAttributesFromQuestion(
+                        orgUnitTreeQuestion));
+        List<Model> options = new ArrayList<Model>(
+                QuestionDB.getOptions(orgUnitTreeQuestion));
+        DatabaseUtils.deleteBatch(optionAttributes);
+        DatabaseUtils.deleteBatch(options);
     }
 
     private Credentials getHardcodedCredentials(IPullController.Callback callback) {
@@ -167,8 +229,11 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 OrgUnitTree orgUnitTree = new OrgUnitTree();
                 orgUnitTree.accept(convertFromApiVisitor, result);
 
+                AppInfo appInfo = appInfoDataSource.getAppInfo();
                 boolean isActiveOu = mPullFilters.getDataByOrgUnit()!=null && !mPullFilters.getDataByOrgUnit().equals("");
-                appInfoDataSource.saveAppInfo(new AppInfo(isActiveOu));
+                appInfo.setMetadataDownloaded(isActiveOu);
+                appInfoDataSource.saveAppInfo(appInfo);
+
                 callback.onComplete();
             }
 

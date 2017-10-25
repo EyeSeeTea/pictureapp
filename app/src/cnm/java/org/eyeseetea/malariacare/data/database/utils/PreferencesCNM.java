@@ -28,4 +28,20 @@ public class PreferencesCNM {
         editor.commit();
     }
 
+    public static String getMetadataVersion() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.metadata_version), "0");
+    }
+
+    public static void saveMetadataVersion(String metadataVersion) {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.metadata_version), metadataVersion);
+        editor.commit();
+    }
+
 }

@@ -135,18 +135,20 @@ public class PullControllerStrategy extends APullControllerStrategy {
             @Override
             public void onSuccess(AppInfo appInfoRemote) {
                 AppInfo appInfoLocal = appInfoDataSource.getAppInfo();
-                if (Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
+                if (pullFilters.pullMetaData() &&
+                        Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
                         appInfoRemote.getMetadataVersion())) {
-                    appInfoDataSource.saveAppInfo(
-                            new AppInfo(false, appInfoRemote.getMetadataVersion()));
+                    appInfoLocal.setMetadataDownloaded(false);
+                    appInfoLocal.setMetadataVersion(appInfoRemote.getMetadataVersion());
+                    appInfoDataSource.saveAppInfo(appInfoLocal);
                     deleteObsoleteMetadata();
                 }
 
-                if (pullFilters.isDemo() || appInfoDataSource.getAppInfo().isMetadataDownloaded()) {
+                if (pullFilters.isDemo() || appInfoLocal.isMetadataDownloaded()) {
                     callback.onComplete();
                 } else {
                     mPullController.pullMetada(pullFilters, callback);
-        }
+                }
             }
 
             @Override

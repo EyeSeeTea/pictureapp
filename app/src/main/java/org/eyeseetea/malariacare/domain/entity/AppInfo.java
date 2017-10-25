@@ -32,4 +32,8 @@ public class AppInfo {
     public void setMetadataDownloaded(boolean metadataDownloaded) {
         this.metadataDownloaded = metadataDownloaded;
     }
+
+    public void setMetadataVersion(String metadataVersion) {
+        this.metadataVersion = metadataVersion;
+    }
 }

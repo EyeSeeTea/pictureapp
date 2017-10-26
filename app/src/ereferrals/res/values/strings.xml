@@ -295,7 +295,7 @@
 
     <!-- Mother name -->
     <!-- Fuzzy -->
-    <string name="ipc_issueEntry_q_motherName">"Mother name"</string>
+    <string name="ipc_issueEntry_q_motherName">"Mother first name"</string>
 
     <!-- Birth District -->
     <!-- Fuzzy -->
@@ -671,7 +671,7 @@
 
     <!-- Monther Name -->
     <!-- Fuzzy -->
-    <string name="provider_findVoucher_q_motherName">"Monther Name"</string>
+    <string name="provider_findVoucher_q_motherName">"Mother Name"</string>
 
     <!-- District of Birth -->
     <!-- Fuzzy -->
@@ -788,7 +788,7 @@
     <string name="common_option_program_familyPlanning">"Family Planning"</string>
     <string name="common_option_program_cervicalCancer">"Cervical Cancer"</string>
     <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
-    <string name="common_option_method_iud">"IUD"</string>
+    <string name="common_option_method_iud">"IUCD"</string>
     <string name="common_option_method_condom">"Condom"</string>
     <string name="common_option_method_pills">"Pills"</string>
     <string name="common_option_method_implant">"Implant"</string>
@@ -945,8 +945,8 @@
     <string name="nepal_program">Nepal</string>
     <string name="mozambique_program">Mozambique</string>
     <string name="ipc_issueEntry_q_householdDelivery">Household delivery</string>
-    <string name="common_option_householdDelivery_yes">yes</string>
-    <string name="common_option_householdDelivery_no">no</string>
+    <string name="common_option_householdDelivery_yes">Yes</string>
+    <string name="common_option_householdDelivery_no">No</string>
     <string name="ipc_issueEntry_q_address">Address</string>
     <string name="ipc_issueEntry_q_ageYoungest">Age of youngest child</string>
     <string name="common_option_ageYoungest_0_6M">"0 - 6 Months"</string>
@@ -996,7 +996,7 @@
     <string name="ipc_issueEntry_q_addressMunVDC">"Address - Municipality/VDC"</string>
     <string name="ipc_issueEntry_q_addressWard">"Address - Ward"</string>
     <string name="ipc_issueEntry_q_addressLoc">"Address - Locality"</string>
-    <string name="zimbawe_program">Zimbawe</string>
+    <string name="zimbawe_program">Zimbabwe</string>
     <string name="common_option_program_vmmc">VMMC</string>
     <string name="e_voucher">eVoucher</string>
 </resources>

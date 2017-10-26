@@ -111,6 +111,9 @@ public class NavigationController {
         OptionDB currentOptionDB = currentValueDB == null ? null : currentValueDB.getOptionDB();
         //Find next node with current option
         boolean isAllowed = findNext(currentOptionDB) != null;
+        if (!isAllowed && !hasNext(null) && !hasNext(currentValueDB.getOptionDB())) {
+            return true;
+        }
         Log.d(TAG, String.format("isNextAllowed()->%b", isAllowed));
         return isAllowed;
     }

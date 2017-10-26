@@ -225,7 +225,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     next();
                 else if (navigationController.isNextAllowed()) {
                     hideKeyboard(listView.getContext(), listView);
-                    next();
+                    finishOrNext();
                 }
             }
 

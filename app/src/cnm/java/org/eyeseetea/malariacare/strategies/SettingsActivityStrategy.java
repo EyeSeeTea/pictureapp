@@ -148,7 +148,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void pullAfterChangeOuFlags() {
         PreferencesCNM.setMetadataDownloaded(false);
         PreferencesState.getInstance().setMetaDataDownload(true);
-        PreferencesState.getInstance().setPullDataAfterMetadata(true);
+        PreferencesState.getInstance().setPullDataAfterMetadata(false);
         PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
     }
 }

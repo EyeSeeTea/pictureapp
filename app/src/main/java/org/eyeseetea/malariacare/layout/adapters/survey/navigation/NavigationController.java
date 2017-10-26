@@ -111,11 +111,24 @@ public class NavigationController {
         OptionDB currentOptionDB = currentValueDB == null ? null : currentValueDB.getOptionDB();
         //Find next node with current option
         boolean isAllowed = findNext(currentOptionDB) != null;
-        if (!isAllowed && !hasNext(null) && !hasNext(currentValueDB.getOptionDB())) {
-            return true;
-        }
         Log.d(TAG, String.format("isNextAllowed()->%b", isAllowed));
         return isAllowed;
+    }
+
+    public boolean isLastQuestion() {
+        //Get value for current
+        QuestionDB currentQuestionDB = getCurrentQuestion();
+        ValueDB currentValueDB = currentQuestionDB.getValueBySession();
+
+        //Cannot move without answer
+        if (currentValueDB == null) {
+            Log.d(TAG, "isNextAllowed()->You must answer first");
+            return false;
+        }
+
+        OptionDB currentOptionDB = currentValueDB == null ? null : currentValueDB.getOptionDB();
+        boolean isAllowed = findNext(currentOptionDB) != null;
+        return (!isAllowed && !hasNext(null) && !hasNext(currentValueDB.getOptionDB()));
     }
 
     /**

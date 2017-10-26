@@ -234,12 +234,15 @@ public abstract class BaseLayoutUtils {
             return;
         }
         try {
-            InputStream inputStream = imageView.getContext().getAssets().open(
-                    Utils.getInternationalizedString(path));
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            imageView.setImageDrawable(
-                    new BitmapDrawable(PreferencesState.getInstance().getContext().getResources(),
-                            bmp));
+            if(path!=null && !path.equals("")) {
+                InputStream inputStream = imageView.getContext().getAssets().open(
+                        Utils.getInternationalizedString(path));
+                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                imageView.setImageDrawable(
+                        new BitmapDrawable(
+                                PreferencesState.getInstance().getContext().getResources(),
+                                bmp));
+            }
         } catch (IOException e) {
             new ImageNotShowException(e, Utils.getInternationalizedString(path));
         }

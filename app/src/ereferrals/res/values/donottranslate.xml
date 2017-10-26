@@ -45,4 +45,5 @@
     <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
     <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
     <string name="no_phone_oc" translatable="false">NO</string>
+    <string name="no_phone_on" translatable="false">common_option_ownershipOfPhone_noMobile</string>
 </resources>

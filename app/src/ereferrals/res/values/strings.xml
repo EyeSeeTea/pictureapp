@@ -998,5 +998,5 @@
     <string name="ipc_issueEntry_q_addressLoc">"Address - Locality"</string>
     <string name="zimbawe_program">Zimbawe</string>
     <string name="common_option_program_vmmc">VMMC</string>
-
+    <string name="e_voucher">eVoucher</string>
 </resources>

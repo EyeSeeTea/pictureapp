@@ -34,9 +34,15 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         if(survey.isCompleted()){
             asterisk="*";
         }
+
         String uid = mContext.getString(R.string.voucher) +
                 ":" +
                 survey.getEventUid();
+        if (hasPhone(survey)) {
+            uid = mContext.getString(R.string.e_voucher);
+        }
+
+
         String firstImportant = "", secondImportant = "", visibleValues = "";
 
         Context context = PreferencesState.getInstance().getContext();
@@ -95,5 +101,12 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     public boolean hasAllComplementarySurveys(SurveyDB malariaSurvey) {
         return true;
     }
+
+    private boolean hasPhone(SurveyDB survey) {
+        Context context = PreferencesState.getInstance().getContext();
+        return !(survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc)).getName().equals(
+                context.getString(R.string.no_phone_on)));
+        }
 }
 

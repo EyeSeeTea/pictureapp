@@ -52,6 +52,7 @@ import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
 import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -85,6 +86,11 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
             EyeSeeTeaApplication.permissions.requestNextPermission();
+        }else{
+            if(Session.getPhoneMetaDataValue().equals("")) {
+                PhoneMetaData phoneMetaData = getPhoneMetadata();
+                Session.setPhoneMetaData(phoneMetaData);
+            }
         }
 
         initView(savedInstanceState);
@@ -447,4 +453,11 @@ public abstract class BaseActivity extends ActionBarActivity {
         return mBaseActivityStrategy;
     }
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+        Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
+        super.attachBaseContext(context);
+    }
 }

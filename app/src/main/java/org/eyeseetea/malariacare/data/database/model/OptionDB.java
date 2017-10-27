@@ -29,6 +29,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Utils;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Table(database = AppDatabase.class, name = "Option")
@@ -330,6 +331,15 @@ public class OptionDB extends BaseModel {
         return mValueDBs;
     }
 
+    public static List<OptionDB> getOptionsWithParentAndQuestion(Long parent,
+            QuestionDB questionDB) {
+        return new Select().from(OptionDB.class)
+                .where(OptionDB_Table.id_answer_fk.eq(questionDB.getAnswerDB().getId_answer()))
+                .and(OptionDB_Table.id_parent_fk.eq(parent))
+                .orderBy(OptionDB_Table.name, true)
+                .queryList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -380,4 +390,16 @@ public class OptionDB extends BaseModel {
         super.delete();
     }
 
+    public static class OptionComparator implements Comparator {
+
+        @Override
+        public int compare(Object o1, Object o2) {
+
+            OptionDB optionDB1 = (OptionDB) o1;
+            OptionDB optionDB2 = (OptionDB) o2;
+            return new Integer(
+                    optionDB1.getInternationalizedName().compareTo(
+                            optionDB2.getInternationalizedName()));
+        }
+    }
 }

@@ -54,6 +54,7 @@ public class TextSingleQuestionView extends AKeyboardQuestionView implements IQu
         sendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(mEditText);
                 notifyAnswerChanged(mEditText.getText().toString());
             }
         });

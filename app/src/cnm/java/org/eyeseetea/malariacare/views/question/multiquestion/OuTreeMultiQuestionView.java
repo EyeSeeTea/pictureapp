@@ -10,11 +10,11 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomSpinner;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.List;
 public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView, IFillSavedInstanceValues {
     private CustomTextView header;
-    private Spinner spinnerProvince, spinnerDistrict, spinnerCommune, spinnerVillage;
+    private CustomSpinner spinnerProvince, spinnerDistrict, spinnerCommune, spinnerVillage;
     private QuestionDB mQuestionDB;
     private boolean optionSetFromSavedValue = false;
     private List<OptionDB> mOptionDBs;
@@ -39,10 +39,10 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
     private void init(Context context) {
         inflate(context, R.layout.multi_question_dropdown_tree, this);
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        spinnerProvince = (Spinner) findViewById(R.id.spinner_province);
-        spinnerDistrict = (Spinner) findViewById(R.id.spinner_district);
-        spinnerCommune = (Spinner) findViewById(R.id.spinner_commune);
-        spinnerVillage = (Spinner) findViewById(R.id.spinner_village);
+        spinnerProvince = (CustomSpinner) findViewById(R.id.spinner_province);
+        spinnerDistrict = (CustomSpinner) findViewById(R.id.spinner_district);
+        spinnerCommune = (CustomSpinner) findViewById(R.id.spinner_commune);
+        spinnerVillage = (CustomSpinner) findViewById(R.id.spinner_village);
         mContext = context;
 
         setSpinnerOnItemSelectedListener(spinnerProvince, spinnerDistrict,
@@ -183,12 +183,6 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
         });
     }
 
-    private void spinnerListenerAction(Spinner spinner, int position, Spinner child,
-            String defaultText) {
-            OptionDB optionDB = (OptionDB) spinner.getItemAtPosition(position);
-            setOptionsWithParent(child, optionDB.getId_option(), defaultText);
-    }
-
     @Override
     public Bundle fillSavedInstanceValues(Bundle savedInstanceValues) {
         if(spinnerProvince.getSelectedItemPosition()!=0){
@@ -212,25 +206,28 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
         if(savedInstanceValues.containsKey("R.id.spinner_province")){
             Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_province");
             if(selectedItem!=null) {
-                spinnerProvince.setSelection(selectedItem);
-                spinnerListenerAction(spinnerProvince, selectedItem, spinnerDistrict,
-                        PreferencesState.getInstance().getContext().getString(R.string.district));
+                spinnerProvince.setSelection(selectedItem, true, true);
+                OptionDB seltectedOptionDB = (OptionDB)spinnerProvince.getSelectedItem();
+                setOptionsWithParent(spinnerDistrict, seltectedOptionDB.getId_option(),
+                        mContext.getString(R.string.district));
             }
         }
         if(savedInstanceValues.containsKey("R.id.spinner_district")){
             Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_district");
             if(selectedItem!=null) {
-                spinnerDistrict.setSelection(selectedItem);
-                spinnerListenerAction(spinnerDistrict, selectedItem, spinnerCommune,
-                        PreferencesState.getInstance().getContext().getString(R.string.commune));
+                spinnerDistrict.setSelection(selectedItem, true, true);
+                OptionDB seltectedOptionDB = (OptionDB)spinnerDistrict.getSelectedItem();
+                setOptionsWithParent(spinnerCommune, seltectedOptionDB.getId_option(),
+                        mContext.getString(R.string.district));
             }
         }
         if(savedInstanceValues.containsKey("R.id.spinner_commune")){
             Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_commune");
             if(selectedItem!=null) {
-                spinnerCommune.setSelection(selectedItem);
-                spinnerListenerAction(spinnerCommune, selectedItem, spinnerVillage,
-                        PreferencesState.getInstance().getContext().getString(R.string.village));
+                spinnerCommune.setSelection(selectedItem, true, true);
+                OptionDB seltectedOptionDB = (OptionDB)spinnerCommune.getSelectedItem();
+                setOptionsWithParent(spinnerVillage, seltectedOptionDB.getId_option(),
+                        mContext.getString(R.string.district));
             }
         }
         if(savedInstanceValues.containsKey("R.id.spinner_village")){

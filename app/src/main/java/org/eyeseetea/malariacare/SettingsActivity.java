@@ -34,6 +34,7 @@ import android.util.DisplayMetrics;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
+import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
@@ -157,12 +158,16 @@ public class SettingsActivity extends PreferenceActivity implements
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         Resources r = context.getResources();
         Configuration c = r.getConfiguration();
+        Locale currentLocale = c.locale;
+        if (currentLocale.getLanguage().isEmpty()) {
+            currentLocale = new Locale(PreferencesState.getInstance().getPhoneLanguage());
+        }
         String[] loc = r.getAssets().getLocales();
         for (int i = 0; i < loc.length; i++) {
             c.locale = new Locale(loc[i]);
             Resources res = new Resources(context.getAssets(), metrics, c);
             String s1 = res.getString(stringId);
-            String language = c.locale.getDisplayLanguage();
+            String language = new Locale(loc[i]).getDisplayLanguage(currentLocale);
             c.locale = new Locale("");
             Resources res2 = new Resources(context.getAssets(), metrics, c);
             String s2 = res2.getString(stringId);
@@ -171,6 +176,9 @@ public class SettingsActivity extends PreferenceActivity implements
             if (!s1.equals(s2)) {
                 languages.put(language, loc[i]);
             }
+            Locale defaultLocale = new Locale(BuildConfig.defaultLocale);
+            languages.put(defaultLocale.getDisplayLanguage(currentLocale),
+                    defaultLocale.getLanguage());
         }
         return languages;
     }
@@ -358,5 +366,12 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onDestroy() {
         mSettingsActivityStrategy.onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+        Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
+        super.attachBaseContext(context);
     }
 }

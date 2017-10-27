@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.layout.adapters.survey;
 
+import static org.eyeseetea.malariacare.R.id.masked;
 import static org.eyeseetea.malariacare.R.id.question;
 import static org.eyeseetea.malariacare.data.database.model.OptionDB.DOESNT_MATCH_POSITION;
 import static org.eyeseetea.malariacare.data.database.model.OptionDB.MATCH_POSITION;
@@ -27,6 +28,7 @@ import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSu
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -631,7 +633,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             setupNavigationByQuestionView(rowView.getRootView(), questionView);
 
             tableRow.addView((View) questionView);
+            List<OptionDB> optionDBList = screenQuestionDB.getAnswerDB().getOptionDBs();
 
+            if(mMultiQuestionViews.size()>0 && optionDBList!=null && optionDBList.size()>0) {
+                OptionDB optionDB = optionDBList.get(optionDBList.size()-1);
+                if(optionDB!=null) {
+                    String color = optionDB.getBackground_colour();
+                    if(color!=null && !color.equals("")) {
+                        color = "#" + color;
+                        rowView.setBackgroundColor(Color.parseColor(color));
+                    }
+                }
+            }
             swipeTouchListener.addTouchableView(rowView);
             swipeTouchListener.addTouchableView(tableRow);
             swipeTouchListener.addTouchableView((View) questionView);

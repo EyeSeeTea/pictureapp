@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
@@ -118,9 +117,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             }
 
             Log.d(TAG, "Saving control dataelements");
-            if (BuildConfig.buildControlDataelements) {
-                buildControlDataElements(surveyDB, event);
-            }
+
+            buildControlDataElements(surveyDB, event);
 
 
             if (SurveyDB.countSurveysByCompletiondate(surveyDB.getCompletionDate()) > 1) {
@@ -174,9 +172,15 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      */
     private void buildControlDataElements(SurveyDB surveyDB, EventExtended event){
         //save phonemetadata
-        buildAndSaveDataValue((getContext().getString(
-                R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
-                event);
+        if (getContext().getString(
+                R.string.control_data_element_phone_metadata) != null
+                && !getContext().getString(
+                R.string.control_data_element_phone_metadata).equals(
+                "")) {
+            buildAndSaveDataValue((getContext().getString(
+                    R.string.control_data_element_phone_metadata)), Session.getPhoneMetaDataValue(),
+                    event);
+        }
 
         //save Time capture
         if (getContext().getString(

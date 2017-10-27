@@ -115,6 +115,22 @@ public class NavigationController {
         return isAllowed;
     }
 
+    public boolean isLastQuestionWithValue() {
+        //Get value for current
+        QuestionDB currentQuestionDB = getCurrentQuestion();
+        ValueDB currentValueDB = currentQuestionDB.getValueBySession();
+
+        //Cannot move without answer
+        if (currentValueDB == null) {
+            Log.d(TAG, "isNextAllowed()->You must answer first");
+            return false;
+        }
+
+        OptionDB currentOptionDB = currentValueDB == null ? null : currentValueDB.getOptionDB();
+        boolean isAllowed = findNext(currentOptionDB) != null;
+        return (!isAllowed && !hasNext(null) && !hasNext(currentValueDB.getOptionDB()));
+    }
+
     /**
      * Asks for next question no matter what answer has been given (just sibling)
      */

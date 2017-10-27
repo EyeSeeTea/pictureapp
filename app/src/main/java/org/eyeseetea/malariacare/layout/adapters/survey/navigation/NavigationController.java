@@ -115,7 +115,7 @@ public class NavigationController {
         return isAllowed;
     }
 
-    public boolean isLastQuestion() {
+    public boolean isLastQuestionWithValue() {
         //Get value for current
         QuestionDB currentQuestionDB = getCurrentQuestion();
         ValueDB currentValueDB = currentQuestionDB.getValueBySession();

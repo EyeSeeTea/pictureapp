@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
-
+    private final String DEFAULT_OPTION_COLOR="eecf00";
     private static String TAG = "ConvertFromApiVisitor";
     @Override
     public void visit(List<OrgUnitTree> orgUnitTrees) {
@@ -91,6 +91,7 @@ public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
                                         questionDB.getAnswerDB());
                                 optionVill.setId_parent_fk(optionComm.getId_option());
                                 OptionAttributeDB optionAttributeDB = new OptionAttributeDB();
+                                optionAttributeDB.setBackground_colour(DEFAULT_OPTION_COLOR);
                                 optionAttributeDB.setPath(
                                         "[" + orgUnitTree.getLng() + "," + orgUnitTree.getLat()
                                                 + "]");

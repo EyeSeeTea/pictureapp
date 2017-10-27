@@ -352,9 +352,16 @@ public class PreferencesState {
         String temLanguageCode = languageCode;
         if (languageCode.equals("")) {
             temLanguageCode = phoneLanguage;
-        }else {
-            setLocale(temLanguageCode);
         }
+        setLocale(temLanguageCode);
+    }
+
+    public String getCurrentLocale() {
+        String temLanguageCode = languageCode;
+        if (languageCode.equals("")) {
+            temLanguageCode = phoneLanguage;
+        }
+        return temLanguageCode;
     }
 
     private void setLocale(String languageCode) {

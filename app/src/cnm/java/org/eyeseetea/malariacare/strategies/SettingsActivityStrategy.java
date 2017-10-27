@@ -86,7 +86,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         deleteOrgUnitUseCase.excute(new DeleteOrgUnitUseCase.Callback() {
                             @Override
                             public void onSuccess() {
-                                executeLogout();
+                                if(PreferencesState.getCredentialsFromPreferences()==null) {
+                                    launchAutoconfigure();
+                                }else {
+                                    executeLogout();
+                                }
                             }
                         });
                         return true;

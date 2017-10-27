@@ -76,11 +76,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             mPullController.populateMetadataFromCsvs(pullFilters.isAutoConfig());
 
             if (pullFilters.isAutoConfig()) {
-                try {
-                    autoConfigureByPhone(context, callback, pullFilters);
-                } catch (ApiCallException e) {
-                    throw new AutoconfigureException();
-                }
+                autoConfigureByPhone(context, callback, pullFilters);
             } else {
                 downloadMetadata(pullFilters, callback);
             }
@@ -94,7 +90,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
     private void autoConfigureByPhone(Context context,
             final IPullController.Callback callback, final PullFilters pullFilters)
-            throws NetworkException, ApiCallException {
+            throws NetworkException, ApiCallException, AutoconfigureException {
 
         organisationUnitRepository = new OrganisationUnitRepository();
         deviceRepository = new DeviceDataSource();
@@ -106,8 +102,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             OrganisationUnit organisationUnit = getOrganisationUnitByPhone(callback);
 
             if (organisationUnit == null) {
-                callback.onError(new AutoconfigureException());
-
+                throw new AutoconfigureException();
             } else {
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());

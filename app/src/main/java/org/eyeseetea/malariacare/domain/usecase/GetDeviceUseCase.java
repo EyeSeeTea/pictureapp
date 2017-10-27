@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.entity.Device;
@@ -7,27 +8,41 @@ import org.eyeseetea.malariacare.domain.entity.Device;
 public class GetDeviceUseCase implements UseCase {
     private Callback mCallback;
     private IMainExecutor mMainExecutor;
+    private IAsyncExecutor mAsyncExecutor;
     private IDeviceRepository mDeviceRepository;
 
     public GetDeviceUseCase(
             IMainExecutor mainExecutor,
+            IAsyncExecutor asyncExecutor,
             IDeviceRepository deviceRepository) {
         mMainExecutor = mainExecutor;
+        mAsyncExecutor = asyncExecutor;
         mDeviceRepository = deviceRepository;
     }
 
     public void execute(Callback callback) {
         mCallback = callback;
-        mMainExecutor.run(this);
+        mAsyncExecutor.run(this);
     }
 
     @Override
     public void run() {
-        Device device = mDeviceRepository.getDevice();
+        final Device device = mDeviceRepository.getDevice();
         if(device!=null) {
-            mCallback.onSuccess(device);
+            mMainExecutor.run(new Runnable() {
+                @Override
+                public void run() {
+                    mCallback.onSuccess(device);
+                }
+            });
+
         }else{
-            mCallback.onError();
+            mMainExecutor.run(new Runnable() {
+                @Override
+                public void run() {
+                    mCallback.onError();
+                }
+            });
         }
     }
 

@@ -102,7 +102,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         if (imeiPreference != null) {
             IDeviceRepository deviceRepository = new DeviceDataSource();
             IMainExecutor mainExecutor = new UIThreadExecutor();
-            GetDeviceUseCase getDeviceUseCase = new GetDeviceUseCase(mainExecutor,
+            IAsyncExecutor asyncExecutor = new AsyncExecutor();
+            GetDeviceUseCase getDeviceUseCase = new GetDeviceUseCase(mainExecutor, asyncExecutor,
                     deviceRepository);
             getDeviceUseCase.execute(new GetDeviceUseCase.Callback() {
                 @Override

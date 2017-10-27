@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQuestionView,
@@ -139,15 +140,19 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     private List<OptionDB> getOptionsWithParent(Long parent, List<OptionDB> optionsFrom) {
-        List<OptionDB> optionsWithParent = new ArrayList<>();
-        for (OptionDB optionDB : optionsFrom) {
-            if ((parent == null && optionDB.getId_parent_fk() == null)
-                    || (optionDB.getId_parent_fk() != null && optionDB.getId_parent_fk().equals(
-                    parent))) {
-                optionsWithParent.add(optionDB);
+        if (parent == null) {
+            List<OptionDB> optionsWithParent = new ArrayList<>();
+            for (OptionDB optionDB : optionsFrom) {
+                if ((parent == null && optionDB.getId_parent_fk() == null)
+                        || (optionDB.getId_parent_fk() != null && optionDB.getId_parent_fk().equals(
+                        parent))) {
+                    optionsWithParent.add(optionDB);
+                }
             }
+            Collections.sort(optionsWithParent, new OptionDB.OptionComparator());
+            return optionsWithParent;
         }
-        return optionsWithParent;
+        return OptionDB.getOptionsWithParentAndQuestion(parent, mQuestionDB);
     }
 
     private void setOptionsWithParent(Spinner spinner, Long parent, String hintText) {

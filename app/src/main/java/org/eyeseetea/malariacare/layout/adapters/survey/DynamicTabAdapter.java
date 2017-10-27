@@ -636,8 +636,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             List<OptionDB> optionDBList = screenQuestionDB.getAnswerDB().getOptionDBs();
 
             if(mMultiQuestionViews.size()>0 && optionDBList!=null && optionDBList.size()>0) {
-                String color ="#" +  optionDBList.get(optionDBList.size()-1).getBackground_colour();
-                rowView.setBackgroundColor(Color.parseColor(color));
+                OptionDB optionDB = optionDBList.get(optionDBList.size()-1);
+                if(optionDB!=null) {
+                    String color = optionDB.getBackground_colour();
+                    if(color!=null && !color.equals("")) {
+                        color = "#" + color;
+                        rowView.setBackgroundColor(Color.parseColor(color));
+                    }
+                }
             }
             swipeTouchListener.addTouchableView(rowView);
             swipeTouchListener.addTouchableView(tableRow);

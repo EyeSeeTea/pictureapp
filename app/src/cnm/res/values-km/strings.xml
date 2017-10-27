@@ -257,4 +257,6 @@
 <string name="tab_village_residence">ភូមិនៃលំនៅដ្ឋាន</string>
 
 <string name="exists_more_than_one_org_unit_by_phone">ការព្រមាន: អង្គភាពច្រើនជាងមួយត្រូវបានតំឡើងសម្រាប់ទូរស័ព្ទនេះ (IMEI: %s)</string>
+<string name="imei">"IMEI"</string>
+<string name="imei_error">"កំហុសក្នុងការទទួល IMEI"</string>
 </resources>

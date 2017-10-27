@@ -86,7 +86,6 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
-            buildConfigField "boolean", "buildControlDataelements", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
         }
         laos {
@@ -107,7 +106,6 @@ android {
             buildConfigField "int", "LimitSurveysCount", "30"
             buildConfigField "int", "LimitSurveysTimeHours", "1"
             buildConfigField "boolean", "customfont", "true"
-            buildConfigField "boolean", "buildControlDataelements", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
         }
         myanmar {
@@ -128,7 +126,6 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
-            buildConfigField "boolean", "buildControlDataelements", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
         }
         ereferrals {
@@ -149,7 +146,6 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "false"
-            buildConfigField "boolean", "buildControlDataelements", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
         }
         cnm {
@@ -170,7 +166,6 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
-            buildConfigField "boolean", "buildControlDataelements", "false"
             buildConfigField "String", "defaultLocale", "\"en\""
         }
 

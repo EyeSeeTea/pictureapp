@@ -88,10 +88,15 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 public void onError(Throwable throwable) {
                     Log.e(this.getClass().getSimpleName(),
                             "error message" + throwable.getMessage());
-                    if (throwable instanceof AutoconfigureException || throwable instanceof ApiCallException) {
+                    if (throwable instanceof AutoconfigureException) {
+                        hasAutoconfigureError = true;
+                        showErrorAutoConfiguration(R.string.error_auto_configuration);
+                        return;
+                    }
+                    if(throwable instanceof ApiCallException){
                         hasAutoconfigureError = true;
                     }
-                    showErrorAutoConfiguration();
+                    showErrorAutoConfiguration(R.string.error_auto_configuration_unexpected);
                 }
 
                 @Override
@@ -130,10 +135,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         }
     }
 
-    private void showErrorAutoConfiguration() {
+    private void showErrorAutoConfiguration(int messageId) {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.error_message)
-                .setMessage(R.string.error_auto_configuration)
+                .setMessage(messageId)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         goNextActivity();
@@ -162,7 +167,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
             }
         } else {
             if (requestCode == Permissions.PHONE_STATE_REQUEST_CODE) {
-                showErrorAutoConfiguration();
+                showErrorAutoConfiguration(R.string.error_auto_configuration);
             } else {
                 Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
                         Permissions.PHONE_STATE_REQUEST_CODE);

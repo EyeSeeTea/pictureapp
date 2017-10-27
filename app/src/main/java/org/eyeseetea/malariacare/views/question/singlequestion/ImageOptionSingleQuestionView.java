@@ -101,7 +101,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
 
     @NonNull
     private ImageOptionView createOptionView(OptionDB optionDB) {
-        ImageOptionView imageOptionView = new ImageOptionView(getContext());
+        ImageOptionView imageOptionView = new ImageOptionView(getContext(),mColumnsCount);
         imageOptionView.setOption(optionDB, mQuestionDB);
         imageOptionView.setOnOptionSelectedListener(this);
         imageOptionView.setEnabled(isEnabled());

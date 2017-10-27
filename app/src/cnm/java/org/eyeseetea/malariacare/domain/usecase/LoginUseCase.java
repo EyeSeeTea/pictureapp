@@ -34,6 +34,31 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         mAsyncExecutor.run(this);
     }
 
+    @Override
+    public void run() {
+        if (mCredentials == null) {
+            onErrorCallback(mCallback,
+                    new IllegalArgumentException("Credentials could not be null"));
+        } else {
+            mAuthenticationManager.login(mCredentials,
+                    new IAuthenticationManager.Callback<UserAccount>() {
+                        @Override
+                        public void onSuccess(UserAccount userAccount) {
+                            if (!mCredentials.isDemoCredentials()) {
+                                logoutAndHardcodedLogin(mCredentials, mCallback);
+                            } else {
+                                mCallback.onLoginSuccess();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            onErrorCallback(mCallback, throwable);
+                        }
+                    });
+        }
+    }
+
     private void logoutAndHardcodedLogin(final Credentials credentials,
             final Callback loginCallback) {
         mAuthenticationManager.logout(new IAuthenticationManager.Callback<Void>() {
@@ -127,28 +152,5 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             }
         });
     }
-    @Override
-    public void run() {
-        if (mCredentials == null) {
-            onErrorCallback(mCallback,
-                    new IllegalArgumentException("Credentials could not be null"));
-        } else {
-            mAuthenticationManager.login(mCredentials,
-                    new IAuthenticationManager.Callback<UserAccount>() {
-                        @Override
-                        public void onSuccess(UserAccount userAccount) {
-                            if (!mCredentials.isDemoCredentials()) {
-                                logoutAndHardcodedLogin(mCredentials, mCallback);
-                            } else {
-                                mCallback.onLoginSuccess();
-                            }
-                        }
 
-                        @Override
-                        public void onError(Throwable throwable) {
-                            onErrorCallback(mCallback, throwable);
-                        }
-                    });
-        }
-    }
 }

@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.exception.organisationunit
@@ -23,6 +24,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.utils.Permissions;
+import org.hisp.dhis.client.sdk.core.common.network.ApiException;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     private PullUseCase mPullUseCase;
@@ -87,9 +89,14 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                     Log.e(this.getClass().getSimpleName(),
                             "error message" + throwable.getMessage());
                     if (throwable instanceof AutoconfigureException) {
-                        showErrorAutoConfiguration();
+                        hasAutoconfigureError = true;
+                        showErrorAutoConfiguration(R.string.error_auto_configuration);
+                        return;
+                    }
+                    if(throwable instanceof ApiCallException){
                         hasAutoconfigureError = true;
                     }
+                    showErrorAutoConfiguration(R.string.error_auto_configuration_unexpected);
                 }
 
                 @Override
@@ -128,10 +135,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         }
     }
 
-    private void showErrorAutoConfiguration() {
+    private void showErrorAutoConfiguration(int messageId) {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.error_message)
-                .setMessage(R.string.error_auto_configuration)
+                .setMessage(messageId)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         goNextActivity();
@@ -160,7 +167,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
             }
         } else {
             if (requestCode == Permissions.PHONE_STATE_REQUEST_CODE) {
-                showErrorAutoConfiguration();
+                showErrorAutoConfiguration(R.string.error_auto_configuration);
             } else {
                 Permissions.Permission permission = EyeSeeTeaApplication.permissions.getPermission(
                         Permissions.PHONE_STATE_REQUEST_CODE);

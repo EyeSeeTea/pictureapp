@@ -102,7 +102,20 @@ public class AnswerDB extends BaseModel {
             mOptionDBs = new Select()
                     .from(OptionDB.class)
                     .where(OptionDB_Table.id_answer_fk
-                            .eq(this.getId_answer())).queryList();
+                            .eq(this.getId_answer()))
+                    .queryList();
+        }
+        return mOptionDBs;
+    }
+
+    public List<OptionDB> getOptionDBsOrderByName() {
+        if (mOptionDBs == null) {
+            mOptionDBs = new Select()
+                    .from(OptionDB.class)
+                    .where(OptionDB_Table.id_answer_fk
+                            .eq(this.getId_answer()))
+                    .orderBy(OptionDB_Table.name, true)
+                    .queryList();
         }
         return mOptionDBs;
     }

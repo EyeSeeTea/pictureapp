@@ -27,7 +27,7 @@ public class ValueLocalDataSource implements IValueRepository {
             }
             if (dBValue.getOptionDB() != null) {
                 value.setInternationalizedName(
-                        dBValue.getOptionDB().getInternationalizedCode());
+                        dBValue.getOptionDB().getInternationalizedName());
                 value.setOptionCode(dBValue.getOptionDB().getCode());
             }
             if (dBValue.getOptionDB() != null && dBValue.getOptionDB().getBackground_colour() != null) {

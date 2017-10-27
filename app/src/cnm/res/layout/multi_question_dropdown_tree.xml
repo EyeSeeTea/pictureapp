@@ -23,7 +23,7 @@
         app:font_name="@string/normal_font" />
 
 
-    <Spinner
+    <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_province"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:paddingTop="2dip"
         android:textColor="@color/black" />
 
-    <Spinner
+    <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_district"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
@@ -53,7 +53,7 @@
         android:background="@drawable/spinner_background"
         android:textColor="@color/black" />
 
-    <Spinner
+    <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_commune"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         android:background="@drawable/spinner_background"
         android:textColor="@color/black" />
 
-    <Spinner
+    <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_village"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

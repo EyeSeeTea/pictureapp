@@ -20,7 +20,9 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -230,5 +232,19 @@ public class SurveyFragment extends Fragment {
         }catch (NullPointerException e){
             new LoadingSurveyException(e);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        saveInstanceState();
+    }
+
+    public void saveInstanceState() {
+        dynamicTabAdapter.fillSaveInstanceState();
+    }
+
+    public void restoreInstanceState() {
+        dynamicTabAdapter.restoreSaveInstanceState();
     }
 }

@@ -28,6 +28,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +59,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ADynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
@@ -80,6 +83,7 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.IFillSavedInstanceValues;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
@@ -133,6 +137,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
     private boolean isBackward = true;
+    Bundle savedInstanceState;
 
     public DynamicTabAdapter(Context context, boolean reviewMode) throws NullPointerException {
         mReviewMode = reviewMode;
@@ -548,7 +553,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
-
+        restoreSaveInstanceState();
         return rowView;
     }
 
@@ -978,6 +983,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
+        hideKeyboard(PreferencesState.getInstance().getContext());
         mDynamicTabAdapterStrategy.finishOrNext();
     }
 
@@ -1134,5 +1140,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         questionDB.saveValuesDDL(selectedOptionDB, questionDB.getValueBySession());
         showOrHideChildren(questionDB);
+    }
+
+    public void fillSaveInstanceState() {
+        savedInstanceState = new Bundle();
+        for(IMultiQuestionView multiQuestionView:mMultiQuestionViews){
+            if(multiQuestionView instanceof IFillSavedInstanceValues){
+                ((IFillSavedInstanceValues)multiQuestionView).fillSavedInstanceValues(savedInstanceState);
+            }
+        }
+    }
+
+    public void restoreSaveInstanceState() {
+        if(savedInstanceState!=null) {
+            for (IMultiQuestionView multiQuestionView : mMultiQuestionViews) {
+                if (multiQuestionView instanceof IFillSavedInstanceValues) {
+                    ((IFillSavedInstanceValues) multiQuestionView).restoreSavedInstanceValues(
+                            savedInstanceState);
+                }
+            }
+        }
     }
 }

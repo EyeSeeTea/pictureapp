@@ -83,6 +83,7 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.IFillSavedInstanceValues;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
@@ -606,7 +607,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestionDB(screenQuestionDB);
-                List<OptionDB> optionDBs = screenQuestionDB.getAnswerDB().getOptionDBs();
+
+                List<OptionDB> optionDBs = null;
+                if (questionView instanceof DropdownMultiQuestionView) {
+                    optionDBs = screenQuestionDB.getAnswerDB().getOptionDBsOrderByName();
+                } else {
+                    optionDBs = screenQuestionDB.getAnswerDB().getOptionDBs();
+                }
                 ((AOptionQuestionView) questionView).setOptions(
                         optionDBs);
             }
@@ -983,7 +990,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
-        hideKeyboard(PreferencesState.getInstance().getContext());
         mDynamicTabAdapterStrategy.finishOrNext();
     }
 

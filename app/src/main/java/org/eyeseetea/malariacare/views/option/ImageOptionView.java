@@ -97,7 +97,7 @@ public class ImageOptionView extends CommonQuestionView {
         mOptionTextView = (CustomTextView) findViewById(R.id.optionText);
         mOptionCounterTextView = (CustomTextView) findViewById(R.id.optionCounterText);
 
-        mOptionImageView.setOnClickListener(new OnClickListener() {
+        mOptionContainerView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isClicked) {

@@ -28,7 +28,6 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
     private boolean optionSetFromSavedValue = false;
     private List<OptionDB> mOptionDBs;
     private Context mContext;
-    private int counterPutFromValue = 0;
 
 
     public OuTreeMultiQuestionView(Context context) {

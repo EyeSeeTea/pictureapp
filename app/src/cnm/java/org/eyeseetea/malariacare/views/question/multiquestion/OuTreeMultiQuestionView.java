@@ -94,22 +94,33 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
             return;
         }
         OptionDB villageOption = valueDB.getOptionDB();
-        OptionDB communeOption = OptionDB.findById(villageOption.getId_parent_fk());
-        OptionDB districtOption = OptionDB.findById(communeOption.getId_parent_fk());
-        OptionDB provinceOption = OptionDB.findById(districtOption.getId_parent_fk());
-        setValueToSpinner(spinnerProvince, provinceOption);
-        setOptionsWithParent(spinnerDistrict, provinceOption.getId_option(),
-                mContext.getString(R.string.district));
-        setValueToSpinner(spinnerDistrict, districtOption);
-        setOptionsWithParent(spinnerCommune, districtOption.getId_option(),
-                mContext.getString(R.string.commune));
+        if(villageOption!=null) {
+            OptionDB communeOption = OptionDB.findById(villageOption.getId_parent_fk());
+            if(communeOption!=null) {
+                OptionDB districtOption = OptionDB.findById(communeOption.getId_parent_fk());
+                if(districtOption!=null) {
+                    OptionDB provinceOption = OptionDB.findById(districtOption.getId_parent_fk());
+                    if(provinceOption!=null) {
+                        setValueToSpinner(spinnerProvince, provinceOption);
+                        setOptionsWithParent(spinnerDistrict, provinceOption.getId_option(),
+                                mContext.getString(R.string.district));
+                    }
+                }
+                setValueToSpinner(spinnerDistrict, districtOption);
+                setOptionsWithParent(spinnerCommune, districtOption.getId_option(),
+                        mContext.getString(R.string.commune));
+            }
         setValueToSpinner(spinnerCommune, communeOption);
         setOptionsWithParent(spinnerVillage, communeOption.getId_option(),
                 mContext.getString(R.string.village));
+        }
         setValueToSpinner(spinnerVillage, villageOption);
     }
 
     private void setValueToSpinner(CustomSpinner spinner, OptionDB optionSelected) {
+        if(spinner.getAdapter()==null){
+            return;
+        }
         for (int i = 0; i < spinner.getAdapter().getCount(); i++) {
             OptionDB optionDB = (OptionDB) spinner.getItemAtPosition(i);
             if (optionDB.equals(optionSelected)) {

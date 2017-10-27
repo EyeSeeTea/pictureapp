@@ -329,6 +329,15 @@ public class QuestionDB extends BaseModel {
                 .where(QuestionDB_Table.uid_question.is(uid))
                 .querySingle();
     }
+    /**
+     * Finds a mQuestionDB by its UID
+     */
+    public static List<QuestionDB> findQuestionsByUID(String uid) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.uid_question.is(uid))
+                .queryList();
+    }
 
     public static QuestionDB findByCode(String code) {
         return new Select()

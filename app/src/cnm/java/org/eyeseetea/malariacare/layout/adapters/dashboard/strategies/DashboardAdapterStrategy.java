@@ -37,10 +37,12 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         List<ValueDB> visible = new ArrayList<>();
 
         for (ValueDB value : survey.getValueDBs()) {
-            if (value.getQuestionDB().isImportant()) {
-                important.add(value);
-            } else if (value.getQuestionDB().isVisible()) {
-                visible.add(value);
+            if(value.getQuestionDB()!=null) {
+                if (value.getQuestionDB().isImportant()) {
+                    important.add(value);
+                } else if (value.getQuestionDB().isVisible()) {
+                    visible.add(value);
+                }
             }
         }
 

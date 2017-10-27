@@ -80,6 +80,7 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
@@ -226,6 +227,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 else if (navigationController.isNextAllowed()) {
                     hideKeyboard(listView.getContext(), listView);
                     next();
+                } else if (navigationController.isLastQuestionWithValue()) {
+                    hideKeyboard(listView.getContext(), listView);
+                    finishOrNext();
                 }
             }
 
@@ -601,7 +605,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestionDB(screenQuestionDB);
-                List<OptionDB> optionDBs = screenQuestionDB.getAnswerDB().getOptionDBs();
+
+                List<OptionDB> optionDBs = null;
+                if (questionView instanceof DropdownMultiQuestionView) {
+                    optionDBs = screenQuestionDB.getAnswerDB().getOptionDBsOrderByName();
+                } else {
+                    optionDBs = screenQuestionDB.getAnswerDB().getOptionDBs();
+                }
                 ((AOptionQuestionView) questionView).setOptions(
                         optionDBs);
             }

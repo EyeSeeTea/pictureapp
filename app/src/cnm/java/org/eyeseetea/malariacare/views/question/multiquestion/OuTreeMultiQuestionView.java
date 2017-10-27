@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomSpinner;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -22,11 +23,12 @@ import java.util.List;
 public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView {
     private CustomTextView header;
-    private Spinner spinnerProvince, spinnerDistrict, spinnerCommune, spinnerVillage;
+    private CustomSpinner spinnerProvince, spinnerDistrict, spinnerCommune, spinnerVillage;
     private QuestionDB mQuestionDB;
     private boolean optionSetFromSavedValue = false;
     private List<OptionDB> mOptionDBs;
     private Context mContext;
+    private int counterPutFromValue = 0;
 
 
     public OuTreeMultiQuestionView(Context context) {
@@ -37,10 +39,10 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
     private void init(Context context) {
         inflate(context, R.layout.multi_question_dropdown_tree, this);
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        spinnerProvince = (Spinner) findViewById(R.id.spinner_province);
-        spinnerDistrict = (Spinner) findViewById(R.id.spinner_district);
-        spinnerCommune = (Spinner) findViewById(R.id.spinner_commune);
-        spinnerVillage = (Spinner) findViewById(R.id.spinner_village);
+        spinnerProvince = (CustomSpinner) findViewById(R.id.spinner_province);
+        spinnerDistrict = (CustomSpinner) findViewById(R.id.spinner_district);
+        spinnerCommune = (CustomSpinner) findViewById(R.id.spinner_commune);
+        spinnerVillage = (CustomSpinner) findViewById(R.id.spinner_village);
         mContext = context;
 
         setSpinnerOnItemSelectedListener(spinnerProvince, spinnerDistrict,
@@ -54,11 +56,10 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position,
                     long l) {
-                if (!optionSetFromSavedValue) {
-                    if (position > 0) {
+
+                if (position > 0) {
                         OptionDB optionDB = (OptionDB) adapterView.getItemAtPosition(position);
                         notifyAnswerChanged(optionDB);
-                    }
                 }
             }
 
@@ -109,11 +110,11 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
         setValueToSpinner(spinnerVillage, villageOption);
     }
 
-    private void setValueToSpinner(Spinner spinner, OptionDB optionSelected) {
+    private void setValueToSpinner(CustomSpinner spinner, OptionDB optionSelected) {
         for (int i = 0; i < spinner.getAdapter().getCount(); i++) {
             OptionDB optionDB = (OptionDB) spinner.getItemAtPosition(i);
             if (optionDB.equals(optionSelected)) {
-                spinner.setSelection(i);
+                spinner.setSelection(i, false, true);
                 break;
             }
         }
@@ -168,10 +169,8 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position,
                     long l) {
-                if (!optionSetFromSavedValue) {
                     OptionDB optionDB = (OptionDB) adapterView.getItemAtPosition(position);
                     setOptionsWithParent(child, optionDB.getId_option(), defaultText);
-                }
             }
 
             @Override

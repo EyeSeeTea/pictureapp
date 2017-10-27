@@ -11,6 +11,6 @@ public class GetReviewValuesBySurveyIdUseCaseStrategy extends
 
     @Override
     public List<Value> orderValues(List<Value> values) {
-        return OrderValuesByQuestionDomainService.execute(values);
+        return values;
     }
 }

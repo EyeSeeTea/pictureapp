@@ -38,11 +38,13 @@ public class GetReviewValuesBySurveyIdUseCase implements UseCase {
 
     @Override
     public void run() {
-        final List<Value> values = mIValueRepository.getValuesFromSurvey(mSurveyId);
+        List<Value> values = mIValueRepository.getValuesFromSurvey(mSurveyId);
+        final List<Value> orderValues = mGetReviewValuesBySurveyIdUseCaseStrategy.orderValues(
+                values);
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onGetValues(values);
+                mCallback.onGetValues(orderValues);
             }
         });
     }

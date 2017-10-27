@@ -190,27 +190,28 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         }
 
         //Datavalue is a valueDB from a questionDB
-        QuestionDB questionDB = QuestionDB.findByUID(questionUID);
-
-        if (questionDB == null) {
+        List<QuestionDB> questions = QuestionDB.findQuestionsByUID(questionUID);
+        if (questions == null) {
             Log.e(TAG, "Question not found with dataelement uid " + questionUID);
         }
+        for(QuestionDB questionDB:questions) {
 
-        ValueDB valueDB = new ValueDB();
-        valueDB.setQuestionDB(questionDB);
-        valueDB.setSurveyDB(surveyDB);
+            ValueDB valueDB = new ValueDB();
+            valueDB.setQuestionDB(questionDB);
+            valueDB.setSurveyDB(surveyDB);
 
-        OptionDB optionDB =
-                sdkDataValueExtended.findOptionByQuestion(questionDB);
-        valueDB.setOptionDB(optionDB);
-        //No optionDB -> text questionDB (straight valueDB)
-        if (optionDB == null) {
-            valueDB.setValue(sdkDataValueExtended.getValue());
-        } else {
-            //OptionDB -> extract valueDB from code
-            valueDB.setValue(sdkDataValueExtended.getDataValue().getValue());
+            OptionDB optionDB =
+                    sdkDataValueExtended.findOptionByQuestion(questionDB);
+            valueDB.setOptionDB(optionDB);
+            //No optionDB -> text questionDB (straight valueDB)
+            if (optionDB == null) {
+                valueDB.setValue(sdkDataValueExtended.getValue());
+            } else {
+                //OptionDB -> extract valueDB from code
+                valueDB.setValue(sdkDataValueExtended.getDataValue().getValue());
+            }
+            mValueDBs.add(valueDB);
         }
-        mValueDBs.add(valueDB);
     }
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {

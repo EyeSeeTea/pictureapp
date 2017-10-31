@@ -95,6 +95,7 @@ public class PopulateDB {
     public static final String STRING_KEY_CSV = "StringKeys.csv";
     public static final String TRANSLATION_CSV = "Translations.csv";
     public static final String VERSIONS_CSV = "Versions.csv";
+    public static final String PHONE_FORMAT_CSV = "PhoneFormat.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
@@ -150,7 +151,8 @@ public class PopulateDB {
             PARTNER_CSV,
             TREATMENT_CSV,
             DRUG_COMBINATIONS_CSV,
-            TREATMENT_MATCHES_CSV);
+            TREATMENT_MATCHES_CSV,
+            PHONE_FORMAT_CSV);
     private static final List<String> tables2updateQuestions = Arrays.asList(
             OPTION_ATTRIBUTES_CSV,
             OPTIONS_CSV,
@@ -163,7 +165,7 @@ public class PopulateDB {
             ORG_UNIT_CSV);
     private static final String TAG = "PopulateDB";
 
-    static Map<Integer, ProgramDB> programList = new LinkedHashMap<Integer, ProgramDB>();
+    static HashMap<Integer, ProgramDB> programList = new HashMap<Integer, ProgramDB>();
     static Map<Integer, TabDB> tabList = new LinkedHashMap<Integer, TabDB>();
     static Map<Integer, HeaderDB> headerList = new LinkedHashMap<Integer, HeaderDB>();
     static Map<Integer, QuestionDB> questionList = new LinkedHashMap<Integer, QuestionDB>();
@@ -404,6 +406,9 @@ public class PopulateDB {
                         break;
                     case TRANSLATION_CSV:
                         PopulateRow.populateTranslation(line, stringKeyList, null).insert();
+                        break;
+                    case PHONE_FORMAT_CSV:
+                        PopulateRow.populatePhoneFormat(line, programList, null).insert();
                         break;
                 }
             }

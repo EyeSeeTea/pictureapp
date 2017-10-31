@@ -3,13 +3,14 @@ package org.eyeseetea.malariacare.data.database.utils.populatedb;
 import android.support.annotation.Nullable;
 
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
-import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
@@ -81,6 +82,7 @@ public class PopulateRow {
         }
         programDB.setUid(line[1]);
         programDB.setName(line[2]);
+        programDB.setStageUid(line[3]);
         return programDB;
     }
 
@@ -261,5 +263,17 @@ public class PopulateRow {
         translationDB.setTranslation(line[2]);
         translationDB.setLanguage(line[3]);
         return translationDB;
+    }
+
+    public static PhoneFormatDB populatePhoneFormat(String[] line,
+            HashMap<Integer, ProgramDB> programFK, @Nullable PhoneFormatDB phoneFormatDB) {
+        if (phoneFormatDB == null) {
+            phoneFormatDB = new PhoneFormatDB();
+            phoneFormatDB.setId_program_fk(programFK.get(Integer.valueOf(line[1])).getId_program());
+            phoneFormatDB.setPhoneMask(line[2]);
+            phoneFormatDB.setTrunkPrefix(line[3]);
+            phoneFormatDB.setPrefixToPut(line[4]);
+        }
+        return phoneFormatDB;
     }
 }

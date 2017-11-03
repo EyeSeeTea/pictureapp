@@ -897,4 +897,7 @@ Ameahidi kuhudhuria"</string>
     <string name="zimbabwe_program">Zimbabwe</string>
     <string name="common_option_program_vmmc">VMMC</string>
     <string name="e_voucher">eVoucher</string>
+    <string name="nepal_program_eref">Nepal</string>
+    <string name="mozambique_program_eref">Mozambique</string>
+    <string name="zimbabwe_program_eref">Zimbabwe</string>
 </resources>

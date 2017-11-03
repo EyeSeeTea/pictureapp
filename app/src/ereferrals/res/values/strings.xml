@@ -1029,6 +1029,9 @@
     <string name="common_option_ZW_targetGroup_Assisted">Assisted</string>
     <string name="common_option_ZW_targetGroup_Administered">Administered</string>
     <string name="common_option_ZW_targetGroup_Absent">Absent</string>
+    <string name="nepal_program_eref">Nepal</string>
+    <string name="mozambique_program_eref">Mozambique</string>
+    <string name="zimbabwe_program_eref">Zimbabwe</string>
 
 
 

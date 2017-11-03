@@ -91,4 +91,7 @@ public abstract class ADynamicTabAdapterStrategy {
     protected boolean shouldShowReviewScreen() {
         return getMalariaSurveyDB().isRDT() || BuildConfig.patientTestedByDefault;
     }
+
+    public void initNavigationButtons(boolean readOnly, View nextButton) {
+    }
 }

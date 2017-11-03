@@ -3,11 +3,10 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 import android.os.Handler;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
-import android.view.View;
-
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -111,5 +110,12 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
                 return;
             }
         }, 750);
+    }
+
+    @Override
+    public void initNavigationButtons(boolean readOnly, View nextButton) {
+        if (readOnly) {
+            ((LinearLayout) nextButton.getParent()).setVisibility(View.GONE);
+        }
     }
 }

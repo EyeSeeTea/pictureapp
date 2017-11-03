@@ -87,76 +87,103 @@
 87;'Makwanpur (DIS-32)';'NP-DIS-32';0;26;7
 88;'Nawalparasi (DIS-48)';'NP-DIS-48';0;26;7
 89;'Kailali (DIS-71)';'NP-DIS-71';0;26;7
-90;'Budhiganga Rural Municipality (RUR-62)';'NP-DIS-10-RUR-62';0;27;7
-91;'Dhanpalthan Rural Municipality (RUR-63)';'NP-DIS-10-RUR-63';0;27;7
-92;'Gramthan Rural Municipality (RUR-64)';'NP-DIS-10-RUR-64';0;27;7
-93;'Jahada Rural Municipality (RUR-65)';'NP-DIS-10-RUR-65';0;27;7
-94;'Kanepokhari Rural Municipality (RUR-66)';'NP-DIS-10-RUR-66';0;27;7
-95;'Katahari Rural Municipality (RUR-67)';'NP-DIS-10-RUR-67';0;27;7
-96;'Kerabari Rural Municipality (RUR-68)';'NP-DIS-10-RUR-68';0;27;7
-97;'Miklajung Rural Municipality (RUR-69)';'NP-DIS-10-RUR-69';0;27;7
-98;'Belbari Municipality (MUN-70)';'NP-DIS-10-MUN-70';0;27;7
-99;'Biratnagar Metropolitan City (MUN-71)';'NP-DIS-10-MUN-71';0;27;7
-100;'Letang Municipality (MUN-72)';'NP-DIS-10-MUN-72';0;27;7
-101;'Patahrishanishchare Municipality (MUN-73)';'NP-DIS-10-MUN-73';0;27;7
-102;'Rangeli Municipality (MUN-74)';'NP-DIS-10-MUN-74';0;27;7
-103;'Ratuwamai Municipality (MUN-75)';'NP-DIS-10-MUN-75';0;27;7
-104;'Sundarharaicha Municipality (MUN-76)';'NP-DIS-10-MUN-76';0;27;7
-105;'Sunwarshi Municipality (MUN-77)';'NP-DIS-10-MUN-77';0;27;7
-106;'Uralabari Municipality (MUN-78)';'NP-DIS-10-MUN-78';0;27;7
-107;'Bishnu Rural Municipality (RUR-97)';'NP-DIS-20-RUR-97';0;27;7
-108;'Brahmapuri Rural Municipality (RUR-98)';'NP-DIS-20-RUR-98';0;27;7
-109;'Chakraghatta Rural Municipality (RUR-99)';'NP-DIS-20-RUR-99';0;27;7
-110;'Chandranagar Rural Municipality (RUR-100)';'NP-DIS-20-RUR-100';0;27;7
-111;'Dhankaul Rural Municipality (RUR-101)';'NP-DIS-20-RUR-101';0;27;7
-112;'Kabilasi Rural Municipality (RUR-102)';'NP-DIS-20-RUR-102';0;27;7
-113;'Ramnagar Rural Municipality (RUR-103)';'NP-DIS-20-RUR-103';0;27;7
-114;'Bagmati Municipality (MUN-104)';'NP-DIS-20-MUN-104';0;27;7
-115;'Balara Municipality (MUN-105)';'NP-DIS-20-MUN-105';0;27;7
-116;'Barahathawa Municipality (MUN-106)';'NP-DIS-20-MUN-106';0;27;7
-117;'Godaita Municipality (MUN-107)';'NP-DIS-20-MUN-107';0;27;7
-118;'Haripur Municipality (MUN-108)';'NP-DIS-20-MUN-108';0;27;7
-119;'Haripurwa Municipality (MUN-109)';'NP-DIS-20-MUN-109';0;27;7
-120;'Hariwan Municipality (MUN-110)';'NP-DIS-20-MUN-110';0;27;7
-121;'Ishworpur Municipality (MUN-111)';'NP-DIS-20-MUN-111';0;27;7
-122;'Lalbandi Municipality (MUN-112)';'NP-DIS-20-MUN-112';0;27;7
-123;'Malangawa Municipality (MUN-113)';'NP-DIS-20-MUN-113';0;27;7
-124;'Bagmati Rural Municipality (RUR-45)';'NP-DIS-32-RUR-45';0;27;7
-125;'Bakaiya Rural Municipality (RUR-46)';'NP-DIS-32-RUR-46';0;27;7
-126;'Bhimphedi Rural Municipality (RUR-47)';'NP-DIS-32-RUR-47';0;27;7
-127;'Indrasarowar Rural Municipality (RUR-48)';'NP-DIS-32-RUR-48';0;27;7
-128;'Kailash Rural Municipality (RUR-49)';'NP-DIS-32-RUR-49';0;27;7
-129;'Makawanpurgadhi Rural Municipality (RUR-50)';'NP-DIS-32-RUR-50';0;27;7
-130;'Manahari Rural Municipality (RUR-51)';'NP-DIS-32-RUR-51';0;27;7
-131;'Raksirang Rural Municipality (RUR-52)';'NP-DIS-32-RUR-52';0;27;7
-132;'Hetauda Sub-Metropolitan City (MUN-53)';'NP-DIS-32-MUN-53';0;27;7
-133;'Thaha Municipality (MUN-54)';'NP-DIS-32-MUN-54';0;27;7
-134;'inayee Triveni Rural Municipality (RUR-74)';'NP-DIS-48-RUR-74';0;27;7
-135;'Bungdikali Rural Municipality (RUR-75)';'NP-DIS-48-RUR-75';0;27;7
-136;'Hupsekot Rural Municipality (RUR-76';'NP-DIS-48-RUR-76';0;27;7
-137;'Palhi Nandan Rural Municipality (RUR-77)';'NP-DIS-48-RUR-77';0;27;7
-138;'Pratappur Rural Municipality (RUR-78)';'NP-DIS-48-RUR-78';0;27;7
-139;'Sarawal Rural Municipality (RUR-79)';'NP-DIS-48-RUR-79';0;27;7
-140;'Susta Rural Municipality (RUR-80)';'NP-DIS-48-RUR-80';0;27;7
-141;'Bardaghat Municipality (MUN-81)';'NP-DIS-48-MUN-81';0;27;7
-142;'Bulingtar Rural Municipality (RUR-82)';'NP-DIS-48-RUR-82';0;27;7
-143;'Devchuli Municipality (MUN-83)';'NP-DIS-48-MUN-83';0;27;7
-144;'Gaidakot Municipality (MUN-84)';'NP-DIS-48-MUN-84';0;27;7
-145;'Kawaswoti Municipality (MUN-85)';'NP-DIS-48-MUN-85';0;27;7
-146;'Madhyabindu Municipality (MUN-86)';'NP-DIS-48-MUN-86';0;27;7
-147;'Ramgram Municipality (MUN-87)';'NP-DIS-48-MUN-87';0;27;7
-148;'Sunwal Municipality (MUN-88)';'NP-DIS-48-MUN-88';0;27;7
-149;'Bardagoriya Rural Municipality (RUR-40)';'NP-DIS-71-RUR-40';0;27;7
-150;'Chure Rural Municipality (RUR-41)';'NP-DIS-71-RUR-41';0;27;7
-151;'Janaki Rural Municipality (RUR-42)';'NP-DIS-71-RUR-42';0;27;7
-152;'Joshipur Rural Municipality (RUR-43)';'NP-DIS-71-RUR-43';0;27;7
-153;'Kailari Rural Municipality (RUR-44)';'NP-DIS-71-RUR-44';0;27;7
-154;'Mohanyal Rural Municipality (RUR-45)';'NP-DIS-71-RUR-45';0;27;7
-155;'Bhajani Municipality (MUN-46)';'NP-DIS-71-MUN-46';0;27;7
-156;'Dhangadhi Sub-Metropolitan City (MUN-47)';'NP-DIS-71-MUN-47';0;27;7
-157;'Gauriganga Municipality (MUN-48)';'NP-DIS-71-MUN-48';0;27;7
-158;'Ghodaghodi Municipality (MUN-49)';'NP-DIS-71-MUN-49';0;27;7
-159;'Godawari Municipality (MUN-50)';'NP-DIS-71-MUN-50';0;27;7
-160;'Lamki-Chuha Municipality (MUN-51)';'NP-DIS-71-MUN-51';0;27;7
-161;'Tikapur Municipality (MUN-52)';'NP-DIS-71-MUN-52';0;27;7
-162;'common_option_program_vmmc';'VMMC';0;30;7
+90;'Belbari Municipality (MUN-1008)';'NP-MUN-1008';0;27;7
+91;'Biratnagar Municipality (MUN-1011)';'NP-MUN-1011';0;27;7
+92;'Koshi Haraicha Municipality (MUN-1032)';'NP-MUN-1032';0;27;7
+93;'Rangeli Municipality (MUN-1046)';'NP-MUN-1046';0;27;7
+94;'Pathari-Sanischare Municipality (MUN-1047)';'NP-MUN-1047';0;27;7
+95;'Sundar Dulari Municipality (MUN-1054)';'NP-MUN-1054';0;27;7
+96;'Urlabari Municipality (MUN-1059)';'NP-MUN-1059';0;27;7
+97;'Letang Municipality (MUN-1069)';'NP-MUN-1069';0;27;7
+98;'Ratuwamai Municipality (MUN-1071)';'NP-MUN-1071';0;27;7
+99;'Sundarharaicha Municipality (MUN-1072)';'NP-MUN-1072';0;27;7
+100;'Sunwarshi Municipality (MUN-1073)';'NP-MUN-1073';0;27;7
+101;'Budhiganga Rural Municipality (RUR-1062)';'NP-RUR-1062';0;27;7
+102;'Dhanpalthan Rural Municipality (RUR-1063)';'NP-RUR-1063';0;27;7
+103;'Gramthan Rural Municipality (RUR-1064)';'NP-RUR-1064';0;27;7
+104;'Jahada Rural Municipality (RUR-1065)';'NP-RUR-1065';0;27;7
+105;'Kanepokhari Rural Municipality (RUR-1066)';'NP-RUR-1066';0;27;7
+106;'Katahari Rural Municipality (RUR-1067)';'NP-RUR-1067';0;27;7
+107;'Kerabari Rural Municipality (RUR-1068)';'NP-RUR-1068';0;27;7
+108;'Miklajung Rural Municipality (RUR-1070)';'NP-RUR-1070';0;27;7
+109;'Godaita Municipality (MUN-20105)';'NP-MUN-20105';0;28;7
+110;'Haripur Municipality (MUN-20106)';'NP-MUN-20106';0;28;7
+111;'Haripurwa Municipality (MUN-20107)';'NP-MUN-20107';0;28;7
+112;'Hariwan Municipality (MUN-2035)';'NP-MUN-2035';0;28;7
+113;'Ishwarpur Municipality (MUN-2038)';'NP-MUN-2038';0;28;7
+114;'Lalbandi Municipality (MUN-2049)';'NP-MUN-2049';0;28;7
+115;'Malangwa Municipality (MUN-2057)';'NP-MUN-2057';0;28;7
+116;'Bagmati Municipality (MUN-2097)';'NP-MUN-2097';0;28;7
+117;'Balara Municipality (MUN-2098)';'NP-MUN-2098';0;28;7
+118;'Barahathawa Municipality (MUN-2099)';'NP-MUN-2099';0;28;7
+119;'Brahmapuri Rural Municipality (RUR-20101)';'NP-RUR-20101';0;28;7
+120;'Chakraghatta Rural Municipality (RUR-20102)';'NP-RUR-20102';0;28;7
+121;'Chandranagar Rural Municipality (RUR-20103)';'NP-RUR-20103';0;28;7
+122;'Dhankaul Rural Municipality (RUR-20104)';'NP-RUR-20104';0;28;7
+123;'Kabilasi Rural Municipality (RUR-20108)';'NP-RUR-20108';0;28;7
+124;'Ramnagar Rural Municipality (RUR-20109)';'NP-RUR-20109';0;28;7
+125;'Hetauda Municipality (MUN-3218)';'NP-MUN-3218';0;29;7
+126;'Thaha Municipality (MUN-3242)';'NP-MUN-3242';0;29;7
+127;'Bagmati Rural Municipality (RUR-3245)';'NP-RUR-3245';0;29;7
+128;'Bakaiya Rural Municipality (RUR-3246)';'NP-RUR-3246';0;29;7
+129;'Bhimphedi Rural Municipality (RUR-3247)';'NP-RUR-3247';0;29;7
+130;'Indrasarowar Rural Municipality (RUR-3248)';'NP-RUR-3248';0;29;7
+131;'Kailash Rural Municipality (RUR-3249)';'NP-RUR-3249';0;29;7
+132;'Makawanpurgadhi Rural Municipality (RUR-3250)';'NP-RUR-3250';0;29;7
+133;'Manahari Rural Municipality (RUR-3251)';'NP-RUR-3251';0;29;7
+134;'Raksirang Rural Municipality (RUR-3252)';'NP-RUR-3252';0;29;7
+135;'Devchuli Municipality (MUN-4815)';'NP-MUN-4806';0;33;7
+136;'Devchuli Municipality (MUN-4815)';'NP-MUN-4815';0;33;7
+137;'Kawasoti Municipality (MUN-4831)';'NP-MUN-4831';0;33;7
+138;'Ramgram Municipality (MUN-4853)';'NP-MUN-4853';0;33;7
+139;'Madhyabindu Municipality (MUN-4861)';'NP-MUN-4861';0;33;7
+140;'Sunwal Municipality (MUN-4865)';'NP-MUN-4865';0;33;7
+141;'Bulingtar Municipality (MUN-4875)';'NP-MUN-4875';0;33;7
+142;'Binayee Triveni Rural Municipality (RUR-4874)';'NP-RUR-4874';0;33;7
+143;'Bungdikali Rural Municipality (RUR-4876)';'NP-RUR-4876';0;33;7
+144;'Hupsekot Rural Municipality (RUR-4877)';'NP-RUR-4877';0;33;7
+145;'Palhi Nandan Rural Municipality (RUR-4878)';'NP-RUR-4878';0;33;7
+146;'Pratappur Rural Municipality (RUR-4879)';'NP-RUR-4879';0;33;7
+147;'Sarawal Rural Municipality (RUR-4880)';'NP-RUR-4880';0;33;7
+148;'Susta Rural Municipality (RUR-4881)';'NP-RUR-4881';0;33;7
+149;'Attariya Municipality (MUN-7101)';'NP-MUN-7101';0;34;7
+150;'Dhangadhi Municipality (MUN-7108)';'NP-MUN-7108';0;34;7
+151;'Lamki Chuha Municipality (MUN-7120)';'NP-MUN-7120';0;34;7
+152;'Tikapur Municipality (MUN-7137)';'NP-MUN-7137';0;34;7
+153;'Bhajani Municipality (MUN-7141)';'NP-MUN-7141';0;34;7
+154;'Gauriganga Municipality (MUN-7143)';'NP-MUN-7143';0;34;7
+155;'Ghodaghodi Municipality (MUN-7144)';'NP-MUN-7144';0;34;7
+156;'Godawari Municipality (MUN-7145)';'NP-MUN-7145';0;34;7
+157;'Bardagoriya Rural Municipality (RUR-7140)';'NP-RUR-7140';0;34;7
+158;'Chure Rural Municipality (RUR-7142)';'NP-RUR-7142';0;34;7
+159;'Janaki Rural Municipality (RUR-7146)';'NP-RUR-7146';0;34;7
+160;'Joshipur Rural Municipality (RUR-7147)';'NP-RUR-7147';0;34;7
+161;'Kailari Rural Municipality (RUR-7148)';'NP-RUR-7148';0;34;7
+162;'Mohanyal Rural Municipality (RUR-7149)';'NP-RUR-7149';0;34;7
+163;'common_option_program_vmmc';'VMMC';0;30;7
+164;'common_btn_yes';'YES';0;31;7
+165;'common_btn_no';'NO';0;31;7
+166;'common_option_method_none';'NON';0;35;1
+167;'common_option_method_condom';'CON';0;35;2
+168;'common_option_method_injection';'INJ';0;35;3
+169;'common_option_method_pills';'PIL';0;35;4
+170;'common_option_method_implant';'IMP';0;35;5
+171;'common_option_method_iud';'IUD';0;35;6
+172;'common_option_method_other';'OTH';0;35;7
+173;'common_option_ZW_targetGroup_schoolGoing';'School Going';0;36;7
+174;'common_option_ZW_targetGroup_outSchool';'Out of School';0;36;7
+175;'common_option_ZW_targetGroup_Orange';'Orange';0;37;7
+176;'common_option_ZW_targetGroup_Yellow';'Yellow';0;37;7
+177;'common_option_ZW_targetGroup_Grey';'Grey';0;37;7
+178;'common_option_ZW_targetGroup_Maroon';'Maroon';0;37;7
+179;'common_option_ZW_targetGroup_Brown';'Brown';0;37;7
+180;'common_option_ZW_targetGroup_Purple';'Purple';0;37;7
+181;'common_option_ZW_targetGroup_Green';'Green';0;37;7
+182;' ';'YES';0;38;7
+183;'common_option_ZW_targetGroup_High';'High';0;39;7
+184;'common_option_ZW_targetGroup_Medium';'Medium';0;39;7
+185;'common_option_ZW_targetGroup_Low';'Low';0;39;7
+186;'common_option_ZW_targetGroup_NotInterested';'Not Interested';0;39;7
+187;'common_option_ZW_targetGroup_Assisted';'Assisted';0;40;7
+188;'common_option_ZW_targetGroup_Administered';'Administered';0;40;7
+189;'common_option_ZW_targetGroup_Absent';'Absent';0;40;7

@@ -997,7 +997,7 @@
     <string name="ipc_issueEntry_q_addressMunVDC">"Endereço - Município / VDC"</string>
     <string name="ipc_issueEntry_q_addressWard">"Endereço - Ward"</string>
     <string name="ipc_issueEntry_q_addressLoc">"Endereço - Localidade"</string>
-    <string name="zimbawe_program">Zimbábue</string>
+    <string name="zimbabwe_program">Zimbábue</string>
     <string name="common_option_program_vmmc">VMMC</string>
     <string name="e_voucher">eVoucher</string>
 </resources>

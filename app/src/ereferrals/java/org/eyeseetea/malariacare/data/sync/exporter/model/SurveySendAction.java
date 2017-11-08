@@ -11,8 +11,7 @@ public class SurveySendAction {
     private List<AttributeValueWS> dataValues;
     private Voucher voucher;
     private String program;
-    @JsonProperty("EventDateTime")
-    private String eventDateTime;
+    private String sourceAddedDateTime;
     private Coordinate coordinate;
 
     public SurveySendAction() {
@@ -60,12 +59,12 @@ public class SurveySendAction {
         this.program = program;
     }
 
-    public String getEventDateTime() {
-        return eventDateTime;
+    public String getSourceAddedDateTime() {
+        return sourceAddedDateTime;
     }
 
-    public void setEventDateTime(String eventDateTime) {
-        this.eventDateTime = eventDateTime;
+    public void setSourceAddedDateTime(String sourceAddedDateTime) {
+        this.sourceAddedDateTime = sourceAddedDateTime;
     }
 
     public Coordinate getCoordinate() {

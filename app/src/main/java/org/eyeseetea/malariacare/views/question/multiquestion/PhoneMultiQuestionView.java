@@ -1,17 +1,17 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
-import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.entity.Validation;
-import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .APhoneMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .PhoneMultiquestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -19,10 +19,11 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText mCustomEditText;
+    private APhoneMultiquestionViewStrategy mPhoneMultiquestionViewStrategy;
 
     public PhoneMultiQuestionView(Context context) {
         super(context);
-
+        mPhoneMultiquestionViewStrategy = new PhoneMultiquestionViewStrategy(this);
         init(context);
     }
 
@@ -53,6 +54,13 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         return mCustomEditText.getError() != null;
     }
 
+    @Override
+    public void setOnAnswerChangedListener(
+            onAnswerChangedListener onAnswerChangedListener) {
+        super.setOnAnswerChangedListener(onAnswerChangedListener);
+        mPhoneMultiquestionViewStrategy.setOnAnswerChangedListener(onAnswerChangedListener);
+    }
+
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_phone_row, this);
 
@@ -60,29 +68,6 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(mCustomEditText);
-        mCustomEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    Phone phone = new Phone(mCustomEditText.getText().toString());
-                    notifyAnswerChanged(phone.getValue());
-                    Validation.getInstance().removeInputError(mCustomEditText);
-
-                } catch (InvalidPhoneException e) {
-                    Validation.getInstance().addinvalidInput(mCustomEditText,
-                            context.getString(R.string.dynamic_error_phone_format));
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-        });
+        mPhoneMultiquestionViewStrategy.addTextChangeListener(mCustomEditText);
     }
 }

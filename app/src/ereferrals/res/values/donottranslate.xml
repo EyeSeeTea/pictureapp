@@ -46,4 +46,6 @@
     <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
     <string name="no_phone_oc" translatable="false">NO</string>
     <string name="no_phone_on" translatable="false">common_option_ownershipOfPhone_noMobile</string>
+    <string name="issue_voucher_qc" translatable="false">generateVoucher</string>
+    <string name="no_voucher_on" translatable="false">common_btn_no</string>
 </resources>

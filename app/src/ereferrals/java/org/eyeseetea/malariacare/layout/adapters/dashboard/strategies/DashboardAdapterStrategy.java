@@ -38,7 +38,9 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         String uid = mContext.getString(R.string.voucher) +
                 ":" +
                 survey.getEventUid();
-        if (hasPhone(survey)) {
+        if (noIssueVoucher(survey)) {
+            uid = mContext.getString(R.string.no_voucher);
+        } else if (hasPhone(survey)) {
             uid = mContext.getString(R.string.e_voucher);
         }
 
@@ -100,6 +102,12 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     @Override
     public boolean hasAllComplementarySurveys(SurveyDB malariaSurvey) {
         return true;
+    }
+
+    private boolean noIssueVoucher(SurveyDB survey) {
+        return survey.getOptionSelectedForQuestionCode(
+                mContext.getString(R.string.issue_voucher_qc)).getName().equals(
+                mContext.getString(R.string.no_voucher_on));
     }
 
     private boolean hasPhone(SurveyDB survey) {

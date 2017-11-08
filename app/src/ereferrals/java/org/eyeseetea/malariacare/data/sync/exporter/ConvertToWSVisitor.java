@@ -95,7 +95,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         surveySendAction.setActionId(CodeGenerator.generateCode());
         surveySendAction.setType(SURVEY_ACTION_ID);
         surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
-        surveySendAction.setVoucher(new Voucher(survey.getEventUid(), hasPhone(survey)));
+        surveySendAction.setVoucher(new Voucher(survey.getEventUid(), getVoucherType(survey)));
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
         surveySendAction.setEventDateTime(getEventDateTimeString(survey.getEventDate()));
@@ -111,8 +111,24 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         return Utils.parseDateToString(eventDate, ISO_FORMAT, timeZone);
     }
 
-    private boolean hasPhone(SurveyDB survey) {
+    private String getVoucherType(SurveyDB survey) {
         Context context = PreferencesState.getInstance().getContext();
+        if (noIssueVoucher(survey, context)) {
+            return Voucher.TYPE_NO_VOUCHER;
+        } else if (hasPhone(survey, context)) {
+            return Voucher.TYPE_PHONE;
+        } else {
+            return Voucher.TYPE_PAPER;
+        }
+    }
+
+    private boolean noIssueVoucher(SurveyDB survey, Context context) {
+        return survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.issue_voucher_qc)).getName().equals(
+                context.getString(R.string.no_voucher_on));
+    }
+
+    private boolean hasPhone(SurveyDB survey, Context context) {
         return !(survey.getOptionSelectedForQuestionCode(
                 context.getString(R.string.phone_ownership_qc)).getName().equals(
                 context.getString(R.string.no_phone_on)));

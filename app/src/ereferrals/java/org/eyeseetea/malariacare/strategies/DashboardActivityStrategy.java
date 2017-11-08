@@ -437,11 +437,17 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
-        if (surveyDB != null && !hasPhone(surveyDB)) {
+        if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
             mDashboardActivity.showException("", String.format(
                     mDashboardActivity.getResources().getString(R.string.give_voucher),
                     surveyDB.getEventUid()));
         }
+    }
+
+    private boolean noIssueVoucher(SurveyDB survey) {
+        return survey.getOptionSelectedForQuestionCode(
+                mDashboardActivity.getString(R.string.issue_voucher_qc)).getName().equals(
+                mDashboardActivity.getString(R.string.no_voucher_on));
     }
 
     private boolean hasPhone(SurveyDB survey) {

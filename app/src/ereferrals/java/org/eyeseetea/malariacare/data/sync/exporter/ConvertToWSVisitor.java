@@ -98,7 +98,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         surveySendAction.setVoucher(new Voucher(survey.getEventUid(), getVoucherType(survey)));
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
-        surveySendAction.setEventDateTime(getEventDateTimeString(survey.getEventDate()));
+        surveySendAction.setSourceAddedDateTime(getEventDateTimeString(survey.getEventDate()));
         Location location = LocationMemory.get(survey.getId_survey());
         surveySendAction.setCoordinate(
                 new Coordinate(location.getLatitude(), location.getLongitude()));

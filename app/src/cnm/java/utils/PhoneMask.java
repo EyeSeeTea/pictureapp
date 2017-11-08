@@ -41,7 +41,7 @@ public class PhoneMask {
      *
      * @return true|false
      */
-    public static boolean checkPhoneNumberByMask(String phoneValue) {
+    public static boolean checkPhoneNumberByMask(String phoneValue, PhoneFormat phoneFormat) {
 
         //Empty  is ok
         if (phoneValue == null) {
@@ -52,7 +52,7 @@ public class PhoneMask {
                 PLAIN_PHONENUMBER_MASK);
     }
 
-    public static String applyValueTransformations(String value){
+    public static String applyValueTransformations(String value, PhoneFormat phoneFormat) {
         return value;
     }
 }

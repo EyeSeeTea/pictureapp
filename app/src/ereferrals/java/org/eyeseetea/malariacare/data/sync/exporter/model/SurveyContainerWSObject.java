@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +10,7 @@ public class SurveyContainerWSObject {
     private String password;
     private List<SurveySendAction> actions;
     private String language;
-    @JsonProperty("Android info")
     private String androidInfo;
-    @JsonProperty("CSV version")
     private String csvVersion;
 
 

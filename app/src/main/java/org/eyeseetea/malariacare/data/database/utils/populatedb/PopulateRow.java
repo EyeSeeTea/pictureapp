@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PopulateRow {
     static QuestionDB populateQuestion(String[] line, HashMap<Long, HeaderDB> headerFK,
@@ -266,7 +267,7 @@ public class PopulateRow {
     }
 
     public static PhoneFormatDB populatePhoneFormat(String[] line,
-            HashMap<Integer, ProgramDB> programFK, @Nullable PhoneFormatDB phoneFormatDB) {
+            Map<Integer, ProgramDB> programFK, @Nullable PhoneFormatDB phoneFormatDB) {
         if (phoneFormatDB == null) {
             phoneFormatDB = new PhoneFormatDB();
             phoneFormatDB.setId_program_fk(programFK.get(Integer.valueOf(line[1])).getId_program());

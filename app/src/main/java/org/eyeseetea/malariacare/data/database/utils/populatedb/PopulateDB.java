@@ -165,7 +165,7 @@ public class PopulateDB {
             ORG_UNIT_CSV);
     private static final String TAG = "PopulateDB";
 
-    static HashMap<Integer, ProgramDB> programList = new HashMap<Integer, ProgramDB>();
+    static Map<Integer, ProgramDB> programList = new LinkedHashMap<Integer, ProgramDB>();
     static Map<Integer, TabDB> tabList = new LinkedHashMap<Integer, TabDB>();
     static Map<Integer, HeaderDB> headerList = new LinkedHashMap<Integer, HeaderDB>();
     static Map<Integer, QuestionDB> questionList = new LinkedHashMap<Integer, QuestionDB>();

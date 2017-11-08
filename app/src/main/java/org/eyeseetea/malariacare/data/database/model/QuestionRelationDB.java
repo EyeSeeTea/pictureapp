@@ -69,6 +69,11 @@ public class QuestionRelationDB extends BaseModel {
      */
     public static final int MATCH_PROPAGATE = 6;
 
+    /**
+     * Hide an option if question threshold match with this option
+     */
+    public static final int MATCH_HIDE_OPTION_QUESTION_THRESHOLD = 7;
+
     private static final String TAG = ".QuestionRelationDB";
     @Column
     @PrimaryKey(autoincrement = true)

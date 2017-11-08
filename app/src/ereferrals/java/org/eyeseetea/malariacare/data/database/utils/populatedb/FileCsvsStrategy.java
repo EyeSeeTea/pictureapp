@@ -16,7 +16,8 @@ public class FileCsvsStrategy extends AFileCsvsStrategy {
             PopulateDB.MATCHES,
             PopulateDB.QUESTION_OPTIONS_CSV,
             PopulateDB.QUESTION_THRESHOLDS_CSV,
-            PopulateDB.VERSIONS_CSV
+            PopulateDB.VERSIONS_CSV,
+            PopulateDB.PHONE_FORMAT_CSV
     );
 
     public static List<String> getCsvsToCreate() {

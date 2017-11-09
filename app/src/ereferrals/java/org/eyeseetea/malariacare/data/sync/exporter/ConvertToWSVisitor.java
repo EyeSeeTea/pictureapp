@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
@@ -123,8 +124,12 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private boolean noIssueVoucher(SurveyDB survey, Context context) {
-        return survey.getOptionSelectedForQuestionCode(
-                context.getString(R.string.issue_voucher_qc)).getName().equals(
+        OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.issue_voucher_qc));
+        if (noIssueOption == null) {
+            return false;
+        }
+        return noIssueOption.getName().equals(
                 context.getString(R.string.no_voucher_on));
     }
 

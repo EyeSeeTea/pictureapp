@@ -37,7 +37,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitR
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetUserLastInsertedUsernameUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -131,14 +131,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        GetUserLastInsertedUsernameUseCase getUserLastInsertedUsernameUseCase =
-                new GetUserLastInsertedUsernameUseCase(mainExecutor, asyncExecutor,
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);
-        getUserLastInsertedUsernameUseCase.execute(
-                new GetUserLastInsertedUsernameUseCase.Callback() {
+        getLastInsertedCredentialsUseCase.execute(
+                new GetLastInsertedCredentialsUseCase.Callback() {
                     @Override
-                    public void onGetUsername(String username) {
-                        LoginActivityStrategy.this.username.setText(username);
+                    public void onGetUsername(Credentials credentials) {
+                        if (credentials != null) {
+                            LoginActivityStrategy.this.username.setText(credentials.getUsername());
+                        }
                     }
                 });
     }

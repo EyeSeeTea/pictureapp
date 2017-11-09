@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
@@ -437,11 +438,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
-        if (surveyDB != null && !hasPhone(surveyDB)) {
+        if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
             mDashboardActivity.showException("", String.format(
                     mDashboardActivity.getResources().getString(R.string.give_voucher),
                     surveyDB.getEventUid()));
         }
+    }
+
+    private boolean noIssueVoucher(SurveyDB survey) {
+        OptionDB noIssueOption=survey.getOptionSelectedForQuestionCode(
+                mDashboardActivity.getString(R.string.issue_voucher_qc));
+        if(noIssueOption==null){
+            return false;
+        }
+        return noIssueOption.getName().equals(
+                mDashboardActivity.getString(R.string.no_voucher_on));
     }
 
     private boolean hasPhone(SurveyDB survey) {

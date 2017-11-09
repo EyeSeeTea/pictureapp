@@ -46,4 +46,5 @@
     <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
     <string name="no_phone_oc" translatable="false">NO</string>
     <string name="no_phone_on" translatable="false">common_option_ownershipOfPhone_noMobile</string>
+    <string name="last_username_inserted_preference">last_username_inserted_preference</string>
 </resources>

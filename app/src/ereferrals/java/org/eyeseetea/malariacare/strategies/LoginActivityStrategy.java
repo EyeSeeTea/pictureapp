@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitR
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -127,6 +128,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 onForgotPassword();
             }
         });
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(
+                new GetLastInsertedCredentialsUseCase.Callback() {
+                    @Override
+                    public void onGetUsername(Credentials credentials) {
+                        if (credentials != null) {
+                            LoginActivityStrategy.this.username.setText(credentials.getUsername());
+                        }
+                    }
+                });
     }
 
     private void onForgotPassword() {

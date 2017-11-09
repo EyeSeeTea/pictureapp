@@ -105,8 +105,12 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     }
 
     private boolean noIssueVoucher(SurveyDB survey) {
-        return survey.getOptionSelectedForQuestionCode(
-                mContext.getString(R.string.issue_voucher_qc)).getName().equals(
+        OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
+                mContext.getString(R.string.issue_voucher_qc));
+        if (noIssueOption == null) {
+            return false;
+        }
+        return noIssueOption.getName().equals(
                 mContext.getString(R.string.no_voucher_on));
     }
 

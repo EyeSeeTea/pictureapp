@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
@@ -445,8 +446,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private boolean noIssueVoucher(SurveyDB survey) {
-        return survey.getOptionSelectedForQuestionCode(
-                mDashboardActivity.getString(R.string.issue_voucher_qc)).getName().equals(
+        OptionDB noIssueOption=survey.getOptionSelectedForQuestionCode(
+                mDashboardActivity.getString(R.string.issue_voucher_qc));
+        if(noIssueOption==null){
+            return false;
+        }
+        return noIssueOption.getName().equals(
                 mDashboardActivity.getString(R.string.no_voucher_on));
     }
 

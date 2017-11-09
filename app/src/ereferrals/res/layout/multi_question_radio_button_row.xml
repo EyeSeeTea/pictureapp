@@ -19,8 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="8dp">
+        android:paddingLeft="@dimen/question_padding"
+        android:paddingRight="@dimen/multiquestion_padding_right">
 
 
         <LinearLayout
@@ -66,13 +66,13 @@
                     layout="@layout/radio"/>
 
                 <ImageView
-                        android:id="@+id/row_header_compulsory"
-                    android:layout_width="10dp"
-                        android:layout_height="10dp"
+                    android:id="@+id/row_header_compulsory"
+                    android:layout_width="@dimen/compulsory_size"
+                    android:layout_height="@dimen/compulsory_size"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/compulsory"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/compulsory"
                     android:visibility="gone" />
             </RelativeLayout>
 

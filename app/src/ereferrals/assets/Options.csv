@@ -9,9 +9,9 @@
 9;'common_option_channelOfReferral_healthFacility';'HF';0;9;8
 10;'common_option_channelOfReferral_groupSession';'GS';0;9;9
 11;'common_option_channelOfReferral_doorToDoor';'DD';0;9;10
-12;'common_option_civilStatus_unmarried';'UNMAR';0;10;11
-13;'common_option_civilStatus_divorced';'DIV';0;10;12
-14;'common_option_civilStatus_married';'MAR';0;10;13
+12;'common_option_civilStatus_married';'MAR';0;10;13
+13;'common_option_civilStatus_unmarried';'UNMAR';0;10;11
+14;'common_option_civilStatus_divorced';'DIV';0;10;12
 15;'common_option_civilStatus_widowed';'WID';0;10;14
 16;'common_option_ownershipOfPhone_noMobile';'NO';0;11;15
 17;'common_option_ownershipOfPhone_herNumber';'HER';0;11;16
@@ -30,9 +30,9 @@
 30;'common_option_method_depo';'DEPO';0;14;7
 31;'common_option_method_ma';'MA';0;1;7
 32;'common_option_method_counselling';'COUNS';0;1;7
-33;'common_option_phoneContactConsent_no';'NO';0;16;7
-34;'common_option_phoneContactConsent_yesp';'YESP';0;16;7
-35;'common_option_phoneContactConsent_yespp';'YESPP';0;16;7
+33;'common_option_furtherInformationConsent_no';'NO';0;16;7
+34;'common_option_furtherInformationConsent_yesFromPSI';'YESP';0;16;7
+35;'common_option_furtherInformationConsent_yesFromPSIAndPartners';'YESPP';0;16;7
 36;'common_option_isClientReferred_yes';'YES';0;17;7
 37;'common_option_isClientReferred_no';'NO';0;17;7
 38;'common_option_householdDelivery_yes';'YES';0;20;7
@@ -63,11 +63,11 @@
 63;'common_option_numberOfLivingChildren_19';19;0;7;7
 64;'common_option_numberOfLivingChildren_20';20;0;7;7
 65;'common_option_method_none';'NON';0;23;1
-66;'common_option_method_condom';'CON';0;23;2
+66;'common_option_method_pills';'PIL';0;23;4
 67;'common_option_method_injection';'INJ';0;23;3
-68;'common_option_method_pills';'PIL';0;23;4
-69;'common_option_method_implant';'IMP';0;23;5
-70;'common_option_method_iud';'IUD';0;23;6
+68;'common_option_method_implant';'IMP';0;23;5
+69;'common_option_method_iud';'IUD';0;23;6
+70;'common_option_method_condom';'CON';0;23;2
 71;'common_option_method_other';'OTH';0;23;7
 72;'common_option_eventType_HHV';'HHV';0;24;7
 73;'common_option_eventType_BHA';'BHA';0;24;7
@@ -164,11 +164,11 @@
 164;'common_btn_yes';'YES';0;31;7
 165;'common_btn_no';'NO';0;31;7
 166;'common_option_method_none';'NON';0;35;1
-167;'common_option_method_condom';'CON';0;35;2
+167;'common_option_method_pills';'PIL';0;35;4
 168;'common_option_method_injection';'INJ';0;35;3
-169;'common_option_method_pills';'PIL';0;35;4
-170;'common_option_method_implant';'IMP';0;35;5
-171;'common_option_method_iud';'IUD';0;35;6
+169;'common_option_method_implant';'IMP';0;35;5
+170;'common_option_method_iud';'IUD';0;35;6
+171;'common_option_method_condom';'CON';0;35;2
 172;'common_option_method_other';'OTH';0;35;7
 173;'common_option_ZW_targetGroup_schoolGoing';'School Going';0;36;7
 174;'common_option_ZW_targetGroup_outSchool';'Out of School';0;36;7

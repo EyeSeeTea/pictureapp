@@ -575,6 +575,7 @@
 <string name="provider_msg_retrievingSearchedReferrals">"रेफरलहरूको पुनः डाटा प्राप्त गर्दै..."</string>
 <string name="action_bar_connect">Connect</string>
 
+
 <!-- TERMS FROM EYESEETEA -->
 <string name="malaria_case_based_reporting">"कनेक्ट"</string>
 <string name="volunteer_label">"IPC"</string>
@@ -806,7 +807,6 @@
 <string name="mozambique_program">"मोजाम्बिक"</string>
 <string name="common_option_householdDelivery_yes">"हो"</string>
 <string name="common_option_householdDelivery_no">"सबै भन्दा कान्छो ब्च्चाको उमेर "</string>
-<string name="ipc_issueEntry_q_ageYoungest">"सानो बच्चाको उमेर"</string>
 <string name="common_option_ageYoungest_0_6M">"० देखि ६ महिना सम्म "</string>
 <string name="common_option_ageYoungest_6_12M">"६ देखि १२ महिना सम्म"</string>
 <string name="common_option_ageYoungest_1_2Y">"१ देखि २ वर्ष सम्म"</string>
@@ -833,35 +833,43 @@
 <string name="common_option_numberOfLivingChildren_19">"19"</string>
 <string name="common_option_numberOfLivingChildren_20">"20"</string>
 <string name="common_option_numberOfLivingChildren_0">"0"</string>
-<string name="web_view_name">"Web URL"</string>
+<string name="web_view_name">"वेब URL"</string>
 <string name="unsent_vouchers">"* नपठाईएको भौचर"</string>
 <string name="zimbabwe_program">"जिम्बावे"</string>
-<string name="ipc_issueEntry_q_age"></string>
-<string name="ipc_issueEntry_q_ZW_targetGroup"></string>
-<string name="ipc_issueEntry_q_ZW_segment"></string>
-<string name="ipc_issueEntry_q_ZW_msgBenefits"></string>
-<string name="ipc_issueEntry_q_ZW_msgPain"></string>
-<string name="ipc_issueEntry_q_ZW_msgSexAppeal"></string>
-<string name="ipc_issueEntry_q_ZW_msgSocialSupport"></string>
-<string name="ipc_issueEntry_q_ZW_msgProcedure"></string>
-<string name="ipc_issueEntry_q_ZW_levelOfInterest"></string>
-<string name="ipc_issueEntry_q_ZW_hivTestedLast3Months"></string>
-<string name="ipc_issueEntry_q_ZW_hivSelfTestGiven"></string>
-<string name="ipc_issueEntry_q_ZW_hivSelfTestAssistance"></string>
-<string name="common_option_ZW_targetGroup_schoolGoing"></string>
-<string name="common_option_ZW_targetGroup_outSchool"></string>
-<string name="common_option_ZW_targetGroup_Orange"></string>
-<string name="common_option_ZW_targetGroup_Yellow"></string>
-<string name="common_option_ZW_targetGroup_Grey"></string>
-<string name="common_option_ZW_targetGroup_Maroon"></string>
-<string name="common_option_ZW_targetGroup_Brown"></string>
-<string name="common_option_ZW_targetGroup_Purple"></string>
-<string name="common_option_ZW_targetGroup_Green"></string>
-<string name="common_option_ZW_targetGroup_High"></string>
-<string name="common_option_ZW_targetGroup_Medium"></string>
-<string name="common_option_ZW_targetGroup_Low"></string>
-<string name="common_option_ZW_targetGroup_NotInterested"></string>
-<string name="common_option_ZW_targetGroup_Assisted"></string>
-<string name="common_option_ZW_targetGroup_Administered"></string>
-<string name="common_option_ZW_targetGroup_Absent"></string>
+
+<string name="e_voucher">eVoucher</string>
+<string name="ipc_issueEntry_q_generateVoucher">के तपाईं एक भाउजु जारी गर्न चाहनुहुन्छ?</string>
+<string name="ipc_issueEntry_q_age">उमेर</string>
+<string name="ipc_issueEntry_q_ZW_targetGroup">MC लक्ष्य समूह</string>
+<string name="common_option_ZW_targetGroup_schoolGoing">स्कूल जाँदैछ</string>
+<string name="common_option_ZW_targetGroup_outSchool">स्कूल बाहिर</string>
+<string name="ipc_issueEntry_q_ZW_segment">खण्ड</string>
+<string name="common_option_ZW_targetGroup_Orange">सुन्तला</string>
+<string name="common_option_ZW_targetGroup_Yellow">पहेंलो</string>
+<string name="common_option_ZW_targetGroup_Grey">खैरो</string>
+<string name="common_option_ZW_targetGroup_Maroon">मरुन</string>
+<string name="common_option_ZW_targetGroup_Brown">खैरो</string>
+<string name="common_option_ZW_targetGroup_Purple">बैंगनी</string>
+<string name="common_option_ZW_targetGroup_Green">हरियो</string>
+<string name="ipc_issueEntry_q_ZW_msgBenefits">सन्देश: VMMC को लाभ</string>
+<string name="ipc_issueEntry_q_ZW_msgPain">सन्देश: दुखाइ</string>
+<string name="ipc_issueEntry_q_ZW_msgSexAppeal">सन्देश: लिंग अपील</string>
+<string name="ipc_issueEntry_q_ZW_msgSocialSupport">सन्देश: सामाजिक समर्थन</string>
+<string name="ipc_issueEntry_q_ZW_msgProcedure">सन्देश: VMMC प्रक्रिया</string>
+<string name="ipc_issueEntry_q_ZW_levelOfInterest">रुचिको स्तर</string>
+<string name="common_option_ZW_targetGroup_High">उच्च</string>
+<string name="common_option_ZW_targetGroup_Medium">मध्यम</string>
+<string name="common_option_ZW_targetGroup_Low">कम</string>
+<string name="common_option_ZW_targetGroup_NotInterested">मन छैन</string>
+<string name="ipc_issueEntry_q_ZW_hivTestedLast3Months">तपाईं विगत 3 महिनामा एचआईभीको लागि परीक्षण गरिएको छ</string>
+<string name="ipc_issueEntry_q_ZW_hivSelfTestGiven">एचआईवी स्व परीक्षण टेस्ट दिइयो</string>
+<string name="ipc_issueEntry_q_ZW_hivSelfTestAssistance">आईपीसी ले एचआईवी स्व परीक्षण को सहायता प्रदान गर्यो</string>
+<string name="common_option_ZW_targetGroup_Assisted">सहायता गरियो</string>
+<string name="common_option_ZW_targetGroup_Administered">प्रशासित</string>
+<string name="common_option_ZW_targetGroup_Absent">अनुपस्थित</string>
+<string name="nepal_program_eref">नेपाल</string>
+<string name="mozambique_program_eref">मोजाम्बिक</string>
+<string name="zimbabwe_program_eref">जिम्बाब्वे</string>
+<string name="no_voucher">कुनै भ्यूचर छैन</string>
+
 </resources>

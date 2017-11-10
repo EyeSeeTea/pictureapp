@@ -19,7 +19,6 @@
 
 package org.eyeseetea.malariacare.layout.adapters.survey;
 
-import static org.eyeseetea.malariacare.R.id.masked;
 import static org.eyeseetea.malariacare.R.id.question;
 import static org.eyeseetea.malariacare.data.database.model.OptionDB.DOESNT_MATCH_POSITION;
 import static org.eyeseetea.malariacare.data.database.model.OptionDB.MATCH_POSITION;
@@ -53,6 +52,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -614,8 +614,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 } else {
                     optionDBs = screenQuestionDB.getAnswerDB().getOptionDBs();
                 }
+                List<OptionDB> optionsToShow = new ArrayList<>(optionDBs);
+                hideOptionsByMatch(screenQuestionDB, optionsToShow);
                 ((AOptionQuestionView) questionView).setOptions(
-                        optionDBs);
+                        optionsToShow);
             }
             mDynamicTabAdapterStrategy.instanceOfSingleQuestion(questionView, screenQuestionDB);
 
@@ -651,6 +653,36 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             swipeTouchListener.addClickableView((View) questionView);
 
             setVisibilityAndAddRow(tableRow, screenQuestionDB, visibility);
+        }
+    }
+
+    private void hideOptionsByMatch(QuestionDB screenQuestionDB,
+            List<OptionDB> optionDBs) {
+        List<QuestionOptionDB> questionOptionDBs = new ArrayList<>();
+        for (OptionDB optionDB : optionDBs) {
+            questionOptionDBs.addAll(QuestionOptionDB.findByQuestionAndOption(screenQuestionDB,
+                    optionDB));
+        }
+        for (QuestionOptionDB questionOptionDB : questionOptionDBs) {
+            if (questionOptionDB.getQuestionRelation().getOperation()
+                    == QuestionRelationDB.MATCH_HIDE_OPTION_QUESTION_THRESHOLD) {
+                hideOptionsIfMatchQuestionThreshold(questionOptionDB, optionDBs);
+            }
+        }
+    }
+
+    private void hideOptionsIfMatchQuestionThreshold(QuestionOptionDB questionOptionDB,
+            List<OptionDB> optionDBs) {
+        QuestionThresholdDB questionThresholdDB = questionOptionDB.getQuestionThreshold();
+        QuestionDB thresholdQuestion = questionThresholdDB.getQuestionDB();
+        if (questionThresholdDB.isInThreshold(
+                Integer.parseInt(thresholdQuestion.getValueBySession().getValue()))) {
+            for (OptionDB optionDB : optionDBs) {
+                if (optionDB.equals(questionOptionDB.getOptionDB())) {
+                    optionDBs.remove(optionDB);
+                    break;
+                }
+            }
         }
     }
 

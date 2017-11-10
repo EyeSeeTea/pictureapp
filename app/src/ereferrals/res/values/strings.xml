@@ -1000,6 +1000,7 @@
 
 <!-- Fuzzy -->
 <string name="zimbabwe_program">"Zimbabwe"</string>
+<string name="e_voucher">eVoucher</string>
 <string name="ipc_issueEntry_q_generateVoucher">Would you like to issue a voucher?</string>
 <string name="ipc_issueEntry_q_age">"Age"</string>
 <string name="ipc_issueEntry_q_ZW_targetGroup">"MC Target group"</string>

@@ -835,6 +835,7 @@
 <string name="zimbabwe_program">"Zimbábue"</string>
 
 <string name="e_voucher">eVoucher</string>
+<string name="no_voucher">No voucher</string>
 <string name="ipc_issueEntry_q_generateVoucher">Gostaria de emitir um voucher?</string>
 <string name="ipc_issueEntry_q_age">idade</string>
 <string name="ipc_issueEntry_q_ZW_targetGroup">MC Target Group</string>

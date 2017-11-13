@@ -102,6 +102,10 @@ public class NavigationController {
         QuestionDB currentQuestionDB = getCurrentQuestion();
         ValueDB currentValueDB = currentQuestionDB.getValueBySession();
 
+        if (currentValueDB == null) {
+            currentValueDB = checkForSameUIDQuestionValues(currentQuestionDB);
+        }
+
         //Cannot move without answer
         if (currentValueDB == null) {
             Log.d(TAG, "isNextAllowed()->You must answer first");
@@ -113,6 +117,19 @@ public class NavigationController {
         boolean isAllowed = findNext(currentOptionDB) != null;
         Log.d(TAG, String.format("isNextAllowed()->%b", isAllowed));
         return isAllowed;
+    }
+
+    private ValueDB checkForSameUIDQuestionValues(QuestionDB currentQuestionDB) {
+        ValueDB currentValueDB;
+        List<QuestionDB> questionsSameUID = currentQuestionDB.findAllByUID(
+                currentQuestionDB.getUid());
+        for (QuestionDB questionDB : questionsSameUID) {
+            currentValueDB = questionDB.getValueBySession();
+            if (currentValueDB != null) {
+                return currentValueDB;
+            }
+        }
+        return null;
     }
 
     public boolean isLastQuestionWithValue() {

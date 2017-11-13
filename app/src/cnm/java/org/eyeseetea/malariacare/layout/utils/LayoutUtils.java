@@ -16,7 +16,7 @@ public class LayoutUtils extends BaseLayoutUtils {
     public static void setActionBar(android.support.v7.app.ActionBar actionBar) {
         ProgramDB program = ProgramDB.getFirstProgram();
         if (program != null && !PreferencesState.getInstance().getOrgUnit().equals("")) {
-            LayoutUtils.setActionBarWithOrgUnitWithOutSubtitle(actionBar);
+            LayoutUtils.setActionBarWithOrgUnit(actionBar);
         } else {
             LayoutUtils.setActionBarLogo(actionBar);
         }

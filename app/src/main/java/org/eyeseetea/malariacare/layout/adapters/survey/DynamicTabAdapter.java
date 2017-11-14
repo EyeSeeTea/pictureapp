@@ -615,7 +615,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     optionDBs = screenQuestionDB.getAnswerDB().getOptionDBs();
                 }
                 List<OptionDB> optionsToShow = new ArrayList<>(optionDBs);
-                hideOptionsByMatch(screenQuestionDB, optionsToShow);
+                valueDB = hideOptionsByMatch(screenQuestionDB, optionsToShow, valueDB);
                 ((AOptionQuestionView) questionView).setOptions(
                         optionsToShow);
             }
@@ -656,8 +656,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    private void hideOptionsByMatch(QuestionDB screenQuestionDB,
-            List<OptionDB> optionDBs) {
+    private ValueDB hideOptionsByMatch(QuestionDB screenQuestionDB,
+            List<OptionDB> optionDBs, ValueDB valueDB) {
+        boolean isQuestionHideOption = false;
+        for (QuestionRelationDB questionRelationDB : screenQuestionDB.getQuestionRelationDBs()) {
+            if (questionRelationDB.getOperation()
+                    == QuestionRelationDB.MATCH_HIDE_OPTION_QUESTION_THRESHOLD) {
+                isQuestionHideOption = true;
+            }
+        }
+        if (!isQuestionHideOption) {
+            return valueDB;
+        }
         List<QuestionOptionDB> questionOptionDBs = new ArrayList<>();
         for (OptionDB optionDB : optionDBs) {
             questionOptionDBs.addAll(QuestionOptionDB.findByQuestionAndOption(screenQuestionDB,
@@ -666,24 +676,37 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         for (QuestionOptionDB questionOptionDB : questionOptionDBs) {
             if (questionOptionDB.getQuestionRelation().getOperation()
                     == QuestionRelationDB.MATCH_HIDE_OPTION_QUESTION_THRESHOLD) {
-                hideOptionsIfMatchQuestionThreshold(questionOptionDB, optionDBs);
+                valueDB = hideOptionsIfMatchQuestionThreshold(questionOptionDB, optionDBs, valueDB);
             }
         }
+        return valueDB;
     }
 
-    private void hideOptionsIfMatchQuestionThreshold(QuestionOptionDB questionOptionDB,
-            List<OptionDB> optionDBs) {
+    private ValueDB hideOptionsIfMatchQuestionThreshold(QuestionOptionDB questionOptionDB,
+            List<OptionDB> optionDBs, ValueDB valueDB) {
         QuestionThresholdDB questionThresholdDB = questionOptionDB.getQuestionThreshold();
         QuestionDB thresholdQuestion = questionThresholdDB.getQuestionDB();
         if (questionThresholdDB.isInThreshold(
                 Integer.parseInt(thresholdQuestion.getValueBySession().getValue()))) {
             for (OptionDB optionDB : optionDBs) {
                 if (optionDB.equals(questionOptionDB.getOptionDB())) {
+                    valueDB = removeValueOfQuestionIfEqualsOption(valueDB, optionDB);
                     optionDBs.remove(optionDB);
                     break;
                 }
             }
         }
+        return valueDB;
+    }
+
+    private ValueDB removeValueOfQuestionIfEqualsOption(ValueDB value,
+            OptionDB optionDB) {
+        if (value != null && value.getId_option() != null && value.getId_option().equals(
+                optionDB.getId_option())) {
+            value.delete();
+            value = null;
+        }
+        return value;
     }
 
     private void setupNavigationByQuestionView(View rootView, IQuestionView questionView) {

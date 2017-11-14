@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.strategies;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -26,7 +25,7 @@ public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
         //Sets the value text in the row and add the question as tag.
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(
                 R.id.review_title_text);
-        TextView answerText = (TextView) rowView.findViewById(R.id.review_answer);
+        CustomTextView answerText = (CustomTextView) rowView.findViewById(R.id.review_answer);
 
         if ((value.getQuestionUId() != null)) {
             rowView.setTag(value.getQuestionUId());

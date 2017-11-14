@@ -24,7 +24,6 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.utils.Permissions;
-import org.hisp.dhis.client.sdk.core.common.network.ApiException;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     private PullUseCase mPullUseCase;
@@ -81,6 +80,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
                 @Override
                 public void onStep(PullStep step) {
+                    if (step == PullStep.AUTO_CONFIGURE_ORG_UNIT) {
+                        ((TextView) activity.findViewById(progress_message)).setText(
+                                R.string.auto_configuring);
+                    }
                     Log.d(this.getClass().getSimpleName(), step.toString());
                 }
 

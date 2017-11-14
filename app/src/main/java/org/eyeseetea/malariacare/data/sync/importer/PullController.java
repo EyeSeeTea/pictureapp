@@ -34,6 +34,7 @@ import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerSt
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.D2;
@@ -81,7 +82,7 @@ public class PullController implements IPullController {
             mPullRemoteDataSource.pullMetadata(
                     new IDataSourceCallback<List<OrganisationUnit>>() {
                         @Override
-                        public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                        public void onSuccess(final List<OrganisationUnit> organisationUnits) {
                                 if(pullFilters.getDataByOrgUnit()!=null && !pullFilters.getDataByOrgUnit().equals("")) {
                                     if (!pullFilters.downloadData()
                                             || pullFilters.pullDataAfterMetadata()) {
@@ -89,8 +90,33 @@ public class PullController implements IPullController {
                                         convertMetaData(callback);
                                     } else {
                                         pullAndConvertOuOptions(pullFilters.getDataByOrgUnit(),callback);
-                                        convertMetaData(callback);
-                                        pullData(pullFilters, organisationUnits, callback);
+                                        convertMetaData(new Callback() {
+                                            @Override
+                                            public void onComplete() {
+                                                pullData(pullFilters, organisationUnits, callback);
+                                            }
+
+                                            @Override
+                                            public void onCancel() {
+                                                callback.onCancel();
+                                            }
+
+                                            @Override
+                                            public void onStep(PullStep step) {
+                                                callback.onStep(step);
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable throwable) {
+                                                callback.onError(throwable);
+                                            }
+
+                                            @Override
+                                            public void onWarning(WarningException warning) {
+                                                callback.onWarning(warning);
+                                            }
+                                        });
+
                                     }
                                 }else{
                                     convertMetaData(callback);

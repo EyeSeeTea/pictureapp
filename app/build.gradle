@@ -150,7 +150,7 @@ android {
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
-            versionName "0.1.0"
+            versionName "0.2.0"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"

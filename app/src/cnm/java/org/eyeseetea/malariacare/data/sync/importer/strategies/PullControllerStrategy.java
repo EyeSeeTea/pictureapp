@@ -42,10 +42,10 @@ import org.eyeseetea.malariacare.domain.exception.organisationunit
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +99,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         if (isOrgUnitConfigured()) {
             downloadMetadata(pullFilters, callback);
         } else {
+            callback.onStep(PullStep.AUTO_CONFIGURE_ORG_UNIT);
             OrganisationUnit organisationUnit = getOrganisationUnitByPhone(callback);
 
             if (organisationUnit == null) {

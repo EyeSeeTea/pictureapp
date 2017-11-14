@@ -329,6 +329,13 @@ public class QuestionDB extends BaseModel {
                 .where(QuestionDB_Table.uid_question.is(uid))
                 .querySingle();
     }
+
+    public static List<QuestionDB> findAllByUID(String uid) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.uid_question.is(uid))
+                .queryList();
+    }
     /**
      * Finds a mQuestionDB by its UID
      */

@@ -658,6 +658,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private ValueDB hideOptionsByMatch(QuestionDB screenQuestionDB,
             List<OptionDB> optionDBs, ValueDB valueDB) {
+        boolean isQuestionHideOption = false;
+        for (QuestionRelationDB questionRelationDB : screenQuestionDB.getQuestionRelationDBs()) {
+            if (questionRelationDB.getOperation()
+                    == QuestionRelationDB.MATCH_HIDE_OPTION_QUESTION_THRESHOLD) {
+                isQuestionHideOption = true;
+            }
+        }
+        if (!isQuestionHideOption) {
+            return valueDB;
+        }
         List<QuestionOptionDB> questionOptionDBs = new ArrayList<>();
         for (OptionDB optionDB : optionDBs) {
             questionOptionDBs.addAll(QuestionOptionDB.findByQuestionAndOption(screenQuestionDB,

@@ -105,6 +105,16 @@ public abstract class BaseLayoutUtils {
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 
+    public static void setActionBarWithOrgUnitWithOutSubtitle(ActionBar actionBar) {
+        LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit());
+    }
+
+    public static void setActionBarText(ActionBar actionBar, String title) {
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setTitle(title);
+    }
+
     public static void setActionBarWithOrgUnit(ActionBar actionBar) {
         LayoutUtils.setActionBarLogo(actionBar);
         LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),

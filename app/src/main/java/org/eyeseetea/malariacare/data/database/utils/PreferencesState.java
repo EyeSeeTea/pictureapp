@@ -129,7 +129,7 @@ public class PreferencesState {
         if (phoneLanguage == null) {
             phoneLanguage = Locale.getDefault().getLanguage();
         }
-        this.context = context;
+        PreferencesState.context = context;
         reloadPreferences();
     }
 
@@ -267,7 +267,7 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putString(context.getResources().getString(namePreference),
                 value); // set your default value here (could be empty as well)
-        prefEditor.commit(); // finally save changes
+        prefEditor.apply(); // finally save changes
     }
 
     public void saveStringPreference(String namePreference, String value) {
@@ -275,7 +275,7 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putString(namePreference,
                 value); // set your default value here (could be empty as well)
-        prefEditor.commit(); // finally save changes
+        prefEditor.apply(); // finally save changes
     }
 
     public String getPreference() {
@@ -308,7 +308,7 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putBoolean(instance.getContext().getString(R.string.meta_data_download),
                 value); // set your default value here (could be empty as well)
-        prefEditor.commit(); // finally save changes
+        prefEditor.apply(); // finally save changes
     }
 
     public boolean getPullDataAfterMetadata() {
@@ -323,7 +323,7 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putBoolean(instance.getContext().getString(R.string.pull_data_after_metadata),
                 value); // set your default value here (could be empty as well)
-        prefEditor.commit(); // finally save changes
+        prefEditor.apply(); // finally save changes
     }
     public boolean getDataFilteredByOrgUnit() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
@@ -337,7 +337,7 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putBoolean(instance.getContext().getString(R.string.data_filtered_by_preference_org_unit),
                 value); // set your default value here (could be empty as well)
-        prefEditor.commit(); // finally save changes
+        prefEditor.apply(); // finally save changes
     }
     public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
         if(BuildConfig.translations) {
@@ -349,14 +349,15 @@ public class PreferencesState {
     }
 
     public void loadsLanguageInActivity() {
+        setLocale(getCurrentLocale());
+    }
+    public String getCurrentLocale() {
         String temLanguageCode = languageCode;
         if (languageCode.equals("")) {
             temLanguageCode = phoneLanguage;
-        }else {
-            setLocale(temLanguageCode);
         }
+        return temLanguageCode;
     }
-
     private void setLocale(String languageCode) {
         Resources res = context.getResources();
         // Change locale settings in the app.
@@ -398,7 +399,7 @@ public class PreferencesState {
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(context.getResources().getString(R.string.push_in_progress), inProgress);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean isFileDownloaderInProgress() {
@@ -413,7 +414,7 @@ public class PreferencesState {
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(context.getResources().getString(R.string.file_downloader_in_progress), inProgress);
-        editor.commit();
+        editor.apply();
     }
 
     public Date getDateStarDateLimitFilter() {

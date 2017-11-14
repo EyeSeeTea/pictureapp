@@ -3,7 +3,7 @@
     <string name="rdtPositive" translatable="false">Positive</string>
     <string name="rdtNegative" translatable="false">Negative</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://android.psi-mis.org</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dhis2.asia/cnm_android</string>
     <string name="work_in_progress" translatable="false">Work in progress</string>
 
 
@@ -36,4 +36,7 @@
     <string name="google_play_required" translatable="false"></string>
     <string name="feedback_view_image" translatable="false"></string>
     <string name="autoconfigure_preference" translatable="false">autoconfigure_preference</string>
+    <string name="metadata_downloaded" translatable="false">metadata_downloaded</string>
+    <string name="metadata_version" translatable="false">metadata_version</string>
+    <string name="imei_preference" translatable="false">imei_prefrence</string>
 </resources>

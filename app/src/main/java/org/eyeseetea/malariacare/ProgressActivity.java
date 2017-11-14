@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -166,6 +167,7 @@ public class ProgressActivity extends Activity {
 
             @Override
             public void onError(Throwable message) {
+                message.printStackTrace();
                 showException(R.string.dialog_pull_error);
             }
 
@@ -177,6 +179,11 @@ public class ProgressActivity extends Activity {
             @Override
             public void onPullConversionError() {
                 showException(R.string.dialog_pull_error);
+            }
+
+            @Override
+            public void onWarning(WarningException warning) {
+                Log.w(this.getClass().getSimpleName(), warning.getMessage());
             }
 
             @Override

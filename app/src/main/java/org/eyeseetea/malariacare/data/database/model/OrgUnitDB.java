@@ -47,6 +47,8 @@ public class OrgUnitDB extends BaseModel {
     Long id_org_unit_parent;
     @Column
     Boolean is_banned;
+    @Column
+    String coordinates;
 
     /**
      * Reference to parent mOrgUnitDB (loaded lazily)
@@ -182,6 +184,14 @@ public class OrgUnitDB extends BaseModel {
         this.mOrgUnitDB = null;
     }
 
+    public String getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(String coordinates) {
+        this.coordinates = coordinates;
+    }
+
     public OrgUnitLevelDB getOrgUnitLevelDB() {
         if (mOrgUnitLevelDB == null) {
             if (this.id_org_unit_level == null) return null;
@@ -288,15 +298,44 @@ public class OrgUnitDB extends BaseModel {
         OrgUnitDB orgUnitDB = (OrgUnitDB) o;
 
         if (id_org_unit != orgUnitDB.id_org_unit) return false;
-        if (is_banned != orgUnitDB.is_banned) return false;
-        if (uid_org_unit != null ? !uid_org_unit.equals(orgUnitDB.uid_org_unit) : orgUnitDB.uid_org_unit != null) return false;
-        if (name != null ? !name.equals(orgUnitDB.name) : orgUnitDB.name != null) return false;
-        if (id_org_unit_parent != null ? !id_org_unit_parent.equals(
-                orgUnitDB.id_org_unit_parent) : orgUnitDB.id_org_unit_parent != null) {
+        if (uid_org_unit != null ? !uid_org_unit.equals(orgUnitDB.uid_org_unit)
+                : orgUnitDB.uid_org_unit != null) {
             return false;
         }
-        return !(id_org_unit_level != null ? !id_org_unit_level.equals(orgUnitDB.id_org_unit_level)
-                : orgUnitDB.id_org_unit_level != null);
+        if (name != null ? !name.equals(orgUnitDB.name) : orgUnitDB.name != null) return false;
+        if (id_org_unit_parent != null ? !id_org_unit_parent.equals(orgUnitDB.id_org_unit_parent)
+                : orgUnitDB.id_org_unit_parent != null) {
+            return false;
+        }
+        if (is_banned != null ? !is_banned.equals(orgUnitDB.is_banned)
+                : orgUnitDB.is_banned != null) {
+            return false;
+        }
+        if (coordinates != null ? !coordinates.equals(orgUnitDB.coordinates)
+                : orgUnitDB.coordinates != null) {
+            return false;
+        }
+        if (mOrgUnitDB != null ? !mOrgUnitDB.equals(orgUnitDB.mOrgUnitDB)
+                : orgUnitDB.mOrgUnitDB != null) {
+            return false;
+        }
+        if (id_org_unit_level != null ? !id_org_unit_level.equals(orgUnitDB.id_org_unit_level)
+                : orgUnitDB.id_org_unit_level != null) {
+            return false;
+        }
+        if (mOrgUnitLevelDB != null ? !mOrgUnitLevelDB.equals(orgUnitDB.mOrgUnitLevelDB)
+                : orgUnitDB.mOrgUnitLevelDB != null) {
+            return false;
+        }
+        if (mSurveyDBs != null ? !mSurveyDBs.equals(orgUnitDB.mSurveyDBs)
+                : orgUnitDB.mSurveyDBs != null) {
+            return false;
+        }
+        if (children != null ? !children.equals(orgUnitDB.children) : orgUnitDB.children != null) {
+            return false;
+        }
+        return mProgramDBs != null ? mProgramDBs.equals(orgUnitDB.mProgramDBs)
+                : orgUnitDB.mProgramDBs == null;
 
     }
 
@@ -304,22 +343,34 @@ public class OrgUnitDB extends BaseModel {
     public int hashCode() {
         int result = (int) (id_org_unit ^ (id_org_unit >>> 32));
         result = 31 * result + (uid_org_unit != null ? uid_org_unit.hashCode() : 0);
-        result = 31 * result + (is_banned != null ? is_banned.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (id_org_unit_parent != null ? id_org_unit_parent.hashCode() : 0);
+        result = 31 * result + (is_banned != null ? is_banned.hashCode() : 0);
+        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
+        result = 31 * result + (mOrgUnitDB != null ? mOrgUnitDB.hashCode() : 0);
         result = 31 * result + (id_org_unit_level != null ? id_org_unit_level.hashCode() : 0);
+        result = 31 * result + (mOrgUnitLevelDB != null ? mOrgUnitLevelDB.hashCode() : 0);
+        result = 31 * result + (mSurveyDBs != null ? mSurveyDBs.hashCode() : 0);
+        result = 31 * result + (children != null ? children.hashCode() : 0);
+        result = 31 * result + (mProgramDBs != null ? mProgramDBs.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "OrgUnitDB{" +
-                "id_org_unit_fk=" + id_org_unit +
+                "id_org_unit=" + id_org_unit +
                 ", uid_org_unit='" + uid_org_unit + '\'' +
-                ", is_banned='" + is_banned + '\'' +
                 ", name='" + name + '\'' +
                 ", id_org_unit_parent=" + id_org_unit_parent +
+                ", is_banned=" + is_banned +
+                ", coordinates='" + coordinates + '\'' +
+                ", mOrgUnitDB=" + mOrgUnitDB +
                 ", id_org_unit_level=" + id_org_unit_level +
+                ", mOrgUnitLevelDB=" + mOrgUnitLevelDB +
+                ", mSurveyDBs=" + mSurveyDBs +
+                ", children=" + children +
+                ", mProgramDBs=" + mProgramDBs +
                 '}';
     }
 

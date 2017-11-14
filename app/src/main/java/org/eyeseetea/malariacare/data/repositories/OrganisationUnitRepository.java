@@ -13,6 +13,8 @@ import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 public class OrganisationUnitRepository implements IOrganisationUnitRepository {
@@ -83,7 +85,8 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     }
 
     @Override
-    public OrganisationUnit getOrganisationUnitByPhone(Device device) throws ApiCallException {
+    public OrganisationUnit getOrganisationUnitByPhone(Device device)
+            throws ApiCallException, ExistsMoreThanOneOrgUnitByPhoneException {
         String IMEI = device.getIMEI();
         if (IMEI == null || IMEI.isEmpty()) {
             return null;
@@ -120,4 +123,7 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         PreferencesState.getInstance().setOrgUnit(null);
     }
 
+    public OrganisationUnit getOrganisationUnitByName(String name) {
+        return OrgUnitDB.getByName(name);
+    }
 }

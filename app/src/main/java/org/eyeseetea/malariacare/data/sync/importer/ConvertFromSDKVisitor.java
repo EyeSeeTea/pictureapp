@@ -101,16 +101,32 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
-        OrgUnitDB appOrgUnitDB = new OrgUnitDB();
+        OrgUnitDB appOrgUnitDB = null;
 
-        appOrgUnitDB.setName(sdkOrganisationUnitExtended.getLabel());
-        appOrgUnitDB.setUid(sdkOrganisationUnitExtended.getId());
+        appOrgUnitDB = convertOrganisationUnitExtended(sdkOrganisationUnitExtended);
 
         appOrgUnitDB.save();
 
         mOrgUnitDBs.add(appOrgUnitDB);
 
         appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnitDB);
+    }
+
+    public static OrgUnitDB convertOrganisationUnitExtended(
+            OrganisationUnitExtended organisationUnitExtended) {
+
+        OrgUnitDB appOrgUnitDB = null;
+
+        appOrgUnitDB = OrgUnitDB.findByUID(organisationUnitExtended.getOrgUnit().getUId());
+
+        if (appOrgUnitDB == null) {
+            appOrgUnitDB = new OrgUnitDB();
+        }
+
+        appOrgUnitDB.setName(organisationUnitExtended.getLabel());
+        appOrgUnitDB.setUid(organisationUnitExtended.getId());
+        appOrgUnitDB.setCoordinates(organisationUnitExtended.getOrgUnit().getCoordinates());
+        return appOrgUnitDB;
     }
 
     /**
@@ -174,27 +190,28 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         }
 
         //Datavalue is a valueDB from a questionDB
-        QuestionDB questionDB = QuestionDB.findByUID(questionUID);
-
-        if (questionDB == null) {
+        List<QuestionDB> questions = QuestionDB.findQuestionsByUID(questionUID);
+        if (questions == null) {
             Log.e(TAG, "Question not found with dataelement uid " + questionUID);
         }
+        for(QuestionDB questionDB:questions) {
 
-        ValueDB valueDB = new ValueDB();
-        valueDB.setQuestionDB(questionDB);
-        valueDB.setSurveyDB(surveyDB);
+            ValueDB valueDB = new ValueDB();
+            valueDB.setQuestionDB(questionDB);
+            valueDB.setSurveyDB(surveyDB);
 
-        OptionDB optionDB =
-                sdkDataValueExtended.findOptionByQuestion(questionDB);
-        valueDB.setOptionDB(optionDB);
-        //No optionDB -> text questionDB (straight valueDB)
-        if (optionDB == null) {
-            valueDB.setValue(sdkDataValueExtended.getValue());
-        } else {
-            //OptionDB -> extract valueDB from code
-            valueDB.setValue(sdkDataValueExtended.getDataValue().getValue());
+            OptionDB optionDB =
+                    sdkDataValueExtended.findOptionByQuestion(questionDB);
+            valueDB.setOptionDB(optionDB);
+            //No optionDB -> text questionDB (straight valueDB)
+            if (optionDB == null) {
+                valueDB.setValue(sdkDataValueExtended.getValue());
+            } else {
+                //OptionDB -> extract valueDB from code
+                valueDB.setValue(sdkDataValueExtended.getDataValue().getValue());
+            }
+            mValueDBs.add(valueDB);
         }
-        mValueDBs.add(valueDB);
     }
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {

@@ -105,6 +105,16 @@ public abstract class BaseLayoutUtils {
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 
+    public static void setActionBarWithOrgUnitWithOutSubtitle(ActionBar actionBar) {
+        LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit());
+    }
+
+    public static void setActionBarText(ActionBar actionBar, String title) {
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setTitle(title);
+    }
+
     public static void setActionBarWithOrgUnit(ActionBar actionBar) {
         LayoutUtils.setActionBarLogo(actionBar);
         LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
@@ -190,7 +200,7 @@ public abstract class BaseLayoutUtils {
     /**
      * Puts a sort of dark shadow over the given view
      */
-    public static void overshadow(FrameLayout view) {
+    public static void overshadow(ViewGroup view) {
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
         view.getBackground().setColorFilter(Color.parseColor("#805a595b"),
                 PorterDuff.Mode.SRC_ATOP);
@@ -234,12 +244,15 @@ public abstract class BaseLayoutUtils {
             return;
         }
         try {
-            InputStream inputStream = PreferencesState.getInstance().getContext().getAssets().open(
-                    Utils.getInternationalizedString(path));
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            imageView.setImageDrawable(
-                    new BitmapDrawable(PreferencesState.getInstance().getContext().getResources(),
-                            bmp));
+            if(path!=null && !path.equals("")) {
+                InputStream inputStream = imageView.getContext().getAssets().open(
+                        Utils.getInternationalizedString(path));
+                Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                imageView.setImageDrawable(
+                        new BitmapDrawable(
+                                PreferencesState.getInstance().getContext().getResources(),
+                                bmp));
+            }
         } catch (IOException e) {
             new ImageNotShowException(e, Utils.getInternationalizedString(path));
         }

@@ -5,9 +5,12 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+
+import java.util.List;
 
 public abstract class APullControllerStrategy {
 
@@ -19,7 +22,8 @@ public abstract class APullControllerStrategy {
         mPullController = pullController;
     }
 
-    public abstract void convertMetadata(ConvertFromSDKVisitor converter);
+    public abstract void convertMetadata(ConvertFromSDKVisitor converter,
+            IPullController.Callback callback);
 
     public void pull(final PullFilters pullFilters, final IPullController.Callback callback,
             Context context) {
@@ -47,5 +51,12 @@ public abstract class APullControllerStrategy {
         callback.onComplete();
     }
 
+    public void convertOrgUnitOptions(List<OrganisationUnitExtended> organisationUnitExtendeds) {
+    }
 
+    public void pullAndCovertOuOptions(final String selectedUid,
+            final IPullController.Callback callback) {
+        AOrgUnitToOptionConverterStrategy orgUnitToOptionConverterStrategy = new OrgUnitToOptionConverterStrategy();
+        orgUnitToOptionConverterStrategy.convert();
+    }
 }

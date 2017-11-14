@@ -62,10 +62,17 @@ public class QuestionRelationDB extends BaseModel {
 
     public static final int TREATMENT_MATCH = 5;
 
+    public static final int MATCH_WITH_OPTION_ATTRIBUTE=6;
+
     /**
      * This mMatchDB propagate the value from questionrelation mQuestionDB to the matched mQuestionDB
      */
     public static final int MATCH_PROPAGATE = 6;
+
+    /**
+     * Hide an option if question threshold match with this option
+     */
+    public static final int MATCH_HIDE_OPTION_QUESTION_THRESHOLD = 7;
 
     private static final String TAG = ".QuestionRelationDB";
     @Column

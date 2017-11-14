@@ -34,6 +34,7 @@ import android.util.DisplayMetrics;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
+import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
@@ -365,5 +366,12 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onDestroy() {
         mSettingsActivityStrategy.onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+        Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
+        super.attachBaseContext(context);
     }
 }

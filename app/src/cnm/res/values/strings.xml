@@ -90,7 +90,7 @@
 <string name="developer_option_summary">"This feature activates the developer options"</string>
 <string name="developer_option_title">"Show developer options"</string>
 <string name="export_data_option_title">"Export database"</string>
-<string name="malaria_case_based_reporting">"Malaria Case Surveillance"</string>
+<string name="malaria_case_based_reporting">"CNM Malaria Case Surveillance"</string>
 <string name="survey_review">"Review"</string>
 <string name="survey_send">"Send"</string>
 <string name="common_menu_about">"About"</string>
@@ -209,10 +209,57 @@
 <string name="tab_stock">"Stock"</string>
 <string name="av_progress">Downloading content... please wait</string>
 
-    <string name="login_userName">Username</string>
+<string name="login_userName">Username</string>
 
-    <string name="error_auto_configuration">"No OU found for this phone"</string>
-    <string name="auto_configuring">"Auto-configuring OU, please wait…"</string>
-    <string name="error_initialize_app">"Error while initializing the application"</string>
-    <string name="autoconfigure_preference_title">"Auto-configure user"</string>
+<string name="error_auto_configuration">"No OU found for this phone"</string>
+<string name="error_auto_configuration_unexpected">"An error has occured autoconfiguring... Please try again later"</string>
+
+<string name="auto_configuring">"Auto-configuring OU, please wait…"</string>
+<string name="error_initialize_app">"Error while initializing the application"</string>
+<string name="autoconfigure_preference_title">"Auto-configure user"</string>
+<string name="village">Village</string>
+<string name="commune">Commune</string>
+<string name="district">District</string>
+<string name="province">Province</string>
+
+<string name="ipc_issueEntry_q_diagnosisMethod">Diagnosis Method</string>
+<string name="common_option_diagnosis_rdt">RDT</string>
+<string name="common_option_diagnosis_microscope">Microscope</string>
+<string name="ipc_issueEntry_q_result_rdt">Test Result RDT</string>
+<string name="ipc_issueEntry_q_result_microscope">Test Result Microscope</string>
+<string name="common_option_rdt_negative">Negative</string>
+<string name="common_option_rdt_pf">Pf</string>
+<string name="common_option_rdt_pv">Pv</string>
+<string name="common_option_rdt_mixed">Mixed</string>
+<string name="ipc_issueEntry_q_village">Village by HC:</string>
+<string name="ipc_issueEntry_q__tree_village">Village by Province / District / Commune:</string>
+<string name="ipc_issueEntry_q_patient_age">Age of Patient</string>
+<string name="ipc_issueEntry_q_patient_gender_pregnant">Gender</string>
+<string name="common_option_male">Male</string>
+<string name="common_option_female">Female</string>
+<string name="common_option_female_pregnant">Female - Pregnant</string>
+<string name="ipc_issueEntry_q_diagnosis_type">Diagnosis Type</string>
+<string name="common_option_diagnosis_simple">Simple</string>
+<string name="common_option_diagnosis_severe">Severe</string>
+<string name="ipc_issueEntry_q_treatment">Treatment</string>
+<string name="common_option_treatment_asmq">AS/MQ</string>
+<string name="common_option_treatment_dha_pip">DHA-PIP</string>
+<string name="common_option_treatment_pq">PQ</string>
+<string name="common_option_treatment_other">Other</string>
+<string name="ipc_issueEntry_q_treatment_other">Other Treatment</string>
+<string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
+<string name="common_option_referred_yes">Yes</string>
+<string name="common_option_referred_no">No</string>
+
+<string name="date_survey_format">"dd-MMM-yy"</string>
+<string name="hour_survey_format">"hh:mm a"</string>
+<string name="new_cases">New Cases</string>
+<string name="cases_pending">Cases Pending to be Uploaded</string>
+<string name="past_cases">Past Cases</string>
+<string name="cases_history">History - Cases Already Uploaded</string>
+<string name="tab_village_residence">Village of Residence</string>
+
+<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
+<string name="imei">"IMEI"</string>
+<string name="imei_error">"Error getting IMEI"</string>
 </resources>

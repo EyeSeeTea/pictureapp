@@ -5,6 +5,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.strategies.APullUseCaseStrategy;
 import org.eyeseetea.malariacare.domain.usecase.strategies.PullUseCaseStrategies;
@@ -36,6 +37,11 @@ public class PullUseCase implements UseCase {
                 } else {
                     notifyError(throwable);
                 }
+            }
+
+            @Override
+            public void onWarning(WarningException warning) {
+                notifyWarning(warning);
             }
 
             @Override
@@ -98,7 +104,6 @@ public class PullUseCase implements UseCase {
                 mCallback.onStep(step);
             }
         });
-
     }
 
     public void notifyOnNetworkError() {
@@ -119,6 +124,15 @@ public class PullUseCase implements UseCase {
         });
     }
 
+    private void notifyWarning(final WarningException warning) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onWarning(warning);
+            }
+        });
+    }
+
     public interface Callback {
         void onComplete();
 
@@ -129,6 +143,8 @@ public class PullUseCase implements UseCase {
         void onNetworkError();
 
         void onPullConversionError();
+
+        void onWarning(WarningException warning);
 
         void onCancel();
     }

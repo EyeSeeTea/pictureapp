@@ -231,6 +231,12 @@ public class QuestionDB extends BaseModel {
                 .queryList();
     }
 
+    public static List<QuestionDB> getAllQuestionsWithOutput(int output) {
+        return new Select().from(QuestionDB.class)
+                .where(QuestionDB_Table.output.eq(output))
+                .queryList();
+    }
+
     public static List<QuestionDB> getAllQuestionsWithMatch() {
         return new Select(QuestionDB_Table.getAllColumnProperties()).distinct().from(
                 QuestionDB.class).as(questionName)
@@ -321,6 +327,29 @@ public class QuestionDB extends BaseModel {
         return new Select()
                 .from(QuestionDB.class)
                 .where(QuestionDB_Table.uid_question.is(uid))
+                .querySingle();
+    }
+
+    public static List<QuestionDB> findAllByUID(String uid) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.uid_question.is(uid))
+                .queryList();
+    }
+    /**
+     * Finds a mQuestionDB by its UID
+     */
+    public static List<QuestionDB> findQuestionsByUID(String uid) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.uid_question.is(uid))
+                .queryList();
+    }
+
+    public static QuestionDB findByCode(String code) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.code.is(code))
                 .querySingle();
     }
 
@@ -442,6 +471,12 @@ public class QuestionDB extends BaseModel {
             QuestionRelationDB.deleteQuestionRelations(questionDB.getQuestionRelationDBs());
             questionDB.delete();
         }
+    }
+
+    public static List<OptionDB> getOptions(QuestionDB questionDB) {
+        return new Select().from(OptionDB.class)
+                .where(OptionDB_Table.id_answer_fk.eq(
+                        questionDB.getAnswerDB().getId_answer())).queryList();
     }
 
     public static List<OptionDB> getOptions(String UID) {
@@ -745,6 +780,21 @@ public class QuestionDB extends BaseModel {
                     .queryList();
         }
         return this.mQuestionRelationDBs;
+    }
+
+
+    public List<QuestionRelationDB> getQuestionTriggeredRelationswithOption(OptionDB optionDB) {
+        return new Select().from(QuestionRelationDB.class).as(questionRelationName).join(
+                MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName).on(
+                QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias).eq(
+                        MatchDB_Table.id_question_relation_fk.withTable(matchAlias))).join(
+                QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(questionOptionName).on(
+                MatchDB_Table.id_match.withTable(matchAlias).eq(
+                        QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias))).where(
+                QuestionOptionDB_Table.id_question_fk.withTable(questionOptionAlias).eq(
+                        id_question)).and(
+                QuestionOptionDB_Table.id_option_fk.withTable(questionOptionAlias).eq(
+                        optionDB.getId_option())).queryList();
     }
 
     public List<QuestionOptionDB> getQuestionOption() {

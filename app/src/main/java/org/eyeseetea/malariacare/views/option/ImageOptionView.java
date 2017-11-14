@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.views.option;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.eyeseetea.malariacare.R;
@@ -13,10 +13,12 @@ import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.AImageOptionViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ImageOptionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ImageOptionView extends CommonQuestionView {
-    public FrameLayout mOptionContainerView;
+    public ViewGroup mOptionContainerView;
     public CustomTextView mOptionTextView;
     public ImageView mOptionImageView;
     public CustomTextView mOptionCounterTextView;
@@ -24,10 +26,13 @@ public class ImageOptionView extends CommonQuestionView {
     OnOptionSelectedListener mOnOptionSelectedListener;
     private Boolean mSelectedOption;
     boolean isClicked = false;
+    private int mColumnsCount;
+    private AImageOptionViewStrategy mImageOptionViewStrategy;
 
-    public ImageOptionView(Context context) {
+    public ImageOptionView(Context context, int columnsCount) {
         super(context);
-
+        mColumnsCount = columnsCount;
+        mImageOptionViewStrategy=new ImageOptionViewStrategy();
         init(context);
     }
 
@@ -89,14 +94,14 @@ public class ImageOptionView extends CommonQuestionView {
     }
 
     private void init(final Context context) {
-        inflate(context, R.layout.dynamic_image_question_option, this);
+        inflate(context, getLayout(), this);
 
-        mOptionContainerView = (FrameLayout) findViewById(R.id.imageOptionContainer);
+        mOptionContainerView = (ViewGroup) findViewById(R.id.imageOptionContainer);
         mOptionImageView = (ImageView) findViewById(R.id.optionImage);
         mOptionTextView = (CustomTextView) findViewById(R.id.optionText);
         mOptionCounterTextView = (CustomTextView) findViewById(R.id.optionCounterText);
 
-        mOptionImageView.setOnClickListener(new OnClickListener() {
+        mOptionContainerView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isClicked) {
@@ -112,5 +117,9 @@ public class ImageOptionView extends CommonQuestionView {
 
     public interface OnOptionSelectedListener {
         void onOptionSelected(View view, OptionDB optionDB);
+    }
+
+    private int getLayout(){
+       return mImageOptionViewStrategy.getViewForColumns(mColumnsCount);
     }
 }

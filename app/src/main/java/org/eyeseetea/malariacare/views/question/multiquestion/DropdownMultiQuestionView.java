@@ -12,11 +12,14 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .ADropdownMultiQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .DropdownMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -29,17 +32,18 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     ImageView imageView;
     QuestionDB mQuestionDB;
     private boolean optionSetFromSavedValue = false;
+    private ADropdownMultiQuestionViewStrategy mDropdownMultiQuestionViewStrategy;
 
     public DropdownMultiQuestionView(Context context) {
         super(context);
-
+        mDropdownMultiQuestionViewStrategy = new DropdownMultiQuestionViewStrategy(context);
         init(context);
     }
 
     @Override
     public void setOptions(List<OptionDB> optionDBs) {
         List<OptionDB> optionDBList = new ArrayList<>(optionDBs);
-        optionDBList.add(0, new OptionDB(Constants.DEFAULT_SELECT_OPTION));
+        optionDBList.add(0, mDropdownMultiQuestionViewStrategy.getDefaultOption(mQuestionDB));
 
         spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionDBList));
     }
@@ -105,6 +109,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
+                    if (position > 0)
                     notifyAnswerChanged(optionDB);
                 } else {
                     optionSetFromSavedValue = false;

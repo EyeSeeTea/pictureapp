@@ -5,20 +5,30 @@ import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.SplashScreenActivity;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesCNM;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.usecase.DeleteOrgUnitUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetDeviceUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -55,6 +65,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                             settingsActivity.getResources().getString(R.string.pref_cat_server));
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.dhis_url)));
+            PreferenceCategory preferenceVisual =
+                    (PreferenceCategory) preferenceScreen.findPreference(
+                            settingsActivity.getResources().getString(R.string.pref_visual));
+            preferenceVisual.removePreference(preferenceScreen.findPreference(
+                    settingsActivity.getResources().getString(R.string.imei_preference)));
         }
         Preference autoconfigurePreference = preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.autoconfigure_preference));
@@ -71,14 +86,60 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         deleteOrgUnitUseCase.excute(new DeleteOrgUnitUseCase.Callback() {
                             @Override
                             public void onSuccess() {
-                                launchAutoconfigure();
+                                if(PreferencesState.getCredentialsFromPreferences()==null) {
+                                    launchAutoconfigure();
+                                }else {
+                                    executeLogout();
+                                }
                             }
                         });
                         return true;
                     }
                 });
+
+        Preference imeiPreference = preferenceScreen.findPreference(
+                settingsActivity.getResources().getString(R.string.imei_preference));
+        showImei(imeiPreference);
     }
 
+    private void showImei(final Preference imeiPreference) {
+        if (imeiPreference != null) {
+            IDeviceRepository deviceRepository = new DeviceDataSource();
+            IMainExecutor mainExecutor = new UIThreadExecutor();
+            IAsyncExecutor asyncExecutor = new AsyncExecutor();
+            GetDeviceUseCase getDeviceUseCase = new GetDeviceUseCase(mainExecutor, asyncExecutor,
+                    deviceRepository);
+            getDeviceUseCase.execute(new GetDeviceUseCase.Callback() {
+                @Override
+                public void onSuccess(Device device) {
+                    imeiPreference.setSummary(device.getIMEI());
+                }
+
+                @Override
+                public void onError() {
+                    imeiPreference.setSummary(
+                            settingsActivity.getResources().getString(R.string.imei_error));
+                }
+            });
+        }
+    }
+
+    public void executeLogout() {
+        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(settingsActivity);
+        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        AlarmPushReceiver.cancelPushAlarm(settingsActivity);
+        logoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+               launchAutoconfigure();
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e("." + this.getClass().getSimpleName(), message);
+            }
+        });
+    }
 
     @Override
     public Preference.OnPreferenceClickListener getOnPreferenceClickListener() {
@@ -122,4 +183,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         settingsActivity.finish();
     }
 
+    @Override
+    public void pullAfterChangeOuFlags() {
+        PreferencesCNM.setMetadataDownloaded(false);
+        PreferencesState.getInstance().setMetaDataDownload(true);
+        PreferencesState.getInstance().setPullDataAfterMetadata(false);
+        PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
+    }
 }

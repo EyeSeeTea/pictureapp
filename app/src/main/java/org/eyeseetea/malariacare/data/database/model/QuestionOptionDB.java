@@ -19,7 +19,10 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationName;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -224,6 +227,15 @@ public class QuestionOptionDB extends BaseModel {
         }
 
         return matchDB.getQuestionThreshold();
+    }
+
+    public QuestionRelationDB getQuestionRelation() {
+        return new Select().from(QuestionRelationDB.class).as(questionRelationName).join(
+                MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName).on(
+                QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias).eq(
+                        MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+                .where(MatchDB_Table.id_match.withTable(matchAlias).eq(id_match_fk))
+                .querySingle();
     }
 
     public static List<QuestionOptionDB> getQuestionOptionsWithMatchId(Long id_match) {

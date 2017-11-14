@@ -28,11 +28,13 @@ import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.D2;
@@ -76,18 +78,49 @@ public class PullController implements IPullController {
             callback.onCancel();
             return;
         }
-        if(pullFilters.pullMetaData()) {
+        if (pullFilters.pullMetaData()) {
             mPullRemoteDataSource.pullMetadata(
                     new IDataSourceCallback<List<OrganisationUnit>>() {
                         @Override
-                        public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                            if (!pullFilters.downloadData() || pullFilters.pullDataAfterMetadata()) {
-                                convertMetaData(callback);
-                                callback.onComplete();
-                            } else {
-                                convertMetaData(callback);
-                                pullData(pullFilters, organisationUnits, callback);
-                            }
+                        public void onSuccess(final List<OrganisationUnit> organisationUnits) {
+                                if(pullFilters.getDataByOrgUnit()!=null && !pullFilters.getDataByOrgUnit().equals("")) {
+                                    if (!pullFilters.downloadData()
+                                            || pullFilters.pullDataAfterMetadata()) {
+                                        pullAndConvertOuOptions(pullFilters.getDataByOrgUnit(),callback);
+                                        convertMetaData(callback);
+                                    } else {
+                                        pullAndConvertOuOptions(pullFilters.getDataByOrgUnit(),callback);
+                                        convertMetaData(new Callback() {
+                                            @Override
+                                            public void onComplete() {
+                                                pullData(pullFilters, organisationUnits, callback);
+                                            }
+
+                                            @Override
+                                            public void onCancel() {
+                                                callback.onCancel();
+                                            }
+
+                                            @Override
+                                            public void onStep(PullStep step) {
+                                                callback.onStep(step);
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable throwable) {
+                                                callback.onError(throwable);
+                                            }
+
+                                            @Override
+                                            public void onWarning(WarningException warning) {
+                                                callback.onWarning(warning);
+                                            }
+                                        });
+
+                                    }
+                                }else{
+                                    convertMetaData(callback);
+                                }
                         }
 
                         @Override
@@ -95,16 +128,21 @@ public class PullController implements IPullController {
                             callback.onError(throwable);
                         }
                     });
-        }
-        else {
+        } else {
             if (pullFilters.downloadData()) {
-                List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
+                List<OrganisationUnit> organisationUnitsList =
+                        D2.me().organisationUnits().list().toBlocking().first();
                 pullData(pullFilters, organisationUnitsList, callback);
-            }
-            else{
+            } else {
                 callback.onComplete();
             }
         }
+    }
+
+    private void pullAndConvertOuOptions(final String orgUnitName, final Callback callback) {
+        OrganisationUnitRepository organisationUnitRepository = new OrganisationUnitRepository();
+        String orgUnituId = organisationUnitRepository.getOrganisationUnitByName(orgUnitName).getUid();
+        mPullControllerStrategy.pullAndCovertOuOptions(orgUnituId, callback);
     }
 
     public void populateMetadataFromCsvs(boolean isDemo) throws IOException {
@@ -155,8 +193,7 @@ public class PullController implements IPullController {
                 assignedOrganisationsUnit.accept(mConverter);
             }
 
-            OrgUnitToOptionConverter.convert();
-            mPullControllerStrategy.convertMetadata(mConverter);
+            mPullControllerStrategy.convertMetadata(mConverter, callback);
         } catch (NullPointerException ex) {
             callback.onError(new PullConversionException(ex));
         }

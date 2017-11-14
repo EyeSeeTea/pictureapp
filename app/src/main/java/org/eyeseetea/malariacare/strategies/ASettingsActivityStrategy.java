@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public abstract class ASettingsActivityStrategy {
 
@@ -41,5 +42,11 @@ public abstract class ASettingsActivityStrategy {
 
     public void onDestroy() {
 
+    }
+
+    public void pullAfterChangeOuFlags() {
+        PreferencesState.getInstance().setMetaDataDownload(false);
+        PreferencesState.getInstance().setPullDataAfterMetadata(true);
+        PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
     }
 }

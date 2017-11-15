@@ -29,11 +29,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +46,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -582,6 +586,43 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             swipeTouchListener.addClickableView((View) questionView);
 
             setVisibilityAndAddRow(tableRow, screenQuestionDB, visibility);
+
+            setupNextFocus(questionView, tableRow);
+        }
+    }
+
+    private void setupNextFocus(IQuestionView questionView, final TableRow tableRow) {
+        if (questionView instanceof AKeyboardQuestionView) {
+            EditText editText = ((AKeyboardQuestionView) questionView).getAnswerView();
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                    View nextView = tableLayout.getChildAt(
+                            tableLayout.indexOfChild(tableRow) + 1);
+                    if (nextView != null) {
+                        IQuestionView nextQuestionView =
+                                (IQuestionView) ((TableRow) nextView).getChildAt(
+                                        0);
+                        if (nextQuestionView instanceof AKeyboardQuestionView) {
+                            return false;
+                        }
+                        if (actionId == EditorInfo.IME_ACTION_NEXT
+                                || actionId == EditorInfo.IME_ACTION_DONE) {
+                            hideKeyboard(textView.getContext(), textView);
+                            textView.clearFocus();
+                            if (nextQuestionView instanceof IMultiQuestionView) {
+                                ((IMultiQuestionView) nextQuestionView)
+                                        .requestAnswerFocus();
+                            } else {
+                                nextView.requestFocus();
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+                    return true;
+                }
+            });
         }
     }
 

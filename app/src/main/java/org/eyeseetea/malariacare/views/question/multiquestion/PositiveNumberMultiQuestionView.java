@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -26,6 +27,11 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
         super(context);
 
         init(context);
+    }
+
+    @Override
+    public EditText getAnswerView() {
+        return numberPicker;
     }
 
     @Override
@@ -53,6 +59,11 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     @Override
     public boolean hasError() {
         return numberPicker.getError() != null || positiveNumber == null;
+    }
+
+    @Override
+    public void requestAnswerFocus() {
+        numberPicker.requestFocus();
     }
 
     private void init(final Context context) {

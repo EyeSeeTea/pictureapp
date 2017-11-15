@@ -89,6 +89,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
+    public void requestAnswerFocus() {
+        spinnerOptions.requestFocus();
+    }
+
+    @Override
     public boolean hasError() {
         return false;
     }
@@ -99,6 +104,9 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerOptions = (Spinner) findViewById(R.id.answer);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
+
+        spinnerOptions.setFocusable(true);
+        spinnerOptions.setFocusableInTouchMode(true);
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

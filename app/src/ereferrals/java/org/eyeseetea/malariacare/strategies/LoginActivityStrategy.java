@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
@@ -354,6 +355,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
+            public void onWarning(WarningException warning) {
+                Log.e(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
+            }
+
+            @Override
             public void onCancel() {
 
             }
@@ -367,14 +373,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         builder.setMessage(message);
         builder.setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
         builder.show();
     }
-
 
 
     private void addDemoButton() {
@@ -474,6 +479,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onPullConversionError() {
                 loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+            }
+
+            @Override
+            public void onWarning(WarningException warning) {
+                Log.e(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
             }
 
             @Override

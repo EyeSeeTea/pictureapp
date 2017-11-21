@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
@@ -45,7 +50,7 @@ public class SplashScreenActivity extends Activity {
         PopulateDB.initDBQuery();
         try {
             PostMigration.launchPostMigration();
-        }catch (PostMigrationException e){
+        } catch (PostMigrationException e) {
             new AlertDialog.Builder(this)
                     .setTitle(getApplicationContext().getString(R.string.error_message))
                     .setCancelable(false)
@@ -67,7 +72,34 @@ public class SplashScreenActivity extends Activity {
             splashActivityStrategy.initPullFilters(pullFilters);
             splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
+
+        try {
+            downloadLanguagesFromServer();
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());
+            e.printStackTrace();
+        }
+
     }
+
+    private void downloadLanguagesFromServer() throws Exception {
+        if (BuildConfig.downloadLanguagesFromServer) {
+            Log.i(TAG, "Starting to download Languages From Server");
+            CredentialsReader cr = CredentialsReader.getInstance();
+
+            String token = cr.getPOEditorToken();
+            String projectID = cr.getPOEditorProjectID();
+
+            ILanguagesClient client = Injector.provideLanguageClient(projectID, token);
+            IConnectivityManager connectivity = Injector.provideConnectivityMN(this);
+
+            LanguageDownloader downloader = Injector.provideLanguageDownloader(client,
+                    connectivity);
+
+            downloader.start();
+        }
+    }
+
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
         Activity activity;

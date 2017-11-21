@@ -57,18 +57,21 @@ public class EyeSeeTeaApplication extends Application {
         super.onCreate();
         Log.d(TAG, "onCreate");
         mInstance = this;
-        Fabric.with(this, new Crashlytics());
+
+        //Apply for Release build
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }else{
+            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V); // set to verbose logging
+        }
+
         PreferencesState.getInstance().init(getApplicationContext());
         FlowConfig flowConfig = new FlowConfig
                 .Builder(this)
                 .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
                 .build();
-
-        if (BuildConfig.DEBUG) {
-            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V); // set to verbose logging
-        }
-
         FlowManager.init(flowConfig);
+
     }
 
     @Override

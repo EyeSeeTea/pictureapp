@@ -88,7 +88,7 @@ public class Utils {
             return key;
         }
 
-        if (BuildConfig.activeSearchLanguageInDB &&
+        if (BuildConfig.downloadLanguagesFromServer &&
                 wasTranslationFound(translation)) {
             return translation;
         } else {

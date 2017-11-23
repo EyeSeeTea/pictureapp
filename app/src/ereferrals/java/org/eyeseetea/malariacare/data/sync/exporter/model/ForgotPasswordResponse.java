@@ -7,6 +7,8 @@ public class ForgotPasswordResponse {
 
     private String status;
     private String message;
+    private String version;
+    private String versionWS;
 
 
     public ForgotPasswordResponse() {
@@ -31,5 +33,21 @@ public class ForgotPasswordResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersionWS() {
+        return versionWS;
+    }
+
+    public void setVersionWS(String versionWS) {
+        this.versionWS = versionWS;
     }
 }

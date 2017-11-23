@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
@@ -95,10 +96,10 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         surveySendAction.setActionId(CodeGenerator.generateCode());
         surveySendAction.setType(SURVEY_ACTION_ID);
         surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
-        surveySendAction.setVoucher(new Voucher(survey.getEventUid(), hasPhone(survey)));
+        surveySendAction.setVoucher(new Voucher(survey.getEventUid(), getVoucherType(survey)));
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
-        surveySendAction.setEventDateTime(getEventDateTimeString(survey.getEventDate()));
+        surveySendAction.setSourceAddedDateTime(getEventDateTimeString(survey.getEventDate()));
         Location location = LocationMemory.get(survey.getId_survey());
         surveySendAction.setCoordinate(
                 new Coordinate(location.getLatitude(), location.getLongitude()));
@@ -111,16 +112,31 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         return Utils.parseDateToString(eventDate, ISO_FORMAT, timeZone);
     }
 
-    private boolean hasPhone(SurveyDB survey) {
+    private String getVoucherType(SurveyDB survey) {
         Context context = PreferencesState.getInstance().getContext();
-        for (ValueDB value : survey.getValueDBs()) {
-            if (value.getQuestionDB().getCode().equals(
-                    context.getString(R.string.phone_ownership_qc))) {
-                return !(value.getOptionDB().getCode().equals(
-                        context.getString(R.string.no_phone_oc)));
-            }
+        if (noIssueVoucher(survey, context)) {
+            return Voucher.TYPE_NO_VOUCHER;
+        } else if (hasPhone(survey, context)) {
+            return Voucher.TYPE_PHONE;
+        } else {
+            return Voucher.TYPE_PAPER;
         }
-        return false;
+    }
+
+    private boolean noIssueVoucher(SurveyDB survey, Context context) {
+        OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.issue_voucher_qc));
+        if (noIssueOption == null) {
+            return false;
+        }
+        return noIssueOption.getName().equals(
+                context.getString(R.string.no_voucher_on));
+    }
+
+    private boolean hasPhone(SurveyDB survey, Context context) {
+        return !(survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc)).getName().equals(
+                context.getString(R.string.no_phone_on)));
     }
 
     public SurveyContainerWSObject getSurveyContainerWSObject() {

@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -42,8 +43,9 @@ public class GetUrlForWebViewsUseCase implements UseCase {
     @Override
     public void run() {
         String typeUrl = getTypeUrlText();
-        String url = String.format(mContext.getString(R.string.base_web_view_url), typeUrl,
-                mCredentials.getUsername(), mCredentials.getPassword());
+        String url = String.format(PreferencesEReferral.getWebViewURL() + mContext.getString(
+                R.string.composed_web_view_url), typeUrl, mCredentials.getUsername(),
+                mCredentials.getPassword());
         mCallback.onGetUrl(url);
     }
 

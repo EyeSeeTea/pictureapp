@@ -10,9 +10,9 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface SurveyApiClientRetrofit {
-    @POST("eRefWSTrain/api")
+    @POST("api")
     Call<SurveyWSResult> pushSurveys(@Body SurveyContainerWSObject surveyContainerWSObject);
 
-    @POST("eRefWSTrain/api/forgotpassword")
+    @POST("api/forgotpassword")
     Call<ForgotPasswordResponse> forgotPassword(@Body ForgotPasswordPayload forgotPasswordPayload);
 }

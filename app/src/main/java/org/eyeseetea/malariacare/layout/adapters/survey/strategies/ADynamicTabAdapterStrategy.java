@@ -94,6 +94,9 @@ public abstract class ADynamicTabAdapterStrategy {
         return getMalariaSurveyDB().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
+    public void initNavigationButtons(boolean readOnly, View nextButton) {
+    }
+
     public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB){
     }
 }

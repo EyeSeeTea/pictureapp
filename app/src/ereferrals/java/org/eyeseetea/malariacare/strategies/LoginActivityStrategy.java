@@ -35,8 +35,10 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -127,6 +129,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 onForgotPassword();
             }
         });
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(
+                new GetLastInsertedCredentialsUseCase.Callback() {
+                    @Override
+                    public void onGetUsername(Credentials credentials) {
+                        if (credentials != null) {
+                            LoginActivityStrategy.this.username.setText(credentials.getUsername());
+                        }
+                    }
+                });
     }
 
     private void onForgotPassword() {
@@ -338,6 +355,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
+            public void onWarning(WarningException warning) {
+                Log.e(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
+            }
+
+            @Override
             public void onCancel() {
 
             }
@@ -351,14 +373,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         builder.setMessage(message);
         builder.setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
         builder.show();
     }
-
 
 
     private void addDemoButton() {
@@ -458,6 +479,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onPullConversionError() {
                 loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+            }
+
+            @Override
+            public void onWarning(WarningException warning) {
+                Log.e(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
             }
 
             @Override

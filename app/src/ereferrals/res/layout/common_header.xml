@@ -24,16 +24,34 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/headerColor">
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/headerColor"
         android:padding="6dp"
+        android:layout_toLeftOf="@+id/header_extra_info"
         android:text="@string/unsent_dashboard_header_offline"
         android:textColor="@color/text_first_color"
         android:textSize="?attr/font_small"
         app:font_name="@string/normal_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:id="@+id/header_extra_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="6dp"
+            android:text="@string/unsent_vouchers"
+            android:textColor="@color/text_first_color"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/normal_font" />
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"

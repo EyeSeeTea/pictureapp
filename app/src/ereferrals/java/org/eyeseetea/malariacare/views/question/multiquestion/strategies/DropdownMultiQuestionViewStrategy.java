@@ -1,7 +1,11 @@
 package org.eyeseetea.malariacare.views.question.multiquestion.strategies;
 
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies.ADropdownMultiQuestionViewStrategy;
+import android.content.Context;
 
 
 public class DropdownMultiQuestionViewStrategy extends ADropdownMultiQuestionViewStrategy {
+
+    public DropdownMultiQuestionViewStrategy(Context context) {
+        super(context);
+    }
 }

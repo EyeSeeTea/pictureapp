@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +11,16 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .ARadioButtonMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .RadioButtonMultiquestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomRadioButton;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -119,20 +121,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     private void fixRadioButtonWidth(
             CustomRadioButton radioButton) {
-        Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
-        BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
-                calculateFixedWidth(radioButtonIcon));
-    }
-
-    private int calculateFixedWidth(Drawable radioButtonIcon) {
-        int width = radioButtonIcon.getIntrinsicWidth();
-        int height = radioButtonIcon.getIntrinsicHeight();
-        int fixedHeight =
-                PreferencesState.getInstance().getContext().getResources()
-                        .getDimensionPixelSize(
-                                R.dimen.image_size);
-        int newHeightPercent = (fixedHeight * 100) / height;
-        return (newHeightPercent * width) / 100;
+        ARadioButtonMultiquestionViewStrategy radioButtonMultiquestionViewStrategy =
+                new RadioButtonMultiquestionViewStrategy(this);
+        radioButtonMultiquestionViewStrategy.fixRadioButtonWidth(radioButton);
     }
 
 

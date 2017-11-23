@@ -788,9 +788,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void initializeNavigationButtons(View navigationButtonsHolder) {
-        View button = (View) navigationButtonsHolder.findViewById(R.id.next_btn);
+        View nextButton = (View) navigationButtonsHolder.findViewById(R.id.next_btn);
 
-        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isClicked) {
@@ -862,14 +862,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
         });
-        button = (ImageButton) navigationButtonsHolder.findViewById(R.id.back_btn);
+        ImageButton backButton = (ImageButton) navigationButtonsHolder.findViewById(R.id.back_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) backButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 previous();
             }
         });
+        mDynamicTabAdapterStrategy.initNavigationButtons(readOnly, nextButton);
     }
 
     private boolean isCounterValueEqualToMax(QuestionDB questionDB, OptionDB selectedOptionDB) {
@@ -935,6 +936,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         for (QuestionDB childQuestionDB : questionDBChildren) {
                             //if the table row questionDB is child of the modified questionDB...
                             toggleChild(row, rowQuestionDB, childQuestionDB);
+                            showOrHideChildren(childQuestionDB);
                         }
                     }
                 }

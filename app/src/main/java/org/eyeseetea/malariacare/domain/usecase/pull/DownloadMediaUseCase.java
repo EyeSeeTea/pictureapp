@@ -4,6 +4,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
@@ -24,6 +25,7 @@ public class DownloadMediaUseCase implements UseCase {
 
     private Callback mCallback;
     private IAsyncExecutor mAsyncExecutor;
+    private IMainExecutor mMainExecutor;
     private IFileDownloader mFileDownloader;
     private IConnectivityManager mConnectivityManager;
     private IProgramRepository mProgramRepository;
@@ -31,11 +33,13 @@ public class DownloadMediaUseCase implements UseCase {
 
     public DownloadMediaUseCase(
             IAsyncExecutor asyncExecutor,
+            IMainExecutor mainExecutor,
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
             IProgramRepository programRepository,
             MediaRepository mediaRepository) {
         mAsyncExecutor = asyncExecutor;
+        mMainExecutor = mainExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
         mProgramRepository = programRepository;
@@ -60,7 +64,8 @@ public class DownloadMediaUseCase implements UseCase {
                 return;
             }
 
-            mCallback.onDownloadInProgressChanged(true);
+            notifyDownloadInProgressChanges(true);
+
             mFileDownloader.changeFileDownloaderIProgress(true);
 
             mFileDownloader.download(currentMedias,
@@ -69,9 +74,9 @@ public class DownloadMediaUseCase implements UseCase {
                     new IFileDownloader.Callback() {
                         @Override
                         public void onError(FileDownloadException ex) {
-                            mCallback.onError(ex);
+                            notifyDownloadError(ex);
                             mFileDownloader.changeFileDownloaderIProgress(false);
-                            mCallback.onDownloadInProgressChanged(false);
+                            notifyDownloadInProgressChanges(false);
                         }
 
                         @Override
@@ -79,9 +84,9 @@ public class DownloadMediaUseCase implements UseCase {
                             int numOfSyncedFiles = saveDownloadedMedia(syncMedias);
 
                             removeNotDownloadedMedia(syncMedias, currentMedias);
-                            mCallback.onSuccess(numOfSyncedFiles);
+                            notifyDownloadSuccess(numOfSyncedFiles);
                             mFileDownloader.changeFileDownloaderIProgress(false);
-                            mCallback.onDownloadInProgressChanged(false);
+                            notifyDownloadInProgressChanges(false);
                         }
 
                     });
@@ -124,5 +129,32 @@ public class DownloadMediaUseCase implements UseCase {
                         mMediaRepository.findByUid(localMedia.getResourceUrl()));
             }
         }
+    }
+
+    private void notifyDownloadInProgressChanges(final boolean value) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onDownloadInProgressChanged(value);
+            }
+        });
+    }
+
+    private void notifyDownloadError(final FileDownloadException exception) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onError(exception);
+            }
+        });
+    }
+
+    private void notifyDownloadSuccess(final int numOfSyncedFiles) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onSuccess(numOfSyncedFiles);
+            }
+        });
     }
 }

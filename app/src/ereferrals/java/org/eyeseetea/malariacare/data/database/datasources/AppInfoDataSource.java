@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
@@ -20,6 +21,16 @@ public class AppInfoDataSource implements IAppInfoRepository {
     @Override
     public AppInfo getAppInfo() {
         return new AppInfo(getMetadataVersion(), getAppVersion());
+    }
+
+    @Override
+    public void getAppInfo(IDataSourceCallback<AppInfo> callback) {
+        callback.onSuccess(new AppInfo(getMetadataVersion(), getAppVersion()));
+    }
+
+    @Override
+    public void saveAppInfo(AppInfo appInfo) {
+        //Not Implemented for this variant yet
     }
 
     private String getMetadataVersion() {
@@ -43,5 +54,4 @@ public class AppInfoDataSource implements IAppInfoRepository {
         }
         return String.valueOf(pInfo.versionCode);
     }
-
 }

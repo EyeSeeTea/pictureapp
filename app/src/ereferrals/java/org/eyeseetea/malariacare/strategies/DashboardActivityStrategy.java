@@ -23,10 +23,10 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -50,8 +51,10 @@ import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
@@ -79,6 +82,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 iCredentialsRepository);
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager();
         IProgramRepository programRepository = new ProgramLocalDataSource();
         String path =
@@ -89,7 +93,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
                         R.raw.driveserviceprivatekey));
-        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, fileDownloader,
+        mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mainExecutor,
+                fileDownloader,
                 mConnectivity, programRepository, mediaRepository);
     }
 
@@ -433,23 +438,28 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
-        if (surveyDB != null && !hasPhone(surveyDB)) {
+        if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
             mDashboardActivity.showException("", String.format(
                     mDashboardActivity.getResources().getString(R.string.give_voucher),
                     surveyDB.getEventUid()));
         }
     }
 
+    private boolean noIssueVoucher(SurveyDB survey) {
+        OptionDB noIssueOption=survey.getOptionSelectedForQuestionCode(
+                mDashboardActivity.getString(R.string.issue_voucher_qc));
+        if(noIssueOption==null){
+            return false;
+        }
+        return noIssueOption.getName().equals(
+                mDashboardActivity.getString(R.string.no_voucher_on));
+    }
+
     private boolean hasPhone(SurveyDB survey) {
         Context context = PreferencesState.getInstance().getContext();
-        for (ValueDB value : survey.getValueDBs()) {
-            if (value.getQuestionDB().getCode().equals(
-                    context.getString(R.string.phone_ownership_qc))) {
-                return !(value.getOptionDB().getCode().equals(
-                        context.getString(R.string.no_phone_oc)));
-            }
-        }
-        return false;
+        return !(survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc)).getName().equals(
+                context.getString(R.string.no_phone_on)));
     }
 
     public boolean onWebViewBackPressed(TabHost tabHost) {
@@ -473,5 +483,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         }
         return false;
+    }
+
+    @Override
+    public void exitReview() {
+        if (!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            sendSurvey();
+            mDashboardActivity.closeSurveyFragment();
+            DynamicTabAdapter.isClicked = false;
+        }
     }
 }

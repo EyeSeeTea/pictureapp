@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase.push.strategies;
 
+import android.util.Log;
+
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -19,6 +21,8 @@ import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import java.util.List;
 
 public abstract class APushUseCaseStrategy {
+    private static String TAG = "APushUseCaseStrategy";
+
     protected IPushController mPushController;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
     private SurveysThresholds mSurveysThresholds;
@@ -121,7 +125,7 @@ public abstract class APushUseCaseStrategy {
             @Override
             public void onError(Throwable throwable) {
                 mPushController.changePushInProgress(false);
-                System.out.println("PusUseCase error");
+                Log.e(TAG, "Failed response when pushing surveys: " + throwable.getMessage());
                 if (throwable instanceof NetworkException) {
                     notifyNetworkError();
                 } else if (throwable instanceof ConversionException) {

@@ -107,7 +107,7 @@ public class PushService extends IntentService {
 
     public void onPushError(String message) {
         PreferencesState.getInstance().setPushInProgress(false);
-        Log.w(TAG, "onPushFinished error: " + message);
+        Log.e(TAG, "onPushFinished error: " + message);
     }
 
 }

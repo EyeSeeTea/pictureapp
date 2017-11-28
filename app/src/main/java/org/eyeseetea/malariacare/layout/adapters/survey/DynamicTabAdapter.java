@@ -84,6 +84,7 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
@@ -610,7 +611,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                 || actionId == EditorInfo.IME_ACTION_DONE) {
                             hideKeyboard(textView.getContext(), textView);
                             textView.clearFocus();
-                            if (nextQuestionView instanceof IMultiQuestionView) {
+                            if (nextQuestionView instanceof DropdownMultiQuestionView) {
+                                ((DropdownMultiQuestionView) nextQuestionView).getSpinnerOptions
+                                        ().requestFocusFromTouch();
+                            } else if (nextQuestionView instanceof IMultiQuestionView) {
                                 ((IMultiQuestionView) nextQuestionView)
                                         .requestAnswerFocus();
                             } else {

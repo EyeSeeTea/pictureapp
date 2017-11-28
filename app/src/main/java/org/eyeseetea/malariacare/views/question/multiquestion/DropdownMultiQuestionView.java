@@ -106,7 +106,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         imageView = ((ImageView) findViewById(R.id.question_image_row));
 
         spinnerOptions.setFocusable(true);
-        spinnerOptions.setFocusableInTouchMode(true);
+//        spinnerOptions.setFocusableInTouchMode(true);
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -124,5 +124,9 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
             }
         });
+    }
+
+    public Spinner getSpinnerOptions() {
+        return spinnerOptions;
     }
 }

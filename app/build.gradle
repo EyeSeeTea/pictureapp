@@ -27,6 +27,19 @@ android {
         config {}
     }
 
+    sourceSets {
+        String sharedJVMTestDir = 'src/sharedJVMTest/java'
+        String sharedAndroidTestDir = 'src/sharedAndroidTest/java'
+
+        test {
+            java.srcDir sharedJVMTestDir
+        }
+        androidTest {
+            java.srcDir sharedJVMTestDir
+            java.srcDir sharedAndroidTestDir
+        }
+    }
+
     compileSdkVersion cfg.compileSdkVersion
     buildToolsVersion cfg.buildToolsVersion
 
@@ -42,7 +55,7 @@ android {
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
-        buildConfigField "String", "poEditorApiUrl",  "\"https://api.poeditor.com/\""
+        buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
         buildConfigField "boolean", "downloadLanguagesFromServer", "false"
 
     }
@@ -230,7 +243,7 @@ dependencies {
 
     // Unit testing dependencies
     testCompile "junit:junit:${libs.jUnitVersion}"
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+    testCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
 
     // Instrumented tests dependencies
     // Android Testing Support Library's runner and rules
@@ -245,8 +258,7 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
     // Espresso-web for WebView support
     androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
-    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
-
+    androidTestCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
 
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {

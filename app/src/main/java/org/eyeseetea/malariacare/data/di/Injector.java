@@ -8,10 +8,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.POEditorApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
+import org.eyeseetea.malariacare.data.database.converts.OptionConverterFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.database.converts.QuestionConverterFromDomainModelToDB;
+import org.eyeseetea.malariacare.domain.entity.Option;
+import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
 import okhttp3.OkHttpClient;
@@ -20,6 +27,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class Injector {
 
     private static IConnectivityManager connectivityMN;
+    private static IConverter<Question, QuestionDB> questionConverterDomainToDb;
+    private static IConverter<Option, OptionDB> optionConverterDomainToDb;
 
     @NonNull
     public static OkHttpClient provideHTTPClientWithLogging() {
@@ -63,6 +72,28 @@ public class Injector {
         }
 
         return connectivityMN;
+    }
+
+    @NonNull
+    public static IConverter<Question, QuestionDB> provideQuestionConverter() {
+
+
+        if (questionConverterDomainToDb == null) {
+            questionConverterDomainToDb = new QuestionConverterFromDomainModelToDB(provideOptionConverter());
+        }
+
+        return questionConverterDomainToDb;
+    }
+
+    @NonNull
+    public static IConverter<Option, OptionDB> provideOptionConverter() {
+
+
+        if (optionConverterDomainToDb == null) {
+            optionConverterDomainToDb = new OptionConverterFromDomainModelToDB();
+        }
+
+        return optionConverterDomainToDb;
     }
 
 

@@ -3,10 +3,9 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.eyeseetea.malariacare.common.FileReader;
+import org.eyeseetea.malariacare.common.BaseMockWebServerTest;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +13,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+public class ForgotPasswordAPIClientTest extends BaseMockWebServerTest {
 
-public class ForgotPasswordAPIClientTest {
 
-    private MockWebServer server;
     private eReferralsAPIClient apiClient;
 
     public static final String FORGOT_PASSWORD_DENIED =
@@ -30,14 +26,8 @@ public class ForgotPasswordAPIClientTest {
 
     @Before
     public void setUp() throws Exception {
-        this.server = new MockWebServer();
-        this.server.start();
+        super.setUp();
         apiClient = initializeApiClient();
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        server.shutdown();
     }
 
     @Test
@@ -107,12 +97,5 @@ public class ForgotPasswordAPIClientTest {
                 "1.0", "manu", "en");
 
         return forgotPasswordPayload;
-    }
-
-    private void enqueueResponse(String fileName) throws IOException {
-        MockResponse mockResponse = new MockResponse();
-        String fileContent = new FileReader().getStringFromFile(getClass(), fileName);
-        mockResponse.setBody(fileContent);
-        server.enqueue(mockResponse);
     }
 }

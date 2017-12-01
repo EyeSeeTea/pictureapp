@@ -13,7 +13,7 @@
 
         <provider
             android:name=".data.database.utils.REFDBProvider"
-            android:authorities="org.eyeseetea.malariacare.data.database.utils.REFDBProvider"
+            android:authorities="${applicationId}.data.database.utils.REFDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">

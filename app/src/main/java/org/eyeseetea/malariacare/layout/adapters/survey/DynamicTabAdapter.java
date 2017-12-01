@@ -264,6 +264,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
             showConfirmCounter(view, selectedOptionDB, questionDB, counterQuestionDB);
         }
+        if (!selectedOptionDB.getCode().isEmpty()) {
+            view.setFocusableInTouchMode(true);
+            view.requestFocus();
+            hideKeyboard(context, view);
+        }
     }
 
     private void assignOrgUnitToSurvey(SurveyDB surveyDB, OrgUnitDB orgUnitDB) {

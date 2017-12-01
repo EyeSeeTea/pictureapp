@@ -66,8 +66,12 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
-                    notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                    if (!s.toString().isEmpty()) {
+                        positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
+                        notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                    } else {
+                        notifyAnswerChanged(numberPicker.getText().toString());
+                    }
                     Validation.getInstance().removeInputError(numberPicker);
 
                 } catch (InvalidPositiveNumberException e) {

@@ -33,12 +33,20 @@ public class SurveyFragmentStrategy {
 
     public static void saveValuesText(ValueDB value, String answer,
             QuestionDB question, SurveyDB survey) {
-        question.createOrSaveValue(answer, value, survey);
-        for (QuestionDB propagateQuestion : question.getPropagationQuestions()) {
-            propagateQuestion.createOrSaveValue(answer,
-                    ValueDB.findValueFromDatabase(propagateQuestion.getId_question(),
-                            Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
+        if (value != null && value.getValue().isEmpty()) {
+            removeValueText(value);
+        } else {
+            question.createOrSaveValue(answer, value, survey);
+            for (QuestionDB propagateQuestion : question.getPropagationQuestions()) {
+                propagateQuestion.createOrSaveValue(answer,
+                        ValueDB.findValueFromDatabase(propagateQuestion.getId_question(),
+                                Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
+            }
         }
+    }
+
+    public static void removeValueText(ValueDB value) {
+        if (value != null) value.delete();
     }
 
     public static void recursiveRemover(ValueDB value, OptionDB optionDB, QuestionDB question,

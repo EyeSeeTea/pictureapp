@@ -101,6 +101,14 @@ public class SurveyService extends IntentService {
      */
     public static final String PREPARE_SURVEY_ACTION_TABS =
             "org.eyeseetea.malariacare.services.SurveyService.PREPARE_SURVEY_ACTION_TABS";
+    /**
+     * For get all surveys of a program
+     */
+    public static final String GET_SURVEYS_FROM_PROGRAM =
+            "org.eyeseetea.malariacare.services.SurveyService.GET_SURVEYS_FROM_PROGRAM";
+
+    public static final String PROGRAM_UID =
+            "org.eyeseetea.malariacare.services.SurveyService.PROGRAM_UID";
 
     /**
      * Tag for logging
@@ -148,6 +156,9 @@ public class SurveyService extends IntentService {
                 break;
             case RELOAD_DASHBOARD_ACTION:
                 reloadDashboard();
+                break;
+            case GET_SURVEYS_FROM_PROGRAM:
+                getSurveysFromProgram(intent);
                 break;
         }
     }
@@ -339,5 +350,16 @@ public class SurveyService extends IntentService {
 
     private interface Callback {
         void onSuccess(String uid);
+    }
+
+    private void getSurveysFromProgram(Intent intent) {
+        String programUID = intent.getExtras().getString(PROGRAM_UID);
+        List<SurveyDB> surveys = SurveyDB.getSurveysWithProgram(programUID);
+
+        Session.putServiceValue(GET_SURVEYS_FROM_PROGRAM, surveys);
+
+        //Returning result to anyone listening
+        Intent resultIntent = new Intent(GET_SURVEYS_FROM_PROGRAM);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
     }
 }

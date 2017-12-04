@@ -55,6 +55,9 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             } else {
                 importantValues += ", ";
             }
+            if (value.getQuestionDB() != null) {
+                visibleValues += value.getQuestionDB().getInternationalizedForm_name() + " : ";
+            }
             if (value.getOptionDB() != null) {
                 importantValues += value.getOptionDB().getInternationalizedName();
             } else {

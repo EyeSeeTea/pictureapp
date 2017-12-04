@@ -538,6 +538,15 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .and(SurveyDB_Table.type.withTable(surveyAlias).is(type)).queryList();
     }
 
+    public static List<SurveyDB> getSurveysWithProgram(String programUID) {
+        return new Select().from(SurveyDB.class).as(surveyName)
+                .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+                .where(ProgramDB_Table.uid_program.withTable(programAlias)
+                        .eq(programUID)).queryList();
+    }
+
     /**
      * Finds a survey by its ID
      */
@@ -1185,4 +1194,5 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
+
 }

@@ -159,7 +159,7 @@ android {
             buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
-            buildConfigField "boolean", "activeStockFragment", "false"
+            buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "false"
             buildConfigField "boolean", "activeAVFragment", "false"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.CNMDBProvider\""

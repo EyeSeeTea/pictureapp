@@ -262,4 +262,9 @@
 <string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
 <string name="imei">"IMEI"</string>
 <string name="imei_error">"Error getting IMEI"</string>
+<string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
+<string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
+<string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
+<string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+
 </resources>

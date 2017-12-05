@@ -1152,6 +1152,9 @@ public class QuestionDB extends BaseModel {
 
     public void saveValuesText(String answer) {
         ValueDB valueDB = getValueBySession();
+        if (valueDB != null) {
+            valueDB.setValue(answer);
+        }
         SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
         SurveyFragmentStrategy.saveValuesText(valueDB, answer, this, surveyDB);
 

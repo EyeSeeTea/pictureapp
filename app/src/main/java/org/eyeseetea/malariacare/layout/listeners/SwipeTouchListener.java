@@ -43,7 +43,7 @@ public class SwipeTouchListener implements View.OnTouchListener {
             fixScrollEventY(event);
             scrollView.onTouchEvent(event);
         }
-        return gestureDetector.onTouchEvent(event);
+        return false;
     }
 
 

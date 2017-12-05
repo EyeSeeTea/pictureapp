@@ -35,8 +35,8 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
                 headerTitle.setText(R.string.past_cases);
                 headerExplanation.setText(R.string.cases_history);
                 break;
-            case R.string.tab_tag_monitor:
-                headerTitle.setText(R.string.monitor_button);
+            case R.string.tab_tag_stock:
+                headerTitle.setText(R.string.tab_stock);
                 headerExplanation.setText("");
                 break;
         }

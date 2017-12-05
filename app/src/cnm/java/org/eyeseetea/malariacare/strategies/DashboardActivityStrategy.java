@@ -38,6 +38,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadStockFragment(Activity activity) {
         if (stockFragment != null && stockFragment.isAdded()) {
+            stockFragment.reloadHeader(activity);
             stockFragment.reloadData();
         } else {
             showStockFragment(activity, false);
@@ -53,6 +54,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockFragment.reloadData();
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 stockFragment);
+        stockFragment.reloadHeader(activity);
 
         return isMoveToLeft;
     }

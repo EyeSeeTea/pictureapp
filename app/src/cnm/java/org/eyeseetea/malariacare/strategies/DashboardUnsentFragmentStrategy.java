@@ -21,8 +21,7 @@ import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.util.List;
 
-public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStrategy implements
-        View.OnClickListener {
+public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStrategy {
     public static final String IS_STOCK_FRAGMENT = "isStockFragment";
 
     private boolean isStockFragment;
@@ -36,7 +35,7 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     public void registerSurveyReceiver(Activity activity,
             DashboardUnsentFragment.SurveyReceiver surveyReceiver) {
         LocalBroadcastManager.getInstance(activity).registerReceiver(surveyReceiver,
-                new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
+                new IntentFilter(SurveyService.GET_SURVEYS_FROM_PROGRAM));
     }
 
     @Override
@@ -57,24 +56,10 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
         }
         if (isStockFragment) {
             View view = inflater.inflate(R.layout.stock_list_fragemnt, container, false);
-            view.findViewById(R.id.add_stock_survey).setOnClickListener(this);
             return view;
         } else {
             return super.inflateView(inflater, container, savedInstanceState);
         }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.add_stock_survey:
-                showNewStockSurvey();
-                break;
-        }
-    }
-
-    private void showNewStockSurvey() {
-
     }
 
     @Override
@@ -88,7 +73,7 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     @Override
     public void reloadHeader(Activity activity) {
         if (isStockFragment) {
-            mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_stock);
+            mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
         } else {
             super.reloadHeader(activity);
         }
@@ -115,7 +100,7 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     @Override
     public void onReceiveSurveys(Intent intent) {
         super.onReceiveSurveys(intent);
-        if (SurveyService.GET_SURVEYS_FROM_PROGRAM.equals(intent.getAction())) {
+        if (isStockFragment && SurveyService.GET_SURVEYS_FROM_PROGRAM.equals(intent.getAction())) {
             List<SurveyDB> surveysUnsentFromService;
             Session.valuesLock.readLock().lock();
             try {

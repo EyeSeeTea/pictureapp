@@ -935,4 +935,5 @@
 <string name="common_option_ZW_district_zvimba">"Zvimba"</string>
 <string name="common_option_ZW_district_zvishavane">"Zvishavane"</string>
 <string name="common_option_ZW_district_outsideZW">"Outside Zimbabwe"</string>
+<string name="dynamic_error_invalid_positive_number">"अमान्य सकारात्मक संख्या"</string>
 </resources>

@@ -994,4 +994,5 @@ Ameahidi kuhudhuria"</string>
 <string name="common_option_ZW_district_zvimba">"Zvimba"</string>
 <string name="common_option_ZW_district_zvishavane">"Zvishavane"</string>
 <string name="common_option_ZW_district_outsideZW">"Outside Zimbabwe"</string>
+<string name="dynamic_error_invalid_positive_number">"Nambari isiyo sahihi batili"</string>
 </resources>

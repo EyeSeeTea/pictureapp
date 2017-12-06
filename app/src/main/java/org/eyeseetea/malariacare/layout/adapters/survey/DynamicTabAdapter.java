@@ -426,7 +426,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             //The survey in session is null when the user closes the surveyFragment, but the
             // getView is called.
-            return convertView;
+            return rowView;
         }
 
         //QuestionDB

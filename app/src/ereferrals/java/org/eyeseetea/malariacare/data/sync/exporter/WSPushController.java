@@ -59,7 +59,7 @@ public class WSPushController implements IPushController {
                 convertToWSSurveys();
             } catch (Exception e) {
                 e.printStackTrace();
-                putSurveysAsCompleted();
+                changeSurveysStatusTo(Constants.SURVEY_CONFLICT);
                 callback.onError(new ConversionException(e));
                 return;
             }
@@ -100,7 +100,11 @@ public class WSPushController implements IPushController {
                     @Override
                     public void onError(Exception e) {
                         Log.e(TAG, "Error pushing surveys: " + e.getMessage());
-                        putSurveysAsCompleted();
+                        int status = Constants.SURVEY_CONFLICT;
+                        if (e instanceof NetworkException) {
+                            status = Constants.SURVEY_COMPLETED;
+                        }
+                        changeSurveysStatusTo(status);
                         mCallback.onError(e);
                     }
                 });
@@ -155,9 +159,9 @@ public class WSPushController implements IPushController {
     }
 
 
-    private void putSurveysAsCompleted() {
+    private void changeSurveysStatusTo(int status) {
         for (SurveyDB survey : mSurveys) {
-            survey.setStatus(Constants.SURVEY_COMPLETED);
+            survey.setStatus(status);
             survey.save();
         }
     }

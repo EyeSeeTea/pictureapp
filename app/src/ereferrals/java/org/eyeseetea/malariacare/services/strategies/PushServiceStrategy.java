@@ -176,7 +176,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     protected void executePush() {
         IPushController pushController;
         try {
-            pushController = WSPushController.getInstance();
+            pushController = new WSPushController();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             showInDialog(PreferencesState.getInstance().getContext().getString(

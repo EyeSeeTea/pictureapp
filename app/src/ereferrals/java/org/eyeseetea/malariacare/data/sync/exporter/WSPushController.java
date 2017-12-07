@@ -99,7 +99,12 @@ public class WSPushController implements IPushController {
                 new eReferralsAPIClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
                     public void onSuccess(SurveyWSResult surveyWSResult) {
-                        checkPushResult(surveyWSResult);
+                        try {
+                            checkPushResult(surveyWSResult);
+                        } catch (ConversionException e) {
+                            e.printStackTrace();
+                            mCallback.onInformativeError(e);
+                        }
                     }
 
                     @Override
@@ -119,46 +124,56 @@ public class WSPushController implements IPushController {
         return vouchers * 2000;
     }
 
-    private void checkPushResult(SurveyWSResult surveyWSResult) {
-        for (SurveyWSResponseAction responseAction : surveyWSResult.getActions()) {
-            if (!responseAction.isSuccess()) {
-                String message;
-                if (responseAction.getResponse().getMsg() != null) {
-                    message = String.format(
-                            PreferencesState.getInstance().getContext().getString(
-                                    R.string.survey_error), responseAction.getActionId(),
-                            responseAction.getMessage(), responseAction.getResponse().getMsg());
-                } else {
-                    message = responseAction.getMessage();
-                }
-                mCallback.onInformativeError(new PushValueException(message));
-            }
-            SurveyDB surveyDB = null;
-            String voucherId = responseAction.getResponse().getData().getVoucherCode();
-            for (SurveyDB survey : mSurveys) {
-                if (voucherId.contains(survey.getEventUid())) {
-                    surveyDB = survey;
-                    break;
-                }
-            }
-            if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
-                Log.d(TAG, "Changing the UID of the survey old:" + surveyDB.getEventUid() + " new:"
-                        + voucherId);
-                Context context = PreferencesState.getInstance().getContext();
+    private void checkPushResult(SurveyWSResult surveyWSResult) throws ConversionException {
 
-                mCallback.onInformativeMessage(String.format(
-                        context.getResources().getString(R.string.voucher_id_changed),
-                        surveyDB.getEventUid(),voucherId));
-
-                surveyDB.setEventUid(voucherId);
-
-                surveyDB.save();
-            }
-
-        }
         for (SurveyDB survey : mSurveys) {
             survey.setStatus(Constants.SURVEY_SENT);
             survey.save();
+        }
+        try {
+            for (SurveyWSResponseAction responseAction : surveyWSResult.getActions()) {
+                if (!responseAction.isSuccess()) {
+                    String message;
+                    if (responseAction.getResponse().getMsg() != null) {
+                        message = String.format(
+                                PreferencesState.getInstance().getContext().getString(
+                                        R.string.survey_error), responseAction.getActionId(),
+                                responseAction.getMessage(), responseAction.getResponse().getMsg());
+                    } else {
+                        message = responseAction.getMessage();
+                    }
+                    mCallback.onInformativeError(new PushValueException(message));
+                }
+                SurveyDB surveyDB = null;
+                String voucherId = responseAction.getResponse().getData().getVoucherCode();
+                if (voucherId != null) {
+                    for (SurveyDB survey : mSurveys) {
+                        if (voucherId.contains(survey.getEventUid())) {
+                            surveyDB = survey;
+                            break;
+                        }
+                    }
+                    if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
+                        Log.d(TAG,
+                                "Changing the UID of the survey old:" + surveyDB.getEventUid()
+                                        + " new:"
+                                        + voucherId);
+                        Context context = PreferencesState.getInstance().getContext();
+
+                        mCallback.onInformativeMessage(String.format(
+                                context.getResources().getString(R.string.voucher_id_changed),
+                                surveyDB.getEventUid(), voucherId));
+
+                        surveyDB.setEventUid(voucherId);
+
+                        surveyDB.save();
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ConversionException(e);
         }
         mCallback.onComplete();
     }

@@ -8,8 +8,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.POEditorApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
@@ -19,8 +25,10 @@ import org.eyeseetea.malariacare.data.database.converts.OptionConverterFromDomai
 import org.eyeseetea.malariacare.data.database.converts.QuestionConverterFromDomainModelToDB;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -32,19 +40,36 @@ public class Injector {
 
     @NonNull
     public static OkHttpClient provideHTTPClientWithLogging() {
+        return provideHTTPClientWithLoggingWith();
+    }
+
+    @NonNull
+    public static OkHttpClient provideHTTPClientWithLoggingWith(Interceptor... interceptors) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient client;
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+        for (Interceptor inter : interceptors) {
+            clientBuilder.addInterceptor(inter);
+        }
+
         if (BuildConfig.DEBUG) {
-            client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+            client = clientBuilder.addInterceptor(interceptor).build();
         } else {
-            client = new OkHttpClient.Builder().build();
+            client = clientBuilder.build();
         }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
         return client;
+    }
+
+    @NonNull
+    public static Interceptor provideAuthenticationInterceptor() throws Exception {
+        return new BasicAuthInterceptor(AuthenticationApiStrategy.getApiCredentials());
     }
 
     @NonNull
@@ -75,11 +100,18 @@ public class Injector {
     }
 
     @NonNull
+    public static IMetadataConfigurationDataSource provideMetadataConfigurationDataSource()
+            throws Exception {
+        return new MetadataConfigurationApiClient(PreferencesState.getInstance().getDhisURL());
+    }
+
+    @NonNull
     public static IConverter<Question, QuestionDB> provideQuestionConverter() {
 
 
         if (questionConverterDomainToDb == null) {
-            questionConverterDomainToDb = new QuestionConverterFromDomainModelToDB(provideOptionConverter());
+            questionConverterDomainToDb = new QuestionConverterFromDomainModelToDB(
+                    provideOptionConverter());
         }
 
         return questionConverterDomainToDb;

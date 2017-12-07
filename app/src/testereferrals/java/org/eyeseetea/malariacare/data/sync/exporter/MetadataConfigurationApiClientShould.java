@@ -29,7 +29,7 @@ public class MetadataConfigurationApiClientShould extends BaseMetadataConfigurat
     public void throw_an_exception_a_network_exception_when_404_http_error_occurs()
             throws Exception {
         enqueue404ResponseCode();
-        List<Question> questions = apiClient.getQuestions();
+        List<Question> questions = apiClient.getQuestionsFor("mz");
 
     }
 
@@ -37,7 +37,7 @@ public class MetadataConfigurationApiClientShould extends BaseMetadataConfigurat
     public void throw_an_exception_when_the_response_is_a_malformed_json() throws Exception {
         enqueueMalformedJson();
 
-        List<Question> questions = apiClient.getQuestions();
+        List<Question> questions = apiClient.getQuestionsFor("mz");
     }
 
     @Test
@@ -72,7 +72,7 @@ public class MetadataConfigurationApiClientShould extends BaseMetadataConfigurat
             String countryJSONFile,
             Question validQuestion) {
 
-        Question question = getQuestionsClient(countryJSONFile).get(questionIndex);
+        Question question = getQuestionsClient(countryJSONFile,"mz").get(questionIndex);
 
         validateQuestion(question, validQuestion);
 

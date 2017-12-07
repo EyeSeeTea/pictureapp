@@ -36,18 +36,19 @@ public class BaseMetadataConfigurationImporterTest extends BaseMockWebServerTest
     }
 
     @NonNull
-    private MetadataConfigurationApiClient initializeApiClient() {
+    private MetadataConfigurationApiClient initializeApiClient() throws Exception {
         return new MetadataConfigurationApiClient(server.url("/").toString());
     }
 
     @NonNull
-    protected List<Question> getQuestionsClient(String countryJSONFile) {
+    protected List<Question> getQuestionsClient(String countryJSONFile, String countryCode) {
         List<Question> questions = Collections.emptyList();
 
         try {
             enqueueResponse(countryJSONFile);
 
-            questions = apiClient.getQuestions();
+            questions = apiClient.getQuestionsFor(countryCode);
+
 
         } catch (Exception e) {
             fail(e.getMessage());

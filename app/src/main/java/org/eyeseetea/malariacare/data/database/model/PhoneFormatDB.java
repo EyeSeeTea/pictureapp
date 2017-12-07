@@ -1,8 +1,11 @@
 package org.eyeseetea.malariacare.data.database.model;
 
+import android.support.annotation.NonNull;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
@@ -112,5 +115,12 @@ public class PhoneFormatDB extends BaseModel {
                 ", trunkPrefix='" + trunkPrefix + '\'' +
                 ", prefixToPut='" + prefixToPut + '\'' +
                 '}';
+    }
+
+    public static void deleteProgramsBy(@NonNull Long id_program) {
+        new Delete()
+                .from(PhoneFormatDB.class)
+                .where(PhoneFormatDB_Table.id_program_fk
+                        .is(id_program));
     }
 }

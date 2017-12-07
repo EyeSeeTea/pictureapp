@@ -31,6 +31,8 @@ public class MetadataConfigurationsApi {
         @JsonProperty("options")
         public List<Option> options;
 
+        public boolean visibility = true;
+
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -41,11 +43,58 @@ public class MetadataConfigurationsApi {
 
         @JsonProperty("poTerm")
         public String name;
+
+        public List<Rule> rules;
+
+        public static class Rule{
+            public String action;
+            public Question targetQuestion;
+        }
+
+        public boolean hasRules(){
+            return rules != null;
+        }
+
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Rule {
+
+        public List<Condition> conditions;
+        public List<Action> actions;
+
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Condition {
+
+        public Operand left;
+        public String operator;
+        public Operand right;
+
+    }
+
+    public static class Action {
+
+        public String dataPointRef;
+        @JsonProperty("do")
+        public String action;
+
+    }
+
+    public static class Operand {
+
+        public String value;
+
+        public String type;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class IssuingCapture {
         @JsonProperty("dataValuesSpecs")
         public List<Question> questions;
+
+        @JsonProperty("rulesSpecs")
+        public List<Rule> rules;
     }
 }

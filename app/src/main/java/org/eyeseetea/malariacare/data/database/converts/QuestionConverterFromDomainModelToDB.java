@@ -1,11 +1,12 @@
 package org.eyeseetea.malariacare.data.database.converts;
 
 
+import android.support.annotation.NonNull;
+
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -30,13 +31,36 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
         QuestionDB dbModel = new QuestionDB();
 
         dbModel.setCode(domainModel.getCode());
+        dbModel.setOrder_pos(domainModel.getIndex());
         dbModel.setDe_name(domainModel.getName());
-        dbModel.setHelp_text(domainModel.getName());
+        dbModel.setForm_name(domainModel.getName());
         dbModel.setOutput(getOutFrom(domainModel.getType()));
         dbModel.setCompulsory(getCompulsoryFrom(domainModel.isCompulsory()));
-        dbModel.setQuestionOptionDBS(getQuestionsOptionsFrom(domainModel));
+        dbModel.setOptionDBS(getOptionDBsFrom(domainModel));
+        dbModel.setHeaderDB(domainModel.getHeader().getId());
+        dbModel.setTotalQuestions(1);
+        dbModel.setVisible(getVisibilityFrom(domainModel));
 
         return dbModel;
+    }
+
+    private int getVisibilityFrom(@NotNull Question question) {
+        int visibilityIntValue = 0;
+
+        switch (question.getVisibility()) {
+
+            case VISIBLE:
+                visibilityIntValue = QuestionDB.QUESTION_VISIBLE;
+                break;
+            case INVISIBLE:
+                visibilityIntValue = QuestionDB.QUESTION_INVISIBLE;
+                break;
+            case IMPORTANT:
+                visibilityIntValue = QuestionDB.QUESTION_IMPORTANT;
+                break;
+        }
+
+        return visibilityIntValue;
     }
 
     private int getOutFrom(@NotNull Question.Type controlType) {
@@ -51,7 +75,7 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
                 finalOutput = Constants.PHONE;
                 break;
             case DROPDOWN_LIST:
-                finalOutput = Constants.DROPDOWN_LIST;
+                finalOutput = Constants.DROPDOWN_OU_LIST;
                 break;
             case YEAR:
                 finalOutput = Constants.YEAR;
@@ -93,22 +117,39 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
     }
 
     @NotNull
-    private List<QuestionOptionDB> getQuestionsOptionsFrom(@NotNull Question questionDomain) {
-        List<QuestionOptionDB> questionOptionDBS = new ArrayList<>();
+    private List<OptionDB> getOptionDBsFrom(@NotNull Question questionDomain) {
+        List<OptionDB> optionDBS = new ArrayList<>();
 
-        if (questionDomain.getOptions() != null) {
+        if (questionDomain.hasOptions()) {
             for (Option domainOption : questionDomain.getOptions()) {
 
-                QuestionOptionDB questionOptionDB = new QuestionOptionDB();
                 OptionDB newOptionDB = optionConverter.convert(domainOption);
 
-                questionOptionDB.setOption(newOptionDB);
+                optionDBS.add(newOptionDB);
 
-                questionOptionDBS.add(questionOptionDB);
+
+                if (domainOption.hasRules()) {
+
+                    List<Option.Rule> domainRules = domainOption.getRules();
+                    List<String> dbRules = convertTODBRulesFrom(domainRules);
+
+                    newOptionDB.setMatchQuestionsCode(dbRules);
+
+                }
 
             }
         }
-        return questionOptionDBS;
+        return optionDBS;
+    }
+
+    @NonNull
+    private List<String> convertTODBRulesFrom(@NonNull List<Option.Rule> domainRules) {
+        List<String> dbRules = new ArrayList<>();
+
+        for (Option.Rule domainRule : domainRules) {
+            dbRules.add(domainRule.getActionSubject().getCode());
+        }
+        return dbRules;
     }
 
 }

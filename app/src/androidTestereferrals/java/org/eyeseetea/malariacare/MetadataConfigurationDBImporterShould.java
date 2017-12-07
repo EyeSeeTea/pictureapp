@@ -3,9 +3,7 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-
-import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAndroidTest
-        .readFileContentFromAssets;
+import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAndroidTest.readFileContentFromAssets;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -18,7 +16,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,16 +46,10 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
 
 
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
-                Injector.provideQuestionConverter()
+                apiClient, Injector.provideQuestionConverter()
         );
 
-        try {
-            importer.importMetadataConfigurations(apiClient);
-
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
+        importer.importMetadata();
 
         shouldBeInDB(16, 28, 28);
     }

@@ -191,7 +191,7 @@ public class QuestionConverterFromDomainModelToDBShould {
             QuestionDB expectedQuestion) {
         assertThat(questionToEvaluate.getCode(), is(expectedQuestion.getCode()));
         assertThat(questionToEvaluate.getDe_name(), is(expectedQuestion.getDe_name()));
-        assertThat(questionToEvaluate.getHelp_text(), is(expectedQuestion.getHelp_text()));
+        assertThat(questionToEvaluate.getForm_name(), is(expectedQuestion.getForm_name()));
         assertThat(questionToEvaluate.getOutput(), is(expectedQuestion.getOutput()));
         assertThat(questionToEvaluate.isCompulsory(), is(expectedQuestion.isCompulsory()));
 
@@ -296,7 +296,7 @@ public class QuestionConverterFromDomainModelToDBShould {
         QuestionDB question = new QuestionDB();
 
         question.setCode("program");
-        question.setHelp_text("ipc_issueEntry_q_program");
+        question.setForm_name("ipc_issueEntry_q_program");
         question.setDe_name("ipc_issueEntry_q_program");
         question.setOutput(Constants.DROPDOWN_LIST);
         question.setCompulsory(1);

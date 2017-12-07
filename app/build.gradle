@@ -128,7 +128,7 @@ android {
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
-            versionName "1.0.10"
+            versionName "1.0.11"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"

@@ -108,7 +108,6 @@
 108;'ZW_hivTestedLast3Months';'ipc_issueEntry_q_ZW_hivTestedLast3Months';;'ipc_issueEntry_q_ZW_hivTestedLast3Months';'fake_uid_htl3m';21;0;0;7;31;0;19;1;0;;1
 109;'ZW_hivSelfTestGiven';'ipc_issueEntry_q_ZW_hivSelfTestGiven';;'ipc_issueEntry_q_ZW_hivSelfTestGiven';'fake_uid_hstg';22;0;0;7;31;0;19;1;0;;1
 110;'ZW_hivSelfTestAssistance';'ipc_issueEntry_q_ZW_hivSelfTestAssistance';;'ipc_issueEntry_q_ZW_hivSelfTestAssistance';'fake_uid_stae';23;0;0;7;40;0;19;1;0;;1
-111;'generateVoucher';'ipc_issueEntry_q_generateVoucher';;'ipc_issueEntry_q_generateVoucher';'fake_uid_gv';24;0;0;7;31;0;19;1;0;;1
 112;'program';'ipc_issueEntry_q_program';;'ipc_issueEntry_q_program';'fake_uid_p';1;0;0;8;13;0;19;1;1;;1
 113;'firstName';'ipc_issueEntry_q_firstName';;'ipc_issueEntry_q_firstName';'fake_uid_fn';2;0;0;8;1;0;4;1;2;;1
 114;'motherName';'ipc_issueEntry_q_motherName';;'ipc_issueEntry_q_motherName';'fake_uid_mn';3;0;0;8;2;0;4;1;2;;1
@@ -167,4 +166,3 @@
 167;'ZW_hivTestedLast3Months';'ipc_issueEntry_q_ZW_hivTestedLast3Months';;'ipc_issueEntry_q_ZW_hivTestedLast3Months';'fake_uid_htl3m';20;0;0;10;31;0;19;1;0;;1
 168;'ZW_hivSelfTestGiven';'ipc_issueEntry_q_ZW_hivSelfTestGiven';;'ipc_issueEntry_q_ZW_hivSelfTestGiven';'fake_uid_hstg';21;0;0;10;31;0;19;1;0;;1
 169;'ZW_hivSelfTestAssistance';'ipc_issueEntry_q_ZW_hivSelfTestAssistance';;'ipc_issueEntry_q_ZW_hivSelfTestAssistance';'fake_uid_stae';22;0;0;10;40;0;19;1;0;;1
-170;'generateVoucher';'ipc_issueEntry_q_generateVoucher';;'ipc_issueEntry_q_generateVoucher';'fake_uid_gv';23;0;0;10;31;0;19;1;0;;1

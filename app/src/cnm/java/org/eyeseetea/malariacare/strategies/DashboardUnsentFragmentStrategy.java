@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
@@ -25,6 +26,7 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     public static final String IS_STOCK_FRAGMENT = "isStockFragment";
 
     private boolean isStockFragment;
+    private boolean isAddShowing = false;
 
     public DashboardUnsentFragmentStrategy(
             DashboardUnsentFragment dashboardUnsentFragment) {
@@ -56,10 +58,26 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
         }
         if (isStockFragment) {
             View view = inflater.inflate(R.layout.stock_list_fragemnt, container, false);
+            initViews(view);
             return view;
         } else {
             return super.inflateView(inflater, container, savedInstanceState);
         }
+    }
+
+    private void initViews(View view) {
+        final ImageButton addBalance = (ImageButton) view.findViewById(R.id.add_balance_survey);
+        final ImageButton addReceipt = (ImageButton) view.findViewById(R.id.add_receipt_survey);
+        view.findViewById(R.id.add_stock_survey).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isAddShowing) {
+                    hideAddMenu(addReceipt, addBalance);
+                } else {
+                    showAddMenu(addReceipt, addBalance);
+                }
+            }
+        });
     }
 
     @Override
@@ -111,5 +129,22 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
             }
             mDashboardUnsentFragment.reloadSurveysFromService(surveysUnsentFromService);
         }
+    }
+
+
+    private void showAddMenu(ImageButton receiptButton, ImageButton balanceButton) {
+        isAddShowing = true;
+        receiptButton.animate().translationY(
+                -mDashboardUnsentFragment.getActivity().getResources().getDimension(
+                        R.dimen.smaller_translation));
+        balanceButton.animate().translationY(
+                -mDashboardUnsentFragment.getActivity().getResources().getDimension(
+                        R.dimen.bigger_translation));
+    }
+
+    private void hideAddMenu(ImageButton receiptButton, ImageButton balanceButton) {
+        isAddShowing = false;
+        receiptButton.animate().translationY(0);
+        balanceButton.animate().translationY(0);
     }
 }

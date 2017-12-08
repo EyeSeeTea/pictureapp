@@ -2,12 +2,14 @@ package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
@@ -25,8 +27,11 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     @Override
     public void renderSurveySummary(View rowView, SurveyDB survey) {
+        boolean isStockSurvey = isStockSurvey(survey);
+
         TextView firstLine = (TextView) rowView.findViewById(R.id.first_line);
         TextView secondLine = (TextView) rowView.findViewById(R.id.second_line);
+        ImageView imageStock = (ImageView) rowView.findViewById(R.id.image_stock);
 
         String date = Utils.parseDateToString(survey.getEventDate(),
                 mContext.getString(R.string.date_survey_format));
@@ -68,9 +73,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             } else {
                 visibleValues += ", ";
             }
-            if (survey.getProgramDB().getUid().equals(
-                    mContext.getString(R.string.stock_program_uid))
-                    && value.getQuestionDB() != null) {
+            if (isStockSurvey && value.getQuestionDB() != null) {
                 visibleValues += value.getQuestionDB().getInternationalizedForm_name() + " : ";
             }
 
@@ -88,10 +91,34 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             secondLine.setVisibility(View.GONE);
         }
 
-
+        if (isStockSurvey) {
+            imageStock.setVisibility(View.VISIBLE);
+            imageStock.setImageDrawable(
+                    mContext.getResources().getDrawable(getImageForSurvey(survey)));
+        } else {
+            imageStock.setVisibility(View.GONE);
+        }
     }
+
     @Override
     public boolean hasAllComplementarySurveys(SurveyDB malariaSurvey) {
         return true;
+    }
+
+    private boolean isStockSurvey(SurveyDB survey) {
+        return survey.getProgramDB().getUid().equals(
+                mContext.getString(R.string.stock_program_uid));
+    }
+
+    private int getImageForSurvey(SurveyDB survey) {
+        switch (survey.getType()) {
+            case Constants.SURVEY_RECEIPT:
+                return R.drawable.ic_arrow_survey_receipt;
+            case Constants.SURVEY_RESET:
+                return R.drawable.ic_sheet_survey_balance;
+            case Constants.SURVEY_ISSUE:
+                return R.drawable.ic_arrow_survey_expense;
+        }
+        return R.drawable.ic_arrow_survey_expense;
     }
 }

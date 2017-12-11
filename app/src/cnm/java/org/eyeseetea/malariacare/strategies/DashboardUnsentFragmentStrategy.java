@@ -36,8 +36,12 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     @Override
     public void registerSurveyReceiver(Activity activity,
             DashboardUnsentFragment.SurveyReceiver surveyReceiver) {
-        LocalBroadcastManager.getInstance(activity).registerReceiver(surveyReceiver,
-                new IntentFilter(SurveyService.GET_SURVEYS_FROM_PROGRAM));
+        if (isStockFragment) {
+            LocalBroadcastManager.getInstance(activity).registerReceiver(surveyReceiver,
+                    new IntentFilter(SurveyService.GET_SURVEYS_FROM_PROGRAM));
+        } else {
+            super.registerSurveyReceiver(activity, surveyReceiver);
+        }
     }
 
     @Override

@@ -2,7 +2,9 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +27,11 @@ public abstract class ADashboardUnsentFragmentStrategy {
         mDashboardUnsentFragment = dashboardUnsentFragment;
     }
 
-    public abstract void registerSurveyReceiver(Activity activity,
-            DashboardUnsentFragment.SurveyReceiver surveyReceiver);
+    public void registerSurveyReceiver(Activity activity,
+            DashboardUnsentFragment.SurveyReceiver surveyReceiver) {
+        LocalBroadcastManager.getInstance(activity).registerReceiver(surveyReceiver,
+                new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
+    }
 
     public void saveBundle(Bundle outState) {
 

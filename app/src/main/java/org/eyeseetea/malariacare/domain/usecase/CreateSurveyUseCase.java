@@ -56,8 +56,9 @@ public class CreateSurveyUseCase implements UseCase {
             OrganisationUnit organisationUnit =
                     mOrganisationUnitRepository.getCurrentOrganisationUnit(
                             ReadPolicy.CACHE);
-            Survey survey = mSurveyRepository.newSurvey(program, organisationUnit, userAccount,
+            Survey survey = new Survey(program, organisationUnit, userAccount,
                     mSurveyType);
+            survey = mSurveyRepository.save(survey);
             notifySurveyCreated(survey);
 
         } catch (NetworkException e) {

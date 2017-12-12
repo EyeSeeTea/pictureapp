@@ -1,12 +1,12 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
-import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
-import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
-import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,20 +59,17 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     }
 
     @Override
-    public void save(Survey survey) {
+    public Survey save(Survey survey) {
         SurveyDB surveyDB = SurveyDB.findById(survey.getId());
+        if (surveyDB == null) {
+            surveyDB = new SurveyDB(OrgUnitDB.findByUID(survey.getOrganisationUnit().getUid()),
+                    ProgramDB.getProgram(survey.getProgram().getId()),
+                    UserDB.findByUID(survey.getUserAccount().getUserUid()), survey.getType());
+            surveyDB.save();
+        }
         surveyDB.setStatus(survey.getStatus());
         surveyDB.update();
-    }
-
-    @Override
-    public Survey newSurvey(Program program, OrganisationUnit organisationUnit, UserAccount user,
-            int type) {
-        SurveyDB surveyDB = new SurveyDB(organisationUnit.getUid(), program.getId(),
-                user.getUserUid(),
-                type);
-
-        return new Survey(surveyDB.getId_survey());
-
+        survey.setId(surveyDB.getId_survey());
+        return survey;
     }
 }

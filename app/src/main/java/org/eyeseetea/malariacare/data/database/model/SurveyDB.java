@@ -555,7 +555,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
                 .where(ProgramDB_Table.uid_program.withTable(programAlias)
-                        .eq(programUID)).queryList();
+                        .eq(programUID))
+                .and(SurveyDB_Table.status.withTable(surveyAlias).isNot(
+                        Constants.SURVEY_IN_PROGRESS)).queryList();
     }
 
     /**

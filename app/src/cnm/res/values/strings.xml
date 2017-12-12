@@ -266,5 +266,6 @@
     <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
     <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
     <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+    <string name="save">Save</string>
 
 </resources>

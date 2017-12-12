@@ -1,14 +1,16 @@
 package org.eyeseetea.malariacare.fragments;
 
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.QuestionLocalDataSource;
@@ -38,7 +40,8 @@ import java.util.List;
 
 
 public class AddBalanceReceiptFragment extends Fragment implements
-        AddBalanceReceiptPresenter.AddBalanceReceiptView {
+        AddBalanceReceiptPresenter.AddBalanceReceiptView,
+        AddBalanceReceiptAdapter.onInteractionListener {
     private static final String TYPE_SURVEY = "TYPE_SURVEY";
 
     private int typeSurvey;
@@ -50,10 +53,10 @@ public class AddBalanceReceiptFragment extends Fragment implements
         // Required empty public constructor
     }
 
-    public static AddBalanceReceiptFragment newInstance(String typeSurvey) {
+    public static AddBalanceReceiptFragment newInstance(int typeSurvey) {
         AddBalanceReceiptFragment fragment = new AddBalanceReceiptFragment();
         Bundle args = new Bundle();
-        args.putString(TYPE_SURVEY, typeSurvey);
+        args.putInt(TYPE_SURVEY, typeSurvey);
         fragment.setArguments(args);
         return fragment;
     }
@@ -112,13 +115,34 @@ public class AddBalanceReceiptFragment extends Fragment implements
 
     @Override
     public void showQuestions(List<Question> questions) {
-        mQuestionsList.setAdapter(new AddBalanceReceiptAdapter(questions));
+        mQuestionsList.setAdapter(new AddBalanceReceiptAdapter(questions, this));
         mQuestionsList.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
     public void showErrorMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void closeFragment() {
+        ((DashboardActivity) getActivity()).closeReceiptBalanceFragment();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAddBalanceReceiptPresenter.detachView();
+    }
+
+    @Override
+    public void onSaveClick() {
+        mAddBalanceReceiptPresenter.onCompletedSurvey();
+    }
+
+    @Override
+    public void onQuestionAnswered(Question question, String answeredValue) {
+        mAddBalanceReceiptPresenter.onQuestionAnswerTextChange(question.getUid(), answeredValue);
     }
 }

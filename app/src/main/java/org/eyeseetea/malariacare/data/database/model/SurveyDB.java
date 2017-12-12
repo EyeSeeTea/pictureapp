@@ -178,6 +178,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.type = type;
     }
 
+    public SurveyDB(String orgUnitUID, String programUID, String userUID, int type) {
+        this();
+        this.status = Constants.SURVEY_IN_PROGRESS;
+
+        this.setOrgUnit(OrgUnitDB.findByUID(orgUnitUID));
+        this.setProgram(ProgramDB.getProgram(programUID));
+        this.setUser(UserDB.findByUID(userUID));
+        this.type = type;
+
+    }
+
 
     public Long getId_survey() {
         return id_survey;

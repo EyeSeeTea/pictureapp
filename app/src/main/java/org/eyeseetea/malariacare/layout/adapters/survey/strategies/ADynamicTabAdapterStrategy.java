@@ -9,8 +9,8 @@ import android.view.View;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -98,5 +98,10 @@ public abstract class ADynamicTabAdapterStrategy {
     }
 
     public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB){
+    }
+
+    public void evaluateTreatmentMatch(QuestionDB questionDB, OptionDB selectedOptionDB,
+            QuestionRelationDB questionRelationDB) {
+
     }
 }

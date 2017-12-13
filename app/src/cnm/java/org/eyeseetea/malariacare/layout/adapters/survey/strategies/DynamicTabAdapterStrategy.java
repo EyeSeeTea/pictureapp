@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -71,5 +73,16 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     @Override
     protected boolean shouldShowReviewScreen() {
         return true;
+    }
+
+    @Override
+    public void evaluateTreatmentMatch(QuestionDB questionDB, OptionDB selectedOptionDB,
+            QuestionRelationDB questionRelationDB) {
+        QuestionDB questionRelated = questionRelationDB.getQuestionDB();
+        String valueToSave = "1";
+        if (questionRelationDB.getOperation() == QuestionRelationDB.TREATMENT_NO_MATCH) {
+            valueToSave = "0";
+        }
+        questionRelated.saveValuesText(valueToSave);
     }
 }

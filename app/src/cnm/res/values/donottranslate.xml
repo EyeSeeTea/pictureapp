@@ -40,4 +40,8 @@
     <string name="metadata_version" translatable="false">metadata_version</string>
     <string name="imei_preference" translatable="false">imei_prefrence</string>
     <string name="stock_program_uid" translatable="false">zaRb1RuqGVk</string>
+    <string name="control_data_element_stock_type" translatable="false">y4khhaHeh4k</string>
+    <string name="control_data_element_stock_type_balance" translatable="false">BALANCE</string>
+    <string name="control_data_element_stock_type_issue" translatable="false">ISSUE</string>
+    <string name="control_data_element_stock_type_receipt" translatable="false">RECEIPT</string>
 </resources>

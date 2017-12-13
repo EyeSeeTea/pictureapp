@@ -267,5 +267,6 @@
     <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
     <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
     <string name="save">Save</string>
+    <string name="login_unexpected_error">"Unexpected error while login"</string>
 
 </resources>

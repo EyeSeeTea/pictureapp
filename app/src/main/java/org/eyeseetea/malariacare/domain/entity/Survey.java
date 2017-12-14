@@ -18,8 +18,8 @@ public class Survey {
             OrganisationUnit organisationUnit,
             UserAccount userAccount, int type) {
         mProgram = required(program, "Program is required");
-        mOrganisationUnit = required(organisationUnit, "Organisation is required");
-        mUserAccount = required(userAccount, "User account is required");
+        mOrganisationUnit = organisationUnit;
+        mUserAccount = userAccount;
         mType = required(type, "Type is required");
     }
 

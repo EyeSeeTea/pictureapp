@@ -67,6 +67,9 @@ public class CreateSurveyUseCase implements UseCase {
         } catch (ApiCallException e) {
             e.printStackTrace();
             notifyError(e);
+        } catch (Exception e){
+            e.printStackTrace();
+            notifyError(e);
         }
     }
 

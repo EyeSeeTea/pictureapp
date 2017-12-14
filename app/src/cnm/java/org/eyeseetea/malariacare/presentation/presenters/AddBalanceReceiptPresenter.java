@@ -44,6 +44,9 @@ public class AddBalanceReceiptPresenter {
 
                             @Override
                             public void onGetQuestions(List<Question> questions) {
+                                for (Question question : questions) {
+                                    onQuestionAnswerTextChange(question.getUid(), "0");
+                                }
                                 if (mView != null) {
                                     mView.showQuestions(questions);
                                 }

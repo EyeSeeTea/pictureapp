@@ -79,7 +79,6 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
 
             }
         });
-        mOnInteractionListener.onQuestionAnswered(question, "0");
     }
 
     @Override

@@ -62,9 +62,16 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     public Survey save(Survey survey) {
         SurveyDB surveyDB = SurveyDB.findById(survey.getId());
         if (surveyDB == null) {
-            surveyDB = new SurveyDB(OrgUnitDB.findByUID(survey.getOrganisationUnit().getUid()),
-                    ProgramDB.getProgram(survey.getProgram().getId()),
-                    UserDB.findByUID(survey.getUserAccount().getUserUid()), survey.getType());
+            OrgUnitDB orgUnitDB = null;
+            if (survey.getOrganisationUnit() != null) {
+                orgUnitDB = OrgUnitDB.findByUID(survey.getOrganisationUnit().getUid());
+            }
+            UserDB userDB = null;
+            if (survey.getUserAccount() != null) {
+                userDB = UserDB.findByUID(survey.getUserAccount().getUserUid());
+            }
+            surveyDB = new SurveyDB(orgUnitDB, ProgramDB.getProgram(survey.getProgram().getId()),
+                    userDB, survey.getType());
             surveyDB.save();
         }
         surveyDB.setStatus(survey.getStatus());

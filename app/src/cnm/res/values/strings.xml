@@ -267,5 +267,10 @@
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
 <string name="common_option_diagnosis_not_tested">Not tested</string>
+<string name="ipc_issueEntry_q_not_reason_tested">Reason not tested</string>
+<string name="common_option_not_tested_refused">Patient refused</string>
+<string name="common_option_not_tested_rdt_out_stock">RDT Stock out</string>
+<string name="common_option_not_tested_danger_signs">Danger Signs</string>
+<string name="common_option_not_tested_referred">Referred</string>
 
 </resources>

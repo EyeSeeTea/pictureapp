@@ -263,5 +263,10 @@
 <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
-<string name="common_option_diagnosis_not_tested">Not tested</string>
+<string name="common_option_diagnosis_not_tested">មិនបានសាកល្បង</string>
+<string name="ipc_issueEntry_q_not_reason_tested">មូលហេតុដែលមិនបានសាកល្បង</string>
+<string name="common_option_not_tested_refused">អ្នកជំងឺបានបដិសេធ</string>
+<string name="common_option_not_tested_rdt_out_stock">RDT ស្តុកចេញ</string>
+<string name="common_option_not_tested_danger_signs">សញ្ញាគ្រោះថ្នាក់</string>
+<string name="common_option_not_tested_referred">សំដៅលើ</string>
 </resources>

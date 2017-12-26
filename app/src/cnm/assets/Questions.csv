@@ -17,3 +17,4 @@
 17;'MCS STK – Primaquine';'ipc_issueEntry_q_stock_primaquine';;'ipc_issueEntry_q_stock_primaquine';'LLP04MYE6LM';3;0;0;4;17;;26;4;1;;1
 18;'MCS STK – RDTs';'ipc_issueEntry_q_stock_rdt';;'ipc_issueEntry_q_stock_rdt';'wYekTzcJE6c';4;0;0;4;18;;26;4;1;;1
 19;'Code: Not Tested Reason';'ipc_issueEntry_q_not_reason_tested';;'ipc_issueEntry_q_not_reason_tested';'CangeUidNoTestQ';2;0;0;1;19;;11;3;0;;1
+20;'Code: Referred';'ipc_issueEntry_q_referred';;'ipc_issueEntry_q_referred';'ChangeUidReferredQ';3;0;0;1;20;;11;3;0;;1

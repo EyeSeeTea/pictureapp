@@ -272,5 +272,10 @@
 <string name="common_option_not_tested_rdt_out_stock">RDT Stock out</string>
 <string name="common_option_not_tested_danger_signs">Danger Signs</string>
 <string name="common_option_not_tested_referred">Referred</string>
+<string name="ipc_issueEntry_q_referred">Referred</string>
+<string name="common_option_referred_suspected">Suspected treatment failure</string>
+<string name="common_option_referred_danger">Danger Signs</string>
+<string name="common_option_referred_stock_out">ACT/PQ stock out</string>
+<string name="common_option_referred_unable">Unable to treat</string>
 
 </resources>

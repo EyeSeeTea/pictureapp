@@ -90,7 +90,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             for (DrugCombinationDB drugCombinationDB : drugCombinationDBS) {
                 if (drugCombinationDB.getDrugDB().getQuestion_code().equals(
                         questionRelated.getUid())) {
-                    valueToSave = Float.toString(drugCombinationDB.getDose());
+                    valueToSave = Integer.toString((int) drugCombinationDB.getDose());
                 }
             }
         }

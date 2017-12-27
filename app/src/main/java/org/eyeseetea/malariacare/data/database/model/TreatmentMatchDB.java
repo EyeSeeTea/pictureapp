@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.data.database.model;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentMatchAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentMatchName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentName;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -88,9 +90,11 @@ public class TreatmentMatchDB extends BaseModel {
                 .join(TreatmentDB.class, Join.JoinType.LEFT_OUTER).as(treatmentName)
                 .on(DrugCombinationDB_Table.id_treatment_fk.withTable(drugCombinationAlias)
                         .eq(TreatmentDB_Table.id_treatment.withTable(treatmentAlias)))
-                .where(TreatmentDB_Table.id_treatment.withTable(treatmentAlias)
-                        .is(TreatmentMatchDB_Table.id_treatment_fk))
-                .and(TreatmentMatchDB_Table.id_match_fk.is(id_match)).queryList();
+                .join(TreatmentMatchDB.class, Join.JoinType.LEFT_OUTER).as(treatmentMatchName)
+                .on(TreatmentDB_Table.id_treatment.withTable(treatmentAlias)
+                        .eq(TreatmentMatchDB_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatchDB_Table.id_match_fk.is(id_match))
+                .queryList();
 
     }
 

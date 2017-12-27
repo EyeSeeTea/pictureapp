@@ -18,8 +18,8 @@
 18;'common_option_diagnosis_simple';'Simple';0;11;14
 19;'common_option_diagnosis_severe';'Severe';0;11;15
 20;'common_option_treatment_asmq_25_50_3';'ASMQ_25_50_3Change';0;12;16
-21;'common_option_treatment_asmq_25_50_6';'ASMQ_25_50_6Change';0;12;18
-22;'common_option_treatment_asmq_100_200_3';'ASMQ_100_200_3Change';0;12;19
+21;'common_option_treatment_asmq_25_50_6';'ASMQ_25_50_6Change';0;12;31
+22;'common_option_treatment_asmq_100_200_3';'ASMQ_100_200_3Change';0;12;32
 23;'common_option_referred_yes';true;0;14;20
 24;'common_option_referred_no';false;0;14;21
 25;'common_option_diagnosis_not_tested';'NotTestedChange';0;1;22
@@ -31,6 +31,6 @@
 31;'common_option_referred_danger';'ReferredChange';0;20;28
 32;'common_option_referred_stock_out';'ReferredChange';0;20;29
 33;'common_option_referred_unable';'ReferredChange';0;20;30
-34;'common_option_treatment_asmq_100_200_6';'ASMQ_100_200_6Change';0;12;19
-35;'common_option_treatment_asmq_100_200_6_pq_1';'ASMQ_100_200_6_PQ_1Change';0;12;19
+34;'common_option_treatment_asmq_100_200_6';'ASMQ_100_200_6Change';0;12;33
+35;'common_option_treatment_asmq_100_200_6_pq_1';'ASMQ_100_200_6_PQ_1Change';0;12;18
 36;'common_option_not_tested_referred';'ReferredChange';0;12;26

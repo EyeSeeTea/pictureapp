@@ -27,12 +27,14 @@ public class ImageOptionView extends CommonQuestionView {
     private Boolean mSelectedOption;
     boolean isClicked = false;
     private int mColumnsCount;
+    private int mTotalOptions;
     private AImageOptionViewStrategy mImageOptionViewStrategy;
 
-    public ImageOptionView(Context context, int columnsCount) {
+    public ImageOptionView(Context context, int columnsCount, int totalOptions) {
         super(context);
         mColumnsCount = columnsCount;
         mImageOptionViewStrategy=new ImageOptionViewStrategy();
+        mTotalOptions = totalOptions;
         init(context);
     }
 
@@ -113,6 +115,7 @@ public class ImageOptionView extends CommonQuestionView {
                 }
             }
         });
+        mImageOptionViewStrategy.initViews(mTotalOptions, mOptionImageView);
     }
 
     public interface OnOptionSelectedListener {

@@ -279,4 +279,5 @@
 <string name="common_option_treatment_asmq_100_200_3">3 គ្រាប់ថ្នាំ ASMQ 100/200 មីលីក្រាម</string>
 <string name="common_option_treatment_asmq_100_200_6">6 គ្រាប់ថ្នាំ ASMQ 100/200 មីលីក្រាម</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 គ្រាប់ថ្នាំ ASMQ នៃថ្នាំ 100/200 មីក្រូក្រាម 15 មីលីក្រាម PQ</string>
+    <string name="save">រក្សាទុក</string>
 </resources>

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.util.Date;
 
 public class Survey {
@@ -7,6 +9,19 @@ public class Survey {
     private int status;
     private SurveyAnsweredRatio mSurveyAnsweredRatio;
     private Date mSurveyDate;
+    private Program mProgram;
+    private OrganisationUnit mOrganisationUnit;
+    private UserAccount mUserAccount;
+    private int mType;
+
+    public Survey(Program program,
+            OrganisationUnit organisationUnit,
+            UserAccount userAccount, int type) {
+        mProgram = required(program, "Program is required");
+        mOrganisationUnit = organisationUnit;
+        mUserAccount = userAccount;
+        mType = required(type, "Type is required");
+    }
 
     public Survey(Date surveyDate) {
         mSurveyDate = surveyDate;
@@ -46,6 +61,22 @@ public class Survey {
     public void setSurveyAnsweredRatio(
             SurveyAnsweredRatio surveyAnsweredRatio) {
         mSurveyAnsweredRatio = surveyAnsweredRatio;
+    }
+
+    public Program getProgram() {
+        return mProgram;
+    }
+
+    public OrganisationUnit getOrganisationUnit() {
+        return mOrganisationUnit;
+    }
+
+    public UserAccount getUserAccount() {
+        return mUserAccount;
+    }
+
+    public int getType() {
+        return mType;
     }
 
     @Override

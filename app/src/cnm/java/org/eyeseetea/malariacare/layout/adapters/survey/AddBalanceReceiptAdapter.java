@@ -79,6 +79,9 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
 
             }
         });
+        mOnInteractionListener.onQuestionAnswered(question,
+                holder.value.getText().toString().isEmpty() ? holder.value.getHint().toString()
+                        : holder.value.getText().toString());
     }
 
     @Override

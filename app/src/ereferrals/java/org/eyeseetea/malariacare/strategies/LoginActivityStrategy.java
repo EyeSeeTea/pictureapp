@@ -144,6 +144,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             loginType = LoginType.SOFT;
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
                             loginActivity.getUsernameEditText().setEnabled(false);
+                            loginActivity.getPasswordEditText().requestFocus();
                         } else {
                             loginType = LoginType.FULL;
                             loginActivity.getUsernameEditText().setEnabled(true);

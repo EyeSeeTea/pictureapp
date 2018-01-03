@@ -11,12 +11,14 @@ public class Configuration {
         private String country;
         private int version;
         private Date lastUpdate;
+        private String reference;
 
         private CountryVersion(Builder builder) {
             setUid(builder.uid);
             setCountry(builder.country);
             setVersion(builder.version);
             setLastUpdate(builder.lastUpdate);
+            setReference(builder.reference);
         }
 
         public static Builder newBuilder() {
@@ -54,6 +56,14 @@ public class Configuration {
 
         public void setLastUpdate(Date lastUpdate) {
             this.lastUpdate = lastUpdate;
+        }
+
+        public String getReference() {
+            return reference;
+        }
+
+        public void setReference(String reference) {
+            this.reference = reference;
         }
 
         @Override
@@ -95,6 +105,7 @@ public class Configuration {
             private String country;
             private int version;
             private Date lastUpdate;
+            private String reference;
 
             private Builder() {
             }
@@ -116,6 +127,11 @@ public class Configuration {
 
             public Builder lastUpdate(Date val) {
                 lastUpdate = val;
+                return this;
+            }
+
+            public Builder reference(String val) {
+                reference = reference;
                 return this;
             }
 

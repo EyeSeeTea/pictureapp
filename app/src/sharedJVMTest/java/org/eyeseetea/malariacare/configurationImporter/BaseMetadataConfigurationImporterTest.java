@@ -29,6 +29,13 @@ public class BaseMetadataConfigurationImporterTest extends BaseMockWebServerTest
     protected static final String ZW_CONFIG_ANDROID_1_0_JSON =
             "zw_config_android_1_0.json";
 
+    protected static final String MZ_CONFIG_ANDROID_2_0_JSON =
+            "mz_config_android_2_0.json";
+
+    protected static final String TC_CONFIG_ANDROID_1_0_JSON =
+            "tz_config_android_2_0.json";
+    protected static final String COUNTRIES_VERSION = "countries_version.json";
+
     @Before
     public void setUp() throws Exception {
         super.setUp();

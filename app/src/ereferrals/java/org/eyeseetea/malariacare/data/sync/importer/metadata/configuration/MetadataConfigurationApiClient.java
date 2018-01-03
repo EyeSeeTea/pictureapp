@@ -98,7 +98,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                             .version(countryVersionApi.version)
                             .uid(countryVersionApi.uid)
                             .lastUpdate(new Date())
-                            .reference(countryVersionApi.reference)
                             .build();
 
             domainCountriesVersions.add(domain);

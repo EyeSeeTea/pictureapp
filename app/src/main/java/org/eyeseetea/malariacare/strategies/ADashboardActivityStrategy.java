@@ -230,4 +230,8 @@ public abstract class ADashboardActivityStrategy {
             mDashboardActivity.reviewShowDone();
         }
     }
+
+    public void onPause(){
+
+    }
 }

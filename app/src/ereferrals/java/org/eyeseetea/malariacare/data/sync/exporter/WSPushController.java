@@ -49,6 +49,7 @@ public class WSPushController implements IPushController {
                 callback.onError(new SurveysToPushNotFoundException("Null surveys"));
                 return;
             }
+            mCallback.onStartPushing();
             for (SurveyDB srv : mSurveys) {
                 Log.d("DpBlank", "Survey to push " + srv.toString());
                 for (ValueDB dv : srv.getValuesFromDB()) {

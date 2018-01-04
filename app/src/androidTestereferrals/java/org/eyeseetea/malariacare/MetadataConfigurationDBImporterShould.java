@@ -3,7 +3,8 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAndroidTest.readFileContentFromAssets;
+import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAndroidTest
+        .readFileContentFromAssets;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -11,11 +12,19 @@ import android.support.test.InstrumentationRegistry;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.configurationImporter.BaseMetadataConfigurationImporterTest;
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
+import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
+import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.di.Injector;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,14 +39,24 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
 
     @Before
     public void setUp() throws Exception {
+        CredentialsReader credentialsReader = CredentialsReader.getInstance();
+        Session.setCredentials(
+                new Credentials("/", credentialsReader.getUser(),
+                        credentialsReader.getPassword()));
         super.setUp();
         context = InstrumentationRegistry.getContext();
+        UpdateDB.updatePrograms(context);
+        UpdateDB.updateTabs(context);
+        UpdateDB.updateHeaders(context);
     }
 
     @Test
     public void insert_questions_to_db_after_download_the_configurations() throws Exception {
 
-        enqueueResponse(MZ_CONFIG_ANDROID_1_0_JSON);
+        enqueueResponse(COUNTRIES_VERSION);
+        enqueueResponse(MZ_CONFIG_ANDROID_2_0_JSON);
+        enqueueResponse(TZ_CONFIG_ANDROID_2_0_JSON);
+
 
         cleanQuestionsTable();
 
@@ -51,7 +70,7 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
 
         importer.importMetadata();
 
-        shouldBeInDB(16, 28, 28);
+        shouldBeInDB(32, 23, 78);
     }
 
     private void shouldNotBeAnyQuestionInTheDB() {
@@ -101,5 +120,18 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
         String fileContent = readFileContentFromAssets(context, fileName);
         mockResponse.setBody(fileContent);
         server.enqueue(mockResponse);
+    }
+
+    @Override
+    public void tearDown() throws IOException {
+        super.tearDown();
+        cleanUsedTables();
+    }
+
+    private void cleanUsedTables() {
+        HeaderDB.deleteAll();
+        TabDB.deleteAll();
+        ProgramDB.deleteAll();
+        CountryVersionDB.deleteAll();
     }
 }

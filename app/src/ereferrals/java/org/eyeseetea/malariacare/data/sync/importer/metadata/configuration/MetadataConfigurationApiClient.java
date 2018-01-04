@@ -189,17 +189,19 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             @NonNull MetadataConfigurationsApi.Question question) {
 
         MetadataConfigurationsApi.Option foundOption = null;
+        if (question.options != null) {
+            for (MetadataConfigurationsApi.Option option : question.options) {
 
-        for (MetadataConfigurationsApi.Option option : question.options) {
+                if (option.code.equals(optionCode)) {
 
-            if (option.code.equals(optionCode)) {
-
-                foundOption = option;
-                break;
+                    foundOption = option;
+                    break;
+                }
             }
         }
         return foundOption;
     }
+
 
     private boolean isApiQuestionNotNull(@NonNull MetadataConfigurationsApi metadata) {
         return metadata.issuingCapture != null &&

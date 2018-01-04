@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Table(database = AppDatabase.class, name = "CountryVersion")
@@ -58,6 +59,16 @@ public class CountryVersionDB extends BaseModel {
                 .from(CountryVersionDB.class).where(
                         (CountryVersionDB_Table.country).is(countryCode)).count();
         return version > versionDB;
+    }
+
+    public static void deleteAll() {
+        for (CountryVersionDB countryVersionDB : getAllCountryVersionDB()) {
+            countryVersionDB.delete();
+        }
+    }
+
+    public static List<CountryVersionDB> getAllCountryVersionDB() {
+        return new Select().from(CountryVersionDB.class).queryList();
     }
 
 

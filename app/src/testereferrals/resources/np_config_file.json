@@ -1,5 +1,10 @@
 {
-  "version": "0.6.2",
+  "countryCode": "NP",
+  "program": "FPL",
+  "actionType": "issueReferral",
+  "version": "1",
+  "updateDate": "2017-12-13 08:00",
+  "updateUser": "BR",
   "languages": ["en", "np"],
   "issuing_capture": {
     "validSamples": [0, 1, 2],

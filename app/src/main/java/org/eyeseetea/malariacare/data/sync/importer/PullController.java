@@ -152,7 +152,9 @@ public class PullController implements IPullController {
         PopulateDB.initDataIfRequired(mContext);
 
         try {
-            IMetadataConfigurationDataSource dataSource = Injector.provideMetadataConfigurationDataSource();
+            IMetadataConfigurationDataSource dataSource = Injector.provideMetadataConfigurationDataSource(
+                    Injector.provideAuthenticationInterceptor()
+            );
             MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
                     dataSource, Injector.provideQuestionConverter()
             );

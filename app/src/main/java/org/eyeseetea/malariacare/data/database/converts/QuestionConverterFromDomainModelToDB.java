@@ -37,11 +37,15 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
         dbModel.setOutput(getOutFrom(domainModel.getType()));
         dbModel.setCompulsory(getCompulsoryFrom(domainModel.isCompulsory()));
         dbModel.setOptionDBS(getOptionDBsFrom(domainModel));
-        dbModel.setHeaderDB(domainModel.getHeader().getId());
+        dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
 
         return dbModel;
+    }
+
+    private long getHeaderID(@NotNull Question domainModel) {
+        return (domainModel.getHeader() !=null) ? domainModel.getHeader().getId() : 0;
     }
 
     private int getVisibilityFrom(@NotNull Question question) {

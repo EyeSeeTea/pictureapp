@@ -131,7 +131,7 @@ public class Configuration {
             }
 
             public Builder reference(String val) {
-                reference = reference;
+                reference = val;
                 return this;
             }
 

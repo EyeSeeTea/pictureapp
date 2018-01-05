@@ -68,7 +68,7 @@ public class Injector {
     }
 
     @NonNull
-    public static Interceptor provideAuthenticationInterceptor() throws Exception {
+    public static BasicAuthInterceptor provideAuthenticationInterceptor() throws Exception {
         return new BasicAuthInterceptor(AuthenticationApiStrategy.getApiCredentials());
     }
 
@@ -100,9 +100,11 @@ public class Injector {
     }
 
     @NonNull
-    public static IMetadataConfigurationDataSource provideMetadataConfigurationDataSource()
+    public static IMetadataConfigurationDataSource provideMetadataConfigurationDataSource(
+            BasicAuthInterceptor basicAuthInterceptor)
             throws Exception {
-        return new MetadataConfigurationApiClient(PreferencesState.getInstance().getDhisURL());
+        return new MetadataConfigurationApiClient(PreferencesState.getInstance().getDhisURL(),
+                basicAuthInterceptor);
     }
 
     @NonNull

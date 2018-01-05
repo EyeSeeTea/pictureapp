@@ -57,7 +57,7 @@ public class QuestionConverterFromDomainModelToDBShould {
         QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
                 Question.Type.DROPDOWN_LIST));
 
-        QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.DROPDOWN_LIST);
+        QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.DROPDOWN_OU_LIST);
 
         assertEqual(questionToEvaluate, expectedQuestion);
 
@@ -207,8 +207,9 @@ public class QuestionConverterFromDomainModelToDBShould {
 
         List<QuestionOptionDB> questionOptionDBSToExpected =
                 expectedQuestion.getQuestionOptionDBS();
-
-        assertEqual(questionOptionDBSToEvaluate, questionOptionDBSToExpected);
+        if (questionOptionDBSToEvaluate != null && questionOptionDBSToExpected != null) {
+            assertEqual(questionOptionDBSToEvaluate, questionOptionDBSToExpected);
+        }
     }
 
     private void assertEqual(List<QuestionOptionDB> questionOptionDBSToEvaluate,
@@ -280,6 +281,7 @@ public class QuestionConverterFromDomainModelToDBShould {
         question.setCode("program");
         question.setName("ipc_issueEntry_q_program");
         question.setType(Question.Type.DROPDOWN_LIST);
+        question.setVisibility(Question.Visibility.VISIBLE);
         question.setCompulsory(true);
 
 
@@ -298,7 +300,7 @@ public class QuestionConverterFromDomainModelToDBShould {
         question.setCode("program");
         question.setForm_name("ipc_issueEntry_q_program");
         question.setDe_name("ipc_issueEntry_q_program");
-        question.setOutput(Constants.DROPDOWN_LIST);
+        question.setOutput(Constants.DROPDOWN_OU_LIST);
         question.setCompulsory(1);
 
         return question;

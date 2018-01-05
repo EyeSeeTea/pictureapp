@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.eyeseetea.malariacare.data.di.Injector;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataConfigurationsApi;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataCountryVersionApi;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .MetadataConfigurationsApi;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .MetadataCountryVersionApi;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Country;
 import org.eyeseetea.malariacare.domain.entity.Form;
@@ -14,6 +16,7 @@ import org.eyeseetea.malariacare.domain.entity.Header;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import okhttp3.Interceptor;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -32,10 +35,10 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
     private IMetadataConfigurationApi configurationApi;
 
-    public MetadataConfigurationApiClient(String url) throws Exception {
+    public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
+            throws Exception {
 
-        Interceptor authentication = Injector.provideAuthenticationInterceptor();
-        OkHttpClient client = Injector.provideHTTPClientWithLoggingWith(authentication);
+        OkHttpClient client = Injector.provideHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -54,18 +57,16 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         List<MetadataConfigurationsApi.Question> apiQuestions = new ArrayList<>();
 
-        Response<MetadataConfigurationsApi> response =
-                configurationApi.getConfiguration(countryCode).execute();
-
         List<MetadataConfigurationsApi.Rule> apiRules;
 
-        MetadataConfigurationsApi metadata = getResultsOrThrowException(response);
+
+        MetadataConfigurationsApi metadata = getMetadataConfigurationsApi(countryCode);
 
 
         if (isApiQuestionNotNull(metadata)) {
-            apiQuestions = response.body().issuingCapture.questions;
+            apiQuestions = metadata.issuingCapture.questions;
 
-            apiRules = response.body().issuingCapture.rules;
+            apiRules = metadata.issuingCapture.rules;
 
             assignRulesToQuestions(apiRules, apiQuestions);
         }
@@ -73,6 +74,24 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         return converter.convertToDomainQuestionsFrom(apiQuestions);
     }
+
+    @NonNull
+    private MetadataConfigurationsApi getMetadataConfigurationsApi(@NonNull String countryCode)
+            throws Exception {
+
+        Response<MetadataConfigurationsApi> response;
+        try {
+
+            response = configurationApi.getConfiguration(countryCode).execute();
+
+        } catch (Exception error) {
+            throw new ApiCallException(error);
+        }
+
+
+        return getResultsOrThrowException(response);
+    }
+
     @Override
     public List<Configuration.CountryVersion> getCountriesVersions() throws Exception {
 
@@ -96,6 +115,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     Configuration.CountryVersion.newBuilder()
                             .country(countryVersionApi.country)
                             .version(countryVersionApi.version)
+                            .reference(countryVersionApi.reference)
                             .uid(countryVersionApi.uid)
                             .lastUpdate(new Date())
                             .build();

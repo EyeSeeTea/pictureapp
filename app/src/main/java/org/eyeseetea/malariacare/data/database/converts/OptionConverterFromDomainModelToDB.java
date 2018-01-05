@@ -1,8 +1,6 @@
 package org.eyeseetea.malariacare.data.database.converts;
 
 
-import android.support.annotation.NonNull;
-
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -21,7 +19,7 @@ public class OptionConverterFromDomainModelToDB implements IConverter<Option, Op
         return dbModel;
     }
 
-    private long getAttributeIdFrom(Option domainOption){
-       return domainOption.getAttribute().getId();
+    private long getAttributeIdFrom(Option domainOption) {
+        return (domainOption.getAttribute() != null) ? domainOption.getAttribute().getId() : 0;
     }
 }

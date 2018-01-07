@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
@@ -24,9 +25,12 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttem
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.DisableAddNewSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
@@ -267,6 +271,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onApiCallError(ApiCallException e) {
+                treatAPiCallException(e);
                 onError("PUSHUSECASE ERROR " + e.getMessage());
                 e.printStackTrace();
             }
@@ -279,4 +284,31 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
         });
     }
+
+
+    private void treatAPiCallException(ApiCallException e) {
+        if (e instanceof ConfigFileObsoleteException) {
+            disableAddNewSurveys();
+        }
+    }
+
+    private void disableAddNewSurveys() {
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IUserRepository userRepository = new UserAccountDataSource();
+        DisableAddNewSurveysUseCase disableAddNewSurveysUseCase = new DisableAddNewSurveysUseCase(
+                mainExecutor, asyncExecutor, userRepository);
+        disableAddNewSurveysUseCase.execute(new DisableAddNewSurveysUseCase.Callback() {
+            @Override
+            public void onSuccess() {
+                Log.d(PushService.TAG, "User disabled to edit surveys");
+            }
+
+            @Override
+            public void onError() {
+                Log.e(PushService.TAG, "Error while disabling user can add surveys");
+            }
+        });
+    }
+
 }

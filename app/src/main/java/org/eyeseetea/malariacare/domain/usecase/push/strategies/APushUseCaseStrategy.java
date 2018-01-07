@@ -134,6 +134,8 @@ public abstract class APushUseCaseStrategy {
                     notifySurveysNotFoundError();
                 } else if (throwable instanceof ClosedUserPushException) {
                     notifyClosedUser();
+                } else if (throwable instanceof ApiCallException) {
+                    notifyApiCallError((ApiCallException) throwable);
                 } else {
                     notifyPushError();
                 }

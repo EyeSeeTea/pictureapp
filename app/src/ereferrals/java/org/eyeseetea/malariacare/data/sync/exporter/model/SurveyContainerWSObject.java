@@ -12,7 +12,7 @@ public class SurveyContainerWSObject {
     private String language;
     private String androidInfo;
     private String csvVersion;
-    private String configVersion;
+    private int configVersion;
 
 
     public SurveyContainerWSObject() {
@@ -20,7 +20,8 @@ public class SurveyContainerWSObject {
     }
 
     public SurveyContainerWSObject(String version, String source, String userName,
-            String password, String language, String androidInfo, String csvVersion) {
+            String password, String language, String androidInfo, String csvVersion,
+            int configVersion) {
         this.version = version;
         this.source = source;
         this.userName = userName;
@@ -29,7 +30,7 @@ public class SurveyContainerWSObject {
         this.language = language;
         this.androidInfo = androidInfo;
         this.csvVersion = csvVersion;
-        this.configVersion = csvVersion;
+        this.configVersion = configVersion;
     }
 
     public String getVersion() {
@@ -96,11 +97,11 @@ public class SurveyContainerWSObject {
         this.csvVersion = csvVersion;
     }
 
-    public String getConfigVersion() {
+    public int getConfigVersion() {
         return configVersion;
     }
 
-    public void setConfigVersion(String configVersion) {
+    public void setConfigVersion(int configVersion) {
         this.configVersion = configVersion;
     }
 }

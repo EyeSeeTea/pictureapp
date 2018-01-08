@@ -1,12 +1,11 @@
 package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 
-import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
-
 import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.data.database.converts.CountryVersionConverterFromDomainModelToDB;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -152,7 +151,7 @@ public class MetadataConfigurationDBImporter {
     }
 
     private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsFor(country.getCountry());
+        List<Question> questions = remoteDataSource.getQuestionsFor(country.getReference());
 
         saveQuestionsInDB(questions, country);
     }

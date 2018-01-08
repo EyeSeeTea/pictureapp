@@ -28,6 +28,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -56,13 +57,21 @@ public class EyeSeeTeaApplication extends Application {
         super.onCreate();
         Log.d(TAG, "onCreate");
         mInstance = this;
-        Fabric.with(this, new Crashlytics());
+
+        //Apply for Release build
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }else{
+            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V); // set to verbose logging
+        }
+
         PreferencesState.getInstance().init(getApplicationContext());
         FlowConfig flowConfig = new FlowConfig
                 .Builder(this)
                 .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
                 .build();
         FlowManager.init(flowConfig);
+
     }
 
     @Override

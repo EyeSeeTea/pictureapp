@@ -3,7 +3,8 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.eyeseetea.malariacare.common.FileReader;
+import org.eyeseetea.malariacare.data.file.ResourcesFileReader;
+import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.junit.After;
@@ -14,36 +15,36 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-
 public class ForgotPasswordAPIClientTest {
 
-    private MockWebServer server;
+
     private eReferralsAPIClient apiClient;
 
-    public static final String FORGOT_PASSWORD_DENIED =
+    private static final String FORGOT_PASSWORD_DENIED =
             "forgot_password_denied.json";
 
-    public static final String FORGOT_PASSWORD_SUCCESS =
+    private static final String FORGOT_PASSWORD_SUCCESS =
             "forgot_password_success.json";
+
+    private Dhis2MockServer dhis2MockServer;
 
     @Before
     public void setUp() throws Exception {
-        this.server = new MockWebServer();
-        this.server.start();
+        dhis2MockServer = new Dhis2MockServer(new ResourcesFileReader());
+
         apiClient = initializeApiClient();
     }
 
     @After
-    public void tearDown() throws IOException {
-        server.shutdown();
+    public void teardown() throws IOException {
+        dhis2MockServer.shutdown();
     }
 
     @Test
     public void shouldParseForgotPasswordSuccessResponse()
             throws IOException, InterruptedException {
-        enqueueResponse(FORGOT_PASSWORD_SUCCESS);
+
+        dhis2MockServer.enqueueMockResponse(FORGOT_PASSWORD_SUCCESS);
 
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -72,7 +73,7 @@ public class ForgotPasswordAPIClientTest {
 
     @Test
     public void shouldParseForgotPasswordDeniedResponse() throws IOException, InterruptedException {
-        enqueueResponse(FORGOT_PASSWORD_DENIED);
+        dhis2MockServer.enqueueMockResponse(FORGOT_PASSWORD_DENIED);
 
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -99,7 +100,7 @@ public class ForgotPasswordAPIClientTest {
     }
 
     private eReferralsAPIClient initializeApiClient() {
-        return new eReferralsAPIClient(server.url("/").toString());
+        return new eReferralsAPIClient(dhis2MockServer.getBaseEndpoint());
     }
 
     private ForgotPasswordPayload givenAForgotPasswordRequest() {
@@ -107,12 +108,5 @@ public class ForgotPasswordAPIClientTest {
                 "1.0", "manu", "en");
 
         return forgotPasswordPayload;
-    }
-
-    private void enqueueResponse(String fileName) throws IOException {
-        MockResponse mockResponse = new MockResponse();
-        String fileContent = new FileReader().getStringFromFile(getClass(), fileName);
-        mockResponse.setBody(fileContent);
-        server.enqueue(mockResponse);
     }
 }

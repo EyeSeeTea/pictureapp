@@ -11,8 +11,8 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
-import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
@@ -93,6 +93,9 @@ public class eReferralsAPIClient {
             ConfigFileObsoleteException configFileObsoleteException =
                     new ConfigFileObsoleteException();
             wsClientCallBack.onError(configFileObsoleteException);
+            if (response.isSuccessful()) {
+                wsClientCallBack.onSuccess(response.body());
+            }
         } else if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());
         } else {

@@ -4,7 +4,6 @@ package org.eyeseetea.malariacare.common.android.test;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
-import org.eyeseetea.malariacare.common.BaseMockWebServerTest;
 import org.junit.Before;
 
 import java.io.BufferedReader;

@@ -193,6 +193,12 @@ android {
             targetModuleName 'EyeSeeTea'
         }
     }
+
+    sourceSets {
+        androidTest.java.srcDirs += 'src/sharedAndroidTest'
+        testEreferrals.java.srcDirs += 'src/testereferrals/java'
+        androidTestEreferrals.java.srcDirs += 'src/androidTestereferrals/java'
+    }
 }
 
 configurations {

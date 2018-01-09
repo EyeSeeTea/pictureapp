@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.data.file.ResourcesFileReader;
-import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
+import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.junit.After;
@@ -26,25 +26,25 @@ public class ForgotPasswordAPIClientTest {
     private static final String FORGOT_PASSWORD_SUCCESS =
             "forgot_password_success.json";
 
-    private Dhis2MockServer dhis2MockServer;
+    private CustomMockServer CustomMockServer;
 
     @Before
     public void setUp() throws Exception {
-        dhis2MockServer = new Dhis2MockServer(new ResourcesFileReader());
+        CustomMockServer = new CustomMockServer(new ResourcesFileReader());
 
         apiClient = initializeApiClient();
     }
 
     @After
     public void teardown() throws IOException {
-        dhis2MockServer.shutdown();
+        CustomMockServer.shutdown();
     }
 
     @Test
     public void shouldParseForgotPasswordSuccessResponse()
             throws IOException, InterruptedException {
 
-        dhis2MockServer.enqueueMockResponse(FORGOT_PASSWORD_SUCCESS);
+        CustomMockServer.enqueueMockResponse(FORGOT_PASSWORD_SUCCESS);
 
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -73,7 +73,7 @@ public class ForgotPasswordAPIClientTest {
 
     @Test
     public void shouldParseForgotPasswordDeniedResponse() throws IOException, InterruptedException {
-        dhis2MockServer.enqueueMockResponse(FORGOT_PASSWORD_DENIED);
+        CustomMockServer.enqueueMockResponse(FORGOT_PASSWORD_DENIED);
 
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -100,7 +100,7 @@ public class ForgotPasswordAPIClientTest {
     }
 
     private eReferralsAPIClient initializeApiClient() {
-        return new eReferralsAPIClient(dhis2MockServer.getBaseEndpoint());
+        return new eReferralsAPIClient(CustomMockServer.getBaseEndpoint());
     }
 
     private ForgotPasswordPayload givenAForgotPasswordRequest() {

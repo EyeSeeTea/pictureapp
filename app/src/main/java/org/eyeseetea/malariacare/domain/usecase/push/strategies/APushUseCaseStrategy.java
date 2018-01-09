@@ -280,4 +280,8 @@ public abstract class APushUseCaseStrategy {
         });
     }
 
+    protected void treatApiCalException(ApiCallException e){
+
+    }
+
 }

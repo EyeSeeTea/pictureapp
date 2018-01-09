@@ -93,9 +93,6 @@ public class eReferralsAPIClient {
             ConfigFileObsoleteException configFileObsoleteException =
                     new ConfigFileObsoleteException();
             wsClientCallBack.onError(configFileObsoleteException);
-            if (response.isSuccessful()) {
-                wsClientCallBack.onSuccess(response.body());
-            }
         } else if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());
         } else {

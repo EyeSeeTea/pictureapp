@@ -18,13 +18,13 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
-public class Dhis2MockServer {
+public class CustomMockServer {
     private static final int OK_CODE = 200;
 
     private MockWebServer server;
     IFileReader fileReader;
 
-    public Dhis2MockServer(IFileReader fileReader) throws IOException {
+    public CustomMockServer(IFileReader fileReader) throws IOException {
         this.fileReader = fileReader;
         this.server = new MockWebServer();
         this.server.start();

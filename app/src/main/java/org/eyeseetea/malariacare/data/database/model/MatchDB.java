@@ -27,6 +27,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -75,6 +76,11 @@ public class MatchDB extends BaseModel {
         deleteMatches(listAll());
     }
 
+    public static void deleteMatchBy(long question_id) {
+        new Delete()
+                .from(MatchDB.class)
+                .where(MatchDB_Table.id_question_relation_fk.eq(question_id));
+    }
     public List<QuestionOptionDB> getQuestionOptionDBs() {
         if (mQuestionOptionDBs == null) {
             this.mQuestionOptionDBs = new Select().from(QuestionOptionDB.class)

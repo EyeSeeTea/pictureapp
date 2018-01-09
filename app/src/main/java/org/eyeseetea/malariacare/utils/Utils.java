@@ -19,14 +19,18 @@
 
 package org.eyeseetea.malariacare.utils;
 
+import static org.eyeseetea.malariacare.data.database.model.TranslationDB.getLocalizedStringFromDB;
+import static org.eyeseetea.malariacare.data.database.model.TranslationDB.wasTranslationFound;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 
-import org.apache.commons.lang3.StringUtils;
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.BufferedReader;
@@ -58,44 +62,70 @@ public class Utils {
         return round(base, Utils.numberOfDecimals);
     }
 
-    public static String getInternationalizedString(String name) {
-        if (name == null) {
-            return "";
-        }
-        Context context = PreferencesState.getInstance().getContext();
+    private static String getUserLanguage(@NonNull Context ctx) {
+        String activeLocale = PreferencesState.getInstance().getLanguageCode();
 
-        int identifier = context.getResources().getIdentifier(name, "string",
-                context.getPackageName());
+        if (activeLocale != null || activeLocale.isEmpty()) {
+            activeLocale = ctx.getResources().getConfiguration().locale.getLanguage();
+        }
+        return activeLocale;
+    }
+
+    @StringRes
+    private static int getStringResBy(@NonNull String key, @NonNull Context ctx) {
+        return ctx.getResources().getIdentifier(key, "string",
+                ctx.getPackageName());
+    }
+
+
+    @NonNull
+    public static String getInternationalizedString(@NonNull String key) {
+        Context ctx = PreferencesState.getInstance().getContext();
+        String language = getUserLanguage(ctx);
+        String translation = getLocalizedStringFromDB(key, language);
+
+        if (key == null) {
+            return key;
+        }
+
+        if (BuildConfig.downloadLanguagesFromServer &&
+                wasTranslationFound(translation)) {
+            return translation;
+        } else {
+            return findStringFromAndroidResource(ctx, key, language);
+        }
+    }
+
+    @NonNull
+    private static String findStringFromAndroidResource(Context ctx, @NonNull String key,
+            String languageCode) {
+
+        int identifier = getStringResBy(key, ctx);
+        String translation = "";
+
         //if the id is 0 it not exist.
         if (identifier != 0) {
             try {
-                String activeLocale = PreferencesState.getInstance().getLanguageCode();
-                if(activeLocale.equals("")){
-                    Locale locale = Resources.getSystem().getConfiguration().locale;
-                    activeLocale = locale.getLanguage();
-                }
-                name = getLocateString(activeLocale, identifier);
+                translation = getLocateString(ctx, languageCode, identifier);
             } catch (Resources.NotFoundException notFoundException) {
-                if (StringUtils.isNumeric(name)) {
-                    name = TranslationDB.getLocalizedString(Long.valueOf(name),
-                            context.getResources().getConfiguration().locale.toString());
-                }
+                translation = key;
             }
+        } else {
+            translation = key;
         }
-
-        return name;
+        return translation;
     }
 
-    private static String getLocateString(String locate, int stringId) {
-        Context context = PreferencesState.getInstance().getContext();
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        Resources r = context.getResources();
+    @NonNull
+    private static String getLocateString(Context ctx, String locate, @StringRes int stringId) {
+        DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();
+        Resources r = ctx.getResources();
         Configuration c = r.getConfiguration();
         c.locale = new Locale(locate);
-        Resources res = new Resources(context.getAssets(), metrics, c);
+        Resources res = new Resources(ctx.getAssets(), metrics, c);
         return res.getString(stringId);
     }
-    
+
     public static String getCommitHash(Context context) {
         String stringCommit;
         //Check if lastcommit.txt file exist, and if not exist show as unavailable.
@@ -189,7 +219,8 @@ public class Utils {
         return df.format(date);
 
     }
-    public static Calendar parseStringToCalendar(String datestring,String dateFormat) {
+
+    public static Calendar parseStringToCalendar(String datestring, String dateFormat) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
         try {
@@ -201,7 +232,7 @@ public class Utils {
         return calendar;
     }
 
-    public static String getStringFromCalendarWithFormat(Calendar calendar,String dateFormat){
+    public static String getStringFromCalendarWithFormat(Calendar calendar, String dateFormat) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
         return format.format(calendar.getTime());
     }
@@ -249,8 +280,9 @@ public class Utils {
 
     /**
      * Method to get if the endDate is grater or equal than the startDate
+     *
      * @param starDate The start date to compare with.
-     * @param endDate The date tha has to be greater or equals to the start date.
+     * @param endDate  The date tha has to be greater or equals to the start date.
      * @return True if is greater or equals false if not.
      */
     public static boolean dateGreaterOrEqualsThanDate(Date starDate, Date endDate) {

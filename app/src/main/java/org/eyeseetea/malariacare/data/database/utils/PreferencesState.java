@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -134,6 +135,11 @@ public class PreferencesState {
     }
 
     public Context getContext() {
+        return context;
+    }
+
+    @VisibleForTesting
+    public static Context getContextForTesting(){
         return context;
     }
 

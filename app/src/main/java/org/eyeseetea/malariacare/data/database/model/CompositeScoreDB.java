@@ -50,6 +50,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Deprecated
 @Table(database = AppDatabase.class, name = "CompositeScore")
 public class CompositeScoreDB extends BaseModel {
     @Column
@@ -292,11 +293,15 @@ public class CompositeScoreDB extends BaseModel {
             return false;
         }
         if (label != null ? !label.equals(that.label) : that.label != null) return false;
-        if (uid_composite_score != null ? !uid_composite_score.equals(that.uid_composite_score) : that.uid_composite_score != null) return false;
+        if (uid_composite_score != null ? !uid_composite_score.equals(that.uid_composite_score)
+                : that.uid_composite_score != null) {
+            return false;
+        }
         if (order_pos != null ? !order_pos.equals(that.order_pos) : that.order_pos != null) {
             return false;
         }
-        return !(id_composite_score_parent != null ? !id_composite_score_parent.equals(that.id_composite_score_parent) : that.id_composite_score_parent != null);
+        return !(id_composite_score_parent != null ? !id_composite_score_parent.equals(
+                that.id_composite_score_parent) : that.id_composite_score_parent != null);
 
     }
 
@@ -307,7 +312,8 @@ public class CompositeScoreDB extends BaseModel {
         result = 31 * result + (label != null ? label.hashCode() : 0);
         result = 31 * result + (uid_composite_score != null ? uid_composite_score.hashCode() : 0);
         result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
-        result = 31 * result + (id_composite_score_parent != null ? id_composite_score_parent.hashCode() : 0);
+        result = 31 * result + (id_composite_score_parent != null
+                ? id_composite_score_parent.hashCode() : 0);
         return result;
     }
 

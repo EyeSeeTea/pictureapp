@@ -9,13 +9,10 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -55,7 +52,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public static final java.lang.String EXIT = "exit";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
-    private EditText username;
+    private View serverURLContainer;
+    private LoginType loginType;
+    private Button logoutButton;
+    private Button demoButton;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -83,11 +83,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
-        loginActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                addDemoButton();
-            }
-        });
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -105,45 +100,146 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         return false;
     }
 
-
     @Override
     public void initViews() {
-        EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
-        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        TextInputLayout passwordHint =
-                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
 
-        username = (EditText) loginActivity.findViewById(R.id.edittext_username);
+        initTextFields();
 
-        LinearLayout loginViewsContainer =
-                (LinearLayout) loginActivity.findViewById(R.id.login_views_container);
-        LayoutInflater inflater = LayoutInflater.from(loginActivity);
-        Button forgotPassword = (Button) inflater.inflate(R.layout.forgot_password_button, null,
-                false);
-        loginViewsContainer.addView(forgotPassword);
+        initButtons();
+
+        setUpSoftOrFullLoginOptions();
+    }
+
+    private void initButtons() {
+        initDemoButton();
+
+        initLogoutButton();
+
+        initForgotPasswordButton();
+
+        initAdvancedOptionsButton();
+    }
+
+    private void initTextFields() {
+        initServerURLField();
+
+        initPasswordField();
+    }
+
+    private void setUpSoftOrFullLoginOptions() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+
+        getLastInsertedCredentialsUseCase.execute(
+                new GetLastInsertedCredentialsUseCase.Callback() {
+                    @Override
+                    public void onGetUsername(Credentials credentials) {
+                        //Determine if it's a Soft or full login
+                        if (credentials != null) {
+                            loginType = LoginType.SOFT;
+                            loginActivity.getUsernameEditText().setText(credentials.getUsername());
+                            loginActivity.getUsernameEditText().setEnabled(false);
+                        } else {
+                            loginType = LoginType.FULL;
+                            loginActivity.getUsernameEditText().setEnabled(true);
+                            loginActivity.getUsernameEditText().setText("");
+
+                        }
+                    }
+                });
+    }
+
+    private void initLogoutButton() {
+        logoutButton = (Button) loginActivity.findViewById(R.id.button_log_out);
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                logout(new LogoutUseCase.Callback() {
+                    @Override
+                    public void onLogoutSuccess() {
+                        //Re-setting the state of all components
+                        // for a full-login
+                        toggleVisibility(serverURLContainer);
+                        loginActivity.getUsernameEditText().setText("");
+                        loginActivity.getPasswordEditText().setText("");
+                        loginType = LoginType.FULL;
+                        toggleVisibility(logoutButton);
+                        loginActivity.getUsernameEditText().setEnabled(true);
+                        Log.d(this.getClass().getSimpleName(), "onLogoutSuccess ");
+
+                    }
+
+                    @Override
+                    public void onLogoutError(String message) {
+                        Log.e(this.getClass().getSimpleName(), "onLogoutError " + message);
+                        loginActivity.showError(
+                                loginActivity.getString(R.string.login_unexpected_error));
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void initForgotPasswordButton() {
+        Button forgotPassword = (Button) loginActivity.findViewById(R.id.forgot_password);
+
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onForgotPassword();
             }
         });
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
-                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
-                        credentialsRepository);
-        getLastInsertedCredentialsUseCase.execute(
-                new GetLastInsertedCredentialsUseCase.Callback() {
-                    @Override
-                    public void onGetUsername(Credentials credentials) {
-                        if (credentials != null) {
-                            LoginActivityStrategy.this.username.setText(credentials.getUsername());
-                        }
-                    }
-                });
+    }
+
+    private void initAdvancedOptionsButton() {
+        Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
+
+        advancedOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                switch (loginType) {
+                    case SOFT:
+                        toggleVisibility(logoutButton);
+                        break;
+
+                    case FULL:
+                        toggleVisibility(demoButton);
+                        break;
+                }
+                toggleVisibility(serverURLContainer);
+            }
+        });
+    }
+
+    private void toggleVisibility(View view) {
+        int visibility = View.VISIBLE;
+        if (view.getVisibility() == View.VISIBLE) {
+            visibility = View.GONE;
+        }
+        view.setVisibility(visibility);
+    }
+
+    private void initServerURLField() {
+        serverURLContainer = loginActivity.findViewById(R.id.text_layout_server_url);
+    }
+
+    private void initPasswordField() {
+        EditText passwordEditText = loginActivity.getPasswordEditText();
+        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+        TextInputLayout passwordHint =
+                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
     }
 
     private void onForgotPassword() {
@@ -153,7 +249,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         IAuthenticationManager authenticationManager = new AuthenticationManager(loginActivity);
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
                 asyncExecutor, authenticationManager);
-        forgotPasswordUseCase.execute(username.getText().toString(),
+        forgotPasswordUseCase.execute(loginActivity.getUsernameEditText().getText().toString(),
                 new ForgotPasswordUseCase.Callback() {
                     @Override
                     public void onGetForgotPasswordSuccess(String result, String title) {
@@ -183,7 +279,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void onLoginSuccess(final Credentials credentials) {
         loginActivity.checkAnnouncement();
     }
-
 
     @Override
     public void onBadCredentials() {
@@ -246,7 +341,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         checkEnableLogin();
     }
 
-
     public boolean canEnableLoginButtonOnTextChange() {
         IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
@@ -259,7 +353,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             super.onTextChange();
         }
     }
-
 
     public void initLoginUseCase(IAuthenticationManager authenticationManager) {
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -291,11 +384,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 credentials.getServerURL())) {
             callback.onSuccess();
         } else {
-            IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
-                    loginActivity);
-            LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
-            AlarmPushReceiver.cancelPushAlarm(loginActivity);
-            logoutUseCase.execute(new LogoutUseCase.Callback() {
+            logout(new LogoutUseCase.Callback() {
                 @Override
                 public void onLogoutSuccess() {
                     callback.onSuccessDoLogin();
@@ -310,7 +399,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
 
     }
-
 
     private void launchPull(boolean isDemo) {
         PullFilters pullFilters = new PullFilters();
@@ -356,7 +444,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onWarning(WarningException warning) {
-                Log.e(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
+                Log.w(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
             }
 
             @Override
@@ -381,20 +469,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         builder.show();
     }
 
-
-    private void addDemoButton() {
-        final ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
-                R.id.login_dynamic_views_container);
-
-        loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
-                true);
-
-        Button demoButton = (Button) loginActivity.findViewById(R.id.demo_login_button);
+    private void initDemoButton() {
+        demoButton = (Button) loginActivity.findViewById(R.id.demo_login_button);
 
         demoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 PopulateDB.wipeDataBase();
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
                 loginActivity.showProgressBar();
@@ -408,12 +488,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
                             @Override
                             public void onServerURLNotValid() {
-                                Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                                Log.e(this.getClass().getSimpleName(),
+                                        "Server url not valid");
                             }
 
                             @Override
                             public void onInvalidCredentials() {
-                                Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                                Log.e(this.getClass().getSimpleName(),
+                                        "Invalid credentials");
                             }
 
                             @Override
@@ -483,7 +565,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onWarning(WarningException warning) {
-                Log.e(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
+                Log.w(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
             }
 
             @Override
@@ -500,4 +582,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
     }
 
+    private void logout(final LogoutUseCase.Callback callback) {
+        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
+                loginActivity);
+
+        AlarmPushReceiver.cancelPushAlarm(loginActivity);
+
+        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+
+        logoutUseCase.execute(callback);
+    }
+
+    private enum LoginType {
+        SOFT, FULL
+    }
 }

@@ -36,6 +36,11 @@ public class WSPushController implements IPushController {
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }
 
+    public WSPushController(eReferralsAPIClient eReferralsAPIClient) {
+        mEReferralsAPIClient = eReferralsAPIClient;
+        mConvertToWSVisitor = new ConvertToWSVisitor();
+    }
+
     @Override
     public void push(IPushControllerCallback callback) {
         mCallback = callback;
@@ -148,6 +153,7 @@ public class WSPushController implements IPushController {
                             break;
                         }
                     }
+
                     if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
                         Log.d(TAG,
                                 "Changing the UID of the survey old:" + surveyDB.getEventUid()
@@ -165,12 +171,29 @@ public class WSPushController implements IPushController {
                     }
 
                 }
+                putActionsStatusToSurveys(responseAction);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
             throw new ConversionException(e);
         }
         mCallback.onComplete();
+    }
+
+    private void putActionsStatusToSurveys(SurveyWSResponseAction responseAction) {
+        if (responseAction.getActionId() != null) {
+            for (SurveyDB survey : mSurveys) {
+                if (responseAction.getActionId().equals(survey.getEventUid())) {
+                    if (responseAction.isFailed()) {
+                        survey.setStatus(Constants.SURVEY_CONFLICT);
+                    } else if (!responseAction.isSuccess()) {
+                        survey.setStatus(Constants.SURVEY_CONFLICT);
+                    }
+                    survey.save();
+                }
+            }
+        }
     }
 
 

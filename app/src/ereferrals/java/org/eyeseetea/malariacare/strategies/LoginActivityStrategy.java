@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -110,7 +111,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
         passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        TextInputLayout passwordHint =
+        final TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
         passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
 
@@ -140,6 +141,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     public void onGetUsername(Credentials credentials) {
                         if (credentials != null) {
                             LoginActivityStrategy.this.username.setText(credentials.getUsername());
+                            passwordHint.requestFocus();
+                            showKeyboard(passwordHint);
                         }
                     }
                 });
@@ -490,4 +493,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
     }
 
+    public static void showKeyboard(View mEtSearch) {
+        mEtSearch.requestFocus();
+        InputMethodManager imm = (InputMethodManager) mEtSearch.getContext().getSystemService(
+                Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
 }

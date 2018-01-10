@@ -47,9 +47,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "int", "MaxDayBeforeDeletingSentSurvey", "14"
+
         }
         debug {
             debuggable true
+            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
         }
     }
     //TODO This config is related to a known issue: http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt

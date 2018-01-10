@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.PostMigration;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -67,6 +68,9 @@ public class SplashScreenActivity extends Activity {
             splashActivityStrategy.initPullFilters(pullFilters);
             splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
+
+        SurveyDB.deleteOlderSentSurveys();
+
     }
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {

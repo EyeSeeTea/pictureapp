@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.BuildConfig.MaxDaysBeforeDeletingSentSurveys;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.optionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitAlias;
@@ -33,6 +34,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -40,6 +42,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
@@ -64,6 +67,8 @@ import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -1053,6 +1058,37 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         for (SurveyDB surveyDB : surveyDBs) {
             surveyDB.delete();
         }
+    }
+
+    public static void deleteOlderSentSurveys() {
+
+        List<SurveyDB> sentSurveys = getAllSentSurveys();
+
+        for (SurveyDB surveyDB : sentSurveys) {
+
+            if (isSurveyOlderThan(surveyDB, MaxDaysBeforeDeletingSentSurveys)) {
+
+                new Delete().from(ValueDB.class).where(
+                        ValueDB_Table.id_survey_fk.eq(surveyDB.getId_survey()));
+
+                surveyDB.delete();
+            }
+        }
+    }
+
+    public static boolean isSurveyOlderThan(SurveyDB surveyDB, int days) {
+        Date createdDate = surveyDB.getCreationDate();
+
+        DateTime createdDatetime = new DateTime(createdDate);
+        DateTime todayDateTime = new DateTime();
+
+        return (Days.daysBetween(createdDatetime, todayDateTime).getDays() >= days) ;
+    }
+
+    @NonNull
+    public static List<SurveyDB> getAllSentSurveys() {
+        return new Select().from(SurveyDB.class).where(
+                SurveyDB_Table.status.is(Constants.SURVEY_SENT)).queryList();
     }
 
     public OptionDB getOptionSelectedForQuestionCode(String questionCode) {

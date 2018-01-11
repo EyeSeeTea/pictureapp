@@ -1,7 +1,9 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -99,11 +101,13 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     private void init(final Context context) {
+        setFocusableInTouchMode(true);
         inflate(context, R.layout.multi_question_tab_dropdown_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerOptions = (Spinner) findViewById(R.id.answer);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
+        optionSetFromSavedValue = true;
 
         spinnerOptions.setFocusable(true);
         spinnerOptions.setFocusableInTouchMode(true);
@@ -114,6 +118,8 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
                     notifyAnswerChanged(optionDB);
+                    requestFocus();
+                    hideKeyboard();
                 } else {
                     optionSetFromSavedValue = false;
                 }
@@ -124,5 +130,12 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
             }
         });
+    }
+
+    private void hideKeyboard() {
+        Log.d(DropdownMultiQuestionView.class.getName(), "KEYBOARD HIDE ");
+        InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        keyboard.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 }

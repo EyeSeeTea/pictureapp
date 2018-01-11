@@ -214,7 +214,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Log.d(TAG, "onSwipeRight(previous)");
                 //Hide keypad
                 if (!readOnly)
-                    hideKeyboard(listView.getContext(), listView);
+                    AKeyboardQuestionView.hideKeyboard(listView.getContext(), listView);
                 previous();
             }
 
@@ -229,7 +229,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if (readOnly)
                     next();
                 else if (navigationController.isNextAllowed()) {
-                    hideKeyboard(listView.getContext(), listView);
+                    AKeyboardQuestionView.hideKeyboard(listView.getContext(), listView);
                     next();
                 }
             }
@@ -594,39 +594,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void setupNextFocus(IQuestionView questionView, final TableRow tableRow) {
         if (questionView instanceof AKeyboardQuestionView) {
-            EditText editText = ((AKeyboardQuestionView) questionView).getAnswerView();
-            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                    View nextView = tableLayout.getChildAt(
-                            tableLayout.indexOfChild(tableRow) + 1);
-                    if (nextView != null) {
-                        IQuestionView nextQuestionView =
-                                (IQuestionView) ((TableRow) nextView).getChildAt(
-                                        0);
-                        if (nextQuestionView instanceof AKeyboardQuestionView) {
-                            return false;
-                        }
-                        if (actionId == EditorInfo.IME_ACTION_NEXT
-                                || actionId == EditorInfo.IME_ACTION_DONE) {
-                            hideKeyboard(textView.getContext(), textView);
-                            textView.clearFocus();
-                            if (nextQuestionView instanceof DropdownMultiQuestionView) {
-                                ((DropdownMultiQuestionView) nextQuestionView).getSpinnerOptions
-                                        ().requestFocusFromTouch();
-                            } else if (nextQuestionView instanceof IMultiQuestionView) {
-                                ((IMultiQuestionView) nextQuestionView)
-                                        .requestAnswerFocus();
-                            } else {
-                                nextView.requestFocus();
-                            }
-                        }
-                    } else {
-                        return false;
-                    }
-                    return true;
-                }
-            });
+            AKeyboardQuestionView.moveFocusToNext((AKeyboardQuestionView) questionView,
+                    tableRow, tableLayout);
         }
     }
 
@@ -803,15 +772,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Float maxCounter = selectedOptionDB.getFactor();
 
         return counterValue.equals(maxCounter);
-    }
-
-    private void hideKeyboard(Context c, View v) {
-        Log.d(TAG, "KEYBOARD HIDE ");
-        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        if (v != null) {
-            keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
     }
 
     public static void setIsClicked(boolean isClicked) {

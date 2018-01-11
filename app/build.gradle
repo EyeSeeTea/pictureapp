@@ -174,11 +174,6 @@ android {
             targetModuleName 'EyeSeeTea'
         }
     }
-
-    sourceSets {
-        androidTestEreferrals.java.srcDirs += 'src/androidTestereferrals/java'
-        androidTestEreferrals.assets.srcDirs += 'src/androidTestereferrals/assets'
-    }
 }
 
 configurations {

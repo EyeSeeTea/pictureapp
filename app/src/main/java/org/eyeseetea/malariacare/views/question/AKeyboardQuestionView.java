@@ -63,36 +63,38 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
 
     public abstract EditText getAnswerView();
 
-    public static void moveFocusToNext(AKeyboardQuestionView questionView, final TableRow tableRow, final ViewGroup layout) {
+    public static void moveFocusToNext(AKeyboardQuestionView questionView, final TableRow tableRow,
+            final ViewGroup layout) {
         EditText editText = questionView.getAnswerView();
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                View nextView = layout.getChildAt(
-                        layout.indexOfChild(tableRow) + 1);
-                if (nextView != null) {
-                    IQuestionView nextQuestionView =
-                            (IQuestionView) ((TableRow) nextView).getChildAt(
-                                    0);
-                    if (nextQuestionView instanceof AKeyboardQuestionView) {
-                        return false;
-                    }
-                    if (actionId == EditorInfo.IME_ACTION_NEXT
-                            || actionId == EditorInfo.IME_ACTION_DONE) {
-                        AKeyboardQuestionView.hideKeyboard(textView.getContext(), textView);
-                        textView.clearFocus();
-                        if (nextQuestionView instanceof DropdownMultiQuestionView) {
-                            ((DropdownMultiQuestionView) nextQuestionView).getSpinnerOptions
-                                    ().requestFocusFromTouch();
-                        } else if (nextQuestionView instanceof IMultiQuestionView) {
-                            ((IMultiQuestionView) nextQuestionView)
-                                    .requestAnswerFocus();
-                        } else {
-                            nextView.requestFocus();
-                        }
-                    }
-                } else {
+                View nextView = layout.getChildAt(layout.indexOfChild(tableRow) + 1);
+
+                if (nextView == null) {
                     return false;
+                }
+
+                IQuestionView nextQuestionView = (IQuestionView) ((ViewGroup) nextView).getChildAt(
+                        0);
+
+                if (nextQuestionView instanceof AKeyboardQuestionView) {
+                    return false;
+                }
+
+                if (actionId == EditorInfo.IME_ACTION_NEXT
+                        || actionId == EditorInfo.IME_ACTION_DONE) {
+                    AKeyboardQuestionView.hideKeyboard(textView.getContext(), textView);
+                    textView.clearFocus();
+                    if (nextQuestionView instanceof DropdownMultiQuestionView) {
+                        ((DropdownMultiQuestionView) nextQuestionView).getSpinnerOptions
+                                ().requestFocusFromTouch();
+                    } else if (nextQuestionView instanceof IMultiQuestionView) {
+                        ((IMultiQuestionView) nextQuestionView)
+                                .requestAnswerFocus();
+                    } else {
+                        nextView.requestFocus();
+                    }
                 }
                 return true;
             }

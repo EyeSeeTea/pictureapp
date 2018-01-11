@@ -47,8 +47,10 @@ public class WSPushControllerShould {
     @Test
     public void put_survey_status_conflict_if_failed_or_no_success_action_status()
             throws IOException {
-        initSurveys();
-        enqueueResponse(PUSH_RESPONSE_CONFLICT);
+        givenSomeTestSurveys();
+
+        whenAPushResponseWithSomeConflictsIsReceived();
+
         mWSPushController.push(new IPushController.IPushControllerCallback() {
             @Override
             public void onComplete() {
@@ -80,7 +82,7 @@ public class WSPushControllerShould {
         });
     }
 
-    private void initSurveys() {
+    private void givenSomeTestSurveys() {
         for (String eventUID : eventUIDs) {
             SurveyDB surveyDB = new SurveyDB(new OrgUnitDB("test"), new ProgramDB("test"),
                     new UserDB("test", "test"));
@@ -89,6 +91,10 @@ public class WSPushControllerShould {
             surveyDB.save();
             surveysIDs.add(surveyDB.getId_survey());
         }
+    }
+
+    private void whenAPushResponseWithSomeConflictsIsReceived() throws IOException{
+        enqueueResponse(PUSH_RESPONSE_CONFLICT);
     }
 
 

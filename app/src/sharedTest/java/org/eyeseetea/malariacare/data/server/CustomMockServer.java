@@ -4,7 +4,6 @@ import static okhttp3.internal.Util.UTC;
 
 import android.support.annotation.NonNull;
 
-
 import org.eyeseetea.malariacare.data.HeaderUtils;
 import org.eyeseetea.malariacare.data.file.IFileReader;
 
@@ -46,6 +45,13 @@ public class CustomMockServer {
         MockResponse mockResponse = new MockResponse();
         mockResponse.setResponseCode(code);
         mockResponse.setBody(response);
+        server.enqueue(mockResponse);
+    }
+
+    public void enqueueMockResponseFileName(int code, String fileName) throws IOException {
+        MockResponse mockResponse = new MockResponse();
+        mockResponse.setResponseCode(code);
+        mockResponse.setBody(fileReader.getStringFromFile(fileName));
         server.enqueue(mockResponse);
     }
 

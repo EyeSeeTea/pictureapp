@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
@@ -42,7 +43,7 @@ import java.util.List;
 public class MetadataConfigurationDBImporterShould {
 
 
-    private Dhis2MockServer dhis2MockServer;
+    private CustomMockServer dhis2MockServer;
 
 
     @Before
@@ -52,7 +53,7 @@ public class MetadataConfigurationDBImporterShould {
                 new Credentials("/", credentialsReader.getUser(),
                         credentialsReader.getPassword()));
 
-        dhis2MockServer = new Dhis2MockServer(new AssetsFileReader());
+        dhis2MockServer = new CustomMockServer(new AssetsFileReader());
 
         UpdateDB.updatePrograms(PreferencesState.getContextForTesting());
         UpdateDB.updateTabs(PreferencesState.getContextForTesting());

@@ -89,9 +89,10 @@ public class eReferralsAPIClient {
             InvalidCredentialsException invalidCredentialsException =
                     new InvalidCredentialsException();
             wsClientCallBack.onError(invalidCredentialsException);
-        } else if (response != null && response.code() == 403) {
+        } else if (response != null && response.code() == 209) {
             ConfigFileObsoleteException configFileObsoleteException =
                     new ConfigFileObsoleteException();
+            wsClientCallBack.onSuccess(response.body());
             wsClientCallBack.onError(configFileObsoleteException);
         } else if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());

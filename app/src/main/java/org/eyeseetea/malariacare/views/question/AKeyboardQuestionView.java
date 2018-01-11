@@ -63,6 +63,14 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
 
     public abstract EditText getAnswerView();
 
+    public static void setupNextFocus(IQuestionView questionView, final TableRow tableRow,
+            final ViewGroup layout) {
+        if (questionView instanceof AKeyboardQuestionView) {
+            AKeyboardQuestionView.moveFocusToNext((AKeyboardQuestionView) questionView,
+                    tableRow, layout);
+        }
+    }
+
     public static void moveFocusToNext(AKeyboardQuestionView questionView, final TableRow tableRow,
             final ViewGroup layout) {
         EditText editText = questionView.getAnswerView();

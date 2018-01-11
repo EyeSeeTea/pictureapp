@@ -110,7 +110,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         optionSetFromSavedValue = true;
 
         spinnerOptions.setFocusable(true);
-//        spinnerOptions.setFocusableInTouchMode(true);
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -132,15 +131,14 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         });
     }
 
-<<<<<<< HEAD
     public Spinner getSpinnerOptions() {
         return spinnerOptions;
-=======
+    }
+
     private void hideKeyboard() {
         Log.d(DropdownMultiQuestionView.class.getName(), "KEYBOARD HIDE ");
         InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         keyboard.hideSoftInputFromWindow(getWindowToken(), 0);
->>>>>>> v1.0_connect
     }
 }

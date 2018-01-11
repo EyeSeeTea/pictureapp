@@ -49,6 +49,11 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     }
 
     @Override
+    public void requestAnswerFocus() {
+        dateText.requestFocus();
+    }
+
+    @Override
     public void setHelpText(String helpText) {
         dateText.setHint(helpText);
     }
@@ -97,6 +102,8 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
                 }
             }
         });
+        dateText.setFocusable(true);
+        dateText.setFocusableInTouchMode(true);
     }
 
 }

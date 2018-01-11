@@ -9,7 +9,6 @@ public class SwipeTouchListenerStrategy extends ASwipeTouchListenerStrategy {
     @Override
     public boolean onTouch(ScrollView scrollView, GestureDetector gestureDetector,
             MotionEvent event) {
-        super.onTouch(scrollView, gestureDetector, event);
         return false;
     }
 }

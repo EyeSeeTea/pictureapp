@@ -33,7 +33,7 @@ public class SurveyFragmentStrategy {
 
     public static void saveValuesText(ValueDB value, String answer,
             QuestionDB question, SurveyDB survey) {
-        if (value != null && value.getValue().isEmpty()) {
+        if (value != null && answer.isEmpty()) {
             removeValueText(value);
         } else {
             question.createOrSaveValue(answer, value, survey);

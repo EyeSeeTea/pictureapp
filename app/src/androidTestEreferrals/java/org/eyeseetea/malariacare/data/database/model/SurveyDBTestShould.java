@@ -80,7 +80,7 @@ public class SurveyDBTestShould {
 
     private void whenAddASentSurveyWithEventDate25AfterToday() {
         Date today = new Date();
-        Date todayWith25Days = SurveyDB.addDaysTo(today, 25);
+        Date todayWith25Days = SurveyDB.minusDaysTo(today, 25);
 
         idSentSurveyWith25AfterTodayEventDate = createANewSentSurvey(todayWith25Days);
     }

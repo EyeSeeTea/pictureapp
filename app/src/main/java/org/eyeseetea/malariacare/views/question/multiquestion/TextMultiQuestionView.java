@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -22,6 +23,11 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         super(context);
 
         init(context);
+    }
+
+    @Override
+    public EditText getAnswerView() {
+        return mCustomEditText;
     }
 
     @Override
@@ -50,6 +56,11 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     @Override
     public boolean hasError() {
         return false;
+    }
+
+    @Override
+    public void requestAnswerFocus() {
+        mCustomEditText.requestFocus();
     }
 
 

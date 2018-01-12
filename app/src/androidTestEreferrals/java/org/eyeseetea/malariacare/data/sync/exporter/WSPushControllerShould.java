@@ -42,13 +42,16 @@ public class WSPushControllerShould {
     private WSPushController mWSPushController;
     private String[] eventUIDs = {"LRR4ZZidQ6T", "PHp2WANFHE1", "NDqaWw51WJr", "Ian8YUgm7T3"};
     private List<Long> surveysIDs = new ArrayList<>();
-
-
+    private String serverPreference="";
+    private String userPreference ="";
+    private String pinPreference ="";
+    private long programPreference =-1;
     @Before
     public void setUp() throws Exception {
-        saveTestCredentialsAndProgram();
         this.server = new MockWebServer();
         this.server.start();
+        savePreferences();
+        saveTestCredentialsAndProgram();
         apiClient = initializeApiClient();
         Device device = new Device("phoneNumber", "imei", "version");
 
@@ -56,10 +59,37 @@ public class WSPushControllerShould {
         mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
     }
 
+    private void savePreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        serverPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.dhis_url),"");
+        userPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.logged_user_username),"");
+        pinPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.logged_user_pin),"");
+        programPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getLong(context.getString(R.string.logged_user_program),-1);
+    }
+
+    private void restorePreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.dhis_url), serverPreference);
+        editor.putString(context.getString(R.string.logged_user_username), userPreference);
+        editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
+        editor.putLong(context.getString(R.string.logged_user_program), programPreference);
+        editor.commit();
+    }
+
+
     private void saveTestCredentialsAndProgram() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(context.getString(R.string.dhis_url), "test");
         editor.commit();
@@ -138,6 +168,7 @@ public class WSPushControllerShould {
     @After
     public void tearDown() throws IOException {
         server.shutdown();
+        restorePreferences();
     }
 
 

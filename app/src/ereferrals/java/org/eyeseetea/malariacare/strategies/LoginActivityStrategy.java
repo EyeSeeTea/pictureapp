@@ -141,7 +141,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     public void onGetUsername(Credentials credentials) {
                         if (credentials != null) {
                             LoginActivityStrategy.this.username.setText(credentials.getUsername());
-                            passwordHint.requestFocus();
                             showKeyboard(passwordHint);
                         }
                     }

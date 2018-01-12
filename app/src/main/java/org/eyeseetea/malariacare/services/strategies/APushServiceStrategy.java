@@ -54,6 +54,11 @@ public abstract class APushServiceStrategy {
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
+            public void onStartPushing() {
+                Log.d(TAG, "On push start");
+            }
+
+            @Override
             public void onComplete() {
                 Log.d(TAG, "PUSHUSECASE WITHOUT ERROR push complete");
                 mPushService.onPushFinished();

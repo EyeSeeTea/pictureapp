@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.util.List;
@@ -76,8 +77,8 @@ public abstract class ADynamicTabAdapterStrategy {
                         mDynamicTabAdapter.surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
-                        mDynamicTabAdapter.hideKeyboard(
-                                PreferencesState.getInstance().getContext());
+                        CommonQuestionView.hideKeyboard(
+                                PreferencesState.getInstance().getContext(), mDynamicTabAdapter.getKeyboardView());
                         DynamicTabAdapter.setIsClicked(false);
                     }
                     return;

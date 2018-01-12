@@ -32,7 +32,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -82,7 +81,8 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -263,44 +263,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
             showConfirmCounter(view, selectedOptionDB, questionDB, counterQuestionDB);
         }
-        if (selectedOptionDB.getId_option() != 0) {
-            moveFocusNextQuestion(view);
-        }
-    }
-
-    private void moveFocusNextQuestion(View currentView) {
-
-        TableRow tableRow = null;
-        ViewParent parent = currentView.getParent();
-        while (!(parent instanceof TableRow)) {
-            parent = parent.getParent();
-        }
-        if (parent instanceof TableRow) {
-            tableRow = (TableRow) parent;
-        }
-        if (tableRow != null) {
-            View nextView = tableLayout.getChildAt(
-                    tableLayout.indexOfChild(tableRow) + 1);
-            if (nextView != null) {
-                while (nextView.getVisibility() == View.GONE &&
-                        tableLayout.indexOfChild(nextView) + 1 < tableLayout.getChildCount()) {
-                    nextView = tableLayout.getChildAt(
-                            tableLayout.indexOfChild(nextView) + 1);
-                }
-                if (nextView.getVisibility() != View.GONE) {
-                    IQuestionView nextQuestionView =
-                            (IQuestionView) ((TableRow) nextView).getChildAt(
-                                    0);
-
-                    if (nextQuestionView instanceof IMultiQuestionView) {
-                        ((IMultiQuestionView) nextQuestionView)
-                                .requestAnswerFocus();
-                    } else {
-                        nextView.requestFocus();
-                    }
-                }
-            }
-        }
     }
 
     private void assignOrgUnitToSurvey(SurveyDB surveyDB, OrgUnitDB orgUnitDB) {
@@ -319,10 +281,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             finishOrNext();
         } else {
             showOrHideChildren(questionDB);
-        }
-        if (!(view instanceof AKeyboardQuestionView)) {
-            AKeyboardQuestionView.hideKeyboard(context, view);
-            moveFocusNextQuestion(view);
         }
     }
 
@@ -623,8 +581,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             swipeTouchListener.addClickableView((View) questionView);
 
             setVisibilityAndAddRow(tableRow, screenQuestionDB, visibility);
-
-            AKeyboardQuestionView.setupNextFocus(questionView, tableRow, tableLayout);
+            if (questionView instanceof CommonQuestionView) {
+                ((CommonQuestionView) questionView).initContainers(tableRow, tableLayout);
+            }
         }
     }
 

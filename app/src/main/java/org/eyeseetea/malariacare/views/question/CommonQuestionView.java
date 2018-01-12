@@ -4,14 +4,19 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 
 public class CommonQuestionView extends LinearLayout {
     boolean isActive = true;
+
+    private TableRow mTableRow;
+    private ViewGroup mLayout;
 
     public CommonQuestionView(Context context) {
         super(context);
@@ -74,5 +79,43 @@ public class CommonQuestionView extends LinearLayout {
         if (view != null) {
             keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void initContainers(TableRow tableRow, ViewGroup layout) {
+        mTableRow = tableRow;
+        mLayout = layout;
+    }
+
+    public void focusNextQuestion() {
+        View nextView = getNextView();
+        if (nextView != null) {
+            while (nextView.getVisibility() == View.GONE &&
+                    mLayout.indexOfChild(nextView) + 1 < mLayout.getChildCount()) {
+                nextView = mLayout.getChildAt(
+                        mLayout.indexOfChild(nextView) + 1);
+            }
+            if (nextView.getVisibility() != View.GONE) {
+                IQuestionView nextQuestionView =
+                        (IQuestionView) ((TableRow) nextView).getChildAt(
+                                0);
+
+                if (nextQuestionView instanceof IMultiQuestionView) {
+                    ((IMultiQuestionView) nextQuestionView)
+                            .requestAnswerFocus();
+                }
+            }
+        }
+    }
+
+    public View getNextView() {
+        return mLayout.getChildAt(mLayout.indexOfChild(mTableRow) + 1);
+    }
+
+    public IQuestionView getNextQuestionView() {
+        View nextView = mLayout.getChildAt(mLayout.indexOfChild(mTableRow) + 1);
+        if (nextView == null) {
+            return null;
+        }
+        return (IQuestionView) ((ViewGroup) nextView).getChildAt(0);
     }
 }

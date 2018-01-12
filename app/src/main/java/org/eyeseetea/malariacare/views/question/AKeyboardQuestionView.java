@@ -3,13 +3,9 @@ package org.eyeseetea.malariacare.views.question;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TableRow;
 import android.widget.TextView;
-
-import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 
 public abstract class AKeyboardQuestionView extends CommonQuestionView {
     protected onAnswerChangedListener mOnAnswerChangedListener;
@@ -20,6 +16,7 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
 
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
+        initEditTextActionListener();
     }
 
     protected void notifyAnswerChanged(String newValue) {
@@ -34,46 +31,22 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
 
     public abstract EditText getAnswerView();
 
-    public static void setupNextFocus(IQuestionView questionView, final TableRow tableRow,
-            final ViewGroup layout) {
-        if (questionView instanceof AKeyboardQuestionView) {
-            AKeyboardQuestionView.moveFocusToNext((AKeyboardQuestionView) questionView,
-                    tableRow, layout);
-        }
-    }
-
-    public static void moveFocusToNext(AKeyboardQuestionView questionView, final TableRow tableRow,
-            final ViewGroup layout) {
-        EditText editText = questionView.getAnswerView();
+    private void initEditTextActionListener() {
+        EditText editText = this.getAnswerView();
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                View nextView = layout.getChildAt(layout.indexOfChild(tableRow) + 1);
 
-                if (nextView == null) {
+                IQuestionView nextQuestionView = getNextQuestionView();
+                if (nextQuestionView == null || nextQuestionView instanceof AKeyboardQuestionView
+                        || !(nextQuestionView instanceof IMultiQuestionView)) {
                     return false;
                 }
-
-                IQuestionView nextQuestionView = (IQuestionView) ((ViewGroup) nextView).getChildAt(
-                        0);
-
-                if (nextQuestionView instanceof AKeyboardQuestionView) {
-                    return false;
-                }
-
                 if (actionId == EditorInfo.IME_ACTION_NEXT
                         || actionId == EditorInfo.IME_ACTION_DONE) {
                     CommonQuestionView.hideKeyboard(textView.getContext(), textView);
                     textView.clearFocus();
-                    if (nextQuestionView instanceof DropdownMultiQuestionView) {
-                        ((DropdownMultiQuestionView) nextQuestionView).getSpinnerOptions
-                                ().requestFocusFromTouch();
-                    } else if (nextQuestionView instanceof IMultiQuestionView) {
-                        ((IMultiQuestionView) nextQuestionView)
-                                .requestAnswerFocus();
-                    } else {
-                        nextView.requestFocus();
-                    }
+                    focusNextQuestion();
                 }
                 return true;
             }

@@ -19,11 +19,15 @@
 
 package org.eyeseetea.malariacare.data.database;
 
+
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 
+import org.eyeseetea.malariacare.BuildConfig;
+
 @Database(
-        name = AppDatabase.NAME, version = AppDatabase.VERSION
+        name = AppDatabase.NAME, version = AppDatabase.VERSION, inMemory = BuildConfig
+        .databaseInMemory
 )
 
 public class AppDatabase {

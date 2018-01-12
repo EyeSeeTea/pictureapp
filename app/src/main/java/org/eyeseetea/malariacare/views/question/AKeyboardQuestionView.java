@@ -1,13 +1,10 @@
 package org.eyeseetea.malariacare.views.question;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,32 +25,6 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
     protected void notifyAnswerChanged(String newValue) {
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
-        }
-    }
-
-    protected void showKeyboard(View view) {
-        view.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-    /**
-     * hide keyboard using a keyboardView variable view
-     */
-    protected void hideKeyboard(View view) {
-        InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(
-                INPUT_METHOD_SERVICE);
-        if (view != null) {
-            keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    public static void hideKeyboard(Context context, View view) {
-        InputMethodManager keyboard = (InputMethodManager) context.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        if (view != null) {
-            keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -92,7 +63,7 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
 
                 if (actionId == EditorInfo.IME_ACTION_NEXT
                         || actionId == EditorInfo.IME_ACTION_DONE) {
-                    AKeyboardQuestionView.hideKeyboard(textView.getContext(), textView);
+                    CommonQuestionView.hideKeyboard(textView.getContext(), textView);
                     textView.clearFocus();
                     if (nextQuestionView instanceof DropdownMultiQuestionView) {
                         ((DropdownMultiQuestionView) nextQuestionView).getSpinnerOptions

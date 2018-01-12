@@ -272,6 +272,7 @@ public abstract class APushUseCaseStrategy {
     }
 
     private void notifyApiCallError(final ApiCallException e) {
+        treatApiCallException(e);
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -280,7 +281,7 @@ public abstract class APushUseCaseStrategy {
         });
     }
 
-    protected void treatApiCalException(ApiCallException e){
+    protected void treatApiCallException(ApiCallException e){
 
     }
 

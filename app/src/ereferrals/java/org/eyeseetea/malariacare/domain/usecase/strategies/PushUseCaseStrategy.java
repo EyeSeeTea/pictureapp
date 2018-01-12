@@ -47,8 +47,8 @@ public class PushUseCaseStrategy extends APushUseCaseStrategy {
     }
 
     @Override
-    protected void treatApiCalException(ApiCallException e) {
-        super.treatApiCalException(e);
+    protected void treatApiCallException(ApiCallException e) {
+        super.treatApiCallException(e);
         if (e instanceof ConfigFileObsoleteException) {
             disableAddNewSurveys();
         }

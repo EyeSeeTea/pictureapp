@@ -134,8 +134,12 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private boolean hasPhone(SurveyDB survey, Context context) {
-        return !(survey.getOptionSelectedForQuestionCode(
-                context.getString(R.string.phone_ownership_qc)).getName().equals(
+        OptionDB optionDB = survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc));
+        if (optionDB == null) {
+            return false;
+        }
+        return !(optionDB.getName().equals(
                 context.getString(R.string.no_phone_on)));
     }
 

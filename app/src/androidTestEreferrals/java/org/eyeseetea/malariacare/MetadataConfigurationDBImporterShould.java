@@ -25,7 +25,6 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
-import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration

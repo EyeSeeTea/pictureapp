@@ -1075,9 +1075,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     }
 
     @NonNull
-    private static Date addDaysTo(Date date,int numberOfDaysAfter) {
+    public static Date addDaysTo(Date date,int numberOfDaysAfter) {
         DateTime dateTime = new DateTime(date);
-        dateTime.plusDays(numberOfDaysAfter);
+        dateTime = dateTime.plusDays(numberOfDaysAfter);
         return dateTime.toDate();
     }
 
@@ -1086,7 +1086,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
         return new Select().from(SurveyDB.class).where(
                 SurveyDB_Table.status.is(Constants.SURVEY_SENT),
-                SurveyDB_Table.creation_date.lessThan(dateOlder)).queryList();
+                SurveyDB_Table.event_date.greaterThanOrEq(dateOlder)).queryList();
     }
 
     public OptionDB getOptionSelectedForQuestionCode(String questionCode) {

@@ -33,7 +33,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -83,8 +82,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -323,7 +321,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             showOrHideChildren(questionDB);
         }
         if (!(view instanceof AKeyboardQuestionView)) {
-            hideKeyboard(context, view);
+            AKeyboardQuestionView.hideKeyboard(context, view);
             moveFocusNextQuestion(view);
         }
     }
@@ -953,16 +951,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * hide keyboard using a keyboardView variable view
-     */
-    public void hideKeyboard(Context c) {
-        Log.d(TAG, "KEYBOARD HIDE ");
-        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        if (keyboardView != null) {
-            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
-        }
+    public View getKeyboardView(){
+        return keyboardView;
     }
 
     /**
@@ -983,7 +973,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setCancelable(false)
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
+                                keyboardView);
                         DashboardActivity.dashboardActivity.completeSurvey();
                         isClicked = false;
                     }
@@ -991,7 +982,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
+                                keyboardView);
                         review();
                         isClicked = false;
                     }
@@ -1107,7 +1099,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.next(valueDB != null ? valueDB.getOptionDB() : null);
 
         notifyDataSetChanged();
-        hideKeyboard(PreferencesState.getInstance().getContext());
+        CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(), keyboardView);
 
         questionDB = navigationController.getCurrentQuestion();
 

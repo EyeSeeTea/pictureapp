@@ -209,7 +209,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Log.d(TAG, "onSwipeRight(previous)");
                 //Hide keypad
                 if (!readOnly)
-                    AKeyboardQuestionView.hideKeyboard(listView.getContext(), listView);
+                    CommonQuestionView.hideKeyboard(listView.getContext(), listView);
                 previous();
             }
 
@@ -224,7 +224,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if (readOnly)
                     next();
                 else if (navigationController.isNextAllowed()) {
-                    AKeyboardQuestionView.hideKeyboard(listView.getContext(), listView);
+                    CommonQuestionView.hideKeyboard(listView.getContext(), listView);
                     next();
                 }
             }

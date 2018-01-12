@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -141,7 +142,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     public void onGetUsername(Credentials credentials) {
                         if (credentials != null) {
                             LoginActivityStrategy.this.username.setText(credentials.getUsername());
-                            showKeyboard(passwordHint);
+                            CommonQuestionView.showKeyboard(
+                                    LoginActivityStrategy.this.username.getContext(), passwordHint);
                         }
                     }
                 });

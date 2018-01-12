@@ -112,11 +112,18 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         return false;
     }
 
+    @Override
+    public void requestAnswerFocus() {
+        radioGroup.requestFocus();
+    }
+
     private void init(final Context context) {
         View view = inflate(context, R.layout.multi_question_radio_button_row, this);
         header = (CustomTextView) view.findViewById(R.id.row_header_text);
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
+        radioGroup.setFocusable(true);
+        radioGroup.setFocusableInTouchMode(true);
     }
 
     private void fixRadioButtonWidth(

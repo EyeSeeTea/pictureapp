@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
@@ -24,6 +25,11 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         super(context);
 
         init(context);
+    }
+
+    @Override
+    public EditText getAnswerView() {
+        return mCustomEditText;
     }
 
     @Override

@@ -150,8 +150,8 @@ android {
             buildConfigField "boolean", "customfont", "false"
             buildConfigField "String", "defaultLocale", "\"en\""
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
-            buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "true"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'

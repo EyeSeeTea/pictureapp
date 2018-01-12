@@ -88,21 +88,23 @@ public class CommonQuestionView extends LinearLayout {
 
     public void focusNextQuestion() {
         View nextView = getNextView();
-        if (nextView != null) {
-            while (nextView.getVisibility() == View.GONE &&
-                    mLayout.indexOfChild(nextView) + 1 < mLayout.getChildCount()) {
-                nextView = mLayout.getChildAt(
-                        mLayout.indexOfChild(nextView) + 1);
-            }
-            if (nextView.getVisibility() != View.GONE) {
-                IQuestionView nextQuestionView =
-                        (IQuestionView) ((TableRow) nextView).getChildAt(
-                                0);
+        if (nextView == null) {
+            return;
+        }
 
-                if (nextQuestionView instanceof IMultiQuestionView) {
-                    ((IMultiQuestionView) nextQuestionView)
-                            .requestAnswerFocus();
-                }
+        while (nextView.getVisibility() == View.GONE &&
+                mLayout.indexOfChild(nextView) + 1 < mLayout.getChildCount()) {
+            nextView = mLayout.getChildAt(
+                    mLayout.indexOfChild(nextView) + 1);
+        }
+        if (nextView.getVisibility() != View.GONE) {
+            IQuestionView nextQuestionView =
+                    (IQuestionView) ((TableRow) nextView).getChildAt(
+                            0);
+
+            if (nextQuestionView instanceof IMultiQuestionView) {
+                ((IMultiQuestionView) nextQuestionView)
+                        .requestAnswerFocus();
             }
         }
     }

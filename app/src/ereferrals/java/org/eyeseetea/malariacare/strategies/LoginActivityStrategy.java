@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -492,12 +491,5 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });
-    }
-
-    public static void showKeyboard(View mEtSearch) {
-        mEtSearch.requestFocus();
-        InputMethodManager imm = (InputMethodManager) mEtSearch.getContext().getSystemService(
-                Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 }

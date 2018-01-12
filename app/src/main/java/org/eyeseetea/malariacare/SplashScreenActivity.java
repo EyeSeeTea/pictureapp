@@ -69,7 +69,7 @@ public class SplashScreenActivity extends Activity {
             splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
 
-        SurveyDB.deleteOlderSentSurveys();
+        performMaintenanceTasks();
 
     }
 
@@ -101,5 +101,11 @@ public class SplashScreenActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         splashActivityStrategy.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void performMaintenanceTasks() {
+        if(BuildConfig.performMaintenanceTasks) {
+            SurveyDB.deleteOlderSentSurveys();
+        }
     }
 }

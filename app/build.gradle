@@ -47,12 +47,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "int", "MaxDayBeforeDeletingSentSurvey", "14"
 
         }
         debug {
             debuggable true
-            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
         }
     }
     //TODO This config is related to a known issue: http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt
@@ -89,6 +87,8 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -108,6 +108,8 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "1"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -128,6 +130,8 @@ android {
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
@@ -147,6 +151,8 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "false"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "boolean", "performMaintenanceTasks", "true"
+            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -165,6 +171,8 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
+            buildConfigField "int", "MaxDaysBeforeDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
 
     }

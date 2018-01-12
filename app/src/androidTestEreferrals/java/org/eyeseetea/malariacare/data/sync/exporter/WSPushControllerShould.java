@@ -4,13 +4,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Device;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.test.utils.AssetsFileReader;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
@@ -37,12 +46,32 @@ public class WSPushControllerShould {
 
     @Before
     public void setUp() throws Exception {
+        saveTestCredentialsAndProgram();
         this.server = new MockWebServer();
         this.server.start();
         apiClient = initializeApiClient();
-        mWSPushController = new WSPushController(apiClient);
+        Device device = new Device("phoneNumber", "imei", "version");
+
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device);
+        mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
     }
 
+    private void saveTestCredentialsAndProgram() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.dhis_url), "test");
+        editor.commit();
+
+        Credentials credentials = new Credentials("test", "test", "test");
+        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
+        programDB.save();
+        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+    }
 
     @Test
     public void put_survey_status_conflict_if_failed_or_no_success_action_status()

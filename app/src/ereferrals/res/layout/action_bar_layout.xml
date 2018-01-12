@@ -32,6 +32,16 @@
             android:textColor="@color/white"  />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/refresh_push"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/action_bar_connection_status"
+        android:src="@drawable/ic_push_progress"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/action_bar_connection_status"
         android:layout_width="wrap_content"

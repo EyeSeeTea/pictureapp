@@ -102,6 +102,11 @@ public abstract class APushUseCaseStrategy {
 
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
+            public void onStartPushing() {
+                notifyStartPushing();
+            }
+
+            @Override
             public void onComplete() {
                 mPushController.changePushInProgress(false);
 
@@ -274,6 +279,15 @@ public abstract class APushUseCaseStrategy {
             @Override
             public void run() {
                 mCallback.onApiCallError(e);
+            }
+        });
+    }
+
+    private void notifyStartPushing() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onStartPushing();
             }
         });
     }

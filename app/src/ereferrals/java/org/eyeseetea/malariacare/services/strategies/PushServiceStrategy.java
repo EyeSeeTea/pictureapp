@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.services.strategies;
 
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -40,6 +41,10 @@ import org.eyeseetea.malariacare.services.PushService;
 public class PushServiceStrategy extends APushServiceStrategy {
 
     public static final String TAG = ".PushServiceStrategy";
+    public static final String SERVICE_METHOD = "serviceMethod";
+    public static final String PUSH_START = "PushStart";
+    public static final String PUSH_IS_START = "PushIsStart";
+
 
     public PushServiceStrategy(PushService pushService) {
         super(pushService);
@@ -201,9 +206,15 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
+            public void onStartPushing() {
+                sendIntentStartEndPush(true);
+            }
+
+            @Override
             public void onComplete() {
                 Log.d(TAG, "PUSHUSECASE WITHOUT ERROR push complete");
                 mPushService.onPushFinished();
+                sendIntentStartEndPush(false);
             }
 
             @Override
@@ -278,5 +289,25 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 closeUserLogout();
             }
         });
+    }
+
+    @Override
+    public void showInDialog(String title, String message) {
+        super.showInDialog(title, message);
+        sendIntentStartEndPush(false);
+    }
+
+    @Override
+    public void onError(String error) {
+        super.onError(error);
+        sendIntentStartEndPush(false);
+    }
+
+    private void sendIntentStartEndPush(boolean start) {
+        Intent surveysIntent = new Intent(PushService.class.getName());
+        surveysIntent.putExtra(SERVICE_METHOD, PUSH_START);
+        surveysIntent.putExtra(PUSH_IS_START, start);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }
 }

@@ -62,6 +62,7 @@ public class WSPushControllerShould {
                 assertThat(secondConflict.getStatus(), is(Constants.SURVEY_CONFLICT));
                 SurveyDB secondNoConflict = SurveyDB.findById(surveysIDs.get(3));
                 assertThat(secondNoConflict.getStatus(), is(Constants.SURVEY_SENT));
+                deleteTestConflictSurveys();
             }
 
             @Override
@@ -76,6 +77,7 @@ public class WSPushControllerShould {
 
             @Override
             public void onError(Throwable throwable) {
+                deleteTestConflictSurveys();
                 boolean hasError = throwable != null;
                 assertThat(hasError, is(false));
             }
@@ -95,6 +97,12 @@ public class WSPushControllerShould {
 
     private void whenAPushResponseWithSomeConflictsIsReceived() throws IOException{
         enqueueResponse(PUSH_RESPONSE_CONFLICT);
+    }
+
+    private void deleteTestConflictSurveys() {
+        for (Long surveyId : surveysIDs) {
+            SurveyDB.findById(surveyId).delete();
+        }
     }
 
 

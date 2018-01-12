@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -43,14 +44,17 @@ public class WSPushControllerShould {
     private WSPushController mWSPushController;
     private String[] eventUIDs = {"LRR4ZZidQ6T", "PHp2WANFHE1", "NDqaWw51WJr", "Ian8YUgm7T3"};
     private List<Long> surveysIDs = new ArrayList<>();
+
     private String serverPreference="";
     private String userPreference ="";
     private String pinPreference ="";
     private long programPreference =-1;
+
     @Before
     public void setUp() throws Exception {
         this.server = new MockWebServer();
         this.server.start();
+        //PreferencesState.getInstance().setContext(InstrumentationRegistry.getInstrumentation().getTargetContext());
         savePreferences();
         saveTestCredentialsAndProgram();
         apiClient = initializeApiClient();
@@ -169,12 +173,6 @@ public class WSPushControllerShould {
             SurveyDB.findById(surveyId).delete();
         }
         ProgramDB.findByUID("testProgramId").delete();
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.commit();
     }
 
 

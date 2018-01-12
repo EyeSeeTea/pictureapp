@@ -6,6 +6,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
 
 public class QuestionAnswerChangedListener implements
@@ -24,11 +25,20 @@ public class QuestionAnswerChangedListener implements
     @Override
     public void onAnswerChanged(View view, String newValue) {
         mDynamicTabAdapter.saveTextValue(view, newValue, mAdvanceToNextQuestion);
+        focusNext(view);
     }
 
     @Override
     public void onAnswerChanged(View view, OptionDB optionDB) {
         mDynamicTabAdapter.OnOptionAnswered(view, optionDB, mAdvanceToNextQuestion);
+        focusNext(view);
+    }
+
+    private void focusNext(View view) {
+        if (view instanceof CommonQuestionView && !(view instanceof AKeyboardQuestionView)) {
+            CommonQuestionView commonQuestionView = (CommonQuestionView) view;
+            commonQuestionView.focusNextQuestion();
+        }
     }
 
 }

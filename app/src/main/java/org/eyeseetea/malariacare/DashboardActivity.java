@@ -384,6 +384,7 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onPause");
         super.onPause();
         mIsInForegroundMode = false;
+        mDashboardActivityStrategy.onPause();
     }
 
     @Override

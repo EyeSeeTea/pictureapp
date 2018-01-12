@@ -12,6 +12,8 @@ import org.eyeseetea.malariacare.domain.usecase.strategies.PushUseCaseStrategy;
 public class PushUseCase implements UseCase {
 
     public interface Callback {
+        void onStartPushing();
+
         void onComplete();
 
         void onPushError();

@@ -23,13 +23,10 @@ import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 
 @Database(
-        name = AppDatabase.NAME, version = AppDatabase.VERSION
+        name = DBConfiguration.NAME, version = DBConfiguration.VERSION, inMemory = DBConfiguration.INMEMORY
 )
 
 public class AppDatabase {
-    public static final String NAME = "EyeSeeTeaDB";
-    public static final int VERSION = 9;
-
 
     // Aliases used for EyeSeeTea DB queries
     public static final String matchName = "m";

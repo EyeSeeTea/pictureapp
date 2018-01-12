@@ -70,7 +70,9 @@ public class SplashScreenActivity extends Activity {
             splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
 
-        performMaintenanceTasks();
+        if(BuildConfig.performMaintenanceTasks) {
+            performMaintenanceTasks();
+        }
 
     }
 
@@ -105,8 +107,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void performMaintenanceTasks() {
-        if(BuildConfig.performMaintenanceTasks) {
-            SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
-        }
+        SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
     }
 }

@@ -1062,7 +1062,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
         Date dateWithDaysAdded = addDaysTo(new Date(),numberOfDaysAfter);
         List<SurveyDB> sentSurveys = getAllSentSurveysOlderThan(dateWithDaysAdded);
-
         deleteSurveys(sentSurveys);
     }
 
@@ -1082,11 +1081,11 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     }
 
     @NonNull
-    public static List<SurveyDB> getAllSentSurveysOlderThan(Date dateOlder) {
+    public static List<SurveyDB> getAllSentSurveysOlderThan(Date oldestAllowedDate) {
 
         return new Select().from(SurveyDB.class).where(
                 SurveyDB_Table.status.is(Constants.SURVEY_SENT),
-                SurveyDB_Table.creation_date.lessThan(dateOlder)).queryList();
+                SurveyDB_Table.creation_date.lessThan(oldestAllowedDate)).queryList();
     }
 
     public OptionDB getOptionSelectedForQuestionCode(String questionCode) {

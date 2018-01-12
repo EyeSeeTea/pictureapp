@@ -14,8 +14,11 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -77,6 +80,9 @@ public class eReferralsAPIClient {
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
             wsClientCallBack.onError(conversionException);
+        } catch (SocketTimeoutException | UnknownHostException e) {
+            wsClientCallBack.onError(new NetworkException());
+            return;
         } catch (IOException e) {
             wsClientCallBack.onError(e);
         }

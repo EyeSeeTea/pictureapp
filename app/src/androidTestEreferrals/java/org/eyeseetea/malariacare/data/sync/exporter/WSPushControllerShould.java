@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -91,7 +92,7 @@ public class WSPushControllerShould {
                 assertThat(secondConflict.getStatus(), is(Constants.SURVEY_CONFLICT));
                 SurveyDB secondNoConflict = SurveyDB.findById(surveysIDs.get(3));
                 assertThat(secondNoConflict.getStatus(), is(Constants.SURVEY_SENT));
-                deleteTestConflictSurveys();
+                deleteTestConflictGeneratedValues();
             }
 
             @Override
@@ -106,7 +107,7 @@ public class WSPushControllerShould {
 
             @Override
             public void onError(Throwable throwable) {
-                deleteTestConflictSurveys();
+                deleteTestConflictGeneratedValues();
                 boolean hasError = throwable != null;
                 assertThat(hasError, is(false));
             }
@@ -128,10 +129,17 @@ public class WSPushControllerShould {
         enqueueResponse(PUSH_RESPONSE_CONFLICT);
     }
 
-    private void deleteTestConflictSurveys() {
+    private void deleteTestConflictGeneratedValues() {
         for (Long surveyId : surveysIDs) {
             SurveyDB.findById(surveyId).delete();
         }
+        ProgramDB.findByUID("testProgramId").delete();
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
     }
 
 

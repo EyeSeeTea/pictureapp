@@ -92,7 +92,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
     @Override
     public void requestAnswerFocus() {
-        spinnerOptions.requestFocus();
+        spinnerOptions.requestFocusFromTouch();
     }
 
     @Override
@@ -101,7 +101,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     private void init(final Context context) {
-        setFocusableInTouchMode(true);
         inflate(context, R.layout.multi_question_tab_dropdown_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
@@ -110,15 +109,12 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         optionSetFromSavedValue = true;
 
         spinnerOptions.setFocusable(true);
-//        spinnerOptions.setFocusableInTouchMode(true);
-
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
                     notifyAnswerChanged(optionDB);
-                    requestFocus();
                     hideKeyboard();
                 } else {
                     optionSetFromSavedValue = false;

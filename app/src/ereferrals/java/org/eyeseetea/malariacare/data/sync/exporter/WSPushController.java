@@ -36,9 +36,9 @@ public class WSPushController implements IPushController {
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }
 
-    public WSPushController(eReferralsAPIClient eReferralsAPIClient) {
+    public WSPushController(eReferralsAPIClient eReferralsAPIClient, ConvertToWSVisitor convertToWSVisitor) {
         mEReferralsAPIClient = eReferralsAPIClient;
-        mConvertToWSVisitor = new ConvertToWSVisitor();
+        mConvertToWSVisitor = convertToWSVisitor;
     }
 
     @Override

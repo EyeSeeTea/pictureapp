@@ -86,6 +86,8 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -105,6 +107,8 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "1"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -124,6 +128,8 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
@@ -144,6 +150,8 @@ android {
             buildConfigField "boolean", "customfont", "false"
             buildConfigField "String", "defaultLocale", "\"en\""
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "true"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -162,6 +170,8 @@ android {
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
         }
 
     }

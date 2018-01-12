@@ -83,6 +83,11 @@ public class WSPushControllerShould {
 
         mWSPushController.push(new IPushController.IPushControllerCallback() {
             @Override
+            public void onStartPushing() {
+
+            }
+
+            @Override
             public void onComplete() {
                 SurveyDB firstNoConflict = SurveyDB.findById(surveysIDs.get(0));
                 assertThat(firstNoConflict.getStatus(), is(Constants.SURVEY_SENT));

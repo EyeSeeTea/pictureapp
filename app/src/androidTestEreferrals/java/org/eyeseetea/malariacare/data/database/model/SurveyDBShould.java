@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class SurveyDBTestShould {
+public class SurveyDBShould {
 
     private long idSentSurveyWithTodayEventDate;
     private long idSentSurveyWith25AfterTodayEventDate;

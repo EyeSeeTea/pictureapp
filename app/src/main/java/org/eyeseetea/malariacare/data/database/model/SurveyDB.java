@@ -1082,11 +1082,11 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     }
 
     @NonNull
-    public static List<SurveyDB> getAllSentSurveysOlderThan(Date dateOlder) {
+    public static List<SurveyDB> getAllSentSurveysOlderThan(Date oldestAllowedDate) {
 
         return new Select().from(SurveyDB.class).where(
                 SurveyDB_Table.status.is(Constants.SURVEY_SENT),
-                SurveyDB_Table.event_date.lessThanOrEq(dateOlder)).queryList();
+                SurveyDB_Table.event_date.lessThanOrEq(oldestAllowedDate)).queryList();
     }
 
     public OptionDB getOptionSelectedForQuestionCode(String questionCode) {

@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare;
 
+import static org.eyeseetea.malariacare.BuildConfig.maxDaysForDeletingSentSurveys;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
@@ -105,7 +106,7 @@ public class SplashScreenActivity extends Activity {
 
     private void performMaintenanceTasks() {
         if(BuildConfig.performMaintenanceTasks) {
-            SurveyDB.deleteOlderSentSurveys();
+            SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
         }
     }
 }

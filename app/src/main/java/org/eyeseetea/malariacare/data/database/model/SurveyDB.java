@@ -19,7 +19,6 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
-import static org.eyeseetea.malariacare.BuildConfig.MaxDaysBeforeDeletingSentSurveys;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.optionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitAlias;
@@ -68,7 +67,6 @@ import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -1060,35 +1058,35 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         }
     }
 
-    public static void deleteOlderSentSurveys() {
+    public static void deleteOlderSentSurveys(int numberOfDaysAfter) {
 
-        List<SurveyDB> sentSurveys = getAllSentSurveys();
+        Date dateWithDaysAdded = addDaysTo(new Date(),numberOfDaysAfter);
+        List<SurveyDB> sentSurveys = getAllSentSurveysOlderThan(dateWithDaysAdded);
 
-        for (SurveyDB surveyDB : sentSurveys) {
+        deleteSurveys(sentSurveys);
+    }
 
-            if (isSurveyOlderThan(surveyDB, MaxDaysBeforeDeletingSentSurveys)) {
-
+    public static void deleteSurveys(List<SurveyDB> surveys) {
+        for (SurveyDB surveyDB : surveys) {
                 new Delete().from(ValueDB.class).where(
                         ValueDB_Table.id_survey_fk.eq(surveyDB.getId_survey()));
-
                 surveyDB.delete();
-            }
         }
     }
 
-    public static boolean isSurveyOlderThan(SurveyDB surveyDB, int days) {
-        Date createdDate = surveyDB.getCreationDate();
-
-        DateTime createdDatetime = new DateTime(createdDate);
-        DateTime todayDateTime = new DateTime();
-
-        return (Days.daysBetween(createdDatetime, todayDateTime).getDays() >= days) ;
+    @NonNull
+    private static Date addDaysTo(Date date,int numberOfDaysAfter) {
+        DateTime dateTime = new DateTime(date);
+        dateTime.plusDays(numberOfDaysAfter);
+        return dateTime.toDate();
     }
 
     @NonNull
-    public static List<SurveyDB> getAllSentSurveys() {
+    public static List<SurveyDB> getAllSentSurveysOlderThan(Date dateOlder) {
+
         return new Select().from(SurveyDB.class).where(
-                SurveyDB_Table.status.is(Constants.SURVEY_SENT)).queryList();
+                SurveyDB_Table.status.is(Constants.SURVEY_SENT),
+                SurveyDB_Table.creation_date.lessThan(dateOlder)).queryList();
     }
 
     public OptionDB getOptionSelectedForQuestionCode(String questionCode) {

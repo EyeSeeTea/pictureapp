@@ -502,13 +502,10 @@ public class DashboardActivity extends BaseActivity {
             beforeExit();
         }
 
-        if (isSent) {
-            tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
-            showUnsentFragment();
-        } else {
-            showUnsentFragment();
+        if (!isSent) {
             mDashboardActivityStrategy.reloadFirstFragment();
         }
+        showUnsentFragment();
     }
 
     public void closeReceiptBalanceFragment() {

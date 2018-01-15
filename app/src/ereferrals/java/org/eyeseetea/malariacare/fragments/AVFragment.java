@@ -184,9 +184,13 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     }
 
     public void showError(int message, boolean hasError) {
-        mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
-        if (hasError) {
-            mErrorMessage.setText(message);
+        if (mPresenter.canShowErrorMessage()) {
+            mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
+            if (hasError) {
+                mErrorMessage.setText(message);
+            }
+        }else {
+            mErrorMessage.setVisibility(View.GONE);
         }
     }
 

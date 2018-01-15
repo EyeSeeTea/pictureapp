@@ -60,6 +60,7 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
     @Override
     public void requestAnswerFocus() {
         yearText.requestFocus();
+        yearText.performClick();
     }
 
     private void init(final Context context) {
@@ -82,10 +83,10 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
                     });
                     yearPicker.show(mActivity.getFragmentManager(), TAG);
                 }
+                hideKeyboard(view);
             }
         });
         yearText.setFocusable(true);
-        yearText.setFocusableInTouchMode(true);
     }
 
     protected void notifyAnswerChanged(String newValue) {

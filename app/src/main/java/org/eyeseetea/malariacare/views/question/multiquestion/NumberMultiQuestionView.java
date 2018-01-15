@@ -60,6 +60,7 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     @Override
     public void requestAnswerFocus() {
         numberPicker.requestFocus();
+        showKeyboard(getContext(), numberPicker);
     }
 
     private void init(final Context context) {

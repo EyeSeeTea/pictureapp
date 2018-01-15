@@ -51,6 +51,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     @Override
     public void requestAnswerFocus() {
         dateText.requestFocus();
+        dateText.performClick();
     }
 
     @Override
@@ -99,11 +100,11 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
             public void onClick(View v) {
                 if (enabled) {
                     datePickerFragment.show(mActivity.getFragmentManager(), TAG);
+                    hideKeyboard(v);
                 }
             }
         });
         dateText.setFocusable(true);
-        dateText.setFocusableInTouchMode(true);
     }
 
 }

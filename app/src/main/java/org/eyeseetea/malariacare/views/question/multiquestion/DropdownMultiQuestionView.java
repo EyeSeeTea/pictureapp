@@ -1,9 +1,8 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -115,7 +114,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
                     notifyAnswerChanged(optionDB);
-                    hideKeyboard();
                 } else {
                     optionSetFromSavedValue = false;
                 }
@@ -126,16 +124,18 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
             }
         });
+        spinnerOptions.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    hideKeyboard(v);
+                }
+                return false;
+            }
+        });
     }
 
     public Spinner getSpinnerOptions() {
         return spinnerOptions;
-    }
-
-    private void hideKeyboard() {
-        Log.d(DropdownMultiQuestionView.class.getName(), "KEYBOARD HIDE ");
-        InputMethodManager keyboard = (InputMethodManager) getContext().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        keyboard.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 }

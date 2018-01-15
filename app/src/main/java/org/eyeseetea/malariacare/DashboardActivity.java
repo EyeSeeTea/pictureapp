@@ -19,7 +19,7 @@
 
 package org.eyeseetea.malariacare;
 
-import static org.eyeseetea.malariacare.BuildConfig.goBackOnASentSurveyTakesYouTo2ndScreen;
+import static org.eyeseetea.malariacare.BuildConfig.exitFromSurveyToImproveTab;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -505,13 +505,14 @@ public class DashboardActivity extends BaseActivity {
         }
 
         if (isSent) {
-            if (goBackOnASentSurveyTakesYouTo2ndScreen) {
+            showUnsentFragment();
+            if (exitFromSurveyToImproveTab) {
                 tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
             }
         } else {
+            showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
         }
-        showUnsentFragment();
     }
 
     public void closeReceiptBalanceFragment() {

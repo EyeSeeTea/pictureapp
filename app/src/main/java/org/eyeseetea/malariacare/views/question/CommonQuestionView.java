@@ -102,15 +102,19 @@ public class CommonQuestionView extends LinearLayout {
                     (IQuestionView) ((TableRow) nextView).getChildAt(
                             0);
 
-            if (nextQuestionView instanceof IMultiQuestionView
-                    && !((this instanceof AKeyboardQuestionView)
-                    && (nextQuestionView instanceof AKeyboardQuestionView))) {
-                ((IMultiQuestionView) nextQuestionView)
-                        .requestAnswerFocus();
-            } else {
+            if (thisAndNextQuestionAreAKeyboardQuestionView(nextQuestionView)) {
+                // use standard Android requestFocus only between keyboard questions
                 nextView.requestFocus();
+            } else {
+                ((IMultiQuestionView) nextQuestionView).requestAnswerFocus();
             }
         }
+    }
+
+    private boolean thisAndNextQuestionAreAKeyboardQuestionView(IQuestionView nextQuestion) {
+        return ((this instanceof AKeyboardQuestionView)
+                && (nextQuestion instanceof AKeyboardQuestionView))
+                || !(nextQuestion instanceof IMultiQuestionView);
     }
 
     public View getNextView() {

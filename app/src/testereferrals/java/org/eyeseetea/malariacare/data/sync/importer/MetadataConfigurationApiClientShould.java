@@ -278,6 +278,6 @@ public class MetadataConfigurationApiClientShould {
     private void whenReceiveAMalformedJSON() throws Exception {
         enqueueMalformedJson();
 
-        apiClient.getQuestionsFor("mz");
+        apiClient.getQuestionsFor("dc@MZ@v1");
     }
 }

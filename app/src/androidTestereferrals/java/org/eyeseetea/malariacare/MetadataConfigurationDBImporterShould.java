@@ -3,6 +3,17 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .cleanUsedTables;
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .getOptionsDBCount;
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .getQuestionDBCount;
+
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .getQuestionOptionDBCount;
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .loadMetadataFromCSV;
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
 import static org.eyeseetea.malariacare.configurationImporter
@@ -10,19 +21,11 @@ import static org.eyeseetea.malariacare.configurationImporter
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
-import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
-import org.eyeseetea.malariacare.data.database.model.HeaderDB;
-import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
@@ -36,17 +39,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public class MetadataConfigurationDBImporterShould {
 
-
     private Dhis2MockServer dhis2MockServer;
-
 
     @Before
     public void setUp() throws Exception {
+        cleanUsedTables();
         CredentialsReader credentialsReader = CredentialsReader.getInstance();
         Session.setCredentials(
                 new Credentials("/", credentialsReader.getUser(),
@@ -54,9 +55,8 @@ public class MetadataConfigurationDBImporterShould {
 
         dhis2MockServer = new Dhis2MockServer(new AssetsFileReader());
 
-        UpdateDB.updatePrograms(PreferencesState.getContextForTesting());
-        UpdateDB.updateTabs(PreferencesState.getContextForTesting());
-        UpdateDB.updateHeaders(PreferencesState.getContextForTesting());
+        Context context = InstrumentationRegistry.getTargetContext();
+        loadMetadataFromCSV(context);
     }
 
     @After
@@ -111,35 +111,5 @@ public class MetadataConfigurationDBImporterShould {
         assertEquals(questionsCount, expectedQuestionsCount);
         assertEquals(questionsOptionsCount, expectedQuestionsOptionsCount);
         assertEquals(optionsCount, expectedOptionsCount);
-    }
-
-    private int getOptionsDBCount() {
-        List<OptionDB> optionDBS = OptionDB.getAllOptions();
-
-        return optionDBS.size();
-    }
-
-    private int getQuestionOptionDBCount() {
-        List<QuestionOptionDB> questionOptionDBS = new Select().from(
-                QuestionOptionDB.class).queryList();
-
-        return questionOptionDBS.size();
-    }
-
-    private int getQuestionDBCount() {
-        List<QuestionDB> questionDBS = QuestionDB.getAllQuestions();
-        return questionDBS.size();
-    }
-
-    private void cleanUsedTables() {
-        HeaderDB.deleteAll();
-        TabDB.deleteAll();
-        ProgramDB.deleteAll();
-        CountryVersionDB.deleteAll();
-
-
-        QuestionDB.deleteAll();
-        OptionDB.deleteAll();
-        QuestionOptionDB.deleteAll();
     }
 }

@@ -19,6 +19,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     CustomTextView header;
     CustomEditText mCustomEditText;
 
+
     public TextMultiQuestionView(Context context) {
         super(context);
 
@@ -61,6 +62,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     @Override
     public void requestAnswerFocus() {
         mCustomEditText.requestFocus();
+        showKeyboard(getContext(), mCustomEditText);
     }
 
 
@@ -84,6 +86,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
                 notifyAnswerChanged(String.valueOf(s));
             }
         });
+
     }
 
     public void setInputType(int value) {

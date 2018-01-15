@@ -98,6 +98,7 @@ android {
             buildConfigField "String", "defaultLocale", "\"en\""
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -119,6 +120,7 @@ android {
             buildConfigField "String", "defaultLocale", "\"en\""
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -140,10 +142,11 @@ android {
             buildConfigField "String", "defaultLocale", "\"en\""
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
-            versionName "1.0.12"
+            versionName "1.0.13"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
@@ -162,6 +165,7 @@ android {
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -182,6 +186,7 @@ android {
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
 
     }

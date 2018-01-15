@@ -65,6 +65,7 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
     @Override
     public void requestAnswerFocus() {
         numberPicker.requestFocus();
+        showKeyboard(getContext(), numberPicker);
     }
 
     private void init(final Context context) {

@@ -64,6 +64,7 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     @Override
     public void requestAnswerFocus() {
         numberPicker.requestFocus();
+        showKeyboard(getContext(), numberPicker);
     }
 
     private void init(final Context context) {

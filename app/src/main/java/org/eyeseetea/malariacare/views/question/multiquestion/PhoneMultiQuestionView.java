@@ -58,6 +58,7 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     @Override
     public void requestAnswerFocus() {
         mCustomEditText.requestFocus();
+        showKeyboard(getContext(), mCustomEditText);
     }
 
     @Override

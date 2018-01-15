@@ -48,8 +48,9 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
-import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
@@ -365,7 +366,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private void downloadMedia() {
         mDownloadMediaUseCase.execute(new DownloadMediaUseCase.Callback() {
             @Override
-            public void onError(FileDownloadException ex) {
+            public void onError(Throwable ex) {
                 //Need to complete credentials (ack from user first time)
                 if (ex.getCause() instanceof UserRecoverableAuthIOException) {
                     showToast(ex.getCause().getMessage());
@@ -393,6 +394,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
                         showDialog(connectionStatusCode);
                     }
+                } else if (ex instanceof NetworkException) {
+                    avFragment.showError(R.string.error_files_download_no_wifi, true);
+                } else if (ex instanceof NoFilesException) {
+                    avFragment.showError(R.string.error_files_download_no_files, true);
                 } else {
                     Log.e(this.getClass().getSimpleName(), ex.getMessage());
                 }
@@ -407,6 +412,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     showToast(String.format("%d files synced", syncedFiles));
                 }
                 avFragment.showProgress(false);
+                avFragment.showError(-1, false);
             }
 
             @Override

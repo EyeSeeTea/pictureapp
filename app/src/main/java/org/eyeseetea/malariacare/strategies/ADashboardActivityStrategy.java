@@ -228,4 +228,7 @@ public abstract class ADashboardActivityStrategy {
     public void onPause(){
 
     }
+    public void onConnectivityStatusChange() {
+
+    }
 }

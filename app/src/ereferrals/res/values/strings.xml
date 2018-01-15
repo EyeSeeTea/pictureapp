@@ -1096,4 +1096,6 @@
 <string name="common_option_ZW_district_zvishavane">"Zvishavane"</string>
 <string name="common_option_ZW_district_outsideZW">"Outside Zimbabwe"</string>
 <string name="dynamic_error_invalid_positive_number">"Invalid positive number"</string>
+<string name="error_files_download_no_files">"No media for this country"</string>
+<string name="error_files_download_no_wifi">"Please connect to a WiFi network to download the media for this country"</string>
 </resources>

@@ -102,9 +102,13 @@ public class CommonQuestionView extends LinearLayout {
                     (IQuestionView) ((TableRow) nextView).getChildAt(
                             0);
 
-            if (nextQuestionView instanceof IMultiQuestionView) {
+            if (nextQuestionView instanceof IMultiQuestionView
+                    && !((this instanceof AKeyboardQuestionView)
+                    && (nextQuestionView instanceof AKeyboardQuestionView))) {
                 ((IMultiQuestionView) nextQuestionView)
                         .requestAnswerFocus();
+            } else {
+                nextView.requestFocus();
             }
         }
     }

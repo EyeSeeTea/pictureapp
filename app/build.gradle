@@ -98,6 +98,7 @@ android {
             buildConfigField "String", "defaultLocale", "\"en\""
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "goBackOnASentSurveyTakesYouTo2ndScreen", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -119,6 +120,7 @@ android {
             buildConfigField "String", "defaultLocale", "\"en\""
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "goBackOnASentSurveyTakesYouTo2ndScreen", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -140,6 +142,7 @@ android {
             buildConfigField "String", "defaultLocale", "\"en\""
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "goBackOnASentSurveyTakesYouTo2ndScreen", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
@@ -162,6 +165,7 @@ android {
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
+            buildConfigField "boolean", "goBackOnASentSurveyTakesYouTo2ndScreen", "false"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -182,6 +186,7 @@ android {
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "goBackOnASentSurveyTakesYouTo2ndScreen", "true"
         }
 
     }

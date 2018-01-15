@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare;
 
+import static org.eyeseetea.malariacare.BuildConfig.goBackOnASentSurveyTakesYouTo2ndScreen;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -502,7 +504,11 @@ public class DashboardActivity extends BaseActivity {
             beforeExit();
         }
 
-        if (!isSent) {
+        if (isSent) {
+            if (goBackOnASentSurveyTakesYouTo2ndScreen) {
+                tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
+            }
+        } else {
             mDashboardActivityStrategy.reloadFirstFragment();
         }
         showUnsentFragment();

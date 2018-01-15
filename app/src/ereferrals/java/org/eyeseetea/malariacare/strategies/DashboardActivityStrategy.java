@@ -536,4 +536,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             refreshPush.setVisibility(View.GONE);
         }
     }
+
+    public void onConnectivityStatusChange() {
+        downloadMedia();
+    }
 }

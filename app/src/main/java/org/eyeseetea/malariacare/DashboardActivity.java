@@ -817,6 +817,7 @@ public class DashboardActivity extends BaseActivity {
 
     public void refreshStatus() {
         mDashboardActivityStrategy.reloadFirstFragmentHeader();
+        mDashboardActivityStrategy.onConnectivityStatusChange();
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {

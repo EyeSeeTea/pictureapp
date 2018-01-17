@@ -9,9 +9,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
@@ -20,6 +24,7 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
@@ -28,7 +33,9 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
@@ -51,12 +58,20 @@ public class PushUseCaseShould {
     private PushUseCase mPushUseCase;
     private int countSync;
 
+    private Credentials previousCredentials;
+    private Program previousProgram;
+    private boolean previousPushInProgress;
+    private UserAccount previousUserAccount;
+
     @Before
     public void cleanUp() throws IOException {
-        saveTestCredentialsAndProgram();
         mCustomMockServer = new CustomMockServer(new AssetsFileReader());
+        savePreviousPreferences();
+        saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        mWSPushController = new WSPushController(mEReferralsAPIClient);
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
+                new Device("testPhone", "testIMEI", "test_version"));
+        mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
@@ -70,12 +85,13 @@ public class PushUseCaseShould {
     }
 
     @Test
-    public void setUserCanAddSurveysToFalse() throws IOException, InterruptedException {
+    public void setUserCanAddSurveysToFalseOn209Response() throws IOException, InterruptedException {
         final Object syncObject = new Object();
         countSync = 0;
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
+        surveyDB.setEventUid("testEventUID");
         surveyDB.setStatus(Constants.SURVEY_COMPLETED);
         surveyDB.save();
         mPushUseCase.execute(new PushUseCase.Callback() {
@@ -151,10 +167,12 @@ public class PushUseCaseShould {
             public void onApiCallError(ApiCallException e) {
                 UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
                 assertThat(userAccountDataSource.getLoggedUser().canAddSurveys(), is(false));
-                if (countSync == 1) {
-                    syncObject.notify();
+                synchronized (syncObject) {
+                    if (countSync == 1) {
+                        syncObject.notify();
+                    }
+                    countSync++;
                 }
-                countSync++;
             }
         });
 
@@ -168,6 +186,24 @@ public class PushUseCaseShould {
     @After
     public void tearDown() throws IOException {
         mCustomMockServer.shutdown();
+        clearDB();
+        restorePreferences();
+    }
+
+
+    private void savePreviousPreferences() {
+        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+        previousCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        ProgramDB databaseProgramDB =
+                ProgramDB.getProgram(
+                        PreferencesEReferral.getUserProgramId());
+        if (databaseProgramDB != null) {
+            previousProgram = programLocalDataSource.getUserProgram();
+        }
+        previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
+        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
+        previousUserAccount = userAccountDataSource.getLoggedUser();
     }
 
     private void saveTestCredentialsAndProgram() {
@@ -185,5 +221,40 @@ public class PushUseCaseShould {
         programDB.save();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        PreferencesState.getInstance().setPushInProgress(false);
+        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
+        userAccountDataSource.saveLoggedUser(
+                new UserAccount("testUsername", "testUserUID", false, true));
     }
+
+    private void clearDB() {
+        FlowManager.getDatabase(AppDatabase.class).reset(
+                EyeSeeTeaApplication.getInstance());
+    }
+
+    private void restorePreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        if (previousCredentials != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(context.getString(R.string.dhis_url),
+                    previousCredentials.getServerURL());
+            editor.commit();
+        }
+        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+        credentialsLocalDataSource.saveOrganisationCredentials(previousCredentials);
+        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        if (previousProgram != null) {
+            programLocalDataSource.saveUserProgramId(previousProgram);
+        } else {
+            PreferencesEReferral.saveUserProgramId(-1l);
+        }
+        PreferencesState.getInstance().setPushInProgress(previousPushInProgress);
+        if (previousUserAccount != null) {
+            UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
+            userAccountDataSource.saveLoggedUser(previousUserAccount);
+        }
+    }
+
 }

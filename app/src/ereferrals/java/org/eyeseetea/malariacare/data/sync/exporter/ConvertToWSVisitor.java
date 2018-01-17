@@ -42,12 +42,20 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private String language;
 
     public ConvertToWSVisitor() {
+        IDeviceRepository deviceDataSource = new DeviceDataSource();
+        Device device = deviceDataSource.getDevice();
+        init(device);
+    }
+
+    public ConvertToWSVisitor(Device device) {
+        init(device);
+    }
+
+    private void init(Device device) {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         ISettingsRepository currentLanguageRepository = new SettingsDataSource();
-        IDeviceRepository deviceDataSource = new DeviceDataSource();
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
         AppInfo appInfo = appInfoDataSource.getAppInfo();
-        Device device = deviceDataSource.getDevice();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
         language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(

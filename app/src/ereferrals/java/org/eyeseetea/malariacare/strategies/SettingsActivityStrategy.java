@@ -10,6 +10,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -22,6 +23,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
+import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
@@ -55,6 +58,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
         }
+        LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
     }
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
@@ -100,6 +104,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void onStart() {
+        applicationWillEnterForeground();
+        LocalBroadcastManager.getInstance(settingsActivity).registerReceiver(pushReceiver,
+                new IntentFilter(PushService.class.getName()));
         applicationWillEnterForeground();
     }
 
@@ -154,4 +161,17 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onDestroy() {
         settingsActivity.unregisterReceiver(mScreenOffReceiver);
     }
+
+    private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showLoginIfConfigFileObsolete(intent);
+        }
+
+        private void showLoginIfConfigFileObsolete(Intent intent) {
+            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+                showLogin();
+            }
+        }
+    };
 }

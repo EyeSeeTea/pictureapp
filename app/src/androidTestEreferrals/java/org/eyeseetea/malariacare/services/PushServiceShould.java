@@ -1,13 +1,17 @@
-package org.eyeseetea.malariacare.data.sync.exporter;
+package org.eyeseetea.malariacare.services;
 
-import static junit.framework.Assert.fail;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -28,6 +32,9 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
+import org.eyeseetea.malariacare.data.sync.exporter.ConvertToWSVisitor;
+import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
+import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -36,138 +43,56 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
-import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
-public class PushUseCaseShould {
-
+public class PushServiceShould {
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private CustomMockServer mCustomMockServer;
     private eReferralsAPIClient mEReferralsAPIClient;
     private WSPushController mWSPushController;
     private PushUseCase mPushUseCase;
-    private int countSync;
+    private PushServiceStrategy mPushServiceStrategy;
+    private boolean showLogiIntentReceibed;
+    private final Object syncObject = new Object();
 
     private Credentials previousCredentials;
     private Program previousProgram;
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
 
+
     @Test
-    public void setUserCanAddSurveysToFalseOn209Response() throws IOException, InterruptedException {
-        final Object syncObject = new Object();
-        countSync = 0;
+    public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
+        showLogiIntentReceibed = false;
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
         surveyDB.setEventUid("testEventUID");
         surveyDB.setStatus(Constants.SURVEY_COMPLETED);
         surveyDB.save();
-        mPushUseCase.execute(new PushUseCase.Callback() {
-            @Override
-            public void onPushStart() {
-
-            }
-
-            @Override
-            public void onComplete() {
-                List<SurveyDB> surveys = SurveyDB.getAllSurveys();
-                assertThat(surveys.get(0).getStatus(), is(Constants.SURVEY_SENT));
-                surveyDB.delete();
-                synchronized (syncObject) {
-                    if (countSync == 1) {
-                        syncObject.notify();
-                    }
-                    countSync++;
-                }
-            }
-
-            @Override
-            public void onPushError() {
-                fail("onPushError");
-            }
-
-            @Override
-            public void onPushInProgressError() {
-                fail("onPushInProgressError");
-            }
-
-            @Override
-            public void onSurveysNotFoundError() {
-                fail("onSurveyNotFound");
-            }
-
-            @Override
-            public void onConversionError() {
-                fail("onConversionError");
-            }
-
-            @Override
-            public void onNetworkError() {
-                fail("onNetworkError");
-            }
-
-            @Override
-            public void onInformativeError(String message) {
-                fail("onInformativeError: " + message);
-            }
-
-            @Override
-            public void onInformativeMessage(String message) {
-                fail("onInformativeMessage: " + message);
-            }
-
-            @Override
-            public void onClosedUser() {
-                fail("onClosedUser");
-            }
-
-            @Override
-            public void onBannedOrgUnit() {
-                fail("onBannedOrgUnit");
-            }
-
-            @Override
-            public void onReOpenOrgUnit() {
-                fail("onReOpenOrgUnit");
-            }
-
-            @Override
-            public void onApiCallError() {
-                fail("onApiCallError");
-            }
-
-            @Override
-            public void onApiCallError(ApiCallException e) {
-                UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-                assertThat(userAccountDataSource.getLoggedUser().canAddSurveys(), is(false));
-                synchronized (syncObject) {
-                    if (countSync == 1) {
-                        syncObject.notify();
-                    }
-                    countSync++;
-                }
-            }
-        });
-
+        mPushServiceStrategy.executePush(mPushUseCase);
+        Log.d("Executing push service strategy test", "testing 209");
         synchronized (syncObject) {
             syncObject.wait();
         }
-
+        assertThat(showLogiIntentReceibed, is(true));
     }
 
     @Before
     public void cleanUp() throws IOException {
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
+                new IntentFilter(PushService.class.getName()));
         mCustomMockServer = new CustomMockServer(new AssetsFileReader());
         savePreviousPreferences();
         saveTestCredentialsAndProgram();
@@ -185,6 +110,7 @@ public class PushUseCaseShould {
                         BuildConfig.LimitSurveysTimeHours);
         mPushUseCase = new PushUseCase(mWSPushController, asyncExecutor, mainExecutor,
                 surveysThresholds, surveyRepository, orgUnitRepository);
+        mPushServiceStrategy = new PushServiceStrategy(new PushService("TestPushService"));
     }
 
 
@@ -261,5 +187,23 @@ public class PushUseCaseShould {
             userAccountDataSource.saveLoggedUser(previousUserAccount);
         }
     }
+
+
+    private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showLoginIfConfigFileObsolete(intent);
+        }
+
+        private void showLoginIfConfigFileObsolete(Intent intent) {
+            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+                synchronized (syncObject) {
+                    showLogiIntentReceibed = true;
+                    syncObject.notify();
+                }
+            }
+        }
+    };
+
 
 }

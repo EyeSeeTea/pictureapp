@@ -47,9 +47,12 @@ public class MetadataConfigurationDBImporter {
                 remoteDataSource.getCountriesVersions();
 
         for (Configuration.CountryVersion domainCountry : countryVersions) {
-            processCountryData(domainCountry);
+            try {
+                processCountryData(domainCountry);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+           }
         }
-
     }
 
     private void deleteCountryPreviousMetadata(Configuration.CountryVersion countryVersion) {
@@ -171,7 +174,6 @@ public class MetadataConfigurationDBImporter {
     private void saveQuestionsInDB(List<Question> questions, Configuration.CountryVersion country) {
 
         for (Question question : questions) {
-
             QuestionDB questionDB = converter.convert(question);
             setDefaultHeader(questionDB, country);
             AnswerDB answerDB = newAnswerDBWith(questionDB);

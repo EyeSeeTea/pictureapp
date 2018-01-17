@@ -3,12 +3,26 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .cleanUsedTables;
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .getOptionsDBCount;
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .getQuestionDBCount;
+
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .getQuestionOptionDBCount;
+import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+        .loadMetadataFromCSV;
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.MZ_CONFIG_ANDROID_2_0_JSON;
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
+
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
@@ -20,9 +34,7 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
@@ -44,9 +56,9 @@ public class MetadataConfigurationDBImporterShould {
 
     private CustomMockServer dhis2MockServer;
 
-
     @Before
     public void setUp() throws Exception {
+        cleanUsedTables();
         CredentialsReader credentialsReader = CredentialsReader.getInstance();
         Session.setCredentials(
                 new Credentials("/", credentialsReader.getUser(),
@@ -54,9 +66,8 @@ public class MetadataConfigurationDBImporterShould {
 
         dhis2MockServer = new CustomMockServer(new AssetsFileReader());
 
-        UpdateDB.updatePrograms(PreferencesState.getContextForTesting());
-        UpdateDB.updateTabs(PreferencesState.getContextForTesting());
-        UpdateDB.updateHeaders(PreferencesState.getContextForTesting());
+        Context context = InstrumentationRegistry.getTargetContext();
+        loadMetadataFromCSV(context);
     }
 
     @After

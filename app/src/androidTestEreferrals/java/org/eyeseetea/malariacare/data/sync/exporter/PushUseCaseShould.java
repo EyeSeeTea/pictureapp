@@ -61,7 +61,6 @@ public class PushUseCaseShould {
     private Credentials previousCredentials;
     private Program previousProgram;
     private boolean previousPushInProgress;
-    private UserAccount previousUserAccount;
 
     @Test
     public void setUserCanAddSurveysToFalseOn209Response() throws IOException, InterruptedException {
@@ -191,7 +190,6 @@ public class PushUseCaseShould {
     @After
     public void tearDown() throws IOException {
         mCustomMockServer.shutdown();
-        clearDB();
         restorePreferences();
     }
 
@@ -207,8 +205,6 @@ public class PushUseCaseShould {
             previousProgram = programLocalDataSource.getUserProgram();
         }
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
-        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-        previousUserAccount = userAccountDataSource.getLoggedUser();
     }
 
     private void saveTestCredentialsAndProgram() {
@@ -232,11 +228,6 @@ public class PushUseCaseShould {
                 new UserAccount("testUsername", "testUserUID", false, true));
     }
 
-    private void clearDB() {
-        FlowManager.getDatabase(AppDatabase.class).reset(
-                EyeSeeTeaApplication.getInstance());
-    }
-
     private void restorePreferences() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
@@ -256,10 +247,6 @@ public class PushUseCaseShould {
             PreferencesEReferral.saveUserProgramId(-1l);
         }
         PreferencesState.getInstance().setPushInProgress(previousPushInProgress);
-        if (previousUserAccount != null) {
-            UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-            userAccountDataSource.saveLoggedUser(previousUserAccount);
-        }
     }
 
 }

@@ -14,9 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
-
-import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
@@ -47,7 +44,7 @@ public class BaseActivityShould {
     @Test
     public void onLoginIntentShowLoginActivity() throws InterruptedException {
         synchronized (syncObject) {
-            syncObject.wait(1000);
+            syncObject.wait(2000);
         }
         sendIntentShowLogin();
         synchronized (syncObject) {
@@ -77,7 +74,6 @@ public class BaseActivityShould {
 
     @After
     public void tearDown() {
-        clearDB();
         restorePreferences();
     }
 
@@ -127,11 +123,6 @@ public class BaseActivityShould {
         userAccountDataSource.saveLoggedUser(
                 new UserAccount("testUsername", "testUserUID", false, true));
         saveCredentials(new Credentials("http:test","test","test"));
-    }
-
-    private void clearDB() {
-        FlowManager.getDatabase(AppDatabase.class).reset(
-                EyeSeeTeaApplication.getInstance());
     }
 
     private void restorePreferences() {

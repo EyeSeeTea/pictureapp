@@ -117,7 +117,6 @@ public class PushServiceShould {
     @After
     public void tearDown() throws IOException {
         mCustomMockServer.shutdown();
-        clearDB();
         restorePreferences();
     }
 
@@ -156,11 +155,6 @@ public class PushServiceShould {
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
                 new UserAccount("testUsername", "testUserUID", false, true));
-    }
-
-    private void clearDB() {
-        FlowManager.getDatabase(AppDatabase.class).reset(
-                EyeSeeTeaApplication.getInstance());
     }
 
     private void restorePreferences() {

@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.data.database;
 
+
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 

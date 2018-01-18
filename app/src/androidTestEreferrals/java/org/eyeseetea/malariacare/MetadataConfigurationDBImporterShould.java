@@ -4,26 +4,13 @@ package org.eyeseetea.malariacare;
 import static junit.framework.Assert.assertEquals;
 
 import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
-        .cleanUsedTables;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
-        .getOptionsDBCount;
-
-
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
         .getPhoneFormatDBCount;
 import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
         .getProgramsDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
-        .getQuestionDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
-        .getQuestionOptionDBCount;
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
 import static org.eyeseetea.malariacare.configurationImporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
-
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 

@@ -58,7 +58,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
         }
-        LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
     }
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
@@ -105,9 +104,19 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onStart() {
         applicationWillEnterForeground();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         LocalBroadcastManager.getInstance(settingsActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
-        applicationWillEnterForeground();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
     }
 
     private void applicationWillEnterForeground() {
@@ -150,7 +159,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     private void showLogin() {
-        if (LockScreenStatus.isPatternSet(settingsActivity)) {
+        if (!LockScreenStatus.isPatternSet(settingsActivity)) {
             Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             settingsActivity.startActivity(loginIntent);

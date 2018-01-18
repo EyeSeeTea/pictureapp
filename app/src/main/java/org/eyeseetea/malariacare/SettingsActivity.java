@@ -298,6 +298,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onResume() {
+        mSettingsActivityStrategy.onResume();
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -305,6 +306,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onPause() {
+        mSettingsActivityStrategy.onPause();
         super.onPause();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);

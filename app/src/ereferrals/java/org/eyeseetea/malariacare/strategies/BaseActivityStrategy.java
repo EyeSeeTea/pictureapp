@@ -87,9 +87,20 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onStart() {
         mBaseActivity.registerReceiver(connectionReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        applicationWillEnterForeground();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         LocalBroadcastManager.getInstance(mBaseActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
-        applicationWillEnterForeground();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
     }
 
     public void applicationdidenterbackground() {
@@ -188,7 +199,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             ActivityCompat.finishAffinity(mBaseActivity);
         }
         mBaseActivity.unregisterReceiver(connectionReceiver);
-        LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
     }
 
     public void setNotConnectedText(int notConnectedText) {

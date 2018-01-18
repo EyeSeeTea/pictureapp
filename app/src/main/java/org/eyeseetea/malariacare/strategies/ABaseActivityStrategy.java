@@ -24,6 +24,10 @@ public abstract class ABaseActivityStrategy {
 
     public abstract void onCreate();
 
+    public void onResume(){}
+
+    public void onPause(){}
+
     public abstract void onCreateOptionsMenu(Menu menu);
 
     public abstract boolean onOptionsItemSelected(MenuItem item);

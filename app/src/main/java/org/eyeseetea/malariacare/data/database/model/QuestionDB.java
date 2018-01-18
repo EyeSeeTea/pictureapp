@@ -48,7 +48,6 @@ import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Condition;
-import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -199,6 +198,8 @@ public class QuestionDB extends BaseModel {
     }
 
 
+    public PhoneFormatDB phoneFormatDB;
+
     /**
      * Reference to associated mCompositeScoreDB for this mQuestionDB (loaded lazily)
      */
@@ -277,6 +278,14 @@ public class QuestionDB extends BaseModel {
         this.setAnswer(answerDB);
         this.setCompositeScore(compositeScoreDB);
         this.setQuestion(questionDB);
+    }
+
+    public PhoneFormatDB getPhoneFormatDB() {
+        return phoneFormatDB;
+    }
+
+    public void setPhoneFormatDB(PhoneFormatDB phoneFormatDB) {
+        this.phoneFormatDB = phoneFormatDB;
     }
 
     public static List<QuestionDB> getAllQuestions() {

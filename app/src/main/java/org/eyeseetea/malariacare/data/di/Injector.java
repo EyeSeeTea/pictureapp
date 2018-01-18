@@ -9,7 +9,9 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
+import org.eyeseetea.malariacare.data.database.converts.PhoneFormatConverterFromDomainToDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
@@ -24,6 +26,7 @@ import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
 import org.eyeseetea.malariacare.data.database.converts.OptionConverterFromDomainModelToDB;
 import org.eyeseetea.malariacare.data.database.converts.QuestionConverterFromDomainModelToDB;
 import org.eyeseetea.malariacare.domain.entity.Option;
+import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
@@ -110,13 +113,16 @@ public class Injector {
     @NonNull
     public static IConverter<Question, QuestionDB> provideQuestionConverter() {
 
-
         if (questionConverterDomainToDb == null) {
             questionConverterDomainToDb = new QuestionConverterFromDomainModelToDB(
-                    provideOptionConverter());
+                    provideOptionConverter(), providePhoneFormatConverter());
         }
 
         return questionConverterDomainToDb;
+    }
+
+    public static IConverter<PhoneFormat, PhoneFormatDB> providePhoneFormatConverter(){
+        return new PhoneFormatConverterFromDomainToDB();
     }
 
     @NonNull

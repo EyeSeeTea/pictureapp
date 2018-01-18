@@ -134,18 +134,10 @@ public class MetadataConfigurationApiClientShould {
 
         Configuration.CountryVersion countryVersion = countryVersions.get(0);
 
-        assertThat(countryVersion.getCountry(), is("MZ"));
-        assertThat(countryVersion.getUid(), is("oEWwlpQJcNh"));
-        assertThat(countryVersion.getVersion(), is(1));
-        assertThat(countryVersion.getReference(), is("dc@MZ@v1"));
-
-        countryVersion = countryVersions.get(1);
-
-        assertThat(countryVersion.getCountry(), is("TZ"));
-        assertThat(countryVersion.getUid(), is("ikKo8v3PeWz"));
+        assertThat(countryVersion.getCountry(), is("T_TZ"));
+        assertThat(countryVersion.getUid(), is("low6qUS2wc9"));
         assertThat(countryVersion.getVersion(), is(1));
         assertThat(countryVersion.getReference(), is("dc@TZ@v1"));
-
     }
 
     private void enqueueMalformedJson() throws IOException {

@@ -12,6 +12,19 @@ public class Configuration {
         private int version;
         private Date lastUpdate;
         private String reference;
+        private String name;
+
+        public CountryVersion(String uid, String country, int version, Date lastUpdate,
+                String reference, String name) {
+            this.uid = uid;
+            this.country = country;
+            this.version = version;
+            this.lastUpdate = lastUpdate;
+            this.reference = reference;
+            this.name = name;
+        }
+
+        public CountryVersion(){}
 
         private CountryVersion(Builder builder) {
             setUid(builder.uid);
@@ -19,6 +32,7 @@ public class Configuration {
             setVersion(builder.version);
             setLastUpdate(builder.lastUpdate);
             setReference(builder.reference);
+            setName(builder.name);
         }
 
         public static Builder newBuilder() {
@@ -66,6 +80,14 @@ public class Configuration {
             this.reference = reference;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -77,8 +99,14 @@ public class Configuration {
             if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
             if (country != null ? !country.equals(that.country) : that.country != null)
                 return false;
-            return lastUpdate != null ? lastUpdate.equals(that.lastUpdate)
-                    : that.lastUpdate == null;
+            if (lastUpdate != null ? !lastUpdate.equals(that.lastUpdate)
+                    : that.lastUpdate != null) {
+                return false;
+            }
+            if (reference != null ? !reference.equals(that.reference) : that.reference != null) {
+                return false;
+            }
+            return name != null ? name.equals(that.name) : that.name == null;
         }
 
         @Override
@@ -87,18 +115,11 @@ public class Configuration {
             result = 31 * result + (country != null ? country.hashCode() : 0);
             result = 31 * result + version;
             result = 31 * result + (lastUpdate != null ? lastUpdate.hashCode() : 0);
+            result = 31 * result + (reference != null ? reference.hashCode() : 0);
+            result = 31 * result + (name != null ? name.hashCode() : 0);
             return result;
         }
 
-        @Override
-        public String toString() {
-            return "CountryVersion{" +
-                    "uid='" + uid + '\'' +
-                    ", country='" + country + '\'' +
-                    ", version=" + version +
-                    ", lastUpdate=" + lastUpdate +
-                    '}';
-        }
 
         public static final class Builder {
             private String uid;
@@ -106,6 +127,7 @@ public class Configuration {
             private int version;
             private Date lastUpdate;
             private String reference;
+            private String name;
 
             private Builder() {
             }
@@ -132,6 +154,11 @@ public class Configuration {
 
             public Builder reference(String val) {
                 reference = val;
+                return this;
+            }
+
+            public Builder name(String val) {
+                name = val;
                 return this;
             }
 

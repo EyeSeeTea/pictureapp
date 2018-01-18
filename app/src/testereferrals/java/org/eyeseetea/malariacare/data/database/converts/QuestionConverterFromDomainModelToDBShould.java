@@ -23,7 +23,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Before
     public void setUp() throws Exception {
         converter = new QuestionConverterFromDomainModelToDB(
-                Injector.provideOptionConverter());
+                Injector.provideOptionConverter(),Injector.providePhoneFormatConverter());
     }
 
     @Test

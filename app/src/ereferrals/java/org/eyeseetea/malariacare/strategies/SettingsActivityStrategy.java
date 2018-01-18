@@ -54,6 +54,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onStop() {
         applicationdidenterbackground();
+        LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
                 settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
@@ -104,21 +105,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onStart() {
         applicationWillEnterForeground();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         LocalBroadcastManager.getInstance(settingsActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
-    }
-
     private void applicationWillEnterForeground() {
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
             EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);

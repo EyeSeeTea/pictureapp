@@ -18,10 +18,6 @@ public abstract class ASettingsActivityStrategy {
         this.settingsActivity = settingsActivity;
     }
 
-    public void onResume(){}
-
-    public void onPause(){}
-
     public abstract void onStop();
 
     public abstract void onCreate();

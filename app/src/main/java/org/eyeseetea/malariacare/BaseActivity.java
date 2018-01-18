@@ -270,7 +270,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public void onResume() {
-        mBaseActivityStrategy.onResume();
         super.onResume();
         Intent intent;
         intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName())
@@ -286,12 +285,6 @@ public abstract class BaseActivity extends ActionBarActivity {
             overridePendingTransition(0, 0);
             startActivity(intent);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        mBaseActivityStrategy.onPause();
-        super.onPause();
     }
 
     @Override

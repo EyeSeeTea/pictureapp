@@ -50,6 +50,10 @@ public class BaseActivityShould {
         synchronized (syncObject) {
             syncObject.wait(1000);
         }
+        isLoginActivityShowing();
+    }
+
+    private void isLoginActivityShowing() {
         ActivityManager am =
                 (ActivityManager) PreferencesState.getInstance().getContext().getSystemService(
                         ACTIVITY_SERVICE);
@@ -162,4 +166,5 @@ public class BaseActivityShould {
                 credentials.getPassword());
         PreferencesState.getInstance().reloadPreferences();
     }
+
 }

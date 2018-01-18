@@ -87,20 +87,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onStart() {
         mBaseActivity.registerReceiver(connectionReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        applicationWillEnterForeground();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         LocalBroadcastManager.getInstance(mBaseActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
+        applicationWillEnterForeground();
     }
 
     public void applicationdidenterbackground() {
@@ -194,6 +183,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onStop() {
         applicationdidenterbackground();
+        LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);

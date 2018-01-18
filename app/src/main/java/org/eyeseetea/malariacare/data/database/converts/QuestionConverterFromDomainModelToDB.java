@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
 import org.eyeseetea.malariacare.domain.entity.Option;
+import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -18,11 +20,14 @@ import java.util.List;
 public class QuestionConverterFromDomainModelToDB implements IConverter<Question, QuestionDB> {
 
     private IConverter<Option, OptionDB> optionConverter;
+    private IConverter<PhoneFormat, PhoneFormatDB> phoneFormatConverter;
 
     public QuestionConverterFromDomainModelToDB(
             @NotNull IConverter<Option, OptionDB>
-                    optionConverter) {
+                    optionConverter,
+            @NotNull IConverter<PhoneFormat, PhoneFormatDB> phoneFormatConverter) {
         this.optionConverter = optionConverter;
+        this.phoneFormatConverter = phoneFormatConverter;
     }
 
     @NotNull
@@ -31,6 +36,7 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
         QuestionDB dbModel = new QuestionDB();
 
         dbModel.setCode(domainModel.getCode());
+        dbModel.setUid(domainModel.getUid());
         dbModel.setOrder_pos(domainModel.getIndex());
         dbModel.setDe_name(domainModel.getName());
         dbModel.setForm_name(domainModel.getName());
@@ -40,8 +46,12 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
-
+        dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
         return dbModel;
+    }
+
+    private PhoneFormatDB getPhoneFormat(PhoneFormat  domainPhoneFormat){
+        return phoneFormatConverter.convert(domainPhoneFormat);
     }
 
     private long getHeaderID(@NotNull Question domainModel) {
@@ -93,6 +103,10 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
 
             case POSITIVE_INT:
                 finalOutput = Constants.POSITIVE_INT;
+                break;
+
+            case INT:
+                finalOutput = Constants.INT;
                 break;
 
             case PREGNANT_MONTH:

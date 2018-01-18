@@ -33,6 +33,9 @@ public class MetadataConfigurationsApi {
 
         public boolean visibility = true;
 
+        @JsonProperty("format")
+        public PhoneFormat phoneFormat;
+
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -56,6 +59,28 @@ public class MetadataConfigurationsApi {
         }
 
     }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class PhoneFormat{
+
+        public List<AcceptedFormat> accepted;
+        public FormatDetails details;
+
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static class AcceptedFormat{
+            public String starts;
+            public String length;
+            public String comment;
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static class FormatDetails{
+            public String trunkPrefix;
+            public String dialingCode;
+        }
+    }
+
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Rule {

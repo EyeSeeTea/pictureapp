@@ -8,25 +8,14 @@ public class Question {
     private long id;
     private String code;
     private String name;
+    private String uid;
+    private PhoneFormat phoneFormat;
     private Type type;
     private boolean compulsory;
     private List<Option> options;
     private Header header;
     private int index;
     private Visibility visibility;
-
-
-    public Question(String code, String name,
-            Type type, boolean compulsory,
-            List<Option> options, Header header, int index) {
-        this.code = code;
-        this.name = name;
-        this.type = type;
-        this.compulsory = compulsory;
-        this.options = options;
-        this.header = header;
-        this.index = index;
-    }
 
     public Question() {
     }
@@ -35,6 +24,8 @@ public class Question {
         setId(builder.id);
         setCode(builder.code);
         setName(builder.name);
+        setUid(builder.uid);
+        setPhoneFormat(builder.phoneFormat);
         setType(builder.type);
         setCompulsory(builder.compulsory);
         setOptions(builder.options);
@@ -43,33 +34,6 @@ public class Question {
         setVisibility(builder.visibility);
     }
 
-    public Question(long id, String code, String name,
-            Type type, boolean compulsory,
-            List<Option> options, Header header, int index) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.type = type;
-        this.compulsory = compulsory;
-        this.options = options;
-        this.header = header;
-        this.index = index;
-    }
-
-    public Question(long id, String code, String name,
-            Type type, boolean compulsory,
-            List<Option> options, Header header, int index,
-            Visibility visibility) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.type = type;
-        this.compulsory = compulsory;
-        this.options = options;
-        this.header = header;
-        this.index = index;
-        this.visibility = visibility;
-    }
 
     public static Builder newBuilder() {
         return new Builder();
@@ -141,18 +105,28 @@ public class Question {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "id='" + id + '\'' +
-                ", code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", compulsory=" + compulsory +
-                ", options=" + options +
-                ", header=" + header +
-                ", index=" + index +
-                '}';
+    public Visibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public PhoneFormat getPhoneFormat() {
+        return phoneFormat;
+    }
+
+    public void setPhoneFormat(PhoneFormat phoneFormat) {
+        this.phoneFormat = phoneFormat;
     }
 
     @Override
@@ -167,11 +141,18 @@ public class Question {
         if (index != question.index) return false;
         if (code != null ? !code.equals(question.code) : question.code != null) return false;
         if (name != null ? !name.equals(question.name) : question.name != null) return false;
+        if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
+        if (phoneFormat != null ? !phoneFormat.equals(question.phoneFormat)
+                : question.phoneFormat != null) {
+            return false;
+        }
         if (type != question.type) return false;
         if (options != null ? !options.equals(question.options) : question.options != null) {
             return false;
         }
-        return header != null ? header.equals(question.header) : question.header == null;
+        if (header != null ? !header.equals(question.header) : question.header != null)
+            return false;
+        return visibility == question.visibility;
     }
 
     @Override
@@ -179,20 +160,15 @@ public class Question {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (phoneFormat != null ? phoneFormat.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (compulsory ? 1 : 0);
         result = 31 * result + (options != null ? options.hashCode() : 0);
         result = 31 * result + (header != null ? header.hashCode() : 0);
         result = 31 * result + index;
+        result = 31 * result + (visibility != null ? visibility.hashCode() : 0);
         return result;
-    }
-
-    public Visibility getVisibility() {
-        return visibility;
-    }
-
-    public void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
     }
 
 
@@ -205,6 +181,8 @@ public class Question {
     public static final class Builder {
         private String code;
         private String name;
+        private String uid;
+        private PhoneFormat phoneFormat;
         private Type type;
         private boolean compulsory;
         private List<Option> options;
@@ -223,6 +201,16 @@ public class Question {
 
         public Builder name(String val) {
             name = val;
+            return this;
+        }
+
+        public Builder uid(String val) {
+            uid = val;
+            return this;
+        }
+
+        public Builder phoneFormat(PhoneFormat val) {
+            phoneFormat = val;
             return this;
         }
 

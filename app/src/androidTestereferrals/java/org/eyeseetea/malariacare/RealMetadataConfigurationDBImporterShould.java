@@ -7,16 +7,13 @@ import static org.eyeseetea.malariacare.common.configurationimporter.Configurati
 import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getOptionsDBCount;
 import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getQuestionDBCount;
 import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getQuestionOptionDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.loadMetadataFromCSV;
-
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 
 import com.squareup.okhttp.Credentials;
 
 import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.junit.After;
 import org.junit.Before;
@@ -26,12 +23,14 @@ public class RealMetadataConfigurationDBImporterShould {
 
     private MetadataConfigurationDBImporter importer;
 
+    private  final Program program = new Program("T_TZ","low6qUS2wc9");
+
     @Before
     public void setUp() throws Exception {
 
         cleanUsedTables();
 
-        String credentials = Credentials.basic("8001", "1234");
+        String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
 
         IMetadataConfigurationDataSource apiClient =
                 Injector.provideMetadataConfigurationDataSource(
@@ -40,11 +39,6 @@ public class RealMetadataConfigurationDBImporterShould {
         importer = new MetadataConfigurationDBImporter(
                 apiClient, Injector.provideQuestionConverter()
         );
-
-        Context context = InstrumentationRegistry.getTargetContext();
-
-        loadMetadataFromCSV(context);
-
     }
 
     @After
@@ -64,7 +58,7 @@ public class RealMetadataConfigurationDBImporterShould {
     }
 
     private void whenImportMetadata() throws Exception {
-        importer.importMetadata();
+        importer.importMetadata(program);
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {

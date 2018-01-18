@@ -229,7 +229,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     CommonQuestionView.hideKeyboard(listView.getContext(), listView);
                     next();
                 } else if (navigationController.isLastQuestionWithValue()) {
-                    hideKeyboard(listView.getContext(), listView);
+                    CommonQuestionView.hideKeyboard(listView.getContext(), listView);
                     finishOrNext();
                 }
             }

@@ -152,8 +152,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
                             loginActivity.getUsernameEditText().setEnabled(false);
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
-                            CommonQuestionView.showKeyboard(
-                                    loginActivity.getUsernameEditText().getContext(), passwordHint);
+                            CommonQuestionView.showKeyboard(loginActivity,
+                                    loginActivity.getPasswordEditText());
                         } else {
                             loginType = LoginType.FULL;
                             loginActivity.getUsernameEditText().setEnabled(true);

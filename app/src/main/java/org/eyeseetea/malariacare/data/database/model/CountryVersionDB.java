@@ -4,6 +4,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.annotation.Unique;
+import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -46,25 +47,17 @@ public class CountryVersionDB extends BaseModel {
         this.uid = uid;
     }
 
-    public static boolean isCountryAlreadyAdded(String countryUID) {
-        long count = new Select()
-                .from(CountryVersionDB.class)
-                .where((CountryVersionDB_Table.uid)
-                        .eq(countryUID))
-                .queryList()
-                .size();
-
+    public static boolean isCountryAlreadyAdded(String countryCode) {
+        long count = new Select(Method.count())
+                .from(CountryVersionDB.class).where(
+                        (CountryVersionDB_Table.country).is(countryCode.toLowerCase())).count();
         return count == 1;
     }
 
-    public static boolean isVersionGreater(String countryUID, int version) {
-        CountryVersionDB countryVersionDB = new Select(CountryVersionDB_Table.version)
-                .from(CountryVersionDB.class)
-                .where((CountryVersionDB_Table.uid)
-                        .eq(countryUID))
-                .querySingle();
-
-        int versionDB = (countryVersionDB != null) ? countryVersionDB.getVersion() : 0;
+    public static boolean isVersionGreater(String countryCode, int version) {
+        long versionDB = new Select(CountryVersionDB_Table.version)
+                .from(CountryVersionDB.class).where(
+                        (CountryVersionDB_Table.country).is(countryCode)).count();
         return version > versionDB;
     }
 

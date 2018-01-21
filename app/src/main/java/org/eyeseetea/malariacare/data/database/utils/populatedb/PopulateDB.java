@@ -34,7 +34,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
-import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
 import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
@@ -129,8 +128,7 @@ public class PopulateDB {
             DrugCombinationDB.class,
             TreatmentMatchDB.class,
             OrgUnitLevelDB.class,
-            OrgUnitDB.class,
-            CountryVersionDB.class
+            OrgUnitDB.class
     );
 
     private static final List<String> tables2populate = Arrays.asList(

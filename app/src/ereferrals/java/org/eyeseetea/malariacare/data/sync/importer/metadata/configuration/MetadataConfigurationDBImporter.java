@@ -25,13 +25,17 @@ import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MetadataConfigurationDBImporter {
 
     private IConverter<Question, QuestionDB> converter;
 
     private List<QuestionOptionDB> pendingOptionsWithRules = new ArrayList<>();
+    private List<QuestionThresholdDB> pendingThresholdWithRules = new ArrayList<>();
+    private Map<String, QuestionDB> mapQuestionsDBByCode = new HashMap<>();
 
     private CountryVersionConverterFromDomainModelToDB converterCountry =
             new CountryVersionConverterFromDomainModelToDB();
@@ -123,24 +127,24 @@ public class MetadataConfigurationDBImporter {
 
     private void processCountryData(Configuration.CountryVersion country) throws Exception {
 
-        String countryCode = country.getCountry();
+        String countryUID = country.getUid();
         int version = country.getVersion();
 
-        if (isCountryNotAlreadyAdded(countryCode)) {
+        if (isCountryNotAlreadyAdded(countryUID)) {
             updateMetadataFor(country);
 
-        } else if (hasMetadataBeenUpdatedFor(countryCode, version)) {
+        } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
             updateMetadataFor(country);
         }
     }
 
-    private boolean hasMetadataBeenUpdatedFor(String countryCode, int version) {
-        return CountryVersionDB.isVersionGreater(countryCode, version);
+    private boolean hasMetadataBeenUpdatedFor(String countryUID, int version) {
+        return CountryVersionDB.isVersionGreater(countryUID, version);
     }
 
-    private boolean isCountryNotAlreadyAdded(String countryCode) {
-        return !CountryVersionDB.isCountryAlreadyAdded(countryCode);
+    private boolean isCountryNotAlreadyAdded(String countryUID) {
+        return !CountryVersionDB.isCountryAlreadyAdded(countryUID);
     }
 
     private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
@@ -163,9 +167,60 @@ public class MetadataConfigurationDBImporter {
             AnswerDB answerDB = newAnswerDBWith(questionDB);
             questionDB.setAnswer(answerDB);
             save(questionDB);
+
+            mapQuestionsDBByCode.put(questionDB.getCode(), questionDB);
+
+            if (question.getRules() != null) {
+
+                for (Question.Rule rule : question.getRules()) {
+                    for (Question.Rule.Condition condition : rule.getConditions()) {
+                        addThreshold(questionDB, rule, condition, condition.getOperator());
+                    }
+                }
+            }
         }
 
         addingRulesToQuestion();
+    }
+
+    private void addThreshold(QuestionDB questionDB, Question.Rule rule,
+            Question.Rule.Condition condition,
+            Question.Rule.Operator operator) {
+        int value = Integer.parseInt(condition.getRight().getValue());
+        QuestionThresholdDB questionThresholdDB = new QuestionThresholdDB();
+
+        switch (operator) {
+            case EQUAL: {
+                questionThresholdDB.setMinValue(value);
+                questionThresholdDB.setMaxValue(value);
+                break;
+            }
+            case GREATER_THAN: {
+                questionThresholdDB.setMinValue(value + 1);
+                break;
+            }
+            case GREATER_OR_EQUAL_THAN: {
+                questionThresholdDB.setMinValue(value);
+                break;
+            }
+            case LESS_THAN: {
+                questionThresholdDB.setMaxValue(value - 1);
+                break;
+            }
+            case LESS_OR_EQUAL_THAN: {
+                questionThresholdDB.setMaxValue(value);
+                break;
+            }
+        }
+
+        questionThresholdDB.setQuestionDB(questionDB);
+        pendingThresholdWithRules.add(questionThresholdDB);
+
+        List<String> matchQuestionsCode = new ArrayList<>();
+        for (Question.Rule.Action action : rule.getActions()) {
+            matchQuestionsCode.add(action.getTargetQuestion());
+        }
+        questionThresholdDB.setMatchQuestionsCode(matchQuestionsCode);
     }
 
     private void setQuestionRelations(QuestionDB questionDB, Configuration.CountryVersion country) {
@@ -186,7 +241,7 @@ public class MetadataConfigurationDBImporter {
 
     private void addPhoneFormatIfRequired(QuestionDB questionDB, ProgramDB programDB) {
         PhoneFormatDB phoneFormatDB = questionDB.getPhoneFormatDB();
-        if(phoneFormatDB !=null){
+        if (phoneFormatDB != null) {
             phoneFormatDB.setId_program_fk(programDB.getId_program());
             phoneFormatDB.save();
 
@@ -201,7 +256,7 @@ public class MetadataConfigurationDBImporter {
 
             for (String matchQuestionCode : matchQuestionsCode) {
 
-                QuestionDB questionMatch = QuestionDB.findByCode(matchQuestionCode);
+                QuestionDB questionMatch = mapQuestionsDBByCode.get(matchQuestionCode);
 
                 QuestionRelationDB questionRelationDB = saveQuestionRelationDB(questionMatch);
 
@@ -211,6 +266,24 @@ public class MetadataConfigurationDBImporter {
             }
 
         }
+
+        for (QuestionThresholdDB questionThresholdDB : pendingThresholdWithRules) {
+            List<String> matchQuestionsCode = questionThresholdDB.getMatchQuestionsCode();
+
+            for (String matchQuestionCode : matchQuestionsCode) {
+
+                QuestionDB questionMatch = mapQuestionsDBByCode.get(matchQuestionCode);
+
+                QuestionRelationDB questionRelationDB = saveQuestionRelationDB(questionMatch);
+
+                MatchDB matchDB = saveMatchDB(questionRelationDB);
+
+                questionThresholdDB.setMatchDB(matchDB);
+                questionThresholdDB.save();
+            }
+        }
+
+
     }
 
     private void saveQuestionOption(QuestionOptionDB questionOptionDBContainer,

@@ -64,6 +64,8 @@ public class QuestionThresholdDB extends BaseModel {
     @Column
     Integer maxValue;
 
+    private List<String> matchQuestionsCode;
+
     public QuestionThresholdDB() {
     }
 
@@ -73,6 +75,14 @@ public class QuestionThresholdDB extends BaseModel {
         setMatchDB(matchDB);
         this.minValue = minValue;
         this.maxValue = maxValue;
+    }
+
+    public List<String> getMatchQuestionsCode() {
+        return matchQuestionsCode;
+    }
+
+    public void setMatchQuestionsCode(List<String> matchQuestionsCode) {
+        this.matchQuestionsCode = matchQuestionsCode;
     }
 
     public static QuestionThresholdDB findByQuestionAndOption(QuestionDB questionDBWithOption,
@@ -225,6 +235,20 @@ public class QuestionThresholdDB extends BaseModel {
         return okLowerBound && okUpperBound;
     }
 
+    public static boolean areInThreadHold(String value,List<QuestionThresholdDB> thresholdDBS){
+        boolean areInThreadHold = false;
+
+        for (QuestionThresholdDB thresholdDB : thresholdDBS) {
+
+            if (thresholdDB.isInThreshold(value)) {
+                areInThreadHold = true;
+            } else {
+                areInThreadHold = false;
+                break;
+            }
+        }
+        return areInThreadHold;
+    }
 
     public static List<QuestionThresholdDB> getQuestionThresholdsWithMatch(Long matchId) {
         return new Select()

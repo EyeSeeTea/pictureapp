@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.utils.ViewUtils.toggleText;
-import static org.eyeseetea.malariacare.utils.ViewUtils.toggleVisibility;
+import static org.eyeseetea.malariacare.views.ViewUtils.toggleText;
+import static org.eyeseetea.malariacare.views.ViewUtils.toggleVisibility;
 
 import android.app.Activity;
 import android.content.DialogInterface;

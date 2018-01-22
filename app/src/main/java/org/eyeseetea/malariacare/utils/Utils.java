@@ -85,7 +85,7 @@ public class Utils {
         String translation = getLocalizedStringFromDB(key, language);
 
         if (key == null) {
-            return key;
+            return "";
         }
 
         if (BuildConfig.activeSearchLanguageInDB &&

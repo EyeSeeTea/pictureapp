@@ -71,6 +71,7 @@ android {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
             versionName "1.3.3"
+            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -91,6 +92,7 @@ android {
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
             versionName "1.2.3"
+            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -111,6 +113,7 @@ android {
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
             versionName "1.0.3"
+            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
@@ -131,6 +134,7 @@ android {
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
             versionName "1.0.6"
+            buildConfigField "boolean", "activeSearchLanguageInDB", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
@@ -151,6 +155,7 @@ android {
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
             versionName "0.2.0"
+            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -198,11 +203,12 @@ dependencies {
     apply plugin: 'com.github.dcendents.android-maven'
 
     //Android support
+    compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
     //3rd party dependencies
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"

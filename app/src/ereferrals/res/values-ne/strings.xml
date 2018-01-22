@@ -5,7 +5,8 @@
 <string name="login_userName">"प्रयोगकर्ता कोड"</string>
 <string name="login_password">"पिन"</string>
 <string name="advanced_options">"उन्नत विकल्पहरू"</string>
-<string name="server_url">सर्भर URL</string>
+<string name="simple_options">"सरल विकल्पहरू"</string>
+<string name="server_url">"सर्भर URL"</string>
 
 
 <!-- Open Referrals -->

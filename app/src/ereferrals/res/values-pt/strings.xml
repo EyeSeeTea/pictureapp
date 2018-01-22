@@ -5,6 +5,7 @@
 <string name="login_userName">"Código de usuário"</string>
 <string name="login_password">"PIN"</string>
 <string name="advanced_options">"Opções avançadas"</string>
+<string name="simple_options">"Opções simples"</string>
 
 
     <!-- Open Referrals -->

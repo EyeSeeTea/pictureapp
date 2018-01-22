@@ -62,26 +62,26 @@ public class Utils {
         return round(base, Utils.numberOfDecimals);
     }
 
-    private static String getUserLanguage(@NonNull Context ctx) {
+    private static String getUserLanguage(@NonNull Context context) {
         String activeLocale = PreferencesState.getInstance().getLanguageCode();
 
         if (activeLocale != null || activeLocale.isEmpty()) {
-            activeLocale = ctx.getResources().getConfiguration().locale.getLanguage();
+            activeLocale = context.getResources().getConfiguration().locale.getLanguage();
         }
         return activeLocale;
     }
 
     @StringRes
-    private static int getStringResBy(@NonNull String key, @NonNull Context ctx) {
-        return ctx.getResources().getIdentifier(key, "string",
-                ctx.getPackageName());
+    private static int getStringResByKey(@NonNull String key, @NonNull Context context) {
+        return context.getResources().getIdentifier(key, "string",
+                context.getPackageName());
     }
 
 
     @NonNull
     public static String getInternationalizedString(@NonNull String key) {
-        Context ctx = PreferencesState.getInstance().getContext();
-        String language = getUserLanguage(ctx);
+        Context context = PreferencesState.getInstance().getContext();
+        String language = getUserLanguage(context);
         String translation = getLocalizedStringFromDB(key, language);
 
         if (key == null) {
@@ -92,21 +92,21 @@ public class Utils {
                 wasTranslationFound(translation)) {
             return translation;
         } else {
-            return findStringFromAndroidResource(ctx, key, language);
+            return findStringFromAndroidResource(context, key, language);
         }
     }
 
     @NonNull
-    private static String findStringFromAndroidResource(Context ctx, @NonNull String key,
+    private static String findStringFromAndroidResource(Context context, @NonNull String key,
             String languageCode) {
 
-        int identifier = getStringResBy(key, ctx);
+        int identifier = getStringResByKey(key, context);
         String translation = "";
 
         //if the id is 0 it not exist.
         if (identifier != 0) {
             try {
-                translation = getLocateString(ctx, languageCode, identifier);
+                translation = getLocateString(context, languageCode, identifier);
             } catch (Resources.NotFoundException notFoundException) {
                 translation = key;
             }
@@ -117,12 +117,12 @@ public class Utils {
     }
 
     @NonNull
-    private static String getLocateString(Context ctx, String locate, @StringRes int stringId) {
-        DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();
-        Resources r = ctx.getResources();
+    private static String getLocateString(Context context, String locate, @StringRes int stringId) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        Resources r = context.getResources();
         Configuration c = r.getConfiguration();
         c.locale = new Locale(locate);
-        Resources res = new Resources(ctx.getAssets(), metrics, c);
+        Resources res = new Resources(context.getAssets(), metrics, c);
         return res.getString(stringId);
     }
 

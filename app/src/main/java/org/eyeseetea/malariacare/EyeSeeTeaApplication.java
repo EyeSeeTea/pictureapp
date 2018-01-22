@@ -65,7 +65,8 @@ public class EyeSeeTeaApplication extends Application {
                 .build();
 
         if (BuildConfig.DEBUG) {
-            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V); // set to verbose logging
+            // Set to verbose logging of select and delete instructions in DBFlow
+            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
         }
 
         FlowManager.init(flowConfig);

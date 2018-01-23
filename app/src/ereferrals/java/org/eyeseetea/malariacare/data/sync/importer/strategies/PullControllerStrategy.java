@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
@@ -86,7 +88,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
         if (isDemo) {
             mMetadataUpdater.updateMetadata();
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-            ProgramDB programDB = ProgramDB.getFirstProgram();
+            ProgramDB programDB = ProgramDB.findByUID(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.demo_program_uid));
             Program program = new Program(programDB.getName(), programDB.getUid());
             programLocalDataSource.saveUserProgramId(program);
             callback.onComplete();

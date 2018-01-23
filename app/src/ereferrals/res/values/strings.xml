@@ -394,6 +394,7 @@
 <!-- Fuzzy -->
 <string name="login_btn_login">"Login"</string>
 <string name="advanced_options">"Advanced Options"</string>
+<string name="simple_options">"Simple Options"</string>
 
     <!-- Voucher event create responseCode not 200, but -->
 <!-- Fuzzy -->

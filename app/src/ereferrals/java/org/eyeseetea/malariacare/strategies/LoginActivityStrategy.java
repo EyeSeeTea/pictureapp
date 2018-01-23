@@ -1,5 +1,8 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.views.ViewUtils.toggleText;
+import static org.eyeseetea.malariacare.views.ViewUtils.toggleVisibility;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -154,10 +157,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
                             CommonQuestionView.showKeyboard(loginActivity,
                                     loginActivity.getPasswordEditText());
+                            loginActivity.getPasswordEditText().requestFocus();
                         } else {
                             loginType = LoginType.FULL;
                             loginActivity.getUsernameEditText().setEnabled(true);
                             loginActivity.getUsernameEditText().setText("");
+
                         }
                     }
                 });
@@ -209,7 +214,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void initAdvancedOptionsButton() {
-        Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
+        final Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,17 +230,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         break;
                 }
                 toggleVisibility(serverURLContainer);
+                toggleText(advancedOptions,R.string.advanced_options,R.string.simple_options);
             }
         });
     }
 
-    private void toggleVisibility(View view) {
-        int visibility = View.VISIBLE;
-        if (view.getVisibility() == View.VISIBLE) {
-            visibility = View.GONE;
-        }
-        view.setVisibility(visibility);
-    }
 
     private void initServerURLField() {
         serverURLContainer = loginActivity.findViewById(R.id.text_layout_server_url);

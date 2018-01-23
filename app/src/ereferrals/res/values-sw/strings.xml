@@ -5,10 +5,11 @@
     <string name="common_option_method_none">"Hatumii"</string>
     <string name="common_option_method_other">"nyingine"</string>
     <string name="login_pin">"siri"</string>
-
+    <string name="advanced_options">"Chaguzi za Juu"</string>
+    <string name="simple_options">"Chaguzi Rahisi"</string>
     <string name="error_web">errorpage_sw.html</string>
     <string name="demo_web">demopage_sw.html</string>
-
+    <string name="clear_and_logout">Futa na uingie</string>
     <string name="app_settings">"Vipimo vya"</string>
     <string name="server">"Seva:"</string>
     <string name="server_name">"DHIS Seva URL"</string>
@@ -168,7 +169,7 @@
     <string name="webservice_url_error">"Hitilafu kujenga huduma ya mtandao: %s"</string>
     <string name="google_play_required">Den här appen kräver Google Play Services. Installera Google Play Services på din enhet och starta om den här appen igen.</string>
     <string name="voucher">"Voucher"</string>
-    <string name="forgot_password">I forgot my password</string>
+    <string name="forgot_password">Nimesahau PIN yangu</string>
     <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
     <string name="ws_unknown_exception">Unknown exception.</string>
@@ -180,8 +181,8 @@
 
 
     <!-- TERMS FROM POEDITOR -->
-    <string name="login_userName">"Jina la mtumiaji"</string>
-    <string name="login_password">"Namba ya siri"</string>
+    <string name="login_userName">"Kanuni ya mtumiaji"</string>
+    <string name="login_password">"PIN"</string>
 
     <!-- Open Referrals -->
     <string name="ipc_menu_openReferrals">"Rufaa ambazo hazijafanyiwa kazi"</string>

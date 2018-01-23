@@ -16,9 +16,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 
@@ -87,7 +85,8 @@ public class PopulateRow {
         return programDB;
     }
 
-    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK, @Nullable TabDB tabDB) {
+    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK,
+            @Nullable TabDB tabDB) {
         if (tabDB == null) {
             tabDB = new TabDB();
         }
@@ -125,7 +124,8 @@ public class PopulateRow {
         return questionThresholdDB;
     }
 
-    static QuestionOptionDB populateQuestionOption(String[] line, HashMap<Long, QuestionDB> questionFK,
+    static QuestionOptionDB populateQuestionOption(String[] line,
+            HashMap<Long, QuestionDB> questionFK,
             HashMap<Long, OptionDB> optionFK, HashMap<Long, MatchDB> matchFK,
             @Nullable QuestionOptionDB questionOptionDB) {
         if (questionOptionDB == null) {
@@ -188,16 +188,15 @@ public class PopulateRow {
      * Method to populate each row of TreatmentDB.csv, execute after populateOrganisations.
      *
      * @param line The row of the csv to populate.
-     * @param stringKeyList
      */
     static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
-            HashMap<Long, StringKeyDB> stringKeyList, @Nullable TreatmentDB treatmentDB) {
+            @Nullable TreatmentDB treatmentDB) {
         if (treatmentDB == null) {
             treatmentDB = new TreatmentDB();
         }
         treatmentDB.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
-        treatmentDB.setDiagnosis(stringKeyList.get(Long.valueOf(line[2])).getId_string_key());
-        treatmentDB.setMessage(stringKeyList.get(Long.valueOf(line[3])).getId_string_key());
+        treatmentDB.setDiagnosis(line[2]); // string_key
+        treatmentDB.setMessage(line[3]); // string_key
         treatmentDB.setType(Integer.parseInt(line[4]));
         return treatmentDB;
     }
@@ -244,26 +243,6 @@ public class PopulateRow {
                     optionAttributeFK.get(Long.valueOf(line[5])));
         }
         return optionDB;
-    }
-
-    static StringKeyDB populateStringKey(String[] line, @Nullable StringKeyDB stringKeyDB) {
-        if (stringKeyDB == null) {
-            stringKeyDB = new StringKeyDB();
-        }
-        stringKeyDB.setKey(line[1]);
-        return stringKeyDB;
-    }
-
-    public static TranslationDB populateTranslation(String[] line,
-            HashMap<Long, StringKeyDB> stringKeyFK,
-            TranslationDB translationDB) {
-        if (translationDB == null) {
-            translationDB = new TranslationDB();
-        }
-        translationDB.setId_string_key(stringKeyFK.get(Long.valueOf(line[1])).getId_string_key());
-        translationDB.setTranslation(line[2]);
-        translationDB.setLanguage(line[3]);
-        return translationDB;
     }
 
     public static PhoneFormatDB populatePhoneFormat(String[] line,

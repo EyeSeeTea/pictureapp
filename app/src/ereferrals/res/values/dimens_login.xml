@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="layout_content_padding">8dp</dimen>
+
+    <!--Logo Settings-->
+    <dimen name="logo_img_width">110dp</dimen>
+    <dimen name="logo_img_height">110dp</dimen>
+    <dimen name="circle_radius">50dp</dimen>
+    <dimen name="number_text_size">74sp</dimen>
+
+    <!--CardView Settings-->
+    <dimen name="login_container_padding">16dp</dimen>
+    <dimen name="login_container_radius">4dp</dimen>
+    <dimen name="login_container_elevation">4dp</dimen>
+
+    <!--Default Button Settings-->
+    <dimen name="custom_button_width">196dp</dimen>
+    <dimen name="custom_button_height">40dp</dimen>
+    <dimen name="custom_button_text_size">17sp</dimen>
+
+    <!--Demo Button Settings-->
+    <dimen name="demo_button_width">180dp</dimen>
+    <dimen name="demo_button_margin_top">4dp</dimen>
+
+    <dimen name="edit_text_bottom_separation">4dp</dimen>
+    <dimen name="edit_text_height">56dp</dimen>
+    <dimen name="password_bottom_separation">16dp</dimen>
+
+    <dimen name="default_bottom_separation">8dp</dimen>
+
+
+</resources>

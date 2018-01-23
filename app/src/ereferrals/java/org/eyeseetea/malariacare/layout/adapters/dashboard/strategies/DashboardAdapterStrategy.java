@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
@@ -12,6 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         String firstImportant = "", secondImportant = "", visibleValues = "";
 
         Context context = PreferencesState.getInstance().getContext();
+        LinearLayout container = (LinearLayout) rowView.findViewById(R.id.assessment_row);
         TextView dateText = (TextView) rowView.findViewById(R.id.completion_date);
         TextView hourText = (TextView) rowView.findViewById(R.id.survey_hour);
         TextView importantText = (TextView) rowView.findViewById(R.id.important_visible_text);
@@ -98,7 +101,28 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         importantText.setText(asterisk + firstImportant + " " + secondImportant);
         visibleValuesText.setText(visibleValues);
 
+        rowView.setBackgroundColor(
+                context.getResources().getColor(getColorForStatus(survey.getStatus())));
     }
+
+    private int getColorForStatus(Integer status) {
+        switch (status) {
+            case Constants.SURVEY_IN_PROGRESS:
+                return R.color.gray_survey_in_progress;
+            case Constants.SURVEY_COMPLETED:
+                return R.color.gray_survey_completed;
+            case Constants.SURVEY_SENT:
+                return R.color.green_survey_sent;
+            case Constants.SURVEY_CONFLICT:
+                return R.color.red_survey_conflict;
+            case Constants.SURVEY_QUARANTINE:
+                return R.color.brown_survey_quarantine;
+            case Constants.SURVEY_SENDING:
+                return R.color.blue_survey_sending;
+        }
+        return R.color.grey_tab_unselected_ereferrals;
+    }
+
     @Override
     public boolean hasAllComplementarySurveys(SurveyDB malariaSurvey) {
         return true;

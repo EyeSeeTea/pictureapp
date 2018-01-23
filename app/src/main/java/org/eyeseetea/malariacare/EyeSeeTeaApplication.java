@@ -62,6 +62,7 @@ public class EyeSeeTeaApplication extends Application {
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
         }else{
+            // Set to verbose logging of select and delete instructions in DBFlow
             FlowLog.setMinimumLoggingLevel(FlowLog.Level.V); // set to verbose logging
         }
 
@@ -71,7 +72,6 @@ public class EyeSeeTeaApplication extends Application {
                 .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
                 .build();
         FlowManager.init(flowConfig);
-
     }
 
     @Override

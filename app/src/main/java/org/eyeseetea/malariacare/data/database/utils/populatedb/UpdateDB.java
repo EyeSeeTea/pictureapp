@@ -14,8 +14,8 @@ import android.content.Context;
 import com.opencsv.CSVReader;
 
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
-import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
@@ -26,9 +26,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
@@ -261,7 +259,8 @@ public class UpdateDB {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_THRESHOLDS_CSV);
         }
-        List<QuestionThresholdDB> questionThresholdDBs = QuestionThresholdDB.getAllQuestionThresholds();
+        List<QuestionThresholdDB> questionThresholdDBs =
+                QuestionThresholdDB.getAllQuestionThresholds();
         HashMap<Long, MatchDB> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
         HashMap<Long, QuestionDB> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
@@ -276,7 +275,8 @@ public class UpdateDB {
                 PopulateRow.populateQuestionThreshold(line, matchIds, questionsIds,
                         questionThresholdDBs.get(i)).save();
             } else {
-                QuestionThresholdDB questionThresholdDB = PopulateRow.populateQuestionThreshold(line,
+                QuestionThresholdDB questionThresholdDB = PopulateRow.populateQuestionThreshold(
+                        line,
                         matchIds, questionsIds, null);
                 questionThresholdDB.insert();
             }
@@ -352,8 +352,6 @@ public class UpdateDB {
         List<TreatmentDB> treatmentDBs = TreatmentDB.getAllTreatments();
         HashMap<Long, PartnerDB> organisationIds =
                 RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
-        HashMap<Long, StringKeyDB> stringKeyIds = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
-                context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_CSV)),
                 SEPARATOR, QUOTECHAR);
@@ -361,10 +359,11 @@ public class UpdateDB {
         int i = 0;
         while ((line = reader.readNext()) != null) {
             if (i < treatmentDBs.size()) {
-                PopulateRow.populateTreatments(line, organisationIds, stringKeyIds,
+                PopulateRow.populateTreatments(line, organisationIds,
                         treatmentDBs.get(i)).save();
             } else {
-                PopulateRow.populateTreatments(line, organisationIds, stringKeyIds, null).insert();
+                PopulateRow.populateTreatments(line, organisationIds,
+                        null).insert();
             }
             i++;
         }
@@ -434,53 +433,6 @@ public class UpdateDB {
         }
     }
 
-    public static void updateStringKeys(Context context, boolean updateCSV) throws IOException {
-        if (updateCSV) {
-            FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.STRING_KEY_CSV);
-        }
-        List<StringKeyDB> stringKeyDBs = StringKeyDB.getAllStringKeys();
-        CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.STRING_KEY_CSV)),
-                SEPARATOR, QUOTECHAR);
-        String line[];
-        int i = 0;
-        while ((line = reader.readNext()) != null) {
-            if (i < stringKeyDBs.size()) {
-                PopulateRow.populateStringKey(line, stringKeyDBs.get(i)).save();
-            } else {
-                PopulateRow.populateStringKey(line, null).insert();
-            }
-            i++;
-        }
-    }
-
-    public static void updateTranslations(Context context, boolean updateCsv) throws IOException {
-        if (updateCsv) {
-            FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TRANSLATION_CSV);
-        }
-        List<TranslationDB> translationDBs = TranslationDB.getAllTranslations();
-        HashMap<Long, StringKeyDB> stringKeyFK = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
-                context);
-        CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.TRANSLATION_CSV)),
-                SEPARATOR, QUOTECHAR);
-        String line[];
-        int i = 0;
-        while ((line = reader.readNext()) != null) {
-            if (i < translationDBs.size()) {
-                PopulateRow.populateTranslation(line, stringKeyFK, translationDBs.get(i)).save();
-            } else {
-                PopulateRow.populateTranslation(line, stringKeyFK, null).insert();
-            }
-            i++;
-        }
-
-    }
-
-
-
     public static void insertLastLines(int numeberLines, Context context)
             throws IOException {
         HashMap<Long, AnswerDB> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
@@ -500,12 +452,12 @@ public class UpdateDB {
     public static void updateQuestionOrder(Context context) throws IOException {
         List<QuestionDB> questionDBs = QuestionDB.getAllQuestions();
         CSVReader reader = new CSVReader(
-                        new InputStreamReader(new PopulateDBStrategy().openFile(context, QUESTIONS_CSV)),
-                        SEPARATOR, QUOTECHAR);
+                new InputStreamReader(new PopulateDBStrategy().openFile(context, QUESTIONS_CSV)),
+                SEPARATOR, QUOTECHAR);
         String line[];
         while ((line = reader.readNext()) != null) {
             for (QuestionDB questionDB : questionDBs) {
-                if(questionDB.getUid().equals(line[5])) {
+                if (questionDB.getUid().equals(line[5])) {
                     questionDB.setOrder_pos(Integer.valueOf(line[6]));
                     questionDB.save();
                 }
@@ -517,12 +469,13 @@ public class UpdateDB {
     public static void updateOptionAttributes(Context context) throws IOException {
         List<OptionAttributeDB> optionsAttributes = OptionAttributeDB.getAllOptionAttributes();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(new PopulateDBStrategy().openFile(context, OPTION_ATTRIBUTES_CSV)),
+                new InputStreamReader(
+                        new PopulateDBStrategy().openFile(context, OPTION_ATTRIBUTES_CSV)),
                 SEPARATOR, QUOTECHAR);
         String line[];
         while ((line = reader.readNext()) != null) {
             for (OptionAttributeDB optionsAttribute : optionsAttributes) {
-                if(optionsAttribute.getId_option_attribute()==Integer.valueOf(line[0])) {
+                if (optionsAttribute.getId_option_attribute() == Integer.valueOf(line[0])) {
                     optionsAttribute.setBackground_colour(line[1]);
                     optionsAttribute.save();
                 }

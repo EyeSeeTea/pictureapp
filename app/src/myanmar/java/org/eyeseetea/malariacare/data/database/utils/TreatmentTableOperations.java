@@ -11,7 +11,6 @@ import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
@@ -26,8 +25,6 @@ import java.util.List;
 
 public class TreatmentTableOperations {
     private static final List<String> csvsToDelete = Arrays.asList(
-            PopulateDB.STRING_KEY_CSV,
-            PopulateDB.TRANSLATION_CSV,
             PopulateDB.MATCHES,
             PopulateDB.QUESTION_OPTIONS_CSV,
             PopulateDB.QUESTION_THRESHOLDS_CSV,
@@ -252,7 +249,7 @@ public class TreatmentTableOperations {
         String[] organisationLine = addOrganisationLine(line, organisationLines);
         String[] treatmentLine = {getNextIdToInsert(treatmentLines), organisationLine[0],
                 getLastIdInserted(
-                diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
+                        diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
                 ? TreatmentDB.TYPE_MAIN : TreatmentDB.TYPE_NOT_MAIN) + ""};
         mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_CSV, treatmentLine);
         treatmentLines.add(treatmentLine);

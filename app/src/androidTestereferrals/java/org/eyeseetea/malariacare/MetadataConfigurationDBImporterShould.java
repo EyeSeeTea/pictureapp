@@ -42,11 +42,7 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
 
         enqueueResponse(MZ_CONFIG_ANDROID_1_0_JSON);
 
-        cleanQuestionsTable();
-
-
         shouldNotBeAnyQuestionInTheDB();
-
 
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
                 Injector.provideQuestionConverter()
@@ -58,7 +54,6 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
         } catch (Exception e) {
             Assert.fail();
         }
-
 
         shouldBeInDB(16, 28, 28);
     }
@@ -96,12 +91,6 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
     private int getQuestionDBCount() {
         List<QuestionDB> questionDBS = QuestionDB.getAllQuestions();
         return questionDBS.size();
-    }
-
-    private void cleanQuestionsTable() {
-        QuestionDB.deleteAll();
-        OptionDB.deleteAll();
-        QuestionOptionDB.deleteAll();
     }
 
     @Override

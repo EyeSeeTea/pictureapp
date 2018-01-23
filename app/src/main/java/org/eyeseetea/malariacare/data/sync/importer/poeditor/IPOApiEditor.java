@@ -10,7 +10,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-public interface IPOEditorApi {
+public interface IPOApiEditor {
 
     @FormUrlEncoded
     @POST("v2/languages/list")

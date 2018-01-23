@@ -6,7 +6,7 @@ import static org.hamcrest.core.Is.is;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.di.AppFactory;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -23,7 +23,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Before
     public void setUp() throws Exception {
         converter = new QuestionConverterFromDomainModelToDB(
-                Injector.provideOptionConverter());
+                AppFactory.provideOptionConverter());
     }
 
     @Test

@@ -10,7 +10,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.di.AppFactory;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
@@ -90,10 +90,10 @@ public class SplashScreenActivity extends Activity {
             String token = cr.getPOEditorToken();
             String projectID = cr.getPOEditorProjectID();
 
-            ILanguagesClient client = Injector.provideLanguageClient(projectID, token);
-            IConnectivityManager connectivity = Injector.provideConnectivityMN(this);
+            ILanguagesClient client = AppFactory.provideLanguageClient(projectID, token);
+            IConnectivityManager connectivity = AppFactory.provideConnectivityMN(this);
 
-            LanguageDownloader downloader = Injector.provideLanguageDownloader(client,
+            LanguageDownloader downloader = AppFactory.provideLanguageDownloader(client,
                     connectivity);
 
             downloader.start();

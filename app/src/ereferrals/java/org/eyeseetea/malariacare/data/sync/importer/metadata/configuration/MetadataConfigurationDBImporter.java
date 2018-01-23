@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
 import org.eyeseetea.malariacare.domain.entity.Question;
 

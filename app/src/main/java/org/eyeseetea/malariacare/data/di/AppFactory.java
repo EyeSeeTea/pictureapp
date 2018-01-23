@@ -24,7 +24,7 @@ import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-public class Injector {
+public class AppFactory {
 
     private static IConnectivityManager connectivityMN;
     private static IConverter<Question, QuestionDB> questionConverterDomainToDb;
@@ -92,9 +92,6 @@ public class Injector {
         if (optionConverterDomainToDb == null) {
             optionConverterDomainToDb = new OptionConverterFromDomainModelToDB();
         }
-
         return optionConverterDomainToDb;
     }
-
-
 }

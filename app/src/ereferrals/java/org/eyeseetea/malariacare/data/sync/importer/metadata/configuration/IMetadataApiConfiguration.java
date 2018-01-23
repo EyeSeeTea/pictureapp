@@ -6,7 +6,7 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface IMetadataConfigurationApi {
+public interface IMetadataApiConfiguration {
 
     @GET("api")
     Call<MetadataConfigurationsApi> getConfiguration();

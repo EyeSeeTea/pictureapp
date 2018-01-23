@@ -3,7 +3,8 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 import android.support.annotation.NonNull;
 
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.di.AppFactory;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -18,17 +19,17 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class MetadataConfigurationApiClient implements IMetadataConfigurationDataSource {
 
-    private IMetadataConfigurationApi configurationApi;
+    private IMetadataApiConfiguration configurationApi;
 
     public MetadataConfigurationApiClient(String url) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
-                .client(Injector.provideHTTPClientWithLogging())
+                .client(AppFactory.provideHTTPClientWithLogging())
                 .baseUrl(url)
                 .build();
 
-        configurationApi = retrofit.create(IMetadataConfigurationApi.class);
+        configurationApi = retrofit.create(IMetadataApiConfiguration.class);
     }
 
     @Override

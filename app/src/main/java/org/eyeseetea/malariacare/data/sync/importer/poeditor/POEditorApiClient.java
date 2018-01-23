@@ -4,7 +4,7 @@ package org.eyeseetea.malariacare.data.sync.importer.poeditor;
 import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.di.AppFactory;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Language;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.LanguagesResult;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.POEditorResponse;
@@ -21,7 +21,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class POEditorApiClient implements ILanguagesClient {
     private String projectID;
     private String apiToken;
-    private IPOEditorApi poEditorApi;
+    private IPOApiEditor poEditorApi;
 
     public POEditorApiClient(String projectID, String apiToken) {
         this.projectID = projectID;
@@ -29,11 +29,11 @@ public class POEditorApiClient implements ILanguagesClient {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
-                .client(Injector.provideHTTPClientWithLogging())
+                .client(AppFactory.provideHTTPClientWithLogging())
                 .baseUrl(BuildConfig.poEditorApiUrl)
                 .build();
 
-        poEditorApi = retrofit.create(IPOEditorApi.class);
+        poEditorApi = retrofit.create(IPOApiEditor.class);
     }
 
 

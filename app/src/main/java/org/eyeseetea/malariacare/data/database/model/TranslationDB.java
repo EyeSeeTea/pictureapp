@@ -74,7 +74,7 @@ public class TranslationDB extends BaseModel {
     }
 
 
-    private static TranslationDB getTranslationBy(String stringKey, String languageCode) {
+    private static TranslationDB getTranslationByKey(String stringKey, String languageCode) {
         return new Select()
                 .from(TranslationDB.class)
                 .indexedBy(TranslationDB_Table
@@ -95,15 +95,15 @@ public class TranslationDB extends BaseModel {
 
     public static String getLocalizedStringFromDB(String string_key, String language_code) {
 
-        TranslationDB translationDB = getTranslationBy(string_key, language_code);
+        TranslationDB translationDB = getTranslationByKey(string_key, language_code);
 
         if (isTranslationEmptyOrNull(translationDB)) {
             String generalLanguage = language_code.split("_")[0];
 
-            translationDB = getTranslationBy(string_key, generalLanguage);
+            translationDB = getTranslationByKey(string_key, generalLanguage);
 
             if (isTranslationEmptyOrNull(translationDB)) {
-                translationDB = getTranslationBy(string_key, DEFAULT_LANGUAGE);
+                translationDB = getTranslationByKey(string_key, DEFAULT_LANGUAGE);
             }
         }
 

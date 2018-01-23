@@ -48,10 +48,14 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         mAsyncExecutor.run(this);
     }
 
+
     @Override
     public void run() {
-
-        if(insertedCredentials.isDemoCredentials()){
+        Credentials previousCredentials = mCredentialsLocalDataSource.getCredentials();
+        if (previousCredentials != null && previousCredentials.isDemoCredentials()) {
+            insertedCredentials = previousCredentials;
+        }
+        if (insertedCredentials.isDemoCredentials()) {
             runDemoLogin();
         }else {
             if (isLoginEnable()) {

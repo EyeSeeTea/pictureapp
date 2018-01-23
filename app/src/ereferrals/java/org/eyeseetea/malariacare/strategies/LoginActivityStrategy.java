@@ -275,7 +275,22 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        loginActivity.checkAnnouncement();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
+            @Override
+            public void onGetUsername(Credentials credentials) {
+                if (credentials.isDemoCredentials()) {
+                    executePullDemo();
+                } else {
+                    loginActivity.checkAnnouncement();
+                }
+            }
+        });
     }
 
     @Override

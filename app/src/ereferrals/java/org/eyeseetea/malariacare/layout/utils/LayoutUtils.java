@@ -83,11 +83,6 @@ public class LayoutUtils extends BaseLayoutUtils {
     }
 
     public static void setListRowBackgroundColor(View row) {
-        int myColor = ContextCompat.getColor(
-                PreferencesState.getInstance().getContext(),
-                android.R.color.transparent
-        );
-        row.setBackgroundColor(myColor);
     }
 
 

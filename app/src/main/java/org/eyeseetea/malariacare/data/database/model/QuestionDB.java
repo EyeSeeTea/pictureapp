@@ -183,6 +183,18 @@ public class QuestionDB extends BaseModel {
      * List of mQuestionDB Thresholds associated with this mQuestionDB
      */
     private List<QuestionThresholdDB> mQuestionThresholdDBs;
+
+    public List<QuestionOptionDB> getQuestionOptionDBS() {
+        return mQuestionOptionDBS;
+    }
+
+    public void setQuestionOptionDBS(
+            List<QuestionOptionDB> questionOptionDBS) {
+        mQuestionOptionDBS = questionOptionDBS;
+    }
+
+    private List<QuestionOptionDB> mQuestionOptionDBS;
+
     /**
      * Cached reference to next mQuestionDB for this one.
      * No parent: Next mQuestionDB in order

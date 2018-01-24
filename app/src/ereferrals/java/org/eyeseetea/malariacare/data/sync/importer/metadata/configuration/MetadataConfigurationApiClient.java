@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataConfigurationsApi;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataApiConfigurations;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
@@ -37,14 +37,14 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         MetadataConfigurationConverterApiModelToDomain
                 converter = new MetadataConfigurationConverterApiModelToDomain();
-        List<MetadataConfigurationsApi.Question> apiQuestions = new ArrayList<>();
+        List<MetadataApiConfigurations.Question> apiQuestions = new ArrayList<>();
 
         try {
 
-            Response<MetadataConfigurationsApi> response =
+            Response<MetadataApiConfigurations> response =
                     configurationApi.getConfiguration().execute();
 
-            MetadataConfigurationsApi metadata = getResultsOrThrowException(response);
+            MetadataApiConfigurations metadata = getResultsOrThrowException(response);
 
 
             if (isApiQuestionNotNull(metadata)) {
@@ -57,14 +57,14 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         return converter.convertToDomainQuestionsFrom(apiQuestions);
     }
 
-    private boolean isApiQuestionNotNull(MetadataConfigurationsApi metadata) {
+    private boolean isApiQuestionNotNull(MetadataApiConfigurations metadata) {
         return metadata.issuingCapture != null &&
                 metadata.issuingCapture.questions != null;
     }
 
     @NonNull
-    private MetadataConfigurationsApi getResultsOrThrowException(
-            Response<MetadataConfigurationsApi> response)
+    private MetadataApiConfigurations getResultsOrThrowException(
+            Response<MetadataApiConfigurations> response)
             throws Exception {
 
         if (response.isSuccessful()) {
@@ -93,11 +93,11 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private List<Question> convertToDomainQuestionsFrom(
-                @NonNull List<MetadataConfigurationsApi.Question> apiQuestions) {
+                @NonNull List<MetadataApiConfigurations.Question> apiQuestions) {
 
             List<Question> domainQuestions = new ArrayList<>();
 
-            for (MetadataConfigurationsApi.Question apiQuestion : apiQuestions) {
+            for (MetadataApiConfigurations.Question apiQuestion : apiQuestions) {
 
                 Question domainQuestion = convertToDomainQuestionFrom(apiQuestion);
 
@@ -112,7 +112,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Question convertToDomainQuestionFrom(
-                @NonNull MetadataConfigurationsApi.Question apiQuestion) {
+                @NonNull MetadataApiConfigurations.Question apiQuestion) {
             Question question = new Question();
 
             question.setCode(apiQuestion.code);
@@ -187,7 +187,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private List<Option> convertToDomainOptionsFrom(
-                @NonNull List<MetadataConfigurationsApi.Option> apiOptions) {
+                @NonNull List<MetadataApiConfigurations.Option> apiOptions) {
 
             List<Option> domainOptions = new ArrayList<>();
 
@@ -195,7 +195,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                 return domainOptions;
             }
 
-            for (MetadataConfigurationsApi.Option apiOption : apiOptions) {
+            for (MetadataApiConfigurations.Option apiOption : apiOptions) {
                 domainOptions.add(convertToDomainOptionFrom(apiOption));
             }
 
@@ -204,7 +204,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Option convertToDomainOptionFrom(
-                @NonNull MetadataConfigurationsApi.Option apiOption) {
+                @NonNull MetadataApiConfigurations.Option apiOption) {
             Option option = new Option();
             option.setName(apiOption.name);
             option.setCode(apiOption.code);

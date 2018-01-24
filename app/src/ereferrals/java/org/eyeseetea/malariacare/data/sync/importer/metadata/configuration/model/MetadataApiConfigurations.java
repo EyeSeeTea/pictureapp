@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MetadataConfigurationsApi {
+public class MetadataApiConfigurations {
 
     @JsonProperty("issuing_capture")
     public IssuingCapture issuingCapture;

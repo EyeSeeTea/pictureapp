@@ -24,7 +24,7 @@ import static org.eyeseetea.malariacare.configurationImporter
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
@@ -68,27 +68,38 @@ public class MetadataConfigurationDBImporterShould {
     @Test
     public void insert_questions_to_db_after_download_the_configurations() throws Exception {
 
-        whenImportMetadata();
+        /* TODO: This is actually not providing an empty DB but checking that DB is empty, we
+        would need to provide an empty DB or avoid checking that, or we will have problems if we
+        change this test position */
+        givenAnEmptyDB();
+
+        whenCountryConfigFilesAreReceived();
+        whenConfigFilesAreParsed();
 
         thenAssertMetadataIsInsertedInTheDB();
+    }
+
+    private void givenAnEmptyDB(){
+        shouldNotBeAnyQuestionInTheDB();
+    }
+
+    private void whenCountryConfigFilesAreReceived() throws Exception {
+        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION);
+        dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {
         shouldBeInDB(17, 7, 37, 1, 1);
     }
 
-    private void whenImportMetadata() throws Exception {
-        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION);
-        dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
-
-        shouldNotBeAnyQuestionInTheDB();
+    private void whenConfigFilesAreParsed() throws Exception {
 
         MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(
                 dhis2MockServer.getBaseEndpoint(),
                 new BasicAuthInterceptor(""));
 
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
-                apiClient, Injector.provideQuestionConverter()
+                apiClient, ConverterFactory.getQuestionConverter()
         );
 
         importer.importMetadata(program);

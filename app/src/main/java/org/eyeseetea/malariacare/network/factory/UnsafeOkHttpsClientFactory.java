@@ -17,7 +17,7 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.network;
+package org.eyeseetea.malariacare.network.factory;
 
 import com.squareup.okhttp.OkHttpClient;
 

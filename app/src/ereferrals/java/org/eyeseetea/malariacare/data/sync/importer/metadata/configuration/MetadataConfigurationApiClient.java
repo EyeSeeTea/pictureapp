@@ -4,7 +4,7 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
         .ConverterFromApiPhoneFormatToDomainModel;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
             throws Exception {
 
-        OkHttpClient client = Injector.provideHTTPClientWithLoggingWith(basicAuthInterceptor);
+        OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -69,7 +70,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
             assignRulesToQuestions(apiRules, apiQuestions);
         }
-
 
         return converter.convertToDomainQuestionsFrom(apiQuestions);
     }

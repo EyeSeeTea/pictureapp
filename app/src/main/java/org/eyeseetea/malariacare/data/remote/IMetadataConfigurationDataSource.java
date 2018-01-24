@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
+package org.eyeseetea.malariacare.data.remote;
 
 
 import org.eyeseetea.malariacare.domain.entity.Configuration;

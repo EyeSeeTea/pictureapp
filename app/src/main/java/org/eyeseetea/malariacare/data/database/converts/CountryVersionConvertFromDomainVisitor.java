@@ -2,14 +2,14 @@ package org.eyeseetea.malariacare.data.database.converts;
 
 
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
-import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 
-public class CountryVersionConverterFromDomainModelToDB implements IConverter<
+public class CountryVersionConvertFromDomainVisitor implements IConvertDomainDBVisitor<
         Configuration.CountryVersion, CountryVersionDB> {
 
     @Override
-    public CountryVersionDB convert(Configuration.CountryVersion domainModel) {
+    public CountryVersionDB visit(Configuration.CountryVersion domainModel) {
         CountryVersionDB countryVersionDB = new CountryVersionDB();
         countryVersionDB.setCountry(domainModel.getCountry());
         countryVersionDB.setVersion(domainModel.getVersion());

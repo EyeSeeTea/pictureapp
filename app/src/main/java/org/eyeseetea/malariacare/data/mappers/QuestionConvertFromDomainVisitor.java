@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.converts;
+package org.eyeseetea.malariacare.data.mappers;
 
 
 import android.support.annotation.NonNull;
@@ -8,7 +8,8 @@ import com.raizlabs.android.dbflow.annotation.NotNull;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -17,22 +18,23 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionConverterFromDomainModelToDB implements IConverter<Question, QuestionDB> {
+public class QuestionConvertFromDomainVisitor implements
+        IConvertDomainDBVisitor<Question, QuestionDB> {
 
-    private IConverter<Option, OptionDB> optionConverter;
-    private IConverter<PhoneFormat, PhoneFormatDB> phoneFormatConverter;
+    private IConvertDomainDBVisitor<Option, OptionDB> optionConverter;
+    private IConvertDomainDBVisitor<PhoneFormat, PhoneFormatDB> phoneFormatConverter;
 
-    public QuestionConverterFromDomainModelToDB(
-            @NotNull IConverter<Option, OptionDB>
+    public QuestionConvertFromDomainVisitor(
+            @NotNull IConvertDomainDBVisitor<Option, OptionDB>
                     optionConverter,
-            @NotNull IConverter<PhoneFormat, PhoneFormatDB> phoneFormatConverter) {
+            @NotNull IConvertDomainDBVisitor<PhoneFormat, PhoneFormatDB> phoneFormatConverter) {
         this.optionConverter = optionConverter;
         this.phoneFormatConverter = phoneFormatConverter;
     }
 
     @NotNull
     @Override
-    public QuestionDB convert(@NotNull Question domainModel) {
+    public QuestionDB visit(@NotNull Question domainModel) {
         QuestionDB dbModel = new QuestionDB();
 
         dbModel.setCode(domainModel.getCode());
@@ -51,7 +53,7 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
     }
 
     private PhoneFormatDB getPhoneFormat(PhoneFormat  domainPhoneFormat){
-        return phoneFormatConverter.convert(domainPhoneFormat);
+        return phoneFormatConverter.visit(domainPhoneFormat);
     }
 
     private long getHeaderID(@NotNull Question domainModel) {
@@ -141,7 +143,7 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
         if (questionDomain.hasOptions()) {
             for (Option domainOption : questionDomain.getOptions()) {
 
-                OptionDB newOptionDB = optionConverter.convert(domainOption);
+                OptionDB newOptionDB = optionConverter.visit(domainOption);
 
                 optionDBS.add(newOptionDB);
 

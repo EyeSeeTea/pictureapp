@@ -623,7 +623,7 @@ public class QuestionDB extends BaseModel {
 
                 .where(QuestionThresholdDB_Table.id_question_fk
                         .withTable(questionThresholdAlias)
-                        .eq(getId_question()))
+                        .eq(this.getId_question()))
 
                 .and(QuestionRelationDB_Table.id_question_fk
                         .withTable(questionRelationAlias).eq(
@@ -1473,7 +1473,7 @@ public class QuestionDB extends BaseModel {
 
                 ValueDB valueDB = parentQuestion.getValueBySession();
 
-                if (thresholdDBS.size() > 0 && valueDB!=null) {
+                if (thresholdDBS.size() > 0 && valueDB != null) {
 
                     boolean areInThreadHold = QuestionThresholdDB.areInThreadHold(
                             valueDB.getValue(), thresholdDBS);
@@ -1865,11 +1865,39 @@ public class QuestionDB extends BaseModel {
         for (QuestionDB questionDB : questionDBs) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(this);
             if (questionDB.isCompulsory() && !questionDB.isHiddenBySurveyAndHeader(
-                    surveyDB) && isNotAnswered(questionDB)) {
+                    surveyDB) && !questionDB.isHiddenByAThreshold() && isNotAnswered(questionDB)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean isHiddenByAThreshold() {
+
+        boolean isHiddenByAThreshold = true;
+
+        List<QuestionThresholdDB> parentsThresholdDBS =
+                QuestionThresholdDB.getParentQuestionsThresholdsByItsChild(this);
+
+        if (parentsThresholdDBS.isEmpty()) return false;
+
+        for (QuestionThresholdDB thresholdDB : parentsThresholdDBS) {
+
+            QuestionDB questionDB = thresholdDB.getQuestionDB();
+            ValueDB valueDB = questionDB.getValueBySession();
+
+            if (valueDB != null) {
+
+                boolean isInThreadHold = thresholdDB.isInThreshold(valueDB.getValue());
+                if (!isInThreadHold) {
+                    isHiddenByAThreshold = true;
+                    break;
+                }else{
+                    isHiddenByAThreshold = false;
+                }
+            }
+        }
+        return isHiddenByAThreshold;
     }
 
     public boolean hasDataElement() {

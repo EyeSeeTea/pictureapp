@@ -1466,20 +1466,7 @@ public class QuestionDB extends BaseModel {
             case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
 
-                // has a threshold rule
-
-                List<QuestionThresholdDB> thresholdDBS =
-                        parentQuestion.getQuestionsThresholdsByChildQuestion(this);
-
-                ValueDB valueDB = parentQuestion.getValueBySession();
-
-                if (thresholdDBS.size() > 0 && valueDB != null) {
-
-                    boolean areInThreadHold = QuestionThresholdDB.areInThreadHold(
-                            valueDB.getValue(), thresholdDBS);
-
-                    return (hasParentOptionActivated > 0) && areInThreadHold ? false : true;
-                }
+               return (hasParentOptionActivated > 0) && !isHiddenByAThreshold() ? false : true;
 
         }
 
@@ -1532,7 +1519,7 @@ public class QuestionDB extends BaseModel {
         }
         long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
 
-        return hasParentOptionActivated > 0 ? false : true;
+        return (hasParentOptionActivated > 0  && !isHiddenByAThreshold()) ? false : true;
     }
 
     public boolean hasQuestionOption() {
@@ -1865,7 +1852,7 @@ public class QuestionDB extends BaseModel {
         for (QuestionDB questionDB : questionDBs) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(this);
             if (questionDB.isCompulsory() && !questionDB.isHiddenBySurveyAndHeader(
-                    surveyDB) && !questionDB.isHiddenByAThreshold() && isNotAnswered(questionDB)) {
+                    surveyDB) && isNotAnswered(questionDB)) {
                 return true;
             }
         }

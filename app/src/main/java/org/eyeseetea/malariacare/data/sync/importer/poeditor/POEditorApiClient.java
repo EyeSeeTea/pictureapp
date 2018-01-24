@@ -21,7 +21,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class POEditorApiClient implements ILanguagesClient {
     private String projectID;
     private String apiToken;
-    private IPOApiEditor poEditorApi;
+    private IPOEditorApi poEditorApi;
 
     public POEditorApiClient(String projectID, String apiToken) {
         this.projectID = projectID;
@@ -33,7 +33,7 @@ public class POEditorApiClient implements ILanguagesClient {
                 .baseUrl(BuildConfig.poEditorApiUrl)
                 .build();
 
-        poEditorApi = retrofit.create(IPOApiEditor.class);
+        poEditorApi = retrofit.create(IPOEditorApi.class);
     }
 
 

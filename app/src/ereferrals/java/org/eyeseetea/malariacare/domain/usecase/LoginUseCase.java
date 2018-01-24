@@ -51,10 +51,6 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
     @Override
     public void run() {
-        Credentials previousCredentials = mCredentialsLocalDataSource.getCredentials();
-        if (previousCredentials != null && previousCredentials.isDemoCredentials()) {
-            insertedCredentials = previousCredentials;
-        }
         if (insertedCredentials.isDemoCredentials()) {
             runDemoLogin();
         }else {

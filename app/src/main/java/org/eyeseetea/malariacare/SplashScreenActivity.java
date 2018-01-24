@@ -10,7 +10,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
@@ -21,6 +20,8 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.locale.factory.LanguageFactory;
+import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
@@ -90,10 +91,10 @@ public class SplashScreenActivity extends Activity {
             String token = cr.getPOEditorToken();
             String projectID = cr.getPOEditorProjectID();
 
-            ILanguagesClient client = AppFactory.provideLanguageClient(projectID, token);
-            IConnectivityManager connectivity = AppFactory.provideConnectivityMN(this);
+            ILanguagesClient client = LanguageFactory.getPOEditorApiClient(projectID, token);
+            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(this);
 
-            LanguageDownloader downloader = AppFactory.provideLanguageDownloader(client,
+            LanguageDownloader downloader = LanguageFactory.getLanguageDownloader(client,
                     connectivity);
 
             downloader.start();

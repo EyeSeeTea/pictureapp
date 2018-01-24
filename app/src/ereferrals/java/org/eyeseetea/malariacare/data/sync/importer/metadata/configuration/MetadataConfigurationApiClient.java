@@ -3,12 +3,12 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 import android.support.annotation.NonNull;
 
-import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataApiConfigurations;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
-                .client(AppFactory.provideHTTPClientWithLogging())
+                .client(HTTPClientFactory.getHTTPClientWithLogging())
                 .baseUrl(url)
                 .build();
 

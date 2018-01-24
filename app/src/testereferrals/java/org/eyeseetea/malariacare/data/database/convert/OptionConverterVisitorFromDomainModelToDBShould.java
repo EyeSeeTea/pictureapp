@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.converts;
+package org.eyeseetea.malariacare.data.database.convert;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.converts;
+package org.eyeseetea.malariacare.data.database.convert;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -6,8 +6,8 @@ import static org.hamcrest.core.Is.is;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.mappers.QuestionConverterVisitorFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -24,7 +24,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Before
     public void setUp() throws Exception {
         converter = new QuestionConverterVisitorFromDomainModelToDB(
-                AppFactory.provideOptionConverter());
+                ConverterFactory.getOptionConverter();
     }
 
     @Test

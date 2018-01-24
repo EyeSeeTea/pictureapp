@@ -4,18 +4,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.mappers.OptionConverterVisitorFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.mappers.OptionConvertDomainDBVisitorFromDomainModelToDB;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.junit.Before;
 import org.junit.Test;
 
 public class OptionConverterVisitorFromDomainModelToDBShould {
 
-    OptionConverterVisitorFromDomainModelToDB converter;
+    OptionConvertDomainDBVisitorFromDomainModelToDB converter;
 
     @Before
     public void setUp() throws Exception {
-        converter = new OptionConverterVisitorFromDomainModelToDB();
+        converter = new OptionConvertDomainDBVisitorFromDomainModelToDB();
     }
 
     @Test

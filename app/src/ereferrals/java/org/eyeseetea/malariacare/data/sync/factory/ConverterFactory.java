@@ -11,29 +11,28 @@ import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 
 public class ConverterFactory {
-    private static IConvertDomainDBVisitor<Question, QuestionDB> questionConverterDomainToDb;
-    private static IConvertDomainDBVisitor<Option, OptionDB> optionConverterDomainToDb;
+    private static IConvertDomainDBVisitor<Question, QuestionDB> questionConvertDomainToDb;
+    private static IConvertDomainDBVisitor<Option, OptionDB> optionConvertDomainToDb;
 
     @NonNull
     public static IConvertDomainDBVisitor<Question, QuestionDB> getQuestionConverter() {
 
 
-        if (questionConverterDomainToDb == null) {
-            questionConverterDomainToDb = new QuestionConvertDomainDBVisitorFromDomainModelToDB(
+        if (questionConvertDomainToDb == null) {
+            questionConvertDomainToDb = new QuestionConvertDomainDBVisitorFromDomainModelToDB(
                     getOptionConverter());
         }
 
-        return questionConverterDomainToDb;
+        return questionConvertDomainToDb;
     }
 
     @NonNull
     public static IConvertDomainDBVisitor<Option, OptionDB> getOptionConverter() {
 
 
-        if (optionConverterDomainToDb == null) {
-            optionConverterDomainToDb = new OptionConvertDomainDBVisitorFromDomainModelToDB();
+        if (optionConvertDomainToDb == null) {
+            optionConvertDomainToDb = new OptionConvertDomainDBVisitorFromDomainModelToDB();
         }
-        return optionConverterDomainToDb;
+        return optionConvertDomainToDb;
     }
-}
 }

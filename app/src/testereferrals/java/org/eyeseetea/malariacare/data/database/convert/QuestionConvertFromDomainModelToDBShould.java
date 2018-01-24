@@ -6,7 +6,7 @@ import static org.hamcrest.core.Is.is;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.mappers.QuestionConverterVisitorFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.mappers.QuestionConvertVisitorFromDomainModelToDB;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -17,14 +17,14 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionConverterFromDomainModelToDBShould {
+public class QuestionConvertFromDomainModelToDBShould {
 
-    private QuestionConverterVisitorFromDomainModelToDB converter;
+    private QuestionConvertVisitorFromDomainModelToDB converter;
 
     @Before
     public void setUp() throws Exception {
-        converter = new QuestionConverterVisitorFromDomainModelToDB(
-                ConverterFactory.getOptionConverter();
+        converter = new QuestionConvertVisitorFromDomainModelToDB(
+                ConverterFactory.getOptionConverter());
     }
 
     @Test

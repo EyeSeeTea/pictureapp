@@ -14,12 +14,12 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionConvertDomainDBVisitorFromDomainModelToDB implements
+public class QuestionConvertFromDomainVisitor implements
         IConvertDomainDBVisitor<Question, QuestionDB> {
 
     private IConvertDomainDBVisitor<Option, OptionDB> optionConverter;
 
-    public QuestionConvertDomainDBVisitorFromDomainModelToDB(
+    public QuestionConvertFromDomainVisitor(
             @NotNull IConvertDomainDBVisitor<Option, OptionDB>
                     optionConverter) {
         this.optionConverter = optionConverter;

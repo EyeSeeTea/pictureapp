@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 
-public class OptionConvertDomainDBVisitorFromDomainModelToDB implements
+public class OptionConvertFromDomainVisitor implements
         IConvertDomainDBVisitor<Option, OptionDB> {
 
     @NotNull

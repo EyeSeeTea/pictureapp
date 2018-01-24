@@ -7,7 +7,6 @@ import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAnd
         .readFileContentFromAssets;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -16,14 +15,9 @@ import org.eyeseetea.malariacare.configurationImporter.BaseMetadataConfiguration
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.mappers.OptionConvertDomainDBVisitorFromDomainModelToDB;
-import org.eyeseetea.malariacare.data.mappers.QuestionConvertDomainDBVisitorFromDomainModelToDB;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
-import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDBImporter;
-import org.eyeseetea.malariacare.domain.entity.Option;
-import org.eyeseetea.malariacare.domain.entity.Question;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

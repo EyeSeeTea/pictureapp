@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.mappers.OptionConvertDomainDBVisitorFromDomainModelToDB;
-import org.eyeseetea.malariacare.data.mappers.QuestionConvertDomainDBVisitorFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.mappers.OptionConvertFromDomainVisitor;
+import org.eyeseetea.malariacare.data.mappers.QuestionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -19,7 +19,7 @@ public class ConverterFactory {
 
 
         if (questionConvertDomainToDb == null) {
-            questionConvertDomainToDb = new QuestionConvertDomainDBVisitorFromDomainModelToDB(
+            questionConvertDomainToDb = new QuestionConvertFromDomainVisitor(
                     getOptionConverter());
         }
 
@@ -31,7 +31,7 @@ public class ConverterFactory {
 
 
         if (optionConvertDomainToDb == null) {
-            optionConvertDomainToDb = new OptionConvertDomainDBVisitorFromDomainModelToDB();
+            optionConvertDomainToDb = new OptionConvertFromDomainVisitor();
         }
         return optionConvertDomainToDb;
     }

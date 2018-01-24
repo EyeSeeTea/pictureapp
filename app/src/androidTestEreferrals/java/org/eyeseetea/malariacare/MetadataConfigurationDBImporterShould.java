@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-
 import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAndroidTest
         .readFileContentFromAssets;
 
@@ -13,11 +12,12 @@ import android.support.test.InstrumentationRegistry;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.configurationImporter.BaseMetadataConfigurationImporterTest;
+import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.AppFactory;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,10 +40,26 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
     @Test
     public void insert_questions_to_db_after_download_the_configurations() throws Exception {
 
-        enqueueResponse(MZ_CONFIG_ANDROID_1_0_JSON);
+        /* TODO: This is actually not providing an empty DB but checking that DB is empty, we
+        would need to provide an empty DB or avoid checking that, or we will have problems if we
+        change this test position */
+        givenAnEmptyDB();
 
+        whenACountryConfigFileIsReceived();
+        whenConfigFileIsParsed();
+
+        thenCheckDBContainsTheQuestions();
+    }
+
+    private void givenAnEmptyDB(){
         shouldNotBeAnyQuestionInTheDB();
+    }
 
+    private void whenACountryConfigFileIsReceived() throws Exception {
+        enqueueResponse(MZ_CONFIG_ANDROID_1_0_JSON);
+    }
+
+    private void whenConfigFileIsParsed() {
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
                 AppFactory.provideQuestionConverter()
         );
@@ -54,13 +70,14 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
         } catch (Exception e) {
             Assert.fail();
         }
+    }
 
+    private void thenCheckDBContainsTheQuestions() {
         shouldBeInDB(16, 28, 28);
     }
 
     private void shouldNotBeAnyQuestionInTheDB() {
         shouldBeInDB(0, 0, 0);
-
     }
 
     private void shouldBeInDB(int expectedQuestionsCount, int expectedQuestionsOptionsCount,

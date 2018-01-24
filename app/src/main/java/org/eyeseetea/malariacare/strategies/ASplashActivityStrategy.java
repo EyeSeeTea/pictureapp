@@ -79,4 +79,8 @@ public abstract class ASplashActivityStrategy {
             int[] grantResults) {
 
     }
+
+    public boolean canEnterApp() {
+        return true;
+    }
 }

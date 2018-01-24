@@ -32,9 +32,11 @@ public class SplashScreenActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         splashActivityStrategy = new SplashActivityStrategy(this);
-        setContentView(R.layout.activity_splash);
-        AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
-        asyncInitApplication.execute((Void) null);
+        if (splashActivityStrategy.canEnterApp()) {
+            setContentView(R.layout.activity_splash);
+            AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
+            asyncInitApplication.execute((Void) null);
+        }
     }
 
     private void init() {

@@ -14,9 +14,9 @@ import org.eyeseetea.malariacare.data.sync.importer.poeditor.POEditorApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.data.sync.importer.IConverterVisitor;
-import org.eyeseetea.malariacare.data.mappers.OptionConverterVisitorFromDomainModelToDB;
-import org.eyeseetea.malariacare.data.mappers.QuestionConverterVisitorFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
+import org.eyeseetea.malariacare.data.mappers.OptionConvertDomainDBVisitorFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.mappers.QuestionConvertDomainDBVisitorFromDomainModelToDB;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
@@ -27,8 +27,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class AppFactory {
 
     private static IConnectivityManager connectivityMN;
-    private static IConverterVisitor<Question, QuestionDB> questionConverterDomainToDb;
-    private static IConverterVisitor<Option, OptionDB> optionConverterDomainToDb;
+    private static IConvertDomainDBVisitor<Question, QuestionDB> questionConverterDomainToDb;
+    private static IConvertDomainDBVisitor<Option, OptionDB> optionConverterDomainToDb;
 
     @NonNull
     public static OkHttpClient provideHTTPClientWithLogging() {
@@ -75,22 +75,22 @@ public class AppFactory {
     }
 
     @NonNull
-    public static IConverterVisitor<Question, QuestionDB> provideQuestionConverter() {
+    public static IConvertDomainDBVisitor<Question, QuestionDB> provideQuestionConverter() {
 
 
         if (questionConverterDomainToDb == null) {
-            questionConverterDomainToDb = new QuestionConverterVisitorFromDomainModelToDB(provideOptionConverter());
+            questionConverterDomainToDb = new QuestionConvertDomainDBVisitorFromDomainModelToDB(provideOptionConverter());
         }
 
         return questionConverterDomainToDb;
     }
 
     @NonNull
-    public static IConverterVisitor<Option, OptionDB> provideOptionConverter() {
+    public static IConvertDomainDBVisitor<Option, OptionDB> provideOptionConverter() {
 
 
         if (optionConverterDomainToDb == null) {
-            optionConverterDomainToDb = new OptionConverterVisitorFromDomainModelToDB();
+            optionConverterDomainToDb = new OptionConvertDomainDBVisitorFromDomainModelToDB();
         }
         return optionConverterDomainToDb;
     }

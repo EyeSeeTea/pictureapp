@@ -7,17 +7,17 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.IConverterVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Question;
 
 import java.util.List;
 
 public class MetadataConfigurationDBImporter {
 
-    private IConverterVisitor<Question, QuestionDB> converter;
+    private IConvertDomainDBVisitor<Question, QuestionDB> converter;
 
     public MetadataConfigurationDBImporter(
-            @NonNull IConverterVisitor<Question, QuestionDB> converter) {
+            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter) {
         this.converter = converter;
 
     }

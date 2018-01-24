@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.annotation.NotNull;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.sync.importer.IConverterVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -14,13 +14,13 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionConverterVisitorFromDomainModelToDB implements
-        IConverterVisitor<Question, QuestionDB> {
+public class QuestionConvertDomainDBVisitorFromDomainModelToDB implements
+        IConvertDomainDBVisitor<Question, QuestionDB> {
 
-    private IConverterVisitor<Option, OptionDB> optionConverter;
+    private IConvertDomainDBVisitor<Option, OptionDB> optionConverter;
 
-    public QuestionConverterVisitorFromDomainModelToDB(
-            @NotNull IConverterVisitor<Option, OptionDB>
+    public QuestionConvertDomainDBVisitorFromDomainModelToDB(
+            @NotNull IConvertDomainDBVisitor<Option, OptionDB>
                     optionConverter) {
         this.optionConverter = optionConverter;
     }

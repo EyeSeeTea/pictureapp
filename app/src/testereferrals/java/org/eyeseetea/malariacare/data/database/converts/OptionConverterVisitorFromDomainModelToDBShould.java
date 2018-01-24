@@ -4,17 +4,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.mappers.OptionConverterVisitorFromDomainModelToDB;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.junit.Before;
 import org.junit.Test;
 
-public class OptionConverterFromDomainModelToDBShould {
+public class OptionConverterVisitorFromDomainModelToDBShould {
 
-    OptionConverterFromDomainModelToDB converter;
+    OptionConverterVisitorFromDomainModelToDB converter;
 
     @Before
     public void setUp() throws Exception {
-        converter = new OptionConverterFromDomainModelToDB();
+        converter = new OptionConverterVisitorFromDomainModelToDB();
     }
 
     @Test
@@ -22,7 +23,7 @@ public class OptionConverterFromDomainModelToDBShould {
 
         Option domainOption = givenADomainOption();
 
-        OptionDB optionDBToEvaluate = converter.convert(domainOption);
+        OptionDB optionDBToEvaluate = converter.visit(domainOption);
 
         assertEqual(optionDBToEvaluate, givenAValidBDOption());
 

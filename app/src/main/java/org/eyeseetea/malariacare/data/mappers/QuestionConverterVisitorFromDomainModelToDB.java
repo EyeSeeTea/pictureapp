@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.converts;
+package org.eyeseetea.malariacare.data.mappers;
 
 
 import com.raizlabs.android.dbflow.annotation.NotNull;
@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.annotation.NotNull;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
+import org.eyeseetea.malariacare.data.sync.importer.IConverterVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -14,19 +14,20 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionConverterFromDomainModelToDB implements IConverter<Question, QuestionDB> {
+public class QuestionConverterVisitorFromDomainModelToDB implements
+        IConverterVisitor<Question, QuestionDB> {
 
-    private IConverter<Option, OptionDB> optionConverter;
+    private IConverterVisitor<Option, OptionDB> optionConverter;
 
-    public QuestionConverterFromDomainModelToDB(
-            @NotNull IConverter<Option, OptionDB>
+    public QuestionConverterVisitorFromDomainModelToDB(
+            @NotNull IConverterVisitor<Option, OptionDB>
                     optionConverter) {
         this.optionConverter = optionConverter;
     }
 
     @NotNull
     @Override
-    public QuestionDB convert(@NotNull Question domainModel) {
+    public QuestionDB visit(@NotNull Question domainModel) {
         QuestionDB dbModel = new QuestionDB();
 
         dbModel.setCode(domainModel.getCode());
@@ -100,7 +101,7 @@ public class QuestionConverterFromDomainModelToDB implements IConverter<Question
             for (Option domainOption : questionDomain.getOptions()) {
 
                 QuestionOptionDB questionOptionDB = new QuestionOptionDB();
-                OptionDB newOptionDB = optionConverter.convert(domainOption);
+                OptionDB newOptionDB = optionConverter.visit(domainOption);
 
                 questionOptionDB.setOption(newOptionDB);
 

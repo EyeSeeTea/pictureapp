@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 import android.support.annotation.NonNull;
 
-import org.eyeseetea.malariacare.data.di.AppFactory;
+import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.domain.entity.Option;

@@ -4,7 +4,7 @@ package org.eyeseetea.malariacare.data.sync.importer.poeditor;
 import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.data.di.AppFactory;
+import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Language;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.LanguagesResult;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.POEditorResponse;

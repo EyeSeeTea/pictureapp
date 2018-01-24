@@ -16,7 +16,7 @@ import org.eyeseetea.malariacare.configurationImporter.BaseMetadataConfiguration
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.di.AppFactory;
+import org.eyeseetea.malariacare.data.AppFactory;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
 import org.junit.Assert;
 import org.junit.Before;

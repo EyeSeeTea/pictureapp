@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -241,6 +242,12 @@ public class TabDB extends BaseModel {
         return new Select()
                 .from(TabDB.class)
                 .where(TabDB_Table.id_tab.eq(id)).querySingle();
+    }
+
+    public static List<TabDB> findTabByProgram(Long id) {
+        return new Select()
+                .from(TabDB.class)
+                .where(TabDB_Table.id_program_fk.eq(id)).queryList();
     }
 
     public static TabDB getFirstTab() {

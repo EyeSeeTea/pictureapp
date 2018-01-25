@@ -27,6 +27,16 @@ android {
         config {}
     }
 
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDirs sharedTestDir
+        }
+    }
+
     compileSdkVersion cfg.compileSdkVersion
     buildToolsVersion cfg.buildToolsVersion
 
@@ -42,14 +52,25 @@ android {
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
+        buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
+        buildConfigField "boolean", "downloadLanguagesFromServer", "false"
+
     }
     buildTypes {
+
+        testBuildType "staging"
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            buildConfigField "boolean", "databaseInMemory", "false"
             debuggable true
+        }
+        staging {
+            initWith(buildTypes.debug)
+            buildConfigField "boolean", "databaseInMemory", "true"
         }
     }
     //TODO This config is related to a known issue: http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt
@@ -71,7 +92,6 @@ android {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
             versionName "1.3.3"
-            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -92,7 +112,6 @@ android {
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
             versionName "1.2.3"
-            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -113,7 +132,6 @@ android {
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
             versionName "1.0.3"
-            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
@@ -134,7 +152,7 @@ android {
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
             versionName "1.0.6"
-            buildConfigField "boolean", "activeSearchLanguageInDB", "true"
+            buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
@@ -155,7 +173,6 @@ android {
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
             versionName "0.2.0"
-            buildConfigField "boolean", "activeSearchLanguageInDB", "false"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -231,7 +248,7 @@ dependencies {
 
     // Unit testing dependencies
     testCompile "junit:junit:${libs.jUnitVersion}"
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+    testCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
 
     // Instrumented tests dependencies
     // Android Testing Support Library's runner and rules
@@ -246,8 +263,7 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
     // Espresso-web for WebView support
     androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
-    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
-
+    androidTestCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
 
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {

@@ -76,79 +76,130 @@ public class QuestionDB extends BaseModel {
      * Constant that reflects a visible mQuestionDB in information
      */
     public static final int QUESTION_VISIBLE = 1;
+
     /**
      * Constant that reflects a not visible mQuestionDB in information
      */
     public static final int QUESTION_INVISIBLE = 0;
+
     /**
      * Constant that reflects a visible important question
      */
     public static final int QUESTION_IMPORTANT = 2;
+
     /**
      * Constant that reflects a visible mQuestionDB in information
      */
     public static final int QUESTION_COMPULSORY = 1;
+
     /**
      * Constant that reflects a not visible mQuestionDB in information
      */
     public static final int QUESTION_NOT_COMPULSORY = 0;
+
     private static final String TAG = "Question";
+
     /**
-     * Required to create a null QuestionDB value to enable caching when you're the last mQuestionDB.
+     * Required to create a null QuestionDB value to enable caching when you're the last
+     * mQuestionDB.
      */
     private final static Long NULL_SIBLING_ID = -0l;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question;
+
     @Column
     String code;
+
     @Column
     String de_name;
+
     @Column
     String help_text;
+
     @Column
     String form_name;
+
     @Column
     String uid_question;
+
     @Column
     Integer order_pos;
+
     @Column
+    @Deprecated
     Float numerator_w;
+
     @Column
+    @Deprecated
     Float denominator_w;
+
+    @Deprecated
     @Column
     String feedback;
+
     @Column
     Long id_header_fk;
+
     /**
      * Reference to the parent mHeaderDB (loaded lazily)
      */
     HeaderDB mHeaderDB;
+
     @Column
     Long id_answer_fk;
+
     /**
      * Reference to the associated mAnswerDB (loaded lazily)
      */
     AnswerDB mAnswerDB;
     @Column
     Integer output;
-    //OBSOLETE
+
+    @Deprecated
     @Column
     Long id_question_parent;
+
     /**
      * Reference to parent mQuestionDB (loaded lazily, DEPRECATED??)
      */
     QuestionDB mQuestionDB;
+
+    @Deprecated
     @Column
     Long id_composite_score_fk;
+
     @Column
     Integer total_questions;
+
     @Column
     Integer visible;
+
     @Column
     String path;
+
     @Column
     Integer compulsory;
+
+    public List<OptionDB> getOptionDBS() {
+        return optionDBS;
+    }
+
+    public void setOptionDBS(
+            List<OptionDB> optionDBS) {
+        this.optionDBS = optionDBS;
+    }
+
+    List<OptionDB> optionDBS;
+
+    public Long getId_answer_fk() {
+        return id_answer_fk;
+    }
+
+
+    public PhoneFormatDB phoneFormatDB;
+
     /**
      * Reference to associated mCompositeScoreDB for this mQuestionDB (loaded lazily)
      */
@@ -183,6 +234,18 @@ public class QuestionDB extends BaseModel {
      * List of mQuestionDB Thresholds associated with this mQuestionDB
      */
     private List<QuestionThresholdDB> mQuestionThresholdDBs;
+
+    public List<QuestionOptionDB> getQuestionOptionDBS() {
+        return mQuestionOptionDBS;
+    }
+
+    public void setQuestionOptionDBS(
+            List<QuestionOptionDB> questionOptionDBS) {
+        mQuestionOptionDBS = questionOptionDBS;
+    }
+
+    private List<QuestionOptionDB> mQuestionOptionDBS;
+
     /**
      * Cached reference to next mQuestionDB for this one.
      * No parent: Next mQuestionDB in order
@@ -215,6 +278,14 @@ public class QuestionDB extends BaseModel {
         this.setAnswer(answerDB);
         this.setCompositeScore(compositeScoreDB);
         this.setQuestion(questionDB);
+    }
+
+    public PhoneFormatDB getPhoneFormatDB() {
+        return phoneFormatDB;
+    }
+
+    public void setPhoneFormatDB(PhoneFormatDB phoneFormatDB) {
+        this.phoneFormatDB = phoneFormatDB;
     }
 
     public static List<QuestionDB> getAllQuestions() {
@@ -336,6 +407,7 @@ public class QuestionDB extends BaseModel {
                 .where(QuestionDB_Table.uid_question.is(uid))
                 .queryList();
     }
+
     /**
      * Finds a mQuestionDB by its UID
      */
@@ -351,6 +423,13 @@ public class QuestionDB extends BaseModel {
                 .from(QuestionDB.class)
                 .where(QuestionDB_Table.code.is(code))
                 .querySingle();
+    }
+
+    public static List<QuestionDB> findQuestionsByHeader(Long id) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.id_header_fk.eq(id))
+                .queryList();
     }
 
     /**
@@ -377,7 +456,8 @@ public class QuestionDB extends BaseModel {
     public static QuestionDB findRootQuestion(TabDB tabDB) {
 
         //Take every child mQuestionDB
-        List<QuestionRelationDB> questionRelationDBs = QuestionRelationDB.listAllParentChildRelations();
+        List<QuestionRelationDB> questionRelationDBs =
+                QuestionRelationDB.listAllParentChildRelations();
 
         if (questionRelationDBs == null || questionRelationDBs.size() == 0) {
             //flow without relations
@@ -426,7 +506,8 @@ public class QuestionDB extends BaseModel {
 
                 .join(QuestionRelationDB.class, Join.JoinType.INNER).as(questionRelationName)
                 .on(QuestionDB_Table.id_question.withTable(questionAlias)
-                        .eq(QuestionRelationDB_Table.id_question_fk.withTable(questionRelationAlias)))
+                        .eq(QuestionRelationDB_Table.id_question_fk.withTable(
+                                questionRelationAlias)))
 
                 .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
                 .on(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)
@@ -605,26 +686,32 @@ public class QuestionDB extends BaseModel {
         this.order_pos = order_pos;
     }
 
+    @Deprecated
     public Float getNumerator_w() {
         return numerator_w;
     }
 
+    @Deprecated
     public void setNumerator_w(Float numerator_w) {
         this.numerator_w = numerator_w;
     }
 
+    @Deprecated
     public Float getDenominator_w() {
         return denominator_w;
     }
 
+    @Deprecated
     public void setDenominator_w(Float denominator_w) {
         this.denominator_w = denominator_w;
     }
 
+    @Deprecated
     public String getFeedback() {
         return feedback;
     }
 
+    @Deprecated
     public void setFeedback(String feedback) {
         this.feedback = feedback;
     }
@@ -673,6 +760,7 @@ public class QuestionDB extends BaseModel {
     public Long getHeaderForeingKeyId() {
         return id_header_fk;
     }
+
     public Integer getOutput() {
         return output;
     }
@@ -734,6 +822,7 @@ public class QuestionDB extends BaseModel {
         return mQuestionDB;
     }
 
+    @Deprecated
     public void setQuestionDB(Long id_parent) {
         this.id_question_parent = id_parent;
         this.mQuestionDB = null;
@@ -745,6 +834,7 @@ public class QuestionDB extends BaseModel {
         this.id_question_parent = (questionDB != null) ? questionDB.getId_question() : null;
     }
 
+    @Deprecated
     public CompositeScoreDB getCompositeScoreDB() {
         if (mCompositeScoreDB == null) {
             if (id_composite_score_fk == null) return null;
@@ -756,11 +846,13 @@ public class QuestionDB extends BaseModel {
         return mCompositeScoreDB;
     }
 
+    @Deprecated
     public void setCompositeScoreDB(Long id_composite_score) {
         this.id_composite_score_fk = id_composite_score;
         this.mCompositeScoreDB = null;
     }
 
+    @Deprecated
     public void setCompositeScore(CompositeScoreDB compositeScoreDB) {
         this.mCompositeScoreDB = compositeScoreDB;
         this.id_composite_score_fk =
@@ -868,13 +960,15 @@ public class QuestionDB extends BaseModel {
             //Select mQuestionDB from questionrelation where operator=1 and id_match in (..)
             this.children = new Select().from(QuestionDB.class).as(questionName)
                     //QuestionDB + QuestioRelation
-                    .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                    .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(
+                            questionRelationName)
                     .on(QuestionDB_Table.id_question.withTable(questionAlias)
                             .eq(QuestionRelationDB_Table.id_question_fk.withTable(
                                     questionRelationAlias)))
                     //+MatchDB
                     .join(MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName)
-                    .on(QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias)
+                    .on(QuestionRelationDB_Table.id_question_relation.withTable(
+                            questionRelationAlias)
                             .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
                     //Parent child relationship
                     .where(in)
@@ -1041,7 +1135,8 @@ public class QuestionDB extends BaseModel {
     private QuestionDB getSiblingNoParent() {
 
         //Take every child mQuestionDB
-        List<QuestionRelationDB> questionRelationDBs = QuestionRelationDB.listAllParentChildRelations();
+        List<QuestionRelationDB> questionRelationDBs =
+                QuestionRelationDB.listAllParentChildRelations();
         //Build a not in condition
         Condition.In in;
         if (questionRelationDBs.size() == 0) {
@@ -1161,6 +1256,10 @@ public class QuestionDB extends BaseModel {
         }
 
         return result;
+    }
+
+    public static int getQuestionDBCount() {
+        return getAllQuestions().size();
     }
 
     /**

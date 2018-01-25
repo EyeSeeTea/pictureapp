@@ -1,0 +1,563 @@
+{
+  "version": "0.6.2",
+  "languages": ["en", "sw"],
+  "issuing_capture": {
+    "validSamples": [0, 1, 2],
+    "payloadSpecs": [{
+      "dataPointRef": "url",
+      "samples": [{
+        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+      }, {
+        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+      }, {
+        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+      }]
+    }, {
+      "dataPointRef": "version",
+      "samples": [{
+        "value": "1.0"
+      }, {
+        "value": "1.0"
+      }, {
+        "value": "1.0"
+      }]
+    }, {
+      "dataPointRef": "csvVersion",
+      "samples": [{
+        "value": "0.6.2"
+      }, {
+        "value": "0.6.2"
+      }, {
+        "value": "0.6.2"
+      }],
+      "mandatory": "false"
+    }, {
+      "dataPointRef": "source",
+      "samples": [{
+        "value": "?"
+      }, {
+        "value": "?"
+      }, {
+        "value": "?"
+      }]
+    }, {
+      "dataPointRef": "androidInfo",
+      "samples": [{
+        "value": "?"
+      }, {
+        "value": "?"
+      }, {
+        "value": "?"
+      }],
+      "mandatory": "false"
+    }, {
+      "dataPointRef": "language",
+      "samples": [{
+        "value": "en"
+      }, {
+        "value": "en"
+      }, {
+        "value": "sw"
+      }]
+    }, {
+      "dataPointRef": "userName",
+      "samples": [{
+        "value": "8002"
+      }, {
+        "value": "8002"
+      }, {
+        "value": "8002"
+      }]
+    }, {
+      "dataPointRef": "password",
+      "samples": [{
+        "value": "1234"
+      }, {
+        "value": "1234"
+      }, {
+        "value": "1234"
+      }]
+    }, {
+      "dataPointRef": "settings",
+      "samples": [{
+        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+      }, {
+        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+      }, {
+        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+      }],
+      "mandatory": "false"
+    }],
+    "actionsSpecs": [{
+      "dataPointRef": "type",
+      "samples": [{
+        "value": "issueReferral"
+      }, {
+        "value": "issueReferral"
+      }, {
+        "value": "issueReferral"
+      }]
+    }, {
+      "dataPointRef": "actionId",
+      "samples": [{
+        "value": "some_actionId-0"
+      }, {
+        "value": "some_actionId-1"
+      }, {
+        "value": "some_actionId-2"
+      }]
+    }, {
+      "dataPointRef": "sourceAddedDateTime",
+      "samples": [{
+        "value": "2017-10-27T10:00:00"
+      }, {
+        "value": "2017-10-28T11:00:00"
+      }, {
+        "value": "2017-10-29T12:00:00"
+      }]
+    }, {
+      "dataPointRef": "voucher",
+      "samples": [{
+        "value": "{\"type\": \"paper\", \"id\": \"1100000000\"}"
+      }, {
+        "value": "{\"type\": \"electronic\", \"id\": \"1100000001\"}"
+      }, {
+        "value": "{\"type\": \"novoucher\", \"id\": \"1100000002\"}"
+      }]
+    }, {
+      "dataPointRef": "coordinates",
+      "samples": [{
+        "value": "{\"latitude\": 10, \"longitude\": 10 }"
+      }, {
+        "value": "{\"latitude\": 20, \"longitude\": 20 }"
+      }, {
+        "value": "{\"latitude\": 30, \"longitude\": 30 }"
+      }]
+    }],
+    "dataValuesSpecs": [{
+      "dataPointRef": "program",
+      "poTerm": "ipc_issueEntry_q_program",
+      "defaultName": "Program",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "FPL"
+      }, {
+        "value": "FPL"
+      }, {
+        "value": "FPL"
+      }],
+      "options": [{
+        "value": "FPL",
+        "poTerm": "common_option_program_familyPlanning",
+        "defaultName": "Family Planning"
+      }]
+    }, {
+      "dataPointRef": "firstName",
+      "poTerm": "ipc_issueEntry_q_firstName",
+      "defaultName": "First name",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "Sara"
+      }, {
+        "value": "Sam"
+      }, {
+        "value": "Bruno"
+      }]
+    }, {
+      "dataPointRef": "lastName",
+      "poTerm": "ipc_issueEntry_q_lastName",
+      "defaultName": "Last name",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "PSI"
+      }, {
+        "value": "PSI"
+      }, {
+        "value": "Raimbault"
+      }]
+    }, {
+      "dataPointRef": "gender",
+      "poTerm": "ipc_issueEntry_q_gender",
+      "defaultName": "Gender",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "F"
+      }, {
+        "value": "F"
+      }, {
+        "value": "M"
+      }],
+      "options": [{
+        "value": "F",
+        "poTerm": "common_option_gender_female",
+        "defaultName": "Female"
+      }, {
+        "value": "M",
+        "poTerm": "common_option_gender_male",
+        "defaultName": "Male"
+      }]
+    }, {
+      "dataPointRef": "motherName",
+      "poTerm": "ipc_issueEntry_q_motherName",
+      "defaultName": "First name of mother",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "Somename 0"
+      }, {
+        "value": "Somename 1"
+      }, {
+        "value": "Somename 2"
+      }]
+    }, {
+      "dataPointRef": "birthDistrict",
+      "poTerm": "ipc_issueEntry_q_birthDistrict",
+      "defaultName": "District of birth",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "District 9"
+      }, {
+        "value": "District 10"
+      }, {
+        "value": "District 11"
+      }]
+    }, {
+      "dataPointRef": "yearOfBirth",
+      "poTerm": "ipc_issueEntry_q_yearOfBirth",
+      "defaultName": "Year of Birth",
+      "controlType": "YEAR",
+      "samples": [{
+        "value": "1970"
+      }, {
+        "value": "1980"
+      }, {
+        "value": "1990"
+      }]
+    }, {
+      "dataPointRef": "civilStatus",
+      "poTerm": "ipc_issueEntry_q_civilStatus",
+      "defaultName": "Marital status ",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "MAR"
+      }, {
+        "value": "UNMAR"
+      }, {
+        "value": "DIV"
+      }],
+      "options": [{
+        "value": "MAR",
+        "poTerm": "common_option_civilStatus_married",
+        "defaultName": "Married"
+      }, {
+        "value": "UNMAR",
+        "poTerm": "common_option_civilStatus_unmarried",
+        "defaultName": "Unmarried"
+      }, {
+        "value": "DIV",
+        "poTerm": "common_option_civilStatus_divorced",
+        "defaultName": "Divorced"
+      }, {
+        "value": "WID",
+        "poTerm": "common_option_civilStatus_widowed",
+        "defaultName": "Widowed"
+      }]
+    }, {
+      "dataPointRef": "currentMethod",
+      "poTerm": "ipc_issueEntry_q_currentMethod",
+      "defaultName": "Current method",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "PIL"
+      }, {
+        "value": "INJ"
+      }, {
+        "value": "CON"
+      }],
+      "options": [{
+        "value": "NON",
+        "poTerm": "common_option_method_none",
+        "defaultName": "None"
+      }, {
+        "value": "CON",
+        "poTerm": "common_option_method_condom",
+        "defaultName": "Condom"
+      }, {
+        "value": "INJ",
+        "poTerm": "common_option_method_injection",
+        "defaultName": "Injection"
+      }, {
+        "value": "PIL",
+        "poTerm": "common_option_method_pills",
+        "defaultName": "Pills"
+      }, {
+        "value": "IMP",
+        "poTerm": "common_option_method_implant",
+        "defaultName": "Implant"
+      }, {
+        "value": "IUD",
+        "poTerm": "common_option_method_iud",
+        "defaultName": "IUD"
+      }, {
+        "value": "OTH",
+        "poTerm": "common_option_method_other",
+        "defaultName": "Other"
+      }]
+    }, {
+      "dataPointRef": "channelOfReferral",
+      "poTerm": "ipc_issueEntry_q_channelOfReferral",
+      "defaultName": "Channel of referral",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "DD"
+      }, {
+        "value": "HF"
+      }, {
+        "value": "GS"
+      }],
+      "options": [{
+        "value": "DD",
+        "poTerm": "common_option_channelOfReferral_doorToDoor",
+        "defaultName": "Door to Door"
+      }, {
+        "value": "HF",
+        "poTerm": "common_option_channelOfReferral_healthFacility",
+        "defaultName": "Health Facility"
+      }, {
+        "value": "GS",
+        "poTerm": "common_option_channelOfReferral_groupSession",
+        "defaultName": "Group Session"
+      }]
+    }, {
+      "dataPointRef": "phoneOwnership",
+      "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
+      "defaultName": "Phone ownership",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "NO"
+      }, {
+        "value": "HER"
+      }, {
+        "value": "PAR"
+      }],
+      "options": [{
+        "value": "NO",
+        "poTerm": "common_option_ownershipOfPhone_noMobile",
+        "defaultName": "No Number"
+      }, {
+        "value": "HER",
+        "poTerm": "common_option_ownershipOfPhone_herNumber",
+        "defaultName": "Her Number"
+      }, {
+        "value": "PAR",
+        "poTerm": "common_option_ownershipOfPhone_husbandPartner",
+        "defaultName": "Husband/Partner"
+      }, {
+        "value": "SHA",
+        "poTerm": "common_option_ownershipOfPhone_shared",
+        "defaultName": "Shared"
+      }]
+    }, {
+      "dataPointRef": "phoneNumber",
+      "poTerm": "ipc_issueEntry_q_phoneNumber",
+      "defaultName": "Phone number",
+      "controlType": "PHONE_NUMBER",
+      "samples": [{
+        "value": "undefined",
+        "provider": "undefined"
+      }, {
+        "value": "+33611901852",
+        "provider": "FR-SFR"
+      }, {
+        "value": "+33611901852",
+        "provider": "FR-SFR"
+      }, {
+        "value": "+255753140000",
+        "provider": "TZ-?"
+      }],
+      "format": {
+        "accepted": [{
+          "starts": "6",
+          "length": "9",
+          "comment": "national"
+        }, {
+          "starts": "7",
+          "length": "9",
+          "comment": "national"
+        }, {
+          "starts": "+",
+          "comment": "international"
+        }, {
+          "starts": "00",
+          "comment": "international"
+        }],
+        "details": {
+          "trunkPrefix": "0",
+          "dialingCode": "+255"
+        }
+      }
+    }, {
+      "dataPointRef": "phoneContactConsent",
+      "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
+      "defaultName": "Further phone contact consent",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "YESP"
+      }, {
+        "value": "YESPP"
+      }],
+      "options": [{
+        "value": "NO",
+        "poTerm": "common_option_furtherInformationConsent_no",
+        "defaultName": "No"
+      }, {
+        "value": "YESP",
+        "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
+        "defaultName": "Yes - PSI"
+      }, {
+        "value": "YESPP",
+        "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
+        "defaultName": "Yes - PSI and Partner"
+      }]
+    }, {
+      "dataPointRef": "noOfLivingChildren",
+      "poTerm": "ipc_issueEntry_q_numberOfChildren",
+      "defaultName": "Number of living children",
+      "controlType": "INT",
+      "samples": [{
+        "value": "2"
+      }, {
+        "value": "0"
+      }, {
+        "value": "3"
+      }]
+    }, {
+      "dataPointRef": "ageYoungest",
+      "poTerm": "ipc_issueEntry_afterIssuing_q1_title",
+      "defaultName": "Age of youngest child",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "0-6M"
+      }, {
+        "value": "undefined"
+      }, {
+        "value": "2+Y"
+      }],
+      "options": [{
+        "value": "0-6M",
+        "poTerm": "ipc_issueEntry_afterIssuing_q1_option1",
+        "defaultName": "0 - 6 months"
+      }, {
+        "value": "6-12M",
+        "poTerm": "ipc_issueEntry_afterIssuing_q1_option2",
+        "defaultName": "6 - 12 months"
+      }, {
+        "value": "1-2Y",
+        "poTerm": "ipc_issueEntry_afterIssuing_q1_option3",
+        "defaultName": "1 - 2 years"
+      }, {
+        "value": "2+Y",
+        "poTerm": "ipc_issueEntry_afterIssuing_q1_option4",
+        "defaultName": "Above 2 years"
+      }]
+    }],
+    "rulesSpecs": [{
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "HER",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneNumber",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "PAR",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneNumber",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "SHA",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneNumber",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "HER",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneContactConsent",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "PAR",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneContactConsent",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "SHA",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneContactConsent",
+        "do": "SHOW"
+      }]
+    }]
+  }
+}

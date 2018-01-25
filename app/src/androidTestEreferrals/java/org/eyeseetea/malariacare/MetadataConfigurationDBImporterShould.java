@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.cleanUsedTables;
 import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getOptionsDBCount;
 import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getPhoneFormatDBCount;
 import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getProgramsDBCount;
@@ -37,7 +36,6 @@ public class MetadataConfigurationDBImporterShould {
 
     @Before
     public void setUp() throws Exception {
-        cleanUsedTables();
         CredentialsReader credentialsReader = CredentialsReader.getInstance();
         Session.setCredentials(
                 new Credentials("/", credentialsReader.getUser(),
@@ -50,7 +48,6 @@ public class MetadataConfigurationDBImporterShould {
     @After
     public void tearDown() throws IOException {
         dhis2MockServer.shutdown();
-         cleanUsedTables();
     }
 
     @Test

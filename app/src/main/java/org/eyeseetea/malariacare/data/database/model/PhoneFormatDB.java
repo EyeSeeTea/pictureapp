@@ -75,6 +75,27 @@ public class PhoneFormatDB extends BaseModel {
         this.prefixToPut = prefixToPut;
     }
 
+    public static void deleteProgramsBy(@NonNull Long id_program) {
+        new Delete()
+                .from(PhoneFormatDB.class)
+                .where(PhoneFormatDB_Table.id_program_fk
+                        .is(id_program));
+    }
+
+    public static void deleteAll() {
+        for (PhoneFormatDB format : getAllPhoneFormats()) {
+            format.delete();
+        }
+    }
+
+    public static List<PhoneFormatDB> getAllPhoneFormats() {
+        return new Select().from(PhoneFormatDB.class).queryList();
+    }
+
+    public static int getPhoneFormatDBCount() {
+        return getAllPhoneFormats().size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,22 +139,5 @@ public class PhoneFormatDB extends BaseModel {
                 ", trunkPrefix='" + trunkPrefix + '\'' +
                 ", prefixToPut='" + prefixToPut + '\'' +
                 '}';
-    }
-
-    public static void deleteProgramsBy(@NonNull Long id_program) {
-        new Delete()
-                .from(PhoneFormatDB.class)
-                .where(PhoneFormatDB_Table.id_program_fk
-                        .is(id_program));
-    }
-
-    public static void deleteAll() {
-        for (PhoneFormatDB format : getAllPhoneFormats()) {
-            format.delete();
-        }
-    }
-
-    public static List<PhoneFormatDB> getAllPhoneFormats() {
-        return new Select().from(PhoneFormatDB.class).queryList();
     }
 }

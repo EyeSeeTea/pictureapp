@@ -3,16 +3,17 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertTrue;
 
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getOptionsDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getQuestionDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getQuestionOptionDBCount;
-
 import com.squareup.okhttp.Credentials;
 
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDataSourceFactory;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.junit.Before;
@@ -54,9 +55,9 @@ public class RealMetadataConfigurationDBImporterShould {
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {
-        int questionsCount = getQuestionDBCount();
-        int questionsOptionsCount = getQuestionOptionDBCount();
-        int optionsCount = getOptionsDBCount();
+        int questionsCount = QuestionDB.getQuestionDBCount();
+        int questionsOptionsCount = QuestionOptionDB.getQuestionOptionDBCount();
+        int optionsCount = OptionDB.getOptionsDBCount();
 
         assertTrue(questionsCount > 0);
         assertTrue(questionsOptionsCount > 0);

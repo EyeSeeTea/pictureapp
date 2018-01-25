@@ -86,6 +86,10 @@ public class ProgramDB extends BaseModel {
         return new Select().from(ProgramDB.class).queryList();
     }
 
+    public static int getProgramsDBCount() {
+        return getAllPrograms().size();
+    }
+
     public static void deleteAll() {
         for (ProgramDB programDB : getAllPrograms()) {
             programDB.delete();

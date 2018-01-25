@@ -124,6 +124,10 @@ public class OptionDB extends BaseModel {
         return new Select().from(OptionDB.class).queryList();
     }
 
+    public static int getOptionsDBCount(){
+        return getAllOptions().size();
+    }
+
     public static void deleteAll() {
         for (OptionDB optionDB : getAllOptions()) {
             optionDB.delete();

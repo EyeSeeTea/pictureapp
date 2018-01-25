@@ -3,20 +3,24 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getOptionsDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getPhoneFormatDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getProgramsDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getQuestionDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil.getQuestionOptionDBCount;
-import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
-import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
+import static org.eyeseetea.malariacare.configurationimporter
+        .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
+import static org.eyeseetea.malariacare.configurationimporter
+        .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationApiClient;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationApiClient;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
@@ -99,11 +103,11 @@ public class MetadataConfigurationDBImporterShould {
     private void shouldBeInDB(int expectedQuestionsCount, int expectedQuestionsOptionsCount,
             int expectedOptionsCount, int expectedProgramsCount, int expectedPhoneFormatsCount) {
 
-        int questionsCount = getQuestionDBCount();
-        int questionsOptionsCount = getQuestionOptionDBCount();
-        int optionsCount = getOptionsDBCount();
-        int programsCount = getProgramsDBCount();
-        int formatsCount = getPhoneFormatDBCount();
+        int questionsCount = QuestionDB.getQuestionDBCount();
+        int questionsOptionsCount = QuestionOptionDB.getQuestionOptionDBCount();
+        int optionsCount = OptionDB.getOptionsDBCount();
+        int programsCount = ProgramDB.getProgramsDBCount();
+        int formatsCount = PhoneFormatDB.getPhoneFormatDBCount();
 
         assertEquals(questionsCount, expectedQuestionsCount);
         assertEquals(questionsOptionsCount, expectedQuestionsOptionsCount);

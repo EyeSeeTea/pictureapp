@@ -3,10 +3,8 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.configurationimporter
-        .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
-import static org.eyeseetea.malariacare.configurationimporter
-        .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
+import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
+import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -15,12 +13,10 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
+import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
-        .MetadataConfigurationApiClient;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
-        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationApiClient;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
@@ -33,7 +29,8 @@ import java.io.IOException;
 
 public class MetadataConfigurationDBImporterShould {
 
-    private Dhis2MockServer dhis2MockServer;
+
+    private CustomMockServer dhis2MockServer;
 
     private final Program program = new Program("T_TZ", "low6qUS2wc9");
 
@@ -45,7 +42,7 @@ public class MetadataConfigurationDBImporterShould {
                 new Credentials("/", credentialsReader.getUser(),
                         credentialsReader.getPassword()));
 
-        dhis2MockServer = new Dhis2MockServer(new AssetsFileReader());
+        dhis2MockServer = new CustomMockServer(new AssetsFileReader());
 
     }
 

@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.common.FileReader;
-import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
+import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
@@ -37,7 +37,7 @@ public class MetadataConfigurationApiClientShould {
 
     private MetadataConfigurationApiClient apiClient;
 
-    private Dhis2MockServer dhis2MockServer;
+    private CustomMockServer CustomMockServer;
 
     private List<Question> questions;
 
@@ -46,15 +46,15 @@ public class MetadataConfigurationApiClientShould {
     @Before
     public void setUp() throws Exception {
 
-        dhis2MockServer = new Dhis2MockServer(new FileReader());
+        CustomMockServer = new CustomMockServer(new FileReader());
 
-        apiClient = new MetadataConfigurationApiClient(dhis2MockServer.getBaseEndpoint(),
+        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(),
                 new BasicAuthInterceptor(""));
     }
 
     @After
     public void teardown() throws IOException {
-        dhis2MockServer.shutdown();
+        CustomMockServer.shutdown();
     }
 
     @Test
@@ -141,7 +141,7 @@ public class MetadataConfigurationApiClientShould {
     }
 
     private void enqueueMalformedJson() throws IOException {
-        dhis2MockServer.enqueueMockResponse(200, "{malformedJson}");
+        CustomMockServer.enqueueMockResponse(200, "{malformedJson}");
 
     }
 
@@ -163,7 +163,7 @@ public class MetadataConfigurationApiClientShould {
 
     private void whenRequestCountryVersions() throws Exception {
 
-        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION);
+        CustomMockServer.enqueueMockResponse(COUNTRIES_VERSION);
 
         countryVersions = apiClient.getCountriesVersions();
 
@@ -171,7 +171,7 @@ public class MetadataConfigurationApiClientShould {
 
     private void requestQuestionsFor(String countryFile, String countryCode) throws Exception {
 
-        dhis2MockServer.enqueueMockResponse(countryFile);
+        CustomMockServer.enqueueMockResponse(countryFile);
 
         questions = apiClient.getQuestionsByCountryCode(countryCode);
 
@@ -263,7 +263,7 @@ public class MetadataConfigurationApiClientShould {
     }
 
     private void whenA404ErrorHappen() throws Exception {
-        dhis2MockServer.enqueueMockResponse(404);
+        CustomMockServer.enqueueMockResponse(404);
         apiClient.getQuestionsByCountryCode("mz");
     }
 

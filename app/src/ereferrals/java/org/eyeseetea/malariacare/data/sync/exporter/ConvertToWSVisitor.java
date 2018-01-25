@@ -46,12 +46,20 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private String language;
 
     public ConvertToWSVisitor() {
+        IDeviceRepository deviceDataSource = new DeviceDataSource();
+        Device device = deviceDataSource.getDevice();
+        init(device);
+    }
+
+    public ConvertToWSVisitor(Device device) {
+        init(device);
+    }
+
+    private void init(Device device) {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         ISettingsRepository currentLanguageRepository = new SettingsDataSource();
-        IDeviceRepository deviceDataSource = new DeviceDataSource();
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
         AppInfo appInfo = appInfoDataSource.getAppInfo();
-        Device device = deviceDataSource.getDevice();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
         language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
@@ -151,8 +159,12 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private boolean hasPhone(SurveyDB survey, Context context) {
-        return !(survey.getOptionSelectedForQuestionCode(
-                context.getString(R.string.phone_ownership_qc)).getName().equals(
+        OptionDB optionDB = survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc));
+        if (optionDB == null) {
+            return false;
+        }
+        return !(optionDB.getName().equals(
                 context.getString(R.string.no_phone_on)));
     }
 

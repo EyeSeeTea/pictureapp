@@ -36,6 +36,13 @@ public class WSPushController implements IPushController {
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }
 
+    public WSPushController(eReferralsAPIClient eReferralsAPIClient,
+            ConvertToWSVisitor convertToWSVisitor)
+            throws IllegalArgumentException {
+        mEReferralsAPIClient = eReferralsAPIClient;
+        mConvertToWSVisitor = convertToWSVisitor;
+    }
+
     @Override
     public void push(IPushControllerCallback callback) {
         mCallback = callback;

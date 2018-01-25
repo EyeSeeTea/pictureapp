@@ -75,7 +75,7 @@ public class PhoneFormatDB extends BaseModel {
         this.prefixToPut = prefixToPut;
     }
 
-    public static void deleteProgramsBy(@NonNull Long id_program) {
+    public static void deleteByProgramId(@NonNull Long id_program) {
         new Delete()
                 .from(PhoneFormatDB.class)
                 .where(PhoneFormatDB_Table.id_program_fk

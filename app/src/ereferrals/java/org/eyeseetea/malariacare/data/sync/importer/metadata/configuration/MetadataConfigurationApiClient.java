@@ -50,7 +50,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @Override
-    public List<Question> getQuestionsFor(String countryCode) throws Exception {
+    public List<Question> getQuestionsByCountryCode(String countryCode) throws Exception {
 
         MetadataConfigurationConverterApiModelToDomain
                 converter = new MetadataConfigurationConverterApiModelToDomain();

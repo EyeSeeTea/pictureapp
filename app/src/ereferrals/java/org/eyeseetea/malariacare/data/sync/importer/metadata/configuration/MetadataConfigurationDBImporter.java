@@ -145,7 +145,7 @@ public class MetadataConfigurationDBImporter {
     }
 
     private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsFor(country.getReference());
+        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
         saveInDB(country);
         saveQuestionsInDB(questions, country);
     }

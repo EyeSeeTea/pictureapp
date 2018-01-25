@@ -173,7 +173,7 @@ public class MetadataConfigurationApiClientShould {
 
         dhis2MockServer.enqueueMockResponse(countryFile);
 
-        questions = apiClient.getQuestionsFor(countryCode);
+        questions = apiClient.getQuestionsByCountryCode(countryCode);
 
     }
 
@@ -264,12 +264,12 @@ public class MetadataConfigurationApiClientShould {
 
     private void whenA404ErrorHappen() throws Exception {
         dhis2MockServer.enqueueMockResponse(404);
-        apiClient.getQuestionsFor("mz");
+        apiClient.getQuestionsByCountryCode("mz");
     }
 
     private void whenReceiveAMalformedJSON() throws Exception {
         enqueueMalformedJson();
 
-        apiClient.getQuestionsFor("dc@MZ@v1");
+        apiClient.getQuestionsByCountryCode("dc@MZ@v1");
     }
 }

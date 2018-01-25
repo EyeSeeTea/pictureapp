@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface IMetadataConfigurationDataSource {
 
-    List<Question> getQuestionsFor(String countryCode) throws Exception;
+    List<Question> getQuestionsByCountryCode(String countryCode) throws Exception;
     List<Configuration.CountryVersion> getCountriesVersions() throws Exception;
 }

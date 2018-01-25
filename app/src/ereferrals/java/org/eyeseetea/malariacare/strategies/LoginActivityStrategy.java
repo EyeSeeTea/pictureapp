@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -123,6 +124,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void initViews() {
+        EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
+        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        final TextInputLayout passwordHint =
+                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
 
         initTextFields();
 
@@ -165,6 +172,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             loginType = LoginType.SOFT;
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
                             loginActivity.getUsernameEditText().setEnabled(false);
+                            loginActivity.getUsernameEditText().setText(credentials.getUsername());
+                            CommonQuestionView.showKeyboard(loginActivity,
+                                    loginActivity.getPasswordEditText());
                             loginActivity.getPasswordEditText().requestFocus();
                         } else {
                             loginType = LoginType.FULL;

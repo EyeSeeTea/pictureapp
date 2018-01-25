@@ -42,7 +42,6 @@ import org.eyeseetea.malariacare.services.PushService;
 public class PushServiceStrategy extends APushServiceStrategy {
 
     public static final String TAG = ".PushServiceStrategy";
-
     public static final String SERVICE_METHOD = "serviceMethod";
     public static final String PUSH_MESSAGE = "PushStart";
     public static final String PUSH_IS_START = "PushIsStart";

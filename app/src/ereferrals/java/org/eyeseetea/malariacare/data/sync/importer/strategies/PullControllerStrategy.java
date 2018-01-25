@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
+import static org.eyeseetea.malariacare.network.ServerAPIController.isNetworkAvailable;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

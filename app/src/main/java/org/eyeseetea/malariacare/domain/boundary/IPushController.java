@@ -27,7 +27,6 @@ public interface IPushController {
     void changePushInProgress(boolean inProgress);
 
     interface IPushControllerCallback {
-
         void onStartPushing();
 
         void onComplete();

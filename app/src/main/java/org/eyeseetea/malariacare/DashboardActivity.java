@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare;
 
+import static org.eyeseetea.malariacare.BuildConfig.exitFromSurveyToImproveTab;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -512,8 +514,10 @@ public class DashboardActivity extends BaseActivity {
         }
 
         if (isSent) {
-            tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
             showUnsentFragment();
+            if (exitFromSurveyToImproveTab) {
+                tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
+            }
         } else {
             showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
@@ -828,6 +832,7 @@ public class DashboardActivity extends BaseActivity {
 
     public void refreshStatus() {
         mDashboardActivityStrategy.reloadFirstFragmentHeader();
+        mDashboardActivityStrategy.onConnectivityStatusChange();
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {

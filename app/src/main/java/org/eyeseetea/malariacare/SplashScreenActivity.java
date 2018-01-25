@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare;
 
+import static org.eyeseetea.malariacare.BuildConfig.maxDaysForDeletingSentSurveys;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.PostMigration;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -83,6 +85,11 @@ public class SplashScreenActivity extends Activity {
             e.printStackTrace();
         }
 
+
+        if(BuildConfig.performMaintenanceTasks) {
+            performMaintenanceTasks();
+        }
+
     }
 
     private void downloadLanguagesFromServer() throws Exception {
@@ -132,5 +139,9 @@ public class SplashScreenActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         splashActivityStrategy.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void performMaintenanceTasks() {
+        SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
     }
 }

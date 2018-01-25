@@ -1,13 +1,19 @@
 package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter;
 
 
+import com.raizlabs.android.dbflow.annotation.NotNull;
+
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 
-public class ConverterFromApiPhoneFormatToDomainModel {
+public class PhoneFormatToDomainVisitor implements
+        IConvertDomainDBVisitor<MetadataConfigurationsApi.PhoneFormat, PhoneFormat> {
 
-    public PhoneFormat convert(
+    @NotNull
+    @Override
+    public PhoneFormat visit (
             MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
 
         String phoneMask = parseToPhoneMask(apiPhoneFormat);

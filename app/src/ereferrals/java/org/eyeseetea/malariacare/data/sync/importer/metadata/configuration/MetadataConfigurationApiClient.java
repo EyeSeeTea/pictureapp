@@ -394,7 +394,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                 MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
 
             if (apiPhoneFormat != null) {
-                return phoneFormatConverter.convert(apiPhoneFormat);
+                return phoneFormatConverter.visit(apiPhoneFormat);
             }
 
             return null;

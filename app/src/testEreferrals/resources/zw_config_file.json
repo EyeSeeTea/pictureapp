@@ -1,6 +1,11 @@
 {
-  "version": "0.6.2",
-  "languages": ["en", "sw"],
+  "countryCode": "ZW",
+  "program": "VMMC",
+  "actionType": "issueReferral",
+  "version": "1",
+  "updateDate": "2017-12-13 08:00",
+  "updateUser": "BR",
+  "languages": ["en"],
   "issuing_capture": {
     "validSamples": [0, 1, 2],
     "payloadSpecs": [{
@@ -57,16 +62,16 @@
       }, {
         "value": "en"
       }, {
-        "value": "sw"
+        "value": "en"
       }]
     }, {
       "dataPointRef": "userName",
       "samples": [{
-        "value": "8002"
+        "value": "8005"
       }, {
-        "value": "8002"
+        "value": "8005"
       }, {
-        "value": "8002"
+        "value": "8005"
       }]
     }, {
       "dataPointRef": "password",
@@ -118,11 +123,11 @@
     }, {
       "dataPointRef": "voucher",
       "samples": [{
-        "value": "{\"type\": \"paper\", \"id\": \"1100000000\"}"
+        "value": "{\"type\": \"paper\", \"id\": \"1110000000\"}"
       }, {
-        "value": "{\"type\": \"electronic\", \"id\": \"1100000001\"}"
+        "value": "{\"type\": \"electronic\", \"id\": \"1110000001\"}"
       }, {
-        "value": "{\"type\": \"novoucher\", \"id\": \"1100000002\"}"
+        "value": "{\"type\": \"novoucher\", \"id\": \"1110000002\"}"
       }]
     }, {
       "dataPointRef": "coordinates",
@@ -140,16 +145,16 @@
       "defaultName": "Program",
       "controlType": "DROPDOWN_LIST",
       "samples": [{
-        "value": "FPL"
+        "value": "VMMC"
       }, {
-        "value": "FPL"
+        "value": "VMMC"
       }, {
-        "value": "FPL"
+        "value": "VMMC"
       }],
       "options": [{
-        "value": "FPL",
-        "poTerm": "common_option_program_familyPlanning",
-        "defaultName": "Family Planning"
+        "value": "VMMC",
+        "poTerm": "common_option_program_VMMC",
+        "defaultName": "VMMC"
       }]
     }, {
       "dataPointRef": "firstName",
@@ -174,6 +179,18 @@
         "value": "PSI"
       }, {
         "value": "Raimbault"
+      }]
+    }, {
+      "dataPointRef": "age",
+      "poTerm": "ipc_issueEntry_q_age",
+      "defaultName": "Age",
+      "controlType": "INT",
+      "samples": [{
+        "value": "40"
+      }, {
+        "value": "30"
+      }, {
+        "value": "20"
       }]
     }, {
       "dataPointRef": "gender",
@@ -221,113 +238,6 @@
         "value": "District 11"
       }]
     }, {
-      "dataPointRef": "yearOfBirth",
-      "poTerm": "ipc_issueEntry_q_yearOfBirth",
-      "defaultName": "Year of Birth",
-      "controlType": "YEAR",
-      "samples": [{
-        "value": "1970"
-      }, {
-        "value": "1980"
-      }, {
-        "value": "1990"
-      }]
-    }, {
-      "dataPointRef": "civilStatus",
-      "poTerm": "ipc_issueEntry_q_civilStatus",
-      "defaultName": "Marital status ",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "MAR"
-      }, {
-        "value": "UNMAR"
-      }, {
-        "value": "DIV"
-      }],
-      "options": [{
-        "value": "MAR",
-        "poTerm": "common_option_civilStatus_married",
-        "defaultName": "Married"
-      }, {
-        "value": "UNMAR",
-        "poTerm": "common_option_civilStatus_unmarried",
-        "defaultName": "Unmarried"
-      }, {
-        "value": "DIV",
-        "poTerm": "common_option_civilStatus_divorced",
-        "defaultName": "Divorced"
-      }, {
-        "value": "WID",
-        "poTerm": "common_option_civilStatus_widowed",
-        "defaultName": "Widowed"
-      }]
-    }, {
-      "dataPointRef": "currentMethod",
-      "poTerm": "ipc_issueEntry_q_currentMethod",
-      "defaultName": "Current method",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "PIL"
-      }, {
-        "value": "INJ"
-      }, {
-        "value": "CON"
-      }],
-      "options": [{
-        "value": "NON",
-        "poTerm": "common_option_method_none",
-        "defaultName": "None"
-      }, {
-        "value": "CON",
-        "poTerm": "common_option_method_condom",
-        "defaultName": "Condom"
-      }, {
-        "value": "INJ",
-        "poTerm": "common_option_method_injection",
-        "defaultName": "Injection"
-      }, {
-        "value": "PIL",
-        "poTerm": "common_option_method_pills",
-        "defaultName": "Pills"
-      }, {
-        "value": "IMP",
-        "poTerm": "common_option_method_implant",
-        "defaultName": "Implant"
-      }, {
-        "value": "IUD",
-        "poTerm": "common_option_method_iud",
-        "defaultName": "IUD"
-      }, {
-        "value": "OTH",
-        "poTerm": "common_option_method_other",
-        "defaultName": "Other"
-      }]
-    }, {
-      "dataPointRef": "channelOfReferral",
-      "poTerm": "ipc_issueEntry_q_channelOfReferral",
-      "defaultName": "Channel of referral",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "DD"
-      }, {
-        "value": "HF"
-      }, {
-        "value": "GS"
-      }],
-      "options": [{
-        "value": "DD",
-        "poTerm": "common_option_channelOfReferral_doorToDoor",
-        "defaultName": "Door to Door"
-      }, {
-        "value": "HF",
-        "poTerm": "common_option_channelOfReferral_healthFacility",
-        "defaultName": "Health Facility"
-      }, {
-        "value": "GS",
-        "poTerm": "common_option_channelOfReferral_groupSession",
-        "defaultName": "Group Session"
-      }]
-    }, {
       "dataPointRef": "phoneOwnership",
       "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
       "defaultName": "Phone ownership",
@@ -371,15 +281,17 @@
         "value": "+33611901852",
         "provider": "FR-SFR"
       }, {
-        "value": "+255753140000",
-        "provider": "TZ-?"
+        "value": "+263772422806",
+        "provider": "ZW-ECONET"
+      }, {
+        "value": "+263712647215",
+        "provider": "ZW-NETONE"
+      }, {
+        "value": "+263731100984",
+        "provider": "ZW-TELECEL"
       }],
       "format": {
         "accepted": [{
-          "starts": "6",
-          "length": "9",
-          "comment": "national"
-        }, {
           "starts": "7",
           "length": "9",
           "comment": "national"
@@ -392,7 +304,7 @@
         }],
         "details": {
           "trunkPrefix": "0",
-          "dialingCode": "+255"
+          "dialingCode": "+263"
         }
       }
     }, {
@@ -421,45 +333,243 @@
         "defaultName": "Yes - PSI and Partner"
       }]
     }, {
-      "dataPointRef": "noOfLivingChildren",
-      "poTerm": "ipc_issueEntry_q_numberOfChildren",
-      "defaultName": "Number of living children",
-      "controlType": "INT",
-      "samples": [{
-        "value": "2"
-      }, {
-        "value": "0"
-      }, {
-        "value": "3"
-      }]
-    }, {
-      "dataPointRef": "ageYoungest",
-      "poTerm": "ipc_issueEntry_afterIssuing_q1_title",
-      "defaultName": "Age of youngest child",
+      "dataPointRef": "generateVoucher",
+      "poTerm": "ipc_issueEntry_q_isClientReferred",
+      "defaultName": "Would you like to issue a voucher?",
       "controlType": "DROPDOWN_LIST",
       "samples": [{
-        "value": "0-6M"
+        "value": "YES"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "NO"
+      }],
+      "options": [{
+        "value": "YES",
+        "poTerm": "common_btn_yes",
+        "defaultName": "Yes"
+      }, {
+        "value": "NO",
+        "poTerm": "common_btn_no",
+        "defaultName": "No"
+      }]
+    }, {
+      "dataPointRef": "ZW_targetGroup",
+      "poTerm": "ipc_issueEntry_q_ZW_targetGroup",
+      "defaultName": "MC Target group",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "School Going"
+      }, {
+        "value": "Out of School"
+      }, {
+        "value": "Out of School"
+      }],
+      "options": [{
+        "value": "School Going",
+        "poTerm": "common_option_ZW_targetGroup_schoolGoing",
+        "defaultName": "School Going"
+      }, {
+        "value": "Out of School",
+        "poTerm": "common_option_ZW_targetGroup_outSchool",
+        "defaultName": "Out of School"
+      }]
+    }, {
+      "dataPointRef": "ZW_segment",
+      "poTerm": "ipc_issueEntry_q_ZW_segment",
+      "defaultName": "Segment",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "Orange"
+      }, {
+        "value": "Grey"
+      }, {
+        "value": "Brown"
+      }],
+      "options": [{
+        "value": "Orange",
+        "poTerm": "common_option_ZW_targetGroup_Orange",
+        "defaultName": "Orange"
+      }, {
+        "value": "Yellow",
+        "poTerm": "common_option_ZW_targetGroup_Yellow",
+        "defaultName": "Yellow"
+      }, {
+        "value": "Grey",
+        "poTerm": "common_option_ZW_targetGroup_Grey",
+        "defaultName": "Grey"
+      }, {
+        "value": "Maroon",
+        "poTerm": "common_option_ZW_targetGroup_Maroon",
+        "defaultName": "Maroon"
+      }, {
+        "value": "Brown",
+        "poTerm": "common_option_ZW_targetGroup_Brown",
+        "defaultName": "Brown"
+      }, {
+        "value": "Purple",
+        "poTerm": "common_option_ZW_targetGroup_Purple",
+        "defaultName": "Purple"
+      }, {
+        "value": "Green",
+        "poTerm": "common_option_ZW_targetGroup_Green",
+        "defaultName": "Green"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgBenefits",
+      "poTerm": "ipc_issueEntry_q_ZW_msgBenefits",
+      "defaultName": "Message: Benefits of VMMC",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "YES"
       }, {
         "value": "undefined"
       }, {
-        "value": "2+Y"
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgPain",
+      "poTerm": "ipc_issueEntry_q_ZW_msgPain",
+      "defaultName": "Message: Pain",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgSexAppeal",
+      "poTerm": "ipc_issueEntry_q_ZW_msgSexAppeal",
+      "defaultName": "Message: Sex appeal",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "undefined"
+      }, {
+        "value": "YES"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgSocialSupport",
+      "poTerm": "ipc_issueEntry_q_ZW_msgSocialSupport",
+      "defaultName": "Message: Social support",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgProcedure",
+      "poTerm": "ipc_issueEntry_q_ZW_msgProcedure",
+      "defaultName": "Message: VMMC procedure",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_levelOfInterest",
+      "poTerm": "ipc_issueEntry_q_ZW_levelOfInterest",
+      "defaultName": "Level of Interest",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "High"
+      }, {
+        "value": "Low"
+      }, {
+        "value": "Not Interested"
       }],
       "options": [{
-        "value": "0-6M",
-        "poTerm": "ipc_issueEntry_afterIssuing_q1_option1",
-        "defaultName": "0 - 6 months"
+        "value": "High",
+        "poTerm": "common_option_ZW_targetGroup_High",
+        "defaultName": "High"
       }, {
-        "value": "6-12M",
-        "poTerm": "ipc_issueEntry_afterIssuing_q1_option2",
-        "defaultName": "6 - 12 months"
+        "value": "Medium",
+        "poTerm": "common_option_ZW_targetGroup_Medium",
+        "defaultName": "Medium"
       }, {
-        "value": "1-2Y",
-        "poTerm": "ipc_issueEntry_afterIssuing_q1_option3",
-        "defaultName": "1 - 2 years"
+        "value": "Low",
+        "poTerm": "common_option_ZW_targetGroup_Low",
+        "defaultName": "Low"
       }, {
-        "value": "2+Y",
-        "poTerm": "ipc_issueEntry_afterIssuing_q1_option4",
-        "defaultName": "Above 2 years"
+        "value": "Not Interested",
+        "poTerm": "common_option_ZW_targetGroup_NotInterested",
+        "defaultName": "Not Interested"
+      }]
+    }, {
+      "dataPointRef": "ZW_hivTestedLast3Months",
+      "poTerm": "ipc_issueEntry_q_ZW_hivTestedLast3Months",
+      "defaultName": "Have you been tested for HIV in the past 3 months",
+      "controlType": "",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "NO"
+      }],
+      "options": [{
+        "value": "YES",
+        "poTerm": "common_btn_yes",
+        "defaultName": "Yes"
+      }, {
+        "value": "NO",
+        "poTerm": "common_btn_no",
+        "defaultName": "No"
+      }]
+    }, {
+      "dataPointRef": "ZW_hivSelfTestGiven",
+      "poTerm": "ipc_issueEntry_q_ZW_hivSelfTestGiven",
+      "defaultName": "HIV Self Test Kit Given",
+      "controlType": "",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "NO"
+      }, {
+        "value": "NO"
+      }],
+      "options": [{
+        "value": "YES",
+        "poTerm": "common_btn_yes",
+        "defaultName": "Yes"
+      }, {
+        "value": "NO",
+        "poTerm": "common_btn_no",
+        "defaultName": "No"
+      }]
+    }, {
+      "dataPointRef": "ZW_hivSelfTestAssistance",
+      "poTerm": "ipc_issueEntry_q_ZW_hivSelfTestAssistance",
+      "defaultName": "IPC assisted HIV Self Testing",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "Assisted"
+      }, {
+        "value": "Administered"
+      }, {
+        "value": "Absent"
+      }],
+      "options": [{
+        "value": "Assisted",
+        "poTerm": "common_option_ZW_targetGroup_Assisted",
+        "defaultName": "Assisted"
+      }, {
+        "value": "Administered",
+        "poTerm": "common_option_ZW_targetGroup_Administered",
+        "defaultName": "Administered"
+      }, {
+        "value": "Absent",
+        "poTerm": "common_option_ZW_targetGroup_Absent",
+        "defaultName": "Absent"
       }]
     }],
     "rulesSpecs": [{

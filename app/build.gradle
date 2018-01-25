@@ -28,15 +28,12 @@ android {
     }
 
     sourceSets {
-        String sharedJVMTestDir = 'src/sharedJVMTest/java'
-        String sharedAndroidTestDir = 'src/sharedAndroidTest/java'
-
+        String sharedTestDir = 'src/sharedTest/java'
         test {
-            java.srcDir sharedJVMTestDir
+            java.srcDir sharedTestDir
         }
         androidTest {
-            java.srcDir sharedJVMTestDir
-            java.srcDir sharedAndroidTestDir
+            java.srcDirs sharedTestDir
         }
     }
 

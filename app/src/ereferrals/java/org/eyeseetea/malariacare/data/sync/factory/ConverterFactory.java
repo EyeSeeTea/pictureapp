@@ -2,13 +2,16 @@ package org.eyeseetea.malariacare.data.sync.factory;
 
 import android.support.annotation.NonNull;
 
+import org.eyeseetea.malariacare.data.database.converts.PhoneFormatConverterFromDomainToDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.mappers.OptionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.mappers.QuestionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 
 public class ConverterFactory {
     private static IConvertDomainDBVisitor<Question, QuestionDB> questionConvertDomainToDb;
@@ -20,7 +23,7 @@ public class ConverterFactory {
 
         if (questionConvertDomainToDb == null) {
             questionConvertDomainToDb = new QuestionConvertFromDomainVisitor(
-                    getOptionConverter());
+                    getOptionConverter(), getPhoneFormatConverter());
         }
 
         return questionConvertDomainToDb;
@@ -34,5 +37,9 @@ public class ConverterFactory {
             optionConvertDomainToDb = new OptionConvertFromDomainVisitor();
         }
         return optionConvertDomainToDb;
+    }
+
+    public static IConvertDomainDBVisitor<PhoneFormat, PhoneFormatDB> getPhoneFormatConverter(){
+        return new PhoneFormatConverterFromDomainToDB();
     }
 }

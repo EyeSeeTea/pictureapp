@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 /**
  * Created by ivan.arrizabalaga on 14/02/15.
  */
+@Deprecated
 @Table(database = AppDatabase.class, name="OrgUnitProgramRelation")
 public class OrgUnitProgramRelationDB extends BaseModel {
 

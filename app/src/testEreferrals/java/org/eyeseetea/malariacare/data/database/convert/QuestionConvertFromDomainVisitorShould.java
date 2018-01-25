@@ -24,7 +24,7 @@ public class QuestionConvertFromDomainVisitorShould {
     @Before
     public void setUp() throws Exception {
         converter = new QuestionConvertFromDomainVisitor(
-                ConverterFactory.getOptionConverter());
+                ConverterFactory.getOptionConverter(), ConverterFactory.getPhoneFormatConverter());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class QuestionConvertFromDomainVisitorShould {
         QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.DROPDOWN_LIST));
 
-        QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.DROPDOWN_LIST);
+        QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.DROPDOWN_OU_LIST);
 
         assertEqual(questionToEvaluate, expectedQuestion);
 
@@ -192,7 +192,7 @@ public class QuestionConvertFromDomainVisitorShould {
             QuestionDB expectedQuestion) {
         assertThat(questionToEvaluate.getCode(), is(expectedQuestion.getCode()));
         assertThat(questionToEvaluate.getDe_name(), is(expectedQuestion.getDe_name()));
-        assertThat(questionToEvaluate.getHelp_text(), is(expectedQuestion.getHelp_text()));
+        assertThat(questionToEvaluate.getForm_name(), is(expectedQuestion.getForm_name()));
         assertThat(questionToEvaluate.getOutput(), is(expectedQuestion.getOutput()));
         assertThat(questionToEvaluate.isCompulsory(), is(expectedQuestion.isCompulsory()));
 
@@ -208,8 +208,9 @@ public class QuestionConvertFromDomainVisitorShould {
 
         List<QuestionOptionDB> questionOptionDBSToExpected =
                 expectedQuestion.getQuestionOptionDBS();
-
-        assertEqual(questionOptionDBSToEvaluate, questionOptionDBSToExpected);
+        if (questionOptionDBSToEvaluate != null && questionOptionDBSToExpected != null) {
+            assertEqual(questionOptionDBSToEvaluate, questionOptionDBSToExpected);
+        }
     }
 
     private void assertEqual(List<QuestionOptionDB> questionOptionDBSToEvaluate,
@@ -281,6 +282,7 @@ public class QuestionConvertFromDomainVisitorShould {
         question.setCode("program");
         question.setName("ipc_issueEntry_q_program");
         question.setType(Question.Type.DROPDOWN_LIST);
+        question.setVisibility(Question.Visibility.VISIBLE);
         question.setCompulsory(true);
 
 
@@ -297,9 +299,9 @@ public class QuestionConvertFromDomainVisitorShould {
         QuestionDB question = new QuestionDB();
 
         question.setCode("program");
-        question.setHelp_text("ipc_issueEntry_q_program");
+        question.setForm_name("ipc_issueEntry_q_program");
         question.setDe_name("ipc_issueEntry_q_program");
-        question.setOutput(Constants.DROPDOWN_LIST);
+        question.setOutput(Constants.DROPDOWN_OU_LIST);
         question.setCompulsory(1);
 
         return question;

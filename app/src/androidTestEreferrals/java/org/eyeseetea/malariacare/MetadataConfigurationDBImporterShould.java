@@ -3,38 +3,55 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.common.android.test.BaseMockWebServerAndroidTest
-        .readFileContentFromAssets;
+import static org.eyeseetea.malariacare.configurationimporter
+        .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
+import static org.eyeseetea.malariacare.configurationimporter
+        .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.configurationImporter.BaseMetadataConfigurationImporterTest;
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationApiClient;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDBImporter;
-import org.junit.Assert;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
-import okhttp3.mockwebserver.MockResponse;
 
-public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigurationImporterTest {
+public class MetadataConfigurationDBImporterShould {
 
-    protected Context context;
+    private Dhis2MockServer dhis2MockServer;
+
+    private final Program program = new Program("T_TZ", "low6qUS2wc9");
+
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
-        context = InstrumentationRegistry.getContext();
+        CredentialsReader credentialsReader = CredentialsReader.getInstance();
+        Session.setCredentials(
+                new Credentials("/", credentialsReader.getUser(),
+                        credentialsReader.getPassword()));
+
+        dhis2MockServer = new Dhis2MockServer(new AssetsFileReader());
+
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        dhis2MockServer.shutdown();
     }
 
     @Test
@@ -45,76 +62,57 @@ public class MetadataConfigurationDBImporterShould extends BaseMetadataConfigura
         change this test position */
         givenAnEmptyDB();
 
-        whenACountryConfigFileIsReceived();
-        whenConfigFileIsParsed();
+        whenCountryConfigFilesAreReceived();
+        whenConfigFilesAreParsed();
 
-        thenCheckDBContainsTheQuestions();
+        thenAssertMetadataIsInsertedInTheDB();
     }
 
     private void givenAnEmptyDB(){
         shouldNotBeAnyQuestionInTheDB();
     }
 
-    private void whenACountryConfigFileIsReceived() throws Exception {
-        enqueueResponse(MZ_CONFIG_ANDROID_1_0_JSON);
+    private void whenCountryConfigFilesAreReceived() throws Exception {
+        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION);
+        dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
     }
 
-    private void whenConfigFileIsParsed() {
+    private void thenAssertMetadataIsInsertedInTheDB() {
+        shouldBeInDB(17, 7, 37, 1, 1);
+    }
+
+    private void whenConfigFilesAreParsed() throws Exception {
+
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(
+                dhis2MockServer.getBaseEndpoint(),
+                new BasicAuthInterceptor(""));
+
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
-                ConverterFactory.getQuestionConverter()
+                apiClient, ConverterFactory.getQuestionConverter()
         );
 
-        try {
-            importer.importMetadataConfigurations(apiClient);
-
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        importer.importMetadata(program);
     }
 
-    private void thenCheckDBContainsTheQuestions() {
-        shouldBeInDB(16, 28, 28);
-    }
 
     private void shouldNotBeAnyQuestionInTheDB() {
-        shouldBeInDB(0, 0, 0);
+        shouldBeInDB(0, 0, 0, 0, 0);
+
     }
 
     private void shouldBeInDB(int expectedQuestionsCount, int expectedQuestionsOptionsCount,
-            int expectedOptionsCount) {
+            int expectedOptionsCount, int expectedProgramsCount, int expectedPhoneFormatsCount) {
 
-        int questionsCount = getQuestionDBCount();
-        int questionsOptionsCount = getQuestionOptionDBCount();
-        int optionsCount = getOptionsDBCount();
+        int questionsCount = QuestionDB.getQuestionDBCount();
+        int questionsOptionsCount = QuestionOptionDB.getQuestionOptionDBCount();
+        int optionsCount = OptionDB.getOptionsDBCount();
+        int programsCount = ProgramDB.getProgramsDBCount();
+        int formatsCount = PhoneFormatDB.getPhoneFormatDBCount();
 
         assertEquals(questionsCount, expectedQuestionsCount);
         assertEquals(questionsOptionsCount, expectedQuestionsOptionsCount);
         assertEquals(optionsCount, expectedOptionsCount);
-    }
-
-    private int getOptionsDBCount() {
-        List<OptionDB> optionDBS = OptionDB.getAllOptions();
-
-        return optionDBS.size();
-    }
-
-    private int getQuestionOptionDBCount() {
-        List<QuestionOptionDB> questionOptionDBS = new Select().from(
-                QuestionOptionDB.class).queryList();
-
-        return questionOptionDBS.size();
-    }
-
-    private int getQuestionDBCount() {
-        List<QuestionDB> questionDBS = QuestionDB.getAllQuestions();
-        return questionDBS.size();
-    }
-
-    @Override
-    protected void enqueueResponse(String fileName) throws IOException {
-        MockResponse mockResponse = new MockResponse();
-        String fileContent = readFileContentFromAssets(context, fileName);
-        mockResponse.setBody(fileContent);
-        server.enqueue(mockResponse);
+        assertEquals(programsCount, expectedProgramsCount);
+        assertEquals(formatsCount, expectedPhoneFormatsCount);
     }
 }

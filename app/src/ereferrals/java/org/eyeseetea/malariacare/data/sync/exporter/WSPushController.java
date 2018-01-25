@@ -49,6 +49,7 @@ public class WSPushController implements IPushController {
                 callback.onError(new SurveysToPushNotFoundException("Null surveys"));
                 return;
             }
+            mCallback.onStartPushing();
             for (SurveyDB srv : mSurveys) {
                 Log.d("DpBlank", "Survey to push " + srv.toString());
                 for (ValueDB dv : srv.getValuesFromDB()) {
@@ -94,7 +95,12 @@ public class WSPushController implements IPushController {
                 new eReferralsAPIClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
                     public void onSuccess(SurveyWSResult surveyWSResult) {
-                        checkPushResult(surveyWSResult);
+                        try {
+                            checkPushResult(surveyWSResult);
+                        } catch (Exception e) {
+                            putSurveysToConflictStatus();
+                            mCallback.onError(e);
+                        }
                     }
 
                     @Override
@@ -104,6 +110,13 @@ public class WSPushController implements IPushController {
                         mCallback.onError(e);
                     }
                 });
+    }
+
+    private void putSurveysToConflictStatus() {
+        for (SurveyDB surveyDB : mSurveys) {
+            surveyDB.setStatus(Constants.SURVEY_CONFLICT);
+            surveyDB.save();
+        }
     }
 
     private int getTimeout(int vouchers) {

@@ -3,11 +3,16 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -55,6 +60,8 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
@@ -342,9 +349,17 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
-
+    @Override
     public void onResume() {
         downloadMedia();
+        LocalBroadcastManager.getInstance(mDashboardActivity).registerReceiver(pushReceiver,
+                new IntentFilter(PushService.class.getName()));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(mDashboardActivity).unregisterReceiver(pushReceiver);
     }
 
     private void downloadMedia() {
@@ -494,4 +509,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             DynamicTabAdapter.isClicked = false;
         }
     }
+
+    private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showHideProgressPush(intent);
+            mDashboardUnsentFragment.reloadData();
+        }
+    };
+
+    private void showHideProgressPush(Intent intent) {
+        View actionBarLayout = mDashboardActivity.getSupportActionBar().getCustomView();
+        ImageView refreshPush = (ImageView) actionBarLayout.findViewById(R.id.refresh_push);
+        if (intent.getBooleanExtra(PushServiceStrategy.PUSH_IS_START, false)) {
+            refreshPush.setVisibility(View.VISIBLE);
+            refreshPush.startAnimation(
+                    AnimationUtils.loadAnimation(refreshPush.getContext(),
+                            R.anim.rotate_center));
+        } else {
+            refreshPush.clearAnimation();
+            refreshPush.setVisibility(View.GONE);
+        }
+    }
+
 }

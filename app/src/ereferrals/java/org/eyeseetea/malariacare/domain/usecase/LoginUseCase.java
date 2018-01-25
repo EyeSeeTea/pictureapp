@@ -48,10 +48,10 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         mAsyncExecutor.run(this);
     }
 
+
     @Override
     public void run() {
-
-        if(insertedCredentials.isDemoCredentials()){
+        if (insertedCredentials.isDemoCredentials()) {
             runDemoLogin();
         }else {
             if (isLoginEnable()) {

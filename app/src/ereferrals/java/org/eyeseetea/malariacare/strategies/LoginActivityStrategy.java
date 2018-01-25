@@ -87,6 +87,24 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
+        showDashboardIfDemoUser();
+    }
+
+    private void showDashboardIfDemoUser() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
+            @Override
+            public void onGetUsername(Credentials credentials) {
+                if (credentials != null && credentials.isDemoCredentials()) {
+                    finishAndGo(DashboardActivity.class);
+                }
+            }
+        });
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -285,7 +303,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        loginActivity.checkAnnouncement();
+                    loginActivity.checkAnnouncement();
     }
 
     @Override

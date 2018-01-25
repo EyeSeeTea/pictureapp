@@ -105,6 +105,9 @@ public class WSPushController implements IPushController {
                         } catch (ConversionException e) {
                             e.printStackTrace();
                             mCallback.onInformativeError(e);
+                        } catch (Exception e) {
+                            putSurveysToConflictStatus();
+                            mCallback.onError(e);
                         }
                     }
 
@@ -119,6 +122,13 @@ public class WSPushController implements IPushController {
                         mCallback.onError(e);
                     }
                 });
+    }
+
+    private void putSurveysToConflictStatus() {
+        for (SurveyDB surveyDB : mSurveys) {
+            surveyDB.setStatus(Constants.SURVEY_CONFLICT);
+            surveyDB.save();
+        }
     }
 
     private int getTimeout(int vouchers) {

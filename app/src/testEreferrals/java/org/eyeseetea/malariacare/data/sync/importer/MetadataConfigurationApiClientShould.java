@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.eyeseetea.malariacare.data.file.ResourcesFileReader;
+import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
@@ -46,7 +46,7 @@ public class MetadataConfigurationApiClientShould {
     @Before
     public void setUp() throws Exception {
 
-        dhis2MockServer = new Dhis2MockServer(new ResourcesFileReader());
+        dhis2MockServer = new Dhis2MockServer(new FileReader());
 
         apiClient = new MetadataConfigurationApiClient(dhis2MockServer.getBaseEndpoint(),
                 new BasicAuthInterceptor(""));

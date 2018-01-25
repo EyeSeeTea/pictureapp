@@ -514,6 +514,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         @Override
         public void onReceive(Context context, Intent intent) {
             showHideProgressPush(intent);
+            mDashboardUnsentFragment.reloadData();
         }
     };
 

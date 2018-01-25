@@ -93,7 +93,8 @@ public class TranslationDB extends BaseModel {
         return trans == null || trans.getTranslation() == null;
     }
 
-    public static String getLocalizedStringFromDB(String string_key, String language_code) {
+    public static String getLocalizedStringFromDB(String string_key, String language_code,
+            String defaultLanguage) {
 
         TranslationDB translationDB = getTranslationByKey(string_key, language_code);
 
@@ -103,7 +104,7 @@ public class TranslationDB extends BaseModel {
             translationDB = getTranslationByKey(string_key, generalLanguage);
 
             if (isTranslationEmptyOrNull(translationDB)) {
-                translationDB = getTranslationByKey(string_key, DEFAULT_LANGUAGE);
+                translationDB = getTranslationByKey(string_key, defaultLanguage);
             }
         }
 

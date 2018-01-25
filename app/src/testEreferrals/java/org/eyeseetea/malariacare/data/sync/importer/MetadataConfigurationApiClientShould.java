@@ -1,20 +1,20 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.MZ_CONFIG_FILE_JSON;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.NP_CONFIG_FILE_JSON;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_FILE_JSON;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.ZW_CONFIG_FILE_JSON;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.eyeseetea.malariacare.data.file.ResourcesFileReader;
+import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
@@ -46,7 +46,7 @@ public class MetadataConfigurationApiClientShould {
     @Before
     public void setUp() throws Exception {
 
-        CustomMockServer = new CustomMockServer(new ResourcesFileReader());
+        CustomMockServer = new CustomMockServer(new FileReader());
 
         apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(),
                 new BasicAuthInterceptor(""));
@@ -173,7 +173,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer.enqueueMockResponse(countryFile);
 
-        questions = apiClient.getQuestionsFor(countryCode);
+        questions = apiClient.getQuestionsByCountryCode(countryCode);
 
     }
 
@@ -264,12 +264,12 @@ public class MetadataConfigurationApiClientShould {
 
     private void whenA404ErrorHappen() throws Exception {
         CustomMockServer.enqueueMockResponse(404);
-        apiClient.getQuestionsFor("mz");
+        apiClient.getQuestionsByCountryCode("mz");
     }
 
     private void whenReceiveAMalformedJSON() throws Exception {
         enqueueMalformedJson();
 
-        apiClient.getQuestionsFor("dc@MZ@v1");
+        apiClient.getQuestionsByCountryCode("dc@MZ@v1");
     }
 }

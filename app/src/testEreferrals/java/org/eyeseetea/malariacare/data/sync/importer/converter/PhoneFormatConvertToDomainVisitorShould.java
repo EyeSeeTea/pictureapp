@@ -3,8 +3,7 @@ package org.eyeseetea.malariacare.data.sync.importer.converter;
 
 import static junit.framework.TestCase.assertTrue;
 
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
-        .ConverterFromApiPhoneFormatToDomainModel;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.domain.entity.Phone;
@@ -15,14 +14,14 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-public class ConverterFromApiPhoneFormatToDomainModelShould {
+public class PhoneFormatConvertToDomainVisitorShould {
 
-    private ConverterFromApiPhoneFormatToDomainModel converter;
+    private PhoneFormatConvertToDomainVisitor converter;
     private PhoneFormat domainPhoneFormat;
 
     @Before
     public void setup() {
-        converter = new ConverterFromApiPhoneFormatToDomainModel();
+        converter = new PhoneFormatConvertToDomainVisitor();
     }
 
     @Test
@@ -44,7 +43,7 @@ public class ConverterFromApiPhoneFormatToDomainModelShould {
 
     private void whenConvertFromApiModelToDomainModel() {
         MetadataConfigurationsApi.PhoneFormat apiPhoneFormat = givenAAPIPhoneFormat();
-        domainPhoneFormat = converter.convert(apiPhoneFormat);
+        domainPhoneFormat = converter.visit(apiPhoneFormat);
     }
 
     private MetadataConfigurationsApi.PhoneFormat givenAAPIPhoneFormat() {

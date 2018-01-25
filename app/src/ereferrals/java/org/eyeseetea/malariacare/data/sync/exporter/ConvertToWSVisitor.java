@@ -6,6 +6,7 @@ import android.location.Location;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CountryVersionDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
@@ -20,10 +21,13 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Voucher;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICountryVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -62,7 +66,20 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
                 PreferencesState.getInstance().getContext().getString(
                         R.string.ws_version), device.getAndroidVersion(), credentials.getUsername(),
                 credentials.getPassword(), language, getAndroidInfo(device, appInfo),
-                appInfo.getMetadataVersion());
+                appInfo.getMetadataVersion(), getConfigFileVersion());
+    }
+
+    private int getConfigFileVersion() {
+        IProgramRepository mProgramLocalDataSource = new ProgramLocalDataSource();
+        String uid = mProgramLocalDataSource.getUserProgram().getId();
+        ICountryVersionRepository countryVersionRepository = new CountryVersionDataSource();
+        Configuration.CountryVersion countryVersion =
+                countryVersionRepository.getCountryVersionForUID(uid);
+        if (countryVersion != null) {
+            return countryVersion.getVersion();
+        } else {
+            return 0;
+        }
     }
 
     private String getAndroidInfo(Device device, AppInfo appInfo) {

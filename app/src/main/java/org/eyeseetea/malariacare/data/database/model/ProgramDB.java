@@ -86,6 +86,10 @@ public class ProgramDB extends BaseModel {
         return new Select().from(ProgramDB.class).queryList();
     }
 
+    public static int getProgramsDBCount() {
+        return getAllPrograms().size();
+    }
+
     public static void deleteAll() {
         for (ProgramDB programDB : getAllPrograms()) {
             programDB.delete();
@@ -233,14 +237,8 @@ public class ProgramDB extends BaseModel {
                 .where(ProgramDB_Table.name
                         .is(name)).querySingle();
     }
-    public static ProgramDB findBy(String uid) {
-        return new Select()
-                .from(ProgramDB.class)
-                .where(ProgramDB_Table.uid_program
-                        .is(uid)).querySingle();
-    }
 
-    public static void deleteProgramsBy(@NonNull String uid) {
+    public static void deleteProgramsByUID(@NonNull String uid) {
         new Delete()
                 .from(ProgramDB.class)
                 .where(ProgramDB_Table.uid_program

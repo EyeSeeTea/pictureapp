@@ -1,20 +1,21 @@
-package org.eyeseetea.malariacare.data.database.converts;
+package org.eyeseetea.malariacare.data.database.convert;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.mappers.OptionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.junit.Before;
 import org.junit.Test;
 
-public class OptionConverterFromDomainModelToDBShould {
+public class OptionConvertFromDomainVisitorShould {
 
-    OptionConverterFromDomainModelToDB converter;
+    OptionConvertFromDomainVisitor converter;
 
     @Before
     public void setUp() throws Exception {
-        converter = new OptionConverterFromDomainModelToDB();
+        converter = new OptionConvertFromDomainVisitor();
     }
 
     @Test
@@ -22,7 +23,7 @@ public class OptionConverterFromDomainModelToDBShould {
 
         Option domainOption = givenADomainOption();
 
-        OptionDB optionDBToEvaluate = converter.convert(domainOption);
+        OptionDB optionDBToEvaluate = converter.visit(domainOption);
 
         assertEqual(optionDBToEvaluate, givenAValidBDOption());
 

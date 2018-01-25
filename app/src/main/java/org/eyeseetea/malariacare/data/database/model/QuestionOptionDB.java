@@ -103,7 +103,7 @@ public class QuestionOptionDB extends BaseModel {
                         questionRelationDB.getId_question_relation())).queryList();
     }
 
-    public static void deleteQuestionOptionsBy(long question_id) {
+    public static void deleteQuestionOptionsById(long question_id) {
          new Delete()
                 .from(QuestionOptionDB.class)
                 .where(QuestionOptionDB_Table.id_question_fk.eq(question_id));
@@ -133,6 +133,8 @@ public class QuestionOptionDB extends BaseModel {
 //FIXME doing in two query because there is a bug in DBFlow
     }
 
+
+
     /**
      * Method to delete in cascade the mQuestionOptionDBs passed.
      *
@@ -146,6 +148,10 @@ public class QuestionOptionDB extends BaseModel {
 
     public static List<QuestionOptionDB> listAll() {
         return new Select().from(QuestionOptionDB.class).queryList();
+    }
+
+    public static int getQuestionOptionDBCount() {
+        return listAll().size();
     }
 
     public static void deleteAll() {

@@ -76,11 +76,12 @@ public class MatchDB extends BaseModel {
         deleteMatches(listAll());
     }
 
-    public static void deleteMatchBy(long question_id) {
+    public static void deleteByQuestionRelationId(long question_relation_id) {
         new Delete()
                 .from(MatchDB.class)
-                .where(MatchDB_Table.id_question_relation_fk.eq(question_id));
+                .where(MatchDB_Table.id_question_relation_fk.eq(question_relation_id));
     }
+
     public List<QuestionOptionDB> getQuestionOptionDBs() {
         if (mQuestionOptionDBs == null) {
             this.mQuestionOptionDBs = new Select().from(QuestionOptionDB.class)

@@ -3,19 +3,19 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertTrue;
 
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.cleanUsedTables;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getOptionsDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getQuestionDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getQuestionOptionDBCount;
-
 import com.squareup.okhttp.Credentials;
 
-import org.eyeseetea.malariacare.data.di.Injector;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
-import org.junit.After;
 import org.junit.Before;
 
 public class RealMetadataConfigurationDBImporterShould {
@@ -28,22 +28,15 @@ public class RealMetadataConfigurationDBImporterShould {
     @Before
     public void setUp() throws Exception {
 
-        cleanUsedTables();
-
         String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
 
         IMetadataConfigurationDataSource apiClient =
-                Injector.provideMetadataConfigurationDataSource(
+                MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
                         new BasicAuthInterceptor(credentials)
                 );
         importer = new MetadataConfigurationDBImporter(
-                apiClient, Injector.provideQuestionConverter()
+                apiClient, ConverterFactory.getQuestionConverter()
         );
-    }
-
-    @After
-    public void tearDown() {
-        cleanUsedTables();
     }
 
     //This test hit a real serve only run it when you want to verify
@@ -62,9 +55,9 @@ public class RealMetadataConfigurationDBImporterShould {
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {
-        int questionsCount = getQuestionDBCount();
-        int questionsOptionsCount = getQuestionOptionDBCount();
-        int optionsCount = getOptionsDBCount();
+        int questionsCount = QuestionDB.getQuestionDBCount();
+        int questionsOptionsCount = QuestionOptionDB.getQuestionOptionDBCount();
+        int optionsCount = OptionDB.getOptionsDBCount();
 
         assertTrue(questionsCount > 0);
         assertTrue(questionsOptionsCount > 0);

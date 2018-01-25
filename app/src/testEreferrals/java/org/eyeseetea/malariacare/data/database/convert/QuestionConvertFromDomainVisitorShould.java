@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.converts;
+package org.eyeseetea.malariacare.data.database.convert;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -6,7 +6,8 @@ import static org.hamcrest.core.Is.is;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.mappers.QuestionConvertFromDomainVisitor;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -16,21 +17,21 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionConverterFromDomainModelToDBShould {
+public class QuestionConvertFromDomainVisitorShould {
 
-    private QuestionConverterFromDomainModelToDB converter;
+    private QuestionConvertFromDomainVisitor converter;
 
     @Before
     public void setUp() throws Exception {
-        converter = new QuestionConverterFromDomainModelToDB(
-                Injector.provideOptionConverter(),Injector.providePhoneFormatConverter());
+        converter = new QuestionConvertFromDomainVisitor(
+                ConverterFactory.getOptionConverter(), ConverterFactory.getPhoneFormatConverter());
     }
 
     @Test
     public void convert_a_domain_question_with_one_options_to_questiondb_with_one_question_answer
             () {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionOneOption());
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionOneOption());
 
         QuestionDB expectedQuestion = givenADBQuestionWithOneOption();
 
@@ -42,7 +43,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_with_no_options_to_questiondb()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWithNonOptions());
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWithNonOptions());
 
         QuestionDB expectedQuestion = givenAQuestionDBNonOptions();
 
@@ -54,7 +55,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_to_questiondb_with_dropdown_list_output()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.DROPDOWN_LIST));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.DROPDOWN_OU_LIST);
@@ -66,7 +67,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Test
     public void convert_a_domain_question_to_questiondb_with_short_text_output() throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.SHORT_TEXT));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.SHORT_TEXT);
@@ -77,7 +78,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Test
     public void convert_a_domain_question_to_questiondb_with_phone_output() throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.PHONE));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.PHONE);
@@ -89,7 +90,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Test
     public void convert_a_domain_question_to_questiondb_with_year_output() throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.YEAR));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.YEAR);
@@ -101,7 +102,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Test
     public void convert_a_domain_question_to_questiondb_with_date_output() throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.DATE));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.DATE);
@@ -113,7 +114,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     @Test
     public void convert_a_domain_question_to_questiondb_with_long_output() throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.LONG_TEXT));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.LONG_TEXT);
@@ -126,7 +127,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_to_questiondb_with_positive_int_output()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.POSITIVE_INT));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.POSITIVE_INT);
@@ -139,7 +140,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_to_questiondb_with_pregnant_month_int_output()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.PREGNANT_MONTH));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.PREGNANT_MONTH_INT);
@@ -152,7 +153,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_to_questiondb_with_radio_group_horizontal_output()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.RADIO_GROUP_HORIZONTAL));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.RADIO_GROUP_HORIZONTAL);
@@ -165,7 +166,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_to_questiondb_with_question_label_output()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.QUESTION_LABEL));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.QUESTION_LABEL);
@@ -178,7 +179,7 @@ public class QuestionConverterFromDomainModelToDBShould {
     public void convert_a_domain_question_to_questiondb_with_switch_button_output()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.convert(givenADomainQuestionWith(
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
                 Question.Type.SWITCH_BUTTON));
 
         QuestionDB expectedQuestion = givenADBQuestionWithOutput(Constants.SWITCH_BUTTON);

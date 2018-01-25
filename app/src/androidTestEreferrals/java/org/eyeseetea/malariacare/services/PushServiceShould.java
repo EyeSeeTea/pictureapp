@@ -13,13 +13,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
-
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
@@ -62,7 +58,7 @@ public class PushServiceShould {
     private WSPushController mWSPushController;
     private PushUseCase mPushUseCase;
     private PushServiceStrategy mPushServiceStrategy;
-    private boolean showLogiIntentReceibed;
+    private boolean showLogiIntentReceived;
     private final Object syncObject = new Object();
 
     private Credentials previousCredentials;
@@ -73,7 +69,7 @@ public class PushServiceShould {
 
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
-        showLogiIntentReceibed = false;
+        showLogiIntentReceived = false;
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
@@ -85,7 +81,7 @@ public class PushServiceShould {
         synchronized (syncObject) {
             syncObject.wait();
         }
-        assertThat(showLogiIntentReceibed, is(true));
+        assertThat(showLogiIntentReceived, is(true));
     }
 
     @Before
@@ -192,7 +188,7 @@ public class PushServiceShould {
         private void showLoginIfConfigFileObsolete(Intent intent) {
             if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
                 synchronized (syncObject) {
-                    showLogiIntentReceibed = true;
+                    showLogiIntentReceived = true;
                     syncObject.notify();
                 }
             }

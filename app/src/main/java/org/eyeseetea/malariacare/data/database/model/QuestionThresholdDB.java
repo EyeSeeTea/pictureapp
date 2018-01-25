@@ -68,8 +68,6 @@ public class QuestionThresholdDB extends BaseModel {
     @Column
     Integer maxValue;
 
-    private List<String> matchQuestionsCode;
-
     public QuestionThresholdDB() {
     }
 
@@ -79,14 +77,6 @@ public class QuestionThresholdDB extends BaseModel {
         setMatchDB(matchDB);
         this.minValue = minValue;
         this.maxValue = maxValue;
-    }
-
-    public List<String> getMatchQuestionsCode() {
-        return matchQuestionsCode;
-    }
-
-    public void setMatchQuestionsCode(List<String> matchQuestionsCode) {
-        this.matchQuestionsCode = matchQuestionsCode;
     }
 
     public static QuestionThresholdDB findByQuestionAndOption(QuestionDB questionDBWithOption,

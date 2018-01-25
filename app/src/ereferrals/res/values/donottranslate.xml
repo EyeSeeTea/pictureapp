@@ -3,7 +3,7 @@
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://clone.psi-mis.org</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
@@ -18,7 +18,6 @@
     <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
     <string name="test_organisation_name">test_organisation</string>
     <string name="test_organisation_uid">9fV2JoHmO94</string>
-    <string name="authority">EREFERRALS_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">-0.996961</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">33.932726</string>
@@ -36,11 +35,11 @@
     <string name="url_status_fragment">ipcStats</string>
     <string name="url_open_fragment">ipcOpenReferrals</string>
     <string name="url_closed_fragment">ipcRedeemedReferrals</string>
-    <string name="base_web_view_url">https://apps.psi-mis.org/connect-train/</string>
+    <string name="base_web_view_url">https://apps.psi-mis.org/connect/</string>
     <string name="composed_web_view_url">pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s</string>
     <string name="ws_version">1.0</string>
     <string name="ws_source">Android v1.1</string>
-    <string name="ws_base_url">https://apps.psi-mis.org/eRefWSTrain/</string>
+    <string name="ws_base_url">https://apps.psi-mis.org/eRefWSProd/</string>
     <string name="error_web_resource" translatable="false">file:///android_asset/web_view_error/%1$s</string>
     <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
     <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
@@ -49,4 +48,5 @@
     <string name="last_username_inserted_preference">last_username_inserted_preference</string>
     <string name="issue_voucher_qc" translatable="false">generateVoucher</string>
     <string name="no_voucher_on" translatable="false">common_btn_no</string>
+    <string name="demo_program_uid" translatable="false">demoProgram</string>
 </resources>

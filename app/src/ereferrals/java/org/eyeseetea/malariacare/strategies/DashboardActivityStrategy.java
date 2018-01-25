@@ -3,11 +3,16 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -43,8 +48,9 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
-import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
@@ -55,6 +61,8 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
@@ -342,15 +350,23 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
-
+    @Override
     public void onResume() {
         downloadMedia();
+        LocalBroadcastManager.getInstance(mDashboardActivity).registerReceiver(pushReceiver,
+                new IntentFilter(PushService.class.getName()));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(mDashboardActivity).unregisterReceiver(pushReceiver);
     }
 
     private void downloadMedia() {
         mDownloadMediaUseCase.execute(new DownloadMediaUseCase.Callback() {
             @Override
-            public void onError(FileDownloadException ex) {
+            public void onError(Throwable ex) {
                 //Need to complete credentials (ack from user first time)
                 if (ex.getCause() instanceof UserRecoverableAuthIOException) {
                     showToast(ex.getCause().getMessage());
@@ -378,6 +394,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
                         showDialog(connectionStatusCode);
                     }
+                } else if (ex instanceof NetworkException) {
+                    avFragment.showError(R.string.error_files_download_no_wifi, true);
+                } else if (ex instanceof NoFilesException) {
+                    avFragment.showError(R.string.error_files_download_no_files, true);
                 } else {
                     Log.e(this.getClass().getSimpleName(), ex.getMessage());
                 }
@@ -392,6 +412,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     showToast(String.format("%d files synced", syncedFiles));
                 }
                 avFragment.showProgress(false);
+                avFragment.showError(-1, false);
             }
 
             @Override
@@ -493,5 +514,31 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             mDashboardActivity.closeSurveyFragment();
             DynamicTabAdapter.isClicked = false;
         }
+    }
+
+    private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showHideProgressPush(intent);
+            mDashboardUnsentFragment.reloadData();
+        }
+    };
+
+    private void showHideProgressPush(Intent intent) {
+        View actionBarLayout = mDashboardActivity.getSupportActionBar().getCustomView();
+        ImageView refreshPush = (ImageView) actionBarLayout.findViewById(R.id.refresh_push);
+        if (intent.getBooleanExtra(PushServiceStrategy.PUSH_IS_START, false)) {
+            refreshPush.setVisibility(View.VISIBLE);
+            refreshPush.startAnimation(
+                    AnimationUtils.loadAnimation(refreshPush.getContext(),
+                            R.anim.rotate_center));
+        } else {
+            refreshPush.clearAnimation();
+            refreshPush.setVisibility(View.GONE);
+        }
+    }
+
+    public void onConnectivityStatusChange() {
+        downloadMedia();
     }
 }

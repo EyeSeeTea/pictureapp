@@ -1,56 +1,11 @@
 package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.ACTION_SHOW;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_INT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_LONG_TEXT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_POSITIVE_INT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_PREGNANT_MONTH_INT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_QUESTION_LABEL;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_RADIO_GROUP_HORIZONTAL;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_SWITCH_BUTTON;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_DATE;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_DROPDOWN_LIST;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_PHONE;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_SHORT_TEXT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_YEAR;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_EQUAL;
-
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_LESS_OR_EQUAL_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_LESS_THAN;
-
-
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_GREATER_OR_EQUAL_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_GREATER_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.TYPE_DATA_POINT_REF;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.TYPE_VALUE;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.eyeseetea.malariacare.data.di.Injector;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
-        .ConverterFromApiPhoneFormatToDomainModel;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
@@ -60,6 +15,7 @@ import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 
 import java.util.ArrayList;
@@ -81,7 +37,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
             throws Exception {
 
-        OkHttpClient client = Injector.provideHTTPClientWithLoggingWith(basicAuthInterceptor);
+        OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -93,7 +49,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @Override
-    public List<Question> getQuestionsFor(String countryCode) throws Exception {
+    public List<Question> getQuestionsByCountryCode(String countryCode) throws Exception {
 
         MetadataConfigurationConverterApiModelToDomain
                 converter = new MetadataConfigurationConverterApiModelToDomain();
@@ -113,7 +69,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
             assignRulesToQuestions(apiRules, apiQuestions);
         }
-
 
         return converter.convertToDomainQuestionsFrom(apiQuestions);
     }
@@ -194,7 +149,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         newOptionRule.action = condition.operator;
         newOptionRule.targetQuestion = targetQuestion;
 
-        newOptionRule.targetQuestion.visibility = !condition.operator.equals(ACTION_SHOW);
+        newOptionRule.targetQuestion.visibility = !condition.operator.equals("SHOW");
 
         return newOptionRule;
     }
@@ -209,59 +164,29 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             MetadataConfigurationsApi.Condition condition = conditions.get(i);
 
             String questionCodeWithRule = condition.left.value;
+            String optionCodeWithRule = condition.right.value;
+
+            String targetQuestionCode = apiRule.actions.get(i).dataPointRef;
 
 
             MetadataConfigurationsApi.Question questionWithRule = questionsByCode.get(
                     questionCodeWithRule);
 
-            if (questionWithRule.output.equals(CONTROL_TYPE_DROPDOWN_LIST)) {
+            MetadataConfigurationsApi.Option optionWithoutRule = findOptionBy(optionCodeWithRule,
+                    questionWithRule);
 
-                assignRulesToQuestionOptions(apiRule, questionsByCode, condition, questionWithRule);
-
-            } else {
-
-                assignRulesToQuestions(apiRule, questionWithRule, questionsByCode);
-            }
-        }
-    }
-
-    private void assignRulesToQuestions(@NonNull MetadataConfigurationsApi.Rule apiRule,
-            MetadataConfigurationsApi.Question questionWithRule,
-            @NonNull Map<String, MetadataConfigurationsApi.Question> questionsByCode) {
-        if (questionWithRule.rules == null) {
-            questionWithRule.rules = new ArrayList<>();
-        }
-
-        questionWithRule.rules.add(apiRule);
-    }
-
-    private void assignRulesToQuestionOptions(@NonNull MetadataConfigurationsApi.Rule apiRule,
-            @NonNull Map<String, MetadataConfigurationsApi.Question> questionsByCode,
-            MetadataConfigurationsApi.Condition condition,
-            MetadataConfigurationsApi.Question questionWithRule) {
-
-        String optionCodeWithRule = condition.right.value;
-
-        MetadataConfigurationsApi.Option optionWithoutRule = findOptionBy(
-                optionCodeWithRule,
-                questionWithRule);
-
-
-        for (MetadataConfigurationsApi.Action action : apiRule.actions) {
-
-            String targetQuestionCode = action.dataPointRef;
 
             if (optionWithoutRule != null) {
 
-                MetadataConfigurationsApi.Question targetQuestion = questionsByCode
-                        .get(targetQuestionCode);
+                MetadataConfigurationsApi.Question targetQuestion = questionsByCode.get(
+                        targetQuestionCode);
 
-                if (targetQuestion != null) {
-                    assignRuleTo(optionWithoutRule, condition, targetQuestion);
-                }
+                assignRuleTo(optionWithoutRule, condition, targetQuestion);
             }
 
         }
+
+
     }
 
     private void assignRuleTo(@NonNull MetadataConfigurationsApi.Option option,
@@ -308,9 +233,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         Map<String, MetadataConfigurationsApi.Question> map = new HashMap<>();
 
-        for (MetadataConfigurationsApi.Question question : questions) {
-            map.put(question.code, question);
-        }
+        for (MetadataConfigurationsApi.Question i : questions) map.put(i.code, i);
 
         return map;
     }
@@ -330,8 +253,21 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     private class MetadataConfigurationConverterApiModelToDomain {
-        private final ConverterFromApiPhoneFormatToDomainModel phoneFormatConverter =
-                new ConverterFromApiPhoneFormatToDomainModel();
+
+        private final String CONTROL_TYPE_SHORT_TEXT = "SHORT_TEXT";
+        private final String CONTROL_TYPE_PHONE = "PHONE_NUMBER";
+        private final String CONTROL_TYPE_DROPDOWN_LIST = "DROPDOWN_LIST";
+        private final String CONTROL_TYPE_YEAR = "YEAR";
+        private final String CONTROL_TYPE_DATE = "DATE";
+        private final String CONTROL_LONG_TEXT = "LONG_TEXT";
+        private final String CONTROL_INT = "INT";
+        private final String CONTROL_POSITIVE_INT = "POSITIVE_INT";
+        private final String CONTROL_PREGNANT_MONTH_INT = "PREGNANT_MONTH_INT";
+        private final String CONTROL_RADIO_GROUP_HORIZONTAL = "RADIO_GROUP_HORIZONTAL";
+        private final String CONTROL_QUESTION_LABEL = "QUESTION_LABEL";
+        private final String CONTROL_SWITCH_BUTTON = "SWITCH_BUTTON";
+        private final PhoneFormatConvertToDomainVisitor phoneFormatConverter =
+                new PhoneFormatConvertToDomainVisitor();
 
         Map<String, Question> mapDomainQuestionsByCode = new HashMap<>();
         Map<String, List<Option>> mapDomainOptionsWithRuleByQuestionCodes = new HashMap<>();
@@ -367,124 +303,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         private boolean isImportantQuestion(Question question) {
             return question.getVisibility() == Question.Visibility.IMPORTANT;
-        }
-
-        private List<Question.Rule> convertToDomainRules(
-                List<MetadataConfigurationsApi.Rule> apiRules) {
-
-            if (apiRules == null) return null;
-
-            List<Question.Rule> domainRules = new ArrayList<>();
-
-            for (MetadataConfigurationsApi.Rule apiRule : apiRules) {
-                domainRules.add(newDomainRule(apiRule));
-            }
-            return domainRules;
-        }
-
-        private Question.Rule newDomainRule(MetadataConfigurationsApi.Rule apiRule) {
-            List<Question.Rule.Condition> domainConditions = new ArrayList<>();
-            List<Question.Rule.Action> domainActions = new ArrayList<>();
-
-
-            for (MetadataConfigurationsApi.Condition apiCondition : apiRule.conditions) {
-
-                Question.Rule.Condition domainCondition = convertToDomainCondition(apiCondition);
-
-                domainConditions.add(domainCondition);
-            }
-
-            for (MetadataConfigurationsApi.Action apiAction : apiRule.actions) {
-
-                domainActions.add(convertToDomainAction(apiAction));
-            }
-
-            return Question.Rule.newBuilder()
-                    .conditions(domainConditions)
-                    .actions(domainActions)
-                    .build();
-        }
-
-        private Question.Rule.Action convertToDomainAction(
-                MetadataConfigurationsApi.Action apiAction) {
-            Question.Rule.ActionToPerform domainActionToPerform = null;
-
-            switch (apiAction.action) {
-                case ACTION_SHOW: {
-                    domainActionToPerform = Question.Rule.ActionToPerform.SHOW;
-                }
-            }
-
-            return Question.Rule.Action.newBuilder()
-                    .targetQuestion(apiAction.dataPointRef)
-                    .actionToPerform(domainActionToPerform)
-                    .build();
-        }
-
-        @NonNull
-        private Question.Rule.Condition convertToDomainCondition(
-                MetadataConfigurationsApi.Condition apiCondition) {
-            return Question.Rule.Condition.newBuilder()
-                    .left(newDomainOperand(apiCondition.left))
-                    .right(newDomainOperand(apiCondition.right))
-                    .operator(newDomainOperator(apiCondition.operator))
-                    .build();
-        }
-
-        private Question.Rule.Operator newDomainOperator(String apiOperator) {
-            Question.Rule.Operator domainOperator = null;
-
-            switch (apiOperator) {
-                case OPERATOR_EQUAL: {
-                    domainOperator = Question.Rule.Operator.EQUAL;
-                    break;
-                }
-                case OPERATOR_GREATER_THAN: {
-                    domainOperator = Question.Rule.Operator.GREATER_THAN;
-                    break;
-                }
-                case OPERATOR_GREATER_OR_EQUAL_THAN: {
-                    domainOperator = Question.Rule.Operator.GREATER_OR_EQUAL_THAN;
-                    break;
-                }
-                case OPERATOR_LESS_THAN: {
-                    domainOperator = Question.Rule.Operator.LESS_THAN;
-                    break;
-                }
-
-                case OPERATOR_LESS_OR_EQUAL_THAN: {
-                    domainOperator = Question.Rule.Operator.LESS_OR_EQUAL_THAN;
-                    break;
-                }
-
-
-            }
-            return domainOperator;
-        }
-
-        private Question.Rule.Operand newDomainOperand(
-                MetadataConfigurationsApi.Operand apiOperand) {
-
-            return Question.Rule.Operand
-                    .newBuilder()
-                    .value(apiOperand.value)
-                    .type(convertToDomainOperandType(apiOperand.type))
-                    .build();
-        }
-
-        private Question.Rule.OperandType convertToDomainOperandType(String apiOperand) {
-            Question.Rule.OperandType operandType = null;
-            switch (apiOperand) {
-                case TYPE_DATA_POINT_REF: {
-                    operandType = Question.Rule.OperandType.QUESTION;
-                    break;
-                }
-                case TYPE_VALUE: {
-                    operandType = Question.Rule.OperandType.VALUE;
-                    break;
-                }
-            }
-            return operandType;
         }
 
         private void assignRulesToQuestions() {
@@ -543,6 +361,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                 @NonNull MetadataConfigurationsApi.Question apiQuestion, int index,
                 boolean isImportantQuestionSelected) {
 
+
             return Question.newBuilder()
                     .code(apiQuestion.code)
                     .uid(apiQuestion.code)
@@ -553,7 +372,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .visibility(getVisibilityFrom(apiQuestion, isImportantQuestionSelected))
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
-                    .rules(convertToDomainRules(apiQuestion.rules))
                     .build();
         }
 
@@ -576,7 +394,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                 MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
 
             if (apiPhoneFormat != null) {
-                return phoneFormatConverter.convert(apiPhoneFormat);
+                return phoneFormatConverter.visit(apiPhoneFormat);
             }
 
             return null;

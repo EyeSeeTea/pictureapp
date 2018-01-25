@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare;
 
+import static org.eyeseetea.malariacare.BuildConfig.maxDaysForDeletingSentSurveys;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
@@ -9,8 +10,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.PostMigration;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
@@ -21,6 +22,8 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.locale.factory.LanguageFactory;
+import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
@@ -37,9 +40,11 @@ public class SplashScreenActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         splashActivityStrategy = new SplashActivityStrategy(this);
-        setContentView(R.layout.activity_splash);
-        AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
-        asyncInitApplication.execute((Void) null);
+        if (splashActivityStrategy.canEnterApp()) {
+            setContentView(R.layout.activity_splash);
+            AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
+            asyncInitApplication.execute((Void) null);
+        }
     }
 
     private void init() {
@@ -80,6 +85,11 @@ public class SplashScreenActivity extends Activity {
             e.printStackTrace();
         }
 
+
+        if(BuildConfig.performMaintenanceTasks) {
+            performMaintenanceTasks();
+        }
+
     }
 
     private void downloadLanguagesFromServer() throws Exception {
@@ -90,10 +100,10 @@ public class SplashScreenActivity extends Activity {
             String token = cr.getPOEditorToken();
             String projectID = cr.getPOEditorProjectID();
 
-            ILanguagesClient client = Injector.provideLanguageClient(projectID, token);
-            IConnectivityManager connectivity = Injector.provideConnectivityMN(this);
+            ILanguagesClient client = LanguageFactory.getPOEditorApiClient(projectID, token);
+            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(this);
 
-            LanguageDownloader downloader = Injector.provideLanguageDownloader(client,
+            LanguageDownloader downloader = LanguageFactory.getLanguageDownloader(client,
                     connectivity);
 
             downloader.start();
@@ -129,5 +139,9 @@ public class SplashScreenActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         splashActivityStrategy.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void performMaintenanceTasks() {
+        SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
     }
 }

@@ -45,8 +45,8 @@ public class LanguageDownloader {
         for (Language language : toUpdate) {
             List<Term> terms = client.getTranslationBy(language.code);
 
+            deletePreviousTranslations(language.code);
             for (Term term : terms) {
-                deletePreviousTranslations(language.code);
                 save(term, language.code);
             }
 
@@ -64,7 +64,7 @@ public class LanguageDownloader {
 
     private void deletePreviousTranslations(String languageCode) {
         SQLite.delete().from(TranslationDB.class).where(
-                TranslationDB_Table.language_code.eq(languageCode));
+                TranslationDB_Table.language_code.eq(languageCode)).query();
     }
 
     @NonNull

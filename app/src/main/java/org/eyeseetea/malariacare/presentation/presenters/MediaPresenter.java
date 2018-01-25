@@ -70,4 +70,8 @@ public class MediaPresenter {
 
         void OpenMedia(String resourcePath);
     }
+
+    public boolean canShowErrorMessage() {
+        return mMediaList == null || mMediaList.isEmpty();
+    }
 }

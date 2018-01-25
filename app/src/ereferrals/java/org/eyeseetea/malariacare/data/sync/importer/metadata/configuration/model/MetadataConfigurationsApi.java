@@ -15,28 +15,6 @@ public class MetadataConfigurationsApi {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Question {
-        public static final String TYPE_DATA_POINT_REF ="dataPointRef";
-        public static final String TYPE_VALUE ="value";
-        public static final String OPERATOR_EQUAL ="==";
-        public static final String OPERATOR_GREATER_THAN =">";
-        public static final String OPERATOR_GREATER_OR_EQUAL_THAN =">=";
-        public static final String OPERATOR_LESS_THAN ="<";
-        public static final String OPERATOR_LESS_OR_EQUAL_THAN ="<=";
-        public static final String ACTION_SHOW ="SHOW";
-
-        public static final String CONTROL_TYPE_SHORT_TEXT = "SHORT_TEXT";
-        public static final String CONTROL_TYPE_PHONE = "PHONE_NUMBER";
-        public static final String CONTROL_TYPE_DROPDOWN_LIST = "DROPDOWN_LIST";
-        public static final String CONTROL_TYPE_YEAR = "YEAR";
-        public static final String CONTROL_TYPE_DATE = "DATE";
-        public static final String CONTROL_LONG_TEXT = "LONG_TEXT";
-        public static final String CONTROL_INT = "INT";
-        public static final String CONTROL_POSITIVE_INT = "POSITIVE_INT";
-        public static final String CONTROL_PREGNANT_MONTH_INT = "PREGNANT_MONTH_INT";
-        public static final String CONTROL_RADIO_GROUP_HORIZONTAL = "RADIO_GROUP_HORIZONTAL";
-        public static final String CONTROL_QUESTION_LABEL = "QUESTION_LABEL";
-        public static final String CONTROL_SWITCH_BUTTON = "SWITCH_BUTTON";
-
 
         @JsonProperty("dataPointRef")
         public String code;
@@ -57,8 +35,6 @@ public class MetadataConfigurationsApi {
 
         @JsonProperty("format")
         public PhoneFormat phoneFormat;
-
-        public List<Rule> rules;
 
     }
 

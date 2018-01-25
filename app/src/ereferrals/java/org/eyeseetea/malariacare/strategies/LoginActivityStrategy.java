@@ -1,5 +1,8 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.views.ViewUtils.toggleText;
+import static org.eyeseetea.malariacare.views.ViewUtils.toggleVisibility;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +48,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -83,6 +87,24 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
+        showDashboardIfDemoUser();
+    }
+
+    private void showDashboardIfDemoUser() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
+            @Override
+            public void onGetUsername(Credentials credentials) {
+                if (credentials != null && credentials.isDemoCredentials()) {
+                    finishAndGo(DashboardActivity.class);
+                }
+            }
+        });
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -102,6 +124,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void initViews() {
+        EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
+        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        final TextInputLayout passwordHint =
+                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
 
         initTextFields();
 
@@ -144,6 +172,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             loginType = LoginType.SOFT;
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
                             loginActivity.getUsernameEditText().setEnabled(false);
+                            loginActivity.getUsernameEditText().setText(credentials.getUsername());
+                            CommonQuestionView.showKeyboard(loginActivity,
+                                    loginActivity.getPasswordEditText());
+                            loginActivity.getPasswordEditText().requestFocus();
                         } else {
                             loginType = LoginType.FULL;
                             loginActivity.getUsernameEditText().setEnabled(true);
@@ -200,7 +232,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void initAdvancedOptionsButton() {
-        Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
+        final Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,17 +248,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         break;
                 }
                 toggleVisibility(serverURLContainer);
+                toggleText(advancedOptions,R.string.advanced_options,R.string.simple_options);
             }
         });
     }
 
-    private void toggleVisibility(View view) {
-        int visibility = View.VISIBLE;
-        if (view.getVisibility() == View.VISIBLE) {
-            visibility = View.GONE;
-        }
-        view.setVisibility(visibility);
-    }
 
     private void initServerURLField() {
         serverURLContainer = loginActivity.findViewById(R.id.text_layout_server_url);
@@ -277,7 +303,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        loginActivity.checkAnnouncement();
+                    loginActivity.checkAnnouncement();
     }
 
     @Override

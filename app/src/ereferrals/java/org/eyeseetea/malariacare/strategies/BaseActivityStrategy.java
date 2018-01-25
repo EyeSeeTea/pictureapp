@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.util.Linkify;
@@ -36,6 +37,8 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
@@ -84,6 +87,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onStart() {
         mBaseActivity.registerReceiver(connectionReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        LocalBroadcastManager.getInstance(mBaseActivity).registerReceiver(pushReceiver,
+                new IntentFilter(PushService.class.getName()));
         applicationWillEnterForeground();
     }
 
@@ -178,6 +183,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onStop() {
         applicationdidenterbackground();
+        LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
@@ -259,5 +265,17 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     }
 
+    private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showLoginIfConfigFileObsolete(intent);
+        }
+
+        private void showLoginIfConfigFileObsolete(Intent intent) {
+            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+                showLogin();
+            }
+        }
+    };
 
 }

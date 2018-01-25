@@ -222,8 +222,6 @@ android {
 
     sourceSets {
         androidTest.java.srcDirs += 'src/sharedAndroidTest'
-        testEreferrals.java.srcDirs += 'src/testereferrals/java'
-        testEreferrals.resources.srcDirs += 'src/testereferrals/resources'
     }
 }
 

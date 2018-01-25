@@ -63,7 +63,8 @@ public class Permissions {
         return permissions.get(code);
     }
 
-    public void requestNextPermission() {
+    public void requestNextPermission(Activity callingActivity) {
+        activity = callingActivity;
         if (permissions.size() > 0) {
             Integer code = (Integer) permissions.keySet().toArray()[0];
             Permission permission = getPermission(code);

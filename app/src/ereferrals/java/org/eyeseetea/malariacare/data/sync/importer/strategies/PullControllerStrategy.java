@@ -73,6 +73,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             if (!pullFilters.isDemo()) {
                 mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
             } else {
+                mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
                 mPullController.onPullDataComplete(callback, true);
                 callback.onComplete();
             }
@@ -87,7 +88,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
         try {
 
         if (isDemo) {
-            mMetadataUpdater.updateMetadata();
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
             ProgramDB programDB = ProgramDB.findByUID(
                     PreferencesState.getInstance().getContext().getString(

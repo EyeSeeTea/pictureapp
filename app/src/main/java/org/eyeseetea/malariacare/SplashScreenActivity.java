@@ -7,15 +7,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.locale.factory.LanguageFactory;
+import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
@@ -45,7 +51,7 @@ public class SplashScreenActivity extends Activity {
         PopulateDB.initDBQuery();
         try {
             PostMigration.launchPostMigration();
-        }catch (PostMigrationException e){
+        } catch (PostMigrationException e) {
             new AlertDialog.Builder(this)
                     .setTitle(getApplicationContext().getString(R.string.error_message))
                     .setCancelable(false)
@@ -67,7 +73,34 @@ public class SplashScreenActivity extends Activity {
             splashActivityStrategy.initPullFilters(pullFilters);
             splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
+
+        try {
+            downloadLanguagesFromServer();
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());
+            e.printStackTrace();
+        }
+
     }
+
+    private void downloadLanguagesFromServer() throws Exception {
+        if (BuildConfig.downloadLanguagesFromServer) {
+            Log.i(TAG, "Starting to download Languages From Server");
+            CredentialsReader cr = CredentialsReader.getInstance();
+
+            String token = cr.getPOEditorToken();
+            String projectID = cr.getPOEditorProjectID();
+
+            ILanguagesClient client = LanguageFactory.getPOEditorApiClient(projectID, token);
+            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(this);
+
+            LanguageDownloader downloader = LanguageFactory.getLanguageDownloader(client,
+                    connectivity);
+
+            downloader.start();
+        }
+    }
+
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
         Activity activity;

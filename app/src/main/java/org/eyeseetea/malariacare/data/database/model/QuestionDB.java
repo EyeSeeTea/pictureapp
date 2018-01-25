@@ -128,14 +128,11 @@ public class QuestionDB extends BaseModel {
     Integer order_pos;
 
     @Column
-    @Deprecated
     Float numerator_w;
 
     @Column
-    @Deprecated
     Float denominator_w;
 
-    @Deprecated
     @Column
     String feedback;
 
@@ -157,7 +154,6 @@ public class QuestionDB extends BaseModel {
     @Column
     Integer output;
 
-    @Deprecated
     @Column
     Long id_question_parent;
 
@@ -686,32 +682,26 @@ public class QuestionDB extends BaseModel {
         this.order_pos = order_pos;
     }
 
-    @Deprecated
     public Float getNumerator_w() {
         return numerator_w;
     }
 
-    @Deprecated
     public void setNumerator_w(Float numerator_w) {
         this.numerator_w = numerator_w;
     }
 
-    @Deprecated
     public Float getDenominator_w() {
         return denominator_w;
     }
 
-    @Deprecated
     public void setDenominator_w(Float denominator_w) {
         this.denominator_w = denominator_w;
     }
 
-    @Deprecated
     public String getFeedback() {
         return feedback;
     }
 
-    @Deprecated
     public void setFeedback(String feedback) {
         this.feedback = feedback;
     }
@@ -822,7 +812,6 @@ public class QuestionDB extends BaseModel {
         return mQuestionDB;
     }
 
-    @Deprecated
     public void setQuestionDB(Long id_parent) {
         this.id_question_parent = id_parent;
         this.mQuestionDB = null;

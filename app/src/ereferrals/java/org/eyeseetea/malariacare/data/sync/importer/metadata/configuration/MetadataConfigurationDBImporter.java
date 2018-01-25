@@ -152,20 +152,20 @@ public class MetadataConfigurationDBImporter {
 
     private void processCountryData(Configuration.CountryVersion country) throws Exception {
 
-        String countryCode = country.getCountry();
+        String countryUID = country.getUid();
         int version = country.getVersion();
 
-        if (isCountryNotAlreadyAdded(countryCode)) {
+        if (isCountryNotAlreadyAdded(countryUID)) {
             updateMetadataFor(country);
 
-        } else if (hasMetadataBeenUpdatedFor(countryCode, version)) {
+        } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
             updateMetadataFor(country);
         }
     }
 
-    private boolean hasMetadataBeenUpdatedFor(String countryCode, int version) {
-        return CountryVersionDB.isVersionGreater(countryCode, version);
+    private boolean hasMetadataBeenUpdatedFor(String countryUID, int version) {
+        return CountryVersionDB.isVersionGreater(countryUID, version);
     }
 
     private boolean isCountryNotAlreadyAdded(String countryCode) {

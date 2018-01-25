@@ -103,7 +103,7 @@ public class QuestionOptionDB extends BaseModel {
                         questionRelationDB.getId_question_relation())).queryList();
     }
 
-    public static void deleteQuestionOptionsBy(long question_id) {
+    public static void deleteQuestionOptionsById(long question_id) {
          new Delete()
                 .from(QuestionOptionDB.class)
                 .where(QuestionOptionDB_Table.id_question_fk.eq(question_id));

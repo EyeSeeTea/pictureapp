@@ -54,7 +54,7 @@ public class MetadataConfigurationDBImporterShould {
                 new Credentials("/", credentialsReader.getUser(),
                         credentialsReader.getPassword()));
 
-        dhis2MockServer = new Dhis2MockServer(new FileReader());
+        dhis2MockServer = new Dhis2MockServer(new AssetsFileReader());
 
     }
 

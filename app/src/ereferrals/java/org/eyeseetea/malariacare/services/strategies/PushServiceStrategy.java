@@ -1,6 +1,9 @@
 package org.eyeseetea.malariacare.services.strategies;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -56,6 +59,13 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
+
+        if (ActivityCompat.checkSelfPermission(PreferencesState.getInstance().getContext(), Manifest.permission.READ_SMS)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PreferencesState.getInstance().getContext(),
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Push cancelled because does not exist phone permissions");
+            return;
+        }
 
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
 

@@ -124,7 +124,7 @@ public class QuestionRelationDB extends BaseModel {
         deleteQuestionRelations(listAll());
     }
 
-    public static void deleteQuestionRelationBy(long question_id) {
+    public static void deleteQuestionRelationById(long question_id) {
         new Delete()
                 .from(QuestionRelationDB.class)
                 .where(QuestionRelationDB_Table.id_question_fk.eq(question_id));

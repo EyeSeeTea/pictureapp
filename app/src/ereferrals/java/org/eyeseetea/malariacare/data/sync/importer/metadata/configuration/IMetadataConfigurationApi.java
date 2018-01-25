@@ -15,6 +15,6 @@ public interface IMetadataConfigurationApi {
     @GET("/api/dataStore/Connect_config/dcSettings")
     Call<MetadataCountryVersionApi> getCountriesVersions();
 
-    @GET("/api/dataStore/configurations/{countryCode}")
+    @GET("/api/dataStore/Connect_config/{countryCode}")
     Call<MetadataConfigurationsApi> getConfiguration(@Path("countryCode") String countryCode);
 }

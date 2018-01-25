@@ -20,5 +20,7 @@ public class MetadataCountryVersionApi {
         public int version;
         @JsonProperty("ou_uid")
         public String uid;
+        //TODO: Remove when, the configuration file api whe updated with this parameter
+        public String name ="tanzania_program_eref";
     }
 }

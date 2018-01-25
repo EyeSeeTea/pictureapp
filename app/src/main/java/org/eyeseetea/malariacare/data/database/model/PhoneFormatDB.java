@@ -6,9 +6,12 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+
+import java.util.List;
 
 @Table(database = AppDatabase.class, name = "PhoneFormat")
 public class PhoneFormatDB extends BaseModel {
@@ -72,6 +75,27 @@ public class PhoneFormatDB extends BaseModel {
         this.prefixToPut = prefixToPut;
     }
 
+    public static void deleteByProgramId(@NonNull Long id_program) {
+        new Delete()
+                .from(PhoneFormatDB.class)
+                .where(PhoneFormatDB_Table.id_program_fk
+                        .is(id_program));
+    }
+
+    public static void deleteAll() {
+        for (PhoneFormatDB format : getAllPhoneFormats()) {
+            format.delete();
+        }
+    }
+
+    public static List<PhoneFormatDB> getAllPhoneFormats() {
+        return new Select().from(PhoneFormatDB.class).queryList();
+    }
+
+    public static int getPhoneFormatDBCount() {
+        return getAllPhoneFormats().size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,12 +139,5 @@ public class PhoneFormatDB extends BaseModel {
                 ", trunkPrefix='" + trunkPrefix + '\'' +
                 ", prefixToPut='" + prefixToPut + '\'' +
                 '}';
-    }
-
-    public static void deleteProgramsBy(@NonNull Long id_program) {
-        new Delete()
-                .from(PhoneFormatDB.class)
-                .where(PhoneFormatDB_Table.id_program_fk
-                        .is(id_program));
     }
 }

@@ -26,12 +26,9 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.di.Injector;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
@@ -150,21 +147,6 @@ public class PullController implements IPullController {
 
     public void populateMetadataFromCsvs(boolean isDemo) throws IOException {
         PopulateDB.initDataIfRequired(mContext);
-
-        try {
-            IMetadataConfigurationDataSource dataSource = Injector.provideMetadataConfigurationDataSource(
-                    Injector.provideAuthenticationInterceptor()
-            );
-            MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
-                    dataSource, Injector.provideQuestionConverter()
-            );
-
-            importer.importMetadata();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         if (isDemo) {
             new PopulateDBStrategy().createDummyOrgUnitsDataInDB(mContext);
             new PopulateDBStrategy().createDummyOrganisationInDB();

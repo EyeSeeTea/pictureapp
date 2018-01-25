@@ -82,7 +82,7 @@ public class AnswerDB extends BaseModel {
                 .where(AnswerDB_Table.id_answer.eq(id)).querySingle();
     }
 
-    public static void deleteBy(Long id) {
+    public static void deleteById(Long id) {
          new Delete()
                 .from(AnswerDB.class)
                 .where(AnswerDB_Table.id_answer.eq(id));

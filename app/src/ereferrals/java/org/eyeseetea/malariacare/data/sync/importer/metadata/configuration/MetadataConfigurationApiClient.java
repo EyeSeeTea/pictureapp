@@ -4,18 +4,18 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.eyeseetea.malariacare.data.di.Injector;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataCountryVersionApi;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
-import org.eyeseetea.malariacare.domain.entity.Country;
-import org.eyeseetea.malariacare.domain.entity.Form;
-import org.eyeseetea.malariacare.domain.entity.Header;
 import org.eyeseetea.malariacare.domain.entity.Option;
+import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
@@ -38,7 +37,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
             throws Exception {
 
-        OkHttpClient client = Injector.provideHTTPClientWithLoggingWith(basicAuthInterceptor);
+        OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -50,7 +49,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @Override
-    public List<Question> getQuestionsFor(String countryCode) throws Exception {
+    public List<Question> getQuestionsByCountryCode(String countryCode) throws Exception {
 
         MetadataConfigurationConverterApiModelToDomain
                 converter = new MetadataConfigurationConverterApiModelToDomain();
@@ -70,7 +69,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
             assignRulesToQuestions(apiRules, apiQuestions);
         }
-
 
         return converter.convertToDomainQuestionsFrom(apiQuestions);
     }
@@ -114,6 +112,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             Configuration.CountryVersion domain =
                     Configuration.CountryVersion.newBuilder()
                             .country(countryVersionApi.country)
+                            .name(countryVersionApi.name)
                             .version(countryVersionApi.version)
                             .reference(countryVersionApi.reference)
                             .uid(countryVersionApi.uid)
@@ -256,7 +255,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     private class MetadataConfigurationConverterApiModelToDomain {
 
         private final String CONTROL_TYPE_SHORT_TEXT = "SHORT_TEXT";
-        private final String CONTROL_TYPE_PHONE = "PHONE";
+        private final String CONTROL_TYPE_PHONE = "PHONE_NUMBER";
         private final String CONTROL_TYPE_DROPDOWN_LIST = "DROPDOWN_LIST";
         private final String CONTROL_TYPE_YEAR = "YEAR";
         private final String CONTROL_TYPE_DATE = "DATE";
@@ -267,6 +266,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         private final String CONTROL_RADIO_GROUP_HORIZONTAL = "RADIO_GROUP_HORIZONTAL";
         private final String CONTROL_QUESTION_LABEL = "QUESTION_LABEL";
         private final String CONTROL_SWITCH_BUTTON = "SWITCH_BUTTON";
+        private final PhoneFormatConvertToDomainVisitor phoneFormatConverter =
+                new PhoneFormatConvertToDomainVisitor();
 
         Map<String, Question> mapDomainQuestionsByCode = new HashMap<>();
         Map<String, List<Option>> mapDomainOptionsWithRuleByQuestionCodes = new HashMap<>();
@@ -280,18 +281,28 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
             List<Question> domainQuestions = new ArrayList<>();
 
+            boolean isImportantQuestionSelected = false;
             for (int questionIndex = 0; questionIndex < apiQuestions.size(); questionIndex++) {
 
                 MetadataConfigurationsApi.Question apiQuestion = apiQuestions.get(questionIndex);
-                Question domainQuestion = convertToDomainQuestionFrom(apiQuestion, questionIndex);
+
+                Question domainQuestion = convertToDomainQuestionFrom(apiQuestion, questionIndex,
+                        isImportantQuestionSelected);
 
                 domainQuestions.add(domainQuestion);
                 mapDomainQuestionsByCode.put(domainQuestion.getCode(), domainQuestion);
+                isImportantQuestionSelected = isImportantQuestion(domainQuestion);
+
             }
 
             assignRulesToQuestions();
 
             return domainQuestions;
+        }
+
+
+        private boolean isImportantQuestion(Question question) {
+            return question.getVisibility() == Question.Visibility.IMPORTANT;
         }
 
         private void assignRulesToQuestions() {
@@ -347,15 +358,18 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Question convertToDomainQuestionFrom(
-                @NonNull MetadataConfigurationsApi.Question apiQuestion, int index) {
+                @NonNull MetadataConfigurationsApi.Question apiQuestion, int index,
+                boolean isImportantQuestionSelected) {
+
 
             return Question.newBuilder()
                     .code(apiQuestion.code)
+                    .uid(apiQuestion.code)
+                    .phoneFormat(convertToDomainPhoneFormatFrom(apiQuestion.phoneFormat))
                     .name(apiQuestion.deName)
                     .index(index)
-                    .header(getDefaultHeader())
                     .type(convertToDomainQuestionTypeFrom(apiQuestion.output))
-                    .visibility(getVisibilityFrom(apiQuestion))
+                    .visibility(getVisibilityFrom(apiQuestion, isImportantQuestionSelected))
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
                     .build();
@@ -364,42 +378,26 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         @NonNull
         private Question.Visibility getVisibilityFrom(
                 @NonNull MetadataConfigurationsApi.Question
-                        apiQuestion) {
+                        apiQuestion, boolean isImportantSelected) {
+
+            if (!isImportantSelected && apiQuestion.visibility) {
+                return Question.Visibility.IMPORTANT;
+            }
 
             return (apiQuestion.visibility)
                     ? Question.Visibility.VISIBLE
                     : Question.Visibility.INVISIBLE;
         }
 
-        @NonNull
-        private Header getDefaultHeader() {
-            return Header.newBuilder()
-                    .id(1)
-                    .shortName("tanzania_program_eref")
-                    .name("Tanzania Program")
-                    .index(1)
-                    .form(getDefaultForm())
-                    .build();
-        }
+        @Nullable
+        private PhoneFormat convertToDomainPhoneFormatFrom(
+                MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
 
+            if (apiPhoneFormat != null) {
+                return phoneFormatConverter.convert(apiPhoneFormat);
+            }
 
-        @NonNull
-        private Form getDefaultForm() {
-            return Form.newBuilder()
-                    .id(1)
-                    .name("tanzania_program_eref")
-                    .index(1)
-                    .type(Form.Type.MULTI_QUESTION)
-                    .country(getDefaultCountry())
-                    .build();
-        }
-
-        @NonNull
-        private Country getDefaultCountry() {
-            return Country.newBuilder()
-                    .id(1)
-                    .uid("low6qUS2wc9")
-                    .name("T_TZ").build();
+            return null;
         }
 
 

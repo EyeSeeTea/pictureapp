@@ -1,129 +1,124 @@
 package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 
-import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
-
 import android.support.annotation.NonNull;
 
-import org.eyeseetea.malariacare.data.database.converts.CountryVersionConverterFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.database.converts.CountryVersionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
+import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
 import org.eyeseetea.malariacare.data.database.model.MatchDB;
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MetadataConfigurationDBImporter {
 
-    private IConverter<Question, QuestionDB> converter;
+    private IConvertDomainDBVisitor<Question, QuestionDB> converter;
 
     private List<QuestionOptionDB> pendingOptionsWithRules = new ArrayList<>();
 
-    private CountryVersionConverterFromDomainModelToDB converterCountry =
-            new CountryVersionConverterFromDomainModelToDB();
+    private CountryVersionConvertFromDomainVisitor converterCountry =
+            new CountryVersionConvertFromDomainVisitor();
     @NonNull
     private IMetadataConfigurationDataSource remoteDataSource;
 
     public MetadataConfigurationDBImporter(
             @NonNull IMetadataConfigurationDataSource remoteDataSource,
-            @NonNull IConverter<Question, QuestionDB> converter) {
+            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter) {
         this.remoteDataSource = remoteDataSource;
         this.converter = converter;
     }
 
-    public void importMetadata() throws Exception {
+    public void importMetadata(Program program) throws Exception {
 
         List<Configuration.CountryVersion> countryVersions =
                 remoteDataSource.getCountriesVersions();
 
         for (Configuration.CountryVersion domainCountry : countryVersions) {
-            processCountryData(domainCountry);
-        }
-
-    }
-
-    private void deleteCountryPreviousMetadata(Configuration.CountryVersion countryVersion) {
-
-        deleteProgramMetadata(countryVersion);
-
-    }
-
-    private void deleteProgramMetadata(Configuration.CountryVersion countryVersion) {
-        String uid = countryVersion.getUid();
-
-        deleteProgramRelations(uid);
-
-        ProgramDB.deleteProgramsBy(uid);
-    }
-
-    private void deleteProgramRelations(String uid) {
-
-        ProgramDB programDB = ProgramDB.findBy(uid);
-
-        Long programID = programDB.getId_program();
-
-        PhoneFormatDB.deleteProgramsBy(programID);
-
-        deleteTabMetadataBy(programID);
-
-    }
-
-    private void deleteTabMetadataBy(long programID) {
-        List<TabDB> tabDBS = TabDB.findTabByProgram(programID);
-        for (TabDB tabDB : tabDBS) {
-
-            long tabID = tabDB.getId_tab();
-
-            List<HeaderDB> headerDBList = HeaderDB.findHeadersByTab(tabID);
-
-            deleteHeaderMetadata(headerDBList);
-
-            tabDB.delete();
+            try {
+                if (domainCountry.getUid().equals(program.getId())) {
+                    processCountryData(domainCountry);
+                    break;
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
     }
 
-    private void deleteHeaderMetadata(List<HeaderDB> headerDBS) {
-        for (HeaderDB headerDB : headerDBS) {
-            long headerID = headerDB.getId_header();
-
-            deleteQuestionMetadata(headerID);
-
-            headerDB.delete();
-
-        }
+    private void deletePreviousMetadata() {
+        deleteDB();
     }
 
-    private void deleteQuestionMetadata(long headerID) {
-        List<QuestionDB> questionDBS = QuestionDB.findQuestionsByHeader(headerID);
-
-        for (QuestionDB questionDB : questionDBS) {
-
-            deleteQuestionRelations(questionDB);
-            questionDB.delete();
-        }
+    private void deleteDB() {
+        CountryVersionDB.deleteAll();
+        PhoneFormatDB.deleteAll();
+        SurveyDB.deleteAll();
+        ProgramDB.deleteAll();
+        TabDB.deleteAll();
+        HeaderDB.deleteAll();
+        AnswerDB.deleteAll();
+        OptionAttributeDB.deleteAll();
+        OptionDB.deleteAll();
+        QuestionDB.deleteAll();
+        QuestionRelationDB.deleteAll();
+        MatchDB.deleteAll();
+        QuestionOptionDB.deleteAll();
+        QuestionThresholdDB.deleteAll();
     }
 
-    private void deleteQuestionRelations(QuestionDB questionDB) {
-        long questionID = questionDB.getId_question();
-        long answerID = questionDB.getId_answer_fk();
+    private void addProgramMetadata(Configuration.CountryVersion countryVersion) {
+        ProgramDB newProgramDB = new ProgramDB();
+        newProgramDB.setName(countryVersion.getCountry());
+        newProgramDB.setUid(countryVersion.getUid());
+        newProgramDB.save();
 
-        AnswerDB.deleteBy(answerID);
-        OptionDB.deleteByAnswer(answerID);
-        QuestionOptionDB.deleteQuestionOptionsBy(questionID);
-        MatchDB.deleteMatchBy(questionID);
-        QuestionRelationDB.deleteQuestionRelationBy(questionID);
+        addProgramRelations(newProgramDB, countryVersion.getName());
+    }
 
+    private void addProgramRelations(ProgramDB newProgramDB, String name) {
+
+        TabDB newTabDB = addNewTab(newProgramDB, name);
+        addHeader(newTabDB);
+    }
+
+    private TabDB addNewTab(ProgramDB newProgramDB, String name) {
+        TabDB newTabDB = new TabDB();
+        newTabDB.setProgram(newProgramDB);
+        newTabDB.setName(name);
+        newTabDB.setOrder_pos(1);
+        newTabDB.setType(Constants.TAB_MULTI_QUESTION);
+        newTabDB.save();
+
+        return newTabDB;
+    }
+
+    private HeaderDB addHeader(TabDB tabDB) {
+        HeaderDB newHeaderDB = new HeaderDB();
+        newHeaderDB.setName(tabDB.getName());
+        newHeaderDB.setShort_name(tabDB.getName());
+        newHeaderDB.setOrder_pos(1);
+        newHeaderDB.setTabDB(tabDB);
+        newHeaderDB.save();
+
+        return newHeaderDB;
     }
 
 
@@ -133,13 +128,11 @@ public class MetadataConfigurationDBImporter {
         int version = country.getVersion();
 
         if (isCountryNotAlreadyAdded(countryCode)) {
-            saveInDB(country);
             updateMetadataFor(country);
 
         } else if (hasMetadataBeenUpdatedFor(countryCode, version)) {
-            deleteCountryPreviousMetadata(country);
+            deletePreviousMetadata();
             updateMetadataFor(country);
-            updateInDB(country);
         }
     }
 
@@ -152,29 +145,22 @@ public class MetadataConfigurationDBImporter {
     }
 
     private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsFor(country.getCountry());
-
+        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
+        saveInDB(country);
         saveQuestionsInDB(questions, country);
     }
 
     private void saveInDB(Configuration.CountryVersion domainCountry) {
-        CountryVersionDB dbCountryVersion = converterCountry.convert(domainCountry);
+        CountryVersionDB dbCountryVersion = converterCountry.visit(domainCountry);
         dbCountryVersion.save();
+        addProgramMetadata(domainCountry);
     }
-
-    private void updateInDB(Configuration.CountryVersion domainCountry) {
-        CountryVersionDB dbCountryVersion = converterCountry.convert(domainCountry);
-        dbCountryVersion.setLast_update(new Date());
-        dbCountryVersion.update();
-    }
-
 
     private void saveQuestionsInDB(List<Question> questions, Configuration.CountryVersion country) {
 
         for (Question question : questions) {
-
-            QuestionDB questionDB = converter.convert(question);
-            setDefaultHeader(questionDB, country);
+            QuestionDB questionDB = converter.visit(question);
+            setQuestionRelations(questionDB, country);
             AnswerDB answerDB = newAnswerDBWith(questionDB);
             questionDB.setAnswer(answerDB);
             save(questionDB);
@@ -183,7 +169,7 @@ public class MetadataConfigurationDBImporter {
         addingRulesToQuestion();
     }
 
-    private void setDefaultHeader(QuestionDB questionDB, Configuration.CountryVersion country) {
+    private void setQuestionRelations(QuestionDB questionDB, Configuration.CountryVersion country) {
         String uid = country.getUid();
         ProgramDB programDB = ProgramDB.findByUID(uid);
 
@@ -195,6 +181,17 @@ public class MetadataConfigurationDBImporter {
 
         questionDB.setHeaderDB(headerID);
 
+        addPhoneFormatIfRequired(questionDB, programDB);
+
+    }
+
+    private void addPhoneFormatIfRequired(QuestionDB questionDB, ProgramDB programDB) {
+        PhoneFormatDB phoneFormatDB = questionDB.getPhoneFormatDB();
+        if(phoneFormatDB !=null){
+            phoneFormatDB.setId_program_fk(programDB.getId_program());
+            phoneFormatDB.save();
+
+        }
     }
 
     private void addingRulesToQuestion() {

@@ -1,9 +1,6 @@
 package org.eyeseetea.malariacare.services.strategies;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -41,6 +38,7 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.utils.Permissions;
 
 public class PushServiceStrategy extends APushServiceStrategy {
 
@@ -60,10 +58,8 @@ public class PushServiceStrategy extends APushServiceStrategy {
     @Override
     public void push() {
 
-        if (ActivityCompat.checkSelfPermission(PreferencesState.getInstance().getContext(), Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PreferencesState.getInstance().getContext(),
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "Push cancelled because does not exist phone permissions");
+        if (Permissions.isPhonePermissionGranted(PreferencesState.getInstance().getContext())) {
+            Log.w(getClass().getSimpleName(), "Push cancelled because does not exist phone permissions");
             return;
         }
 

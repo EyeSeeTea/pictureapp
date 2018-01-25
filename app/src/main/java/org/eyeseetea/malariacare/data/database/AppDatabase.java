@@ -25,8 +25,8 @@ import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import org.eyeseetea.malariacare.BuildConfig;
 
 @Database(
-        name = AppDatabase.NAME, version = AppDatabase.VERSION, inMemory = BuildConfig
-        .databaseInMemory
+        name = AppDatabase.NAME, version = AppDatabase.VERSION,
+        inMemory = BuildConfig.databaseInMemory
 )
 
 public class AppDatabase {

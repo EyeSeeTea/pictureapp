@@ -47,6 +47,13 @@ public class CountryVersionDB extends BaseModel {
         this.uid = uid;
     }
 
+    public static CountryVersionDB getCountryVersionByUID(String uid) {
+        return new Select()
+                .from(CountryVersionDB.class)
+                .where(CountryVersionDB_Table.uid.is(uid))
+                .querySingle();
+    }
+
     public static boolean isCountryAlreadyAdded(String countryCode) {
         long count = new Select(Method.count())
                 .from(CountryVersionDB.class).where(

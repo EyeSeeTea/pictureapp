@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public class FileReader implements IFileReader{
+public class FileReader implements IFileReader {
 
     public String getStringFromFile(String filename) throws IOException {
         return getContentFromFile(getClass(), filename);

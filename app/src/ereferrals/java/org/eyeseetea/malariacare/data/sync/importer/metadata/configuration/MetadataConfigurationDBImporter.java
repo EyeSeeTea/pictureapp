@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 import android.support.annotation.NonNull;
 
-import org.eyeseetea.malariacare.data.database.converts.CountryVersionConverterFromDomainModelToDB;
+import org.eyeseetea.malariacare.data.database.converts.CountryVersionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
@@ -14,11 +14,12 @@ import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.domain.boundary.converters.IConverter;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -29,18 +30,18 @@ import java.util.List;
 
 public class MetadataConfigurationDBImporter {
 
-    private IConverter<Question, QuestionDB> converter;
+    private IConvertDomainDBVisitor<Question, QuestionDB> converter;
 
     private List<QuestionOptionDB> pendingOptionsWithRules = new ArrayList<>();
 
-    private CountryVersionConverterFromDomainModelToDB converterCountry =
-            new CountryVersionConverterFromDomainModelToDB();
+    private CountryVersionConvertFromDomainVisitor converterCountry =
+            new CountryVersionConvertFromDomainVisitor();
     @NonNull
     private IMetadataConfigurationDataSource remoteDataSource;
 
     public MetadataConfigurationDBImporter(
             @NonNull IMetadataConfigurationDataSource remoteDataSource,
-            @NonNull IConverter<Question, QuestionDB> converter) {
+            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter) {
         this.remoteDataSource = remoteDataSource;
         this.converter = converter;
     }
@@ -144,13 +145,13 @@ public class MetadataConfigurationDBImporter {
     }
 
     private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsFor(country.getReference());
+        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
         saveInDB(country);
         saveQuestionsInDB(questions, country);
     }
 
     private void saveInDB(Configuration.CountryVersion domainCountry) {
-        CountryVersionDB dbCountryVersion = converterCountry.convert(domainCountry);
+        CountryVersionDB dbCountryVersion = converterCountry.visit(domainCountry);
         dbCountryVersion.save();
         addProgramMetadata(domainCountry);
     }
@@ -158,7 +159,7 @@ public class MetadataConfigurationDBImporter {
     private void saveQuestionsInDB(List<Question> questions, Configuration.CountryVersion country) {
 
         for (Question question : questions) {
-            QuestionDB questionDB = converter.convert(question);
+            QuestionDB questionDB = converter.visit(question);
             setQuestionRelations(questionDB, country);
             AnswerDB answerDB = newAnswerDBWith(questionDB);
             questionDB.setAnswer(answerDB);

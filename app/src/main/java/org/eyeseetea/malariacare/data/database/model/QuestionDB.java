@@ -1258,6 +1258,10 @@ public class QuestionDB extends BaseModel {
         return result;
     }
 
+    public static int getQuestionDBCount() {
+        return getAllQuestions().size();
+    }
+
     /**
      * Add register to ScoreRegister if this is an scored mQuestionDB
      *

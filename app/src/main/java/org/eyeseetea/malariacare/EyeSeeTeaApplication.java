@@ -61,9 +61,9 @@ public class EyeSeeTeaApplication extends Application {
         //Apply for Release build
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
-        }else{
+        } else {
             // Set to verbose logging of select and delete instructions in DBFlow
-            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V); // set to verbose logging
+            FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
         }
 
         PreferencesState.getInstance().init(getApplicationContext());

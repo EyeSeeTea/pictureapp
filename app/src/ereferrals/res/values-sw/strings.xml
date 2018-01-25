@@ -931,6 +931,6 @@ Ameahidi kuhudhuria"</string>
     <string name="mozambique_program_eref">Mozambique</string>
     <string name="zimbabwe_program_eref">Zimbabwe</string>
     <string name="no_voucher">Hakuna chaguo</string>
-<string name="error_android_version_not_supported">"Unasisitiza lakini Unganisha haijaambatana na toleo lako la Android kifaa. Unahitaji kuwa na Android 5.0+ ili Uunganishe kufanya kazi."</ string>
+    <string name="error_android_version_not_supported">"Unasisitiza lakini Unganisha haijaambatana na toleo lako la Android kifaa. Unahitaji kuwa na Android 5.0+ ili Uunganishe kufanya kazi."</string>
 
 </resources>

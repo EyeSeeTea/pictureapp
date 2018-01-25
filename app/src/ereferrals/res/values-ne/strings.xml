@@ -877,6 +877,6 @@
 <string name="mozambique_program_eref">मोजाम्बिक</string>
 <string name="zimbabwe_program_eref">जिम्बाब्वे</string>
 <string name="no_voucher">कुनै भ्यूचर छैन</string>
-<string name="error_android_version_not_supported">"अपील गर्दछ तर कनेक्ट तपाईंको उपकरण एन्ड्रोइड संस्करणसँग मिल्ने छैन। तपाईंकोसँग जडान गर्नको लागी एन्ड्रोइड 5.0 ++ हुनु पर्छ।"</ string>
+<string name="error_android_version_not_supported">"अपील गर्दछ तर कनेक्ट तपाईंको उपकरण एन्ड्रोइड संस्करणसँग मिल्ने छैन। तपाईंकोसँग जडान गर्नको लागी एन्ड्रोइड 5.0 ++ हुनु पर्छ।"</string>
 
 </resources>

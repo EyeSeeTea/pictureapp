@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 
-public class PhoneFormatToDomainVisitor implements
+public class PhoneFormatConvertToDomainVisitor implements
         IConvertDomainDBVisitor<MetadataConfigurationsApi.PhoneFormat, PhoneFormat> {
 
     @NotNull

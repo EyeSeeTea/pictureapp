@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatToDomainVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
@@ -266,8 +266,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         private final String CONTROL_RADIO_GROUP_HORIZONTAL = "RADIO_GROUP_HORIZONTAL";
         private final String CONTROL_QUESTION_LABEL = "QUESTION_LABEL";
         private final String CONTROL_SWITCH_BUTTON = "SWITCH_BUTTON";
-        private final PhoneFormatToDomainVisitor phoneFormatConverter =
-                new PhoneFormatToDomainVisitor();
+        private final PhoneFormatConvertToDomainVisitor phoneFormatConverter =
+                new PhoneFormatConvertToDomainVisitor();
 
         Map<String, Question> mapDomainQuestionsByCode = new HashMap<>();
         Map<String, List<Option>> mapDomainOptionsWithRuleByQuestionCodes = new HashMap<>();

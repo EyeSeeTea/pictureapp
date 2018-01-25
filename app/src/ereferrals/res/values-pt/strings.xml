@@ -872,4 +872,5 @@
 <string name="common_option_ZW_targetGroup_Administered">Administrado</string>
 <string name="common_option_ZW_targetGroup_Absent">Ausente</string>
 <string name="nepal_program_eref">Nepal</string>
+<string name="error_android_version_not_supported">"Pediu desculpas, mas Connect não é compatível com a versão Android do seu dispositivo. Você deve ter o Android 5.0+ para que o Connect funcione."</string>
 </resources>

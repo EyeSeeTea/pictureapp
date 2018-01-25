@@ -21,8 +21,8 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public class MetadataConfigurationDBImporterShould {

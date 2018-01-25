@@ -21,10 +21,8 @@ import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
-        .MetadataConfigurationDBImporter;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
-        .MetadataConfigurationDataSourceFactory;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;

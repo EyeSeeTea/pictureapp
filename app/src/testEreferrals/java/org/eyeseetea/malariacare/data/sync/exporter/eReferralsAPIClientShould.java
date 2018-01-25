@@ -35,7 +35,7 @@ public class eReferralsAPIClientShould {
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
                 mCustomMockServer.getBaseEndpoint());
         eReferralsAPIClient.pushSurveys(new SurveyContainerWSObject("", "",
-                        "", "", "", "", ""),
+                        "", "", "", "", "", 2),
                 new eReferralsAPIClient.WSClientCallBack() {
                     @Override
                     public void onSuccess(Object result) {

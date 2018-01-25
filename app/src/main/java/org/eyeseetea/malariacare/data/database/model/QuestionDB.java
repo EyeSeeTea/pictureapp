@@ -1395,18 +1395,9 @@ public class QuestionDB extends BaseModel {
         return hasParentOptionActivated > 0 ? false : true;
     }
 
-    /**
-     * Checks if this mQuestionDB is shown according to the values of the given survey
-     */
-    public boolean isHiddenBySurveyAndHeader(SurveyDB surveyDB) {
-        if (surveyDB == null) {
-            return false;
-        }
-        //No mQuestionDB relations
-        if (!hasParentInSameHeader()) {
-            return false;
-        }
-        long hasParentOptionActivated = SQLite.selectCountOf().from(ValueDB.class).as(valueName)
+    private long hasParentOptionActivated(SurveyDB surveyDB) {
+        //Parent with the right value -> not hidden
+        return SQLite.selectCountOf().from(ValueDB.class).as(valueName)
                 .join(QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
                 .on(ValueDB_Table.id_question_fk.withTable(valueAlias)
                                 .eq(QuestionOptionDB_Table.id_question_fk.withTable
@@ -1437,7 +1428,20 @@ public class QuestionDB extends BaseModel {
                         this.getHeaderDB().getId_header()))
                 .count();
         //Parent with the right value -> not hidden
-        return hasParentOptionActivated > 0 ? false : true;
+
+    }
+
+    public boolean isHiddenBySurveyAndHeader(SurveyDB surveyDB) {
+        if (surveyDB == null) {
+            return false;
+        }
+        //No mQuestionDB relations
+        if (!hasParentInSameHeader()) {
+            return false;
+        }
+        long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
+
+        return (hasParentOptionActivated > 0  && !isHiddenByAThreshold()) ? false : true;
     }
 
     public boolean hasQuestionOption() {
@@ -1775,6 +1779,34 @@ public class QuestionDB extends BaseModel {
             }
         }
         return false;
+    }
+
+    public boolean isHiddenByAThreshold() {
+
+        boolean isHiddenByAThreshold = true;
+
+        List<QuestionThresholdDB> parentsThresholdDBS =
+                QuestionThresholdDB.getParentQuestionsThresholdsByItsChild(this);
+
+        if (parentsThresholdDBS.isEmpty()) return false;
+
+        for (QuestionThresholdDB thresholdDB : parentsThresholdDBS) {
+
+            QuestionDB questionDB = thresholdDB.getQuestionDB();
+            ValueDB valueDB = questionDB.getValueBySession();
+
+            if (valueDB != null) {
+
+                boolean isInThreadHold = thresholdDB.isInThreshold(valueDB.getValue());
+                if (!isInThreadHold) {
+                    isHiddenByAThreshold = true;
+                    break;
+                }else{
+                    isHiddenByAThreshold = false;
+                }
+            }
+        }
+        return isHiddenByAThreshold;
     }
 
     public boolean hasDataElement() {

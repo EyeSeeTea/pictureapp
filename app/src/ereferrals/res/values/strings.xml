@@ -1033,4 +1033,5 @@
 <string name="common_option_ZW_targetGroup_Assisted">"Assisted"</string>
 <string name="common_option_ZW_targetGroup_Administered">"Administered"</string>
 <string name="common_option_ZW_targetGroup_Absent">"Absent"</string>
+<string name="error_android_version_not_supported">"Apologizes but Connect is not compatible with your device Android version. You must have Android 5.0+ to get Connect working."</string>
 </resources>

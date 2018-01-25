@@ -102,7 +102,12 @@ public class WSPushController implements IPushController {
                 new eReferralsAPIClient.WSClientCallBack<SurveyWSResult>() {
                     @Override
                     public void onSuccess(SurveyWSResult surveyWSResult) {
-                        checkPushResult(surveyWSResult);
+                        try {
+                            checkPushResult(surveyWSResult);
+                        } catch (Exception e) {
+                            putSurveysToConflictStatus();
+                            mCallback.onError(e);
+                        }
                     }
 
                     @Override
@@ -112,6 +117,13 @@ public class WSPushController implements IPushController {
                         mCallback.onError(e);
                     }
                 });
+    }
+
+    private void putSurveysToConflictStatus() {
+        for (SurveyDB surveyDB : mSurveys) {
+            surveyDB.setStatus(Constants.SURVEY_CONFLICT);
+            surveyDB.save();
+        }
     }
 
     private int getTimeout(int vouchers) {

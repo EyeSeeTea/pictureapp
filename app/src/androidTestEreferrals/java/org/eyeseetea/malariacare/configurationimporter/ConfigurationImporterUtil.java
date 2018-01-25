@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.common.configurationimporter;
+package org.eyeseetea.malariacare.configurationimporter;
 
 
 import com.raizlabs.android.dbflow.sql.language.Select;

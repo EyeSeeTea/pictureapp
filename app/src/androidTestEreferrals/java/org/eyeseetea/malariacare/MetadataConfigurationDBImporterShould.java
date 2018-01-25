@@ -3,29 +3,28 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
         .cleanUsedTables;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
         .getOptionsDBCount;
-
-
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
         .getPhoneFormatDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
         .getProgramsDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
         .getQuestionDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
         .getQuestionOptionDBCount;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 
+import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.server.Dhis2MockServer;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
@@ -55,7 +54,7 @@ public class MetadataConfigurationDBImporterShould {
                 new Credentials("/", credentialsReader.getUser(),
                         credentialsReader.getPassword()));
 
-        dhis2MockServer = new Dhis2MockServer(new AssetsFileReader());
+        dhis2MockServer = new Dhis2MockServer(new FileReader());
 
     }
 

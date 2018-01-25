@@ -3,16 +3,23 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertTrue;
 
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.cleanUsedTables;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getOptionsDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getQuestionDBCount;
-import static org.eyeseetea.malariacare.common.configurationimporter.ConfigurationImporterUtil.getQuestionOptionDBCount;
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
+        .cleanUsedTables;
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
+        .getOptionsDBCount;
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
+        .getQuestionDBCount;
+import static org.eyeseetea.malariacare.configurationimporter.ConfigurationImporterUtil
+        .getQuestionOptionDBCount;
 
 import com.squareup.okhttp.Credentials;
 
-import org.eyeseetea.malariacare.data.di.Injector;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.junit.After;
@@ -33,11 +40,11 @@ public class RealMetadataConfigurationDBImporterShould {
         String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
 
         IMetadataConfigurationDataSource apiClient =
-                Injector.provideMetadataConfigurationDataSource(
+                MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
                         new BasicAuthInterceptor(credentials)
                 );
         importer = new MetadataConfigurationDBImporter(
-                apiClient, Injector.provideQuestionConverter()
+                apiClient, ConverterFactory.getQuestionConverter()
         );
     }
 

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.configurationImporter;
+package org.eyeseetea.malariacare.configurationimporter;
 
 
 public class ConstantsMetadataConfigurationImporterTest {

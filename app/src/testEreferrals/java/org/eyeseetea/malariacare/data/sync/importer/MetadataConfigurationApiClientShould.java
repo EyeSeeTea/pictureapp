@@ -1,14 +1,14 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.MZ_CONFIG_FILE_JSON;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.NP_CONFIG_FILE_JSON;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_FILE_JSON;
-import static org.eyeseetea.malariacare.configurationImporter
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.ZW_CONFIG_FILE_JSON;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;

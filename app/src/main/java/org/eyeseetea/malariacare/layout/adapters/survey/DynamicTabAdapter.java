@@ -949,7 +949,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestionDB);
 
-            if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB, parentQuestionDB)) {
+            if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
                 ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();

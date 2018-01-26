@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Form {
     private long id;
     private String name;
@@ -8,15 +10,12 @@ public class Form {
     private Type type;
     private Country country;
 
-    public Form() {
-    }
-
     private Form(Builder builder) {
-        setId(builder.id);
-        setName(builder.name);
-        setIndex(builder.index);
-        setType(builder.type);
-        setCountry(builder.country);
+        setId(required(builder.id,"id is required"));
+        setName(required(builder.name,"name is required"));
+        setIndex(required(builder.index,"index is required"));
+        setType(required(builder.type,"type is required"));
+        setCountry(required(builder.country,"country is required"));
     }
 
     public static Builder newBuilder() {
@@ -61,30 +60,6 @@ public class Form {
 
     public void setCountry(Country country) {
         this.country = country;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Form form = (Form) o;
-
-        if (id != form.id) return false;
-        if (index != form.index) return false;
-        if (name != null ? !name.equals(form.name) : form.name != null) return false;
-        if (type != form.type) return false;
-        return country != null ? country.equals(form.country) : form.country == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + index;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        return result;
     }
 
     public enum Type {

@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare.domain.entity;
 
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.util.List;
 
 public class Question {
@@ -17,16 +19,13 @@ public class Question {
     private int index;
     private Visibility visibility;
 
-    public Question() {
-    }
-
     private Question(Builder builder) {
-        setId(builder.id);
-        setCode(builder.code);
-        setName(builder.name);
-        setUid(builder.uid);
+        setId(required(builder.id,"id is required"));
+        setCode(required(builder.code,"code is required"));
+        setName(required(builder.name,"name is required"));
+        setUid(required(builder.uid,"uid is required"));
         setPhoneFormat(builder.phoneFormat);
-        setType(builder.type);
+        setType(required(builder.type,"type is required"));
         setCompulsory(builder.compulsory);
         setOptions(builder.options);
         setHeader(builder.header);

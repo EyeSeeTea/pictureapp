@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Header {
     private long id;
     private String shortName;
@@ -8,24 +10,12 @@ public class Header {
     private Form form;
     private int index;
 
-    public Header(long id, String shortName, String name,
-            Form form, int index) {
-        this.id = id;
-        this.shortName = shortName;
-        this.name = name;
-        this.form = form;
-        this.index = index;
-    }
-
-    public Header() {
-    }
-
     private Header(Builder builder) {
-        setId(builder.id);
-        setShortName(builder.shortName);
-        setName(builder.name);
-        setForm(builder.form);
-        setIndex(builder.index);
+        setId(required(builder.id,"id is required"));
+        setShortName(required(builder.shortName,"shortName is required"));
+        setName(required(builder.name,"name is required"));
+        setForm(required(builder.form,"form is required"));
+        setIndex(required(builder.index,"index is required"));
     }
 
     public static Builder newBuilder() {

@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.util.List;
 
 public class Option {
@@ -16,29 +18,12 @@ public class Option {
         this.name = name;
     }
 
-    public Option() {
-    }
-
-    public Option(long id, String code, String name) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-    }
-
     private Option(Builder builder) {
-        setId(builder.id);
-        setCode(builder.code);
-        setName(builder.name);
+        setId(required(builder.id,"id is required"));
+        setCode(required(builder.code,"code is required"));
+        setName(required(builder.name,"name is required"));
         setAttribute(builder.attribute);
         setRules(builder.rules);
-    }
-
-    public Option(long id, String code, String name,
-            Attribute attribute) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.attribute = attribute;
     }
 
     public static Builder newBuilder() {

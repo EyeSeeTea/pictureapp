@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.util.Date;
 
 public class Configuration {
@@ -14,31 +16,18 @@ public class Configuration {
         private String reference;
         private String name;
 
-        public CountryVersion(String uid, String country, int version, Date lastUpdate,
-                String reference, String name) {
-            this.uid = uid;
-            this.country = country;
-            this.version = version;
-            this.lastUpdate = lastUpdate;
-            this.reference = reference;
-            this.name = name;
-        }
-
-        public CountryVersion(){}
-
         private CountryVersion(Builder builder) {
-            setUid(builder.uid);
-            setCountry(builder.country);
-            setVersion(builder.version);
-            setLastUpdate(builder.lastUpdate);
-            setReference(builder.reference);
+            setUid(required(builder.uid,"UID is required"));
+            setCountry(required(builder.country,"country is required"));
+            setVersion(required(builder.version,"version is required"));
+            setLastUpdate(required(builder.lastUpdate,"version is required"));
+            setReference(required(builder.reference,"reference is required"));
             setName(builder.name);
         }
 
         public static Builder newBuilder() {
             return new Builder();
         }
-
 
         public String getUid() {
             return uid;

@@ -49,26 +49,6 @@ public class Country {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Country country = (Country) o;
-
-        if (id != country.id) return false;
-        if (uid != null ? !uid.equals(country.uid) : country.uid != null) return false;
-        return name != null ? name.equals(country.name) : country.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
-
     public static final class Builder {
         private long id;
         private String uid;

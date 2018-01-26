@@ -249,9 +249,10 @@ public class QuestionConvertFromDomainVisitorShould {
 
         question.setOptions(new ArrayList<Option>(1));
 
-        Option firstOption = new Option();
-        firstOption.setCode("FPL");
-        firstOption.setName("common_option_program_familyPlanning");
+        Option firstOption = Option.newBuilder()
+                .code("FPL")
+                .name("common_option_program_familyPlanning")
+                .build();
 
         question.getOptions().add(firstOption);
 
@@ -278,15 +279,15 @@ public class QuestionConvertFromDomainVisitorShould {
     }
 
     private Question givenADomainQuestionWithNonOptions() {
-        Question question = new Question();
-        question.setCode("program");
-        question.setName("ipc_issueEntry_q_program");
-        question.setType(Question.Type.DROPDOWN_LIST);
-        question.setVisibility(Question.Visibility.VISIBLE);
-        question.setCompulsory(true);
-
-
-        return question;
+       return Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .compulsory(true)
+                .build();
     }
 
     private QuestionDB givenADBQuestionWithOutput(int output) {

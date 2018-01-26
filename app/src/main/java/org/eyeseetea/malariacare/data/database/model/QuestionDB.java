@@ -35,6 +35,8 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOption
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
@@ -185,6 +187,7 @@ public class QuestionDB extends BaseModel {
     public List<OptionDB> getOptionDBS() {
         return optionDBS;
     }
+    private List<QuestionRelationDB> questionRelationThatAreMatchingWithQuestionOptions;
 
     public void setOptionDBS(
             List<OptionDB> optionDBS) {
@@ -606,6 +609,30 @@ public class QuestionDB extends BaseModel {
                         getId_question())).queryList();
     }
 
+    public List<QuestionThresholdDB> getQuestionsThresholdsByChildQuestion(
+            QuestionDB childQuestionDB) {
+        return new Select().from(QuestionThresholdDB.class).as(questionThresholdName)
+
+                .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                .on(QuestionThresholdDB_Table.id_match_fk.withTable(questionThresholdAlias)
+                        .eq(MatchDB_Table.id_match.withTable(matchAlias)))
+
+                .join(QuestionRelationDB.class, Join.JoinType.INNER).as(questionRelationName)
+                .on(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)
+                        .eq(QuestionRelationDB_Table.id_question_relation.withTable(
+                                questionRelationAlias)))
+
+                .where(QuestionThresholdDB_Table.id_question_fk
+                        .withTable(questionThresholdAlias)
+                        .eq(getId_question()))
+
+                .and(QuestionRelationDB_Table.id_question_fk
+                        .withTable(questionRelationAlias).eq(
+                                childQuestionDB.getId_question()))
+
+                .queryList();
+    }
+
     /**
      * Creates a false mQuestionDB that lets cache siblings better
      */
@@ -927,15 +954,69 @@ public class QuestionDB extends BaseModel {
         return matchedQuestionOptionDB;
     }
 
+    public List<QuestionRelationDB> getQuestionRelationsThatAreMatchingOnQuestionOption() {
+
+        if(questionRelationThatAreMatchingWithQuestionOptions != null)
+            return questionRelationThatAreMatchingWithQuestionOptions;
+
+
+        questionRelationThatAreMatchingWithQuestionOptions  =
+                new Select().from(QuestionRelationDB.class).as(questionRelationName)
+
+                        .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                        .on(QuestionRelationDB_Table.id_question_relation.withTable(
+                                questionRelationAlias)
+                                .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+
+                        .join(QuestionOptionDB.class, Join.JoinType.INNER).as(
+                        questionOptionName)
+                        .on(QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias)
+                                .eq(MatchDB_Table.id_match.withTable(
+                                        matchAlias)))
+
+                        .where(QuestionRelationDB_Table.id_question_fk.withTable(questionRelationAlias).eq(
+                                this.getId_question()))
+                        .queryList();
+
+        return questionRelationThatAreMatchingWithQuestionOptions;
+    }
+
     public List<MatchDB> getMatchDBs() {
         if (mMatchDBs == null) {
 
-            mMatchDBs = new Select().from(MatchDB.class).as(matchName)
-                    .join(QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
-                    .on(MatchDB_Table.id_match.withTable(matchAlias)
-                            .eq(QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias)))
-                    .where(QuestionOptionDB_Table.id_question_fk.withTable(questionOptionAlias).eq(
-                            this.getId_question())).queryList();
+            switch (this.getOutput()) {
+                case Constants.POSITIVE_INT:
+                case Constants.POSITIVE_OR_ZERO_INT:
+                case Constants.YEAR:
+                case Constants.PREGNANT_MONTH_INT:
+                case Constants.INT:
+
+                    mMatchDBs = new Select().from(MatchDB.class).as(matchName)
+                            .join(QuestionThresholdDB.class, Join.JoinType.LEFT_OUTER).as(
+                                    questionThresholdName)
+                            .on(MatchDB_Table.id_match.withTable(matchAlias)
+                                    .eq(QuestionThresholdDB_Table.id_match_fk.withTable(
+                                            questionThresholdAlias)))
+                            .where(QuestionThresholdDB_Table.id_question_fk.withTable(
+                                    questionThresholdAlias).eq(
+                                    this.getId_question())).queryList();
+
+                    break;
+
+                default:
+                    mMatchDBs = new Select().from(MatchDB.class).as(matchName)
+                            .join(QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(
+                                    questionOptionName)
+                            .on(MatchDB_Table.id_match.withTable(matchAlias)
+                                    .eq(QuestionOptionDB_Table.id_match_fk.withTable(
+                                            questionOptionAlias)))
+                            .where(QuestionOptionDB_Table.id_question_fk.withTable(
+                                    questionOptionAlias).eq(
+                                    this.getId_question())).queryList();
+
+            }
+
+
         }
         return mMatchDBs;
     }
@@ -1439,9 +1520,13 @@ public class QuestionDB extends BaseModel {
         if (!hasParentInSameHeader()) {
             return false;
         }
-        long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
 
-        return (hasParentOptionActivated > 0  && !isHiddenByAThreshold()) ? false : true;
+        if(getQuestionRelationsThatAreMatchingOnQuestionOption().isEmpty()){
+            return isHiddenByAThreshold();
+        }else {
+            long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
+            return (hasParentOptionActivated > 0) && !isHiddenByAThreshold() ? false : true;
+        }
     }
 
     public boolean hasQuestionOption() {
@@ -1500,6 +1585,11 @@ public class QuestionDB extends BaseModel {
                         parentHeader = true;
                         return parentHeader;
                     }
+                }
+                List<QuestionThresholdDB> thresholdDBS = questionDB.getQuestionsThresholdsByChildQuestion(this);
+                if(!thresholdDBS.isEmpty()){
+                    parentHeader = true;
+                    break;
                 }
             }
         }

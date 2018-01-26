@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -79,9 +80,20 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                                 Log.e(TAG, "Unable to download Languages From Server"
                                         + e.getMessage());
                                 e.printStackTrace();
+                                showToast(R.string.error_downloading_languages, e);
                             }
                         }
                     }
                 });
+    }
+
+    private void showToast(int titleResource, final Exception e) {
+        final String title = activity.getResources().getString(titleResource);
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(activity, title + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

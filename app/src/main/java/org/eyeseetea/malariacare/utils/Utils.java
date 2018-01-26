@@ -81,8 +81,9 @@ public class Utils {
     @NonNull
     public static String getInternationalizedString(@NonNull String key) {
         Context context = PreferencesState.getInstance().getContext();
+        String defaultLanguage = context.getString(R.string.default_language);
         String language = getUserLanguage(context);
-        String translation = getLocalizedStringFromDB(key, language);
+        String translation = getLocalizedStringFromDB(key, language, defaultLanguage);
 
         if (key == null) {
             return "";

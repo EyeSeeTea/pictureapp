@@ -62,6 +62,16 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     }
 
     @Override
+    public List<Survey> getAllCompletedSurveys() {
+        List<Survey> completedSurveys = new ArrayList<>();
+        for (SurveyDB surveyDB : SurveyDB.getAllCompletedSurveys()) {
+            Survey survey = new Survey(surveyDB.getEventDate());
+            completedSurveys.add(survey);
+        }
+        return completedSurveys;
+    }
+
+    @Override
     public void save(Survey survey) {
         SurveyDB surveyDB = SurveyDB.findById(survey.getId());
         surveyDB.setStatus(survey.getStatus());

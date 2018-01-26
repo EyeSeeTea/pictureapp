@@ -23,5 +23,7 @@ public class ConstantsMetadataConfigurationImporterTest {
             "tz_config_android_2_0.json";
     public static final String COUNTRIES_VERSION = "countries_version.json";
 
+    public static final String COUNTRIES_VERSION_V2 =
+            "countries_version_with_configuration_version_2.json";
 
 }

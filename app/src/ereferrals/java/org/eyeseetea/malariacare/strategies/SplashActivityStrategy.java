@@ -1,15 +1,25 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy.TAG;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.SplashScreenActivity;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
@@ -47,5 +57,30 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                     }
                 });
         builder.show();
+    }
+
+    @Override
+    public void downloadLanguagesFromServer() throws Exception {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(
+                new GetLastInsertedCredentialsUseCase.Callback() {
+                    @Override
+                    public void onGetUsername(Credentials credentials) {
+                        if (credentials == null || !credentials.isDemoCredentials()) {
+                            try {
+                                SplashActivityStrategy.super.downloadLanguagesFromServer();
+                            } catch (Exception e) {
+                                Log.e(TAG, "Unable to download Languages From Server"
+                                        + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
     }
 }

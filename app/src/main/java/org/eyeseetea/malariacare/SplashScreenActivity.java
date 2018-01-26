@@ -79,7 +79,7 @@ public class SplashScreenActivity extends Activity {
         }
 
         try {
-            downloadLanguagesFromServer();
+            splashActivityStrategy.downloadLanguagesFromServer();
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());
             e.printStackTrace();
@@ -91,26 +91,6 @@ public class SplashScreenActivity extends Activity {
         }
 
     }
-
-    private void downloadLanguagesFromServer() throws Exception {
-        if (BuildConfig.downloadLanguagesFromServer) {
-            Log.i(TAG, "Starting to download Languages From Server");
-            CredentialsReader cr = CredentialsReader.getInstance();
-
-            String token = cr.getPOEditorToken();
-            String projectID = cr.getPOEditorProjectID();
-
-            ILanguagesClient client = LanguageFactory.getPOEditorApiClient(projectID, token);
-            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(this);
-
-            LanguageDownloader downloader = LanguageFactory.getLanguageDownloader(client,
-                    connectivity);
-
-            downloader.start();
-        }
-    }
-
-
     public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
         Activity activity;
 

@@ -10,12 +10,13 @@ import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.POEditorResp
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Term;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.TermsResult;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 
 import java.util.List;
 
-import retrofit2.*;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class POEditorApiClient implements ILanguagesClient {
@@ -42,8 +43,9 @@ public class POEditorApiClient implements ILanguagesClient {
         Response<POEditorResponse<LanguagesResult>> response =
                 poEditorApi.getLanguages(apiToken,
                         projectID).execute();
-
-        return getResultsOrThrowException(response).result.languages;
+        POEditorResponse<LanguagesResult> languagesResultPOEditorResponse =
+                getResultsOrThrowException(response);
+        return languagesResultPOEditorResponse.result.languages;
     }
 
     public List<Term> getTranslationBy(String language) throws Exception {
@@ -60,10 +62,14 @@ public class POEditorApiClient implements ILanguagesClient {
             throws Exception {
 
         if (response.isSuccessful()) {
+            if (response.body().response.code.equals("4011")
+                    || response.body().response.code.equals("403")) {
+                throw new LanguagesDownloadException(response.body().response.message);
+            }
             return response.body();
         } else {
             String error = response.errorBody().string();
-            throw new Exception(error);
+            throw new LanguagesDownloadException(error);
         }
     }
 

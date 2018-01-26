@@ -999,5 +999,5 @@ Ameahidi kuhudhuria"</string>
 <string name="error_files_download_no_files">"Hakuna vyombo vya habari vya nchi hii"</string>
 <string name="error_files_download_no_wifi">"Tafadhali ingia kwenye mtandao wa WiFi ili kupakua vyombo vya habari kwa nchi hii"</string>
 <string name="error_android_version_not_supported">"Unasisitiza lakini Unganisha haijaambatana na toleo lako la Android kifaa. Unahitaji kuwa na Android 5.0+ ili Uunganishe kufanya kazi."</string>
-<string name="error_downloading_languages">"Hitilafu wakati wa lugha kupakua:"</ string>
+    <string name="error_downloading_languages">"Hitilafu wakati wa lugha kupakua:"</string>
 </resources>

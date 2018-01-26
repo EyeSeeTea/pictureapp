@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 
 public class AuthenticationManager implements IAuthenticationManager {
     IAuthenticationDataSource userAccountLocalDataSource;
@@ -45,7 +46,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     public void hardcodedLogin(String url, Callback<UserAccount> callback) {
         try {
             remoteLogin(getHardcodedServerCredentials(url), callback);
-        } catch (ConfigJsonIOException e) {
+        }catch (LanguagesDownloadException |ConfigJsonIOException e) {
             callback.onError(e);
         }
     }
@@ -132,7 +133,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
 
     public Credentials getHardcodedServerCredentials(String serverUrl) throws
-            ConfigJsonIOException {
+            ConfigJsonIOException, LanguagesDownloadException {
         String username = CredentialsReader.getInstance().getUser();
         String password = CredentialsReader.getInstance().getPassword();
         Credentials credentials = new Credentials(serverUrl, username, password);

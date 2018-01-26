@@ -129,11 +129,6 @@ public class MetadataConfigurationDBImporterShould {
         importer.importMetadata(program);
     }
 
-    private void shouldNotBeAnyQuestionInTheDB() {
-        shouldBeInDB(0, 0, 0, 0, 0);
-
-    }
-
     private void shouldBeInDB(int expectedQuestionsCount, int expectedQuestionsOptionsCount,
             int expectedOptionsCount, int expectedProgramsCount, int expectedPhoneFormatsCount) {
 

@@ -165,8 +165,6 @@ public class MetadataConfigurationDBImporter {
         for (Question question : questions) {
             QuestionDB questionDB = converter.visit(question);
             setQuestionRelations(questionDB, country);
-            AnswerDB answerDB = newAnswerDBWith(questionDB);
-            questionDB.setAnswer(answerDB);
             save(questionDB);
 
             mapQuestionsDBByCode.put(questionDB.getCode(), questionDB);
@@ -314,18 +312,15 @@ public class MetadataConfigurationDBImporter {
         return questionRelationDB;
     }
 
-    private AnswerDB newAnswerDBWith(QuestionDB questionDB) {
-        AnswerDB answerDB = new AnswerDB();
-        answerDB.setName(questionDB.getCode());
-
-        answerDB.save();
-        return answerDB;
-    }
-
     private void save(QuestionDB questionDB) {
+        AnswerDB answerDB = questionDB.getAnswerDB();
+        List<OptionDB> questionOptionDBS = answerDB.getOptionDBs();
+        answerDB.setName(questionDB.getCode());
+        answerDB.save();
+        questionDB.setAnswer(answerDB);
         questionDB.save();
 
-        save(questionDB.getOptionDBS(), questionDB);
+        save(questionOptionDBS, questionDB);
 
     }
 

@@ -85,7 +85,7 @@ public class MetadataConfigurationDBImporterShould {
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {
-        shouldBeInDB(17, 7, 37, 1, 1);
+        shouldBeInDB(17, 24, 37, 1, 1);
     }
 
     private void whenConfigFilesAreParsed() throws Exception {

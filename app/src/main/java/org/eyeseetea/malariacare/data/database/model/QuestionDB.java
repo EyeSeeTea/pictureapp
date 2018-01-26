@@ -180,17 +180,6 @@ public class QuestionDB extends BaseModel {
     @Column
     Integer compulsory;
 
-    public List<OptionDB> getOptionDBS() {
-        return optionDBS;
-    }
-
-    public void setOptionDBS(
-            List<OptionDB> optionDBS) {
-        this.optionDBS = optionDBS;
-    }
-
-    List<OptionDB> optionDBS;
-
     public Long getId_answer_fk() {
         return id_answer_fk;
     }

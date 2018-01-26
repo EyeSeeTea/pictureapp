@@ -14,12 +14,12 @@ import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -43,18 +43,22 @@ public class MetadataConfigurationDBImporter {
     @NonNull
     private IMetadataConfigurationDataSource remoteDataSource;
 
+    private boolean needToDownloadMetadata;
+    private List<Configuration.CountryVersion> countryVersions;
+
     public MetadataConfigurationDBImporter(
             @NonNull IMetadataConfigurationDataSource remoteDataSource,
-            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter) {
+            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter) throws Exception {
         this.remoteDataSource = remoteDataSource;
         this.converter = converter;
+        countryVersions = new ArrayList<>();
+        needToDownloadMetadata = false;
     }
 
     public void importMetadata(Program program) throws Exception {
-
-        List<Configuration.CountryVersion> countryVersions =
-                remoteDataSource.getCountriesVersions();
-
+        if (!needToDownloadMetadata) {
+            throw new IllegalStateException("Has to call hasToUpdateMetadata before this method.");
+        }
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
                 if (domainCountry.getUid().equals(program.getId())) {
@@ -66,6 +70,30 @@ public class MetadataConfigurationDBImporter {
             }
         }
     }
+
+    public boolean hasToUpdateMetadata(Program program) throws Exception {
+        countryVersions = remoteDataSource.getCountriesVersions();
+
+        for (Configuration.CountryVersion domainCountry : countryVersions) {
+            try {
+                if (domainCountry.getUid().equals(program.getId())) {
+                    String countryCode = domainCountry.getCountry();
+                    int version = domainCountry.getVersion();
+
+                    if (isCountryNotAlreadyAdded(countryCode)) {
+                        needToDownloadMetadata = true;
+                    } else if (hasMetadataBeenUpdatedFor(countryCode, version)) {
+                        needToDownloadMetadata = true;
+                    }
+                    break;
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+        return needToDownloadMetadata;
+    }
+
 
     private void deletePreviousMetadata() {
         deleteDB();
@@ -128,20 +156,20 @@ public class MetadataConfigurationDBImporter {
 
     private void processCountryData(Configuration.CountryVersion country) throws Exception {
 
-        String countryCode = country.getCountry();
+        String countryUID = country.getUid();
         int version = country.getVersion();
 
-        if (isCountryNotAlreadyAdded(countryCode)) {
+        if (isCountryNotAlreadyAdded(countryUID)) {
             updateMetadataFor(country);
 
-        } else if (hasMetadataBeenUpdatedFor(countryCode, version)) {
+        } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
             updateMetadataFor(country);
         }
     }
 
-    private boolean hasMetadataBeenUpdatedFor(String countryCode, int version) {
-        return CountryVersionDB.isVersionGreater(countryCode, version);
+    private boolean hasMetadataBeenUpdatedFor(String countryUID, int version) {
+        return CountryVersionDB.isVersionGreater(countryUID, version);
     }
 
     private boolean isCountryNotAlreadyAdded(String countryCode) {

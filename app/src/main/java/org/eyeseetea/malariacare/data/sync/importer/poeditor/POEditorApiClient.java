@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.POEditorResp
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Term;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.TermsResult;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
-import org.eyeseetea.malariacare.domain.exception.POEditorException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 
 import java.util.List;
@@ -64,12 +64,12 @@ public class POEditorApiClient implements ILanguagesClient {
         if (response.isSuccessful()) {
             if (response.body().response.code.equals("4011")
                     || response.body().response.code.equals("403")) {
-                throw new POEditorException(response.body().response.message);
+                throw new LanguagesDownloadException(response.body().response.message);
             }
             return response.body();
         } else {
             String error = response.errorBody().string();
-            throw new POEditorException(error);
+            throw new LanguagesDownloadException(error);
         }
     }
 

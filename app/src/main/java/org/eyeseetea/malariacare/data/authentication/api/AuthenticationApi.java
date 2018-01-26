@@ -7,13 +7,13 @@ import com.squareup.okhttp.Credentials;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
-import org.eyeseetea.malariacare.domain.exception.POEditorException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 
 public class AuthenticationApi {
 
 
     public static String getHardcodedApiCredentials() throws ConfigJsonIOException,
-            POEditorException {
+            LanguagesDownloadException {
         return
                 Credentials.basic(getHardcodedApiUser(),
                         getHardcodedApiPass());
@@ -26,12 +26,12 @@ public class AuthenticationApi {
     }
 
     @NonNull
-    static String getHardcodedApiUser() throws ConfigJsonIOException, POEditorException {
+    static String getHardcodedApiUser() throws ConfigJsonIOException, LanguagesDownloadException {
         return CredentialsReader.getInstance().getUser();
     }
 
     @NonNull
-    static String getHardcodedApiPass() throws ConfigJsonIOException, POEditorException {
+    static String getHardcodedApiPass() throws ConfigJsonIOException, LanguagesDownloadException {
         return CredentialsReader.getInstance().getPassword();
     }
 }

@@ -58,17 +58,25 @@ public class CountryVersionDB extends BaseModel {
                 .querySingle();
     }
 
-    public static boolean isCountryAlreadyAdded(String countryCode) {
-        long count = new Select(Method.count())
-                .from(CountryVersionDB.class).where(
-                        (CountryVersionDB_Table.country).is(countryCode.toLowerCase())).count();
+    public static boolean isCountryAlreadyAdded(String countryUID) {
+        long count = new Select()
+                .from(CountryVersionDB.class)
+                .where((CountryVersionDB_Table.uid)
+                        .eq(countryUID))
+                .queryList()
+                .size();
+
         return count == 1;
     }
 
-    public static boolean isVersionGreater(String countryCode, int version) {
-        long versionDB = new Select(CountryVersionDB_Table.version)
-                .from(CountryVersionDB.class).where(
-                        (CountryVersionDB_Table.country).is(countryCode)).count();
+    public static boolean isVersionGreater(String countryUID, int version) {
+        CountryVersionDB countryVersionDB = new Select(CountryVersionDB_Table.version)
+                .from(CountryVersionDB.class)
+                .where((CountryVersionDB_Table.uid)
+                        .eq(countryUID))
+                .querySingle();
+
+        int versionDB = (countryVersionDB != null) ? countryVersionDB.getVersion() : 0;
         return version > versionDB;
     }
 

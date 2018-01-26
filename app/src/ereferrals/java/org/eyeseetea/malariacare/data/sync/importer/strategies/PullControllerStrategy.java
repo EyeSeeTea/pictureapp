@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
-import static org.eyeseetea.malariacare.network.ServerAPIController.isNetworkAvailable;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -45,10 +43,14 @@ import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
     private MetadataUpdater mMetadataUpdater;
+    private MetadataConfigurationDBImporter importer;
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
         mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
+
+        IMetadataConfigurationDataSource dataSource =
+                null;
     }
 
     @Override
@@ -73,6 +75,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             if (!pullFilters.isDemo()) {
                 mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
             } else {
+                mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
                 mPullController.onPullDataComplete(callback, true);
                 callback.onComplete();
             }
@@ -85,9 +88,15 @@ public class PullControllerStrategy extends APullControllerStrategy {
     @Override
     public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
         try {
+            IMetadataConfigurationDataSource dataSource =
+                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                            HTTPClientFactory.getAuthenticationInterceptor()
+                    );
+            importer = new MetadataConfigurationDBImporter(
+                    dataSource, ConverterFactory.getQuestionConverter()
+            );
 
         if (isDemo) {
-            mMetadataUpdater.updateMetadata();
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
             ProgramDB programDB = ProgramDB.findByUID(
                     PreferencesState.getInstance().getContext().getString(
@@ -104,7 +113,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
                                 credentialsLocalDataSource.getOrganisationCredentials());
                 org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
 
-                checkNotSentSurveys(callback, program);
+            if (importer.hasToUpdateMetadata(program)) {
+                checkCompletedSurveys(callback, program);
+            }
                 programLocalDataSource.saveUserProgramId(program);
 
             mPullController.convertData(callback);
@@ -115,9 +126,10 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
-    private void checkNotSentSurveys(final IPullController.Callback callback, Program userProgram) {
+    private void checkCompletedSurveys(final IPullController.Callback callback,
+            Program userProgram) {
         ISurveyRepository surveyLocalDataSource = new SurveyLocalDataSource();
-        List<Survey> surveys = surveyLocalDataSource.getUnsentSurveys();
+        List<Survey> surveys = surveyLocalDataSource.getAllCompletedSurveys();
 
         IUserRepository userDataSource = new UserAccountDataSource();
         UserAccount currentUser = userDataSource.getLoggedUser();
@@ -158,15 +170,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void downloadMetadataFromConfigurationFiles(
             Program actualProgram) {
         try {
-
-            IMetadataConfigurationDataSource dataSource =
-                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                            HTTPClientFactory.getAuthenticationInterceptor()
-                    );
-            MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
-                    dataSource, ConverterFactory.getQuestionConverter()
-            );
-
             importer.importMetadata(actualProgram);
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,21 +6,21 @@ import static junit.framework.Assert.assertEquals;
 import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
 import static org.eyeseetea.malariacare.configurationimporter
+        .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION_V2;
+import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
+import static org.junit.Assert.assertTrue;
 
-
-import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
-import org.eyeseetea.malariacare.data.database.model.HeaderDB;
-import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
@@ -44,9 +44,9 @@ public class MetadataConfigurationDBImporterShould {
 
     private final Program program = new Program("T_TZ", "low6qUS2wc9");
 
-
     @Before
     public void setUp() throws Exception {
+        PopulateDB.wipeDataBase();
         CredentialsReader credentialsReader = CredentialsReader.getInstance();
         Session.setCredentials(
                 new Credentials("/", credentialsReader.getUser(),
@@ -64,10 +64,23 @@ public class MetadataConfigurationDBImporterShould {
     @Test
     public void insert_questions_to_db_after_download_the_configurations() throws Exception {
 
-        /* TODO: This is actually not providing an empty DB but checking that DB is empty, we
-        would need to provide an empty DB or avoid checking that, or we will have problems if we
-        change this test position */
-        givenAnEmptyDB();
+        whenCountryConfigFilesAreReceived();
+
+        whenConfigFilesAreParsed();
+
+        thenAssertMetadataIsInsertedInTheDB();
+    }
+
+    @Test
+    public void update_data_with_new_updated_configuration_version() throws Exception {
+
+        givenADownloadedVersionOneOfConfigurationFile();
+        givenADownloadedVersionTwoOfConfigurationFile();
+
+        thenAssertConfigurationFileVersionHasIncreaseToVersionTwo();
+    }
+
+    private void givenADownloadedVersionOneOfConfigurationFile() throws Exception {
 
         whenCountryConfigFilesAreReceived();
         whenConfigFilesAreParsed();
@@ -75,17 +88,32 @@ public class MetadataConfigurationDBImporterShould {
         thenAssertMetadataIsInsertedInTheDB();
     }
 
-    private void givenAnEmptyDB(){
-        shouldNotBeAnyQuestionInTheDB();
+    private void givenADownloadedVersionTwoOfConfigurationFile() throws Exception {
+
+        whenCountryConfigFilesVersionTwoAreReceived();
+        whenConfigFilesAreParsed();
     }
+
 
     private void whenCountryConfigFilesAreReceived() throws Exception {
         dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION);
         dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
     }
 
+    private void whenCountryConfigFilesVersionTwoAreReceived() throws Exception {
+        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION_V2);
+        dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
+    }
+
     private void thenAssertMetadataIsInsertedInTheDB() {
         shouldBeInDB(17, 7, 37, 1, 1);
+    }
+
+    private void thenAssertConfigurationFileVersionHasIncreaseToVersionTwo() {
+        CountryVersionDB countryVersionDB = CountryVersionDB.getCountryVersionByUID(
+                program.getId());
+
+                assertTrue(countryVersionDB.getVersion() == 2);
     }
 
     private void whenConfigFilesAreParsed() throws Exception {
@@ -99,12 +127,6 @@ public class MetadataConfigurationDBImporterShould {
         );
 
         importer.importMetadata(program);
-    }
-
-
-    private void shouldNotBeAnyQuestionInTheDB() {
-        shouldBeInDB(0, 0, 0, 0, 0);
-
     }
 
     private void shouldBeInDB(int expectedQuestionsCount, int expectedQuestionsOptionsCount,

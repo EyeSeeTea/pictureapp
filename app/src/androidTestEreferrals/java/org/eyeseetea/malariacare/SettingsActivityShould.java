@@ -53,6 +53,7 @@ public class SettingsActivityShould {
     public void cleanUp() {
         Intent intent = new Intent(PreferencesState.getInstance().getContext(),
                 SettingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         EyeSeeTeaApplication.getInstance().startActivity(intent);
     }
 

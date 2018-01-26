@@ -38,6 +38,7 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.utils.Permissions;
 
 public class PushServiceStrategy extends APushServiceStrategy {
 
@@ -56,6 +57,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
+
+        if (Permissions.isPhonePermissionGranted(PreferencesState.getInstance().getContext())) {
+            Log.w(getClass().getSimpleName(), "Push cancelled because does not exist phone permissions");
+            return;
+        }
 
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
 

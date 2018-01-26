@@ -45,17 +45,18 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     }
 
     private void showDialogNotSupportedAndroid() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle(R.string.dialog_title_error);
-        builder.setMessage(R.string.error_android_version_not_supported);
-        builder.setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_title_error)
+                .setMessage(R.string.error_android_version_not_supported)
+                .setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
                         activity.finish();
                     }
-                });
+                })
+                .setCancelable(false);
         builder.show();
     }
 

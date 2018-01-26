@@ -903,10 +903,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      *
      * this code will be delete when DynamicTabAdapter refactoring will be completed
      *
-     * @param questionDB is the parent questionDB
+     * @param parentQuestionDB is the parent questionDB
      */
-    private void showOrHideChildren(QuestionDB questionDB) {
-        if (!questionDB.hasChildren()) {
+    private void showOrHideChildren(QuestionDB parentQuestionDB) {
+        if (!parentQuestionDB.hasChildren()) {
             return;
         }
 
@@ -924,11 +924,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if (rowQuestionDB == null) {
                         continue;
                     }
-                    List<QuestionDB> questionDBChildren = questionDB.getChildren();
+                    List<QuestionDB> questionDBChildren = parentQuestionDB.getChildren();
                     if (questionDBChildren != null && questionDBChildren.size() > 0) {
                         for (QuestionDB childQuestionDB : questionDBChildren) {
                             //if the table row questionDB is child of the modified questionDB...
-                            toggleChild(row, rowQuestionDB, childQuestionDB);
+                            toggleChild(row, rowQuestionDB, childQuestionDB, parentQuestionDB);
                             showOrHideChildren(childQuestionDB);
                         }
                     }
@@ -944,11 +944,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param rowQuestionDB   is the question in the view
      * @param childQuestionDB is the posible child
      */
-    private boolean toggleChild(TableRow row, QuestionDB rowQuestionDB, QuestionDB childQuestionDB) {
+    private boolean toggleChild(TableRow row, QuestionDB rowQuestionDB, QuestionDB childQuestionDB,
+            QuestionDB parentQuestionDB) {
         if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestionDB);
 
-            if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB)) {
+            if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB, parentQuestionDB)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
                 ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();

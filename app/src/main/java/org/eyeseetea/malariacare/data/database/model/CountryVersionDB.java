@@ -29,6 +29,9 @@ public class CountryVersionDB extends BaseModel {
     int version;
 
     @Column
+    String reference;
+
+    @Column
     Date last_update;
 
     @Unique
@@ -39,10 +42,11 @@ public class CountryVersionDB extends BaseModel {
     }
 
     public CountryVersionDB(Long id_country_version, String country, int version,
-            Date last_update, String uid) {
+            String reference, Date last_update, String uid) {
         this.id_country_version = id_country_version;
         this.country = country;
         this.version = version;
+        this.reference = reference;
         this.last_update = last_update;
         this.uid = uid;
     }
@@ -147,5 +151,13 @@ public class CountryVersionDB extends BaseModel {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 }

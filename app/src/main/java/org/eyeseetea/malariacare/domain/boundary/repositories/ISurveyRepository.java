@@ -17,5 +17,7 @@ public interface ISurveyRepository {
 
     List<Survey> getAllQuarantineSurveys();
 
+    List<Survey> getAllCompletedSurveys();
+
     void save(Survey survey);
 }

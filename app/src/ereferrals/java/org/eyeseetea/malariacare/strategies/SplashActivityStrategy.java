@@ -64,7 +64,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void downloadLanguagesFromServer() throws Exception {
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        final IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
@@ -74,14 +74,19 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                     @Override
                     public void onGetUsername(Credentials credentials) {
                         if (credentials == null || !credentials.isDemoCredentials()) {
-                            try {
-                                SplashActivityStrategy.super.downloadLanguagesFromServer();
-                            } catch (Exception e) {
-                                Log.e(TAG, "Unable to download Languages From Server"
-                                        + e.getMessage());
-                                e.printStackTrace();
-                                showToast(R.string.error_downloading_languages, e);
-                            }
+                            asyncExecutor.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        SplashActivityStrategy.super.downloadLanguagesFromServer();
+                                    } catch (Exception e) {
+                                        Log.e(TAG, "Unable to download Languages From Server"
+                                                + e.getMessage());
+                                        e.printStackTrace();
+                                        showToast(R.string.error_downloading_languages, e);
+                                    }
+                                }
+                            });
                         }
                     }
                 });

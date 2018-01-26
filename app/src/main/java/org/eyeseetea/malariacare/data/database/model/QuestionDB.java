@@ -187,6 +187,7 @@ public class QuestionDB extends BaseModel {
     public List<OptionDB> getOptionDBS() {
         return optionDBS;
     }
+    private List<QuestionRelationDB> questionRelationThatAreMatchingWithQuestionOptions;
 
     public void setOptionDBS(
             List<OptionDB> optionDBS) {
@@ -953,6 +954,33 @@ public class QuestionDB extends BaseModel {
         return matchedQuestionOptionDB;
     }
 
+    public List<QuestionRelationDB> getQuestionRelationsThatAreMatchingOnQuestionOption() {
+
+        if(questionRelationThatAreMatchingWithQuestionOptions != null)
+            return questionRelationThatAreMatchingWithQuestionOptions;
+
+
+        questionRelationThatAreMatchingWithQuestionOptions  =
+                new Select().from(QuestionRelationDB.class).as(questionRelationName)
+
+                        .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                        .on(QuestionRelationDB_Table.id_question_relation.withTable(
+                                questionRelationAlias)
+                                .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+
+                        .join(QuestionOptionDB.class, Join.JoinType.INNER).as(
+                        questionOptionName)
+                        .on(QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias)
+                                .eq(MatchDB_Table.id_match.withTable(
+                                        matchAlias)))
+
+                        .where(QuestionRelationDB_Table.id_question_fk.withTable(questionRelationAlias).eq(
+                                this.getId_question()))
+                        .queryList();
+
+        return questionRelationThatAreMatchingWithQuestionOptions;
+    }
+
     public List<MatchDB> getMatchDBs() {
         if (mMatchDBs == null) {
 
@@ -1448,34 +1476,6 @@ public class QuestionDB extends BaseModel {
         return hasParentOptionActivated > 0 ? false : true;
     }
 
-    /**
-     * Checks if this mQuestionDB is shown according to the values of the given survey
-     */
-    public boolean isHiddenBySurveyAndHeader(SurveyDB surveyDB, QuestionDB parentQuestion) {
-        if (surveyDB == null) {
-            return false;
-        }
-        //No mQuestionDB relations
-        if (!hasParentInSameHeader()) {
-            return false;
-        }
-        long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
-
-        //Only if it's a question that could has a threshold rule
-        switch (parentQuestion.getOutput()) {
-            case Constants.POSITIVE_INT:
-            case Constants.POSITIVE_OR_ZERO_INT:
-            case Constants.YEAR:
-            case Constants.PREGNANT_MONTH_INT:
-            case Constants.INT:
-
-                return (hasParentOptionActivated > 0) && !isHiddenByAThreshold() ? false : true;
-
-        }
-
-        return (hasParentOptionActivated > 0) ? false : true;
-    }
-
     private long hasParentOptionActivated(SurveyDB surveyDB) {
         //Parent with the right value -> not hidden
         return SQLite.selectCountOf().from(ValueDB.class).as(valueName)
@@ -1520,9 +1520,13 @@ public class QuestionDB extends BaseModel {
         if (!hasParentInSameHeader()) {
             return false;
         }
-        long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
 
-        return (hasParentOptionActivated > 0  && !isHiddenByAThreshold()) ? false : true;
+        if(getQuestionRelationsThatAreMatchingOnQuestionOption().isEmpty()){
+            return isHiddenByAThreshold();
+        }else {
+            long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
+            return (hasParentOptionActivated > 0) && !isHiddenByAThreshold() ? false : true;
+        }
     }
 
     public boolean hasQuestionOption() {
@@ -1581,6 +1585,11 @@ public class QuestionDB extends BaseModel {
                         parentHeader = true;
                         return parentHeader;
                     }
+                }
+                List<QuestionThresholdDB> thresholdDBS = questionDB.getQuestionsThresholdsByChildQuestion(this);
+                if(!thresholdDBS.isEmpty()){
+                    parentHeader = true;
+                    break;
                 }
             }
         }

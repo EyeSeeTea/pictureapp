@@ -57,6 +57,7 @@ public class QuestionConvertFromDomainVisitor implements
         answerDB.setOptionDBs(getOptionDBsFrom(domainModel));
         return answerDB;
     }
+    
     private PhoneFormatDB getPhoneFormat(PhoneFormat  domainPhoneFormat){
         return phoneFormatConverter.visit(domainPhoneFormat);
     }

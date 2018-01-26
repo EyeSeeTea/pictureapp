@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.utils;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
@@ -63,7 +65,8 @@ public class Permissions {
         return permissions.get(code);
     }
 
-    public void requestNextPermission() {
+    public void requestNextPermission(Activity callingActivity) {
+        activity = callingActivity;
         if (permissions.size() > 0) {
             Integer code = (Integer) permissions.keySet().toArray()[0];
             Permission permission = getPermission(code);
@@ -77,6 +80,12 @@ public class Permissions {
 
     public boolean areAllPermissionsGranted() {
         return permissions.isEmpty();
+    }
+
+    public static boolean isPhonePermissionGranted(Context context){
+            return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED;
     }
 
     public class Permission {

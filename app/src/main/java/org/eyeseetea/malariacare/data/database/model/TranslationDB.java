@@ -24,7 +24,6 @@ import java.util.List;
 public class TranslationDB extends BaseModel {
 
     public static final String TRANSLATION_NOT_FOUND = "-1";
-    public static String DEFAULT_LANGUAGE = "default";
     public static final String INDEX_NAME_STRING_KEY_AND_LANGUAGE_CODE =
             "TranslationIndexStringKeyAndLanguageCode";
 

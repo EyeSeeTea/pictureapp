@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -21,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQuestionView,
-        IMultiQuestionView {
+        IMultiQuestionView, IFillSavedInstanceValues {
     private CustomTextView header;
     private CustomSpinner spinnerProvince, spinnerDistrict, spinnerCommune, spinnerVillage;
     private QuestionDB mQuestionDB;
@@ -188,5 +189,60 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
 
             }
         });
+    }
+
+    @Override
+    public Bundle fillSavedInstanceValues(Bundle savedInstanceValues) {
+        if(spinnerProvince.getSelectedItemPosition()!=0){
+            savedInstanceValues.putInt("R.id.spinner_province", spinnerProvince.getSelectedItemPosition());
+        }
+        if(spinnerDistrict.getSelectedItemPosition()!=0){
+            savedInstanceValues.putInt("R.id.spinner_district",
+                    spinnerDistrict.getSelectedItemPosition());
+        }
+        if(spinnerCommune.getSelectedItemPosition()!=0){
+            savedInstanceValues.putInt("R.id.spinner_commune", spinnerCommune.getSelectedItemPosition());
+        }
+        if(spinnerVillage.getSelectedItemPosition()!=0){
+            savedInstanceValues.putInt("R.id.spinner_village", spinnerVillage.getSelectedItemPosition());
+        }
+        return savedInstanceValues;
+    }
+
+    @Override
+    public void restoreSavedInstanceValues(Bundle savedInstanceValues) {
+        if(savedInstanceValues.containsKey("R.id.spinner_province")){
+            Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_province");
+            if(selectedItem!=null) {
+                spinnerProvince.setSelection(selectedItem, true, true);
+                OptionDB seltectedOptionDB = (OptionDB)spinnerProvince.getSelectedItem();
+                setOptionsWithParent(spinnerDistrict, seltectedOptionDB.getId_option(),
+                        mContext.getString(R.string.district));
+            }
+        }
+        if(savedInstanceValues.containsKey("R.id.spinner_district")){
+            Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_district");
+            if(selectedItem!=null) {
+                spinnerDistrict.setSelection(selectedItem, true, true);
+                OptionDB seltectedOptionDB = (OptionDB)spinnerDistrict.getSelectedItem();
+                setOptionsWithParent(spinnerCommune, seltectedOptionDB.getId_option(),
+                        mContext.getString(R.string.district));
+            }
+        }
+        if(savedInstanceValues.containsKey("R.id.spinner_commune")){
+            Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_commune");
+            if(selectedItem!=null) {
+                spinnerCommune.setSelection(selectedItem, true, true);
+                OptionDB seltectedOptionDB = (OptionDB)spinnerCommune.getSelectedItem();
+                setOptionsWithParent(spinnerVillage, seltectedOptionDB.getId_option(),
+                        mContext.getString(R.string.district));
+            }
+        }
+        if(savedInstanceValues.containsKey("R.id.spinner_village")){
+            Integer selectedItem = savedInstanceValues.getInt("R.id.spinner_village");
+            if(selectedItem!=null) {
+                spinnerVillage.setSelection(selectedItem);
+            }
+        }
     }
 }

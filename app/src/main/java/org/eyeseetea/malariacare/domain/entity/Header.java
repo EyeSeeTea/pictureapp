@@ -10,13 +10,16 @@ public class Header {
     private Form form;
     private int index;
 
-    private Header(Builder builder) {
-        setId(required(builder.id,"id is required"));
-        setShortName(required(builder.shortName,"shortName is required"));
-        setName(required(builder.name,"name is required"));
-        setForm(required(builder.form,"form is required"));
-        setIndex(required(builder.index,"index is required"));
+    public Header(long id, String shortName, String name,
+            Form form, int index) {
+
+        setId(required(id,"id is required"));
+        setShortName(required(shortName,"shortName is required"));
+        setName(required(name,"name is required"));
+        setForm(required(form,"form is required"));
+        setIndex(required(index,"index is required"));
     }
+
 
     public static Builder newBuilder() {
         return new Builder();
@@ -27,7 +30,7 @@ public class Header {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -35,7 +38,7 @@ public class Header {
         return shortName;
     }
 
-    public void setShortName(String shortName) {
+    private void setShortName(String shortName) {
         this.shortName = shortName;
     }
 
@@ -43,7 +46,7 @@ public class Header {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -51,7 +54,7 @@ public class Header {
         return form;
     }
 
-    public void setForm(Form form) {
+    private void setForm(Form form) {
         this.form = form;
     }
 
@@ -59,7 +62,7 @@ public class Header {
         return index;
     }
 
-    public void setIndex(int index) {
+    private void setIndex(int index) {
         this.index = index;
     }
 
@@ -125,7 +128,13 @@ public class Header {
         }
 
         public Header build() {
-            return new Header(this);
+            return new Header(
+                    this.id,
+                    this.shortName,
+                    this.name,
+                    this.form,
+                    this.index
+            );
         }
     }
 }

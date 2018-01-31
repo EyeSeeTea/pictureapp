@@ -16,13 +16,15 @@ public class Configuration {
         private String reference;
         private String name;
 
-        private CountryVersion(Builder builder) {
-            setUid(required(builder.uid,"UID is required"));
-            setCountry(required(builder.country,"country is required"));
-            setVersion(required(builder.version,"version is required"));
-            setLastUpdate(required(builder.lastUpdate,"version is required"));
-            setReference(required(builder.reference,"reference is required"));
-            setName(builder.name);
+        public CountryVersion(String uid, String country, int version, Date lastUpdate,
+                String reference, String name) {
+
+            setUid(required(uid,"UID is required"));
+            setCountry(required(country,"country is required"));
+            setVersion(required(version,"version is required"));
+            setLastUpdate(required(lastUpdate,"version is required"));
+            setReference(required(reference,"reference is required"));
+            setName(name);
         }
 
         public static Builder newBuilder() {
@@ -33,7 +35,7 @@ public class Configuration {
             return uid;
         }
 
-        public void setUid(String uid) {
+        private void setUid(String uid) {
             this.uid = uid;
         }
 
@@ -41,7 +43,7 @@ public class Configuration {
             return country;
         }
 
-        public void setCountry(String country) {
+        private void setCountry(String country) {
             this.country = country;
         }
 
@@ -49,7 +51,7 @@ public class Configuration {
             return version;
         }
 
-        public void setVersion(int version) {
+        private void setVersion(int version) {
             this.version = version;
         }
 
@@ -57,7 +59,7 @@ public class Configuration {
             return lastUpdate;
         }
 
-        public void setLastUpdate(Date lastUpdate) {
+        private void setLastUpdate(Date lastUpdate) {
             this.lastUpdate = lastUpdate;
         }
 
@@ -65,7 +67,7 @@ public class Configuration {
             return reference;
         }
 
-        public void setReference(String reference) {
+        private void setReference(String reference) {
             this.reference = reference;
         }
 
@@ -73,7 +75,7 @@ public class Configuration {
             return name;
         }
 
-        public void setName(String name) {
+        private void setName(String name) {
             this.name = name;
         }
 
@@ -152,7 +154,14 @@ public class Configuration {
             }
 
             public CountryVersion build() {
-                return new CountryVersion(this);
+                return new CountryVersion(
+                        this.uid,
+                        this.country,
+                        this.version,
+                        this.lastUpdate,
+                        this.reference,
+                        this.name
+                );
             }
         }
     }

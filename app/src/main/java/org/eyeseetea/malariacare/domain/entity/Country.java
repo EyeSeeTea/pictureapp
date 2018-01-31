@@ -1,24 +1,17 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Country {
     private long id;
     private String uid;
     private String name;
 
     public Country(long id, String uid, String name) {
-        this.id = id;
-        this.uid = uid;
-        this.name = name;
-    }
-
-    public Country() {
-    }
-
-    private Country(Builder builder) {
-        setId(builder.id);
-        setUid(builder.uid);
-        setName(builder.name);
+        setId(required(id, "id is required"));
+        setUid(required(uid, "uid is required"));
+        setName(name);
     }
 
     public static Builder newBuilder() {
@@ -29,7 +22,7 @@ public class Country {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -37,7 +30,7 @@ public class Country {
         return uid;
     }
 
-    public void setUid(String uid) {
+    private void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -45,7 +38,7 @@ public class Country {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -73,7 +66,11 @@ public class Country {
         }
 
         public Country build() {
-            return new Country(this);
+            return new Country(
+                    this.id,
+                    this.uid,
+                    this.name
+            );
         }
     }
 }

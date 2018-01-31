@@ -10,12 +10,14 @@ public class Form {
     private Type type;
     private Country country;
 
-    private Form(Builder builder) {
-        setId(required(builder.id,"id is required"));
-        setName(required(builder.name,"name is required"));
-        setIndex(required(builder.index,"index is required"));
-        setType(required(builder.type,"type is required"));
-        setCountry(required(builder.country,"country is required"));
+    public Form(long id, String name, int index, Type type,
+            Country country) {
+
+        setId(required(id, "id is required"));
+        setName(required(name, "name is required"));
+        setIndex(required(index, "index is required"));
+        setType(required(type, "type is required"));
+        setCountry(required(country, "country is required"));
     }
 
     public static Builder newBuilder() {
@@ -26,7 +28,7 @@ public class Form {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
@@ -34,7 +36,7 @@ public class Form {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -42,7 +44,7 @@ public class Form {
         return index;
     }
 
-    public void setIndex(int index) {
+    private void setIndex(int index) {
         this.index = index;
     }
 
@@ -50,7 +52,7 @@ public class Form {
         return type;
     }
 
-    public void setType(Type type) {
+    private void setType(Type type) {
         this.type = type;
     }
 
@@ -58,7 +60,7 @@ public class Form {
         return country;
     }
 
-    public void setCountry(Country country) {
+    private void setCountry(Country country) {
         this.country = country;
     }
 
@@ -105,7 +107,13 @@ public class Form {
         }
 
         public Form build() {
-            return new Form(this);
+            return new Form(
+                    this.id,
+                    this.name,
+                    this.index,
+                    this.type,
+                    this.country
+            );
         }
     }
 }

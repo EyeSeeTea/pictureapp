@@ -116,7 +116,6 @@
                 <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/demo_login_button"
                     style="@style/CustomButton"
-                    android:layout_width="@dimen/demo_button_width"
                     android:layout_marginTop="@dimen/demo_button_margin_top"
                     android:background="@drawable/button_blue_selector"
                     android:orientation="vertical"

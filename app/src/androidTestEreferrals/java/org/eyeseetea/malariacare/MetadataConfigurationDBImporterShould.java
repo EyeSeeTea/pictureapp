@@ -106,7 +106,7 @@ public class MetadataConfigurationDBImporterShould {
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {
-        shouldBeInDB(17, 7, 37, 1, 1);
+        shouldBeInDB(17, 24, 37, 1, 1);
     }
 
     private void thenAssertConfigurationFileVersionHasIncreaseToVersionTwo() {
@@ -138,10 +138,10 @@ public class MetadataConfigurationDBImporterShould {
         int programsCount = ProgramDB.getProgramsDBCount();
         int formatsCount = PhoneFormatDB.getPhoneFormatDBCount();
 
-        assertEquals(questionsCount, expectedQuestionsCount);
-        assertEquals(questionsOptionsCount, expectedQuestionsOptionsCount);
-        assertEquals(optionsCount, expectedOptionsCount);
-        assertEquals(programsCount, expectedProgramsCount);
-        assertEquals(formatsCount, expectedPhoneFormatsCount);
+        assertEquals(expectedQuestionsCount,questionsCount);
+        assertEquals(expectedQuestionsOptionsCount,questionsOptionsCount);
+        assertEquals(expectedOptionsCount,optionsCount );
+        assertEquals(expectedProgramsCount,programsCount);
+        assertEquals(expectedPhoneFormatsCount,formatsCount);
     }
 }

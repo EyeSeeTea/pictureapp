@@ -56,9 +56,8 @@ public class MetadataConfigurationDBImporter {
     }
 
     public void importMetadata(Program program) throws Exception {
-        if (!needToDownloadMetadata) {
-            throw new IllegalStateException("Has to call hasToUpdateMetadata before this method.");
-        }
+        fetchContriesVersionsIfRequired();
+
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
                 if (domainCountry.getUid().equals(program.getId())) {
@@ -72,7 +71,8 @@ public class MetadataConfigurationDBImporter {
     }
 
     public boolean hasToUpdateMetadata(Program program) throws Exception {
-        countryVersions = remoteDataSource.getCountriesVersions();
+
+        fetchContriesVersionsIfRequired();
 
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
@@ -92,6 +92,12 @@ public class MetadataConfigurationDBImporter {
             }
         }
         return needToDownloadMetadata;
+    }
+
+    private void fetchContriesVersionsIfRequired() throws Exception {
+        if(countryVersions == null || countryVersions.isEmpty()){
+            countryVersions = remoteDataSource.getCountriesVersions();
+        }
     }
 
 

@@ -158,13 +158,14 @@ public class MetadataConfigurationDBImporter {
 
         String countryUID = country.getUid();
         int version = country.getVersion();
+        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
 
         if (isCountryNotAlreadyAdded(countryUID)) {
-            updateMetadataFor(country);
+            updateMetadataFor(questions,country);
 
         } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
-            updateMetadataFor(country);
+            updateMetadataFor(questions,country);
         }
     }
 
@@ -176,8 +177,7 @@ public class MetadataConfigurationDBImporter {
         return !CountryVersionDB.isCountryAlreadyAdded(countryCode);
     }
 
-    private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
+    private void updateMetadataFor(List<Question> questions ,Configuration.CountryVersion country) throws Exception {
         saveInDB(country);
         saveQuestionsInDB(questions, country);
     }

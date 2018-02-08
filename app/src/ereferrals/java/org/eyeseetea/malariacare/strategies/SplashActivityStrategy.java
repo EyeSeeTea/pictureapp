@@ -12,15 +12,7 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
@@ -63,33 +55,14 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     @Override
     public void downloadLanguagesFromServer() throws Exception {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        final IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
-                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
-                        credentialsRepository);
-        getLastInsertedCredentialsUseCase.execute(
-                new GetLastInsertedCredentialsUseCase.Callback() {
-                    @Override
-                    public void onGetUsername(Credentials credentials) {
-                        if (credentials == null || !credentials.isDemoCredentials()) {
-                            asyncExecutor.run(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        SplashActivityStrategy.super.downloadLanguagesFromServer();
-                                    } catch (Exception e) {
-                                        Log.e(TAG, "Unable to download Languages From Server"
-                                                + e.getMessage());
-                                        e.printStackTrace();
-                                        showToast(R.string.error_downloading_languages, e);
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
+        try {
+            SplashActivityStrategy.super.downloadLanguagesFromServer();
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to download Languages From Server"
+                    + e.getMessage());
+            e.printStackTrace();
+            showToast(R.string.error_downloading_languages, e);
+        }
     }
 
     private void showToast(int titleResource, final Exception e) {

@@ -28,6 +28,7 @@
     <string name="last_media_program">last_media_program</string>
     <string name="ancestor_level">3</string>
     <string name="number_bad_login">number_bad_login</string>
+    <string name="last_log_in_type">last_log_in_type</string>
     <string name="time_enable_login">time_enable_login</string>
     <item name="web_service_url" translatable="false" type="string">web_service_url</item>
     <item name="web_view_url" translatable="false" type="string">web_view_url</item>

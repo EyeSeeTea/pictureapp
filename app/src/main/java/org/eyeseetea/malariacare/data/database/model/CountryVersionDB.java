@@ -4,7 +4,6 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.annotation.Unique;
-import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -52,6 +51,13 @@ public class CountryVersionDB extends BaseModel {
                 .from(CountryVersionDB.class)
                 .where(CountryVersionDB_Table.uid.is(uid))
                 .querySingle();
+    }
+
+    public static boolean isEmpty() {
+        long count = new Select()
+                .from(CountryVersionDB.class)
+                .count();
+        return count < 1;
     }
 
     public static boolean isCountryAlreadyAdded(String countryUID) {

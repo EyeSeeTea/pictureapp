@@ -26,5 +26,6 @@
         android:paddingLeft="@dimen/question_padding_all"
         android:paddingRight="@dimen/question_padding_all"
         android:textSize="?attr/font_small"
+        android:textColor="@color/text_first_color"
         app:font_name="@string/normal_font" />
 </LinearLayout>

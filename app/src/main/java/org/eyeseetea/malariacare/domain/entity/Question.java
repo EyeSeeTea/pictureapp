@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;<<<<<<< HEAD
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import java.util.List;
 

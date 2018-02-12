@@ -35,7 +35,8 @@ public class GetUrlForWebViewsUseCase implements UseCase {
 
     public void execute(int urlType, Callback callback) {
         mCallback = callback;
-        if(PreferencesState.getCredentialsFromPreferences().isDemoCredentials()){
+        Credentials credentials = PreferencesState.getCredentialsFromPreferences();
+        if (credentials != null && credentials.isDemoCredentials()) {
             mCallback.onGetUrl(null);
         }
         mUrlType = urlType;
@@ -48,7 +49,7 @@ public class GetUrlForWebViewsUseCase implements UseCase {
         String typeUrl = getTypeUrlText();
         String url = String.format(PreferencesEReferral.getWebViewURL() + mContext.getString(
                 R.string.composed_web_view_url), typeUrl, mCredentials.getUsername(),
-                mCredentials.getPassword(),language);
+                mCredentials.getPassword(), language);
         mCallback.onGetUrl(url);
     }
 

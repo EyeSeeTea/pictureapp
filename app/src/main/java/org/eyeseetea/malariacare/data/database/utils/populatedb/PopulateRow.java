@@ -19,6 +19,8 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.APopulateRowStrategy;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.PopulateRowStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -190,15 +192,10 @@ public class PopulateRow {
      * @param line The row of the csv to populate.
      */
     static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
-            @Nullable TreatmentDB treatmentDB) {
-        if (treatmentDB == null) {
-            treatmentDB = new TreatmentDB();
-        }
-        treatmentDB.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
-        treatmentDB.setDiagnosis(line[2]); // string_key
-        treatmentDB.setMessage(line[3]); // string_key
-        treatmentDB.setType(Integer.parseInt(line[4]));
-        return treatmentDB;
+            HashMap<Long, StringKeyDB> stringKeyList, @Nullable TreatmentDB treatmentDB) {
+        APopulateRowStrategy populateRowStrategy = new PopulateRowStrategy();
+        return populateRowStrategy.populateTreatments(line, organisationFK, stringKeyList,
+                treatmentDB);
     }
 
     /**

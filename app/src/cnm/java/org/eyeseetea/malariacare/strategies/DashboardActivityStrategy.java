@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.os.Bundle;
 import android.view.View;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -13,6 +15,8 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 
 /**
  * Created by manuel on 28/12/16.
@@ -21,6 +25,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
+    DashboardUnsentFragment stockFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -34,12 +39,26 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-
+        if (stockFragment != null && stockFragment.isAdded()) {
+            stockFragment.reloadHeader(activity);
+            stockFragment.reloadData();
+        } else {
+            showStockFragment(activity, false);
+        }
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        return false;
+        stockFragment = new DashboardUnsentFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(DashboardUnsentFragmentStrategy.IS_STOCK_FRAGMENT, true);
+        stockFragment.setArguments(bundle);
+        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+                stockFragment);
+        stockFragment.reloadData();
+        stockFragment.reloadHeader(activity);
+
+        return isMoveToLeft;
     }
 
     @Override
@@ -90,6 +109,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
+        if (isFragmentActive(activity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_container)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
+        Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
         return false;
     }
 

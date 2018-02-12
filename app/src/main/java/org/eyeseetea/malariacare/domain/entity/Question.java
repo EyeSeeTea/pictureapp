@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;<<<<<<< HEAD
 
 import java.util.List;
 
@@ -16,8 +17,14 @@ public class Question {
     private int index;
     private Visibility visibility;
     private List<Rule> rules;
+    private String mQuestionText;
 
     public Question() {
+    }
+
+    public Question(String uid, String questionText) {
+        this.uid = required(uid, "uid is required");
+        this.mQuestionText = required(questionText, "questionText is required");
     }
 
     public Question(long id, String code, String name, String uid,
@@ -157,6 +164,10 @@ public class Question {
 
     public void setRules(List<Rule> rules) {
         this.rules = rules;
+    }
+
+    public String getQuestionText() {
+        return mQuestionText;
     }
 
     @Override

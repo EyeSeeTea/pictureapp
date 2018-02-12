@@ -12,3 +12,7 @@
 12;'Code: Treatment';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'zxEEyLrpMBG';11;0;0;3;12;;14;8;1;;1
 13;'Code: Other Treatment';'ipc_issueEntry_q_treatment_other';;'ipc_issueEntry_q_treatment_other';'V8q06yRjHqg';12;0;0;3;13;;3;9;0;;1
 14;'Code: Referred Hospital';'ipc_issueEntry_q_referred_hospital';;'ipc_issueEntry_q_referred_hospital';'v52DTn3NYD2';13;0;0;3;14;;10;8;0;;1
+15;'MCS STK - ASMQ 100/200 m';'ipc_issueEntry_q_stock_asmq_100_200';;'ipc_issueEntry_q_stock_asmq_100_200';'Y0rvgxJm28P';1;0;0;4;15;;26;4;1;;1
+16;'MCS STK - ASMQ 25/50 mg';'ipc_issueEntry_q_stock_asmq_25_50';;'ipc_issueEntry_q_stock_asmq_25_50';'WA1ouIgQyCr';2;0;0;4;16;;26;4;1;;1
+17;'MCS STK – Primaquine';'ipc_issueEntry_q_stock_primaquine';;'ipc_issueEntry_q_stock_primaquine';'LLP04MYE6LM';3;0;0;4;17;;26;4;1;;1
+18;'MCS STK – RDTs';'ipc_issueEntry_q_stock_rdt';;'ipc_issueEntry_q_stock_rdt';'wYekTzcJE6c';4;0;0;4;18;;26;4;1;;1

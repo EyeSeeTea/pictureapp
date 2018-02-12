@@ -2,7 +2,7 @@
 <resources>
 <string name="yes">"Yes"</string>
 <string name="no">"No"</string>
-    <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
+<string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
 <string name="cancel">"Cancel"</string>
 <string name="settings_menu_licence">"License"</string>
 <string name="dialog_title_delete_surveys">"Are you sure that you want to remove all sent surveys?"</string>
@@ -103,7 +103,7 @@
 <string name="server">"Server"</string>
 <string name="app_visual">"Visual"</string>
 <string name="monitoring_title_dropdown">"Please, select a time period"</string>
-    <string name="common_menu_statistics">"MONITORING"</string>
+<string name="common_menu_statistics">"MONITORING"</string>
 <string name="monitoring_label_option_months">"Latest 6 months"</string>
 <string name="monitoring_label_option_days">"Latest 6 days"</string>
 <string name="monitoring_label_option_weeks">"Latest 6 weeks"</string>
@@ -131,7 +131,7 @@
 <string name="mixed">"Pf/Pv"</string>
 <string name="dynamic_error_number">"Invalid Number"</string>
 <string name="settings_menu_logout_message">"Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
-    <string name="common_menu_logOff">"Logout"</string>
+<string name="common_menu_logOff">"Logout"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>
@@ -264,4 +264,11 @@
 <string name="imei_error">"Error getting IMEI"</string>
 <string name="dynamic_error_invalid_positive_number">"Invalid positive number"</string>
 <string name="error_downloading_languages">"Error downloading languages"</string>
+
+<string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
+<string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
+<string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
+<string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+<string name="save">Save</string>
+
 </resources>

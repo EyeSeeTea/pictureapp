@@ -5,8 +5,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
@@ -17,6 +15,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.utils.Constants;
 
 /**
  * Created by manuel on 28/12/16.
@@ -63,13 +62,23 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        ProgramDB program = new Select().from(ProgramDB.class).querySingle();
+        ProgramDB program = ProgramDB.findByUID(
+                activity.getString(R.string.malaria_program_uid));
+        ProgramDB stockProgram = ProgramDB.findByUID(
+                activity.getString(R.string.stock_program_uid));
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);
         SurveyDB survey = new SurveyDB(orgUnit, program, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
+        SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
+                Constants.SURVEY_ISSUE);
+        stockSurvey.setEventDate(
+                survey.getEventDate());//asociate the malaria survey to the stock survey
+        stockSurvey.save();
+        Session.setStockSurveyDB(stockSurvey);
+
         //Look for coordinates
         prepareLocationListener(activity, survey);
         activity.findViewById(R.id.common_header).setVisibility(View.GONE);
@@ -80,6 +89,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
+        Session.getStockSurveyDB().updateSurveyStatus();
         mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
     }
 
@@ -105,6 +115,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void completeSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
+        //Complete stockSurvey
+        Session.getStockSurveyDB().updateSurveyStatus();
     }
 
     @Override

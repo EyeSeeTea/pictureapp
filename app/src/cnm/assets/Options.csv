@@ -22,3 +22,4 @@
 22;'common_option_treatment_other';'Other';0;12;19
 23;'common_option_referred_yes';true;0;14;20
 24;'common_option_referred_no';false;0;14;21
+25;'common_option_diagnosis_not_tested';'NotTested';0;1;22

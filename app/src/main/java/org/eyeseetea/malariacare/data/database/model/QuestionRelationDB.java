@@ -76,6 +76,8 @@ public class QuestionRelationDB extends BaseModel {
      */
     public static final int MATCH_HIDE_OPTION_QUESTION_THRESHOLD = 7;
 
+    public static final int TREATMENT_NO_MATCH = 8;
+
     private static final String TAG = ".QuestionRelationDB";
     @Column
     @PrimaryKey(autoincrement = true)

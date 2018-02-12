@@ -12,6 +12,7 @@ import com.squareup.okhttp.Response;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.network.factory.UnsafeOkHttpsClientFactory;
 import org.json.JSONObject;
 
@@ -82,6 +83,9 @@ class BasicAuthenticator implements Authenticator {
         try {
             credentials = AuthenticationApiStrategy.getApiCredentials();
         } catch (ConfigJsonIOException e) {
+            throw new ApiCallException(e);
+        } catch (LanguagesDownloadException e) {
+            e.printStackTrace();
             throw new ApiCallException(e);
         }
     }

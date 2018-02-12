@@ -82,6 +82,11 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     @Override
+    public void requestAnswerFocus() {
+
+    }
+
+    @Override
     public void setHelpText(String helpText) {
 
     }

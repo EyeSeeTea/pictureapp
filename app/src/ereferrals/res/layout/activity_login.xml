@@ -135,6 +135,8 @@
                 <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/forgot_password"
                     style="@style/CustomButton.Link"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:text="@string/forgot_password"/>
 
                 <org.eyeseetea.sdk.presentation.views.CustomButton

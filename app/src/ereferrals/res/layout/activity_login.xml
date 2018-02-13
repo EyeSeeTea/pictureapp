@@ -116,15 +116,14 @@
                 <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/demo_login_button"
                     style="@style/CustomButton"
-                    android:layout_width="@dimen/demo_button_width"
                     android:layout_marginTop="@dimen/demo_button_margin_top"
                     android:background="@drawable/button_blue_selector"
                     android:orientation="vertical"
                     android:text="@string/demo_login"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/medium_text_size"
+                    android:textSize="@dimen/login_button_text_size"
                     android:visibility="gone"
-                    app:font_name="@string/bold_font"
+                    app:font_name="@string/normal_font"
                     tools:visibility="visible"/>
 
                 <org.eyeseetea.sdk.presentation.views.CustomButton
@@ -136,6 +135,8 @@
                 <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/forgot_password"
                     style="@style/CustomButton.Link"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:text="@string/forgot_password"/>
 
                 <org.eyeseetea.sdk.presentation.views.CustomButton

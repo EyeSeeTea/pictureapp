@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="QuestionContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">@dimen/question_padding</item>
+        <item name="android:paddingRight">@dimen/question_padding</item>
+    </style>
+
+    <style name="QuestionDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/text_first_color</item>
+    </style>
+
+    <style name="QuestionHeaderContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_marginBottom">@dimen/input_edit_text_top_bottom</item>
+        <item name="android:layout_marginTop">@dimen/input_edit_text_top_bottom</item>
+        <item name="android:weightSum">1</item>
+    </style>
+
+    <style name="QuestionHeader">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.9</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:gravity">left</item>
+        <item name="android:paddingLeft">@dimen/input_edit_text_left_padding</item>
+        <item name="android:paddingRight">@dimen/input_edit_text_right_padding</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/text_first_color</item>
+        <item name="android:textSize">?attr/font_xsmall</item>
+    </style>
+
+    <style name="QuestionHeaderCompulsorySign">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:layout_weight">0.1</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:src">@drawable/compulsory</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:contentDescription">@string/compulsory_sign</item>
+    </style>
+
+    <style name="QuestionAnswerContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="QuestionAnswer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">@dimen/input_edit_text_margin</item>
+        <item name="android:layout_marginRight">@dimen/input_edit_text_margin</item>
+        <item name="android:layout_marginTop">@dimen/input_edit_text_top_bottom</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:editable">false</item>
+        <item name="android:gravity">left</item>
+        <item name="android:paddingLeft">@dimen/input_edit_text_left_padding</item>
+        <item name="android:paddingRight">@dimen/input_edit_text_left_padding</item>
+        <item name="android:textColor">@color/text_first_color</item>
+        <item name="android:textColorHint">@color/text_first_color</item>
+    </style>
+
+</resources>

@@ -20,7 +20,8 @@ import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDataSourceFactory;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
@@ -88,13 +89,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     @Override
     public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
         try {
-            IMetadataConfigurationDataSource dataSource =
-                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                            HTTPClientFactory.getAuthenticationInterceptor()
-                    );
-            importer = new MetadataConfigurationDBImporter(
-                    dataSource, ConverterFactory.getQuestionConverter()
-            );
 
         if (isDemo) {
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
@@ -105,6 +99,13 @@ public class PullControllerStrategy extends APullControllerStrategy {
             programLocalDataSource.saveUserProgramId(program);
             callback.onComplete();
         } else {
+            IMetadataConfigurationDataSource dataSource =
+                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                            HTTPClientFactory.getAuthenticationInterceptor()
+                    );
+            importer = new MetadataConfigurationDBImporter(
+                    dataSource, ConverterFactory.getQuestionConverter()
+            );
             ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
             IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();

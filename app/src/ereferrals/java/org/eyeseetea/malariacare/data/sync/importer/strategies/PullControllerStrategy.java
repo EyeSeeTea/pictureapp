@@ -95,13 +95,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     @Override
     public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
         try {
-            IMetadataConfigurationDataSource dataSource =
-                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                            HTTPClientFactory.getAuthenticationInterceptor()
-                    );
-            importer = new MetadataConfigurationDBImporter(
-                    dataSource, ConverterFactory.getQuestionConverter()
-            );
 
         if (isDemo) {
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
@@ -112,6 +105,13 @@ public class PullControllerStrategy extends APullControllerStrategy {
             programLocalDataSource.saveUserProgramId(program);
             callback.onComplete();
         } else {
+            IMetadataConfigurationDataSource dataSource =
+                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                            HTTPClientFactory.getAuthenticationInterceptor()
+                    );
+            importer = new MetadataConfigurationDBImporter(
+                    dataSource, ConverterFactory.getQuestionConverter()
+            );
             ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
             IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();

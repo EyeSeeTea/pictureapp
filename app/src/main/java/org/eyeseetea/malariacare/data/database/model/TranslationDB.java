@@ -91,7 +91,7 @@ public class TranslationDB extends BaseModel {
 
     private static boolean isTranslationEmptyOrNull(TranslationDB trans) {
         return isTranslationNull(trans)
-                || trans.getTranslation().isEmpty();
+                || trans.getTranslation().trim().isEmpty();
     }
 
     private static boolean isTranslationNull(TranslationDB trans) {
@@ -113,7 +113,7 @@ public class TranslationDB extends BaseModel {
             }
         }
 
-        return !isTranslationNull(translationDB)
+        return !isTranslationEmptyOrNull(translationDB)
                 ? translationDB.getTranslation() : TRANSLATION_NOT_FOUND;
     }
 

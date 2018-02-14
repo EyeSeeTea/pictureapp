@@ -791,6 +791,10 @@ public class QuestionDB extends BaseModel {
         return (this.visible == QUESTION_IMPORTANT);
     }
 
+    public boolean isInvisible() {
+        return (this.visible == QUESTION_INVISIBLE);
+    }
+
     public void setVisible(Integer visible) {
         this.visible = visible;
     }

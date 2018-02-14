@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.database.convert;
 
+import static junit.framework.TestCase.assertTrue;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -15,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class QuestionConvertFromDomainVisitorShould {
 
@@ -188,6 +189,26 @@ public class QuestionConvertFromDomainVisitorShould {
 
     }
 
+    @Test
+    public void convert_a_domain_question_with_visibility_important() {
+        Question domainImportantQuestion = givenADomainQuestionWithVisibility(
+                Question.Visibility.IMPORTANT);
+
+        QuestionDB dbImportantQuestion = converter.visit(domainImportantQuestion);
+
+        assertTrue(dbImportantQuestion.isImportant());
+    }
+
+    @Test
+    public void convert_a_domain_question_with_visibility_invisible() {
+        Question domainImportantQuestion = givenADomainQuestionWithVisibility(
+                Question.Visibility.INVISIBLE);
+
+        QuestionDB dbImportantQuestion = converter.visit(domainImportantQuestion);
+
+        assertTrue(dbImportantQuestion.isInvisible());
+    }
+
     private void assertEqualQuestionsProperties(QuestionDB questionToEvaluate,
             QuestionDB expectedQuestion) {
         assertThat(questionToEvaluate.getCode(), is(expectedQuestion.getCode()));
@@ -202,40 +223,7 @@ public class QuestionConvertFromDomainVisitorShould {
 
         assertEqualQuestionsProperties(questionToEvaluate, expectedQuestion);
 
-
-        List<QuestionOptionDB> questionOptionDBSToEvaluate =
-                questionToEvaluate.getQuestionOptionDBS();
-
-        List<QuestionOptionDB> questionOptionDBSToExpected =
-                expectedQuestion.getQuestionOptionDBS();
-        if (questionOptionDBSToEvaluate != null && questionOptionDBSToExpected != null) {
-            assertEqual(questionOptionDBSToEvaluate, questionOptionDBSToExpected);
-        }
     }
-
-    private void assertEqual(List<QuestionOptionDB> questionOptionDBSToEvaluate,
-            List<QuestionOptionDB> questionOptionDBSToExpected) {
-
-        int sizeQuestionOptions = questionOptionDBSToEvaluate.size();
-        for (int i = 0; i < sizeQuestionOptions; i++) {
-
-            QuestionOptionDB questionOptionDBToEvaluate = questionOptionDBSToEvaluate.get(i);
-            QuestionOptionDB expectedQuestionOptionDB = questionOptionDBSToExpected.get(i);
-
-            assertEqual(questionOptionDBToEvaluate, expectedQuestionOptionDB);
-        }
-    }
-
-    private void assertEqual(QuestionOptionDB questionOptionDBToEvaluate, QuestionOptionDB
-            expectedQuestionOptionDB) {
-
-        OptionDB optionDBToEvaluate = questionOptionDBToEvaluate.getOptionDB();
-        OptionDB expectedOptionDB = expectedQuestionOptionDB.getOptionDB();
-
-        assertThat(optionDBToEvaluate.getCode(), is(expectedOptionDB.getCode()));
-        assertThat(optionDBToEvaluate.getName(), is(expectedOptionDB.getName()));
-    }
-
 
     private Question givenADomainQuestionWith(Question.Type type) {
         Question question = givenADomainQuestionWithNonOptions();
@@ -259,9 +247,14 @@ public class QuestionConvertFromDomainVisitorShould {
         return question;
     }
 
+    private Question givenADomainQuestionWithVisibility(Question.Visibility visibility) {
+        Question question = givenADomainQuestionWithNonOptions();
+        question.setVisibility(visibility);
+        return question;
+    }
+
     private QuestionDB givenADBQuestionWithOneOption() {
         QuestionDB questionDB = givenAQuestionDB();
-        List<QuestionOptionDB> questionOptionDBS = new ArrayList<>(1);
 
         OptionDB optionDB = new OptionDB();
         optionDB.setCode("FPL");
@@ -269,10 +262,6 @@ public class QuestionConvertFromDomainVisitorShould {
 
         QuestionOptionDB questionOptionDB = new QuestionOptionDB();
         questionOptionDB.setOption(optionDB);
-
-        questionOptionDBS.add(questionOptionDB);
-
-        questionDB.setQuestionOptionDBS(questionOptionDBS);
 
         return questionDB;
     }

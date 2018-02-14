@@ -28,6 +28,12 @@ import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuratio
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.CONTROL_TYPE_YEAR;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .MetadataConfigurationsApi.Question.DISPLAY_PRIORITY_IMPORTANT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .MetadataConfigurationsApi.Question.DISPLAY_PRIORITY_INVISIBLE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .MetadataConfigurationsApi.Question.DISPLAY_PRIORITY_VISIBLE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.OPERATOR_EQUAL;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.OPERATOR_GREATER_OR_EQUAL_THAN;
@@ -41,6 +47,9 @@ import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuratio
         .MetadataConfigurationsApi.Question.TYPE_DATA_POINT_REF;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.TYPE_VALUE;
+import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.IMPORTANT;
+import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.INVISIBLE;
+import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.VISIBLE;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -190,8 +199,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         newOptionRule.action = condition.operator;
         newOptionRule.targetQuestion = targetQuestion;
 
-        newOptionRule.targetQuestion.visibility = !condition.operator.equals(ACTION_SHOW);
-
         return newOptionRule;
     }
 
@@ -215,14 +222,13 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
             } else {
 
-                assignRulesToQuestions(apiRule, questionWithRule, questionsByCode);
+                assignRulesToQuestions(apiRule, questionWithRule);
             }
         }
     }
 
     private void assignRulesToQuestions(@NonNull MetadataConfigurationsApi.Rule apiRule,
-            MetadataConfigurationsApi.Question questionWithRule,
-            @NonNull Map<String, MetadataConfigurationsApi.Question> questionsByCode) {
+            MetadataConfigurationsApi.Question questionWithRule) {
         if (questionWithRule.rules == null) {
             questionWithRule.rules = new ArrayList<>();
         }
@@ -345,18 +351,30 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
                 MetadataConfigurationsApi.Question apiQuestion = apiQuestions.get(questionIndex);
 
-                Question domainQuestion = convertToDomainQuestionFrom(apiQuestion, questionIndex,
-                        isImportantQuestionSelected);
+                Question domainQuestion = convertToDomainQuestionFrom(apiQuestion, questionIndex);
 
                 domainQuestions.add(domainQuestion);
                 mapDomainQuestionsByCode.put(domainQuestion.getCode(), domainQuestion);
-                isImportantQuestionSelected = isImportantQuestion(domainQuestion);
 
+                if(!isImportantQuestionSelected) {
+                    isImportantQuestionSelected = isImportantQuestion(domainQuestion);
+                }
             }
+
+            setImportantDomainQuestion(domainQuestions, isImportantQuestionSelected);
 
             assignRulesToQuestions();
 
             return domainQuestions;
+        }
+
+        private void setImportantDomainQuestion(List<Question> domainQuestions,
+                boolean isImportantQuestionSelected) {
+
+            if(!isImportantQuestionSelected && domainQuestions.size() >=1){
+                Question domainQuestion  = domainQuestions.get(0);
+                domainQuestion.setVisibility(IMPORTANT);
+            }
         }
 
 
@@ -535,8 +553,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Question convertToDomainQuestionFrom(
-                @NonNull MetadataConfigurationsApi.Question apiQuestion, int index,
-                boolean isImportantQuestionSelected) {
+                @NonNull MetadataConfigurationsApi.Question apiQuestion, int index) {
 
             return Question.newBuilder()
                     .code(apiQuestion.code)
@@ -545,7 +562,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .name(apiQuestion.deName)
                     .index(index)
                     .type(convertToDomainQuestionTypeFrom(apiQuestion.output))
-                    .visibility(getVisibilityFrom(apiQuestion, isImportantQuestionSelected))
+                    .visibility(getVisibilityFrom(apiQuestion))
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
                     .rules(convertToDomainRules(apiQuestion.rules))
@@ -555,15 +572,31 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         @NonNull
         private Question.Visibility getVisibilityFrom(
                 @NonNull MetadataConfigurationsApi.Question
-                        apiQuestion, boolean isImportantSelected) {
+                        apiQuestion) {
 
-            if (!isImportantSelected && apiQuestion.visibility) {
-                return Question.Visibility.IMPORTANT;
+            Question.Visibility domainVisibility;
+
+            switch (apiQuestion.queueDisplayPriority){
+
+                case DISPLAY_PRIORITY_VISIBLE:{
+                    domainVisibility = VISIBLE;
+                    break;
+                }
+
+                case DISPLAY_PRIORITY_INVISIBLE:{
+                    domainVisibility = INVISIBLE;
+                    break;
+                }
+
+                case DISPLAY_PRIORITY_IMPORTANT:{
+                    domainVisibility = IMPORTANT;
+                    break;
+                }
+                default:
+                    domainVisibility = VISIBLE;
             }
 
-            return (apiQuestion.visibility)
-                    ? Question.Visibility.VISIBLE
-                    : Question.Visibility.INVISIBLE;
+            return domainVisibility;
         }
 
         @Nullable

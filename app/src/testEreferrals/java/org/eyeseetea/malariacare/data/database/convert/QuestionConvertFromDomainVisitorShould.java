@@ -191,7 +191,7 @@ public class QuestionConvertFromDomainVisitorShould {
 
     @Test
     public void convert_a_domain_question_with_visibility_important() {
-        Question domainImportantQuestion = giveADomainQuestionWithVisibility(
+        Question domainImportantQuestion = givenADomainQuestionWithVisibility(
                 Question.Visibility.IMPORTANT);
 
         QuestionDB dbImportantQuestion = converter.visit(domainImportantQuestion);
@@ -201,7 +201,7 @@ public class QuestionConvertFromDomainVisitorShould {
 
     @Test
     public void convert_a_domain_question_with_visibility_invisible() {
-        Question domainImportantQuestion = giveADomainQuestionWithVisibility(
+        Question domainImportantQuestion = givenADomainQuestionWithVisibility(
                 Question.Visibility.INVISIBLE);
 
         QuestionDB dbImportantQuestion = converter.visit(domainImportantQuestion);
@@ -247,7 +247,7 @@ public class QuestionConvertFromDomainVisitorShould {
         return question;
     }
 
-    private Question giveADomainQuestionWithVisibility(Question.Visibility visibility) {
+    private Question givenADomainQuestionWithVisibility(Question.Visibility visibility) {
         Question question = givenADomainQuestionWithNonOptions();
         question.setVisibility(visibility);
         return question;

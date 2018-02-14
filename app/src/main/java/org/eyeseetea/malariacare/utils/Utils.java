@@ -97,6 +97,16 @@ public class Utils {
         }
     }
 
+    public static String getUserLanguageOrDefault(Context context ){
+        String language = getUserLanguage(context);
+
+        if(language !=null && !language.isEmpty()){
+            return language;
+        }else {
+            return context.getString(R.string.default_language);
+        }
+    }
+
     @NonNull
     private static String findStringFromAndroidResource(Context context, @NonNull String key,
             String languageCode) {

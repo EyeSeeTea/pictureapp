@@ -36,7 +36,6 @@ public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCa
                         mILanguageRepository.translationsWereDownloaded();
 
         switch (loginType) {
-
             case SOFT:
                 boolean stringsTranslationFailed =
                         !mILanguageRepository.translationsWereDownloaded();
@@ -48,7 +47,6 @@ public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCa
 
             case FULL:
                 if (!configFilesAndLanguagesWereDownloaded) {
-
                     if (!mILanguageRepository.translationsWereDownloaded() &&
                             !mIConfigurationRepository.configurationFilesWereDownloaded()) {
                         callback.onFullLoginStringTranslationOrConfigFilesFailed(
@@ -66,9 +64,7 @@ public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCa
                                 CONFIGURATION_FILES);
                         return;
                     }
-
                 }
-
                 break;
         }
     }

@@ -27,8 +27,8 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ConfigurationDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.LanguagesDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -92,8 +92,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void onCreate() {
 
-        IConfigurationRepository configurationRepository = new ConfigurationDataSource();
-        ILanguageRepository languageRepository = new LanguagesDataSource();
+        IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
+        ILanguageRepository languageRepository = new LanguagesLocalDataSource();
 
         VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
                 new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(

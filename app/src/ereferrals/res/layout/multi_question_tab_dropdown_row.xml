@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="0.5"
     android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp">
+    android:paddingLeft="@dimen/question_padding"
+    android:paddingRight="@dimen/question_padding">
 
     <View
         android:layout_width="match_parent"
@@ -49,25 +50,26 @@
                     android:layout_weight="0.9"
                     android:background="@color/transparent"
                     android:gravity="left"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingLeft="@dimen/input_edit_text_left_padding"
+                    android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:textColor="@color/text_first_color"
                     android:textSize="?attr/font_xsmall"
-                    app:font_name="@string/normal_font" />
+                    app:font_name="@string/normal_font"
+                    tools:text="Title"/>
 
                 <ImageView
                     android:id="@+id/row_header_compulsory"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_gravity="right"
-                    android:layout_marginRight="4dp"
                     android:layout_toRightOf="@+id/row_header_text"
                     android:layout_weight="0.1"
                     android:adjustViewBounds="true"
-                    android:gravity="right|center_vertical"
+                    android:gravity="right"
                     android:scaleType="fitCenter"
                     android:src="@drawable/compulsory"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    tools:visibility="visible"/>
             </LinearLayout>
 
             <LinearLayout

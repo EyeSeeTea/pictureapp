@@ -62,6 +62,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private LoginType loginType;
     private Button logoutButton;
     private Button demoButton;
+    private Button advancedOptions;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -207,6 +208,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         toggleVisibility(logoutButton);
                         loginActivity.getUsernameEditText().setEnabled(true);
                         Log.d(this.getClass().getSimpleName(), "onLogoutSuccess ");
+                        toggleText(advancedOptions,R.string.advanced_options,R.string.simple_options);
                         PreferencesEReferral.setLastLoginType(loginType);
                     }
 
@@ -234,7 +236,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void initAdvancedOptionsButton() {
-        final Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
+        advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override

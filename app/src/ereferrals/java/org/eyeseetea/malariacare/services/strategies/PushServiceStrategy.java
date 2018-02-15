@@ -331,12 +331,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }
 
-    private void handleAPIException(Exception e) {
-        if (e instanceof ConfigFileObsoleteException) {
-            sendIntentShowLogin();
-        }
-    }
-
     private void sendIntentShowLogin() {
         Intent surveysIntent = new Intent(PushService.class.getName());
         surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);

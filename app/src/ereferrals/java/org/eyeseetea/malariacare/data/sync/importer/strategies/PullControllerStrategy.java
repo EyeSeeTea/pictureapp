@@ -102,12 +102,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
             programLocalDataSource.saveUserProgramId(program);
             callback.onComplete();
         } else {
-            IMetadataConfigurationDataSource dataSource =
+            IMetadataConfigurationDataSource metadataConfigurationDataSource =
                     MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
                             HTTPClientFactory.getAuthenticationInterceptor()
                     );
             importer = new MetadataConfigurationDBImporter(
-                    dataSource, ConverterFactory.getQuestionConverter()
+                    metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()
             );
             ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
             IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();

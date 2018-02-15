@@ -2042,6 +2042,12 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
+    public static boolean isEmpty() {
+        long count = new Select()
+                .from(QuestionDB.class)
+                .count();
+        return count < 1;
+    }
 
     public static class QuestionOrderComparator implements Comparator {
 

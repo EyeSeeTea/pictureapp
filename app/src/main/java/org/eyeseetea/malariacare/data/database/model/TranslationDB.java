@@ -72,6 +72,12 @@ public class TranslationDB extends BaseModel {
         this.translation = translation;
     }
 
+    public static boolean isEmpty() {
+        long count = new Select()
+                .from(TranslationDB.class)
+                .count();
+        return count < 1;
+    }
 
     private static TranslationDB getTranslationByKey(String stringKey, String languageCode) {
         return new Select()

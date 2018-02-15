@@ -1,29 +1,29 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 
-import static org.eyeseetea.malariacare.domain.usecase
-        .VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback.TypeOfFailed
+import static org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback.TypeOfFailure
         .CONFIGURATION_FILES;
-import static org.eyeseetea.malariacare.domain.usecase
-        .VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback.TypeOfFailed.TRANSLATIONS;
-import static org.eyeseetea.malariacare.domain.usecase
-        .VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback.TypeOfFailed
+import static org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback.TypeOfFailure.TRANSLATIONS;
+import static org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback.TypeOfFailure
         .TRANSLATIONS_AND_CONFIGURATION_FILES;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.domain.boundary.repositories
-        .IConfigurationAndLanguagesStatusRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.entity.LoginType;
 
 public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCase {
 
     private Callback callback;
-    IConfigurationAndLanguagesStatusRepository statusRepository;
+    IConfigurationRepository mIConfigurationRepository;
+    ILanguageRepository mILanguageRepository;
 
     public VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
-            IConfigurationAndLanguagesStatusRepository statusRepository
+            IConfigurationRepository configurationRepository,
+            ILanguageRepository languageRepository
             ,Callback callback) {
-        this.statusRepository = statusRepository;
+        this.mIConfigurationRepository = configurationRepository;
+        this.mILanguageRepository = languageRepository;
         this.callback = callback;
     }
 
@@ -32,15 +32,14 @@ public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCa
         LoginType loginType = PreferencesEReferral.getLastLoginType();
 
         boolean configFilesAndLanguagesWereDownloaded =
-                statusRepository.configurationFilesWereDownloaded() &&
-                        statusRepository.translationsWereDownloaded();
+                mIConfigurationRepository.configurationFilesWereDownloaded() &&
+                        mILanguageRepository.translationsWereDownloaded();
 
         switch (loginType) {
 
             case SOFT:
-
                 boolean stringsTranslationFailed =
-                        !statusRepository.translationsWereDownloaded();
+                        !mILanguageRepository.translationsWereDownloaded();
 
                 if (stringsTranslationFailed) {
                     callback.onSoftLoginStringTranslationFailed();
@@ -48,21 +47,21 @@ public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCa
                 break;
 
             case FULL:
-
                 if (!configFilesAndLanguagesWereDownloaded) {
 
-                    if (!statusRepository.translationsWereDownloaded() &&
-                            !statusRepository.configurationFilesWereDownloaded()) {
+                    if (!mILanguageRepository.translationsWereDownloaded() &&
+                            !mIConfigurationRepository.configurationFilesWereDownloaded()) {
                         callback.onFullLoginStringTranslationOrConfigFilesFailed(
                                 TRANSLATIONS_AND_CONFIGURATION_FILES);
                         return;
                     }
 
-                    if (!statusRepository.translationsWereDownloaded()) {
+                    if (!mILanguageRepository.translationsWereDownloaded()) {
                         callback.onFullLoginStringTranslationOrConfigFilesFailed(TRANSLATIONS);
                         return;
                     }
-                    if (!statusRepository.configurationFilesWereDownloaded()) {
+
+                    if (!mIConfigurationRepository.configurationFilesWereDownloaded()) {
                         callback.onFullLoginStringTranslationOrConfigFilesFailed(
                                 CONFIGURATION_FILES);
                         return;
@@ -75,14 +74,14 @@ public class VerifyLanguagesAndConfigFilesWereDownloadedUseCase implements UseCa
     }
 
     public interface Callback {
-        enum TypeOfFailed {
+        enum TypeOfFailure {
             TRANSLATIONS, CONFIGURATION_FILES,
             TRANSLATIONS_AND_CONFIGURATION_FILES
         }
 
         void onSoftLoginStringTranslationFailed();
 
-        void onFullLoginStringTranslationOrConfigFilesFailed(TypeOfFailed typeOfFailed);
+        void onFullLoginStringTranslationOrConfigFilesFailed(TypeOfFailure typeOfFailure);
     }
 
 }

@@ -27,7 +27,8 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ConfigurationAndLanguageStatusDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ConfigurationDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.LanguagesDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -45,9 +46,9 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
-import org.eyeseetea.malariacare.domain.boundary.repositories
-        .IConfigurationAndLanguagesStatusRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
@@ -91,13 +92,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void onCreate() {
 
-        IConfigurationAndLanguagesStatusRepository statusDataSource =
-                new ConfigurationAndLanguageStatusDataSource();
+        IConfigurationRepository configurationRepository = new ConfigurationDataSource();
+        ILanguageRepository languageRepository = new LanguagesDataSource();
 
         VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
                 new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
-                        statusDataSource
-                        , new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
+                        configurationRepository, languageRepository,
+                        new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
                     @Override
                     public void onSoftLoginStringTranslationFailed() {
                         showToast(R.string.warning_strings_download_failed);
@@ -105,24 +106,17 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
                     @Override
                     public void onFullLoginStringTranslationOrConfigFilesFailed(
-                            TypeOfFailed typeOfFailed) {
+                            TypeOfFailure typeOfFailed) {
                         switch (typeOfFailed) {
-
                             case TRANSLATIONS:
-
                                 showToast(R.string.error_unable_to_download_translations);
-
                                 break;
                             case CONFIGURATION_FILES:
-
                                 showToast(R.string.error_unable_to_download_configuration_files);
-
                                 break;
                             case TRANSLATIONS_AND_CONFIGURATION_FILES:
-
                                 showToast(
                                         R.string.error_unable_to_download_translations_and_configuration_files);
-
                                 break;
                         }
 

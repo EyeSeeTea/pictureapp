@@ -1,9 +1,7 @@
 package org.eyeseetea.malariacare.domain.boundary.repositories;
 
-
-public interface IConfigurationAndLanguagesStatusRepository {
+public interface ILanguageRepository {
 
     boolean translationsWereDownloaded();
 
-    boolean configurationFilesWereDownloaded();
 }

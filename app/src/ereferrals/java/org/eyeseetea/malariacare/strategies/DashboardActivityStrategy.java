@@ -18,8 +18,7 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.googleapis.extensions.android.gms.auth
-        .GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -51,6 +50,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -92,41 +92,45 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void onCreate() {
 
-        IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
-        ILanguageRepository languageRepository = new LanguagesLocalDataSource();
-
-        VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
-                new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
-                        configurationRepository, languageRepository,
-                        new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
-                    @Override
-                    public void onSoftLoginStringTranslationFailed() {
-                        showToast(R.string.warning_strings_download_failed);
-                    }
-
-                    @Override
-                    public void onFullLoginStringTranslationOrConfigFilesFailed(
-                            TypeOfFailure typeOfFailed) {
-                        switch (typeOfFailed) {
-                            case TRANSLATIONS:
-                                showToast(R.string.error_unable_to_download_translations);
-                                break;
-                            case CONFIGURATION_FILES:
-                                showToast(R.string.error_unable_to_download_configuration_files);
-                                break;
-                            case TRANSLATIONS_AND_CONFIGURATION_FILES:
-                                showToast(
-                                        R.string.error_unable_to_download_translations_and_configuration_files);
-                                break;
-                        }
-
-                        mDashboardActivity.finishAndGo(LoginActivity.class);
-                    }
-                });
-
-        downloadedUseCase.run();
-
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
+
+        Credentials credentials = iCredentialsRepository.getOrganisationCredentials();
+        if (credentials != null && !credentials.isDemoCredentials()) {
+            IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
+            ILanguageRepository languageRepository = new LanguagesLocalDataSource();
+
+            VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
+                    new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
+                            configurationRepository, languageRepository,
+                            new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
+                                @Override
+                                public void onSoftLoginStringTranslationFailed() {
+                                    showToast(R.string.warning_strings_download_failed);
+                                }
+
+                                @Override
+                                public void onFullLoginStringTranslationOrConfigFilesFailed(
+                                        TypeOfFailure typeOfFailed) {
+                                    switch (typeOfFailed) {
+                                        case TRANSLATIONS:
+                                            showToast(R.string.error_unable_to_download_translations);
+                                            break;
+                                        case CONFIGURATION_FILES:
+                                            showToast(R.string.error_unable_to_download_configuration_files);
+                                            break;
+                                        case TRANSLATIONS_AND_CONFIGURATION_FILES:
+                                            showToast(
+                                                    R.string.error_unable_to_download_translations_and_configuration_files);
+                                            break;
+                                    }
+
+                                    mDashboardActivity.finishAndGo(LoginActivity.class);
+                                }
+                            });
+
+            downloadedUseCase.run();
+        }
+
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
 

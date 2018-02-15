@@ -55,9 +55,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
         mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
-
-        IMetadataConfigurationDataSource dataSource =
-                null;
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.processor.definition.TypeConverterDefinition;
 import com.raizlabs.android.dbflow.processor.definition.method.DatabaseDefinition;
 import com.raizlabs.android.dbflow.processor.definition.method.DatabaseHolderDefinition;
 import com.raizlabs.android.dbflow.processor.handler.BaseContainerHandler;
+import com.raizlabs.android.dbflow.processor.handler.DatabaseHandler;
 import com.raizlabs.android.dbflow.processor.handler.Handler;
 import com.raizlabs.android.dbflow.processor.utils.WriterUtils;
 import com.raizlabs.android.dbflow.processor.validator.ContentProviderValidator;
@@ -373,9 +374,22 @@ public class ProcessorManager implements Handler {
 
         try {
             JavaFile.builder(ClassNames.FLOW_MANAGER_PACKAGE,
-                    new FlowManagerHolderDefinition(processorManager).getTypeSpec())
+                    new FlowManagerHolderDefinition(processorManager,false).getTypeSpec())
                     .build().writeTo(processorManager.getProcessingEnvironment().getFiler());
+
+            generatingInMemoryDataBaseFiles(processorManager, roundEnvironment);
+
         } catch (IOException e) {
         }
+    }
+
+    private void generatingInMemoryDataBaseFiles(ProcessorManager processorManager,
+            RoundEnvironment roundEnvironment) throws IOException {
+
+        new DatabaseHandler(true).handle(processorManager, roundEnvironment);
+
+        JavaFile.builder(ClassNames.FLOW_MANAGER_PACKAGE,
+                new FlowManagerHolderDefinition(processorManager,true).getTypeSpec())
+                .build().writeTo(processorManager.getProcessingEnvironment().getFiler());
     }
 }

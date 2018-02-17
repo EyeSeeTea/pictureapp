@@ -4,7 +4,6 @@ import com.raizlabs.android.dbflow.annotation.ConflictAction;
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.processor.ClassNames;
 import com.raizlabs.android.dbflow.processor.definition.BaseDefinition;
-import com.raizlabs.android.dbflow.processor.definition.ManyToManyDefinition;
 import com.raizlabs.android.dbflow.processor.definition.MigrationDefinition;
 import com.raizlabs.android.dbflow.processor.definition.ModelViewDefinition;
 import com.raizlabs.android.dbflow.processor.definition.QueryModelDefinition;
@@ -60,13 +59,17 @@ public class DatabaseDefinition extends BaseDefinition implements TypeDefinition
 
     private DatabaseHolderDefinition holderDefinition;
 
-    public DatabaseDefinition(ProcessorManager manager, Element element) {
+    public DatabaseDefinition(ProcessorManager manager, Element element,boolean inMemory) {
         super(element, manager);
         packageName = ClassNames.FLOW_MANAGER_PACKAGE;
 
         Database database = element.getAnnotation(Database.class);
         if (database != null) {
             databaseName = database.name();
+            String testPrefix ="";
+            if(inMemory){
+                testPrefix= "InMemory";
+            }
             if (databaseName == null || databaseName.isEmpty()) {
                 databaseName = element.getSimpleName().toString();
             }
@@ -91,14 +94,14 @@ public class DatabaseDefinition extends BaseDefinition implements TypeDefinition
                 fieldRefSeparator = classSeparator;
             }
 
-            setOutputClassName(databaseName + classSeparator + "Database");
+            setOutputClassName(testPrefix+databaseName + classSeparator + "Database");
 
             databaseVersion = database.version();
             foreignKeysSupported = database.foreignKeysSupported();
 
             insertConflict = database.insertConflict();
             updateConflict = database.updateConflict();
-            isInMemory = database.inMemory();
+            this.isInMemory = inMemory;
         }
     }
 

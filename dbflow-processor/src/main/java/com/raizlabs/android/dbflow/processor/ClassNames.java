@@ -12,6 +12,7 @@ public class ClassNames {
     public static final String BASE_PACKAGE = "com.raizlabs.android.dbflow";
     public static final String FLOW_MANAGER_PACKAGE = BASE_PACKAGE + ".config";
     public static final String DATABASE_HOLDER_STATIC_CLASS_NAME = "GeneratedDatabaseHolder";
+    public static final String IN_MEMORY_DATABASE_HOLDER_STATIC_CLASS_NAME = "InMemoryGeneratedDatabaseHolder";
     public static final String CONVERTER = BASE_PACKAGE + ".converter";
     public static final String STRUCTURE = BASE_PACKAGE + ".structure";
     public static final String DATABASE = STRUCTURE + ".database";

@@ -1,5 +1,8 @@
 package com.raizlabs.android.dbflow.processor.definition;
 
+import static com.raizlabs.android.dbflow.processor.ClassNames
+        .IN_MEMORY_DATABASE_HOLDER_STATIC_CLASS_NAME;
+
 import com.raizlabs.android.dbflow.processor.ClassNames;
 import com.raizlabs.android.dbflow.processor.definition.method.DatabaseDefinition;
 import com.raizlabs.android.dbflow.processor.definition.method.DatabaseHolderDefinition;
@@ -23,7 +26,7 @@ public class FlowManagerHolderDefinition implements TypeDefinition {
 
     private static final String OPTION_TARGET_MODULE_NAME = "targetModuleName";
 
-    public FlowManagerHolderDefinition(ProcessorManager processorManager) {
+    public FlowManagerHolderDefinition(ProcessorManager processorManager, boolean inMemory) {
         this.processorManager = processorManager;
 
         Map<String, String> options = this.processorManager.getProcessingEnvironment().getOptions();
@@ -32,27 +35,37 @@ public class FlowManagerHolderDefinition implements TypeDefinition {
             className = options.get(OPTION_TARGET_MODULE_NAME);
         }
 
-        className += ClassNames.DATABASE_HOLDER_STATIC_CLASS_NAME;
+
+        if (inMemory)
+            className += IN_MEMORY_DATABASE_HOLDER_STATIC_CLASS_NAME;
+         else
+            className += ClassNames.DATABASE_HOLDER_STATIC_CLASS_NAME;
+
+
     }
 
     @Override
     public TypeSpec getTypeSpec() {
         TypeSpec.Builder typeBuilder = TypeSpec.classBuilder(this.className)
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .superclass(ClassNames.DATABASE_HOLDER);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .superclass(ClassNames.DATABASE_HOLDER);
 
         MethodSpec.Builder constructor = MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC);
 
-        for (TypeConverterDefinition typeConverterDefinition : processorManager.getTypeConverters()) {
-            constructor.addStatement("$L.put($T.class, new $T())", DatabaseHandler.TYPE_CONVERTER_MAP_FIELD_NAME,
-                typeConverterDefinition.getModelTypeName(),
-                typeConverterDefinition.getClassName());
+        for (TypeConverterDefinition typeConverterDefinition : processorManager.getTypeConverters
+                ()) {
+            constructor.addStatement("$L.put($T.class, new $T())",
+                    DatabaseHandler.TYPE_CONVERTER_MAP_FIELD_NAME,
+                    typeConverterDefinition.getModelTypeName(),
+                    typeConverterDefinition.getClassName());
         }
 
-        for (DatabaseHolderDefinition databaseDefinition : processorManager.getDatabaseDefinitionMap()) {
+        for (DatabaseHolderDefinition databaseDefinition : processorManager
+                .getDatabaseDefinitionMap()) {
             if (databaseDefinition.getDatabaseDefinition() != null) {
-                constructor.addStatement("new $T(this)", databaseDefinition.getDatabaseDefinition().outputClassName);
+                constructor.addStatement("new $T(this)",
+                        databaseDefinition.getDatabaseDefinition().outputClassName);
             }
         }
 

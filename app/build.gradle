@@ -299,7 +299,8 @@ dependencies {
     compile "com.squareup:javapoet:${libs.javapoetVersion}"
 
     //DBFlow
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${libs.dbFlowVersion}"
+    apt project(":dbflow-processor")
+
     compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"

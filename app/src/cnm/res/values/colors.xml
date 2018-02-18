@@ -16,4 +16,7 @@
     <color name="tab_pressed_background">#008b17</color>
     <color name="headerColor">#008b17</color>
     <color name="selected_tab_below_row">#00ff2e</color>
+    <color name="actionbar_background">#005913</color>
+    <color name="dark_navy_blue">#005913</color>
+    <color name="main_window_background">#f7f7f7</color>
 </resources>

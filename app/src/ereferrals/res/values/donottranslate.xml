@@ -51,4 +51,8 @@
     <string name="no_voucher_on" translatable="false">common_btn_no</string>
     <string name="demo_program_uid" translatable="false">demoProgram</string>
     <string name="default_language" translatable="false">en</string>
+    <string name="label_editor_question_title" translatable="false">Question Title</string>
+    <string name="label_editor_question_answer_title" translatable="false">Answer</string>
+    <string name="label_editor_question_phone_answer_title" translatable="false">909 453 789</string>
+    <string name="label_editor_question_int_answer_title" translatable="false">9</string>
 </resources>

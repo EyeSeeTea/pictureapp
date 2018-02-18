@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TabHost;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -15,7 +16,9 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 /**
  * Created by manuel on 28/12/16.
@@ -146,4 +149,62 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
 
     }
+
+    public void initTabWidget(TabHost tabHost, Fragment reviewFragment,
+            final Fragment surveyFragment,
+            final boolean isReadOnly) {
+         /* set tabs in order */
+        LayoutUtils.setTabHosts(mDashboardActivity);
+        LayoutUtils.setTabDivider(mDashboardActivity);
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                /** If current tab is android */
+
+                //set the tabs background as transparent
+//                setTabsBackgroundColor(R.color.tab_unpressed_background);
+
+                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
+                if (isSurveyFragmentActive(surveyFragment)) {
+                    mDashboardActivity.onSurveyBackPressed();
+                }
+                if (isReviewFragmentActive(surveyFragment)) {
+                    mDashboardActivity.exitReviewOnChangeTab(null);
+                }
+                if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_assess))) {
+                    if (!isReadOnly) {
+                        reloadFirstFragment();
+                    }
+                    reloadFirstFragmentHeader();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_improve))) {
+                    reloadSecondFragment();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_stock))) {
+                    reloadStockFragment(mDashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_monitor))) {
+                    if (GradleVariantConfig.isMonitoringFragmentActive()) {
+                        reloadFourthFragment();
+                    }
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
+                    reloadAVFragment();
+                }
+            }
+        });
+        // init tabHost
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_below_line);
+        }
+        tabHost.getTabWidget().setStripEnabled(true);
+        tabHost.getTabWidget().setRightStripDrawable(R.drawable.background_odd);
+        tabHost.getTabWidget().setLeftStripDrawable(R.drawable.background_odd);
+    }
+
+
 }

@@ -461,7 +461,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * It is called when the user press back in a surveyFragment
      */
-    private void onSurveyBackPressed() {
+    public void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
         SurveyDB surveyDB = Session.getMalariaSurveyDB();
         if (!surveyDB.isSent()) {
@@ -725,59 +725,7 @@ public class DashboardActivity extends BaseActivity {
             initAssess();
         }
         initTabHost(savedInstanceState);
-        /* set tabs in order */
-        LayoutUtils.setTabHosts(this);
-        LayoutUtils.setTabDivider(this);
-        //set the tabs background as transparent
-        setTabsBackgroundColor(R.color.tab_unpressed_background);
-
-        //set first tab as selected:
-        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(
-                getResources().getColor(R.color.tab_pressed_background));
-
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
-            @Override
-            public void onTabChanged(String tabId) {
-                /** If current tab is android */
-
-                //set the tabs background as transparent
-                setTabsBackgroundColor(R.color.tab_unpressed_background);
-
-                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
-                if (isSurveyFragmentActive()) {
-                    onSurveyBackPressed();
-                }
-                if (isReviewFragmentActive()) {
-                    exitReviewOnChangeTab(null);
-                }
-                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    if (!isReadOnly) {
-                        mDashboardActivityStrategy.reloadFirstFragment();
-                    }
-                    mDashboardActivityStrategy.reloadFirstFragmentHeader();
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_improve))) {
-                    mDashboardActivityStrategy.reloadSecondFragment();
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_stock))) {
-                    mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_monitor))) {
-                    if(GradleVariantConfig.isMonitoringFragmentActive()) {
-                        mDashboardActivityStrategy.reloadFourthFragment();
-                    }
-                } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_av))) {
-                    mDashboardActivityStrategy.reloadAVFragment();
-                }
-                tabHost.getCurrentTabView().setBackgroundColor(
-                        getResources().getColor(R.color.tab_pressed_background));
-            }
-        });
-        // init tabHost
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
-        }
+        mDashboardActivityStrategy.initTabWidget(tabHost,reviewFragment,surveyFragment,isReadOnly);
 
         getSurveysFromService();
 

@@ -50,7 +50,7 @@ android {
         dexOptions {
             javaMaxHeapSize "6g"
         }
-        testInstrumentationRunner "org.eyeseetea.malariacare.CustomTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
         buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
         buildConfigField "boolean", "downloadLanguagesFromServer", "false"

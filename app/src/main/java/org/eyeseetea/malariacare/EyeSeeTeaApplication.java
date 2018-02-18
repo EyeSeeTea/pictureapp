@@ -26,7 +26,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
+import com.raizlabs.android.dbflow.config.DatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -66,10 +66,12 @@ public class EyeSeeTeaApplication extends Application {
             FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
         }
 
+        DatabaseHolderProviderStrategy databaseStrategy = new DatabaseHolderProviderStrategy();
+
         PreferencesState.getInstance().init(getApplicationContext());
         FlowConfig flowConfig = new FlowConfig
                 .Builder(this)
-                .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
+                .addDatabaseHolder(databaseStrategy.provide())
                 .build();
         FlowManager.init(flowConfig);
     }
@@ -118,5 +120,9 @@ public class EyeSeeTeaApplication extends Application {
 
     public void setIsBackPressed(boolean isBackPressed) {
         EyeSeeTeaApplication.isBackPressed = isBackPressed;
+    }
+
+    public static interface IDatabaseHolderProviderStrategy {
+        Class<? extends DatabaseHolder> provide();
     }
 }

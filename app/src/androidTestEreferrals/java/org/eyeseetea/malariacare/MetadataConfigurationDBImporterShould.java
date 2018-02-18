@@ -125,7 +125,7 @@ public class MetadataConfigurationDBImporterShould {
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(
                 apiClient, ConverterFactory.getQuestionConverter()
         );
-
+        importer.hasToUpdateMetadata(program);
         importer.importMetadata(program);
     }
 

@@ -25,9 +25,8 @@
         android:padding="5dp"
         android:layout_toRightOf="@+id/optionImage"
         android:layout_centerVertical="true"
-        android:textColor="@color/white"
-        android:textAllCaps="true"
-        android:textSize="?attr/font_medium"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_small"
         app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView

@@ -39,7 +39,8 @@ public class Constants {
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON = 28,
             PREGNANT_MONTH_INT = 29,
             YEAR = 30,
-            DROPDOWN_LIST_OU_TREE = 31;
+            DROPDOWN_LIST_OU_TREE = 31,
+            IMAGES_VERTICAL = 32;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(

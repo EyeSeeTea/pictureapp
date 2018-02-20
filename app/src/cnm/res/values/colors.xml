@@ -19,4 +19,8 @@
     <color name="actionbar_background">#005913</color>
     <color name="dark_navy_blue">#005913</color>
     <color name="main_window_background">#f7f7f7</color>
+    <color name="default_background_survey">#e2ffb2</color>
+    <color name="gray_text_survey">#666666</color>
+    <color name="green_option">#a5e183</color>
+    <color name="green_option_2">#c9ff6e</color>
 </resources>

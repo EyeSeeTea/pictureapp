@@ -83,6 +83,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -618,6 +619,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 valueDB = hideOptionsByMatch(screenQuestionDB, optionsToShow, valueDB);
                 ((AOptionQuestionView) questionView).setOptions(
                         optionsToShow);
+            }
+            if (questionView instanceof PositiveNumberSingleQuestionView) {
+                ((PositiveNumberSingleQuestionView) questionView).setQuestionDB(screenQuestionDB);
             }
             mDynamicTabAdapterStrategy.instanceOfSingleQuestion(questionView, screenQuestionDB);
 

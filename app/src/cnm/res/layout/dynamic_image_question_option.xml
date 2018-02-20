@@ -21,8 +21,8 @@
         android:gravity="center"
         android:layout_above="@+id/optionImage"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
-        android:textSize="?attr/font_medium"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_small"
         app:font_name="@string/normal_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView

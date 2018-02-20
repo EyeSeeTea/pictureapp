@@ -33,6 +33,10 @@ public class TabArrayAdapter extends AddlArrayAdapter<TabDB> {
         super(context, R.layout.main_spinner_item, tabDBs);
     }
 
+    public TabArrayAdapter(Context context, List<TabDB> tabDBs, int idLayout) {
+        super(context, idLayout, tabDBs);
+    }
+
     @Override
     public void drawText(CustomTextView customTextView, TabDB tabDB) {
         customTextView.setText(tabDB.getName());

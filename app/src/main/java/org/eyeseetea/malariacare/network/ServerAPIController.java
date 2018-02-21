@@ -66,6 +66,11 @@ public class ServerAPIController {
     private static final String TAG_ID = "id";
 
     /**
+     * Tag for code in json response
+     */
+    private static final String TAG_CODE= "code";
+
+    /**
      * Tag for closedDate (orgUnit) in json response
      */
     private static final String TAG_CLOSEDDATE = "closedDate";
@@ -151,6 +156,11 @@ public class ServerAPIController {
      * Current program UID (once is calculated never changes)
      */
     private static String programUID;
+
+    private static String DEFAULT_ORG_UNIT_GROUP_CODE_HC ="HC";
+
+    private static String DEFAULT_ORG_UNIT_GROUP_CODE_VMW ="VMW";
+
 
 
     /**
@@ -664,15 +674,19 @@ public class ServerAPIController {
         }
     }
 
-    private static OrganisationUnitGroup parseOrganisationGroup(JSONObject organisationUnitGroupJSON)
+    private static OrganisationUnitGroup parseOrganisationGroup(
+            JSONObject organisationUnitGroupJSON)
             throws ApiCallException {
         if (organisationUnitGroupJSON != null) {
 
             try {
-               String uid = organisationUnitGroupJSON.getString(TAG_ID);
-                String name = organisationUnitGroupJSON.has(TAG_NAME) ? organisationUnitGroupJSON.getString(TAG_NAME) : "";
+                String uid = organisationUnitGroupJSON.getString(TAG_ID);
 
-                return new OrganisationUnitGroup(uid,name);
+                String code = organisationUnitGroupJSON.has(TAG_CODE)
+                        ? organisationUnitGroupJSON.getString(TAG_CODE)
+                        : DEFAULT_ORG_UNIT_GROUP_CODE_HC;
+
+                return new OrganisationUnitGroup(uid, code);
 
             } catch (JSONException e) {
                 throw new ApiCallException(e);

@@ -6,11 +6,11 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 public class OrganisationUnitGroup {
 
     private String uid;
-    private String name;
+    private String code;
 
-    public OrganisationUnitGroup(String uid, String name) {
+    public OrganisationUnitGroup(String uid, String code) {
         this.uid = required(uid,"UID is required");
-        this.name = required(name,"Name is required");
+        this.code = required(code,"Code is required");
     }
 
     public String getUid() {
@@ -21,11 +21,11 @@ public class OrganisationUnitGroup {
         this.uid = uid;
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

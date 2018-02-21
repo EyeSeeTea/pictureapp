@@ -250,7 +250,7 @@ public class PreferencesState {
 
     public void setOrganisationUnitGroup(OrganisationUnitGroup organisationUnitGroup) {
         saveStringPreference(R.string.org_unit_group_id, organisationUnitGroup.getUid());
-        saveStringPreference(R.string.org_unit_group_name, organisationUnitGroup.getName());
+        saveStringPreference(R.string.org_unit_group_code, organisationUnitGroup.getCode());
     }
 
     public String getDhisURL() {

@@ -14,7 +14,7 @@
     <item name="dhis_password" translatable="false" type="string">dhis_password</item>
     <item name="org_unit" translatable="false" type="string">org_unit</item>
     <item name="org_unit_group_id" translatable="false" type="string">org_unit_group_id</item>
-    <item name="org_unit_group_name" translatable="false" type="string">org_unit_group_name</item>
+    <item name="org_unit_group_code" translatable="false" type="string">org_unit_group_code</item>
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
     <item name="language_code" translatable="false" type="string">language_code</item>
 

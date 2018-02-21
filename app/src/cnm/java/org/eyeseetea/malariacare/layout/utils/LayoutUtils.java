@@ -37,8 +37,6 @@ public class LayoutUtils extends BaseLayoutUtils {
 
 
     public static void fixRowViewBackground(View row, int position) {
-        row.setBackgroundColor(
-                row.getContext().getResources().getColor(R.color.tab_pressed_background));
     }
 
 }

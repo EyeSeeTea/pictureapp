@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -84,7 +85,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             }
         }
 
-        String firstText = date + " / " + hour + " / " + importantValues;
+        String firstText = "[ " + date + " - " + hour + " ] " + importantValues;
         firstLine.setText(firstText);
         secondLine.setText(visibleValues);
         if (visibleValues.isEmpty()) {
@@ -97,6 +98,15 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
                     mContext.getResources().getDrawable(getImageForSurvey(survey)));
         } else {
             imageStock.setVisibility(View.GONE);
+        }
+
+        setBackgroundToLayout(important, rowView);
+    }
+
+    private void setBackgroundToLayout(List<ValueDB> important, View rowView) {
+        if (!important.isEmpty()) {
+            rowView.setBackgroundColor(Color.parseColor("#" + important.get(
+                    0).getOptionDB().getBackground_colour()));
         }
     }
 

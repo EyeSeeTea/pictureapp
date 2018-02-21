@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.raizlabs.android.dbflow.annotation.NotNull;
+
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -11,6 +13,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.organisationunit
@@ -36,30 +39,6 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
             organisationUnit = OrgUnitDB.getByName(PreferencesState.getInstance().getOrgUnit());
         }
 
-        return organisationUnit;
-    }
-
-    private void verifyBanChanged(OrganisationUnit organisationUnit) {
-        OrgUnitDB cachedOrganisationUnit =
-                OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
-
-        if (cachedOrganisationUnit != null
-                && organisationUnit.isBanned() != cachedOrganisationUnit.isBanned()) {
-            mBanOrgUnitChangeListener.onBanOrgUnitChanged(organisationUnit);
-        }
-    }
-
-    private OrganisationUnit getFromRemote() throws NetworkException, ApiCallException {
-        if (!isNetworkAvailable()) {
-            throw new NetworkException();
-        }
-
-        OrganisationUnit organisationUnit = null;
-        try {
-            organisationUnit = ServerAPIController.getCurrentOrgUnit();
-        } catch (Exception e) {
-            throw new ApiCallException("Error checking banned call");
-        }
         return organisationUnit;
     }
 
@@ -105,13 +84,18 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         PreferencesState.getInstance().setOrgUnit(organisationUnit.getName());
     }
 
+    @Override
+    public void saveCurrentOrganisationUnitGroup(@NotNull OrganisationUnitGroup organisationUnitGroup) {
+        PreferencesState.getInstance().setOrganisationUnitGroup(organisationUnitGroup);
+    }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager cm =
-                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+    @Override
+    public OrganisationUnitGroup getOrganisationUnitGroupBy(OrganisationUnit organisationUnit)
+            throws NetworkException, ApiCallException {
+
+        requiredNetworkConnection();
+
+        return ServerAPIController.getOrganisationUnitGroupBy(organisationUnit.getUid());
     }
 
     @Override
@@ -121,6 +105,43 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
             orgUnitDB.delete();
         }
         PreferencesState.getInstance().setOrgUnit(null);
+    }
+
+    private void verifyBanChanged(OrganisationUnit organisationUnit) {
+        OrgUnitDB cachedOrganisationUnit =
+                OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
+
+        if (cachedOrganisationUnit != null
+                && organisationUnit.isBanned() != cachedOrganisationUnit.isBanned()) {
+            mBanOrgUnitChangeListener.onBanOrgUnitChanged(organisationUnit);
+        }
+    }
+
+    private OrganisationUnit getFromRemote() throws NetworkException, ApiCallException {
+
+        requiredNetworkConnection();
+
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit = ServerAPIController.getCurrentOrgUnit();
+        } catch (Exception e) {
+            throw new ApiCallException("Error checking banned call");
+        }
+        return organisationUnit;
+    }
+
+    private void requiredNetworkConnection() throws NetworkException {
+        if (!isNetworkAvailable()) {
+            throw new NetworkException();
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public OrganisationUnit getOrganisationUnitByName(String name) {

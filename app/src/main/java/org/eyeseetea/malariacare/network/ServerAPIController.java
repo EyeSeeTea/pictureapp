@@ -21,9 +21,11 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -31,6 +33,7 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -79,6 +82,7 @@ public class ServerAPIController {
      * Tag for organisationUnits in json response
      */
     private static final String TAG_ORGANISATIONUNITS = "organisationUnits";
+    private static final String TAG_ORGANISATION_UNIT_GROUP = "organisationUnitGroups";
 
     /**
      * Date format to the closedDate attribute
@@ -96,6 +100,13 @@ public class ServerAPIController {
     private static final String DHIS_PULL_ORG_UNIT_API =
             "/api/organisationUnits.json?paging=false&fields=id,name,code,closedDate,"
                     + "description&filter=code:eq:%s&filter:programs:id:eq:%s";
+
+    /**
+     * Endpoint to retrieve orgUnitsGroup info filtering by CODE (API)
+     */
+    private static final String DHIS_PULL_ORG_UNIT_GROUP_API =
+            "/api/organisationUnitGroups.json?paging=false&fields=id,name"
+                    + "&filter=organisationUnits.id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
@@ -338,6 +349,7 @@ public class ServerAPIController {
         elementObject.put(TAG_CLOSEDDATE, dateFormatted);
         return elementObject;
     }
+
     /**
      * Prepare the closing value.
      *
@@ -420,9 +432,42 @@ public class ServerAPIController {
         }
 
         //0| >1 matches -> Error
+        return validateEmptyOrMoreThanOneJSOnArray("getOrgUnitData",orgUnitNameOrCode, url, orgUnitsArray);
+    }
+
+    /**
+     * Returns the orgUnitGroup by the given server according to its current version
+     * @param orgUnitCode the organisationUnit code
+     * @return a JSONObject representing a OrganisationUnitGroup object
+     */
+     public static OrganisationUnitGroup getOrganisationUnitGroupBy(@NotNull String orgUnitCode) throws ApiCallException {
+        //Version is required to choose which field to match
+        String url = PreferencesState.getInstance().getDhisURL();
+
+        String urlOrgUnitData = getOrgUnitGroupDataUrl(url, orgUnitCode);
+        Response response = ServerApiCallExecution.executeCall(null, urlOrgUnitData, "GET");
+        //{"organisationUnits":[{}]}
+        JSONObject jsonResponse = ServerApiUtils.getApiResponseAsJSONObject(response);
+        JSONArray orgUnitsArray = null;
+        try {
+            orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATION_UNIT_GROUP);
+        } catch (JSONException e) {
+            throw new ApiCallException(e);
+        }
+
+        JSONObject jsonObject = validateEmptyOrMoreThanOneJSOnArray("getOrganisationUnitGroupBy",
+                orgUnitCode, url, orgUnitsArray);
+
+        return parseOrganisationGroup(jsonObject);
+    }
+
+    @Nullable
+    private static JSONObject validateEmptyOrMoreThanOneJSOnArray(@NotNull String logMethodName, @NotNull String orgUnitCode,
+            String url, JSONArray orgUnitsArray) throws ApiCallException {
+        //0| >1 matches -> Error
         if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
-            Log.e(TAG, String.format("getOrgUnitData(%s,%s) -> Found %d matches", url,
-                    orgUnitNameOrCode, orgUnitsArray.length()));
+            Log.e(TAG, String.format("logMethodName(%s,%s) -> Found %d matches", url,
+                    orgUnitCode, orgUnitsArray.length()));
             return null;
         }
         try {
@@ -619,6 +664,25 @@ public class ServerAPIController {
         }
     }
 
+    private static OrganisationUnitGroup parseOrganisationGroup(JSONObject organisationUnitGroupJSON)
+            throws ApiCallException {
+        if (organisationUnitGroupJSON != null) {
+
+            try {
+               String uid = organisationUnitGroupJSON.getString(TAG_ID);
+                String name = organisationUnitGroupJSON.has(TAG_NAME) ? organisationUnitGroupJSON.getString(TAG_NAME) : "";
+
+                return new OrganisationUnitGroup(uid,name);
+
+            } catch (JSONException e) {
+                throw new ApiCallException(e);
+            }
+
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)
      */
@@ -673,6 +737,21 @@ public class ServerAPIController {
         endpoint = ServerApiUtils.encodeBlanks(endpoint);
         Log.d(TAG, String.format("getOrgUnitDataUrl(%s,%s,%s) -> %s", url, serverVersion,
                 orgUnitNameOrCode, endpoint));
+
+        return endpoint;
+    }
+
+    /**
+     * Returns the right endpoint depending on the server version
+     */
+    static String getOrgUnitGroupDataUrl(String url, String orgUnitId) {
+        String endpoint = url;
+            endpoint += String.format(DHIS_PULL_ORG_UNIT_GROUP_API, orgUnitId);
+
+        endpoint = ServerApiUtils.encodeBlanks(endpoint);
+        Log.d(TAG, String.format("getOrgUnitGroupDataUrl(%s,%s) -> %s", url,
+                orgUnitId, endpoint));
+
         return endpoint;
     }
 

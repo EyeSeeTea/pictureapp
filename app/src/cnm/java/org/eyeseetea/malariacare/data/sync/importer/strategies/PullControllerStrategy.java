@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
@@ -106,6 +107,11 @@ public class PullControllerStrategy extends APullControllerStrategy {
             if (organisationUnit == null) {
                 throw new AutoconfigureException();
             } else {
+                OrganisationUnitGroup organisationUnitGroup =
+                        organisationUnitRepository.getOrganisationUnitGroupBy(organisationUnit);
+
+                organisationUnitRepository.saveCurrentOrganisationUnitGroup(organisationUnitGroup);
+
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
 

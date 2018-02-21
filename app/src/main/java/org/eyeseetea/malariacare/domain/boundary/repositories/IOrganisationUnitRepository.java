@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.boundary.repositories;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.organisationunit
@@ -31,5 +32,10 @@ public interface IOrganisationUnitRepository {
             throws ApiCallException, ExistsMoreThanOneOrgUnitByPhoneException;
 
     void saveCurrentOrganisationUnit(OrganisationUnit organisationUnit);
+
+    void saveCurrentOrganisationUnitGroup(OrganisationUnitGroup organisationUnitGroup);
+
+    OrganisationUnitGroup getOrganisationUnitGroupBy(OrganisationUnit organisationUnit)
+            throws NetworkException, ApiCallException;
 
 }

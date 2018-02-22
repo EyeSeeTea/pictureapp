@@ -13,7 +13,7 @@ import java.io.File;
 
 public class Media {
 
-    public enum MediaType{ PICTURE, VIDEO};
+    public enum MediaType{ PICTURE, VIDEO, UNKNOWN};
     long id;
     String name;
     String resourcePath;

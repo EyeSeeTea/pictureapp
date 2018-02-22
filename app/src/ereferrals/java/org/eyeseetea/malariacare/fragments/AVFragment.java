@@ -19,6 +19,9 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import static org.eyeseetea.malariacare.views.ViewUtils.isThereAnAppThatCanHandleThis;
+import static org.eyeseetea.malariacare.views.ViewUtils.showToast;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -144,10 +147,14 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
                         contentUri));
         implicitIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         implicitIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-        getActivity().startActivity(Intent.createChooser(implicitIntent,
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.feedback_view_image)));
 
+        if (isThereAnAppThatCanHandleThis(implicitIntent, getActivity())) {
+            getActivity().startActivity(Intent.createChooser(implicitIntent,
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.feedback_view_image)));
+        } else {
+            showToast(R.string.error_unable_to_find_app_than_can_open_file, getActivity());
+        }
     }
 
     private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {

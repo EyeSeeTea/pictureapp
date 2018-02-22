@@ -38,7 +38,7 @@ ext {
             minSdkVersion    : 15,
             compileSdkVersion: 25,
             targetSdkVersion : 25,
-            versionCode      : 50,
+            versionCode      : 51,
             versionName      : "QAApp"
     ]
     libraries = [
@@ -81,7 +81,8 @@ ext {
             powerMockVersion             : "1.6.3",
             runnerVersion                : "0.4.1",
             espressoVersion              : "2.2.1",
-            mockwebserverVersion         : "3.2.0"
+            mockwebserverVersion         : "3.2.0",
+            dexmakerMockitoVersion       : "2.12.1"
     ]
 
     // Old App dependencies versions

@@ -51,7 +51,6 @@ public class ProgramDB extends BaseModel {
     @Column
     String name;
 
-    @Deprecated
     @Column
     String stage_uid;
 
@@ -154,12 +153,10 @@ public class ProgramDB extends BaseModel {
         this.name = name;
     }
 
-    @Deprecated
     public String getStageUid() {
         return stage_uid;
     }
 
-    @Deprecated
     public void setStageUid(String stage_uid) {
         this.stage_uid = stage_uid;
     }

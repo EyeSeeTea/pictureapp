@@ -164,13 +164,14 @@ public class MetadataConfigurationDBImporter {
 
         String countryUID = country.getUid();
         int version = country.getVersion();
+        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
 
         if (isCountryNotAlreadyAdded(countryUID)) {
-            updateMetadataFor(country);
+            updateMetadataFor(questions,country);
 
         } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
-            updateMetadataFor(country);
+            updateMetadataFor(questions,country);
         }
     }
 
@@ -182,8 +183,7 @@ public class MetadataConfigurationDBImporter {
         return !CountryVersionDB.isCountryAlreadyAdded(countryCode);
     }
 
-    private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
+    private void updateMetadataFor(List<Question> questions ,Configuration.CountryVersion country) throws Exception {
         saveInDB(country);
         saveQuestionsInDB(questions, country);
     }
@@ -199,8 +199,6 @@ public class MetadataConfigurationDBImporter {
         for (Question question : questions) {
             QuestionDB questionDB = converter.visit(question);
             setQuestionRelations(questionDB, country);
-            AnswerDB answerDB = newAnswerDBWith(questionDB);
-            questionDB.setAnswer(answerDB);
             save(questionDB);
 
             mapQuestionsDBByCode.put(questionDB.getCode(), questionDB);
@@ -348,18 +346,15 @@ public class MetadataConfigurationDBImporter {
         return questionRelationDB;
     }
 
-    private AnswerDB newAnswerDBWith(QuestionDB questionDB) {
-        AnswerDB answerDB = new AnswerDB();
-        answerDB.setName(questionDB.getCode());
-
-        answerDB.save();
-        return answerDB;
-    }
-
     private void save(QuestionDB questionDB) {
+        AnswerDB answerDB = questionDB.getAnswerDB();
+        List<OptionDB> questionOptionDBS = answerDB.getOptionDBs();
+        answerDB.setName(questionDB.getCode());
+        answerDB.save();
+        questionDB.setAnswer(answerDB);
         questionDB.save();
 
-        save(questionDB.getOptionDBS(), questionDB);
+        save(questionOptionDBS, questionDB);
 
     }
 

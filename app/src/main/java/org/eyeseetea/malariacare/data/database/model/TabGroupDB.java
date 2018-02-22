@@ -28,7 +28,6 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Deprecated
 @Table(database = AppDatabase.class, name = "TabGroup")
 public class TabGroupDB extends BaseModel {
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,8 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -43,7 +46,9 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
@@ -53,6 +58,7 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -85,6 +91,41 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void onCreate() {
+
+        IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
+        ILanguageRepository languageRepository = new LanguagesLocalDataSource();
+
+        VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
+                new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
+                        configurationRepository, languageRepository,
+                        new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
+                    @Override
+                    public void onSoftLoginStringTranslationFailed() {
+                        showToast(R.string.warning_strings_download_failed);
+                    }
+
+                    @Override
+                    public void onFullLoginStringTranslationOrConfigFilesFailed(
+                            TypeOfFailure typeOfFailed) {
+                        switch (typeOfFailed) {
+                            case TRANSLATIONS:
+                                showToast(R.string.error_unable_to_download_translations);
+                                break;
+                            case CONFIGURATION_FILES:
+                                showToast(R.string.error_unable_to_download_configuration_files);
+                                break;
+                            case TRANSLATIONS_AND_CONFIGURATION_FILES:
+                                showToast(
+                                        R.string.error_unable_to_download_translations_and_configuration_files);
+                                break;
+                        }
+
+                        mDashboardActivity.finishAndGo(LoginActivity.class);
+                    }
+                });
+
+        downloadedUseCase.run();
+
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
@@ -104,6 +145,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mainExecutor,
                 fileDownloader,
                 mConnectivity, programRepository, mediaRepository);
+    }
+
+    private void showToast(@StringRes int text) {
+        Toast.makeText(mDashboardActivity.getApplicationContext(), text,
+                Toast.LENGTH_LONG).show();
     }
 
     private void showToast(String message) {
@@ -467,9 +513,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private boolean noIssueVoucher(SurveyDB survey) {
-        OptionDB noIssueOption=survey.getOptionSelectedForQuestionCode(
+        OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
                 mDashboardActivity.getString(R.string.issue_voucher_qc));
-        if(noIssueOption==null){
+        if (noIssueOption == null) {
             return false;
         }
         return noIssueOption.getName().equals(

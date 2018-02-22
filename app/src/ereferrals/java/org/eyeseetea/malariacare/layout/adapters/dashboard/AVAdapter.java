@@ -1,7 +1,9 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -72,18 +74,9 @@ public class AVAdapter extends RecyclerView.Adapter {
             GridMediaViewHolder mediaViewHolder = (GridMediaViewHolder) viewHolder;
             final Media media = medias.get(position);
             mediaViewHolder.name.setText(media.getName());
-            if(media.getType().equals(Media.MediaType.PICTURE)){
-                if(media.getResourcePath()!=null) {
-                    File file = new File(media.getResourcePath());
-                    Uri uri = Uri.fromFile(file);
-                    mediaViewHolder.filename.setImageURI(uri);
-                }
-            }else {
-                if(media.getResourcePath()!=null) {
-                    mediaViewHolder.filename.setImageBitmap(
-                            VideoUtils.getVideoPreview(media.getResourcePath(), context));
-                }
-            }
+
+            handlePreviewImage(mediaViewHolder, media);
+
             mediaViewHolder.itemView.setOnClickListener(new ImageView.OnClickListener() {
                 public void onClick(View v)
                 {
@@ -107,6 +100,49 @@ public class AVAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
+        }
+    }
+
+    private void handlePreviewImage(GridMediaViewHolder mediaViewHolder, Media media) {
+        switch (media.getType()) {
+            case PICTURE:
+                handlePictureMediaTypePreview(mediaViewHolder, media);
+                break;
+            case VIDEO:
+                handleVideoMediaTypePreview(mediaViewHolder, media);
+                break;
+            case UNKNOWN:
+                handleUnknownMediaTypePreview(mediaViewHolder);
+                break;
+        }
+    }
+
+    private void handleUnknownMediaTypePreview(GridMediaViewHolder mediaViewHolder) {
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.no_image_available);
+        mediaViewHolder.filename.setImageDrawable(drawable);
+        mediaViewHolder.filename.setAdjustViewBounds(true);
+        mediaViewHolder.filename.setScaleType(ImageView.ScaleType.CENTER);
+    }
+
+    private void handleVideoMediaTypePreview(GridMediaViewHolder mediaViewHolder,
+            Media media) {
+        if(media.getResourcePath()!=null) {
+            mediaViewHolder.filename.setImageBitmap(
+                    VideoUtils.getVideoPreview(media.getResourcePath(), context));
+            mediaViewHolder.filename.setAdjustViewBounds(true);
+            mediaViewHolder.filename.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        }
+    }
+
+    private void handlePictureMediaTypePreview(GridMediaViewHolder mediaViewHolder,
+            Media media) {
+        if(media.getResourcePath()!=null) {
+            File file = new File(media.getResourcePath());
+            Uri uri = Uri.fromFile(file);
+            mediaViewHolder.filename.setImageURI(uri);
+            mediaViewHolder.filename.setAdjustViewBounds(true);
+            mediaViewHolder.filename.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
     }
 

@@ -230,4 +230,11 @@ public abstract class ADashboardActivityStrategy {
             mDashboardActivity.reviewShowDone();
         }
     }
+
+    public void onPause(){
+
+    }
+    public void onConnectivityStatusChange() {
+
+    }
 }

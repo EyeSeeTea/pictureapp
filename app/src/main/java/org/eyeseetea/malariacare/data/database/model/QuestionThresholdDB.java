@@ -21,9 +21,12 @@ package org.eyeseetea.malariacare.data.database.model;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdName;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -31,6 +34,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
@@ -64,6 +68,8 @@ public class QuestionThresholdDB extends BaseModel {
     @Column
     Integer maxValue;
 
+    private List<String> matchQuestionsCode;
+
     public QuestionThresholdDB() {
     }
 
@@ -73,6 +79,14 @@ public class QuestionThresholdDB extends BaseModel {
         setMatchDB(matchDB);
         this.minValue = minValue;
         this.maxValue = maxValue;
+    }
+
+    public List<String> getMatchQuestionsCode() {
+        return matchQuestionsCode;
+    }
+
+    public void setMatchQuestionsCode(List<String> matchQuestionsCode) {
+        this.matchQuestionsCode = matchQuestionsCode;
     }
 
     public static QuestionThresholdDB findByQuestionAndOption(QuestionDB questionDBWithOption,
@@ -106,8 +120,9 @@ public class QuestionThresholdDB extends BaseModel {
 
     /**
      * Method to get the mMatchDBs with a mQuestionDB id and a value between or equal min max
+     *
      * @param id_question The id of the mQuestionDB.
-     * @param value The value to check.
+     * @param value       The value to check.
      * @return The list of mMatchDBs.
      */
     public static List<MatchDB> getMatchesWithQuestionValue(Long id_question,
@@ -225,6 +240,20 @@ public class QuestionThresholdDB extends BaseModel {
         return okLowerBound && okUpperBound;
     }
 
+    public static boolean areInThreadHold(String value, List<QuestionThresholdDB> thresholdDBS) {
+        boolean areInThreadHold = false;
+
+        for (QuestionThresholdDB thresholdDB : thresholdDBS) {
+
+            if (thresholdDB.isInThreshold(value)) {
+                areInThreadHold = true;
+            } else {
+                areInThreadHold = false;
+                break;
+            }
+        }
+        return areInThreadHold;
+    }
 
     public static List<QuestionThresholdDB> getQuestionThresholdsWithMatch(Long matchId) {
         return new Select()
@@ -233,6 +262,40 @@ public class QuestionThresholdDB extends BaseModel {
                 .queryList();
     }
 
+
+    public static List<QuestionThresholdDB> getParentQuestionsThresholdsByItsChild(
+            QuestionDB childQuestionDB) {
+
+        IProperty[] properties = getAllPropertiesWithAlias();
+
+        return new Select(properties).from(QuestionThresholdDB.class).as(questionThresholdName)
+
+                .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                .on(QuestionThresholdDB_Table.id_match_fk.withTable(questionThresholdAlias)
+                        .eq(MatchDB_Table.id_match.withTable(matchAlias)))
+
+                .join(QuestionRelationDB.class, Join.JoinType.INNER).as(questionRelationName)
+                .on(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)
+                        .eq(QuestionRelationDB_Table.id_question_relation.withTable(
+                                questionRelationAlias)))
+
+                .where(QuestionRelationDB_Table.id_question_fk
+                        .withTable(questionRelationAlias).eq(
+                                childQuestionDB.getId_question()))
+
+                .queryList();
+    }
+
+    @NonNull
+    private static IProperty[] getAllPropertiesWithAlias() {
+        IProperty[] properties = QuestionThresholdDB_Table.getAllColumnProperties();
+
+        for (int i =0; i< properties.length; i++) {
+            IProperty property =  properties[i];
+            properties[i] = property.withTable(questionThresholdAlias);
+        }
+        return properties;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,0 +1,673 @@
+{
+  "countryCode": "ZW",
+  "program": "VMMC",
+  "actionType": "issueReferral",
+  "version": "1",
+  "updateDate": "2017-12-13 08:00",
+  "updateUser": "BR",
+  "languages": ["en"],
+  "issuing_capture": {
+    "validSamples": [0, 1, 2],
+    "payloadSpecs": [{
+      "dataPointRef": "url",
+      "samples": [{
+        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+      }, {
+        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+      }, {
+        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+      }]
+    }, {
+      "dataPointRef": "version",
+      "samples": [{
+        "value": "1.0"
+      }, {
+        "value": "1.0"
+      }, {
+        "value": "1.0"
+      }]
+    }, {
+      "dataPointRef": "csvVersion",
+      "samples": [{
+        "value": "0.6.2"
+      }, {
+        "value": "0.6.2"
+      }, {
+        "value": "0.6.2"
+      }],
+      "mandatory": "false"
+    }, {
+      "dataPointRef": "source",
+      "samples": [{
+        "value": "?"
+      }, {
+        "value": "?"
+      }, {
+        "value": "?"
+      }]
+    }, {
+      "dataPointRef": "androidInfo",
+      "samples": [{
+        "value": "?"
+      }, {
+        "value": "?"
+      }, {
+        "value": "?"
+      }],
+      "mandatory": "false"
+    }, {
+      "dataPointRef": "language",
+      "samples": [{
+        "value": "en"
+      }, {
+        "value": "en"
+      }, {
+        "value": "en"
+      }]
+    }, {
+      "dataPointRef": "userName",
+      "samples": [{
+        "value": "8005"
+      }, {
+        "value": "8005"
+      }, {
+        "value": "8005"
+      }]
+    }, {
+      "dataPointRef": "password",
+      "samples": [{
+        "value": "1234"
+      }, {
+        "value": "1234"
+      }, {
+        "value": "1234"
+      }]
+    }, {
+      "dataPointRef": "settings",
+      "samples": [{
+        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+      }, {
+        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+      }, {
+        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+      }],
+      "mandatory": "false"
+    }],
+    "actionsSpecs": [{
+      "dataPointRef": "type",
+      "samples": [{
+        "value": "issueReferral"
+      }, {
+        "value": "issueReferral"
+      }, {
+        "value": "issueReferral"
+      }]
+    }, {
+      "dataPointRef": "actionId",
+      "samples": [{
+        "value": "some_actionId-0"
+      }, {
+        "value": "some_actionId-1"
+      }, {
+        "value": "some_actionId-2"
+      }]
+    }, {
+      "dataPointRef": "sourceAddedDateTime",
+      "samples": [{
+        "value": "2017-10-27T10:00:00"
+      }, {
+        "value": "2017-10-28T11:00:00"
+      }, {
+        "value": "2017-10-29T12:00:00"
+      }]
+    }, {
+      "dataPointRef": "voucher",
+      "samples": [{
+        "value": "{\"type\": \"paper\", \"id\": \"1110000000\"}"
+      }, {
+        "value": "{\"type\": \"electronic\", \"id\": \"1110000001\"}"
+      }, {
+        "value": "{\"type\": \"novoucher\", \"id\": \"1110000002\"}"
+      }]
+    }, {
+      "dataPointRef": "coordinates",
+      "samples": [{
+        "value": "{\"latitude\": 10, \"longitude\": 10 }"
+      }, {
+        "value": "{\"latitude\": 20, \"longitude\": 20 }"
+      }, {
+        "value": "{\"latitude\": 30, \"longitude\": 30 }"
+      }]
+    }],
+    "dataValuesSpecs": [{
+      "dataPointRef": "program",
+      "poTerm": "ipc_issueEntry_q_program",
+      "defaultName": "Program",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "VMMC"
+      }, {
+        "value": "VMMC"
+      }, {
+        "value": "VMMC"
+      }],
+      "options": [{
+        "value": "VMMC",
+        "poTerm": "common_option_program_VMMC",
+        "defaultName": "VMMC"
+      }]
+    }, {
+      "dataPointRef": "firstName",
+      "poTerm": "ipc_issueEntry_q_firstName",
+      "defaultName": "First name",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "Sara"
+      }, {
+        "value": "Sam"
+      }, {
+        "value": "Bruno"
+      }]
+    }, {
+      "dataPointRef": "lastName",
+      "poTerm": "ipc_issueEntry_q_lastName",
+      "defaultName": "Last name",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "PSI"
+      }, {
+        "value": "PSI"
+      }, {
+        "value": "Raimbault"
+      }]
+    }, {
+      "dataPointRef": "age",
+      "poTerm": "ipc_issueEntry_q_age",
+      "defaultName": "Age",
+      "controlType": "INT",
+      "samples": [{
+        "value": "40"
+      }, {
+        "value": "30"
+      }, {
+        "value": "20"
+      }]
+    }, {
+      "dataPointRef": "gender",
+      "poTerm": "ipc_issueEntry_q_gender",
+      "defaultName": "Gender",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "F"
+      }, {
+        "value": "F"
+      }, {
+        "value": "M"
+      }],
+      "options": [{
+        "value": "F",
+        "poTerm": "common_option_gender_female",
+        "defaultName": "Female"
+      }, {
+        "value": "M",
+        "poTerm": "common_option_gender_male",
+        "defaultName": "Male"
+      }]
+    }, {
+      "dataPointRef": "motherName",
+      "poTerm": "ipc_issueEntry_q_motherName",
+      "defaultName": "First name of mother",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "Somename 0"
+      }, {
+        "value": "Somename 1"
+      }, {
+        "value": "Somename 2"
+      }]
+    }, {
+      "dataPointRef": "birthDistrict",
+      "poTerm": "ipc_issueEntry_q_birthDistrict",
+      "defaultName": "District of birth",
+      "controlType": "SHORT_TEXT",
+      "samples": [{
+        "value": "District 9"
+      }, {
+        "value": "District 10"
+      }, {
+        "value": "District 11"
+      }]
+    }, {
+      "dataPointRef": "phoneOwnership",
+      "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
+      "defaultName": "Phone ownership",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "NO"
+      }, {
+        "value": "HER"
+      }, {
+        "value": "PAR"
+      }],
+      "options": [{
+        "value": "NO",
+        "poTerm": "common_option_ownershipOfPhone_noMobile",
+        "defaultName": "No Number"
+      }, {
+        "value": "HER",
+        "poTerm": "common_option_ownershipOfPhone_herNumber",
+        "defaultName": "Her Number"
+      }, {
+        "value": "PAR",
+        "poTerm": "common_option_ownershipOfPhone_husbandPartner",
+        "defaultName": "Husband/Partner"
+      }, {
+        "value": "SHA",
+        "poTerm": "common_option_ownershipOfPhone_shared",
+        "defaultName": "Shared"
+      }]
+    }, {
+      "dataPointRef": "phoneNumber",
+      "poTerm": "ipc_issueEntry_q_phoneNumber",
+      "defaultName": "Phone number",
+      "controlType": "PHONE_NUMBER",
+      "samples": [{
+        "value": "undefined",
+        "provider": "undefined"
+      }, {
+        "value": "+33611901852",
+        "provider": "FR-SFR"
+      }, {
+        "value": "+33611901852",
+        "provider": "FR-SFR"
+      }, {
+        "value": "+263772422806",
+        "provider": "ZW-ECONET"
+      }, {
+        "value": "+263712647215",
+        "provider": "ZW-NETONE"
+      }, {
+        "value": "+263731100984",
+        "provider": "ZW-TELECEL"
+      }],
+      "format": {
+        "accepted": [{
+          "starts": "7",
+          "length": "9",
+          "comment": "national"
+        }, {
+          "starts": "+",
+          "comment": "international"
+        }, {
+          "starts": "00",
+          "comment": "international"
+        }],
+        "details": {
+          "trunkPrefix": "0",
+          "dialingCode": "+263"
+        }
+      }
+    }, {
+      "dataPointRef": "phoneContactConsent",
+      "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
+      "defaultName": "Further phone contact consent",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "YESP"
+      }, {
+        "value": "YESPP"
+      }],
+      "options": [{
+        "value": "NO",
+        "poTerm": "common_option_furtherInformationConsent_no",
+        "defaultName": "No"
+      }, {
+        "value": "YESP",
+        "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
+        "defaultName": "Yes - PSI"
+      }, {
+        "value": "YESPP",
+        "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
+        "defaultName": "Yes - PSI and Partner"
+      }]
+    }, {
+      "dataPointRef": "generateVoucher",
+      "poTerm": "ipc_issueEntry_q_isClientReferred",
+      "defaultName": "Would you like to issue a voucher?",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "NO"
+      }],
+      "options": [{
+        "value": "YES",
+        "poTerm": "common_btn_yes",
+        "defaultName": "Yes"
+      }, {
+        "value": "NO",
+        "poTerm": "common_btn_no",
+        "defaultName": "No"
+      }]
+    }, {
+      "dataPointRef": "ZW_targetGroup",
+      "poTerm": "ipc_issueEntry_q_ZW_targetGroup",
+      "defaultName": "MC Target group",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "School Going"
+      }, {
+        "value": "Out of School"
+      }, {
+        "value": "Out of School"
+      }],
+      "options": [{
+        "value": "School Going",
+        "poTerm": "common_option_ZW_targetGroup_schoolGoing",
+        "defaultName": "School Going"
+      }, {
+        "value": "Out of School",
+        "poTerm": "common_option_ZW_targetGroup_outSchool",
+        "defaultName": "Out of School"
+      }]
+    }, {
+      "dataPointRef": "ZW_segment",
+      "poTerm": "ipc_issueEntry_q_ZW_segment",
+      "defaultName": "Segment",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "Orange"
+      }, {
+        "value": "Grey"
+      }, {
+        "value": "Brown"
+      }],
+      "options": [{
+        "value": "Orange",
+        "poTerm": "common_option_ZW_targetGroup_Orange",
+        "defaultName": "Orange"
+      }, {
+        "value": "Yellow",
+        "poTerm": "common_option_ZW_targetGroup_Yellow",
+        "defaultName": "Yellow"
+      }, {
+        "value": "Grey",
+        "poTerm": "common_option_ZW_targetGroup_Grey",
+        "defaultName": "Grey"
+      }, {
+        "value": "Maroon",
+        "poTerm": "common_option_ZW_targetGroup_Maroon",
+        "defaultName": "Maroon"
+      }, {
+        "value": "Brown",
+        "poTerm": "common_option_ZW_targetGroup_Brown",
+        "defaultName": "Brown"
+      }, {
+        "value": "Purple",
+        "poTerm": "common_option_ZW_targetGroup_Purple",
+        "defaultName": "Purple"
+      }, {
+        "value": "Green",
+        "poTerm": "common_option_ZW_targetGroup_Green",
+        "defaultName": "Green"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgBenefits",
+      "poTerm": "ipc_issueEntry_q_ZW_msgBenefits",
+      "defaultName": "Message: Benefits of VMMC",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgPain",
+      "poTerm": "ipc_issueEntry_q_ZW_msgPain",
+      "defaultName": "Message: Pain",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgSexAppeal",
+      "poTerm": "ipc_issueEntry_q_ZW_msgSexAppeal",
+      "defaultName": "Message: Sex appeal",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "undefined"
+      }, {
+        "value": "YES"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgSocialSupport",
+      "poTerm": "ipc_issueEntry_q_ZW_msgSocialSupport",
+      "defaultName": "Message: Social support",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_msgProcedure",
+      "poTerm": "ipc_issueEntry_q_ZW_msgProcedure",
+      "defaultName": "Message: VMMC procedure",
+      "controlType": "RADIO_GROUP_HORIZONTAL",
+      "samples": [{
+        "value": "undefined"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "undefined"
+      }]
+    }, {
+      "dataPointRef": "ZW_levelOfInterest",
+      "poTerm": "ipc_issueEntry_q_ZW_levelOfInterest",
+      "defaultName": "Level of Interest",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "High"
+      }, {
+        "value": "Low"
+      }, {
+        "value": "Not Interested"
+      }],
+      "options": [{
+        "value": "High",
+        "poTerm": "common_option_ZW_targetGroup_High",
+        "defaultName": "High"
+      }, {
+        "value": "Medium",
+        "poTerm": "common_option_ZW_targetGroup_Medium",
+        "defaultName": "Medium"
+      }, {
+        "value": "Low",
+        "poTerm": "common_option_ZW_targetGroup_Low",
+        "defaultName": "Low"
+      }, {
+        "value": "Not Interested",
+        "poTerm": "common_option_ZW_targetGroup_NotInterested",
+        "defaultName": "Not Interested"
+      }]
+    }, {
+      "dataPointRef": "ZW_hivTestedLast3Months",
+      "poTerm": "ipc_issueEntry_q_ZW_hivTestedLast3Months",
+      "defaultName": "Have you been tested for HIV in the past 3 months",
+      "controlType": "",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "YES"
+      }, {
+        "value": "NO"
+      }],
+      "options": [{
+        "value": "YES",
+        "poTerm": "common_btn_yes",
+        "defaultName": "Yes"
+      }, {
+        "value": "NO",
+        "poTerm": "common_btn_no",
+        "defaultName": "No"
+      }]
+    }, {
+      "dataPointRef": "ZW_hivSelfTestGiven",
+      "poTerm": "ipc_issueEntry_q_ZW_hivSelfTestGiven",
+      "defaultName": "HIV Self Test Kit Given",
+      "controlType": "",
+      "samples": [{
+        "value": "YES"
+      }, {
+        "value": "NO"
+      }, {
+        "value": "NO"
+      }],
+      "options": [{
+        "value": "YES",
+        "poTerm": "common_btn_yes",
+        "defaultName": "Yes"
+      }, {
+        "value": "NO",
+        "poTerm": "common_btn_no",
+        "defaultName": "No"
+      }]
+    }, {
+      "dataPointRef": "ZW_hivSelfTestAssistance",
+      "poTerm": "ipc_issueEntry_q_ZW_hivSelfTestAssistance",
+      "defaultName": "IPC assisted HIV Self Testing",
+      "controlType": "DROPDOWN_LIST",
+      "samples": [{
+        "value": "Assisted"
+      }, {
+        "value": "Administered"
+      }, {
+        "value": "Absent"
+      }],
+      "options": [{
+        "value": "Assisted",
+        "poTerm": "common_option_ZW_targetGroup_Assisted",
+        "defaultName": "Assisted"
+      }, {
+        "value": "Administered",
+        "poTerm": "common_option_ZW_targetGroup_Administered",
+        "defaultName": "Administered"
+      }, {
+        "value": "Absent",
+        "poTerm": "common_option_ZW_targetGroup_Absent",
+        "defaultName": "Absent"
+      }]
+    }],
+    "rulesSpecs": [{
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "HER",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneNumber",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "PAR",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneNumber",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "SHA",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneNumber",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "HER",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneContactConsent",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "PAR",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneContactConsent",
+        "do": "SHOW"
+      }]
+    }, {
+      "conditions": [{
+        "left": {
+          "value": "phoneOwnership",
+          "type": "dataPointRef"
+        },
+        "operator": "==",
+        "right": {
+          "value": "SHA",
+          "type": "value"
+        }
+      }],
+      "actions": [{
+        "dataPointRef": "phoneContactConsent",
+        "do": "SHOW"
+      }]
+    }]
+  }
+}

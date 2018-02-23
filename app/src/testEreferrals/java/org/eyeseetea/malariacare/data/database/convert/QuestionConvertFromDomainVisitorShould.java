@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionConvertFromDomainVisitorShould {
 
@@ -252,7 +253,7 @@ public class QuestionConvertFromDomainVisitorShould {
     }
 
     private Question givenADomainQuestionWithVisibility(Question.Visibility visibility) {
-        Question question = givenADomainQuestionWithNonOptions();
+        Question question = givenADomainQuestionBuilderWithNonOptions().build();
         question.setVisibility(visibility);
         return question;
     }

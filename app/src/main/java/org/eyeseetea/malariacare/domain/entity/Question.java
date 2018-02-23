@@ -95,6 +95,10 @@ public class Question {
         return rules;
     }
 
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

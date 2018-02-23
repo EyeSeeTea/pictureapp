@@ -6,6 +6,7 @@ import android.location.Location;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
@@ -20,10 +21,13 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Voucher;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICountryVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -42,19 +46,40 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private String language;
 
     public ConvertToWSVisitor() {
+        IDeviceRepository deviceDataSource = new DeviceDataSource();
+        Device device = deviceDataSource.getDevice();
+        init(device);
+    }
+
+    public ConvertToWSVisitor(Device device) {
+        init(device);
+    }
+
+    private void init(Device device) {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         ISettingsRepository currentLanguageRepository = new SettingsDataSource();
-        IDeviceRepository deviceDataSource = new DeviceDataSource();
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
         AppInfo appInfo = appInfoDataSource.getAppInfo();
-        Device device = deviceDataSource.getDevice();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
         language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.ws_version), device.getAndroidVersion(), credentials.getUsername(),
                 credentials.getPassword(), language, getAndroidInfo(device, appInfo),
-                appInfo.getMetadataVersion());
+                appInfo.getMetadataVersion(), getConfigFileVersion());
+    }
+
+    private int getConfigFileVersion() {
+        IProgramRepository mProgramLocalDataSource = new ProgramLocalDataSource();
+        String uid = mProgramLocalDataSource.getUserProgram().getId();
+        ICountryVersionRepository countryVersionRepository = new CountryVersionLocalDataSource();
+        Configuration.CountryVersion countryVersion =
+                countryVersionRepository.getCountryVersionForUID(uid);
+        if (countryVersion != null) {
+            return countryVersion.getVersion();
+        } else {
+            return 0;
+        }
     }
 
     private String getAndroidInfo(Device device, AppInfo appInfo) {
@@ -134,8 +159,12 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private boolean hasPhone(SurveyDB survey, Context context) {
-        return !(survey.getOptionSelectedForQuestionCode(
-                context.getString(R.string.phone_ownership_qc)).getName().equals(
+        OptionDB optionDB = survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc));
+        if (optionDB == null) {
+            return false;
+        }
+        return !(optionDB.getName().equals(
                 context.getString(R.string.no_phone_on)));
     }
 

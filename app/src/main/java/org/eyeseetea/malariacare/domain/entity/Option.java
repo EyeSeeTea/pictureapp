@@ -15,11 +15,11 @@ public class Option {
     public Option(long id, String code, String name,
             Attribute attribute,
             List<Rule> rules) {
-        setId(required(id, "id is required"));
-        setCode(required(code, "code is required"));
-        setName(required(name, "name is required"));
-        setAttribute(attribute);
-        setRules(rules);
+        this.id = required(id, "id is required");
+        this.code = required(code, "code is required");
+        this.name = required(name, "name is required");
+        this.attribute = attribute;
+        this.rules = rules;
     }
 
     public static Builder newBuilder() {
@@ -30,32 +30,16 @@ public class Option {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCode() {
         return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Attribute getAttribute() {
         return attribute;
-    }
-
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
     }
 
     @Override
@@ -114,11 +98,11 @@ public class Option {
                 HorizontalAlignment horizontalAlignment,
                 VerticalAlignment verticalAlignment, int textSize) {
 
-            setId(id);
-            setBackgroundColour(backgroundColour);
-            setHorizontalAlignment(horizontalAlignment);
-            setVerticalAlignment(verticalAlignment);
-            setTextSize(textSize);
+            this.id = id;
+            this.backgroundColour = backgroundColour;
+            this.horizontalAlignment = horizontalAlignment;
+            this.verticalAlignment = verticalAlignment;
+            this.textSize = textSize;
         }
 
 
@@ -130,42 +114,20 @@ public class Option {
             return id;
         }
 
-        public void setId(long id) {
-            this.id = id;
-        }
-
         public String getBackgroundColour() {
             return backgroundColour;
-        }
-
-        private void setBackgroundColour(String backgroundColour) {
-            this.backgroundColour = backgroundColour;
         }
 
         public HorizontalAlignment getHorizontalAlignment() {
             return horizontalAlignment;
         }
 
-        private void setHorizontalAlignment(
-                HorizontalAlignment horizontalAlignment) {
-            this.horizontalAlignment = horizontalAlignment;
-        }
-
         public VerticalAlignment getVerticalAlignment() {
             return verticalAlignment;
         }
 
-        private void setVerticalAlignment(
-                VerticalAlignment verticalAlignment) {
-            this.verticalAlignment = verticalAlignment;
-        }
-
         public int getTextSize() {
             return textSize;
-        }
-
-        public void setTextSize(int textSize) {
-            this.textSize = textSize;
         }
 
         public enum HorizontalAlignment {
@@ -230,9 +192,9 @@ public class Option {
         private Question actionSubject;
 
         public Rule(Action action, Operator operator, Question actionSubject) {
-            setAction(required(action, "action is required"));
-            setOperator(required(operator, "operator is required"));
-            setActionSubject(required(actionSubject, "actionSubject is required"));
+            this.action = required(action, "action is required");
+            this.operator = required(operator, "operator is required");
+            this.actionSubject = required(actionSubject, "actionSubject is required");
         }
 
         public static Builder newBuilder() {
@@ -243,24 +205,12 @@ public class Option {
             return operator;
         }
 
-        private void setOperator(Operator operator) {
-            this.operator = operator;
-        }
-
         public Action getAction() {
             return action;
         }
 
-        private void setAction(Action action) {
-            this.action = action;
-        }
-
         public Question getActionSubject() {
             return actionSubject;
-        }
-
-        private void setActionSubject(Question actionSubject) {
-            this.actionSubject = actionSubject;
         }
 
         public enum Operator {

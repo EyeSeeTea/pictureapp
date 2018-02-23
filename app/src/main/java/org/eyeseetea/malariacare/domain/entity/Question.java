@@ -25,20 +25,19 @@ public class Question {
             Visibility visibility,
             List<Rule> rules) {
 
-        setId(required(id, "id is required"));
-        setCode(required(code, "code is required"));
-        setName(required(name, "name is required"));
-        setUid(required(uid, "uid is required"));
-        setPhoneFormat(phoneFormat);
-        setType(required(type, "type is required"));
-        setCompulsory(compulsory);
-        setOptions(options);
-        setHeader(header);
-        setIndex(index);
-        setVisibility(visibility);
-        setRules(rules);
+        this.id = required(id, "id is required");
+        this.code = required(code, "code is required");
+        this.name = required(name, "name is required");
+        this.uid = required(uid, "uid is required");
+        this.phoneFormat = phoneFormat;
+        this.type = required(type, "type is required");
+        this.compulsory = compulsory;
+        this.options = options;
+        this.header = header;
+        this.index = index;
+        this.visibility = visibility;
+        this.rules = rules;
     }
-
 
     public static Builder newBuilder() {
         return new Builder();
@@ -48,32 +47,16 @@ public class Question {
         return code;
     }
 
-    private void setCode(String code) {
-        this.code = code;
-    }
-
     public String getName() {
         return name;
-    }
-
-    private void setName(String name) {
-        this.name = name;
     }
 
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-
     public boolean isCompulsory() {
         return compulsory;
-    }
-
-    private void setCompulsory(boolean compulsory) {
-        this.compulsory = compulsory;
     }
 
     public List<Option> getOptions() {
@@ -84,64 +67,32 @@ public class Question {
         return options != null;
     }
 
-    public void setOptions(List<Option> options) {
-        this.options = options;
-    }
-
     public Header getHeader() {
         return header;
-    }
-
-    private void setHeader(Header header) {
-        this.header = header;
     }
 
     public int getIndex() {
         return index;
     }
 
-    private void setIndex(int index) {
-        this.index = index;
-    }
-
     public long getId() {
         return id;
-    }
-
-    private void setId(long id) {
-        this.id = id;
     }
 
     public Visibility getVisibility() {
         return visibility;
     }
 
-    private void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
-    }
-
     public String getUid() {
         return uid;
-    }
-
-    private void setUid(String uid) {
-        this.uid = uid;
     }
 
     public PhoneFormat getPhoneFormat() {
         return phoneFormat;
     }
 
-    private void setPhoneFormat(PhoneFormat phoneFormat) {
-        this.phoneFormat = phoneFormat;
-    }
-
     public List<Rule> getRules() {
         return rules;
-    }
-
-    private void setRules(List<Rule> rules) {
-        this.rules = rules;
     }
 
     @Override
@@ -317,8 +268,8 @@ public class Question {
                 List<Condition> conditions,
                 List<Action> actions) {
 
-            setConditions(required(conditions, "conditions is required"));
-            setActions(required(actions, "actions is required"));
+            this.conditions = required(conditions, "conditions is required");
+            this.actions = required(actions, "actions is required");
 
         }
 
@@ -330,20 +281,9 @@ public class Question {
             return conditions;
         }
 
-        private void setConditions(
-                List<Condition> conditions) {
-            this.conditions = conditions;
-        }
-
         public List<Action> getActions() {
             return actions;
         }
-
-        private void setActions(
-                List<Action> actions) {
-            this.actions = actions;
-        }
-
 
         public static class Condition {
             private Operand left;
@@ -353,9 +293,9 @@ public class Question {
             public Condition(Operand left,
                     Operator operator, Operand right) {
 
-                setLeft(required(left, "left condition is required"));
-                setOperator(required(operator, "operator is required"));
-                setRight(required(right, "right is required"));
+                this.left = required(left, "left condition is required");
+                this.operator = required(operator, "operator is required");
+                this.right = required(right, "right is required");
             }
 
             public static Builder newBuilder() {
@@ -366,24 +306,12 @@ public class Question {
                 return left;
             }
 
-            private void setLeft(Operand left) {
-                this.left = left;
-            }
-
             public Operator getOperator() {
                 return operator;
             }
 
-            private void setOperator(Operator operator) {
-                this.operator = operator;
-            }
-
             public Operand getRight() {
                 return right;
-            }
-
-            private void setRight(Operand right) {
-                this.right = right;
             }
 
             public static final class Builder {
@@ -425,10 +353,9 @@ public class Question {
 
             public Operand(String value, OperandType type) {
 
-                setValue(required(value, "value condition is required"));
-                setType(required(type, "type condition is required"));
+                this.value = required(value, "value condition is required");
+                this.type = required(type, "type condition is required");
             }
-
 
             public static Builder newBuilder() {
                 return new Builder();
@@ -438,16 +365,8 @@ public class Question {
                 return value;
             }
 
-            private void setValue(String value) {
-                this.value = value;
-            }
-
             public OperandType getType() {
                 return type;
-            }
-
-            private void setType(OperandType type) {
-                this.type = type;
             }
 
             public static final class Builder {
@@ -483,9 +402,9 @@ public class Question {
             public Action(String targetQuestion,
                     ActionToPerform actionToPerform) {
 
-                setTargetQuestion(required(targetQuestion, "value targetQuestion is required"));
-                setActionToPerform(
-                        required(actionToPerform, "actionToPerform condition is required"));
+                this.targetQuestion = required(targetQuestion, "value targetQuestion is required");
+                this.actionToPerform =
+                        required(actionToPerform, "actionToPerform condition is required");
             }
 
 
@@ -497,17 +416,8 @@ public class Question {
                 return targetQuestion;
             }
 
-            private void setTargetQuestion(String targetQuestion) {
-                this.targetQuestion = targetQuestion;
-            }
-
             public ActionToPerform getActionToPerform() {
                 return actionToPerform;
-            }
-
-            private void setActionToPerform(
-                    ActionToPerform actionToPerform) {
-                this.actionToPerform = actionToPerform;
             }
 
             public static final class Builder {

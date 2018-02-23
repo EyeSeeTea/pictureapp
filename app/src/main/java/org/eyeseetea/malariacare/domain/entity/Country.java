@@ -9,9 +9,9 @@ public class Country {
     private String name;
 
     public Country(long id, String uid, String name) {
-        setId(required(id, "id is required"));
-        setUid(required(uid, "uid is required"));
-        setName(name);
+        this.id = required(id, "id is required");
+        this.uid = required(uid, "uid is required");
+        this.name = name;
     }
 
     public static Builder newBuilder() {
@@ -22,24 +22,12 @@ public class Country {
         return id;
     }
 
-    private void setId(long id) {
-        this.id = id;
-    }
-
     public String getUid() {
         return uid;
     }
 
-    private void setUid(String uid) {
-        this.uid = uid;
-    }
-
     public String getName() {
         return name;
-    }
-
-    private void setName(String name) {
-        this.name = name;
     }
 
     public static final class Builder {

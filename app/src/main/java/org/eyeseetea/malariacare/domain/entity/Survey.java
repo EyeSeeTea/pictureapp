@@ -27,10 +27,6 @@ public class Survey {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -41,11 +37,6 @@ public class Survey {
 
     public SurveyAnsweredRatio getSurveyAnsweredRatio() {
         return mSurveyAnsweredRatio;
-    }
-
-    public void setSurveyAnsweredRatio(
-            SurveyAnsweredRatio surveyAnsweredRatio) {
-        mSurveyAnsweredRatio = surveyAnsweredRatio;
     }
 
     @Override

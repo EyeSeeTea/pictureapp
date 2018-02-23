@@ -13,11 +13,11 @@ public class Header {
     public Header(long id, String shortName, String name,
             Form form, int index) {
 
-        setId(required(id,"id is required"));
-        setShortName(required(shortName,"shortName is required"));
-        setName(required(name,"name is required"));
-        setForm(required(form,"form is required"));
-        setIndex(required(index,"index is required"));
+        this.id = required(id, "id is required");
+        this.shortName = required(shortName, "shortName is required");
+        this.name = required(name, "name is required");
+        this.form = required(form, "form is required");
+        this.index = required(index, "index is required");
     }
 
 
@@ -25,45 +25,24 @@ public class Header {
         return new Builder();
     }
 
-
     public long getId() {
         return id;
-    }
-
-    private void setId(long id) {
-        this.id = id;
     }
 
     public String getShortName() {
         return shortName;
     }
 
-    private void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
     public String getName() {
         return name;
-    }
-
-    private void setName(String name) {
-        this.name = name;
     }
 
     public Form getForm() {
         return form;
     }
 
-    private void setForm(Form form) {
-        this.form = form;
-    }
-
     public int getIndex() {
         return index;
-    }
-
-    private void setIndex(int index) {
-        this.index = index;
     }
 
     @Override

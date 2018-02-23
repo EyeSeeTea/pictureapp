@@ -43,10 +43,6 @@ public class Media {
         return program;
     }
 
-    public void setProgram(String program) {
-        this.program = program;
-    }
-
     public long getId() {
         return id;
     }
@@ -55,16 +51,8 @@ public class Media {
         return name;
     }
 
-    public void setName(String name) {
-        this.name=name;
-    }
-
     public String getResourceUrl() {
         return resourceUrl;
-    }
-
-    public void setResourceUrl(String resourceUrl) {
-        this.resourceUrl = resourceUrl;
     }
 
     public String getSize() {

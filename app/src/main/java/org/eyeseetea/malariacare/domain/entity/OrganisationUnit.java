@@ -107,35 +107,16 @@ public class OrganisationUnit {
         return sb.toString();
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getPin() {
         return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
     }
 
     public Program getProgram() {
         return mProgram;
     }
 
-    public void setProgram(Program program) {
-        mProgram = program;
-    }
-
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
 }

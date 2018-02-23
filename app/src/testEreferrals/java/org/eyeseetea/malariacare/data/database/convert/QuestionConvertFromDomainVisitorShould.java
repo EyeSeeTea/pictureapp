@@ -43,7 +43,9 @@ public class QuestionConvertFromDomainVisitorShould {
     public void convert_a_domain_question_with_no_options_to_questiondb()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWithNonOptions());
+        Question question = givenADomainQuestionBuilderWithNonOptions().build();
+
+        QuestionDB questionToEvaluate = converter.visit(question);
 
         QuestionDB expectedQuestion = givenAQuestionDBNonOptions();
 
@@ -238,26 +240,27 @@ public class QuestionConvertFromDomainVisitorShould {
 
 
     private Question givenADomainQuestionWith(Question.Type type) {
-        Question question = givenADomainQuestionWithNonOptions();
-        question.setType(type);
+        Question.Builder questionBuilder = givenADomainQuestionBuilderWithNonOptions();
+        questionBuilder.type(type);
 
-        return question;
+        return questionBuilder.build();
     }
 
     private Question givenADomainQuestionOneOption() {
-        Question question = givenADomainQuestionWithNonOptions();
+        Question.Builder questionBuilder = givenADomainQuestionBuilderWithNonOptions();
 
-        question.setOptions(new ArrayList<Option>(1));
+        List<Option> options = new ArrayList<>(1);
 
         Option firstOption = Option.newBuilder()
                 .code("FPL")
                 .name("common_option_program_familyPlanning")
                 .build();
 
-        question.getOptions().add(firstOption);
+        options.add(firstOption);
+        questionBuilder.options(options);
 
 
-        return question;
+        return questionBuilder.build();
     }
 
     private QuestionDB givenADBQuestionWithOneOption() {
@@ -278,16 +281,15 @@ public class QuestionConvertFromDomainVisitorShould {
         return questionDB;
     }
 
-    private Question givenADomainQuestionWithNonOptions() {
-       return Question
+    private Question.Builder givenADomainQuestionBuilderWithNonOptions() {
+        return Question
                 .newBuilder()
                 .uid("uid")
                 .code("program")
                 .name("ipc_issueEntry_q_program")
                 .type(Question.Type.DROPDOWN_LIST)
                 .visibility(Question.Visibility.VISIBLE)
-                .compulsory(true)
-                .build();
+                .compulsory(true);
     }
 
     private QuestionDB givenADBQuestionWithOutput(int output) {

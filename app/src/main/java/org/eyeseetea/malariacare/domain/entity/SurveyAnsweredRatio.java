@@ -43,16 +43,8 @@ public class SurveyAnsweredRatio {
         return answered;
     }
 
-    public void setAnswered(int answered) {
-        this.answered = answered;
-    }
-
     public int getTotal() {
         return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
     }
 
     /**

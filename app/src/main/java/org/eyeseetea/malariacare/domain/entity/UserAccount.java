@@ -31,10 +31,6 @@ public class UserAccount {
         return userUid;
     }
 
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
-    }
-
     public boolean canAddSurveys() {
         return canAddSurveys;
     }

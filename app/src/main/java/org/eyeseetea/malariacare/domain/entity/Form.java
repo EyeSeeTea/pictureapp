@@ -13,11 +13,11 @@ public class Form {
     public Form(long id, String name, int index, Type type,
             Country country) {
 
-        setId(required(id, "id is required"));
-        setName(required(name, "name is required"));
-        setIndex(required(index, "index is required"));
-        setType(required(type, "type is required"));
-        setCountry(required(country, "country is required"));
+        this.id = required(id, "id is required");
+        this.name = required(name, "name is required");
+        this.index = required(index, "index is required");
+        this.type = required(type, "type is required");
+        this.country = required(country, "country is required");
     }
 
     public static Builder newBuilder() {
@@ -28,40 +28,20 @@ public class Form {
         return id;
     }
 
-    private void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    private void setName(String name) {
-        this.name = name;
     }
 
     public int getIndex() {
         return index;
     }
 
-    private void setIndex(int index) {
-        this.index = index;
-    }
-
     public Type getType() {
         return type;
     }
 
-    private void setType(Type type) {
-        this.type = type;
-    }
-
     public Country getCountry() {
         return country;
-    }
-
-    private void setCountry(Country country) {
-        this.country = country;
     }
 
     public enum Type {

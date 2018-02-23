@@ -19,12 +19,12 @@ public class Configuration {
         public CountryVersion(String uid, String country, int version, Date lastUpdate,
                 String reference, String name) {
 
-            setUid(required(uid,"UID is required"));
-            setCountry(required(country,"country is required"));
-            setVersion(required(version,"version is required"));
-            setLastUpdate(required(lastUpdate,"version is required"));
-            setReference(required(reference,"reference is required"));
-            setName(name);
+            this.uid = (required(uid, "UID is required"));
+            this.country = (required(country, "country is required"));
+            this.version = (required(version, "version is required"));
+            this.lastUpdate = (required(lastUpdate, "version is required"));
+            this.reference = (required(reference, "reference is required"));
+            this.name = name;
         }
 
         public static Builder newBuilder() {
@@ -35,48 +35,25 @@ public class Configuration {
             return uid;
         }
 
-        private void setUid(String uid) {
-            this.uid = uid;
-        }
 
         public String getCountry() {
             return country;
-        }
-
-        private void setCountry(String country) {
-            this.country = country;
         }
 
         public int getVersion() {
             return version;
         }
 
-        private void setVersion(int version) {
-            this.version = version;
-        }
-
         public Date getLastUpdate() {
             return lastUpdate;
-        }
-
-        private void setLastUpdate(Date lastUpdate) {
-            this.lastUpdate = lastUpdate;
         }
 
         public String getReference() {
             return reference;
         }
 
-        private void setReference(String reference) {
-            this.reference = reference;
-        }
-
         public String getName() {
             return name;
-        }
-
-        private void setName(String name) {
-            this.name = name;
         }
 
         @Override
@@ -88,8 +65,9 @@ public class Configuration {
 
             if (version != that.version) return false;
             if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
-            if (country != null ? !country.equals(that.country) : that.country != null)
+            if (country != null ? !country.equals(that.country) : that.country != null) {
                 return false;
+            }
             if (lastUpdate != null ? !lastUpdate.equals(that.lastUpdate)
                     : that.lastUpdate != null) {
                 return false;

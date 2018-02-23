@@ -9,17 +9,14 @@ import android.util.Log;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
-import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
+import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
-import org.eyeseetea.malariacare.locale.factory.LanguageFactory;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 
@@ -37,7 +34,8 @@ public abstract class ASplashActivityStrategy {
         activity.startActivity(new Intent(activity, activityClass));
         activity.finish();
     }
-    public void initPullFilters(PullFilters pullFilters){
+
+    public void initPullFilters(PullFilters pullFilters) {
         pullFilters.setDemo(true);
     }
 
@@ -97,18 +95,14 @@ public abstract class ASplashActivityStrategy {
     public void downloadLanguagesFromServer() throws Exception {
         if (BuildConfig.downloadLanguagesFromServer) {
             Log.i(TAG, "Starting to download Languages From Server");
-            CredentialsReader cr = CredentialsReader.getInstance();
+            CredentialsReader credentialsReader = CredentialsReader.getInstance();
+            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
+                    activity);
 
-            String token = cr.getPOEditorToken();
-            String projectID = cr.getPOEditorProjectID();
+            DownloadLanguageTranslationUseCase downloader =
+                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-            ILanguagesClient client = LanguageFactory.getPOEditorApiClient(projectID, token);
-            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(activity);
-
-            LanguageDownloader downloader = LanguageFactory.getLanguageDownloader(client,
-                    connectivity);
-
-            downloader.start();
+            downloader.download();
         }
     }
 }

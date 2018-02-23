@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
+import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
@@ -44,7 +44,7 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setForm_name(domainModel.getName());
         dbModel.setOutput(getOutFrom(domainModel.getType()));
         dbModel.setCompulsory(getCompulsoryFrom(domainModel.isCompulsory()));
-        dbModel.setOptionDBS(getOptionDBsFrom(domainModel));
+        dbModel.setAnswer(getAnswerDBFromDomain(domainModel));
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
@@ -52,6 +52,12 @@ public class QuestionConvertFromDomainVisitor implements
         return dbModel;
     }
 
+    private AnswerDB getAnswerDBFromDomain(@NotNull Question domainModel){
+        AnswerDB answerDB = new AnswerDB();
+        answerDB.setOptionDBs(getOptionDBsFrom(domainModel));
+        return answerDB;
+    }
+    
     private PhoneFormatDB getPhoneFormat(PhoneFormat  domainPhoneFormat){
         return phoneFormatConverter.visit(domainPhoneFormat);
     }

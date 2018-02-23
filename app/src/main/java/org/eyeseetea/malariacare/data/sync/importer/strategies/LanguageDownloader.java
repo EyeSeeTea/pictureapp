@@ -8,6 +8,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TranslationDB_Table;
 import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB_Table;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Language;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Term;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
@@ -49,7 +50,7 @@ public class LanguageDownloader {
             for (Term term : terms) {
                 save(term, language.code);
             }
-
+            save(language);
         }
     }
 
@@ -63,6 +64,9 @@ public class LanguageDownloader {
     }
 
     private void deletePreviousTranslations(String languageCode) {
+        SQLite.delete().from(TranslationLanguageDB.class).where(
+                TranslationLanguageDB_Table.language_code.eq(languageCode)).query();
+
         SQLite.delete().from(TranslationDB.class).where(
                 TranslationDB_Table.language_code.eq(languageCode)).query();
     }
@@ -99,7 +103,6 @@ public class LanguageDownloader {
             }
 
         } else {
-            save(languageServer);
             requiresToBeDownloaded = true;
         }
         return requiresToBeDownloaded;

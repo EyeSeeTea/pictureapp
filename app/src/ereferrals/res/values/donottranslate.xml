@@ -28,6 +28,7 @@
     <string name="last_media_program">last_media_program</string>
     <string name="ancestor_level">3</string>
     <string name="number_bad_login">number_bad_login</string>
+    <string name="last_log_in_type">last_log_in_type</string>
     <string name="time_enable_login">time_enable_login</string>
     <item name="web_service_url" translatable="false" type="string">web_service_url</item>
     <item name="web_view_url" translatable="false" type="string">web_view_url</item>
@@ -36,7 +37,7 @@
     <string name="url_open_fragment">ipcOpenReferrals</string>
     <string name="url_closed_fragment">ipcRedeemedReferrals</string>
     <string name="base_web_view_url">https://apps.psi-mis.org/connect/</string>
-    <string name="composed_web_view_url">pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s</string>
+    <string name="composed_web_view_url">pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s&amp;lang=%4$s</string>
     <string name="ws_version">1.0</string>
     <string name="ws_source">Android v1.1</string>
     <string name="ws_base_url">https://apps.psi-mis.org/eRefWSProd/</string>

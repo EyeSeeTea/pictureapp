@@ -162,7 +162,7 @@ android {
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
-            versionName "1.1.0"
+            versionName "1.1.1"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -286,6 +286,9 @@ dependencies {
     // Espresso-web for WebView support
     androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
     androidTestCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
+    androidTestCompile "org.mockito:mockito-core:${libs.mockitoVersion}"
+    androidTestCompile "com.linkedin.dexmaker:dexmaker-mockito:${libs.dexmakerMockitoVersion}"
+
 
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {

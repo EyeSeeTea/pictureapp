@@ -941,4 +941,9 @@
 <string name="error_files_download_no_wifi">"Conecte-se a uma rede WiFi para baixar a mídia para este país"</string>
 <string name="error_android_version_not_supported">"Pediu desculpas, mas Connect não é compatível com a versão Android do seu dispositivo. Você deve ter o Android 5.0+ para que o Connect funcione."</string>
 <string name="error_downloading_languages">"Erro durante o download de idiomas:"</string>
+<string name="error_unable_to_find_app_than_can_open_file">Não é possível encontrar um aplicativo que abra esse arquivo</string>
+<string name="warning_strings_download_failed">Aviso, download de cadeias de caracteres falhou</string>
+<string name="error_unable_to_download_translations">Não é possível baixar traduções</string>
+<string name="error_unable_to_download_configuration_files">Não é possível baixar os arquivos de configuração</string>
+<string name="error_unable_to_download_translations_and_configuration_files">Não é possível baixar traduções e arquivos de configuração</string>
 </resources>

@@ -6,7 +6,6 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
-import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,25 +27,20 @@ public class CredentialsReader {
 
     private static CredentialsReader credentialsInstance;
 
-    public static CredentialsReader getInstance() throws ConfigJsonIOException,
-            LanguagesDownloadException {
+    public static CredentialsReader getInstance() throws ConfigJsonIOException {
         if (credentialsInstance == null) {
             credentialsInstance = new CredentialsReader();
         }
         return credentialsInstance;
     }
 
-    private CredentialsReader() throws ConfigJsonIOException, LanguagesDownloadException {
+    private CredentialsReader() throws ConfigJsonIOException {
         readJson();
         try {
             name = mJSONObject.getString(NAME_KEY);
             password = mJSONObject.getString(PASS_KEY);
 
             if (BuildConfig.downloadLanguagesFromServer) {
-                if (!mJSONObject.has(JSON_KEY_POEDITOR_TOKEN) || !mJSONObject.has(
-                        JSON_KEY_POEDITOR_PROJECT_ID)) {
-                    throw new LanguagesDownloadException();
-                }
                 poEditorToken = mJSONObject.getString(JSON_KEY_POEDITOR_TOKEN);
                 poEditorProjectID = mJSONObject.getString(JSON_KEY_POEDITOR_PROJECT_ID);
             }

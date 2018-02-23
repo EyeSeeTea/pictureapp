@@ -1,7 +1,12 @@
 package org.eyeseetea.malariacare.data.database.model;
 
 
+import static org.eyeseetea.malariacare.data.database.model.TranslationDB
+        .INDEX_NAME_STRING_KEY_AND_LANGUAGE_CODE;
+
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Index;
+import com.raizlabs.android.dbflow.annotation.IndexGroup;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -12,30 +17,37 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import java.util.List;
 
 
-@Table(database = AppDatabase.class, name = "Translation")
+@Table(database = AppDatabase.class, name = "Translation",
+        indexGroups = {@IndexGroup(number = 1,
+                name = INDEX_NAME_STRING_KEY_AND_LANGUAGE_CODE)
+        })
 public class TranslationDB extends BaseModel {
 
-    public static String DEFAULT_LANGUAGE = "default";
+    public static final String TRANSLATION_NOT_FOUND = "-1";
+    public static final String INDEX_NAME_STRING_KEY_AND_LANGUAGE_CODE =
+            "TranslationIndexStringKeyAndLanguageCode";
 
     @Column
     @PrimaryKey(autoincrement = true)
     Long id_translation;
+    @Index(indexGroups = 1)
     @Column
-    Long id_string_key;
+    String string_key;
     @Column
     String translation;
     @Column
-    String language;
+    @Index(indexGroups = 1)
+    String language_code;
 
     public TranslationDB() {
     }
 
-    public TranslationDB(Long id_translation, Long id_string_key,
-            String translation, String language) {
+    public TranslationDB(Long id_translation, String string_key, String translation,
+            String language_code) {
         this.id_translation = id_translation;
-        this.id_string_key = id_string_key;
+        this.string_key = string_key;
         this.translation = translation;
-        this.language = language;
+        this.language_code = language_code;
     }
 
     public static List<TranslationDB> getAllTranslations() {
@@ -52,14 +64,6 @@ public class TranslationDB extends BaseModel {
         this.id_translation = id_translation;
     }
 
-    public Long getId_string_key() {
-        return id_string_key;
-    }
-
-    public void setId_string_key(Long id_string_key) {
-        this.id_string_key = id_string_key;
-    }
-
     public String getTranslation() {
         return translation;
     }
@@ -68,40 +72,69 @@ public class TranslationDB extends BaseModel {
         this.translation = translation;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public static String getLocalizedString(Long id_string, String language) {
-        TranslationDB translationDB = new Select()
+    public static boolean isEmpty() {
+        long count = new Select()
                 .from(TranslationDB.class)
-                .where(TranslationDB_Table.id_string_key.is(id_string))
-                .and(TranslationDB_Table.language.is(language))
+                .count();
+        return count < 1;
+    }
+
+    private static TranslationDB getTranslationByKey(String stringKey, String languageCode) {
+        return new Select()
+                .from(TranslationDB.class)
+                .indexedBy(TranslationDB_Table
+                        .index_TranslationIndexStringKeyAndLanguageCode)
+                .where(TranslationDB_Table.string_key.is(stringKey))
+                .and(TranslationDB_Table.language_code.is(languageCode))
                 .querySingle();
-        if (translationDB == null || translationDB.getTranslation() == null
-                || translationDB.getTranslation().isEmpty()) {
-            String generalLanguage = language.split("_")[0];
-            translationDB = new Select()
-                    .from(TranslationDB.class)
-                    .where(TranslationDB_Table.id_string_key.is(id_string))
-                    .and(TranslationDB_Table.language.is(generalLanguage))
-                    .querySingle();
-        }
-        if (translationDB == null || translationDB.getTranslation() == null
-                || translationDB.getTranslation().isEmpty()) {
-            translationDB = new Select()
-                    .from(TranslationDB.class)
-                    .where(TranslationDB_Table.id_string_key.is(id_string))
-                    .and(TranslationDB_Table.language.is(DEFAULT_LANGUAGE))
-                    .querySingle();
+    }
+
+    private static boolean isTranslationEmptyOrNull(TranslationDB trans) {
+        return isTranslationNull(trans)
+                || trans.getTranslation().trim().isEmpty();
+    }
+
+    private static boolean isTranslationNull(TranslationDB trans) {
+        return trans == null || trans.getTranslation() == null;
+    }
+
+    public static String getLocalizedStringFromDB(String string_key, String language_code,
+            String defaultLanguage) {
+
+        TranslationDB translationDB = getTranslationByKey(string_key, language_code);
+
+        if (isTranslationEmptyOrNull(translationDB)) {
+            String generalLanguage = language_code.split("_")[0];
+
+            translationDB = getTranslationByKey(string_key, generalLanguage);
+
+            if (isTranslationEmptyOrNull(translationDB)) {
+                translationDB = getTranslationByKey(string_key, defaultLanguage);
+            }
         }
 
-        return translationDB != null && translationDB.getTranslation() != null
-                ? translationDB.getTranslation() : id_string + "";
+        return !isTranslationEmptyOrNull(translationDB)
+                ? translationDB.getTranslation() : TRANSLATION_NOT_FOUND;
+    }
+
+    public static boolean wasTranslationFound(String translation){
+        return !TRANSLATION_NOT_FOUND.equalsIgnoreCase(translation);
+    }
+
+    public String getString_key() {
+        return string_key;
+    }
+
+    public void setString_key(String string_key) {
+        this.string_key = string_key;
+    }
+
+    public String getLanguage_code() {
+        return language_code;
+    }
+
+    public void setLanguage_code(String language_code) {
+        this.language_code = language_code;
     }
 
     @Override
@@ -115,24 +148,23 @@ public class TranslationDB extends BaseModel {
                 : that.id_translation != null) {
             return false;
         }
-        if (id_string_key != null ? !id_string_key.equals(that.id_string_key) : that.id_string_key
-                != null) {
+        if (string_key != null ? !string_key.equals(that.string_key) : that.string_key != null) {
             return false;
         }
         if (translation != null ? !translation.equals(that.translation)
                 : that.translation != null) {
             return false;
         }
-        return language != null ? language.equals(that.language) : that.language == null;
-
+        return language_code != null ? language_code.equals(that.language_code)
+                : that.language_code == null;
     }
 
     @Override
     public int hashCode() {
         int result = id_translation != null ? id_translation.hashCode() : 0;
-        result = 31 * result + (id_string_key != null ? id_string_key.hashCode() : 0);
+        result = 31 * result + (string_key != null ? string_key.hashCode() : 0);
         result = 31 * result + (translation != null ? translation.hashCode() : 0);
-        result = 31 * result + (language != null ? language.hashCode() : 0);
+        result = 31 * result + (language_code != null ? language_code.hashCode() : 0);
         return result;
     }
 
@@ -140,11 +172,9 @@ public class TranslationDB extends BaseModel {
     public String toString() {
         return "TranslationDB{" +
                 "id_translation=" + id_translation +
-                ", id_string=" + id_string_key +
-                ", translation=" + translation +
-                ", language=" + language +
+                ", string_key='" + string_key + '\'' +
+                ", translation='" + translation + '\'' +
+                ", language_code='" + language_code + '\'' +
                 '}';
     }
-
-
 }

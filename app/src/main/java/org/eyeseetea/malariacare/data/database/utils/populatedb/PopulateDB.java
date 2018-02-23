@@ -34,6 +34,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
+import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
 import org.eyeseetea.malariacare.data.database.model.DrugDB;
 import org.eyeseetea.malariacare.data.database.model.HeaderDB;
@@ -44,18 +45,17 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitLevelDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
+import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.ScoreDB;
-import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyScheduleDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TabGroupDB;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
@@ -92,8 +92,6 @@ public class PopulateDB {
     public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
     public static final String TREATMENT_CSV = "Treatments.csv";
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
-    public static final String STRING_KEY_CSV = "StringKeys.csv";
-    public static final String TRANSLATION_CSV = "Translations.csv";
     public static final String VERSIONS_CSV = "Versions.csv";
     public static final String PHONE_FORMAT_CSV = "PhoneFormat.csv";
 
@@ -111,8 +109,6 @@ public class PopulateDB {
             SurveyDB.class,
             ValueDB.class,
             UserDB.class,
-            StringKeyDB.class,
-            TranslationDB.class,
             ProgramDB.class,
             TabDB.class,
             HeaderDB.class,
@@ -130,12 +126,12 @@ public class PopulateDB {
             DrugCombinationDB.class,
             TreatmentMatchDB.class,
             OrgUnitLevelDB.class,
-            OrgUnitDB.class
+            OrgUnitDB.class,
+            CountryVersionDB.class,
+            PhoneFormatDB.class
     );
 
     private static final List<String> tables2populate = Arrays.asList(
-            STRING_KEY_CSV,
-            TRANSLATION_CSV,
             PROGRAMS_CSV,
             TABS_CSV,
             HEADERS_CSV,
@@ -181,7 +177,6 @@ public class PopulateDB {
     static HashMap<Long, DrugDB> drugList = new HashMap<>();
     static HashMap<Long, PartnerDB> organisationList = new HashMap<>();
     static HashMap<Long, TreatmentDB> treatmentList = new HashMap<>();
-    static HashMap<Long, StringKeyDB> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
         if (PopulateDB.hasMandatoryTables()) {
@@ -341,7 +336,8 @@ public class PopulateDB {
                     case QUESTION_RELATIONS_CSV:
                         QuestionRelationDB questionRelationDB = new QuestionRelationDB();
                         questionRelationDB.setOperation(Integer.valueOf(line[1]));
-                        questionRelationDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionRelationDB.setQuestionDB(
+                                questionList.get(Integer.valueOf(line[2])));
                         questionRelationDB.save();
                         questionRelationList.put(Integer.valueOf(line[0]), questionRelationDB);
                         break;
@@ -366,7 +362,8 @@ public class PopulateDB {
                     case QUESTION_THRESHOLDS_CSV:
                         QuestionThresholdDB questionThresholdDB = new QuestionThresholdDB();
                         questionThresholdDB.setMatchDB(matchList.get(Long.valueOf(line[1])));
-                        questionThresholdDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionThresholdDB.setQuestionDB(
+                                questionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
                             questionThresholdDB.setMinValue(Integer.valueOf(line[3]));
                         }
@@ -386,8 +383,8 @@ public class PopulateDB {
                         organisationList.put(Long.parseLong(line[0]), partnerDB);
                         break;
                     case TREATMENT_CSV:
-                        TreatmentDB treatmentDB = PopulateRow.populateTreatments(line, organisationList,
-                                stringKeyList, null);
+                        TreatmentDB treatmentDB = PopulateRow.populateTreatments(line,
+                                organisationList, null);
                         treatmentDB.insert();
                         treatmentList.put(Long.parseLong(line[0]), treatmentDB);
                         break;
@@ -398,14 +395,6 @@ public class PopulateDB {
                     case TREATMENT_MATCHES_CSV:
                         PopulateRow.populateTreatmentMatches(line, treatmentList, matchList,
                                 null).insert();
-                        break;
-                    case STRING_KEY_CSV:
-                        StringKeyDB stringKeyDB = PopulateRow.populateStringKey(line, null);
-                        stringKeyDB.insert();
-                        stringKeyList.put(Long.valueOf(line[0]), stringKeyDB);
-                        break;
-                    case TRANSLATION_CSV:
-                        PopulateRow.populateTranslation(line, stringKeyList, null).insert();
                         break;
                     case PHONE_FORMAT_CSV:
                         PopulateRow.populatePhoneFormat(line, programList, null).insert();
@@ -505,6 +494,7 @@ public class PopulateDB {
         databaseDefinition.getWritableDatabase().execSQL(sqlCopy);
 
     }
+
     /**
      * Delete all surveys from database (and its related info)
      */
@@ -608,7 +598,8 @@ public class PopulateDB {
             if (line.length > 4 && !line[4].equals("")) {
                 optionAttributeDB.setVertical_alignment(Integer.valueOf(line[4]));
             } else {
-                optionAttributeDB.setVertical_alignment(OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttributeDB.setVertical_alignment(
+                        OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
             }
             if (line.length > 5 && !line[5].equals("")) {
                 optionAttributeDB.setText_size(Integer.valueOf(line[5]));
@@ -671,7 +662,8 @@ public class PopulateDB {
             if (line.length > 4 && !line[4].equals("")) {
                 optionAttributeDB.setVertical_alignment(Integer.valueOf(line[4]));
             } else {
-                optionAttributeDB.setVertical_alignment(OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttributeDB.setVertical_alignment(
+                        OptionAttributeDB.DEFAULT_VERTICAL_ALIGNMENT);
             }
             if (line.length > 5 && !line[5].equals("")) {
                 optionAttributeDB.setText_size(Integer.valueOf(line[5]));
@@ -842,8 +834,9 @@ public class PopulateDB {
                             optionDB.setFactor(Float.valueOf(line[3]));
                             optionDB.setAnswerDB(AnswerDB.findById(Long.valueOf(line[4])));
                             if (line[5] != null && !line[5].isEmpty()) {
-                                OptionAttributeDB localOptionAttributeDB = OptionAttributeDB.findById(
-                                        Long.valueOf(line[5]));
+                                OptionAttributeDB localOptionAttributeDB =
+                                        OptionAttributeDB.findById(
+                                                Long.valueOf(line[5]));
                                 if (localOptionAttributeDB == null) {
                                     localOptionAttributeDB = optionAttributeList.get(
                                             Integer.valueOf(line[5]));
@@ -908,7 +901,8 @@ public class PopulateDB {
                         }
                         QuestionRelationDB questionRelationDB = new QuestionRelationDB();
                         questionRelationDB.setOperation(Integer.valueOf(line[1]));
-                        questionRelationDB.setQuestionDB(questionList.get(Integer.valueOf(line[2])));
+                        questionRelationDB.setQuestionDB(
+                                questionList.get(Integer.valueOf(line[2])));
                         questionRelationDB.save();
                         questionRelationList.put(Integer.valueOf(line[0]), questionRelationDB);
                         break;

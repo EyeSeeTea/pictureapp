@@ -102,6 +102,11 @@ public abstract class APushUseCaseStrategy {
 
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
+            public void onStartPushing() {
+                notifyOnStart();
+            }
+
+            @Override
             public void onComplete() {
                 mPushController.changePushInProgress(false);
 
@@ -134,6 +139,8 @@ public abstract class APushUseCaseStrategy {
                     notifySurveysNotFoundError();
                 } else if (throwable instanceof ClosedUserPushException) {
                     notifyClosedUser();
+                } else if (throwable instanceof ApiCallException) {
+                    notifyApiCallError((ApiCallException) throwable);
                 } else {
                     notifyPushError();
                 }
@@ -270,10 +277,24 @@ public abstract class APushUseCaseStrategy {
     }
 
     private void notifyApiCallError(final ApiCallException e) {
+        treatApiCallException(e);
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
                 mCallback.onApiCallError(e);
+            }
+        });
+    }
+
+    protected void treatApiCallException(ApiCallException e){
+
+    }
+
+    private void notifyOnStart() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onPushStart();
             }
         });
     }

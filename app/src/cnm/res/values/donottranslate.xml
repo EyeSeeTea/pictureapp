@@ -39,4 +39,5 @@
     <string name="metadata_downloaded" translatable="false">metadata_downloaded</string>
     <string name="metadata_version" translatable="false">metadata_version</string>
     <string name="imei_preference" translatable="false">imei_prefrence</string>
+    <string name="default_language" translatable="false">en</string>
 </resources>

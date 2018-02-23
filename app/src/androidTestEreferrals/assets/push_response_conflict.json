@@ -1,0 +1,73 @@
+{
+  "versionWS":"v 1.08",
+  "response":{
+    "msg":"Success",
+    "returnCode":200,
+    "orgUnit":{  }
+  },
+  "version":"1.0",
+  "actions":[
+    {
+      "timeOnQueue":"0h",
+      "response":{
+        "msg":"-- ipc_issueEntry_msg_creatingClient ... -- ipc_issueEntry_msg_cientCreatedWithId 'x9xS9Zyf3zE'.-- ipc_issueEntry_msg_clientCUICis '%sdMd%51'.-- ipc_issueEntry_msg_enrollingClient ... -- ipc_issueEntry_msg_enrolledClientInProgram 'eReferrals - Clients'-- ipc_issueEntry_msg_creatingEventForTheClient ...-- ipc_issueEntry_msg_clientEventCreatedWithId 'cOKocmyiY43'.-- ipc_issueEntry_msg_creatingVoucher ... -- ipc_issueEntry_msg_voucherCreatedWithId 'G0PnREabEdi'.-- ipc_issueEntry_msg_addClientVoucherRelationship ... -- ipc_issueEntry_msg_relationshipAdded.-- ipc_issueEntry_msg_enrollingVoucher ... -- ipc_issueEntry_msg_voucherEnrolledInProgram 'eReferrals - Vouchers'.-- ipc_issueEntry_msg_creatingEventForVoucher ...-- ipc_issueEntry_msg_voucherCreatedWithId 'zpQTFjEk3GJ'., Logging Result: {'result':'success','insertedRow':1,'detail':'SQL Success '}",
+        "data":{
+          "voucherEventId":"zpQTFjEk3GJ",
+          "clientId":"x9xS9Zyf3zE",
+          "CUIC":"%sdMd%51",
+          "voucherId":"G0PnREabEdi",
+          "clientEventId":"cOKocmyiY43",
+          "voucherCode":"1323544116"
+        }
+      },
+      "actionId":"LRR4ZZidQ6T",
+      "type":"issueReferral",
+      "message":"Issued referral.",
+      "status":"success"
+    },
+    {
+      "timeOnQueue":"0h",
+      "response":{
+        "msg":"-- ipc_issueEntry_msg_creatingClient ... -- ipc_issueEntry_msg_clientCreatedError Invalid format: '%-01-01' , Logging Result: {'result':'success','insertedRow':1,'detail':'SQL Success '}",
+        "data":{
+
+        }
+      },
+      "actionId":"PHp2WANFHE1",
+      "type":"issueReferral",
+      "message":"Failed to issue referral. - Invalid format: '%-01-01' ",
+      "status":"failed"
+    },
+    {
+      "timeOnQueue":"0h",
+      "response":{
+        "msg":"-- ipc_issueEntry_msg_creatingClient ... -- ipc_issueEntry_msg_clientCreatedError Invalid format: '%-01-01' , Logging Result: {'result':'success','insertedRow':1,'detail':'SQL Success '}",
+        "data":{
+
+        }
+      },
+      "actionId":"NDqaWw51WJr",
+      "type":"issueReferral",
+      "message":"Failed to issue referral. - Invalid format: '%-01-01' ",
+      "status":"other"
+    },
+    {
+      "timeOnQueue":"0h",
+      "response":{
+        "msg":"-- ipc_issueEntry_msg_creatingClient ... -- ipc_issueEntry_msg_cientCreatedWithId 'qC7n5twm6uM'.-- ipc_issueEntry_msg_clientCUICis '%dsFs%52'.-- ipc_issueEntry_msg_enrollingClient ... -- ipc_issueEntry_msg_enrolledClientInProgram 'eReferrals - Clients'-- ipc_issueEntry_msg_creatingEventForTheClient ...-- ipc_issueEntry_msg_clientEventCreatedWithId 'jiW1Qey5LwP'.-- ipc_issueEntry_msg_creatingVoucher ... -- ipc_issueEntry_msg_voucherCreatedWithId 'UvmJ32odvs2'.-- ipc_issueEntry_msg_addClientVoucherRelationship ... -- ipc_issueEntry_msg_relationshipAdded.-- ipc_issueEntry_msg_enrollingVoucher ... -- ipc_issueEntry_msg_voucherEnrolledInProgram 'eReferrals - Vouchers'.-- ipc_issueEntry_msg_creatingEventForVoucher ...-- ipc_issueEntry_msg_voucherCreatedWithId 'sgRHjyvxWJt'., Logging Result: {'result':'success','insertedRow':1,'detail':'SQL Success '}",
+        "data":{
+          "voucherEventId":"sgRHjyvxWJt",
+          "clientId":"qC7n5twm6uM",
+          "CUIC":"%dsFs%52",
+          "voucherId":"UvmJ32odvs2",
+          "clientEventId":"jiW1Qey5LwP",
+          "voucherCode":"1323543058"
+        }
+      },
+      "actionId":"Ian8YUgm7T3",
+      "type":"issueReferral",
+      "message":"Issued referral.",
+      "status":"success"
+    }
+  ]
+}

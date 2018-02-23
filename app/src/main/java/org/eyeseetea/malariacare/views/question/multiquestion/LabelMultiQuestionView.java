@@ -58,12 +58,19 @@ public class LabelMultiQuestionView extends CommonQuestionView implements IQuest
         return false;
     }
 
+    @Override
+    public void requestAnswerFocus() {
+        helpTextView.requestFocus();
+    }
+
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_label_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
         helpTextView = (CustomTextView) findViewById(R.id.row_help_text);
+        helpTextView.setFocusable(true);
+        helpTextView.setFocusableInTouchMode(true);
     }
 
     private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {

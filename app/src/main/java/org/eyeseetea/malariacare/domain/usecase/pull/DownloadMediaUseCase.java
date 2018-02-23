@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
-import org.eyeseetea.malariacare.domain.exception.FileDownloadException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.sdk.common.FileUtils;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DownloadMediaUseCase implements UseCase {
     public interface Callback {
-        void onError(FileDownloadException ex);
+        void onError(Throwable ex);
 
         void onSuccess(int syncedFiles);
 
@@ -58,8 +58,28 @@ public class DownloadMediaUseCase implements UseCase {
 
         final List<Media> currentMedias = mMediaRepository.getAll();
 
+        IFileDownloader.Callback callback = new IFileDownloader.Callback() {
+            @Override
+            public void onError(Throwable ex) {
+                notifyDownloadError(ex);
+                mFileDownloader.changeFileDownloaderIProgress(false);
+                notifyDownloadInProgressChanges(false);
+            }
+
+            @Override
+            public void onSuccess(List<Media> syncMedias) {
+                int numOfSyncedFiles = saveDownloadedMedia(syncMedias);
+
+                removeNotDownloadedMedia(syncMedias, currentMedias);
+                notifyDownloadSuccess(numOfSyncedFiles);
+                mFileDownloader.changeFileDownloaderIProgress(false);
+                notifyDownloadInProgressChanges(false);
+            }
+
+        };
+
         if (mConnectivityManager.isDeviceOnline()) {
-            if(mFileDownloader.isFileDownloaderIProgress()) {
+            if (mFileDownloader.isFileDownloaderIProgress()) {
                 System.out.println("File downloader is already downloading");
                 return;
             }
@@ -71,28 +91,11 @@ public class DownloadMediaUseCase implements UseCase {
             mFileDownloader.download(currentMedias,
                     PreferencesState.getInstance().getDriveRootFolderUid(),
                     mProgramRepository.getUserProgram().getCode(),
-                    new IFileDownloader.Callback() {
-                        @Override
-                        public void onError(FileDownloadException ex) {
-                            notifyDownloadError(ex);
-                            mFileDownloader.changeFileDownloaderIProgress(false);
-                            notifyDownloadInProgressChanges(false);
-                        }
-
-                        @Override
-                        public void onSuccess(List<Media> syncMedias) {
-                            int numOfSyncedFiles = saveDownloadedMedia(syncMedias);
-
-                            removeNotDownloadedMedia(syncMedias, currentMedias);
-                            notifyDownloadSuccess(numOfSyncedFiles);
-                            mFileDownloader.changeFileDownloaderIProgress(false);
-                            notifyDownloadInProgressChanges(false);
-                        }
-
-                    });
+                    callback);
         } else {
             System.out.println(this.getClass().getSimpleName()
                     + ": No wifi connection available. Media will not be synced");
+            callback.onError(new NetworkException());
             mFileDownloader.changeFileDownloaderIProgress(false);
         }
     }
@@ -140,7 +143,7 @@ public class DownloadMediaUseCase implements UseCase {
         });
     }
 
-    private void notifyDownloadError(final FileDownloadException exception) {
+    private void notifyDownloadError(final Throwable exception) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {

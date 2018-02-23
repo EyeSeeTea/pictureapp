@@ -44,6 +44,41 @@ public class Form {
         return country;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Form form = (Form) o;
+
+        if (id != form.id) return false;
+        if (index != form.index) return false;
+        if (name != null ? !name.equals(form.name) : form.name != null) return false;
+        if (type != form.type) return false;
+        return country != null ? country.equals(form.country) : form.country == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + index;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Form{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", index=" + index +
+                ", type=" + type +
+                ", country=" + country +
+                '}';
+    }
+
     public enum Type {
         AUTOMATIC, AUTOMATIC_NON_SCORED, COMPOSITE_SCORE, SCORE_SUMMARY,
         ADHERENCE, IQA, REPORTING, DYNAMIC_AUTOMATIC, MULTI_QUESTION,

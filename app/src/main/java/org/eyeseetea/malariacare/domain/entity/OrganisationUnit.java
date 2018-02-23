@@ -119,4 +119,52 @@ public class OrganisationUnit {
         return code;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrganisationUnit that = (OrganisationUnit) o;
+
+        if (banned != that.banned) return false;
+        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (code != null ? !code.equals(that.code) : that.code != null) return false;
+        if (description != null ? !description.equals(that.description)
+                : that.description != null) {
+            return false;
+        }
+        if (closedDate != null ? !closedDate.equals(that.closedDate) : that.closedDate != null) {
+            return false;
+        }
+        if (pin != null ? !pin.equals(that.pin) : that.pin != null) return false;
+        return mProgram != null ? mProgram.equals(that.mProgram) : that.mProgram == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uid != null ? uid.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (closedDate != null ? closedDate.hashCode() : 0);
+        result = 31 * result + (banned ? 1 : 0);
+        result = 31 * result + (pin != null ? pin.hashCode() : 0);
+        result = 31 * result + (mProgram != null ? mProgram.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "OrganisationUnit{" +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
+                ", closedDate=" + closedDate +
+                ", banned=" + banned +
+                ", pin='" + pin + '\'' +
+                ", mProgram=" + mProgram +
+                '}';
+    }
 }

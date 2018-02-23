@@ -38,4 +38,14 @@ public class UserAccount {
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
     }
+
+    @Override
+    public String toString() {
+        return "UserAccount{" +
+                "userName='" + userName + '\'' +
+                ", userUid='" + userUid + '\'' +
+                ", isDemo=" + isDemo +
+                ", canAddSurveys=" + canAddSurveys +
+                '}';
+    }
 }

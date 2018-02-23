@@ -130,6 +130,45 @@ public class Option {
             return textSize;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Attribute attribute = (Attribute) o;
+
+            if (id != attribute.id) return false;
+            if (textSize != attribute.textSize) return false;
+            if (backgroundColour != null ? !backgroundColour.equals(attribute.backgroundColour)
+                    : attribute.backgroundColour != null) {
+                return false;
+            }
+            if (horizontalAlignment != attribute.horizontalAlignment) return false;
+            return verticalAlignment == attribute.verticalAlignment;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (int) (id ^ (id >>> 32));
+            result = 31 * result + (backgroundColour != null ? backgroundColour.hashCode() : 0);
+            result = 31 * result + (horizontalAlignment != null ? horizontalAlignment.hashCode()
+                    : 0);
+            result = 31 * result + (verticalAlignment != null ? verticalAlignment.hashCode() : 0);
+            result = 31 * result + textSize;
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Attribute{" +
+                    "id=" + id +
+                    ", backgroundColour='" + backgroundColour + '\'' +
+                    ", horizontalAlignment=" + horizontalAlignment +
+                    ", verticalAlignment=" + verticalAlignment +
+                    ", textSize=" + textSize +
+                    '}';
+        }
+
         public enum HorizontalAlignment {
             LEFT, CENTER, RIGHT, NONE;
         }
@@ -211,6 +250,36 @@ public class Option {
 
         public Question getActionSubject() {
             return actionSubject;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Rule rule = (Rule) o;
+
+            if (operator != rule.operator) return false;
+            if (action != rule.action) return false;
+            return actionSubject != null ? actionSubject.equals(rule.actionSubject)
+                    : rule.actionSubject == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = operator != null ? operator.hashCode() : 0;
+            result = 31 * result + (action != null ? action.hashCode() : 0);
+            result = 31 * result + (actionSubject != null ? actionSubject.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Rule{" +
+                    "operator=" + operator +
+                    ", action=" + action +
+                    ", actionSubject=" + actionSubject +
+                    '}';
         }
 
         public enum Operator {

@@ -71,6 +71,17 @@ public class Header {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Header{" +
+                "id=" + id +
+                ", shortName='" + shortName + '\'' +
+                ", name='" + name + '\'' +
+                ", form=" + form +
+                ", index=" + index +
+                '}';
+    }
+
     public static final class Builder {
         private long id;
         private String shortName;

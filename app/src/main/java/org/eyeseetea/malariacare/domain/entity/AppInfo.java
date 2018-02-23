@@ -29,4 +29,12 @@ public class AppInfo {
         return metadataDownloaded;
     }
 
+   @Override
+    public String toString() {
+        return "AppInfo{" +
+                "metadataVersion='" + metadataVersion + '\'' +
+                ", appVersion='" + appVersion + '\'' +
+                ", metadataDownloaded=" + metadataDownloaded +
+                '}';
+    }
 }

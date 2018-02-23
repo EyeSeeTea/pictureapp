@@ -79,4 +79,11 @@ public class SurveyAnsweredRatio {
         return answered >= total;
     }
 
+    @Override
+    public String toString() {
+        return "SurveyAnsweredRatio{" +
+                "total=" + total +
+                ", answered=" + answered +
+                '}';
+    }
 }

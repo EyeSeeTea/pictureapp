@@ -57,36 +57,15 @@ public class Configuration {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            CountryVersion that = (CountryVersion) o;
-
-            if (version != that.version) return false;
-            if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
-            if (country != null ? !country.equals(that.country) : that.country != null) {
-                return false;
-            }
-            if (lastUpdate != null ? !lastUpdate.equals(that.lastUpdate)
-                    : that.lastUpdate != null) {
-                return false;
-            }
-            if (reference != null ? !reference.equals(that.reference) : that.reference != null) {
-                return false;
-            }
-            return name != null ? name.equals(that.name) : that.name == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = uid != null ? uid.hashCode() : 0;
-            result = 31 * result + (country != null ? country.hashCode() : 0);
-            result = 31 * result + version;
-            result = 31 * result + (lastUpdate != null ? lastUpdate.hashCode() : 0);
-            result = 31 * result + (reference != null ? reference.hashCode() : 0);
-            result = 31 * result + (name != null ? name.hashCode() : 0);
-            return result;
+        public String toString() {
+            return "CountryVersion{" +
+                    "uid='" + uid + '\'' +
+                    ", country='" + country + '\'' +
+                    ", version=" + version +
+                    ", lastUpdate=" + lastUpdate +
+                    ", reference='" + reference + '\'' +
+                    ", name='" + name + '\'' +
+                    '}';
         }
 
 

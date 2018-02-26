@@ -31,7 +31,8 @@
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:text="@string/province"
         android:textColor="@color/gray_text_survey"
-        android:textSize="?attr/font_small" />
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_province"
@@ -53,7 +54,8 @@
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:text="@string/district"
         android:textColor="@color/gray_text_survey"
-        android:textSize="?attr/font_small" />
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_district"
@@ -75,7 +77,8 @@
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:text="@string/commune"
         android:textColor="@color/gray_text_survey"
-        android:textSize="?attr/font_small" />
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_commune"
@@ -97,7 +100,8 @@
         android:paddingRight="@dimen/input_edit_text_right_padding"
         android:text="@string/village"
         android:textColor="@color/gray_text_survey"
-        android:textSize="?attr/font_small" />
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_village"

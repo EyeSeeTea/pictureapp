@@ -10,6 +10,19 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
 
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:gravity="left"
+        android:layout_gravity="center"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/font_name_bold"/>
+
     <org.eyeseetea.sdk.presentation.views.CustomEditText
         android:id="@+id/answer"
         android:layout_width="match_parent"

@@ -27,7 +27,8 @@ public abstract class ASplashActivityStrategy {
         activity.startActivity(new Intent(activity, activityClass));
         activity.finish();
     }
-    public void initPullFilters(PullFilters pullFilters){
+
+    public void initPullFilters(PullFilters pullFilters) {
         pullFilters.setDemo(true);
     }
 
@@ -78,5 +79,13 @@ public abstract class ASplashActivityStrategy {
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
             int[] grantResults) {
 
+    }
+
+    public boolean canEnterApp() {
+        return true;
+    }
+
+    public void downloadLanguagesFromServer() {
+        //By default, variants do nothing
     }
 }

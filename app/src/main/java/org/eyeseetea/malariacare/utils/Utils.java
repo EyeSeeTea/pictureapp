@@ -19,14 +19,18 @@
 
 package org.eyeseetea.malariacare.utils;
 
+import static org.eyeseetea.malariacare.data.database.model.TranslationDB.getLocalizedStringFromDB;
+import static org.eyeseetea.malariacare.data.database.model.TranslationDB.wasTranslationFound;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 
-import org.apache.commons.lang3.StringUtils;
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.BufferedReader;
@@ -58,36 +62,73 @@ public class Utils {
         return round(base, Utils.numberOfDecimals);
     }
 
-    public static String getInternationalizedString(String name) {
-        if (name == null) {
+    private static String getUserLanguage(@NonNull Context context) {
+        String activeLocale = PreferencesState.getInstance().getLanguageCode();
+
+        if (activeLocale != null || activeLocale.isEmpty()) {
+            activeLocale = context.getResources().getConfiguration().locale.getLanguage();
+        }
+        return activeLocale;
+    }
+
+    @StringRes
+    private static int getStringResByKey(@NonNull String key, @NonNull Context context) {
+        return context.getResources().getIdentifier(key, "string",
+                context.getPackageName());
+    }
+
+
+    @NonNull
+    public static String getInternationalizedString(@NonNull String key) {
+        Context context = PreferencesState.getInstance().getContext();
+        String defaultLanguage = context.getString(R.string.default_language);
+        String language = getUserLanguage(context);
+        String translation = getLocalizedStringFromDB(key, language, defaultLanguage);
+
+        if (key == null) {
             return "";
         }
-        Context context = PreferencesState.getInstance().getContext();
 
-        int identifier = context.getResources().getIdentifier(name, "string",
-                context.getPackageName());
+        if (BuildConfig.downloadLanguagesFromServer &&
+                wasTranslationFound(translation)) {
+            return translation;
+        } else {
+            return findStringFromAndroidResource(context, key, language);
+        }
+    }
+
+    public static String getUserLanguageOrDefault(Context context ){
+        String language = getUserLanguage(context);
+
+        if(language !=null && !language.isEmpty()){
+            return language;
+        }else {
+            return context.getString(R.string.default_language);
+        }
+    }
+
+    @NonNull
+    private static String findStringFromAndroidResource(Context context, @NonNull String key,
+            String languageCode) {
+
+        int identifier = getStringResByKey(key, context);
+        String translation = "";
+
         //if the id is 0 it not exist.
         if (identifier != 0) {
             try {
-                String activeLocale = PreferencesState.getInstance().getLanguageCode();
-                if(activeLocale.equals("")){
-                    Locale locale = Resources.getSystem().getConfiguration().locale;
-                    activeLocale = locale.getLanguage();
-                }
-                name = getLocateString(activeLocale, identifier);
+                translation = getLocateString(context, languageCode, identifier);
             } catch (Resources.NotFoundException notFoundException) {
-                if (StringUtils.isNumeric(name)) {
-                    name = TranslationDB.getLocalizedString(Long.valueOf(name),
-                            context.getResources().getConfiguration().locale.toString());
-                }
+                translation = key;
             }
+        } else {
+            translation = key;
         }
-
-        return name;
+        return translation;
     }
 
-    private static String getLocateString(String locate, int stringId) {
-        Context context = PreferencesState.getInstance().getContext();
+    @NonNull
+    private static String getLocateString(Context context, String locate, @StringRes int stringId) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         Resources r = context.getResources();
         Configuration c = r.getConfiguration();
@@ -95,7 +136,7 @@ public class Utils {
         Resources res = new Resources(context.getAssets(), metrics, c);
         return res.getString(stringId);
     }
-    
+
     public static String getCommitHash(Context context) {
         String stringCommit;
         //Check if lastcommit.txt file exist, and if not exist show as unavailable.
@@ -189,7 +230,8 @@ public class Utils {
         return df.format(date);
 
     }
-    public static Calendar parseStringToCalendar(String datestring,String dateFormat) {
+
+    public static Calendar parseStringToCalendar(String datestring, String dateFormat) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
         try {
@@ -201,7 +243,7 @@ public class Utils {
         return calendar;
     }
 
-    public static String getStringFromCalendarWithFormat(Calendar calendar,String dateFormat){
+    public static String getStringFromCalendarWithFormat(Calendar calendar, String dateFormat) {
         SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
         return format.format(calendar.getTime());
     }
@@ -249,8 +291,9 @@ public class Utils {
 
     /**
      * Method to get if the endDate is grater or equal than the startDate
+     *
      * @param starDate The start date to compare with.
-     * @param endDate The date tha has to be greater or equals to the start date.
+     * @param endDate  The date tha has to be greater or equals to the start date.
      * @return True if is greater or equals false if not.
      */
     public static boolean dateGreaterOrEqualsThanDate(Date starDate, Date endDate) {

@@ -33,6 +33,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -40,6 +41,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
@@ -64,6 +66,7 @@ import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -1053,6 +1056,37 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         for (SurveyDB surveyDB : surveyDBs) {
             surveyDB.delete();
         }
+    }
+
+    public static void deleteOlderSentSurveys(int numberOfDaysAfter) {
+
+        Date dateWithDaysAdded = minusDaysTo(new Date(),numberOfDaysAfter);
+        List<SurveyDB> sentSurveys = getAllSentSurveysOlderThan(dateWithDaysAdded);
+
+        deleteSurveys(sentSurveys);
+    }
+
+    public static void deleteSurveys(List<SurveyDB> surveys) {
+        for (SurveyDB surveyDB : surveys) {
+                new Delete().from(ValueDB.class).where(
+                        ValueDB_Table.id_survey_fk.eq(surveyDB.getId_survey()));
+                surveyDB.delete();
+        }
+    }
+
+    @NonNull
+    public static Date minusDaysTo(Date date,int numberOfDaysAfter) {
+        DateTime dateTime = new DateTime(date);
+        dateTime = dateTime.minusDays(numberOfDaysAfter);
+        return dateTime.toDate();
+    }
+
+    @NonNull
+    public static List<SurveyDB> getAllSentSurveysOlderThan(Date oldestAllowedDate) {
+
+        return new Select().from(SurveyDB.class).where(
+                SurveyDB_Table.status.is(Constants.SURVEY_SENT),
+                SurveyDB_Table.event_date.lessThanOrEq(oldestAllowedDate)).queryList();
     }
 
     public OptionDB getOptionSelectedForQuestionCode(String questionCode) {

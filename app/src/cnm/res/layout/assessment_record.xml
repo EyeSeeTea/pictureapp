@@ -66,20 +66,26 @@
                 android:id="@+id/statusContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/second_line"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/white"
+                    android:textColor="@color/gray_text_survey"
                     android:textSize="?attr/font_small"
                     android:textStyle="bold"
                     app:font_name="@string/normal_font" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:id="@+id/stock_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="8dp"
+        android:background="@color/gray_text_survey" />
 
 </LinearLayout>

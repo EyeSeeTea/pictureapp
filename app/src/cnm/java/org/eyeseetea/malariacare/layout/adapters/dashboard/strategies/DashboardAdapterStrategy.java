@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
@@ -33,6 +34,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         TextView firstLine = (TextView) rowView.findViewById(R.id.first_line);
         TextView secondLine = (TextView) rowView.findViewById(R.id.second_line);
         ImageView imageStock = (ImageView) rowView.findViewById(R.id.image_stock);
+        View lineStock = rowView.findViewById(R.id.stock_line);
 
         String date = Utils.parseDateToString(survey.getEventDate(),
                 mContext.getString(R.string.date_survey_format));
@@ -94,13 +96,31 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
         if (isStockSurvey) {
             imageStock.setVisibility(View.VISIBLE);
+            lineStock.setVisibility(View.VISIBLE);
             imageStock.setImageDrawable(
                     mContext.getResources().getDrawable(getImageForSurvey(survey)));
+            addStockValues(secondLine, survey);
         } else {
             imageStock.setVisibility(View.GONE);
+            lineStock.setVisibility(View.GONE);
         }
 
         setBackgroundToLayout(important, rowView);
+    }
+
+    private void addStockValues(TextView secondLine, SurveyDB survey) {
+        secondLine.setVisibility(View.VISIBLE);
+        List<QuestionDB> questions = survey.getQuestionsFromValues();
+        List<ValueDB> values = survey.getValueDBs();
+        String valuesText = "";
+        for (int i = 0; i < questions.size(); i++) {
+            valuesText += questions.get(i).getInternationalizedForm_name() + ": ";
+            valuesText += values.get(i).getValue();
+            if (i < questions.size() - 1) {
+                valuesText += ", ";
+            }
+        }
+        secondLine.setText(valuesText);
     }
 
     private void setBackgroundToLayout(List<ValueDB> important, View rowView) {

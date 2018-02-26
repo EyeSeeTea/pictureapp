@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionConvertFromDomainVisitorShould {
 
@@ -44,7 +45,9 @@ public class QuestionConvertFromDomainVisitorShould {
     public void convert_a_domain_question_with_no_options_to_questiondb()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWithNonOptions());
+        Question question = givenADomainQuestionBuilderWithNonOptions();
+
+        QuestionDB questionToEvaluate = converter.visit(question);
 
         QuestionDB expectedQuestion = givenAQuestionDBNonOptions();
 
@@ -226,29 +229,45 @@ public class QuestionConvertFromDomainVisitorShould {
     }
 
     private Question givenADomainQuestionWith(Question.Type type) {
-        Question question = givenADomainQuestionWithNonOptions();
-        question.setType(type);
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .type(type)
+                .compulsory(true).build();
+
 
         return question;
     }
 
     private Question givenADomainQuestionOneOption() {
-        Question question = givenADomainQuestionWithNonOptions();
+        List<Option> options = new ArrayList<>(1);
 
-        question.setOptions(new ArrayList<Option>(1));
+        Option firstOption = Option.newBuilder()
+                .code("FPL")
+                .name("common_option_program_familyPlanning")
+                .build();
 
-        Option firstOption = new Option();
-        firstOption.setCode("FPL");
-        firstOption.setName("common_option_program_familyPlanning");
+        options.add(firstOption);
 
-        question.getOptions().add(firstOption);
-
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .options(options)
+                .compulsory(true).build();
 
         return question;
     }
 
     private Question givenADomainQuestionWithVisibility(Question.Visibility visibility) {
-        Question question = givenADomainQuestionWithNonOptions();
+        Question question = givenADomainQuestionBuilderWithNonOptions();
         question.setVisibility(visibility);
         return question;
     }
@@ -266,16 +285,15 @@ public class QuestionConvertFromDomainVisitorShould {
         return questionDB;
     }
 
-    private Question givenADomainQuestionWithNonOptions() {
-        Question question = new Question();
-        question.setCode("program");
-        question.setName("ipc_issueEntry_q_program");
-        question.setType(Question.Type.DROPDOWN_LIST);
-        question.setVisibility(Question.Visibility.VISIBLE);
-        question.setCompulsory(true);
-
-
-        return question;
+    private Question givenADomainQuestionBuilderWithNonOptions() {
+        return Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .compulsory(true).build();
     }
 
     private QuestionDB givenADBQuestionWithOutput(int output) {

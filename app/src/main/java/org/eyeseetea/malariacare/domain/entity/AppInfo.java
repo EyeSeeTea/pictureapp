@@ -29,11 +29,12 @@ public class AppInfo {
         return metadataDownloaded;
     }
 
-    public void setMetadataDownloaded(boolean metadataDownloaded) {
-        this.metadataDownloaded = metadataDownloaded;
-    }
-
-    public void setMetadataVersion(String metadataVersion) {
-        this.metadataVersion = metadataVersion;
+   @Override
+    public String toString() {
+        return "AppInfo{" +
+                "metadataVersion='" + metadataVersion + '\'' +
+                ", appVersion='" + appVersion + '\'' +
+                ", metadataDownloaded=" + metadataDownloaded +
+                '}';
     }
 }

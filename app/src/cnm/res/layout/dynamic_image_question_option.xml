@@ -9,21 +9,21 @@
     <ImageView
         android:id="@+id/optionImage"
         android:layout_centerInParent="true"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:scaleType="fitCenter" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/optionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="155dp"
         android:gravity="center"
-        android:padding="5dip"
         android:layout_above="@+id/optionImage"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
-        android:textSize="?attr/font_medium"
-        app:font_name="@string/normal_font" />
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/optionCounterText"

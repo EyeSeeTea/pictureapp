@@ -7,6 +7,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
+
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/row_header_text"
         android:layout_width="match_parent"
@@ -18,10 +19,20 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/white"
+        android:textColor="@color/gray_text_survey"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
 
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/input_edit_text_left_padding"
+        android:paddingRight="@dimen/input_edit_text_right_padding"
+        android:text="@string/province"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_province"
@@ -33,10 +44,18 @@
         android:background="@drawable/spinner_background"
         android:spinnerMode="dropdown"
         android:paddingBottom="2dip"
-        android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
-        android:paddingTop="2dip"
-        android:textColor="@color/black" />
+        android:textColor="@color/gray_text_survey" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/input_edit_text_left_padding"
+        android:text="@string/district"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_district"
@@ -46,12 +65,20 @@
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
         android:paddingBottom="2dip"
-        android:paddingLeft="@dimen/input_edit_text_left_padding"
-        android:paddingRight="@dimen/input_edit_text_right_padding"
-        android:paddingTop="2dip"
         android:spinnerMode="dropdown"
         android:background="@drawable/spinner_background"
-        android:textColor="@color/black" />
+        android:textColor="@color/gray_text_survey" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/input_edit_text_left_padding"
+        android:paddingRight="@dimen/input_edit_text_right_padding"
+        android:text="@string/commune"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_commune"
@@ -60,13 +87,21 @@
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
         android:paddingBottom="2dip"
-        android:paddingLeft="@dimen/input_edit_text_left_padding"
-        android:paddingRight="@dimen/input_edit_text_right_padding"
-        android:paddingTop="2dip"
         android:spinnerMode="dropdown"
         android:layout_marginTop="10dp"
         android:background="@drawable/spinner_background"
-        android:textColor="@color/black" />
+        android:textColor="@color/gray_text_survey" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/input_edit_text_left_padding"
+        android:paddingRight="@dimen/input_edit_text_right_padding"
+        android:text="@string/village"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomSpinner
         android:id="@+id/spinner_village"
@@ -75,13 +110,10 @@
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
         android:paddingBottom="2dip"
-        android:paddingLeft="@dimen/input_edit_text_left_padding"
-        android:paddingRight="@dimen/input_edit_text_right_padding"
-        android:paddingTop="2dip"
         android:spinnerMode="dropdown"
         android:layout_marginTop="10dp"
         android:background="@drawable/spinner_background"
-        android:textColor="@color/black" />
+        android:textColor="@color/gray_text_survey" />
 
     <View
         android:layout_width="1000dp"

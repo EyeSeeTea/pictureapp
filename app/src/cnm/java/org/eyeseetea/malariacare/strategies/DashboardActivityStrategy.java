@@ -1,9 +1,10 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.os.Bundle;
 import android.view.View;
-
-import com.raizlabs.android.dbflow.sql.language.Select;
+import android.widget.TabHost;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -13,6 +14,11 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 /**
  * Created by manuel on 28/12/16.
@@ -21,6 +27,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
+    DashboardUnsentFragment stockFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -34,23 +41,47 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-
+        if (stockFragment != null && stockFragment.isAdded()) {
+            stockFragment.reloadHeader(activity);
+            stockFragment.reloadData();
+        } else {
+            showStockFragment(activity, false);
+        }
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        return false;
+        stockFragment = new DashboardUnsentFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(DashboardUnsentFragmentStrategy.IS_STOCK_FRAGMENT, true);
+        stockFragment.setArguments(bundle);
+        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+                stockFragment);
+        stockFragment.reloadData();
+        stockFragment.reloadHeader(activity);
+
+        return isMoveToLeft;
     }
 
     @Override
     public void newSurvey(Activity activity) {
-        ProgramDB program = new Select().from(ProgramDB.class).querySingle();
+        ProgramDB program = ProgramDB.findByUID(
+                activity.getString(R.string.malaria_program_uid));
+        ProgramDB stockProgram = ProgramDB.findByUID(
+                activity.getString(R.string.stock_program_uid));
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);
         SurveyDB survey = new SurveyDB(orgUnit, program, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
+        SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
+                Constants.SURVEY_ISSUE);
+        stockSurvey.setEventDate(
+                survey.getEventDate());//asociate the malaria survey to the stock survey
+        stockSurvey.save();
+        Session.setStockSurveyDB(stockSurvey);
+
         //Look for coordinates
         prepareLocationListener(activity, survey);
         activity.findViewById(R.id.common_header).setVisibility(View.GONE);
@@ -61,6 +92,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
+        Session.getStockSurveyDB().updateSurveyStatus();
         mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
     }
 
@@ -86,10 +118,24 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void completeSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
+        //Complete stockSurvey
+        Session.getStockSurveyDB().updateSurveyStatus();
     }
 
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
+        if (isFragmentActive(activity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_container)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
+        Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
         return false;
     }
 
@@ -103,4 +149,62 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
 
     }
+
+    public void initTabWidget(TabHost tabHost, Fragment reviewFragment,
+            final Fragment surveyFragment,
+            final boolean isReadOnly) {
+         /* set tabs in order */
+        LayoutUtils.setTabHosts(mDashboardActivity);
+        LayoutUtils.setTabDivider(mDashboardActivity);
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                /** If current tab is android */
+
+                //set the tabs background as transparent
+//                setTabsBackgroundColor(R.color.tab_unpressed_background);
+
+                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
+                if (isSurveyFragmentActive(surveyFragment)) {
+                    mDashboardActivity.onSurveyBackPressed();
+                }
+                if (isReviewFragmentActive(surveyFragment)) {
+                    mDashboardActivity.exitReviewOnChangeTab(null);
+                }
+                if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_assess))) {
+                    if (!isReadOnly) {
+                        reloadFirstFragment();
+                    }
+                    reloadFirstFragmentHeader();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_improve))) {
+                    reloadSecondFragment();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_stock))) {
+                    reloadStockFragment(mDashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_monitor))) {
+                    if (GradleVariantConfig.isMonitoringFragmentActive()) {
+                        reloadFourthFragment();
+                    }
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
+                    reloadAVFragment();
+                }
+            }
+        });
+        // init tabHost
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_below_line);
+        }
+        tabHost.getTabWidget().setStripEnabled(true);
+        tabHost.getTabWidget().setRightStripDrawable(R.drawable.background_odd);
+        tabHost.getTabWidget().setLeftStripDrawable(R.drawable.background_odd);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,6 +26,8 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 public abstract class ADashboardActivityStrategy {
     private final static String TAG = ".DashActivityStrategy";
@@ -236,5 +239,102 @@ public abstract class ADashboardActivityStrategy {
     }
     public void onConnectivityStatusChange() {
 
+    }
+
+    /**
+     * Checks if a survey fragment is active
+     */
+    protected boolean isReviewFragmentActive(Fragment reviewFragment) {
+        return isFragmentActive(reviewFragment, getSurveyContainer());
+    }
+
+    /**
+     * Checks if a survey fragment is active
+     */
+    protected boolean isSurveyFragmentActive(Fragment surveyFragment) {
+        return isFragmentActive(surveyFragment, getSurveyContainer());
+    }
+
+    protected boolean isNewHistoricReceiptBalanceFragmentActive() {
+        return isHistoricNewReceiptBalanceFragment(mDashboardActivity);
+    }
+
+    /**
+     * Checks if a dashboardUnsentFragment is active
+     */
+    public boolean isFragmentActive(Fragment fragment, int layout) {
+        Fragment currentFragment = mDashboardActivity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment != null && currentFragment.equals(fragment)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void initTabWidget(final TabHost tabHost, final Fragment reviewFragment,
+            final Fragment surveyFragment,
+            final boolean isReadOnly) {
+          /* set tabs in order */
+        LayoutUtils.setTabHosts(mDashboardActivity);
+        LayoutUtils.setTabDivider(mDashboardActivity);
+        //set the tabs background as transparent
+        setTabsBackgroundColor(R.color.tab_unpressed_background, tabHost);
+
+        //set first tab as selected:
+        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(
+                mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                /** If current tab is android */
+
+                //set the tabs background as transparent
+                setTabsBackgroundColor(R.color.tab_unpressed_background, tabHost);
+
+                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
+                if (isSurveyFragmentActive(surveyFragment)) {
+                    mDashboardActivity.onSurveyBackPressed();
+                }
+                if (isReviewFragmentActive(reviewFragment)) {
+                    mDashboardActivity.exitReviewOnChangeTab(null);
+                }
+                if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_assess))) {
+                    if (!isReadOnly) {
+                        reloadFirstFragment();
+                    }
+                    reloadFirstFragmentHeader();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_improve))) {
+                    reloadSecondFragment();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_stock))) {
+                    reloadStockFragment(mDashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_monitor))) {
+                    if (GradleVariantConfig.isMonitoringFragmentActive()) {
+                        reloadFourthFragment();
+                    }
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
+                    reloadAVFragment();
+                }
+                tabHost.getCurrentTabView().setBackgroundColor(
+                        mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
+            }
+        });
+        // init tabHost
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+        }
+    }
+
+    private void setTabsBackgroundColor(int color, TabHost tabHost) {
+        //set the tabs background as transparent
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setBackgroundColor(
+                    mDashboardActivity.getResources().getColor(color));
+        }
     }
 }

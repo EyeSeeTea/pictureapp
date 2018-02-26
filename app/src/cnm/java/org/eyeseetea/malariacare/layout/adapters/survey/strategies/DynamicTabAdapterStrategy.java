@@ -5,8 +5,12 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.DrugCombinationDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -71,5 +75,25 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     @Override
     protected boolean shouldShowReviewScreen() {
         return true;
+    }
+
+    @Override
+    public void evaluateTreatmentMatch(QuestionDB questionDB, OptionDB selectedOptionDB,
+            QuestionRelationDB questionRelationDB) {
+        QuestionDB questionRelated = questionRelationDB.getQuestionDB();
+        String valueToSave = "1";
+        if (questionRelationDB.getOperation() == QuestionRelationDB.TREATMENT_NO_MATCH) {
+            valueToSave = "0";
+        } else {
+            List<DrugCombinationDB> drugCombinationDBS = TreatmentMatchDB.getDrugCombinationDB(
+                    questionRelationDB.getId_question_relation());
+            for (DrugCombinationDB drugCombinationDB : drugCombinationDBS) {
+                if (drugCombinationDB.getDrugDB().getQuestion_code().equals(
+                        questionRelated.getUid())) {
+                    valueToSave = Integer.toString((int) drugCombinationDB.getDose());
+                }
+            }
+        }
+        questionRelated.saveValuesText(valueToSave);
     }
 }

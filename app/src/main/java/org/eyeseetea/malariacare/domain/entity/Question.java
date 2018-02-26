@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
@@ -18,6 +19,12 @@ public class Question {
     private int index;
     private Visibility visibility;
     private List<Rule> rules;
+    private String mQuestionText;
+
+    public Question(String uid, String questionText) {
+        this.uid = required(uid, "uid is required");
+        this.mQuestionText = required(questionText, "questionText is required");
+    }
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
@@ -97,6 +104,10 @@ public class Question {
 
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
+    }
+
+    public String getQuestionText() {
+        return mQuestionText;
     }
 
     @Override

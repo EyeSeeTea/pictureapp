@@ -3,8 +3,9 @@ package org.eyeseetea.malariacare.network.factory;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.network.ConnectivityStatus;
+
 
 public class NetworkManagerFactory {
 
@@ -16,7 +17,7 @@ public class NetworkManagerFactory {
             sConnectivityManager = new IConnectivityManager() {
                 @Override
                 public boolean isDeviceOnline() {
-                    return ConnectivityStatus.isConnected(context);
+                    return new ConnectivityManager().isDeviceOnline();
                 }
             };
         }

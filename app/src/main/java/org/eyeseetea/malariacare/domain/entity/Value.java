@@ -11,6 +11,11 @@ public class Value {
         this.value = value;
     }
 
+    public Value(String value, String questionUId) {
+        this.value = value;
+        this.questionUId = questionUId;
+    }
+
     public String getValue() {
         return value;
     }

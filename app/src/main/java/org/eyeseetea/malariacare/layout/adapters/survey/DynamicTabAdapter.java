@@ -83,6 +83,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -327,7 +328,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         //TODO DynamicTab not working well when there are to many relations doing this in tab
         // behaviour.
-//        evaluateQuestionRelations(questionDB, selectedOptionDB);
+        TabDB tabDB = questionDB.getHeaderDB().getTabDB();
+        if (tabDB.getType() != Constants.TAB_MULTI_QUESTION_EXCLUSIVE) {
+            evaluateQuestionRelations(questionDB, selectedOptionDB);
+        }
 
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -345,6 +349,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             switch (type) {
                 case QuestionRelationDB.MATCH_WITH_OPTION_ATTRIBUTE:
                     saveInQuestionRelatedValueInAttribute(selectedOptionDB,
+                            questionRelation);
+                    break;
+                case QuestionRelationDB.TREATMENT_MATCH:
+                case QuestionRelationDB.TREATMENT_NO_MATCH:
+                    mDynamicTabAdapterStrategy.evaluateTreatmentMatch(questionDB, selectedOptionDB,
                             questionRelation);
                     break;
             }
@@ -610,6 +619,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 valueDB = hideOptionsByMatch(screenQuestionDB, optionsToShow, valueDB);
                 ((AOptionQuestionView) questionView).setOptions(
                         optionsToShow);
+            }
+            if (questionView instanceof PositiveNumberSingleQuestionView) {
+                ((PositiveNumberSingleQuestionView) questionView).setQuestionDB(screenQuestionDB);
             }
             mDynamicTabAdapterStrategy.instanceOfSingleQuestion(questionView, screenQuestionDB);
 

@@ -19,5 +19,5 @@ public interface ISurveyRepository {
 
     List<Survey> getAllCompletedSurveys();
 
-    void save(Survey survey);
+    Survey save(Survey survey);
 }

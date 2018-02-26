@@ -1,5 +1,7 @@
 package utils;
 
+import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
+
 /**
  * Created by ina on 02/08/2016.
  */

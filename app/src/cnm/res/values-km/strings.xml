@@ -22,6 +22,7 @@
 ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
 <string name="dialog_reopen_org_unit">"ហាង %s គឺបើក។"</string>
 <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )"</string>
+    <string name="dynamic_error_invalid_positive_number">"លេខវិជ្ជមានមិនត្រឹមត្រូវ"</string>
 <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
 <string name="pref_header_general">"ទូទៅ"</string>
 <string name="dialog_title_push">"ទិន្នន័យដែលបាន ជំរុញឱ្យមាន"</string>
@@ -259,4 +260,8 @@
 <string name="exists_more_than_one_org_unit_by_phone">ការព្រមាន: អង្គភាពច្រើនជាងមួយត្រូវបានតំឡើងសម្រាប់ទូរស័ព្ទនេះ (IMEI: %s)</string>
 <string name="imei">"IMEI"</string>
 <string name="imei_error">"កំហុសក្នុងការទទួល IMEI"</string>
+<string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
+<string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
+<string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
+<string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
 </resources>

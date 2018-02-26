@@ -18,8 +18,7 @@
 18;'common_option_diagnosis_simple';'Simple';0;11;14
 19;'common_option_diagnosis_severe';'Severe';0;11;15
 20;'common_option_treatment_asmq';'ASMQ';0;12;16
-21;'common_option_treatment_dha_pip';'DHA-PIP';0;12;17
-22;'common_option_treatment_pq';'PQ';0;12;18
-23;'common_option_treatment_other';'Other';0;12;19
-24;'common_option_referred_yes';true;0;14;20
-25;'common_option_referred_no';false;0;14;21
+21;'common_option_treatment_pq';'PQ';0;12;18
+22;'common_option_treatment_other';'Other';0;12;19
+23;'common_option_referred_yes';true;0;14;20
+24;'common_option_referred_no';false;0;14;21

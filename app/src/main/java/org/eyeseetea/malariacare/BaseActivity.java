@@ -85,7 +85,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
         if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
-            EyeSeeTeaApplication.permissions.requestNextPermission();
+            EyeSeeTeaApplication.permissions.requestNextPermission(this);
         }else{
             if(Session.getPhoneMetaDataValue().equals("")) {
                 PhoneMetaData phoneMetaData = getPhoneMetadata();
@@ -114,13 +114,16 @@ public abstract class BaseActivity extends ActionBarActivity {
     public void onRequestPermissionsResult(int requestCode,
             String permissions[], int[] grantResults) {
         if (Permissions.processAnswer(requestCode, permissions, grantResults)) {
-            EyeSeeTeaApplication.permissions.requestNextPermission();
+            EyeSeeTeaApplication.permissions.requestNextPermission(this);
             if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
                 PhoneMetaData phoneMetaData = getPhoneMetadata();
                 Session.setPhoneMetaData(phoneMetaData);
             }
         } else {
-            onDestroy();
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
         }
     }
 

@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.LoginType;
 
 public class PreferencesEReferral {
 
@@ -124,6 +125,25 @@ public class PreferencesEReferral {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         return sharedPreferences.getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
+    }
+
+    public static void setLastLoginType(LoginType loginType){
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.last_log_in_type), loginType.getIntType());
+        editor.commit();
+    }
+
+    public static LoginType getLastLoginType() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        int intLoginType = sharedPreferences.getInt(context.getString(R.string.last_log_in_type), 0);
+
+        return LoginType.fromInt(intLoginType);
     }
 
     public static void setWSURL(String url){

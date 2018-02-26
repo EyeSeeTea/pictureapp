@@ -37,12 +37,18 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
     @Override
     public void getUnsentSurveys(IDataSourceCallback<List<Survey>> callback) {
+        List<Survey> unsentSurveys = getUnsentSurveys();
+        callback.onSuccess(unsentSurveys);
+    }
+
+    @Override
+    public List<Survey> getUnsentSurveys() {
         List<Survey> unsentSurveys = new ArrayList<>();
         for (SurveyDB surveyDB : SurveyDB.getAllUnsentSurveys()) {
             Survey survey = new Survey(surveyDB.getEventDate());
             unsentSurveys.add(survey);
         }
-        callback.onSuccess(unsentSurveys);
+        return unsentSurveys;
     }
 
     @Override
@@ -53,6 +59,16 @@ public class SurveyLocalDataSource implements ISurveyRepository {
             surveys.add(new Survey(surveyDB.getId_survey(), surveyDB.getStatus(), null));
         }
         return surveys;
+    }
+
+    @Override
+    public List<Survey> getAllCompletedSurveys() {
+        List<Survey> completedSurveys = new ArrayList<>();
+        for (SurveyDB surveyDB : SurveyDB.getAllCompletedSurveys()) {
+            Survey survey = new Survey(surveyDB.getEventDate());
+            completedSurveys.add(survey);
+        }
+        return completedSurveys;
     }
 
     @Override

@@ -474,4 +474,8 @@ public class PreferencesState {
     public String getPhoneLanguage() {
         return phoneLanguage;
     }
+
+    public void setContext(Context targetContext) {
+        context = targetContext;
+    }
 }

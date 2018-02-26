@@ -22,5 +22,6 @@
     <string name="monitor_row_title" translatable="false">%1$s</string>
     <string name="google_play_required" translatable="false"></string>
     <string name="feedback_view_image" translatable="false"></string>
+    <string name="default_language" translatable="false">en</string>
 
 </resources>

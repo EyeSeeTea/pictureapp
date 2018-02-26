@@ -79,8 +79,18 @@ public class AddBalanceReceiptFragment extends Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_balance_receipt, container, false);
         initRecyclerView(view);
+        initSaveButton(view);
         initPresenter();
         return view;
+    }
+
+    private void initSaveButton(View view) {
+        view.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAddBalanceReceiptPresenter.onCompletedSurvey();
+            }
+        });
     }
 
     private void initRecyclerView(View view) {
@@ -134,11 +144,6 @@ public class AddBalanceReceiptFragment extends Fragment implements
     public void onDestroy() {
         super.onDestroy();
         mAddBalanceReceiptPresenter.detachView();
-    }
-
-    @Override
-    public void onSaveClick() {
-        mAddBalanceReceiptPresenter.onCompletedSurvey();
     }
 
     @Override

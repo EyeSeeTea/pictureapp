@@ -11,6 +11,7 @@ public class CountryVersionConvertFromDomainVisitor implements IConvertDomainDBV
     @Override
     public CountryVersionDB visit(Configuration.CountryVersion domainModel) {
         CountryVersionDB countryVersionDB = new CountryVersionDB();
+        countryVersionDB.setReference(domainModel.getReference());
         countryVersionDB.setCountry(domainModel.getCountry());
         countryVersionDB.setVersion(domainModel.getVersion());
         countryVersionDB.setLast_update(domainModel.getLastUpdate());

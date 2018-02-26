@@ -17,6 +17,12 @@ public class AppInfo {
         this.metadataVersion = required(metadataVersion, "metadataVersion is required");
     }
 
+    public AppInfo(String metadataVersion, String appVersion, boolean metadataDownloaded) {
+        this.metadataVersion = required(metadataVersion, "metadataVersion is required");
+        this.appVersion = required(appVersion, "appVersion is required");
+        this.metadataDownloaded = required(metadataDownloaded, "metadataDownloaded is required");
+    }
+
     public String getMetadataVersion() {
         return metadataVersion;
     }
@@ -29,11 +35,12 @@ public class AppInfo {
         return metadataDownloaded;
     }
 
-    public void setMetadataDownloaded(boolean metadataDownloaded) {
-        this.metadataDownloaded = metadataDownloaded;
-    }
-
-    public void setMetadataVersion(String metadataVersion) {
-        this.metadataVersion = metadataVersion;
+   @Override
+    public String toString() {
+        return "AppInfo{" +
+                "metadataVersion='" + metadataVersion + '\'' +
+                ", appVersion='" + appVersion + '\'' +
+                ", metadataDownloaded=" + metadataDownloaded +
+                '}';
     }
 }

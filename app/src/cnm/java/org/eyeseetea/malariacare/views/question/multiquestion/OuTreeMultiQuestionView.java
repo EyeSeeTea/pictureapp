@@ -83,7 +83,7 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
 
     @Override
     public void requestAnswerFocus() {
-
+        spinnerProvince.requestFocus();
     }
 
     @Override

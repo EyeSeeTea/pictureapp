@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
@@ -19,9 +20,12 @@ import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDataSourceFactory;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
+        .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -31,9 +35,12 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
+import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
@@ -48,9 +55,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
         mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
-
-        IMetadataConfigurationDataSource dataSource =
-                null;
     }
 
     @Override
@@ -88,13 +92,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
     @Override
     public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
         try {
-            IMetadataConfigurationDataSource dataSource =
-                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                            HTTPClientFactory.getAuthenticationInterceptor()
-                    );
-            importer = new MetadataConfigurationDBImporter(
-                    dataSource, ConverterFactory.getQuestionConverter()
-            );
 
         if (isDemo) {
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
@@ -105,6 +102,13 @@ public class PullControllerStrategy extends APullControllerStrategy {
             programLocalDataSource.saveUserProgramId(program);
             callback.onComplete();
         } else {
+            IMetadataConfigurationDataSource metadataConfigurationDataSource =
+                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                            HTTPClientFactory.getAuthenticationInterceptor()
+                    );
+            importer = new MetadataConfigurationDBImporter(
+                    metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()
+            );
             ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
             IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
@@ -170,10 +174,24 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void downloadMetadataFromConfigurationFiles(
             Program actualProgram) {
         try {
+            downloadAsyncLanguagesFromServer();
             importer.importMetadata(actualProgram);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void downloadAsyncLanguagesFromServer() throws Exception {
+            Log.i(TAG, "Starting to download Languages From Server");
+            AsyncExecutor asyncExecutor = new AsyncExecutor();
+            CredentialsReader credentialsReader = CredentialsReader.getInstance();
+            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
+                    PreferencesState.getInstance().getContext());
+
+            DownloadLanguageTranslationUseCase downloader =
+                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
+
+            downloader.downloadAsync(asyncExecutor);
     }
 
 }

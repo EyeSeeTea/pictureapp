@@ -1,24 +1,17 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Country {
     private long id;
     private String uid;
     private String name;
 
     public Country(long id, String uid, String name) {
-        this.id = id;
-        this.uid = uid;
+        this.id = required(id, "id is required");
+        this.uid = required(uid, "uid is required");
         this.name = name;
-    }
-
-    public Country() {
-    }
-
-    private Country(Builder builder) {
-        setId(builder.id);
-        setUid(builder.uid);
-        setName(builder.name);
     }
 
     public static Builder newBuilder() {
@@ -29,24 +22,12 @@ public class Country {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -67,6 +48,15 @@ public class Country {
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Country{" +
+                "id=" + id +
+                ", uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public static final class Builder {
@@ -93,7 +83,11 @@ public class Country {
         }
 
         public Country build() {
-            return new Country(this);
+            return new Country(
+                    this.id,
+                    this.uid,
+                    this.name
+            );
         }
     }
 }

@@ -1102,4 +1102,10 @@
 <string name="error_files_download_no_wifi">"Please connect to a WiFi network to download the media for this country"</string>
 <string name="error_android_version_not_supported">"Apologizes but Connect is not compatible with your device Android version. You must have Android 5.0+ to get Connect working."</string>
 <string name="error_downloading_languages">"Error during languages download: "</string>
+<string name="error_unable_to_find_app_than_can_open_file">Unable to find an app that open this file</string>
+<string name="warning_strings_download_failed">Warning, strings download failed</string>
+<string name="error_unable_to_download_translations">Unable to download translations</string>
+<string name="error_unable_to_download_configuration_files">Unable to download configuration files</string>
+<string name="error_unable_to_download_translations_and_configuration_files">Unable to download translations and configuration files</string>
+
 </resources>

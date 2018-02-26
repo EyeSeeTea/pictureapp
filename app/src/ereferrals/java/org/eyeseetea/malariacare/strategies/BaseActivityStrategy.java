@@ -39,7 +39,7 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
-import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.network.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {

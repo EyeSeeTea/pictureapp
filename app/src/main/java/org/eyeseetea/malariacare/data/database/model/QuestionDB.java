@@ -791,6 +791,10 @@ public class QuestionDB extends BaseModel {
         return (this.visible == QUESTION_IMPORTANT);
     }
 
+    public boolean isInvisible() {
+        return (this.visible == QUESTION_INVISIBLE);
+    }
+
     public void setVisible(Integer visible) {
         this.visible = visible;
     }
@@ -2046,6 +2050,12 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
+    public static boolean isEmpty() {
+        long count = new Select()
+                .from(QuestionDB.class)
+                .count();
+        return count < 1;
+    }
 
     public static class QuestionOrderComparator implements Comparator {
 

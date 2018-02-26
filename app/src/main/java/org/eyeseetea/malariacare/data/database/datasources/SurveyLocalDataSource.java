@@ -92,7 +92,9 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         }
         surveyDB.setStatus(survey.getStatus());
         surveyDB.update();
-        survey.setId(surveyDB.getId_survey());
+        survey = new Survey(surveyDB.getId_survey(), survey.getStatus(),
+                survey.getSurveyAnsweredRatio(), survey.getSurveyDate(), survey.getProgram(),
+                survey.getOrganisationUnit(), survey.getUserAccount(), survey.getType());
         return survey;
     }
 }

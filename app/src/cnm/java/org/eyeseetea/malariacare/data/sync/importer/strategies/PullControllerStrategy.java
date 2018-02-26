@@ -110,7 +110,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
-                appInfo.setMetadataDownloaded(false);
+                appInfo = new AppInfo(appInfo.getMetadataVersion(), appInfo.getAppVersion(), false);
                 appInfoDataSource.saveAppInfo(appInfo);
 
                 Credentials hardcodedCredentials = getHardcodedCredentials(callback);
@@ -167,8 +167,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 if (pullFilters.pullMetaData() &&
                         Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
                         appInfoRemote.getMetadataVersion())) {
-                    appInfoLocal.setMetadataDownloaded(false);
-                    appInfoLocal.setMetadataVersion(appInfoRemote.getMetadataVersion());
+                    appInfoLocal = new AppInfo(appInfoRemote.getMetadataVersion(),
+                            appInfoLocal.getAppVersion(), false);
                     appInfoDataSource.saveAppInfo(appInfoLocal);
                     deleteObsoleteMetadata();
                 }
@@ -210,7 +210,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         } catch (ConfigJsonIOException e) {
             e.printStackTrace();
             callback.onError(e);
-        } catch (LanguagesDownloadException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);
         }
@@ -231,7 +231,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
                 boolean isActiveOu = mPullFilters.getDataByOrgUnit()!=null && !mPullFilters.getDataByOrgUnit().equals("");
-                appInfo.setMetadataDownloaded(isActiveOu);
+                appInfo = new AppInfo(appInfo.getMetadataVersion(), appInfo.getAppVersion(),
+                        isActiveOu);
                 appInfoDataSource.saveAppInfo(appInfo);
 
                 callback.onComplete();

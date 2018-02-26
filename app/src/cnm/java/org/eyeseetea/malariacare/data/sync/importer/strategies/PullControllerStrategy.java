@@ -167,8 +167,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 if (pullFilters.pullMetaData() &&
                         Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
                         appInfoRemote.getMetadataVersion())) {
-                    appInfoLocal = new AppInfo(appInfoRemote.getMetadataVersion(),
-                            appInfoLocal.getAppVersion(), false);
+                    appInfoLocal = new AppInfo(appInfoRemote.getMetadataVersion(), false);
                     appInfoDataSource.saveAppInfo(appInfoLocal);
                     deleteObsoleteMetadata();
                 }
@@ -231,8 +230,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
                 boolean isActiveOu = mPullFilters.getDataByOrgUnit()!=null && !mPullFilters.getDataByOrgUnit().equals("");
-                appInfo = new AppInfo(appInfo.getMetadataVersion(), appInfo.getAppVersion(),
-                        isActiveOu);
+                appInfo = new AppInfo(appInfo.getMetadataVersion(),isActiveOu);
                 appInfoDataSource.saveAppInfo(appInfo);
 
                 callback.onComplete();

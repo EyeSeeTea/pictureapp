@@ -45,7 +45,7 @@ public class QuestionConvertFromDomainVisitorShould {
     public void convert_a_domain_question_with_no_options_to_questiondb()
             throws Exception {
 
-        Question question = givenADomainQuestionBuilderWithNonOptions().build();
+        Question question = givenADomainQuestionBuilderWithNonOptions();
 
         QuestionDB questionToEvaluate = converter.visit(question);
 
@@ -229,15 +229,21 @@ public class QuestionConvertFromDomainVisitorShould {
     }
 
     private Question givenADomainQuestionWith(Question.Type type) {
-        Question.Builder questionBuilder = givenADomainQuestionBuilderWithNonOptions();
-        questionBuilder.type(type);
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .type(type)
+                .compulsory(true).build();
 
-        return questionBuilder.build();
+
+        return question;
     }
 
     private Question givenADomainQuestionOneOption() {
-        Question.Builder questionBuilder = givenADomainQuestionBuilderWithNonOptions();
-
         List<Option> options = new ArrayList<>(1);
 
         Option firstOption = Option.newBuilder()
@@ -246,14 +252,22 @@ public class QuestionConvertFromDomainVisitorShould {
                 .build();
 
         options.add(firstOption);
-        questionBuilder.options(options);
 
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .options(options)
+                .compulsory(true).build();
 
-        return questionBuilder.build();
+        return question;
     }
 
     private Question givenADomainQuestionWithVisibility(Question.Visibility visibility) {
-        Question question = givenADomainQuestionBuilderWithNonOptions().build();
+        Question question = givenADomainQuestionBuilderWithNonOptions();
         question.setVisibility(visibility);
         return question;
     }
@@ -271,7 +285,7 @@ public class QuestionConvertFromDomainVisitorShould {
         return questionDB;
     }
 
-    private Question.Builder givenADomainQuestionBuilderWithNonOptions() {
+    private Question givenADomainQuestionBuilderWithNonOptions() {
         return Question
                 .newBuilder()
                 .uid("uid")
@@ -279,7 +293,7 @@ public class QuestionConvertFromDomainVisitorShould {
                 .name("ipc_issueEntry_q_program")
                 .type(Question.Type.DROPDOWN_LIST)
                 .visibility(Question.Visibility.VISIBLE)
-                .compulsory(true);
+                .compulsory(true).build();
     }
 
     private QuestionDB givenADBQuestionWithOutput(int output) {

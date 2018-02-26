@@ -1,20 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:layout_weight="0.5"
-    android:baselineAligned="false"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:layout_marginLeft="@dimen/question_padding"
-    android:layout_marginRight="@dimen/question_padding">
+              xmlns:tools="http://schemas.android.com/tools"
+              style="@style/QuestionContainer">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_first_color"/>
+        style="@style/QuestionDivider"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,42 +20,23 @@
             android:paddingBottom="@dimen/image_padding"
             android:paddingTop="@dimen/image_padding"
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/input_edit_text_top_bottom"
-            android:layout_marginTop="@dimen/input_edit_text_top_bottom">
+            style="@style/QuestionHeaderContainer">
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:id="@+id/row_header_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:background="@color/transparent"
-                android:gravity="left"
-                android:singleLine="true"
-                android:paddingLeft="@dimen/input_edit_text_left_padding"
-                android:paddingRight="@dimen/input_edit_text_right_padding"
-                android:textColor="@color/text_first_color"
-                android:textColorHint="@color/text_first_color"
-                android:textSize="?attr/font_xsmall"
-                app:font_name="@string/normal_font"
-                tools:text="Title"/>
+                style="@style/QuestionHeader"
+                tools:text="@string/label_editor_question_title"/>
 
             <ImageView
                 android:id="@+id/row_header_compulsory"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/compulsory_size"
-                android:adjustViewBounds="true"
-                android:layout_gravity="right|top"
-                android:scaleType="fitCenter"
-                android:layout_weight="0.1"
-                android:src="@drawable/compulsory"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                style="@style/QuestionHeaderCompulsorySign"
+                tools:visibility="visible"
+                tools:ignore="ContentDescription"/>
+
         </LinearLayout>
 
     </LinearLayout>

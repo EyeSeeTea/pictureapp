@@ -18,6 +18,7 @@ public class CountryVersionLocalDataSource implements ICountryVersionRepository 
             return Configuration.CountryVersion.newBuilder()
                     .country(countryVersionDB.getCountry())
                     .uid(countryVersionDB.getUid())
+                    .reference(countryVersionDB.getReference())
                     .lastUpdate(countryVersionDB.getLast_update())
                     .version(countryVersionDB.getVersion())
                     .build();

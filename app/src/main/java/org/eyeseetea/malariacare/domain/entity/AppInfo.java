@@ -21,15 +21,23 @@ public class AppInfo {
         return metadataVersion;
     }
 
+    public void changeMetadataDownloaded(boolean metadataDownloaded) {
+        this.metadataDownloaded = metadataDownloaded;
+    }
+
     public String getAppVersion() {
         return appVersion;
+    }
+
+    public void changeMetadataVersion(String metadataVersion) {
+        this.metadataVersion = metadataVersion;
     }
 
     public boolean isMetadataDownloaded() {
         return metadataDownloaded;
     }
 
-   @Override
+    @Override
     public String toString() {
         return "AppInfo{" +
                 "metadataVersion='" + metadataVersion + '\'' +

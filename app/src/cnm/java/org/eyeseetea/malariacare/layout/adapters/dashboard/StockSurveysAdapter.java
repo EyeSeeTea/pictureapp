@@ -1,10 +1,10 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +17,7 @@ import org.eyeseetea.malariacare.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockSurveysAdapter extends BaseAdapter {
+public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapter.SurveyHolder> {
 
     protected List<SurveyDB> surveys;
     protected LayoutInflater mInflater;
@@ -31,37 +31,14 @@ public class StockSurveysAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return surveys.size();
+    public SurveyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View rowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.stock_list_row,
+                parent, false);
+        return new SurveyHolder(rowView);
     }
 
     @Override
-    public Object getItem(int position) {
-        return surveys.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return surveys.get(position).getId_survey();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder viewHolder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.stock_list_row, null);
-            viewHolder = new ViewHolder();
-            viewHolder.date = (TextView) convertView.findViewById(R.id.date_line);
-            viewHolder.drugs = (TextView) convertView.findViewById(R.id.drugs_line);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-        putValuesToRow(viewHolder, position);
-        return convertView;
-    }
-
-    private void putValuesToRow(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(SurveyHolder holder, int position) {
         SurveyDB survey = surveys.get(position);
 
         String date = Utils.parseDateToString(survey.getEventDate(),
@@ -99,11 +76,20 @@ public class StockSurveysAdapter extends BaseAdapter {
         }
 
         String dateText = "[ " + date + " - " + hour + " ] ";
-        viewHolder.date.setText(dateText);
-        viewHolder.drugs.setText(visibleValues);
-        viewHolder.stockImage.setImageDrawable(
+        holder.date.setText(dateText);
+        holder.drugs.setText(visibleValues);
+        holder.stockImage.setImageDrawable(
                 mContext.getResources().getDrawable(getImageForSurvey(survey)));
+    }
 
+    @Override
+    public long getItemId(int position) {
+        return surveys.get(position).getId_survey();
+    }
+
+    @Override
+    public int getItemCount() {
+        return surveys.size();
     }
 
     private int getImageForSurvey(SurveyDB survey) {
@@ -118,9 +104,16 @@ public class StockSurveysAdapter extends BaseAdapter {
         return R.drawable.ic_arrow_survey_expense;
     }
 
-    static class ViewHolder {
+    public class SurveyHolder extends RecyclerView.ViewHolder {
         ImageView stockImage;
         TextView date;
         TextView drugs;
+
+        public SurveyHolder(View itemView) {
+            super(itemView);
+            stockImage = (ImageView) itemView.findViewById(R.id.image_stock);
+            date = (TextView) itemView.findViewById(R.id.date_line);
+            drugs = (TextView) itemView.findViewById(R.id.drugs_line);
+        }
     }
 }

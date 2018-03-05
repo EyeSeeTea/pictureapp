@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 
 /**
  * Created by manuel on 28/12/16.
@@ -23,7 +24,7 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
-    DashboardUnsentFragment stockFragment;
+    StockSurveysFragment stockFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -47,7 +48,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        stockFragment = new DashboardUnsentFragment();
+        stockFragment = new StockSurveysFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(DashboardUnsentFragmentStrategy.IS_STOCK_FRAGMENT, true);
         stockFragment.setArguments(bundle);

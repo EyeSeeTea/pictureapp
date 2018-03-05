@@ -23,11 +23,12 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
     protected LayoutInflater mInflater;
     protected Context mContext;
 
-    public StockSurveysAdapter(
-            List<SurveyDB> surveys, LayoutInflater lInflater, Context context) {
-        this.surveys = surveys;
-        this.mInflater = lInflater;
+    public StockSurveysAdapter(Context context) {
         mContext = context;
+    }
+
+    public void addSurveys(List<SurveyDB> surveys) {
+        this.surveys = surveys;
     }
 
     @Override
@@ -89,6 +90,9 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
 
     @Override
     public int getItemCount() {
+        if (surveys == null) {
+            return 0;
+        }
         return surveys.size();
     }
 

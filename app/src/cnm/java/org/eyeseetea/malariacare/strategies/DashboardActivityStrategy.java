@@ -44,8 +44,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        stockFragment = new StockSurveysFragment();
-        stockFragment.reloadData();
+        if (stockFragment == null) {
+            stockFragment = new StockSurveysFragment();
+        }
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 stockFragment);
         stockFragment.reloadData();

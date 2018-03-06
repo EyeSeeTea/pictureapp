@@ -117,13 +117,13 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         addBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStockSurveysPresenter.onAddBalanceClick();
+                mStockSurveysPresenter.onAddBalanceClick(getActivity());
             }
         });
         addReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStockSurveysPresenter.onAddReceiptClick();
+                mStockSurveysPresenter.onAddReceiptClick(getActivity());
             }
         });
     }

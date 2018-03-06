@@ -85,7 +85,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
         if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
-            EyeSeeTeaApplication.permissions.requestNextPermission();
+            EyeSeeTeaApplication.permissions.requestNextPermission(this);
         }else{
             if(Session.getPhoneMetaDataValue().equals("")) {
                 PhoneMetaData phoneMetaData = getPhoneMetadata();
@@ -114,13 +114,16 @@ public abstract class BaseActivity extends ActionBarActivity {
     public void onRequestPermissionsResult(int requestCode,
             String permissions[], int[] grantResults) {
         if (Permissions.processAnswer(requestCode, permissions, grantResults)) {
-            EyeSeeTeaApplication.permissions.requestNextPermission();
+            EyeSeeTeaApplication.permissions.requestNextPermission(this);
             if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
                 PhoneMetaData phoneMetaData = getPhoneMetadata();
                 Session.setPhoneMetaData(phoneMetaData);
             }
         } else {
-            onDestroy();
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
         }
     }
 
@@ -338,7 +341,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param rawId   Id of the raw text resource in HTML format
      */
     public void showAlertWithHtmlMessage(int titleId, int rawId) {
-        InputStream message = getApplicationContext().getResources().openRawResource(rawId);
+        InputStream message = getResources().openRawResource(rawId);
         final SpannableString linkedMessage = new SpannableString(
                 Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
         Linkify.addLinks(linkedMessage, Linkify.ALL);
@@ -415,7 +418,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     private void showAlert(int titleId, CharSequence text) {
         final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(getApplicationContext().getString(titleId))
+                .setTitle(getString(titleId))
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null).create();
         dialog.show();

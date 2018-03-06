@@ -61,7 +61,7 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void putValuesToQuestion(final Question question, final QuestionViewHolder holder) {
-        holder.question.setText(question.getQuestionText());
+        holder.question.setText(question.getName());
         holder.value.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

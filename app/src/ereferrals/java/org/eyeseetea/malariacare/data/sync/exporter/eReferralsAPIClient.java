@@ -12,10 +12,14 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -77,6 +81,9 @@ public class eReferralsAPIClient {
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
             wsClientCallBack.onError(conversionException);
+        } catch (SocketTimeoutException | UnknownHostException e) {
+            wsClientCallBack.onError(new NetworkException());
+            return;
         } catch (IOException e) {
             wsClientCallBack.onError(e);
         }
@@ -88,6 +95,11 @@ public class eReferralsAPIClient {
             InvalidCredentialsException invalidCredentialsException =
                     new InvalidCredentialsException();
             wsClientCallBack.onError(invalidCredentialsException);
+        } else if (response != null && response.code() == 209) {
+            ConfigFileObsoleteException configFileObsoleteException =
+                    new ConfigFileObsoleteException();
+            wsClientCallBack.onSuccess(response.body());
+            wsClientCallBack.onError(configFileObsoleteException);
         } else if (response != null && response.isSuccessful()) {
             wsClientCallBack.onSuccess(response.body());
         } else {

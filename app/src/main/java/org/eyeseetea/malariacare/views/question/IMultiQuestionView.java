@@ -4,4 +4,6 @@ public interface IMultiQuestionView {
     void setHeader(String headerValue);
 
     boolean hasError();
+
+    void requestAnswerFocus();
 }

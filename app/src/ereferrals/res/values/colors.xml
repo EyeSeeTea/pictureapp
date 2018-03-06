@@ -31,4 +31,11 @@
     <color name="create_button_background">#4fabd2</color>
     <color name="action_bar_color">@color/orange_header_ereferrals</color>
     <color name="background_text_grid_av">#80000000</color>
+    <color name="gray_survey_in_progress">#80B5B5B5</color>
+    <color name="gray_survey_completed">#80808080</color>
+    <color name="green_survey_sent">#8065962B</color>
+    <color name="red_survey_conflict">#80FF0000</color>
+    <color name="brown_survey_quarantine">#80B45F04</color>
+    <color name="blue_survey_sending">#8058D3F7</color>
+
 </resources>

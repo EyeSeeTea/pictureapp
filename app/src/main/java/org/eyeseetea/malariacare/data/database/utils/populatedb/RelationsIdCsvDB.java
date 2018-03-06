@@ -17,7 +17,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 
@@ -249,24 +248,6 @@ public class RelationsIdCsvDB {
         return organisationFK;
     }
 
-    static HashMap<Long, StringKeyDB> getStringKeyIdRelationCsvDB(Context context)
-            throws IOException {
-        HashMap<Long, StringKeyDB> stringKeyFK = new HashMap<>();
-        List<StringKeyDB> stringKeyDBs = StringKeyDB.getAllStringKeys();
-        List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.STRING_KEY_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
-        String[] idToAdd;
-        while ((idToAdd = reader.readNext()) != null) {
-            csvIds.add(Long.parseLong(idToAdd[0]));
-        }
-        for (int i = 0; i < stringKeyDBs.size() && i < csvIds.size(); i++) {
-            stringKeyFK.put(csvIds.get(i), stringKeyDBs.get(i));
-        }
-        return stringKeyFK;
-    }
-
     static HashMap<Long, Object> getIdRelationCsvDB(Context context, String CsvName,
             List<Object> allDBObjects)
             throws IOException {
@@ -322,7 +303,8 @@ public class RelationsIdCsvDB {
         return treatmentFK;
     }
 
-    public static HashMap<Long, OptionAttributeDB> getOptionAttributeIdRelationCsvDB(Context context)
+    public static HashMap<Long, OptionAttributeDB> getOptionAttributeIdRelationCsvDB(
+            Context context)
             throws IOException {
         HashMap<Long, OptionAttributeDB> optionAttributeFK = new HashMap<>();
         List<OptionAttributeDB> optionAttributeDBs = OptionAttributeDB.getAllOptionAttributes();

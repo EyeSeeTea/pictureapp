@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.util.List;
 
 public class Question {
@@ -17,20 +19,18 @@ public class Question {
     private Visibility visibility;
     private List<Rule> rules;
 
-    public Question() {
-    }
-
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             List<Option> options, Header header, int index,
             Visibility visibility,
             List<Rule> rules) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.uid = uid;
+
+        this.id = required(id, "id is required");
+        this.code = required(code, "code is required");
+        this.name = required(name, "name is required");
+        this.uid = required(uid, "uid is required");
         this.phoneFormat = phoneFormat;
-        this.type = type;
+        this.type = required(type, "type is required");
         this.compulsory = compulsory;
         this.options = options;
         this.header = header;
@@ -38,22 +38,6 @@ public class Question {
         this.visibility = visibility;
         this.rules = rules;
     }
-
-    private Question(Builder builder) {
-        setId(builder.id);
-        setCode(builder.code);
-        setName(builder.name);
-        setUid(builder.uid);
-        setPhoneFormat(builder.phoneFormat);
-        setType(builder.type);
-        setCompulsory(builder.compulsory);
-        setOptions(builder.options);
-        setHeader(builder.header);
-        setIndex(builder.index);
-        setVisibility(builder.visibility);
-        setRules(builder.rules);
-    }
-
 
     public static Builder newBuilder() {
         return new Builder();
@@ -63,32 +47,16 @@ public class Question {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-
     public boolean isCompulsory() {
         return compulsory;
-    }
-
-    public void setCompulsory(boolean compulsory) {
-        this.compulsory = compulsory;
     }
 
     public List<Option> getOptions() {
@@ -99,64 +67,36 @@ public class Question {
         return options != null;
     }
 
-    public void setOptions(List<Option> options) {
-        this.options = options;
-    }
-
     public Header getHeader() {
         return header;
-    }
-
-    public void setHeader(Header header) {
-        this.header = header;
     }
 
     public int getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Visibility getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
-    }
-
     public String getUid() {
         return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public PhoneFormat getPhoneFormat() {
         return phoneFormat;
     }
 
-    public void setPhoneFormat(PhoneFormat phoneFormat) {
-        this.phoneFormat = phoneFormat;
-    }
-
     public List<Rule> getRules() {
         return rules;
     }
 
-    public void setRules(List<Rule> rules) {
-        this.rules = rules;
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 
     @Override
@@ -221,7 +161,6 @@ public class Question {
                 ", rules=" + rules +
                 '}';
     }
-
 
     public enum Type {
         SHORT_TEXT, PHONE, DROPDOWN_LIST, YEAR, DATE, INT, LONG_TEXT, POSITIVE_INT,
@@ -302,7 +241,20 @@ public class Question {
         }
 
         public Question build() {
-            return new Question(this);
+            return new Question(
+                    this.id,
+                    this.code,
+                    this.name,
+                    this.uid,
+                    this.phoneFormat,
+                    this.type,
+                    this.compulsory,
+                    this.options,
+                    this.header,
+                    this.index,
+                    this.visibility,
+                    this.rules
+            );
         }
 
         public Builder id(long val) {
@@ -319,13 +271,10 @@ public class Question {
         public Rule(
                 List<Condition> conditions,
                 List<Action> actions) {
-            this.conditions = conditions;
-            this.actions = actions;
-        }
 
-        private Rule(Builder builder) {
-            setConditions(builder.conditions);
-            setActions(builder.actions);
+            this.conditions = required(conditions, "conditions is required");
+            this.actions = required(actions, "actions is required");
+
         }
 
         public static Builder newBuilder() {
@@ -336,20 +285,9 @@ public class Question {
             return conditions;
         }
 
-        public void setConditions(
-                List<Condition> conditions) {
-            this.conditions = conditions;
-        }
-
         public List<Action> getActions() {
             return actions;
         }
-
-        public void setActions(
-                List<Action> actions) {
-            this.actions = actions;
-        }
-
 
         public static class Condition {
             private Operand left;
@@ -358,15 +296,10 @@ public class Question {
 
             public Condition(Operand left,
                     Operator operator, Operand right) {
-                this.left = left;
-                this.operator = operator;
-                this.right = right;
-            }
 
-            private Condition(Builder builder) {
-                setLeft(builder.left);
-                setOperator(builder.operator);
-                setRight(builder.right);
+                this.left = required(left, "left condition is required");
+                this.operator = required(operator, "operator is required");
+                this.right = required(right, "right is required");
             }
 
             public static Builder newBuilder() {
@@ -377,24 +310,12 @@ public class Question {
                 return left;
             }
 
-            public void setLeft(Operand left) {
-                this.left = left;
-            }
-
             public Operator getOperator() {
                 return operator;
             }
 
-            public void setOperator(Operator operator) {
-                this.operator = operator;
-            }
-
             public Operand getRight() {
                 return right;
-            }
-
-            public void setRight(Operand right) {
-                this.right = right;
             }
 
             public static final class Builder {
@@ -421,7 +342,11 @@ public class Question {
                 }
 
                 public Condition build() {
-                    return new Condition(this);
+                    return new Condition(
+                            this.left,
+                            this.operator,
+                            this.right
+                    );
                 }
             }
         }
@@ -431,13 +356,9 @@ public class Question {
             private OperandType type;
 
             public Operand(String value, OperandType type) {
-                this.value = value;
-                this.type = type;
-            }
 
-            private Operand(Builder builder) {
-                setValue(builder.value);
-                setType(builder.type);
+                this.value = required(value, "value condition is required");
+                this.type = required(type, "type condition is required");
             }
 
             public static Builder newBuilder() {
@@ -448,16 +369,8 @@ public class Question {
                 return value;
             }
 
-            public void setValue(String value) {
-                this.value = value;
-            }
-
             public OperandType getType() {
                 return type;
-            }
-
-            public void setType(OperandType type) {
-                this.type = type;
             }
 
             public static final class Builder {
@@ -478,7 +391,10 @@ public class Question {
                 }
 
                 public Operand build() {
-                    return new Operand(this);
+                    return new Operand(
+                            this.value,
+                            this.type
+                    );
                 }
             }
         }
@@ -489,14 +405,12 @@ public class Question {
 
             public Action(String targetQuestion,
                     ActionToPerform actionToPerform) {
-                this.targetQuestion = targetQuestion;
-                this.actionToPerform = actionToPerform;
+
+                this.targetQuestion = required(targetQuestion, "value targetQuestion is required");
+                this.actionToPerform =
+                        required(actionToPerform, "actionToPerform condition is required");
             }
 
-            private Action(Builder builder) {
-                setTargetQuestion(builder.targetQuestion);
-                setActionToPerform(builder.actionToPerform);
-            }
 
             public static Builder newBuilder() {
                 return new Builder();
@@ -506,17 +420,8 @@ public class Question {
                 return targetQuestion;
             }
 
-            public void setTargetQuestion(String targetQuestion) {
-                this.targetQuestion = targetQuestion;
-            }
-
             public ActionToPerform getActionToPerform() {
                 return actionToPerform;
-            }
-
-            public void setActionToPerform(
-                    ActionToPerform actionToPerform) {
-                this.actionToPerform = actionToPerform;
             }
 
             public static final class Builder {
@@ -537,7 +442,10 @@ public class Question {
                 }
 
                 public Action build() {
-                    return new Action(this);
+                    return new Action(
+                            this.targetQuestion,
+                            this.actionToPerform
+                    );
                 }
             }
         }
@@ -572,7 +480,10 @@ public class Question {
             }
 
             public Rule build() {
-                return new Rule(this);
+                return new Rule(
+                        this.conditions,
+                        this.actions
+                );
             }
         }
     }

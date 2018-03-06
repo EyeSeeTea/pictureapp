@@ -27,10 +27,6 @@ public class Survey {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -43,11 +39,6 @@ public class Survey {
         return mSurveyAnsweredRatio;
     }
 
-    public void setSurveyAnsweredRatio(
-            SurveyAnsweredRatio surveyAnsweredRatio) {
-        mSurveyAnsweredRatio = surveyAnsweredRatio;
-    }
-
     @Override
     public String toString() {
         return "Survey{" +
@@ -58,5 +49,31 @@ public class Survey {
 
     public Date getSurveyDate() {
         return mSurveyDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Survey survey = (Survey) o;
+
+        if (id != survey.id) return false;
+        if (status != survey.status) return false;
+        if (mSurveyAnsweredRatio != null ? !mSurveyAnsweredRatio.equals(survey.mSurveyAnsweredRatio)
+                : survey.mSurveyAnsweredRatio != null) {
+            return false;
+        }
+        return mSurveyDate != null ? mSurveyDate.equals(survey.mSurveyDate)
+                : survey.mSurveyDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + status;
+        result = 31 * result + (mSurveyAnsweredRatio != null ? mSurveyAnsweredRatio.hashCode() : 0);
+        result = 31 * result + (mSurveyDate != null ? mSurveyDate.hashCode() : 0);
+        return result;
     }
 }

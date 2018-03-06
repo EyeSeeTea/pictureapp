@@ -9,7 +9,6 @@ import android.view.View;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -80,7 +79,8 @@ public abstract class ADynamicTabAdapterStrategy {
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
                         CommonQuestionView.hideKeyboard(
-                                PreferencesState.getInstance().getContext(), mDynamicTabAdapter.getKeyboardView());
+                                PreferencesState.getInstance().getContext(),
+                                mDynamicTabAdapter.getKeyboardView());
                         DynamicTabAdapter.setIsClicked(false);
                     }
                     return;

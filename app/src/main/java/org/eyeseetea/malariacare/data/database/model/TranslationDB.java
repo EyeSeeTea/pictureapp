@@ -117,7 +117,7 @@ public class TranslationDB extends BaseModel {
                 ? translationDB.getTranslation() : TRANSLATION_NOT_FOUND;
     }
 
-    public static boolean wasTranslationFound(String translation){
+    public static boolean wasTranslationFound(String translation) {
         return !TRANSLATION_NOT_FOUND.equalsIgnoreCase(translation);
     }
 

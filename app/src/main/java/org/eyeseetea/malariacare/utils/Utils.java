@@ -97,12 +97,12 @@ public class Utils {
         }
     }
 
-    public static String getUserLanguageOrDefault(Context context ){
+    public static String getUserLanguageOrDefault(Context context) {
         String language = getUserLanguage(context);
 
-        if(language !=null && !language.isEmpty()){
+        if (language != null && !language.isEmpty()) {
             return language;
-        }else {
+        } else {
             return context.getString(R.string.default_language);
         }
     }

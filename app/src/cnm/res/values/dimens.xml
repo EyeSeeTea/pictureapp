@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="smaller_translation">55dp</dimen>
+    <dimen name="bigger_translation">105dp</dimen>
+</resources>

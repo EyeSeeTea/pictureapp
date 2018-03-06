@@ -14,7 +14,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/text_first_color"/>
+        android:background="@color/text_first_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:textColorHint="@color/text_first_color"
                 android:textSize="?attr/font_xsmall"
                 app:font_name="@string/normal_font"
-                tools:text="Title"/>
+                tools:text="Title" />
 
             <ImageView
                 android:id="@+id/row_header_compulsory"
@@ -66,7 +66,7 @@
                 android:layout_weight="0.1"
                 android:src="@drawable/compulsory"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
         </LinearLayout>
 
     </LinearLayout>
@@ -76,6 +76,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:gravity="right"/>
+        android:gravity="right" />
 
 </LinearLayout>

@@ -55,7 +55,7 @@
                     android:textColor="@color/text_first_color"
                     android:textSize="?attr/font_xsmall"
                     app:font_name="@string/normal_font"
-                    tools:text="Title"/>
+                    tools:text="Title" />
 
                 <ImageView
                     android:id="@+id/row_header_compulsory"
@@ -69,7 +69,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/compulsory"
                     android:visibility="invisible"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
             </LinearLayout>
 
             <LinearLayout

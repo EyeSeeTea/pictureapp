@@ -183,6 +183,7 @@ public class QuestionDB extends BaseModel {
     public List<OptionDB> getOptionDBS() {
         return optionDBS;
     }
+
     private List<QuestionRelationDB> questionRelationThatAreMatchingWithQuestionOptions;
 
     public void setOptionDBS(
@@ -938,11 +939,12 @@ public class QuestionDB extends BaseModel {
 
     public List<QuestionRelationDB> getQuestionRelationsThatAreMatchingOnQuestionOption() {
 
-        if(questionRelationThatAreMatchingWithQuestionOptions != null)
+        if (questionRelationThatAreMatchingWithQuestionOptions != null) {
             return questionRelationThatAreMatchingWithQuestionOptions;
+        }
 
 
-        questionRelationThatAreMatchingWithQuestionOptions  =
+        questionRelationThatAreMatchingWithQuestionOptions =
                 new Select().from(QuestionRelationDB.class).as(questionRelationName)
 
                         .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
@@ -956,7 +958,8 @@ public class QuestionDB extends BaseModel {
                                 .eq(MatchDB_Table.id_match.withTable(
                                         matchAlias)))
 
-                        .where(QuestionRelationDB_Table.id_question_fk.withTable(questionRelationAlias).eq(
+                        .where(QuestionRelationDB_Table.id_question_fk.withTable(
+                                questionRelationAlias).eq(
                                 this.getId_question()))
                         .queryList();
 
@@ -1503,9 +1506,9 @@ public class QuestionDB extends BaseModel {
             return false;
         }
 
-        if(getQuestionRelationsThatAreMatchingOnQuestionOption().isEmpty()){
+        if (getQuestionRelationsThatAreMatchingOnQuestionOption().isEmpty()) {
             return isHiddenByAThreshold();
-        }else {
+        } else {
             long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
             return (hasParentOptionActivated > 0) && !isHiddenByAThreshold() ? false : true;
         }
@@ -1568,8 +1571,9 @@ public class QuestionDB extends BaseModel {
                         return parentHeader;
                     }
                 }
-                List<QuestionThresholdDB> thresholdDBS = questionDB.getQuestionsThresholdsByChildQuestion(this);
-                if(!thresholdDBS.isEmpty()){
+                List<QuestionThresholdDB> thresholdDBS =
+                        questionDB.getQuestionsThresholdsByChildQuestion(this);
+                if (!thresholdDBS.isEmpty()) {
                     parentHeader = true;
                     break;
                 }
@@ -1873,7 +1877,7 @@ public class QuestionDB extends BaseModel {
                 if (!isInThreadHold) {
                     isHiddenByAThreshold = true;
                     break;
-                }else{
+                } else {
                     isHiddenByAThreshold = false;
                 }
             }

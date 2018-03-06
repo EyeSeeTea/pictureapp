@@ -28,16 +28,16 @@ public class MediaMapper {
 
     private static Media.MediaType getMediaType(int mediaType) {
         Media.MediaType type = null;
-        switch (mediaType){
-            case Constants.MEDIA_TYPE_IMAGE:{
+        switch (mediaType) {
+            case Constants.MEDIA_TYPE_IMAGE: {
                 type = Media.MediaType.PICTURE;
                 break;
             }
-            case Constants.MEDIA_TYPE_VIDEO:{
+            case Constants.MEDIA_TYPE_VIDEO: {
                 type = Media.MediaType.VIDEO;
                 break;
             }
-            case Constants.MEDIA_TYPE_UNKNOWN:{
+            case Constants.MEDIA_TYPE_UNKNOWN: {
                 type = Media.MediaType.UNKNOWN;
                 break;
             }

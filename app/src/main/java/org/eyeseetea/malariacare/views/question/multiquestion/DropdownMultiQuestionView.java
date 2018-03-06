@@ -118,7 +118,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
                     if (position > 0)
-                    notifyAnswerChanged(optionDB);
+                        notifyAnswerChanged(optionDB);
                 } else {
                     optionSetFromSavedValue = false;
                 }

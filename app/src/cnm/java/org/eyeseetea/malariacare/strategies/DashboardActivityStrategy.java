@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -13,6 +14,8 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 
 /**
  * Created by manuel on 28/12/16.
@@ -21,6 +24,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
+    StockSurveysFragment stockFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -34,12 +38,23 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-
+        if (stockFragment != null && stockFragment.isAdded()) {
+            stockFragment.reloadHeader(activity);
+            stockFragment.reloadData();
+        } else {
+            showStockFragment(activity, false);
+        }
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        return false;
+        stockFragment = new StockSurveysFragment();
+        stockFragment.reloadData();
+        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+                stockFragment);
+        stockFragment.reloadHeader(activity);
+
+        return isMoveToLeft;
     }
 
     @Override

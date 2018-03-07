@@ -1,4 +1,5 @@
 include ':app', ':core', ':dbflow-processor', ':core-android', ':core-rules', ':models', ':ui', ':ui-bindings', ':utils', ':EyeSeeTea-sdk'
+project(':dbflow-processor').projectDir = new File(settingsDir, 'DBFlow/dbflow-processor')
 project(':core').projectDir = new File(settingsDir, 'sdk/core')
 project(':core-android').projectDir = new File(settingsDir, 'sdk/core-android')
 project(':core-rules').projectDir = new File(settingsDir, 'sdk/core-rules')

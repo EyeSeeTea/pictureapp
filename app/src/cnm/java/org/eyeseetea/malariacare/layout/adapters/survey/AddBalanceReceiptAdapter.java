@@ -20,12 +20,14 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int VIEW_TYPE_SAVE = 1;
     private List<Question> mQuestions;
     private onInteractionListener mOnInteractionListener;
+    private String mDefValue;
 
     public AddBalanceReceiptAdapter(
             List<Question> questions,
-            onInteractionListener onInteractionListener) {
+            onInteractionListener onInteractionListener, String defValue) {
         mQuestions = questions;
         mOnInteractionListener = onInteractionListener;
+        mDefValue = defValue;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private void putValuesToQuestion(final Question question, final QuestionViewHolder holder) {
         holder.question.setText(question.getName());
+        holder.value.setHint(mDefValue);
         holder.value.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -79,9 +82,7 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
 
             }
         });
-        mOnInteractionListener.onQuestionAnswered(question,
-                holder.value.getText().toString().isEmpty() ? holder.value.getHint().toString()
-                        : holder.value.getText().toString());
+        mOnInteractionListener.onQuestionAnswered(question, holder.value.getText().toString());
     }
 
     @Override

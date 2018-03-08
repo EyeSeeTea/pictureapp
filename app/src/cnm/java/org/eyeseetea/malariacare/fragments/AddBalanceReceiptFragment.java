@@ -114,8 +114,8 @@ public class AddBalanceReceiptFragment extends Fragment implements
     }
 
     @Override
-    public void showQuestions(List<Question> questions) {
-        mQuestionsList.setAdapter(new AddBalanceReceiptAdapter(questions, this));
+    public void showQuestions(List<Question> questions, String defValue) {
+        mQuestionsList.setAdapter(new AddBalanceReceiptAdapter(questions, this,defValue));
         mQuestionsList.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }

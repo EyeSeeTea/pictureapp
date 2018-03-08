@@ -3,14 +3,10 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertEquals;
 
-import static org.eyeseetea.malariacare.configurationimporter
-        .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
-import static org.eyeseetea.malariacare.configurationimporter
-        .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION_V2;
-import static org.eyeseetea.malariacare.configurationimporter
-        .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
+import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
+import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION_V2;
+import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 import static org.junit.Assert.assertTrue;
-
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
@@ -20,18 +16,16 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
-        .MetadataConfigurationApiClient;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
-        .MetadataConfigurationDBImporter;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationApiClient;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataConfigurationDBImporter;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -44,9 +38,11 @@ public class MetadataConfigurationDBImporterShould {
 
     private final Program program = new Program("T_TZ", "low6qUS2wc9");
 
+    @Rule
+    public InMemoryDBFlowDataBase mInMemoryDBFlowDataBase = new InMemoryDBFlowDataBase();
+
     @Before
     public void setUp() throws Exception {
-        PopulateDB.wipeDataBase();
         CredentialsReader credentialsReader = CredentialsReader.getInstance();
         Session.setCredentials(
                 new Credentials("/", credentialsReader.getUser(),

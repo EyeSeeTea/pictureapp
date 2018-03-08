@@ -21,5 +21,24 @@ public class ProgramProgramRelationDB extends BaseModel {
     @Column
     long id_aux_program;
 
+    public ProgramProgramRelationDB() {
+    }
 
+    public ProgramProgramRelationDB(long id_main_program,
+            long id_aux_program) {
+        this.id_main_program = id_main_program;
+        this.id_aux_program = id_aux_program;
+    }
+
+    public long getId_program_program_relation() {
+        return id_program_program_relation;
+    }
+
+    public long getId_main_program() {
+        return id_main_program;
+    }
+
+    public long getId_aux_program() {
+        return id_aux_program;
+    }
 }

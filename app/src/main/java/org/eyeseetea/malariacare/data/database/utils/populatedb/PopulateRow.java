@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
@@ -255,5 +256,12 @@ public class PopulateRow {
             phoneFormatDB.setPrefixToPut(line[4]);
         }
         return phoneFormatDB;
+    }
+
+    public static ProgramProgramRelationDB populateProgramProgramRelation(String[] line,
+            Map<Integer, ProgramDB> programFK) {
+        return new ProgramProgramRelationDB(
+                programFK.get(Integer.valueOf(line[1])).getId_program(),
+                programFK.get(Integer.valueOf(line[2])).getId_program());
     }
 }

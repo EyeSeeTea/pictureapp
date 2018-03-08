@@ -1,11 +1,7 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
-import android.app.Activity;
-
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
-import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
@@ -65,9 +61,4 @@ public class StockSurveysPresenter {
     public void reloadData() {
         getStockSurveys();
     }
-
-    public void reloadHeader(Activity activity) {
-        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_stock);
-    }
-
 }

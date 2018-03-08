@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.domain.entity.Question;
 
 import java.util.List;
 
-public class GetQuestionsForProgramUseCase implements UseCase {
+public class GetQuestionsByProgramUseCase implements UseCase {
 
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
@@ -15,7 +15,7 @@ public class GetQuestionsForProgramUseCase implements UseCase {
     private Callback mCallback;
     private String mProgramUID;
 
-    public GetQuestionsForProgramUseCase(
+    public GetQuestionsByProgramUseCase(
             IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor,
             IQuestionRepository questionRepository) {
@@ -32,7 +32,7 @@ public class GetQuestionsForProgramUseCase implements UseCase {
 
     @Override
     public void run() {
-        List<Question> questions = mQuestionRepository.getQuestionsForProgram(mProgramUID);
+        List<Question> questions = mQuestionRepository.getQuestionsByProgram(mProgramUID);
         notifyGetQuestions(questions);
     }
 

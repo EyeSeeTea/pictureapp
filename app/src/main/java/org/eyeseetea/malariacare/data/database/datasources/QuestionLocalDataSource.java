@@ -12,7 +12,7 @@ import java.util.List;
 
 public class QuestionLocalDataSource implements IQuestionRepository {
     @Override
-    public List<Question> getQuestionsForProgram(String programUID) {
+    public List<Question> getQuestionsByProgram(String programUID) {
         List<QuestionDB> questionDBS = QuestionDB.listByProgram(
                 ProgramDB.getProgram(programUID));
 

@@ -62,9 +62,7 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
 
     @Override
     public void reloadHeader(Activity activity) {
-        if (mStockSurveysPresenter != null) {
-            mStockSurveysPresenter.reloadHeader(activity);
-        }
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_stock);
     }
 
     @Override

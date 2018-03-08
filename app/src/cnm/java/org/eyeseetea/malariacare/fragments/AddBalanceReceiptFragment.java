@@ -28,7 +28,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.usecase.CreateSurveyUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetQuestionsForProgramUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetQuestionsByProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.AddBalanceReceiptAdapter;
@@ -100,15 +100,15 @@ public class AddBalanceReceiptFragment extends Fragment implements
         CreateSurveyUseCase createSurveyUseCase = new CreateSurveyUseCase(mainExecutor,
                 asyncExecutor, surveyRepository, programRepository, organisationUnitRepository,
                 userRepository);
-        GetQuestionsForProgramUseCase getQuestionsForProgramUseCase =
-                new GetQuestionsForProgramUseCase(mainExecutor, asyncExecutor, questionRepository);
+        GetQuestionsByProgramUseCase getQuestionsByProgramUseCase =
+                new GetQuestionsByProgramUseCase(mainExecutor, asyncExecutor, questionRepository);
         SaveValueUseCase saveValueUseCase = new SaveValueUseCase(asyncExecutor, mainExecutor,
                 valueRepository);
         SaveSurveyUseCase saveSurveyUseCase = new SaveSurveyUseCase(asyncExecutor, mainExecutor,
                 surveyRepository);
 
         mAddBalanceReceiptPresenter = new AddBalanceReceiptPresenter(createSurveyUseCase,
-                getQuestionsForProgramUseCase, saveValueUseCase, saveSurveyUseCase);
+                getQuestionsByProgramUseCase, saveValueUseCase, saveSurveyUseCase);
         mAddBalanceReceiptPresenter.attachView(this,
                 getActivity().getResources().getString(R.string.stock_program_uid), typeSurvey);
     }

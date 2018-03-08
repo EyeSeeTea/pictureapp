@@ -6,7 +6,7 @@ import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.usecase.CreateSurveyUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetQuestionsForProgramUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetQuestionsByProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -17,16 +17,16 @@ public class AddBalanceReceiptPresenter {
 
     AddBalanceReceiptView mView;
     private CreateSurveyUseCase mCreateSurveyUseCase;
-    private GetQuestionsForProgramUseCase mGetQuestionsForProgramUseCase;
+    private GetQuestionsByProgramUseCase mGetQuestionsByProgramUseCase;
     private SaveValueUseCase mSaveValueUseCase;
     private SaveSurveyUseCase mSaveSurveyUseCase;
     private Survey mSurvey;
     public AddBalanceReceiptPresenter(
             CreateSurveyUseCase createSurveyUseCase,
-            GetQuestionsForProgramUseCase getQuestionsForProgramUseCase,
+            GetQuestionsByProgramUseCase getQuestionsByProgramUseCase,
             SaveValueUseCase saveValueUseCase, SaveSurveyUseCase saveSurveyUseCase) {
         mCreateSurveyUseCase = createSurveyUseCase;
-        mGetQuestionsForProgramUseCase = getQuestionsForProgramUseCase;
+        mGetQuestionsByProgramUseCase = getQuestionsByProgramUseCase;
         mSaveValueUseCase = saveValueUseCase;
         mSaveSurveyUseCase = saveSurveyUseCase;
     }
@@ -39,8 +39,8 @@ public class AddBalanceReceiptPresenter {
             public void onCreateSurvey(Survey survey) {
                 mSurvey = survey;
                 Log.d(this.getClass().getName(), "Survey created id" + survey.getId());
-                mGetQuestionsForProgramUseCase.execute(
-                        new GetQuestionsForProgramUseCase.Callback() {
+                mGetQuestionsByProgramUseCase.execute(
+                        new GetQuestionsByProgramUseCase.Callback() {
 
                             @Override
                             public void onGetQuestions(List<Question> questions) {

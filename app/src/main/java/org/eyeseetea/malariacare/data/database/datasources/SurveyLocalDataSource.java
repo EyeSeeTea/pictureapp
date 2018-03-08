@@ -80,7 +80,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     }
 
     @Override
-    public Survey save(Survey survey) {
+    public long save(Survey survey) {
         SurveyDB surveyDB = SurveyDB.findById(survey.getId());
         if (surveyDB == null) {
             OrgUnitDB orgUnitDB = null;
@@ -97,8 +97,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         }
         surveyDB.setStatus(survey.getStatus());
         surveyDB.update();
-        survey.setId(surveyDB.getId_survey());
-        return survey;
+        return surveyDB.getId_survey();
     }
 
 

@@ -31,7 +31,7 @@ public class QuestionLocalDataSource implements IQuestionRepository {
         return questions;
     }
 
-    private Question.Type mapOutputToQuestionType(int output) {
+    public static Question.Type mapOutputToQuestionType(int output) {
         Question.Type questionType;
 
         switch (output) {

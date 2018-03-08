@@ -18,12 +18,13 @@ public class Question {
     private int index;
     private Visibility visibility;
     private List<Rule> rules;
+    private Value mValue;
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             List<Option> options, Header header, int index,
             Visibility visibility,
-            List<Rule> rules) {
+            List<Rule> rules, Value value) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -37,6 +38,7 @@ public class Question {
         this.index = index;
         this.visibility = visibility;
         this.rules = rules;
+        mValue = value;
     }
 
     public static Builder newBuilder() {
@@ -97,6 +99,10 @@ public class Question {
 
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
+    }
+
+    public Value getValue() {
+        return mValue;
     }
 
     @Override
@@ -185,6 +191,7 @@ public class Question {
         private Visibility visibility;
         private List<Rule> rules;
         private long id;
+        private Value mValue;
 
         public Builder() {
         }
@@ -244,6 +251,11 @@ public class Question {
             return this;
         }
 
+        public Builder value(Value value) {
+            mValue = value;
+            return this;
+        }
+
         public Question build() {
             return new Question(
                     this.id,
@@ -257,7 +269,8 @@ public class Question {
                     this.header,
                     this.index,
                     this.visibility,
-                    this.rules
+                    this.rules,
+                    mValue
             );
         }
 

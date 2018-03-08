@@ -20,4 +20,6 @@ public interface ISurveyRepository {
     Survey save(Survey survey);
 
     List<Survey> getAllCompletedSurveys();
+
+    List<Survey> getSurveysByProgram(String idProgram);
 }

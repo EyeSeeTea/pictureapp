@@ -886,7 +886,8 @@ public class QuestionDB extends BaseModel {
 
 
     public List<QuestionRelationDB> getQuestionTriggeredRelationswithOption(OptionDB optionDB) {
-        return new Select().from(QuestionRelationDB.class).as(questionRelationName).join(
+        List<QuestionRelationDB> questionRelationDBS = new Select().from(
+                QuestionRelationDB.class).as(questionRelationName).join(
                 MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName).on(
                 QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias).eq(
                         MatchDB_Table.id_question_relation_fk.withTable(matchAlias))).join(
@@ -897,6 +898,13 @@ public class QuestionDB extends BaseModel {
                         id_question)).and(
                 QuestionOptionDB_Table.id_option_fk.withTable(questionOptionAlias).eq(
                         optionDB.getId_option())).queryList();
+        //FIXME fix the question id of the question relation related with DBFlow bug
+        List<QuestionRelationDB> realQuestionRelations = new ArrayList<>();
+        for (QuestionRelationDB questionRelationDB : questionRelationDBS) {
+            realQuestionRelations.add(
+                    QuestionRelationDB.findById(questionRelationDB.getId_question_relation()));
+        }
+        return realQuestionRelations;
     }
 
     public List<QuestionOptionDB> getQuestionOption() {
@@ -1243,7 +1251,7 @@ public class QuestionDB extends BaseModel {
         return this.sibling;
     }
 
-    private ProgramDB getQuestionProgram() {
+    public ProgramDB getQuestionProgram() {
 
         return new Select().from(ProgramDB.class).as(programName)
                 .join(TabDB.class, Join.JoinType.LEFT_OUTER).as(tabName)

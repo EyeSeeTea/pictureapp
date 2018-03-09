@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
-import android.os.Bundle;
+import android.app.Fragment;
 import android.view.View;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -14,12 +14,8 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
-
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
@@ -48,10 +44,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        stockFragment = new StockSurveysFragment();
-        stockFragment.reloadData();
+        if (stockFragment == null) {
+            stockFragment = new StockSurveysFragment();
+        }
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 stockFragment);
+        stockFragment.reloadData();
         stockFragment.reloadHeader(activity);
 
         return isMoveToLeft;
@@ -105,6 +103,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
+        if (isFragmentActive(activity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_container)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
+        Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
         return false;
     }
 

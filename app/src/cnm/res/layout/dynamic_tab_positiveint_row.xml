@@ -20,8 +20,8 @@
         android:gravity="left"
         android:layout_gravity="center"
         android:textColor="@color/gray_text_survey"
-        android:textSize="?attr/font_small"
-        app:font_name="@string/normal_font" />
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/font_name_bold"/>
 
     <org.eyeseetea.sdk.presentation.views.CustomEditText
         android:id="@+id/answer"

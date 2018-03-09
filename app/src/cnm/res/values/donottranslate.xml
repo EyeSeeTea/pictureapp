@@ -41,6 +41,7 @@
     <string name="imei_preference" translatable="false">imei_prefrence</string>
     <string name="default_language" translatable="false">en</string>
     <string name="stock_program_uid" translatable="false">zaRb1RuqGVk</string>
+    <string name="malaria_program_uid" translatable="false">d7iipQZaHad</string>
     <string name="control_data_element_stock_type" translatable="false">y4khhaHeh4k</string>
     <string name="control_data_element_stock_type_balance" translatable="false">BALANCE</string>
     <string name="control_data_element_stock_type_issue" translatable="false">ISSUE</string>

@@ -1,12 +1,11 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
-import android.util.Log;
 
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.usecase.CreateSurveyUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetQuestionsForProgramUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetQuestionsByProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -17,16 +16,16 @@ public class AddBalanceReceiptPresenter {
 
     AddBalanceReceiptView mView;
     private CreateSurveyUseCase mCreateSurveyUseCase;
-    private GetQuestionsForProgramUseCase mGetQuestionsForProgramUseCase;
+    private GetQuestionsByProgramUseCase mGetQuestionsByProgramUseCase;
     private SaveValueUseCase mSaveValueUseCase;
     private SaveSurveyUseCase mSaveSurveyUseCase;
     private Survey mSurvey;
     public AddBalanceReceiptPresenter(
             CreateSurveyUseCase createSurveyUseCase,
-            GetQuestionsForProgramUseCase getQuestionsForProgramUseCase,
+            GetQuestionsByProgramUseCase getQuestionsByProgramUseCase,
             SaveValueUseCase saveValueUseCase, SaveSurveyUseCase saveSurveyUseCase) {
         mCreateSurveyUseCase = createSurveyUseCase;
-        mGetQuestionsForProgramUseCase = getQuestionsForProgramUseCase;
+        mGetQuestionsByProgramUseCase = getQuestionsByProgramUseCase;
         mSaveValueUseCase = saveValueUseCase;
         mSaveSurveyUseCase = saveSurveyUseCase;
     }
@@ -38,14 +37,13 @@ public class AddBalanceReceiptPresenter {
             @Override
             public void onCreateSurvey(Survey survey) {
                 mSurvey = survey;
-                Log.d(this.getClass().getName(), "Survey created id" + survey.getId());
-                mGetQuestionsForProgramUseCase.execute(
-                        new GetQuestionsForProgramUseCase.Callback() {
+                mGetQuestionsByProgramUseCase.execute(
+                        new GetQuestionsByProgramUseCase.Callback() {
 
                             @Override
                             public void onGetQuestions(List<Question> questions) {
                                 if (mView != null) {
-                                    mView.showQuestions(questions);
+                                    mView.showQuestions(questions,"0");
                                 }
                             }
                         }, programUID);
@@ -62,12 +60,12 @@ public class AddBalanceReceiptPresenter {
     }
 
     public void onQuestionAnswerTextChange(String questionUID, String value) {
+        String valueToSave = value.isEmpty() ? "0" : value;
         mSaveValueUseCase.execute(new SaveValueUseCase.Callback() {
             @Override
             public void onValueSaved(Value value) {
-                Log.d(this.getClass().getName(), "Value saved" + value.getQuestionUId());
             }
-        }, mSurvey.getId(), new Value(value, questionUID));
+        }, mSurvey.getId(), new Value(valueToSave, questionUID));
     }
 
     public void onCompletedSurvey() {
@@ -75,7 +73,6 @@ public class AddBalanceReceiptPresenter {
         mSaveSurveyUseCase.execute(mSurvey, new SaveSurveyUseCase.Callback() {
             @Override
             public void onSurveySaved() {
-                Log.d(this.getClass().getName(), "Survey completed saved" + mSurvey.getId());
             }
         });
         mView.closeFragment();
@@ -86,7 +83,7 @@ public class AddBalanceReceiptPresenter {
     }
 
     public interface AddBalanceReceiptView {
-        void showQuestions(List<Question> questions);
+        void showQuestions(List<Question> questions,String defValue);
 
         void showErrorMessage(String message);
 

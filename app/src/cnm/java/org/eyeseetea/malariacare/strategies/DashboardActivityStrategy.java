@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.os.Bundle;
 import android.view.View;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -14,13 +13,8 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
-
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
@@ -49,7 +43,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        stockFragment = new StockSurveysFragment();
+        if (stockFragment == null) {
+            stockFragment = new StockSurveysFragment();
+        }
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 stockFragment);
         stockFragment.reloadData();

@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
@@ -19,6 +18,7 @@ public class Question {
     private int index;
     private Visibility visibility;
     private List<Rule> rules;
+    private Value mValue;
     private String mQuestionText;
 
     public Question() {
@@ -33,7 +33,7 @@ public class Question {
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             List<Option> options, Header header, int index,
             Visibility visibility,
-            List<Rule> rules) {
+            List<Rule> rules, Value value) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -47,6 +47,7 @@ public class Question {
         this.index = index;
         this.visibility = visibility;
         this.rules = rules;
+        mValue = value;
     }
 
     public static Builder newBuilder() {
@@ -111,6 +112,10 @@ public class Question {
 
     public String getQuestionText() {
         return mQuestionText;
+    }
+
+    public Value getValue() {
+        return mValue;
     }
 
     @Override
@@ -178,9 +183,13 @@ public class Question {
 
     public enum Type {
         SHORT_TEXT, PHONE, DROPDOWN_LIST, YEAR, DATE, INT, LONG_TEXT, POSITIVE_INT,
-        PREGNANT_MONTH, RADIO_GROUP_HORIZONTAL, QUESTION_LABEL, SWITCH_BUTTON
+        PREGNANT_MONTH, RADIO_GROUP_HORIZONTAL, QUESTION_LABEL, NO_ANSWER, RADIO_GROUP_VERTICAL,
+        DROPDOWN_LIST_DISABLED, IMAGES_2, IMAGES_4, IMAGES_6, IMAGES_3, IMAGES_5, COUNTER,
+        WARNING, REMINDER, DROPDOWN_OU_LIST, IMAGE_3_NO_DATAELEMENT, HIDDEN,
+        IMAGE_RADIO_GROUP_NO_DATAELEMENT, IMAGE_RADIO_GROUP, POSITIVE_OR_ZERO_INT,
+        DYNAMIC_TREATMENT_SWITCH_NUMBER, DYNAMIC_STOCK_IMAGE_RADIO_BUTTON, PREGNANT_MONTH_INT,
+        DROPDOWN_LIST_OU_TREE, SWITCH_BUTTON
     }
-
 
     public static final class Builder {
         private String code;
@@ -195,6 +204,7 @@ public class Question {
         private Visibility visibility;
         private List<Rule> rules;
         private long id;
+        private Value mValue;
 
         public Builder() {
         }
@@ -254,6 +264,11 @@ public class Question {
             return this;
         }
 
+        public Builder value(Value value) {
+            mValue = value;
+            return this;
+        }
+
         public Question build() {
             return new Question(
                     this.id,
@@ -267,7 +282,8 @@ public class Question {
                     this.header,
                     this.index,
                     this.visibility,
-                    this.rules
+                    this.rules,
+                    mValue
             );
         }
 

@@ -10,24 +10,23 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapter.SurveyHolder> {
 
-    protected List<SurveyDB> surveys;
-    protected LayoutInflater mInflater;
+    protected List<Survey> surveys;
     protected Context mContext;
 
     public StockSurveysAdapter(Context context) {
         mContext = context;
     }
 
-    public void addSurveys(List<SurveyDB> surveys) {
+    public void addSurveys(List<Survey> surveys) {
         this.surveys = surveys;
     }
 
@@ -40,40 +39,26 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
 
     @Override
     public void onBindViewHolder(SurveyHolder holder, int position) {
-        SurveyDB survey = surveys.get(position);
+        Survey survey = surveys.get(position);
 
-        String date = Utils.parseDateToString(survey.getEventDate(),
+        String date = Utils.parseDateToString(survey.getSurveyDate(),
                 mContext.getString(R.string.date_survey_format));
-        String hour = Utils.parseDateToString(survey.getEventDate(),
+        String hour = Utils.parseDateToString(survey.getSurveyDate(),
                 mContext.getString(R.string.hour_survey_format));
 
-        List<ValueDB> visible = new ArrayList<>();
-
-        for (ValueDB value : survey.getValueDBs()) {
-            if (value.getQuestionDB() != null) {
-                if (value.getQuestionDB().isVisible()) {
-                    visible.add(value);
-                }
-            }
-        }
+        List<Question> questions = survey.getQuestions();
 
         String visibleValues = "";
         boolean first = true;
-        for (ValueDB value : visible) {
+        for (Question question : questions) {
             if (first) {
                 first = false;
             } else {
                 visibleValues += ", ";
             }
-            if (value.getQuestionDB() != null) {
-                visibleValues += value.getQuestionDB().getInternationalizedForm_name() + " : ";
-            }
+            visibleValues += Utils.getInternationalizedString(question.getName()) + " : ";
 
-            if (value.getOptionDB() != null) {
-                visibleValues += value.getOptionDB().getInternationalizedName();
-            } else {
-                visibleValues += value.getValue();
-            }
+            visibleValues += question.getValue().getValue();
         }
 
         String dateText = "[ " + date + " - " + hour + " ] ";
@@ -85,7 +70,7 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
 
     @Override
     public long getItemId(int position) {
-        return surveys.get(position).getId_survey();
+        return surveys.get(position).getId();
     }
 
     @Override
@@ -96,7 +81,7 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
         return surveys.size();
     }
 
-    private int getImageForSurvey(SurveyDB survey) {
+    private int getImageForSurvey(Survey survey) {
         switch (survey.getType()) {
             case Constants.SURVEY_RECEIPT:
                 return R.drawable.ic_arrow_survey_receipt;

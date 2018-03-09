@@ -9,7 +9,8 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 
 @Migration(version = 13, database = AppDatabase.class)
-public class Migration12AddColumnReferenceToCountryDB extends AlterTableMigration<CountryVersionDB> {
+public class Migration12AddColumnReferenceToCountryDB extends
+        AlterTableMigration<CountryVersionDB> {
 
 
     public Migration12AddColumnReferenceToCountryDB(Class<CountryVersionDB> table) {

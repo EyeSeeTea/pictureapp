@@ -35,6 +35,8 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOption
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
@@ -76,79 +78,128 @@ public class QuestionDB extends BaseModel {
      * Constant that reflects a visible mQuestionDB in information
      */
     public static final int QUESTION_VISIBLE = 1;
+
     /**
      * Constant that reflects a not visible mQuestionDB in information
      */
     public static final int QUESTION_INVISIBLE = 0;
+
     /**
      * Constant that reflects a visible important question
      */
     public static final int QUESTION_IMPORTANT = 2;
+
     /**
      * Constant that reflects a visible mQuestionDB in information
      */
     public static final int QUESTION_COMPULSORY = 1;
+
     /**
      * Constant that reflects a not visible mQuestionDB in information
      */
     public static final int QUESTION_NOT_COMPULSORY = 0;
+
     private static final String TAG = "Question";
+
     /**
-     * Required to create a null QuestionDB value to enable caching when you're the last mQuestionDB.
+     * Required to create a null QuestionDB value to enable caching when you're the last
+     * mQuestionDB.
      */
     private final static Long NULL_SIBLING_ID = -0l;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question;
+
     @Column
     String code;
+
     @Column
     String de_name;
+
     @Column
     String help_text;
+
     @Column
     String form_name;
+
     @Column
     String uid_question;
+
     @Column
     Integer order_pos;
+
     @Column
     Float numerator_w;
+
     @Column
     Float denominator_w;
+
     @Column
     String feedback;
+
     @Column
     Long id_header_fk;
+
     /**
      * Reference to the parent mHeaderDB (loaded lazily)
      */
     HeaderDB mHeaderDB;
+
     @Column
     Long id_answer_fk;
+
     /**
      * Reference to the associated mAnswerDB (loaded lazily)
      */
     AnswerDB mAnswerDB;
     @Column
     Integer output;
-    //OBSOLETE
+
     @Column
     Long id_question_parent;
+
     /**
      * Reference to parent mQuestionDB (loaded lazily, DEPRECATED??)
      */
     QuestionDB mQuestionDB;
+
+    @Deprecated
     @Column
     Long id_composite_score_fk;
+
     @Column
     Integer total_questions;
+
     @Column
     Integer visible;
+
     @Column
     String path;
+
     @Column
     Integer compulsory;
+
+    public List<OptionDB> getOptionDBS() {
+        return optionDBS;
+    }
+
+    private List<QuestionRelationDB> questionRelationThatAreMatchingWithQuestionOptions;
+
+    public void setOptionDBS(
+            List<OptionDB> optionDBS) {
+        this.optionDBS = optionDBS;
+    }
+
+    List<OptionDB> optionDBS;
+
+    public Long getId_answer_fk() {
+        return id_answer_fk;
+    }
+
+
+    public PhoneFormatDB phoneFormatDB;
+
     /**
      * Reference to associated mCompositeScoreDB for this mQuestionDB (loaded lazily)
      */
@@ -183,6 +234,7 @@ public class QuestionDB extends BaseModel {
      * List of mQuestionDB Thresholds associated with this mQuestionDB
      */
     private List<QuestionThresholdDB> mQuestionThresholdDBs;
+
     /**
      * Cached reference to next mQuestionDB for this one.
      * No parent: Next mQuestionDB in order
@@ -215,6 +267,14 @@ public class QuestionDB extends BaseModel {
         this.setAnswer(answerDB);
         this.setCompositeScore(compositeScoreDB);
         this.setQuestion(questionDB);
+    }
+
+    public PhoneFormatDB getPhoneFormatDB() {
+        return phoneFormatDB;
+    }
+
+    public void setPhoneFormatDB(PhoneFormatDB phoneFormatDB) {
+        this.phoneFormatDB = phoneFormatDB;
     }
 
     public static List<QuestionDB> getAllQuestions() {
@@ -336,6 +396,7 @@ public class QuestionDB extends BaseModel {
                 .where(QuestionDB_Table.uid_question.is(uid))
                 .queryList();
     }
+
     /**
      * Finds a mQuestionDB by its UID
      */
@@ -351,6 +412,13 @@ public class QuestionDB extends BaseModel {
                 .from(QuestionDB.class)
                 .where(QuestionDB_Table.code.is(code))
                 .querySingle();
+    }
+
+    public static List<QuestionDB> findQuestionsByHeader(Long id) {
+        return new Select()
+                .from(QuestionDB.class)
+                .where(QuestionDB_Table.id_header_fk.eq(id))
+                .queryList();
     }
 
     /**
@@ -377,7 +445,8 @@ public class QuestionDB extends BaseModel {
     public static QuestionDB findRootQuestion(TabDB tabDB) {
 
         //Take every child mQuestionDB
-        List<QuestionRelationDB> questionRelationDBs = QuestionRelationDB.listAllParentChildRelations();
+        List<QuestionRelationDB> questionRelationDBs =
+                QuestionRelationDB.listAllParentChildRelations();
 
         if (questionRelationDBs == null || questionRelationDBs.size() == 0) {
             //flow without relations
@@ -426,7 +495,8 @@ public class QuestionDB extends BaseModel {
 
                 .join(QuestionRelationDB.class, Join.JoinType.INNER).as(questionRelationName)
                 .on(QuestionDB_Table.id_question.withTable(questionAlias)
-                        .eq(QuestionRelationDB_Table.id_question_fk.withTable(questionRelationAlias)))
+                        .eq(QuestionRelationDB_Table.id_question_fk.withTable(
+                                questionRelationAlias)))
 
                 .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
                 .on(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)
@@ -523,6 +593,30 @@ public class QuestionDB extends BaseModel {
         return new Select().from(QuestionThresholdDB.class)
                 .where(QuestionThresholdDB_Table.id_question_fk.eq(
                         getId_question())).queryList();
+    }
+
+    public List<QuestionThresholdDB> getQuestionsThresholdsByChildQuestion(
+            QuestionDB childQuestionDB) {
+        return new Select().from(QuestionThresholdDB.class).as(questionThresholdName)
+
+                .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                .on(QuestionThresholdDB_Table.id_match_fk.withTable(questionThresholdAlias)
+                        .eq(MatchDB_Table.id_match.withTable(matchAlias)))
+
+                .join(QuestionRelationDB.class, Join.JoinType.INNER).as(questionRelationName)
+                .on(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)
+                        .eq(QuestionRelationDB_Table.id_question_relation.withTable(
+                                questionRelationAlias)))
+
+                .where(QuestionThresholdDB_Table.id_question_fk
+                        .withTable(questionThresholdAlias)
+                        .eq(getId_question()))
+
+                .and(QuestionRelationDB_Table.id_question_fk
+                        .withTable(questionRelationAlias).eq(
+                                childQuestionDB.getId_question()))
+
+                .queryList();
     }
 
     /**
@@ -673,6 +767,7 @@ public class QuestionDB extends BaseModel {
     public Long getHeaderForeingKeyId() {
         return id_header_fk;
     }
+
     public Integer getOutput() {
         return output;
     }
@@ -695,6 +790,10 @@ public class QuestionDB extends BaseModel {
 
     public Boolean isImportant() {
         return (this.visible == QUESTION_IMPORTANT);
+    }
+
+    public boolean isInvisible() {
+        return (this.visible == QUESTION_INVISIBLE);
     }
 
     public void setVisible(Integer visible) {
@@ -745,6 +844,7 @@ public class QuestionDB extends BaseModel {
         this.id_question_parent = (questionDB != null) ? questionDB.getId_question() : null;
     }
 
+    @Deprecated
     public CompositeScoreDB getCompositeScoreDB() {
         if (mCompositeScoreDB == null) {
             if (id_composite_score_fk == null) return null;
@@ -756,11 +856,13 @@ public class QuestionDB extends BaseModel {
         return mCompositeScoreDB;
     }
 
+    @Deprecated
     public void setCompositeScoreDB(Long id_composite_score) {
         this.id_composite_score_fk = id_composite_score;
         this.mCompositeScoreDB = null;
     }
 
+    @Deprecated
     public void setCompositeScore(CompositeScoreDB compositeScoreDB) {
         this.mCompositeScoreDB = compositeScoreDB;
         this.id_composite_score_fk =
@@ -843,15 +945,71 @@ public class QuestionDB extends BaseModel {
         return matchedQuestionOptionDB;
     }
 
+    public List<QuestionRelationDB> getQuestionRelationsThatAreMatchingOnQuestionOption() {
+
+        if (questionRelationThatAreMatchingWithQuestionOptions != null) {
+            return questionRelationThatAreMatchingWithQuestionOptions;
+        }
+
+
+        questionRelationThatAreMatchingWithQuestionOptions =
+                new Select().from(QuestionRelationDB.class).as(questionRelationName)
+
+                        .join(MatchDB.class, Join.JoinType.INNER).as(matchName)
+                        .on(QuestionRelationDB_Table.id_question_relation.withTable(
+                                questionRelationAlias)
+                                .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+
+                        .join(QuestionOptionDB.class, Join.JoinType.INNER).as(
+                        questionOptionName)
+                        .on(QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias)
+                                .eq(MatchDB_Table.id_match.withTable(
+                                        matchAlias)))
+
+                        .where(QuestionRelationDB_Table.id_question_fk.withTable(
+                                questionRelationAlias).eq(
+                                this.getId_question()))
+                        .queryList();
+
+        return questionRelationThatAreMatchingWithQuestionOptions;
+    }
+
     public List<MatchDB> getMatchDBs() {
         if (mMatchDBs == null) {
 
-            mMatchDBs = new Select().from(MatchDB.class).as(matchName)
-                    .join(QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
-                    .on(MatchDB_Table.id_match.withTable(matchAlias)
-                            .eq(QuestionOptionDB_Table.id_match_fk.withTable(questionOptionAlias)))
-                    .where(QuestionOptionDB_Table.id_question_fk.withTable(questionOptionAlias).eq(
-                            this.getId_question())).queryList();
+            switch (this.getOutput()) {
+                case Constants.POSITIVE_INT:
+                case Constants.POSITIVE_OR_ZERO_INT:
+                case Constants.YEAR:
+                case Constants.PREGNANT_MONTH_INT:
+                case Constants.INT:
+
+                    mMatchDBs = new Select().from(MatchDB.class).as(matchName)
+                            .join(QuestionThresholdDB.class, Join.JoinType.LEFT_OUTER).as(
+                                    questionThresholdName)
+                            .on(MatchDB_Table.id_match.withTable(matchAlias)
+                                    .eq(QuestionThresholdDB_Table.id_match_fk.withTable(
+                                            questionThresholdAlias)))
+                            .where(QuestionThresholdDB_Table.id_question_fk.withTable(
+                                    questionThresholdAlias).eq(
+                                    this.getId_question())).queryList();
+
+                    break;
+
+                default:
+                    mMatchDBs = new Select().from(MatchDB.class).as(matchName)
+                            .join(QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(
+                                    questionOptionName)
+                            .on(MatchDB_Table.id_match.withTable(matchAlias)
+                                    .eq(QuestionOptionDB_Table.id_match_fk.withTable(
+                                            questionOptionAlias)))
+                            .where(QuestionOptionDB_Table.id_question_fk.withTable(
+                                    questionOptionAlias).eq(
+                                    this.getId_question())).queryList();
+
+            }
+
+
         }
         return mMatchDBs;
     }
@@ -876,13 +1034,15 @@ public class QuestionDB extends BaseModel {
             //Select mQuestionDB from questionrelation where operator=1 and id_match in (..)
             this.children = new Select().from(QuestionDB.class).as(questionName)
                     //QuestionDB + QuestioRelation
-                    .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                    .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(
+                            questionRelationName)
                     .on(QuestionDB_Table.id_question.withTable(questionAlias)
                             .eq(QuestionRelationDB_Table.id_question_fk.withTable(
                                     questionRelationAlias)))
                     //+MatchDB
                     .join(MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName)
-                    .on(QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias)
+                    .on(QuestionRelationDB_Table.id_question_relation.withTable(
+                            questionRelationAlias)
                             .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
                     //Parent child relationship
                     .where(in)
@@ -1049,7 +1209,8 @@ public class QuestionDB extends BaseModel {
     private QuestionDB getSiblingNoParent() {
 
         //Take every child mQuestionDB
-        List<QuestionRelationDB> questionRelationDBs = QuestionRelationDB.listAllParentChildRelations();
+        List<QuestionRelationDB> questionRelationDBs =
+                QuestionRelationDB.listAllParentChildRelations();
         //Build a not in condition
         Condition.In in;
         if (questionRelationDBs.size() == 0) {
@@ -1169,6 +1330,10 @@ public class QuestionDB extends BaseModel {
         }
 
         return result;
+    }
+
+    public static int getQuestionDBCount() {
+        return getAllQuestions().size();
     }
 
     /**
@@ -1304,18 +1469,9 @@ public class QuestionDB extends BaseModel {
         return hasParentOptionActivated > 0 ? false : true;
     }
 
-    /**
-     * Checks if this mQuestionDB is shown according to the values of the given survey
-     */
-    public boolean isHiddenBySurveyAndHeader(SurveyDB surveyDB) {
-        if (surveyDB == null) {
-            return false;
-        }
-        //No mQuestionDB relations
-        if (!hasParentInSameHeader()) {
-            return false;
-        }
-        long hasParentOptionActivated = SQLite.selectCountOf().from(ValueDB.class).as(valueName)
+    private long hasParentOptionActivated(SurveyDB surveyDB) {
+        //Parent with the right value -> not hidden
+        return SQLite.selectCountOf().from(ValueDB.class).as(valueName)
                 .join(QuestionOptionDB.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
                 .on(ValueDB_Table.id_question_fk.withTable(valueAlias)
                                 .eq(QuestionOptionDB_Table.id_question_fk.withTable
@@ -1346,7 +1502,24 @@ public class QuestionDB extends BaseModel {
                         this.getHeaderDB().getId_header()))
                 .count();
         //Parent with the right value -> not hidden
-        return hasParentOptionActivated > 0 ? false : true;
+
+    }
+
+    public boolean isHiddenBySurveyAndHeader(SurveyDB surveyDB) {
+        if (surveyDB == null) {
+            return false;
+        }
+        //No mQuestionDB relations
+        if (!hasParentInSameHeader()) {
+            return false;
+        }
+
+        if (getQuestionRelationsThatAreMatchingOnQuestionOption().isEmpty()) {
+            return isHiddenByAThreshold();
+        } else {
+            long hasParentOptionActivated = hasParentOptionActivated(surveyDB);
+            return (hasParentOptionActivated > 0) && !isHiddenByAThreshold() ? false : true;
+        }
     }
 
     public boolean hasQuestionOption() {
@@ -1405,6 +1578,12 @@ public class QuestionDB extends BaseModel {
                         parentHeader = true;
                         return parentHeader;
                     }
+                }
+                List<QuestionThresholdDB> thresholdDBS =
+                        questionDB.getQuestionsThresholdsByChildQuestion(this);
+                if (!thresholdDBS.isEmpty()) {
+                    parentHeader = true;
+                    break;
                 }
             }
         }
@@ -1686,6 +1865,34 @@ public class QuestionDB extends BaseModel {
         return false;
     }
 
+    public boolean isHiddenByAThreshold() {
+
+        boolean isHiddenByAThreshold = true;
+
+        List<QuestionThresholdDB> parentsThresholdDBS =
+                QuestionThresholdDB.getParentQuestionsThresholdsByItsChild(this);
+
+        if (parentsThresholdDBS.isEmpty()) return false;
+
+        for (QuestionThresholdDB thresholdDB : parentsThresholdDBS) {
+
+            QuestionDB questionDB = thresholdDB.getQuestionDB();
+            ValueDB valueDB = questionDB.getValueBySession();
+
+            if (valueDB != null) {
+
+                boolean isInThreadHold = thresholdDB.isInThreshold(valueDB.getValue());
+                if (!isInThreadHold) {
+                    isHiddenByAThreshold = true;
+                    break;
+                } else {
+                    isHiddenByAThreshold = false;
+                }
+            }
+        }
+        return isHiddenByAThreshold;
+    }
+
     public boolean hasDataElement() {
         return !Constants.QUESTION_TYPES_NO_DATA_ELEMENT.contains(output);
     }
@@ -1847,6 +2054,12 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
+    public static boolean isEmpty() {
+        long count = new Select()
+                .from(QuestionDB.class)
+                .count();
+        return count < 1;
+    }
 
     public static class QuestionOrderComparator implements Comparator {
 

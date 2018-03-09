@@ -131,8 +131,8 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
 
-    public Credentials getHardcodedServerCredentials(String serverUrl) throws
-            ConfigJsonIOException {
+    public Credentials getHardcodedServerCredentials(String serverUrl)
+            throws ConfigJsonIOException {
         String username = CredentialsReader.getInstance().getUser();
         String password = CredentialsReader.getInstance().getPassword();
         Credentials credentials = new Credentials(serverUrl, username, password);

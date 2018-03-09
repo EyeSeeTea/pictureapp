@@ -1,10 +1,11 @@
 package org.eyeseetea.malariacare.views.question;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public abstract class AKeyboardQuestionView extends CommonQuestionView {
     protected onAnswerChangedListener mOnAnswerChangedListener;
@@ -15,6 +16,7 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
 
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
+        initEditTextActionListener();
     }
 
     protected void notifyAnswerChanged(String newValue) {
@@ -23,23 +25,31 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
         }
     }
 
-    protected void showKeyboard(View view) {
-        view.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-    /**
-     * hide keyboard using a keyboardView variable view
-     */
-    protected void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     public interface onAnswerChangedListener {
         void onAnswerChanged(View view, String newValue);
+    }
+
+    public abstract EditText getAnswerView();
+
+    private void initEditTextActionListener() {
+        EditText editText = this.getAnswerView();
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+
+                IQuestionView nextQuestionView = getNextQuestionView();
+                if (nextQuestionView == null || nextQuestionView instanceof AKeyboardQuestionView
+                        || !(nextQuestionView instanceof IMultiQuestionView)) {
+                    return false;
+                }
+                if (actionId == EditorInfo.IME_ACTION_NEXT
+                        || actionId == EditorInfo.IME_ACTION_DONE) {
+                    CommonQuestionView.hideKeyboard(textView.getContext(), textView);
+                    textView.clearFocus();
+                    focusNextQuestion();
+                }
+                return true;
+            }
+        });
     }
 }

@@ -81,6 +81,19 @@ public class HeaderDB extends BaseModel {
         }
     }
 
+    public static List<HeaderDB> findHeadersByTab(Long id_tab) {
+        return new Select()
+                .from(HeaderDB.class)
+                .where(HeaderDB_Table.id_tab_fk.eq(id_tab))
+                .queryList();
+    }
+
+    public static HeaderDB findFirstHeaderByTab(Long id_tab) {
+        return new Select()
+                .from(HeaderDB.class)
+                .where(HeaderDB_Table.id_tab_fk.eq(id_tab))
+                .querySingle();
+    }
     public static HeaderDB findById(Long id) {
         return new Select()
         .from(HeaderDB.class)

@@ -103,6 +103,13 @@ public class UserDB extends BaseModel {
         return null;
     }
 
+    public static UserDB findByUID(String uid) {
+        return new Select()
+                .from(UserDB.class)
+                .where(UserDB_Table.uid_user.is(uid))
+                .querySingle();
+    }
+
     @Override
     public void save() {
         super.save();

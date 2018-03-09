@@ -188,8 +188,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface arg0,
                                                                 int arg1) {
-                                                            ((SurveyDB) adapter.getItem(
-                                                                    position - 1)).delete();
+                                                            mDashboardUnsentFragmentStrategy
+                                                                    .deleteSurvey(
+                                                                    ((SurveyDB) adapter.getItem(
+                                                                            position - 1)));
+
                                                             //Reload data using service
                                                             Intent surveysIntent = new Intent(
                                                                     getActivity(),

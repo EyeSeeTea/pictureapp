@@ -190,12 +190,11 @@ public class PopulateRow {
      * Method to populate each row of TreatmentDB.csv, execute after populateOrganisations.
      *
      * @param line The row of the csv to populate.
-     * @param stringKeyList
      */
     static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
-            HashMap<Long, StringKeyDB> stringKeyList, @Nullable TreatmentDB treatmentDB) {
+            @Nullable TreatmentDB treatmentDB) {
         APopulateRowStrategy populateRowStrategy = new PopulateRowStrategy();
-        return populateRowStrategy.populateTreatments(line, organisationFK, stringKeyList,
+        return populateRowStrategy.populateTreatments(line, organisationFK,
                 treatmentDB);
     }
 

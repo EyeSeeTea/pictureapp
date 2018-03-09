@@ -31,15 +31,21 @@ public class UserAccount {
         return userUid;
     }
 
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
-    }
-
     public boolean canAddSurveys() {
         return canAddSurveys;
     }
 
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
+    }
+
+    @Override
+    public String toString() {
+        return "UserAccount{" +
+                "userName='" + userName + '\'' +
+                ", userUid='" + userUid + '\'' +
+                ", isDemo=" + isDemo +
+                ", canAddSurveys=" + canAddSurveys +
+                '}';
     }
 }

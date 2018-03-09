@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.views.question.singlequestion;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -18,6 +19,11 @@ public class TextSingleQuestionView extends AKeyboardQuestionView implements IQu
     public TextSingleQuestionView(Context context) {
         super(context);
         init(context);
+    }
+
+    @Override
+    public EditText getAnswerView() {
+        return mEditText;
     }
 
     @Override

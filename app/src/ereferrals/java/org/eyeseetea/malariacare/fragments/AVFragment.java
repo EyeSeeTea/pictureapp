@@ -19,6 +19,9 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import static org.eyeseetea.malariacare.views.ViewUtils.isThereAnAppThatCanHandleThis;
+import static org.eyeseetea.malariacare.views.ViewUtils.showToast;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -58,6 +61,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     private RecyclerView recyclerView;
     private MediaPresenter mPresenter;
     CustomTextView mTextProgressView;
+    private CustomTextView mErrorMessage;
     IMainExecutor mainExecutor;
 
     View rootView;
@@ -69,6 +73,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         rootView = inflater.inflate(R.layout.av_fragment, container, false);
 
         mTextProgressView = (CustomTextView)rootView.findViewById(R.id.progress_text);
+        mErrorMessage = (CustomTextView) rootView.findViewById(R.id.error_message);
 
         initializeRecyclerView();
         initializeChangeModeButtons();
@@ -142,10 +147,14 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
                         contentUri));
         implicitIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         implicitIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-        getActivity().startActivity(Intent.createChooser(implicitIntent,
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.feedback_view_image)));
 
+        if (isThereAnAppThatCanHandleThis(implicitIntent, getActivity())) {
+            getActivity().startActivity(Intent.createChooser(implicitIntent,
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.feedback_view_image)));
+        } else {
+            showToast(R.string.error_unable_to_find_app_than_can_open_file, getActivity());
+        }
     }
 
     private void refreshList(List<Media> mediaList, AVAdapter.ViewType viewType) {
@@ -175,10 +184,23 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     public void showProgress(final  boolean isInProgress) {
         if(isInProgress) {
             mTextProgressView.setVisibility(android.view.View.VISIBLE);
+            mErrorMessage.setVisibility(View.GONE);
         }else{
             mTextProgressView.setVisibility(android.view.View.GONE);
         }
     }
+
+    public void showError(int message, boolean hasError) {
+        if (mPresenter.canShowErrorMessage()) {
+            mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
+            if (hasError) {
+                mErrorMessage.setText(message);
+            }
+        }else {
+            mErrorMessage.setVisibility(View.GONE);
+        }
+    }
+
 
     public void hideHeader() {
         DashboardHeaderStrategy.getInstance().hideHeader(getActivity());

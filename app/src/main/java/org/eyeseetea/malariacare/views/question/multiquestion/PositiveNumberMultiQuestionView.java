@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -29,6 +30,11 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
+    public EditText getAnswerView() {
+        return numberPicker;
+    }
+
+    @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
     }
@@ -52,7 +58,13 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
 
     @Override
     public boolean hasError() {
-        return numberPicker.getError() != null || positiveNumber == null;
+        return false;
+    }
+
+    @Override
+    public void requestAnswerFocus() {
+        numberPicker.requestFocus();
+        showKeyboard(getContext(), numberPicker);
     }
 
     private void init(final Context context) {
@@ -66,13 +78,17 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
-                    notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                    if (!s.toString().isEmpty()) {
+                        positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
+                        notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                    } else {
+                        notifyAnswerChanged(numberPicker.getText().toString());
+                    }
                     Validation.getInstance().removeInputError(numberPicker);
 
                 } catch (InvalidPositiveNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
-                            context.getString(R.string.dynamic_error_age));
+                            context.getString(R.string.dynamic_error_invalid_positive_number));
                 }
             }
 

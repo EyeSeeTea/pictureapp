@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -18,10 +19,16 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     CustomTextView header;
     CustomEditText mCustomEditText;
 
+
     public TextMultiQuestionView(Context context) {
         super(context);
 
         init(context);
+    }
+
+    @Override
+    public EditText getAnswerView() {
+        return mCustomEditText;
     }
 
     @Override
@@ -52,6 +59,12 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         return false;
     }
 
+    @Override
+    public void requestAnswerFocus() {
+        mCustomEditText.requestFocus();
+        showKeyboard(getContext(), mCustomEditText);
+    }
+
 
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_text_row, this);
@@ -73,6 +86,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
                 notifyAnswerChanged(String.valueOf(s));
             }
         });
+
     }
 
     public void setInputType(int value) {

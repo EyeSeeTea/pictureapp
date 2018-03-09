@@ -109,7 +109,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
-                appInfo.setMetadataDownloaded(false);
+                appInfo.changeMetadataDownloaded(false);
                 appInfoDataSource.saveAppInfo(appInfo);
 
                 Credentials hardcodedCredentials = getHardcodedCredentials(callback);
@@ -166,8 +166,8 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 if (pullFilters.pullMetaData() &&
                         Integer.parseInt(appInfoLocal.getMetadataVersion()) < Integer.parseInt(
                         appInfoRemote.getMetadataVersion())) {
-                    appInfoLocal.setMetadataDownloaded(false);
-                    appInfoLocal.setMetadataVersion(appInfoRemote.getMetadataVersion());
+                    appInfoLocal.changeMetadataDownloaded(false);
+                    appInfoLocal.changeMetadataVersion(appInfoRemote.getMetadataVersion());
                     appInfoDataSource.saveAppInfo(appInfoLocal);
                     deleteObsoleteMetadata();
                 }
@@ -227,7 +227,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
                 boolean isActiveOu = mPullFilters.getDataByOrgUnit()!=null && !mPullFilters.getDataByOrgUnit().equals("");
-                appInfo.setMetadataDownloaded(isActiveOu);
+                appInfo.changeMetadataDownloaded(isActiveOu);
                 appInfoDataSource.saveAppInfo(appInfo);
 
                 callback.onComplete();

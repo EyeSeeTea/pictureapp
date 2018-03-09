@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
@@ -55,10 +56,21 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
+    public void requestAnswerFocus() {
+        mCustomEditText.requestFocus();
+        showKeyboard(getContext(), mCustomEditText);
+    }
+
+    @Override
     public void setOnAnswerChangedListener(
             onAnswerChangedListener onAnswerChangedListener) {
         super.setOnAnswerChangedListener(onAnswerChangedListener);
         mPhoneMultiquestionViewStrategy.setOnAnswerChangedListener(onAnswerChangedListener);
+    }
+
+    @Override
+    public EditText getAnswerView() {
+        return mCustomEditText;
     }
 
     private void init(final Context context) {

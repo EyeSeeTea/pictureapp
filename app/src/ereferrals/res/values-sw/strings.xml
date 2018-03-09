@@ -5,10 +5,11 @@
     <string name="common_option_method_none">"Hatumii"</string>
     <string name="common_option_method_other">"nyingine"</string>
     <string name="login_pin">"siri"</string>
-
+    <string name="advanced_options">"Chaguzi za Juu"</string>
+    <string name="simple_options">"Chaguzi Rahisi"</string>
     <string name="error_web">errorpage_sw.html</string>
     <string name="demo_web">demopage_sw.html</string>
-
+    <string name="clear_and_logout">Futa na uingie</string>
     <string name="app_settings">"Vipimo vya"</string>
     <string name="server">"Seva:"</string>
     <string name="server_name">"DHIS Seva URL"</string>
@@ -168,7 +169,7 @@
     <string name="webservice_url_error">"Hitilafu kujenga huduma ya mtandao: %s"</string>
     <string name="google_play_required">Den här appen kräver Google Play Services. Installera Google Play Services på din enhet och starta om den här appen igen.</string>
     <string name="voucher">"Voucher"</string>
-    <string name="forgot_password">I forgot my password</string>
+    <string name="forgot_password">Nimesahau PIN yangu</string>
     <string name="forgot_password_sms_sent">SMS sent to stored phone for the given username</string>
     <string name="forgot_password_wrong_username">Username do not match any register in the server</string>
     <string name="ws_unknown_exception">Unknown exception.</string>
@@ -180,8 +181,8 @@
 
 
     <!-- TERMS FROM POEDITOR -->
-    <string name="login_userName">"Jina la mtumiaji"</string>
-    <string name="login_password">"Namba ya siri"</string>
+    <string name="login_userName">"Kanuni ya mtumiaji"</string>
+    <string name="login_password">"PIN"</string>
 
     <!-- Open Referrals -->
     <string name="ipc_menu_openReferrals">"Rufaa ambazo hazijafanyiwa kazi"</string>
@@ -930,6 +931,78 @@ Ameahidi kuhudhuria"</string>
     <string name="mozambique_program_eref">Mozambique</string>
     <string name="zimbabwe_program_eref">Zimbabwe</string>
     <string name="no_voucher">Hakuna chaguo</string>
-
-
+    <string name="ipc_issueEntry_q_birthDate">"Tarehe ya kuzaliwa"</string>
+    <string name="ipc_issueEntry_q_ZW_birthOrder">"Amri ya kuzaliwa (kwa mapacha tu)"</string>
+    <string name="common_option_ZW_district_beitbridge">"Beitbridge"</string>
+    <string name="common_option_ZW_district_bikita">"Bikita"</string>
+    <string name="common_option_ZW_district_bindura">"Bindura"</string>
+    <string name="common_option_ZW_district_binga">"Binga"</string>
+    <string name="common_option_ZW_district_bubi">"Bubi"</string>
+    <string name="common_option_ZW_district_buhera">"Buhera"</string>
+    <string name="common_option_ZW_district_bulawayo">"Bulawayo"</string>
+    <string name="common_option_ZW_district_bulilima">"Bulilima"</string>
+    <string name="common_option_ZW_district_centenary">"Centenary"</string>
+    <string name="common_option_ZW_district_chegutu">"Chegutu"</string>
+    <string name="common_option_ZW_district_chikomba">"Chikomba"</string>
+    <string name="common_option_ZW_district_chimanimani">Chimanimani"</string>
+    <string name="common_option_ZW_district_chipinge">"Chipinge"</string>
+    <string name="common_option_ZW_district_chiredzi">"Chiredzi"</string>
+    <string name="common_option_ZW_district_chirumanzi">"Chirumanzi"</string>
+    <string name="common_option_ZW_district_chivi">"Chivi"</string>
+    <string name="common_option_ZW_district_gokweNorth">"Gokwe North"</string>
+    <string name="common_option_ZW_district_gokweSouth">"Gokwe South"</string>
+    <string name="common_option_ZW_district_goromonzi">"Goromonzi"</string>
+    <string name="common_option_ZW_district_guruve">"Guruve"</string>
+    <string name="common_option_ZW_district_gutu">"Gutu"</string>
+    <string name="common_option_ZW_district_gwanda">"Gwanda"</string>
+    <string name="common_option_ZW_district_gweru">"Gweru"</string>
+    <string name="common_option_ZW_district_harare">"Harare"</string>
+    <string name="common_option_ZW_district_hurungwe">"Hurungwe"</string>
+    <string name="common_option_ZW_district_hwange">"Hwange"</string>
+    <string name="common_option_ZW_district_hwedza">"Hwedza"</string>
+    <string name="common_option_ZW_district_insiza">"Insiza"</string>
+    <string name="common_option_ZW_district_kadoma">"Kadoma"</string>
+    <string name="common_option_ZW_district_kariba">"Kariba"</string>
+    <string name="common_option_ZW_district_kwekwe">"Kwekwe"</string>
+    <string name="common_option_ZW_district_lupane">"Lupane"</string>
+    <string name="common_option_ZW_district_makonde">"Makonde"</string>
+    <string name="common_option_ZW_district_makoni">"Makoni"</string>
+    <string name="common_option_ZW_district_mangwe">"Mangwe"</string>
+    <string name="common_option_ZW_district_marondera">"Marondera"</string>
+    <string name="common_option_ZW_district_masvingo">"Masvingo"</string>
+    <string name="common_option_ZW_district_matobo">"Matobo"</string>
+    <string name="common_option_ZW_district_mazowe">"Mazowe"</string>
+    <string name="common_option_ZW_district_mberengwa">"Mberengwa"</string>
+    <string name="common_option_ZW_district_mtDarwin">"Mt Darwin"</string>
+    <string name="common_option_ZW_district_mudzi">"Mudzi"</string>
+    <string name="common_option_ZW_district_murehwa">"Murehwa"</string>
+    <string name="common_option_ZW_district_mutare">"Mutare"</string>
+    <string name="common_option_ZW_district_mutasa">"Mutasa"</string>
+    <string name="common_option_ZW_district_mutoko">"Mutoko"</string>
+    <string name="common_option_ZW_district_mwenezi">"Mwenezi"</string>
+    <string name="common_option_ZW_district_nkayi">"Nkayi"</string>
+    <string name="common_option_ZW_district_nyanga">"Nyanga"</string>
+    <string name="common_option_ZW_district_rusape">"Rusape"</string>
+    <string name="common_option_ZW_district_rushinga">"Rushinga"</string>
+    <string name="common_option_ZW_district_seke">"Seke"</string>
+    <string name="common_option_ZW_district_shamva">"Shamva"</string>
+    <string name="common_option_ZW_district_shurugwi">"Shurugwi"</string>
+    <string name="common_option_ZW_district_tsholotsho">"Tsholotsho"</string>
+    <string name="common_option_ZW_district_umguza">"Umguza"</string>
+    <string name="common_option_ZW_district_umzingwane">"Umzingwane"</string>
+    <string name="common_option_ZW_district_umpWe">"UMP WE"</string>
+    <string name="common_option_ZW_district_zaka">"Zaka"</string>
+    <string name="common_option_ZW_district_zvimba">"Zvimba"</string>
+    <string name="common_option_ZW_district_zvishavane">"Zvishavane"</string>
+    <string name="common_option_ZW_district_outsideZW">"Outside Zimbabwe"</string>
+    <string name="dynamic_error_invalid_positive_number">"Nambari isiyo sahihi batili"</string>
+    <string name="error_files_download_no_files">"Hakuna vyombo vya habari vya nchi hii"</string>
+    <string name="error_files_download_no_wifi">"Tafadhali ingia kwenye mtandao wa WiFi ili kupakua vyombo vya habari kwa nchi hii"</string>
+    <string name="error_android_version_not_supported">"Unasisitiza lakini Unganisha haijaambatana na toleo lako la Android kifaa. Unahitaji kuwa na Android 5.0+ ili Uunganishe kufanya kazi."</string>
+    <string name="error_downloading_languages">"Hitilafu wakati wa lugha kupakua:"</string>
+    <string name="error_unable_to_find_app_than_can_open_file">Haiwezi kupata programu inayofungua faili hii</string>
+    <string name="warning_strings_download_failed">Onyo, kupakua kwa masharti imeshindwa</string>
+    <string name="error_unable_to_download_translations">Haiwezi kupakua tafsiri</string>
+    <string name="error_unable_to_download_configuration_files">Haiwezi kupakua faili za usanidi</string>
+    <string name="error_unable_to_download_translations_and_configuration_files">Haiwezi kupakua tafsiri na faili za usanidi</string>
 </resources>

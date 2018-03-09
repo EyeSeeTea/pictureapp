@@ -10,6 +10,10 @@ public abstract class AKeyboardSingleQuestionView extends AKeyboardQuestionView 
         super(context);
     }
 
+    public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
+        mOnAnswerChangedListener = onAnswerChangedListener;
+    }
+
     protected void notifyAnswerChanged(String newValue) {
         if (lastValue == null || !newValue.equals(lastValue)) {
             super.notifyAnswerChanged(newValue);

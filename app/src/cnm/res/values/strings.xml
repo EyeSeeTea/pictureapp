@@ -284,7 +284,7 @@
 <string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
     <string name="login_unexpected_error">"Unexpected error while login"</string>
-
+    <string name="save">Save</string>
     <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>
 <p>Steps:</p>

@@ -44,7 +44,7 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
             case R.string.tab_tag_stock:
                 headerTitle.setText(R.string.tab_stock);
                 headerExplanation.setText("");
-                headerImage.setVisibility(View.GONE);
+                headerImage.setVisibility(View.INVISIBLE);
                 break;
             case R.string.fragment_new_balance:
                 headerTitle.setText(R.string.tab_stock);

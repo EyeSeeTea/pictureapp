@@ -16,7 +16,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.StringKeyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
@@ -242,25 +241,6 @@ public class PopulateRow {
         return optionDB;
     }
 
-    static StringKeyDB populateStringKey(String[] line, @Nullable StringKeyDB stringKeyDB) {
-        if (stringKeyDB == null) {
-            stringKeyDB = new StringKeyDB();
-        }
-        stringKeyDB.setKey(line[1]);
-        return stringKeyDB;
-    }
-
-    public static TranslationDB populateTranslation(String[] line,
-            HashMap<Long, StringKeyDB> stringKeyFK,
-            TranslationDB translationDB) {
-        if (translationDB == null) {
-            translationDB = new TranslationDB();
-        }
-        translationDB.setId_string_key(stringKeyFK.get(Long.valueOf(line[1])).getId_string_key());
-        translationDB.setTranslation(line[2]);
-        translationDB.setLanguage(line[3]);
-        return translationDB;
-    }
 
     public static PhoneFormatDB populatePhoneFormat(String[] line,
             Map<Integer, ProgramDB> programFK, @Nullable PhoneFormatDB phoneFormatDB) {

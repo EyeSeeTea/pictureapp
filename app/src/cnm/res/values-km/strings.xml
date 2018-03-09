@@ -264,6 +264,7 @@
 <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+<string name="common_option_diagnosis_not_tested">Not tested</string>
     <string name="save">រក្សាទុក</string>
     <string name="lastcommit_unavailable"><![CDATA[
 <p> ជម្រើសនេះត្រូវការការផ្លាស់ប្តូរខ្លះនៅក្នុងឃ្លាំង git ។ </ p>

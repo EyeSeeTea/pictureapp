@@ -519,6 +519,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                         date)).queryList();
     }
 
+    public static SurveyDB findSurveysWithProgramAndEventDate(String uidProgram,
+            Date date) {
+        return new Select().from(SurveyDB.class).as(surveyName)
+                .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+                .where(ProgramDB_Table.uid_program.withTable(programAlias)
+                        .eq(uidProgram))
+                .and(SurveyDB_Table.event_date.withTable(surveyAlias).is(date)).querySingle();
+    }
+
     public static Date getLastDateForSurveyType(int type) {
         SurveyDB surveyDB = new Select().
                 from(SurveyDB.class)

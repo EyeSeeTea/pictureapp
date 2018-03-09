@@ -41,4 +41,5 @@
     <string name="imei_preference" translatable="false">imei_prefrence</string>
     <string name="default_language" translatable="false">en</string>
     <string name="stock_program_uid" translatable="false">zaRb1RuqGVk</string>
+    <string name="malaria_program_uid" translatable="false">d7iipQZaHad</string>
 </resources>

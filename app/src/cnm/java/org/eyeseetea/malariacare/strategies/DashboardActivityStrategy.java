@@ -94,6 +94,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean beforeExit(boolean isBackPressed) {
         SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        SurveyDB stockSurvey = Session.getStockSurveyDB();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
             malariaSurvey.getValuesFromDB();
@@ -103,6 +104,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
                     Session.setMalariaSurveyDB(null);
                     malariaSurvey.delete();
+                    Session.setStockSurveyDB(null);
+                    stockSurvey.delete();
                 }
                 isBackPressed = false;
             }

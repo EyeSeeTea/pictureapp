@@ -12,4 +12,5 @@
     <color name="orange">#f18903</color>
     <color name="green">#779a0b</color>
     <color name="dark_green">#13a083</color>
+    <color name="gray_text_survey">#666666</color>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomButton">
+        <item name="android:layout_width">@dimen/custom_button_width</item>
+        <item name="android:layout_height">@dimen/custom_button_height</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/default_bottom_separation</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/custom_button_text_size</item>
+        <item name="font_name">@string/normal_font</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="CustomButton.Link">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/navy_blue</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="TextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
+        <item name="android:layout_marginBottom">@dimen/default_bottom_separation</item>
+    </style>
+
+    <style name="CustomEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="font_name">@string/normal_font</item>
+    </style>
+
+</resources>

@@ -27,6 +27,16 @@ android {
         config {}
     }
 
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDirs sharedTestDir
+        }
+    }
+
     compileSdkVersion cfg.compileSdkVersion
     buildToolsVersion cfg.buildToolsVersion
 
@@ -42,16 +52,29 @@ android {
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
+        buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
+        buildConfigField "boolean", "downloadLanguagesFromServer", "false"
+
     }
     buildTypes {
+
+        testBuildType "staging"
+
         release {
+            buildConfigField "boolean", "databaseInMemory", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            buildConfigField "boolean", "databaseInMemory", "false"
             debuggable true
         }
+        staging {
+            initWith(buildTypes.debug)
+            buildConfigField "boolean", "databaseInMemory", "true"
+        }
     }
+
     //TODO This config is related to a known issue: http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt
     packagingOptions {
         exclude 'LICENSE.txt'
@@ -87,6 +110,9 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -107,6 +133,9 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "1"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -127,10 +156,14 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
-            versionName "1.0.6"
+            versionName "1.1.1"
+            buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
@@ -142,11 +175,15 @@ android {
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
             buildConfigField "boolean", "activeAVFragment", "true"
-            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.REFDBProvider\""
+            buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.REFDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "false"
             buildConfigField "String", "defaultLocale", "\"en\""
+            resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "true"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -167,6 +204,9 @@ android {
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
 
     }
@@ -178,6 +218,10 @@ android {
         arguments {
             targetModuleName 'EyeSeeTea'
         }
+    }
+
+    sourceSets {
+        androidTest.java.srcDirs += 'src/sharedAndroidTest'
     }
 }
 
@@ -198,11 +242,12 @@ dependencies {
     apply plugin: 'com.github.dcendents.android-maven'
 
     //Android support
+    compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
     //3rd party dependencies
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
@@ -225,7 +270,7 @@ dependencies {
 
     // Unit testing dependencies
     testCompile "junit:junit:${libs.jUnitVersion}"
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+    testCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
 
     // Instrumented tests dependencies
     // Android Testing Support Library's runner and rules
@@ -240,7 +285,9 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
     // Espresso-web for WebView support
     androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
-    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+    androidTestCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
+    androidTestCompile "org.mockito:mockito-core:${libs.mockitoVersion}"
+    androidTestCompile "com.linkedin.dexmaker:dexmaker-mockito:${libs.dexmakerMockitoVersion}"
 
 
     //Tracking crashes

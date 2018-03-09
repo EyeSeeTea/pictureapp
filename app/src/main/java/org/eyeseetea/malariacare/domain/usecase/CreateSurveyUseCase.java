@@ -58,13 +58,17 @@ public class CreateSurveyUseCase implements UseCase {
                             ReadPolicy.CACHE);
             Survey survey = new Survey(program, organisationUnit, userAccount,
                     mSurveyType);
-            survey = mSurveyRepository.save(survey);
+            long idSurvey = mSurveyRepository.save(survey);
+            survey.setId(idSurvey);
             notifySurveyCreated(survey);
 
         } catch (NetworkException e) {
             e.printStackTrace();
             notifyError(e);
         } catch (ApiCallException e) {
+            e.printStackTrace();
+            notifyError(e);
+        } catch (Exception e){
             e.printStackTrace();
             notifyError(e);
         }

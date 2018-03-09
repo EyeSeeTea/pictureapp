@@ -38,4 +38,6 @@
 38;'single_radio_button'
 39;'ZW_levelOfInterest'
 40;'ZW_hivSelfTestAssistance'
-
+41;'birth_date'
+42;'order_birth'
+43;'birth_district_zw'

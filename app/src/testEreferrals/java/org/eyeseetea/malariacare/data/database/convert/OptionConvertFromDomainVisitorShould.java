@@ -32,11 +32,11 @@ public class OptionConvertFromDomainVisitorShould {
 
     private Option givenADomainOption() {
 
-        Option option = new Option();
-        option.setCode("FPL");
-        option.setName("common_option_program_familyPlanning");
-
-        return option;
+        return Option
+                .newBuilder()
+                .code("FPL")
+                .name("common_option_program_familyPlanning")
+                .build();
     }
 
     private OptionDB givenAValidBDOption() {

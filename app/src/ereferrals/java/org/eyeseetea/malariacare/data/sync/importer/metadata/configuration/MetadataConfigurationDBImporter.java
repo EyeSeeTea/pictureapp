@@ -56,9 +56,8 @@ public class MetadataConfigurationDBImporter {
     }
 
     public void importMetadata(Program program) throws Exception {
-        if (!needToDownloadMetadata) {
-            throw new IllegalStateException("Has to call hasToUpdateMetadata before this method.");
-        }
+        fetchContriesVersionsIfRequired();
+
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
                 if (domainCountry.getUid().equals(program.getId())) {
@@ -72,7 +71,8 @@ public class MetadataConfigurationDBImporter {
     }
 
     public boolean hasToUpdateMetadata(Program program) throws Exception {
-        countryVersions = remoteDataSource.getCountriesVersions();
+
+        fetchContriesVersionsIfRequired();
 
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
@@ -92,6 +92,12 @@ public class MetadataConfigurationDBImporter {
             }
         }
         return needToDownloadMetadata;
+    }
+
+    private void fetchContriesVersionsIfRequired() throws Exception {
+        if(countryVersions == null || countryVersions.isEmpty()){
+            countryVersions = remoteDataSource.getCountriesVersions();
+        }
     }
 
 
@@ -158,13 +164,14 @@ public class MetadataConfigurationDBImporter {
 
         String countryUID = country.getUid();
         int version = country.getVersion();
+        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
 
         if (isCountryNotAlreadyAdded(countryUID)) {
-            updateMetadataFor(country);
+            updateMetadataFor(questions,country);
 
         } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
-            updateMetadataFor(country);
+            updateMetadataFor(questions,country);
         }
     }
 
@@ -176,8 +183,7 @@ public class MetadataConfigurationDBImporter {
         return !CountryVersionDB.isCountryAlreadyAdded(countryCode);
     }
 
-    private void updateMetadataFor(Configuration.CountryVersion country) throws Exception {
-        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
+    private void updateMetadataFor(List<Question> questions ,Configuration.CountryVersion country) throws Exception {
         saveInDB(country);
         saveQuestionsInDB(questions, country);
     }

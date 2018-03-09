@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
@@ -35,6 +36,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.LoginType;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
@@ -60,6 +62,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private LoginType loginType;
     private Button logoutButton;
     private Button demoButton;
+    private Button advancedOptions;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -205,7 +208,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         toggleVisibility(logoutButton);
                         loginActivity.getUsernameEditText().setEnabled(true);
                         Log.d(this.getClass().getSimpleName(), "onLogoutSuccess ");
-
+                        toggleText(advancedOptions,R.string.advanced_options,R.string.simple_options);
+                        PreferencesEReferral.setLastLoginType(loginType);
                     }
 
                     @Override
@@ -232,7 +236,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void initAdvancedOptionsButton() {
-        final Button advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
+        advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,7 +252,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         break;
                 }
                 toggleVisibility(serverURLContainer);
-                toggleText(advancedOptions,R.string.advanced_options,R.string.simple_options);
+                toggleText(advancedOptions, R.string.advanced_options, R.string.simple_options);
             }
         });
     }
@@ -303,7 +307,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-                    loginActivity.checkAnnouncement();
+        loginActivity.checkAnnouncement();
+        PreferencesEReferral.setLastLoginType(loginType);
     }
 
     @Override
@@ -422,8 +427,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 }
             });
         }
-
-
     }
 
     private void launchPull(boolean isDemo) {
@@ -617,9 +620,5 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
 
         logoutUseCase.execute(callback);
-    }
-
-    private enum LoginType {
-        SOFT, FULL
     }
 }

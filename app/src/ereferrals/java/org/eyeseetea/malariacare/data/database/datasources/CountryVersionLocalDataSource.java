@@ -5,7 +5,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICountryVersionRep
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 
 
-public class CountryVersionDataSource implements ICountryVersionRepository {
+public class CountryVersionLocalDataSource implements ICountryVersionRepository {
     @Override
     public Configuration.CountryVersion getCountryVersionForUID(String uid) {
         CountryVersionDB countryVersionDB = CountryVersionDB.getCountryVersionByUID(uid);
@@ -18,6 +18,7 @@ public class CountryVersionDataSource implements ICountryVersionRepository {
             return Configuration.CountryVersion.newBuilder()
                     .country(countryVersionDB.getCountry())
                     .uid(countryVersionDB.getUid())
+                    .reference(countryVersionDB.getReference())
                     .lastUpdate(countryVersionDB.getLast_update())
                     .version(countryVersionDB.getVersion())
                     .build();

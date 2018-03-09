@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
+
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
@@ -33,7 +35,8 @@ public class GetUrlForWebViewsUseCase implements UseCase {
 
     public void execute(int urlType, Callback callback) {
         mCallback = callback;
-        if(PreferencesState.getCredentialsFromPreferences().isDemoCredentials()){
+        Credentials credentials = PreferencesState.getCredentialsFromPreferences();
+        if (credentials != null && credentials.isDemoCredentials()) {
             mCallback.onGetUrl(null);
         }
         mUrlType = urlType;
@@ -42,10 +45,11 @@ public class GetUrlForWebViewsUseCase implements UseCase {
 
     @Override
     public void run() {
+        String language = getUserLanguageOrDefault(mContext);
         String typeUrl = getTypeUrlText();
         String url = String.format(PreferencesEReferral.getWebViewURL() + mContext.getString(
                 R.string.composed_web_view_url), typeUrl, mCredentials.getUsername(),
-                mCredentials.getPassword());
+                mCredentials.getPassword(), language);
         mCallback.onGetUrl(url);
     }
 

@@ -52,18 +52,18 @@ public class QuestionConvertFromDomainVisitor implements
         return dbModel;
     }
 
-    private AnswerDB getAnswerDBFromDomain(@NotNull Question domainModel){
+    private AnswerDB getAnswerDBFromDomain(@NotNull Question domainModel) {
         AnswerDB answerDB = new AnswerDB();
         answerDB.setOptionDBs(getOptionDBsFrom(domainModel));
         return answerDB;
     }
-    
-    private PhoneFormatDB getPhoneFormat(PhoneFormat  domainPhoneFormat){
+
+    private PhoneFormatDB getPhoneFormat(PhoneFormat domainPhoneFormat) {
         return phoneFormatConverter.visit(domainPhoneFormat);
     }
 
     private long getHeaderID(@NotNull Question domainModel) {
-        return (domainModel.getHeader() !=null) ? domainModel.getHeader().getId() : 0;
+        return (domainModel.getHeader() != null) ? domainModel.getHeader().getId() : 0;
     }
 
     private int getVisibilityFrom(@NotNull Question question) {

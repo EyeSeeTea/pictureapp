@@ -64,4 +64,13 @@ public class Credentials {
                 username.hashCode() *
                 password.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Credentials{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", serverURL='" + serverURL + '\'' +
+                '}';
+    }
 }

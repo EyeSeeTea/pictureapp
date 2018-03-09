@@ -82,8 +82,8 @@ public class Permissions {
         return permissions.isEmpty();
     }
 
-    public static boolean isPhonePermissionGranted(Context context){
-            return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
+    public static boolean isPhonePermissionGranted(Context context) {
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED;
     }

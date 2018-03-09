@@ -47,8 +47,8 @@ public class Migration11UpdateTreatment extends BaseMigration {
                         + "message, "
                         + "type) " +
                         "SELECT id_treatment,id_partner_fk, "
-                        +"(SELECT StringKey.key FROM StringKey WHERE id_string_key = diagnosis), "
-                        +"(SELECT StringKey.key FROM StringKey WHERE id_string_key = message), "
+                        + "(SELECT StringKey.key FROM StringKey WHERE id_string_key = diagnosis), "
+                        + "(SELECT StringKey.key FROM StringKey WHERE id_string_key = message), "
                         + "type "
                         + "FROM Treatment; ";
 

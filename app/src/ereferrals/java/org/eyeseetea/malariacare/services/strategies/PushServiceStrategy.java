@@ -269,7 +269,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
             public void onInformativeError(String message) {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
                         R.string.error_conflict_title), "PUSHUSECASE ERROR " + message
-                        + PreferencesState.getInstance().isPushInProgress());
+                        +" "+ PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
@@ -298,7 +298,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onApiCallError(ApiCallException e) {
-                handleAPIException(e);
                 onError("PUSHUSECASE ERROR " + e.getMessage());
                 e.printStackTrace();
             }
@@ -330,12 +329,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
         surveysIntent.putExtra(PUSH_IS_START, start);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
-    }
-
-    private void handleAPIException(Exception e) {
-        if (e instanceof ConfigFileObsoleteException) {
-            sendIntentShowLogin();
-        }
     }
 
     private void sendIntentShowLogin() {

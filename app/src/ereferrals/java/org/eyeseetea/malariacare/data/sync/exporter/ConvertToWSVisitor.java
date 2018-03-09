@@ -6,7 +6,7 @@ import android.location.Location;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.CountryVersionDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
@@ -72,7 +72,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private int getConfigFileVersion() {
         IProgramRepository mProgramLocalDataSource = new ProgramLocalDataSource();
         String uid = mProgramLocalDataSource.getUserProgram().getId();
-        ICountryVersionRepository countryVersionRepository = new CountryVersionDataSource();
+        ICountryVersionRepository countryVersionRepository = new CountryVersionLocalDataSource();
         Configuration.CountryVersion countryVersion =
                 countryVersionRepository.getCountryVersionForUID(uid);
         if (countryVersion != null) {

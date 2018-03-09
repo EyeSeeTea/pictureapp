@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="yes">"Yes"</string>
-    <string name="no">"No"</string>
+<string name="yes">"Yes"</string>
+<string name="no">"No"</string>
     <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
     <string name="cancel">"Cancel"</string>
     <string name="settings_menu_licence">"License"</string>
@@ -285,6 +285,7 @@
 <string name="common_option_treatment_asmq_100_200_3">3 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
+    <string name="login_unexpected_error">"Unexpected error while login"</string>
 
     <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>

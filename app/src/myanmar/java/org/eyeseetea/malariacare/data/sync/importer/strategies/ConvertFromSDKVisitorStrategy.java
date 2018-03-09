@@ -53,4 +53,9 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
             me.save();
         }
     }
+
+    @Override
+    public void visit(DataValueExtended dataValueExtended, SurveyDB surveyDB) {
+
+    }
 }

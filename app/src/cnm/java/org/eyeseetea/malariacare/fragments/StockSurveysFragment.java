@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,13 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.StockSurveysAdapter;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.StockSurveysPresenter;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
@@ -54,9 +62,7 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
 
     @Override
     public void reloadHeader(Activity activity) {
-        if (mStockSurveysPresenter != null) {
-            mStockSurveysPresenter.reloadHeader(activity);
-        }
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_stock);
     }
 
     @Override
@@ -73,23 +79,26 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
 
     @Override
     public void registerFragmentReceiver() {
-        mStockSurveysPresenter.registerFragmentReceiver(getActivity());
     }
 
     @Override
     public void unregisterFragmentReceiver() {
-        mStockSurveysPresenter.unregisterFragmentReceiver(getActivity());
     }
 
     @Override
-    public void showValues(List<SurveyDB> surveys) {
+    public void showValues(List<Survey> surveys) {
         mStockSurveysAdapter.addSurveys(surveys);
         mStockSurveysAdapter.notifyDataSetChanged();
     }
 
 
     private void initializePresenter() {
-        mStockSurveysPresenter = new StockSurveysPresenter();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        mStockSurveysPresenter = new StockSurveysPresenter(
+                new GetSurveysByProgram(asyncExecutor, mainExecutor, surveyRepository),
+                getResources().getString(R.string.stock_program_uid));
         mStockSurveysPresenter.attachView(this);
     }
 
@@ -131,6 +140,11 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         });
     }
 
+    @Override
+    public void showNewReceiptSurvey(int type) {
+        showNewReceiptBalanceFragment(type);
+    }
+
     private void showAddMenu(ImageButton receiptButton, ImageButton balanceButton) {
         isAddShowing = true;
         receiptButton.animate().translationY(
@@ -147,5 +161,31 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         balanceButton.animate().translationY(0);
     }
 
+
+    private void showNewReceiptBalanceFragment(int type) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            AddBalanceReceiptFragment addBalanceReceiptFragment =
+                    AddBalanceReceiptFragment.newInstance(type);
+            replaceFragment(activity, R.id.dashboard_stock_container, addBalanceReceiptFragment);
+
+            int headerString = R.string.fragment_new_receipt;
+            if (type == Constants.SURVEY_RESET) {
+                headerString = R.string.fragment_new_reset;
+            }
+            DashboardHeaderStrategy.getInstance().init(activity, headerString);
+            if (activity instanceof DashboardActivity) {
+                ((DashboardActivity) activity).initNewReceiptFragment();
+            }
+        }
+    }
+
+    private void replaceFragment(Activity activity, int layout, Fragment fragment) {
+        if (activity != null) {
+            FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+            ft.replace(layout, fragment);
+            ft.commit();
+        }
+    }
 
 }

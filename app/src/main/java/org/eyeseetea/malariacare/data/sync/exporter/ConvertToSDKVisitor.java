@@ -118,8 +118,11 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
             Log.d(TAG, "Saving control dataelements");
 
-            buildControlDataElements(surveyDB, event);
-
+            ConvertToSdkVisitorStrategy convertToSdkVisitorStrategy =
+                    new ConvertToSdkVisitorStrategy();
+            if (!convertToSdkVisitorStrategy.putAlternativeControlDataElements(surveyDB, event)) {
+                buildControlDataElements(surveyDB, event);
+            }
 
             if (SurveyDB.countSurveysByCompletiondate(surveyDB.getCompletionDate()) > 1) {
                 Log.d(TAG, String.format("Delete repeated survey", surveyDB.toString()));

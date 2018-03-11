@@ -43,16 +43,8 @@ public class SurveyAnsweredRatio {
         return answered;
     }
 
-    public void setAnswered(int answered) {
-        this.answered = answered;
-    }
-
     public int getTotal() {
         return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
     }
 
     /**
@@ -87,4 +79,11 @@ public class SurveyAnsweredRatio {
         return answered >= total;
     }
 
+    @Override
+    public String toString() {
+        return "SurveyAnsweredRatio{" +
+                "total=" + total +
+                ", answered=" + answered +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare;
 
+import static org.eyeseetea.malariacare.BuildConfig.maxDaysForDeletingSentSurveys;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
@@ -8,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.PostMigration;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -32,9 +35,11 @@ public class SplashScreenActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         splashActivityStrategy = new SplashActivityStrategy(this);
-        setContentView(R.layout.activity_splash);
-        AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
-        asyncInitApplication.execute((Void) null);
+        if (splashActivityStrategy.canEnterApp()) {
+            setContentView(R.layout.activity_splash);
+            AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
+            asyncInitApplication.execute((Void) null);
+        }
     }
 
     private void init() {
@@ -45,7 +50,7 @@ public class SplashScreenActivity extends Activity {
         PopulateDB.initDBQuery();
         try {
             PostMigration.launchPostMigration();
-        }catch (PostMigrationException e){
+        } catch (PostMigrationException e) {
             new AlertDialog.Builder(this)
                     .setTitle(getApplicationContext().getString(R.string.error_message))
                     .setCancelable(false)
@@ -67,6 +72,15 @@ public class SplashScreenActivity extends Activity {
             splashActivityStrategy.initPullFilters(pullFilters);
             splashActivityStrategy.executePull(pullUseCase, pullFilters);
         }
+
+        if (BuildConfig.downloadLanguagesFromServer) {
+            splashActivityStrategy.downloadLanguagesFromServer();
+        }
+
+        if (BuildConfig.performMaintenanceTasks) {
+            performMaintenanceTasks();
+        }
+
     }
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
@@ -84,6 +98,7 @@ public class SplashScreenActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
             init();
+
             return null;
         }
 
@@ -97,5 +112,9 @@ public class SplashScreenActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         splashActivityStrategy.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void performMaintenanceTasks() {
+        SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
     }
 }

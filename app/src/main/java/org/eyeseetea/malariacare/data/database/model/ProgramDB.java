@@ -20,10 +20,12 @@
 package org.eyeseetea.malariacare.data.database.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -36,16 +38,19 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(database = AppDatabase.class, name ="Program")
+@Table(database = AppDatabase.class, name = "Program")
 public class ProgramDB extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
     long id_program;
+
     @Column
     String uid_program;
+
     @Column
     String name;
+
     @Column
     String stage_uid;
 
@@ -78,6 +83,10 @@ public class ProgramDB extends BaseModel {
 
     public static List<ProgramDB> getAllPrograms() {
         return new Select().from(ProgramDB.class).queryList();
+    }
+
+    public static int getProgramsDBCount() {
+        return getAllPrograms().size();
     }
 
     public static void deleteAll() {
@@ -187,7 +196,8 @@ public class ProgramDB extends BaseModel {
         }
 
         //Save a new relationship
-        OrgUnitProgramRelationDB orgUnitProgramRelationDB = new OrgUnitProgramRelationDB(orgUnitDB, this);
+        OrgUnitProgramRelationDB orgUnitProgramRelationDB = new OrgUnitProgramRelationDB(orgUnitDB,
+                this);
         orgUnitProgramRelationDB.save();
 
         //Clear cache to enable reloading
@@ -210,6 +220,7 @@ public class ProgramDB extends BaseModel {
                 .where(ProgramDB_Table.id_program
                         .is(id_program)).querySingle();
     }
+
     public static ProgramDB findByUID(String UID) {
         return new Select()
                 .from(ProgramDB.class)
@@ -224,6 +235,13 @@ public class ProgramDB extends BaseModel {
                         .is(name)).querySingle();
     }
 
+    public static void deleteProgramsByUID(@NonNull String uid) {
+        new Delete()
+                .from(ProgramDB.class)
+                .where(ProgramDB_Table.uid_program
+                        .is(uid));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -232,7 +250,10 @@ public class ProgramDB extends BaseModel {
         ProgramDB programDB = (ProgramDB) o;
 
         if (id_program != programDB.id_program) return false;
-        if (uid_program != null ? !uid_program.equals(programDB.uid_program) : programDB.uid_program != null) return false;
+        if (uid_program != null ? !uid_program.equals(programDB.uid_program)
+                : programDB.uid_program != null) {
+            return false;
+        }
         return name.equals(programDB.name);
 
     }

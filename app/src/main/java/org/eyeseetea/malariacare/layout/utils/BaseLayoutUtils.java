@@ -241,10 +241,12 @@ public abstract class BaseLayoutUtils {
      */
     public static void putImageInImageView(String path, ImageView imageView) {
         if (path == null || path.equals("")) {
+            imageView.setVisibility(View.GONE);
             return;
         }
         try {
             if(path!=null && !path.equals("")) {
+                imageView.setVisibility(View.VISIBLE);
                 InputStream inputStream = imageView.getContext().getAssets().open(
                         Utils.getInternationalizedString(path));
                 Bitmap bmp = BitmapFactory.decodeStream(inputStream);

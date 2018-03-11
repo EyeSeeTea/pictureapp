@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.services.strategies;
 
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -26,6 +27,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -36,10 +38,18 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.utils.Permissions;
 
 public class PushServiceStrategy extends APushServiceStrategy {
 
     public static final String TAG = ".PushServiceStrategy";
+    public static final String SERVICE_METHOD = "serviceMethod";
+    public static final String PUSH_MESSAGE = "PushStart";
+    public static final String PUSH_IS_START = "PushIsStart";
+    public static final String SHOW_LOGIN = "ShowLogin";
+
+    private IPushController mPushController;
+    private PushUseCase mPushUseCase;
 
     public PushServiceStrategy(PushService pushService) {
         super(pushService);
@@ -47,6 +57,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
+
+        if (Permissions.isPhonePermissionGranted(PreferencesState.getInstance().getContext())) {
+            Log.w(getClass().getSimpleName(), "Push cancelled because does not exist phone permissions");
+            return;
+        }
 
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
 
@@ -173,17 +188,24 @@ public class PushServiceStrategy extends APushServiceStrategy {
         }
     }
 
+    public void executePush(PushUseCase pushUseCase) {
+        mPushUseCase = pushUseCase;
+        executePush();
+    }
+
     protected void executePush() {
-        IPushController pushController;
-        try {
-            pushController = new WSPushController();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            showInDialog(PreferencesState.getInstance().getContext().getString(
-                    R.string.webservice_url_error_title),
-                    String.format(PreferencesState.getInstance().getContext().getString(
-                            R.string.webservice_url_error), e.getMessage()));
-            return;
+        IPushController pushController = null;
+        if (mPushUseCase == null) {
+            try {
+                pushController = new WSPushController();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                showInDialog(PreferencesState.getInstance().getContext().getString(
+                        R.string.webservice_url_error_title),
+                        String.format(PreferencesState.getInstance().getContext().getString(
+                                R.string.webservice_url_error), e.getMessage()));
+                return;
+            }
         }
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -194,16 +216,25 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 new SurveysThresholds(BuildConfig.LimitSurveysCount,
                         BuildConfig.LimitSurveysTimeHours);
 
-        PushUseCase pushUseCase =
-                new PushUseCase(pushController, asyncExecutor, mainExecutor,
-                        surveysThresholds, surveyRepository, orgUnitRepository);
+        PushUseCase pushUseCase = mPushUseCase;
+        if (pushUseCase == null) {
+            pushUseCase = new PushUseCase(pushController, asyncExecutor, mainExecutor,
+                    surveysThresholds, surveyRepository, orgUnitRepository);
+        }
 
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
+            public void onPushStart() {
+                Log.d(TAG, "OnPushStart");
+                sendIntentStartEndPush(true);
+            }
+
+            @Override
             public void onComplete() {
                 Log.d(TAG, "PUSHUSECASE WITHOUT ERROR push complete");
                 mPushService.onPushFinished();
+                sendIntentStartEndPush(false);
             }
 
             @Override
@@ -238,7 +269,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
             public void onInformativeError(String message) {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
                         R.string.error_conflict_title), "PUSHUSECASE ERROR " + message
-                        + PreferencesState.getInstance().isPushInProgress());
+                        +" "+ PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
@@ -278,5 +309,33 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 closeUserLogout();
             }
         });
+    }
+
+    @Override
+    public void showInDialog(String title, String message) {
+        super.showInDialog(title, message);
+        sendIntentStartEndPush(false);
+    }
+
+    @Override
+    public void onError(String error) {
+        super.onError(error);
+        sendIntentStartEndPush(false);
+    }
+
+    private void sendIntentStartEndPush(boolean start) {
+        Intent surveysIntent = new Intent(PushService.class.getName());
+        surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
+        surveysIntent.putExtra(PUSH_IS_START, start);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
+    }
+
+    private void sendIntentShowLogin() {
+        Intent surveysIntent = new Intent(PushService.class.getName());
+        surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
+        surveysIntent.putExtra(SHOW_LOGIN, true);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }
 }

@@ -148,6 +148,7 @@ public class Constants {
     // Values to identify image/video on media_type column in the DB
     public static final int MEDIA_TYPE_IMAGE = 0;
     public static final int MEDIA_TYPE_VIDEO = 1;
+    public static final int MEDIA_TYPE_UNKNOWN = 2;
     public static final String MEDIA_SEPARATOR="#";
     public static final int NO_MEDIA_ID=-1;
     public static final String MEDIA_FOLDER = "media";

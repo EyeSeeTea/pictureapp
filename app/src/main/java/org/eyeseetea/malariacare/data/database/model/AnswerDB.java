@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -79,6 +80,12 @@ public class AnswerDB extends BaseModel {
         return new Select()
                 .from(AnswerDB.class)
                 .where(AnswerDB_Table.id_answer.eq(id)).querySingle();
+    }
+
+    public static void deleteById(Long id) {
+        new Delete()
+                .from(AnswerDB.class)
+                .where(AnswerDB_Table.id_answer.eq(id));
     }
 
     public Long getId_answer() {

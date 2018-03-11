@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -93,6 +94,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
+    public void requestAnswerFocus() {
+        spinnerOptions.requestFocusFromTouch();
+    }
+
+    @Override
     public boolean hasError() {
         return false;
     }
@@ -103,14 +109,17 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerOptions = (Spinner) findViewById(R.id.answer);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
+        optionSetFromSavedValue = true;
 
+        spinnerOptions.setFocusable(true);
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
-                    if (position > 0)
-                    notifyAnswerChanged(optionDB);
+                    if (position > 0) {
+                        notifyAnswerChanged(optionDB);
+                    }
                 } else {
                     optionSetFromSavedValue = false;
                 }
@@ -121,5 +130,18 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
             }
         });
+        spinnerOptions.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    hideKeyboard(v);
+                }
+                return false;
+            }
+        });
+    }
+
+    public Spinner getSpinnerOptions() {
+        return spinnerOptions;
     }
 }

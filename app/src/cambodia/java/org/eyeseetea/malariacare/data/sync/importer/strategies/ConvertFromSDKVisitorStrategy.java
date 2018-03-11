@@ -21,4 +21,9 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
 
     public static void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
     }
+
+    @Override
+    public void visit(DataValueExtended dataValueExtended, SurveyDB surveyDB) {
+
+    }
 }

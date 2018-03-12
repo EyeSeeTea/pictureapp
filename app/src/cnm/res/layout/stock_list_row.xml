@@ -47,7 +47,7 @@
                 android:id="@+id/facilityDateContainer"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/date_line"
@@ -59,6 +59,20 @@
                     android:textSize="?attr/font_small"
                     android:textStyle="bold"
                     app:font_name="@string/normal_font" />
+
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
+                    android:id="@+id/not_sent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/gray_text_survey"
+                    android:textSize="?attr/font_small"
+                    android:textStyle="bold"
+                    android:text="*"
+                    app:font_name="@string/normal_font" />
+
+
             </LinearLayout>
 
             <LinearLayout

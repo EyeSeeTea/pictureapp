@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -66,6 +65,7 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
         holder.drugs.setText(visibleValues);
         holder.stockImage.setImageDrawable(
                 mContext.getResources().getDrawable(getImageForSurvey(survey)));
+        holder.notSent.setVisibility(isSurveyUnsent(survey.getStatus()) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -79,6 +79,12 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
             return 0;
         }
         return surveys.size();
+    }
+
+    private boolean isSurveyUnsent(int surveyStatus) {
+        return surveyStatus == Constants.SURVEY_IN_PROGRESS
+                || surveyStatus == Constants.SURVEY_SENDING
+                || surveyStatus == Constants.SURVEY_COMPLETED;
     }
 
     private int getImageForSurvey(Survey survey) {
@@ -97,12 +103,14 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
         ImageView stockImage;
         TextView date;
         TextView drugs;
+        TextView notSent;
 
         public SurveyHolder(View itemView) {
             super(itemView);
             stockImage = (ImageView) itemView.findViewById(R.id.image_stock);
             date = (TextView) itemView.findViewById(R.id.date_line);
             drugs = (TextView) itemView.findViewById(R.id.drugs_line);
+            notSent = (TextView) itemView.findViewById(R.id.not_sent);
         }
     }
 }

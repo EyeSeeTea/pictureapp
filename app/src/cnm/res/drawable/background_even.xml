@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="-2dip"
+        android:right="-2dip"
+        android:top="-2dip">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/tab_pressed_background" /> <!--background color-->
+            <stroke
+                android:width="2dip"
+                android:color="@color/selected_tab_below_row" /> <!--line color-->
+        </shape>
+    </item>
+</layer-list>

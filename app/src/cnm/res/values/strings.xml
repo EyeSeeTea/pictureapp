@@ -271,15 +271,23 @@
 <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+<string name="error_downloading_languages">"Error downloading languages"</string>
 <string name="common_option_diagnosis_not_tested">Not tested</string>
+<string name="save">Save</string>
 <string name="ipc_issueEntry_q_referred">Referred</string>
 <string name="common_option_referred_suspected">Suspected treatment failure</string>
 <string name="common_option_referred_danger">Danger Signs</string>
 <string name="common_option_referred_stock_out">ACT/PQ stock out</string>
 <string name="common_option_referred_unable">Unable to treat</string>
-<string name="save">Save</string>
 <string name="login_unexpected_error">"Unexpected error while login"</string>
 <string name="lastcommit_unavailable"><![CDATA[
+<string name="common_option_treatment_asmq_25_50_3">3 ASMQ Tablets of 25/50 mg</string>
+<string name="common_option_treatment_asmq_25_50_6">6 ASMQ Tablets of 25/50mg</string>
+<string name="common_option_treatment_asmq_100_200_3">3 ASMQ Tablets of 100/200 mg</string>
+<string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
+<string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
+
+    <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>
 <p>Steps:</p>
 <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>

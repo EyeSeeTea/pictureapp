@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.organisationunit
         .ExistsMoreThanOneOrgUnitByPhoneException;
@@ -207,6 +208,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     authenticationManager.getHardcodedServerCredentials(
                             ServerAPIController.getServerUrl());
         } catch (ConfigJsonIOException e) {
+            e.printStackTrace();
+            callback.onError(e);
+        } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);
         }

@@ -19,6 +19,15 @@ public class Question {
     private Visibility visibility;
     private List<Rule> rules;
     private Value mValue;
+    private String mQuestionText;
+
+    public Question() {
+    }
+
+    public Question(String uid, String questionText) {
+        this.uid = required(uid, "uid is required");
+        this.mQuestionText = required(questionText, "questionText is required");
+    }
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
@@ -99,6 +108,10 @@ public class Question {
 
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
+    }
+
+    public String getQuestionText() {
+        return mQuestionText;
     }
 
     public Value getValue() {

@@ -8,6 +8,7 @@ import java.util.List;
 
 public class StockSurveysPresenter {
 
+
     public interface StockView {
         void showValues(List<Survey> surveys);
 
@@ -56,6 +57,10 @@ public class StockSurveysPresenter {
 
     public void onAddReceiptClick() {
         mStockView.showNewReceiptSurvey(Constants.SURVEY_RECEIPT);
+    }
+
+    public void onAddExpenseClick() {
+        mStockView.showNewReceiptSurvey(Constants.SURVEY_ISSUE);
     }
 
     public void reloadData() {

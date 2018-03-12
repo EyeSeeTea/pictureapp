@@ -194,7 +194,7 @@ public class PopulateRow {
     static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
            @Nullable TreatmentDB treatmentDB) {
         APopulateRowStrategy populateRowStrategy = new PopulateRowStrategy();
-        return populateRowStrategy.populateTreatments(line, organisationFK, stringKeyList,
+        return populateRowStrategy.populateTreatments(line, organisationFK,
                 treatmentDB);
     }
 

@@ -3,8 +3,13 @@ package org.eyeseetea.malariacare.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +29,7 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.StockSurveysAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.StockSurveysPresenter;
+import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -36,6 +42,7 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
     private StockSurveysPresenter mStockSurveysPresenter;
     private View mView;
     private boolean isAddShowing;
+    private UpdateSurveyReceiver mUpdateSurveyReceiver;
 
     @Nullable
     @Override
@@ -79,10 +86,20 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
 
     @Override
     public void registerFragmentReceiver() {
+        if (mUpdateSurveyReceiver == null) {
+            mUpdateSurveyReceiver = new UpdateSurveyReceiver();
+        }
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mUpdateSurveyReceiver,
+                new IntentFilter(SurveyService.RELOAD_DASHBOARD_ACTION));
     }
 
     @Override
     public void unregisterFragmentReceiver() {
+        if (mUpdateSurveyReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(
+                    mUpdateSurveyReceiver);
+            mUpdateSurveyReceiver = null;
+        }
     }
 
     @Override
@@ -198,6 +215,19 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
             FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
             ft.replace(layout, fragment);
             ft.commit();
+        }
+    }
+
+    public class UpdateSurveyReceiver extends BroadcastReceiver {
+        private UpdateSurveyReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mStockSurveysPresenter != null && intent.getAction() != null
+                    && intent.getAction().equals(SurveyService.RELOAD_DASHBOARD_ACTION)) {
+                mStockSurveysPresenter.reloadData();
+            }
         }
     }
 

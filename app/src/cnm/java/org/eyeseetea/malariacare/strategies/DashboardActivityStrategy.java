@@ -13,8 +13,8 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
-import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 

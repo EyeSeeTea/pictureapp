@@ -13,11 +13,10 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
-import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit
-        .ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 public class OrganisationUnitRepository implements IOrganisationUnitRepository {
@@ -107,8 +106,9 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     }
 
     @Override
-    public void saveCurrentOrganisationUnitGroup(@NotNull OrganisationUnitGroup organisationUnitGroup) {
-        PreferencesState.getInstance().setOrganisationUnitGroup(organisationUnitGroup);
+    public void saveCurrentProgram(
+            @NotNull Program program) {
+        PreferencesState.getInstance().setProgram(program);
     }
 
     private void requiredNetworkConnection() throws NetworkException {
@@ -126,11 +126,12 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     }
 
     @Override
-    public OrganisationUnitGroup getOrganisationUnitGroupFromRemote(OrganisationUnit organisationUnit)
+    public Program getOrganisationUnitGroupFromRemote(OrganisationUnit organisationUnit)
             throws NetworkException, ApiCallException {
         requiredNetworkConnection();
 
-        return ServerAPIController.getOrganisationUnitGroupBy(organisationUnit.getUid());
+        return ServerAPIController.getOrganisationUnitGroupByOrganisationUnit(
+                organisationUnit.getUid());
     }
 
     @Override

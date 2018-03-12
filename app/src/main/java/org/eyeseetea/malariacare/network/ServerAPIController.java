@@ -33,12 +33,11 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
-import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit
-        .ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -446,11 +445,11 @@ public class ServerAPIController {
     }
 
     /**
-     * Returns the orgUnitGroup by the given server according to its current version
+     * Returns the Program by the given server according to its current version
      * @param orgUnitCode the organisationUnit code
      * @return a JSONObject representing a OrganisationUnitGroup object
      */
-     public static OrganisationUnitGroup getOrganisationUnitGroupBy(@NotNull String orgUnitCode) throws ApiCallException {
+     public static Program getOrganisationUnitGroupByOrganisationUnit(@NotNull String orgUnitCode) throws ApiCallException {
         //Version is required to choose which field to match
         String url = PreferencesState.getInstance().getDhisURL();
 
@@ -641,20 +640,19 @@ public class ServerAPIController {
                     }
                 }
 
-                org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
-                        .malariacare.domain.entity.Program();
+                org.eyeseetea.malariacare.domain.entity.Program program = null;
 
                 JSONArray ancestors = orgUnitJO.has(ANCESTORS) ? orgUnitJO.getJSONArray(ANCESTORS)
                         : null;
                 for (int i = 0; ancestors != null && i < ancestors.length(); i++) {
                     if (ancestors.getJSONObject(i).has(LEVEL) && ancestors.getJSONObject(i).getInt(
                             LEVEL) == ORG_UNIT_LEVEL) {
-                        program.setId(
-                                ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(
-                                        i).getString(TAG_ID) : "");
-                        program.setCode(
-                                ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(
-                                        i).getString(CODE) : "");
+                        program = new org.eyeseetea
+                                .malariacare.domain.entity.Program(
+                                ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(i)
+                                        .getString(CODE) : "",
+                                ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(i)
+                                        .getString(TAG_ID) : "");
                     }
                 }
 
@@ -674,7 +672,7 @@ public class ServerAPIController {
         }
     }
 
-    private static OrganisationUnitGroup parseOrganisationGroup(
+    private static Program parseOrganisationGroup(
             JSONObject organisationUnitGroupJSON)
             throws ApiCallException {
         if (organisationUnitGroupJSON != null) {
@@ -686,7 +684,7 @@ public class ServerAPIController {
                         ? organisationUnitGroupJSON.getString(TAG_CODE)
                         : DEFAULT_ORG_UNIT_GROUP_CODE_HC;
 
-                return new OrganisationUnitGroup(uid, code);
+                return new Program(uid, code);
 
             } catch (JSONException e) {
                 throw new ApiCallException(e);

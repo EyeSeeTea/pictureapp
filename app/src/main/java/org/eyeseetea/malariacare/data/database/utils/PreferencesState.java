@@ -30,7 +30,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.DateFilter;
 import org.eyeseetea.malariacare.views.FontUtils;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
@@ -248,9 +248,9 @@ public class PreferencesState {
         this.orgUnit = orgUnit;
     }
 
-    public void setOrganisationUnitGroup(OrganisationUnitGroup organisationUnitGroup) {
-        saveStringPreference(R.string.org_unit_group_id, organisationUnitGroup.getUid());
-        saveStringPreference(R.string.org_unit_group_code, organisationUnitGroup.getCode());
+    public void setProgram(Program program) {
+        saveStringPreference(R.string.program_id, program.getId());
+        saveStringPreference(R.string.program_code, program.getCode());
     }
 
     public String getDhisURL() {

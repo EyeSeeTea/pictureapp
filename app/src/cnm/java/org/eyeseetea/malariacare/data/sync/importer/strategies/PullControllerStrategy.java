@@ -33,13 +33,14 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
-import org.eyeseetea.malariacare.domain.entity.OrganisationUnitGroup;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -86,7 +87,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                         organisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.CACHE);
 
                 if(selectedOrganisationUnit !=null) {
-                    saveOrganisationUnitGroup(selectedOrganisationUnit);
+                    setProgramByOrganisationUnit(selectedOrganisationUnit);
                 }
             }
 
@@ -114,7 +115,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 throw new AutoconfigureException();
             } else {
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
-                saveOrganisationUnitGroup(organisationUnit);
+                setProgramByOrganisationUnit(organisationUnit);
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
@@ -143,12 +144,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
         }
     }
 
-    private void saveOrganisationUnitGroup(OrganisationUnit organisationUnit)
+    private void setProgramByOrganisationUnit(OrganisationUnit organisationUnit)
             throws NetworkException, ApiCallException {
-        OrganisationUnitGroup organisationUnitGroup =
+        Program program =
                 organisationUnitRepository.getOrganisationUnitGroupFromRemote(organisationUnit);
 
-        organisationUnitRepository.saveCurrentOrganisationUnitGroup(organisationUnitGroup);
+        organisationUnitRepository.saveCurrentProgram(program);
     }
 
     private OrganisationUnit getOrganisationUnitByPhone(IPullController.Callback callback)

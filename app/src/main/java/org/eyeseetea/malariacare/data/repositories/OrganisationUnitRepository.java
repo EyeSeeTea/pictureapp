@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.raizlabs.android.dbflow.annotation.NotNull;
+
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -11,10 +13,10 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit
-        .ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 public class OrganisationUnitRepository implements IOrganisationUnitRepository {
@@ -50,9 +52,7 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
     }
 
     private OrganisationUnit getFromRemote() throws NetworkException, ApiCallException {
-        if (!isNetworkAvailable()) {
-            throw new NetworkException();
-        }
+        requiredNetworkConnection();
 
         OrganisationUnit organisationUnit = null;
         try {
@@ -105,6 +105,17 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         PreferencesState.getInstance().setOrgUnit(organisationUnit.getName());
     }
 
+    @Override
+    public void saveCurrentProgram(
+            @NotNull Program program) {
+        PreferencesState.getInstance().setProgram(program);
+    }
+
+    private void requiredNetworkConnection() throws NetworkException {
+        if (!isNetworkAvailable()) {
+            throw new NetworkException();
+        }
+    }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager cm =
@@ -112,6 +123,15 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
                         Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public Program getOrganisationUnitGroupFromRemote(OrganisationUnit organisationUnit)
+            throws NetworkException, ApiCallException {
+        requiredNetworkConnection();
+
+        return ServerAPIController.getOrganisationUnitGroupByOrganisationUnit(
+                organisationUnit.getUid());
     }
 
     @Override

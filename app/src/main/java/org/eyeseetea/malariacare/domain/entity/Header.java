@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Header {
     private long id;
     private String shortName;
@@ -10,67 +12,37 @@ public class Header {
 
     public Header(long id, String shortName, String name,
             Form form, int index) {
-        this.id = id;
-        this.shortName = shortName;
-        this.name = name;
-        this.form = form;
-        this.index = index;
+
+        this.id = required(id, "id is required");
+        this.shortName = required(shortName, "shortName is required");
+        this.name = required(name, "name is required");
+        this.form = required(form, "form is required");
+        this.index = required(index, "index is required");
     }
 
-    public Header() {
-    }
-
-    private Header(Builder builder) {
-        setId(builder.id);
-        setShortName(builder.shortName);
-        setName(builder.name);
-        setForm(builder.form);
-        setIndex(builder.index);
-    }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getShortName() {
         return shortName;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Form getForm() {
         return form;
     }
 
-    public void setForm(Form form) {
-        this.form = form;
-    }
-
     public int getIndex() {
         return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 
     @Override
@@ -97,6 +69,17 @@ public class Header {
         result = 31 * result + (form != null ? form.hashCode() : 0);
         result = 31 * result + index;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Header{" +
+                "id=" + id +
+                ", shortName='" + shortName + '\'' +
+                ", name='" + name + '\'' +
+                ", form=" + form +
+                ", index=" + index +
+                '}';
     }
 
     public static final class Builder {
@@ -135,7 +118,13 @@ public class Header {
         }
 
         public Header build() {
-            return new Header(this);
+            return new Header(
+                    this.id,
+                    this.shortName,
+                    this.name,
+                    this.form,
+                    this.index
+            );
         }
     }
 }

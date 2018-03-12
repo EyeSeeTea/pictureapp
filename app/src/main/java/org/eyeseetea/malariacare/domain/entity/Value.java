@@ -20,10 +20,6 @@ public class Value {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public String getBackgroundColor() {
         return backgroundColor;
     }

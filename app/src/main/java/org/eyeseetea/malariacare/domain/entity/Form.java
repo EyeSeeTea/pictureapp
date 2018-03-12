@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Form {
     private long id;
     private String name;
@@ -8,15 +10,14 @@ public class Form {
     private Type type;
     private Country country;
 
-    public Form() {
-    }
+    public Form(long id, String name, int index, Type type,
+            Country country) {
 
-    private Form(Builder builder) {
-        setId(builder.id);
-        setName(builder.name);
-        setIndex(builder.index);
-        setType(builder.type);
-        setCountry(builder.country);
+        this.id = required(id, "id is required");
+        this.name = required(name, "name is required");
+        this.index = required(index, "index is required");
+        this.type = required(type, "type is required");
+        this.country = required(country, "country is required");
     }
 
     public static Builder newBuilder() {
@@ -27,40 +28,20 @@ public class Form {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-
     public Country getCountry() {
         return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
     }
 
     @Override
@@ -85,6 +66,17 @@ public class Form {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Form{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", index=" + index +
+                ", type=" + type +
+                ", country=" + country +
+                '}';
     }
 
     public enum Type {
@@ -130,7 +122,13 @@ public class Form {
         }
 
         public Form build() {
-            return new Form(this);
+            return new Form(
+                    this.id,
+                    this.name,
+                    this.index,
+                    this.type,
+                    this.country
+            );
         }
     }
 }

@@ -5,595 +5,919 @@
   "version": "2",
   "updateDate": "2017-12-20 12:00",
   "updateUser": "BR",
-  "languages": ["en", "pt"],
+  "languages": [
+    "en",
+    "pt"
+  ],
   "issuing_capture": {
-    "validSamples": [0, 1, 2],
-    "payloadSpecs": [{
-      "dataPointRef": "url",
-      "samples": [{
-        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
-      }, {
-        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
-      }, {
-        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
-      }]
-    }, {
-      "dataPointRef": "version",
-      "samples": [{
-        "value": "1.0"
-      }, {
-        "value": "1.0"
-      }, {
-        "value": "1.0"
-      }]
-    }, {
-      "dataPointRef": "source",
-      "samples": [{
-        "value": "?"
-      }, {
-        "value": "?"
-      }, {
-        "value": "?"
-      }]
-    }, {
-      "dataPointRef": "androidInfo",
-      "samples": [{
-        "value": "?"
-      }, {
-        "value": "?"
-      }, {
-        "value": "?"
-      }],
-      "mandatory": "false"
-    }, {
-      "dataPointRef": "language",
-      "samples": [{
-        "value": "en"
-      }, {
-        "value": "en"
-      }, {
-        "value": "pt"
-      }]
-    }, {
-      "dataPointRef": "userName",
-      "samples": [{
-        "value": "8004"
-      }, {
-        "value": "8004"
-      }, {
-        "value": "8004"
-      }]
-    }, {
-      "dataPointRef": "password",
-      "samples": [{
-        "value": "1234"
-      }, {
-        "value": "1234"
-      }, {
-        "value": "1234"
-      }]
-    }, {
-      "dataPointRef": "settings",
-      "samples": [{
-        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
-      }, {
-        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
-      }, {
-        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
-      }],
-      "mandatory": "false"
-    }],
-    "actionsSpecs": [{
-      "dataPointRef": "type",
-      "samples": [{
-        "value": "issueReferral"
-      }, {
-        "value": "issueReferral"
-      }, {
-        "value": "issueReferral"
-      }]
-    }, {
-      "dataPointRef": "actionId",
-      "samples": [{
-        "value": "some_actionId-0"
-      }, {
-        "value": "some_actionId-1"
-      }, {
-        "value": "some_actionId-2"
-      }]
-    }, {
-      "dataPointRef": "sourceAddedDateTime",
-      "samples": [{
-        "value": "2017-10-27T10:00:00"
-      }, {
-        "value": "2017-10-28T11:00:00"
-      }, {
-        "value": "2017-10-29T12:00:00"
-      }]
-    }, {
-      "dataPointRef": "voucher",
-      "samples": [{
-        "value": "{\"type\": \"paper\", \"id\": \"1000000000\"}"
-      }, {
-        "value": "{\"type\": \"electronic\", \"id\": \"1000000001\"}"
-      }, {
-        "value": "{\"type\": \"novoucher\", \"id\": \"1000000002\"}"
-      }]
-    }, {
-      "dataPointRef": "coordinates",
-      "samples": [{
-        "value": "{\"latitude\": 10, \"longitude\": 10 }"
-      }, {
-        "value": "{\"latitude\": 20, \"longitude\": 20 }"
-      }, {
-        "value": "{\"latitude\": 30, \"longitude\": 30 }"
-      }]
-    }],
-    "dataValuesSpecs": [{
-      "dataPointRef": "program",
-      "poTerm": "ipc_issueEntry_q_program",
-      "defaultName": "Programa",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "FPL"
-      }, {
-        "value": "FPL"
-      }, {
-        "value": "FPL"
-      }],
-      "options": [{
-        "value": "FPL",
-        "poTerm": "common_option_program_familyPlanning",
-        "defaultName": "Planeamento familiar"
-      }]
-    }, {
-      "dataPointRef": "firstName",
-      "poTerm": "ipc_issueEntry_q_firstName",
-      "defaultName": "Primeiro Nome",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "Sara"
-      }, {
-        "value": "Sam"
-      }, {
-        "value": "Bruno"
-      }]
-    }, {
-      "dataPointRef": "lastName",
-      "poTerm": "ipc_issueEntry_q_lastName",
-      "defaultName": "Úlitmo Nome",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "PSI"
-      }, {
-        "value": "PSI"
-      }, {
-        "value": "Raimbault"
-      }]
-    }, {
-      "dataPointRef": "birthProvince",
-      "poTerm": "ipc_issueEntry_q_MZ_birthProvince",
-      "defaultName": "Província de Nascimento",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "MZ01"
-      }, {
-        "value": "MZ02"
-      }, {
-        "value": "MZ03"
-      }],
-      "options": [
-        {
-          "value": "MZ01",
-          "poTerm": "common_option_MZ_province_cidadeDeMaputo",
-          "defaultName": "Maputo Cidade"
-        }, {
-          "value": "MZ02",
-          "poTerm": "common_option_MZ_province_maputo",
-          "defaultName": "Maputo"
-        }, {
-          "value": "MZ03",
-          "poTerm": "common_option_MZ_province_gaza",
-          "defaultName": "Gaza"
-        }, {
-          "value": "MZ04",
-          "poTerm": "common_option_MZ_province_inhambane",
-          "defaultName": "Inhambane"
-        }, {
-          "value": "MZ05",
-          "poTerm": "common_option_MZ_province_sofala",
-          "defaultName": "Sofala"
-        }, {
-          "value": "MZ06",
-          "poTerm": "common_option_MZ_province_zambezia",
-          "defaultName": "Zambézia"
-        }, {
-          "value": "MZ07",
-          "poTerm": "common_option_MZ_province_nampula",
-          "defaultName": "Nampula"
-        }, {
-          "value": "MZ08",
-          "poTerm": "common_option_MZ_province_niassa",
-          "defaultName": "Niassa"
-        }, {
-          "value": "MZ09",
-          "poTerm": "common_option_MZ_province_caboDelgado",
-          "defaultName": "Cabo Delgado"
-        }, {
-          "value": "MZ10",
-          "poTerm": "common_option_MZ_province_tete",
-          "defaultName": "Tete"
-        }, {
-          "value": "MZ11",
-          "poTerm": "common_option_MZ_province_manica",
-          "defaultName": "Manica"
-        }]
-
-    }, {
-      "dataPointRef": "birthOrder",
-      "poTerm": "ipc_issueEntry_q_MZ_birthOrder",
-      "defaultName": "Ordem de Nascimento (entre irmãos)",
-      "controlType": "INT",
-      "samples": [{
-        "value": "1"
-      }, {
-        "value": "2"
-      }, {
-        "value": "3"
-      }]
-    }, {
-      "dataPointRef": "age",
-      "poTerm": "ipc_issueEntry_q_age",
-      "defaultName": "Idade",
-      "controlType": "INT",
-      "samples": [{
-        "value": "40"
-      }, {
-        "value": "30"
-      }, {
-        "value": "20"
-      }]
-    }, {
-      "dataPointRef": "phoneOwnership",
-      "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
-      "defaultName": "Tem telemóvel?",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "NO"
-      }, {
-        "value": "HER"
-      }, {
-        "value": "PAR"
-      }],
-      "options": [{
-        "value": "NO",
-        "poTerm": "common_option_ownershipOfPhone_noMobile",
-        "defaultName": "Sem telemóvel"
-      }, {
-        "value": "HER",
-        "poTerm": "common_option_ownershipOfPhone_herNumber",
-        "defaultName": "Contacto dela"
-      }, {
-        "value": "MF",
-        "poTerm": "common_option_ownershipOfPhone_parent",
-        "defaultName": "Número do pai"
-      }, {
-        "value": "PAR",
-        "poTerm": "common_option_ownershipOfPhone_husbandPartner",
-        "defaultName": "Esposo/parceiro"
-      }, {
-        "value": "SHA",
-        "poTerm": "common_option_ownershipOfPhone_shared",
-        "defaultName": "Partilhado"
-      }]
-    }, {
-      "dataPointRef": "phoneNumber",
-      "poTerm": "ipc_issueEntry_q_phoneNumber",
-      "defaultName": "Número de telemóvel",
-      "controlType": "PHONE_NUMBER",
-      "samples": [{
-        "value": "undefined",
-        "provider": "undefined"
-      }, {
-        "value": "+33611901852",
-        "provider": "FR-SFR"
-      }, {
-        "value": "+33611901852",
-        "provider": "FR-SFR"
-      }, {
-        "value": "+258846270057",
-        "provider": "MZ-Vodacom"
-      }, {
-        "value": "+258824242092",
-        "provider": "MZ-mCcel"
-      }, {
-        "value": "+258867013670",
-        "provider": "MZ-Movitel"
-      }],
-      "format": {
-        "accepted": [{
-          "starts": "8",
-          "length": "9",
-          "comment": "national"
-        }, {
-          "starts": "+",
-          "comment": "international"
-        }, {
-          "starts": "00",
-          "comment": "international"
-        }],
-        "details": {
-          "trunkPrefix": "",
-          "dialingCode": "+258"
-        }
+    "validSamples": [
+      0,
+      1,
+      2
+    ],
+    "payloadSpecs": [
+      {
+        "dataPointRef": "url",
+        "samples": [
+          {
+            "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+          },
+          {
+            "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+          },
+          {
+            "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "version",
+        "samples": [
+          {
+            "value": "1.0"
+          },
+          {
+            "value": "1.0"
+          },
+          {
+            "value": "1.0"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "source",
+        "samples": [
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "androidInfo",
+        "samples": [
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          }
+        ],
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "language",
+        "samples": [
+          {
+            "value": "en"
+          },
+          {
+            "value": "en"
+          },
+          {
+            "value": "pt"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "userName",
+        "samples": [
+          {
+            "value": "8004"
+          },
+          {
+            "value": "8004"
+          },
+          {
+            "value": "8004"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "password",
+        "samples": [
+          {
+            "value": "1234"
+          },
+          {
+            "value": "1234"
+          },
+          {
+            "value": "1234"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "settings",
+        "samples": [
+          {
+            "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+          },
+          {
+            "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+          },
+          {
+            "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+          }
+        ],
+        "mandatory": "false"
       }
-    }, {
-      "dataPointRef": "phoneContactConsent",
-      "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
-      "defaultName": "Permissão para contactar a beneficiária",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "undefined"
-      }, {
-        "value": "YESP"
-      }, {
-        "value": "YESPP"
-      }],
-      "options": [{
-        "value": "NO",
-        "poTerm": "common_option_furtherInformationConsent_no",
-        "defaultName": "Não"
-      }, {
-        "value": "YESP",
-        "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
-        "defaultName": "Sim - Da PSI"
-      }, {
-        "value": "YESPP",
-        "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
-        "defaultName": "Sim - Da PSI e parceiros"
-      }]
-    }, {
-      "dataPointRef": "currentMethod",
-      "poTerm": "ipc_issueEntry_q_currentMethod",
-      "defaultName": "Método contraceptivo actual",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "PIL"
-      }, {
-        "value": "INJ"
-      }, {
-        "value": "CON"
-      }],
-      "options": [{
-        "value": "NON",
-        "poTerm": "common_option_method_none",
-        "defaultName": "Nenhum"
-      }, {
-        "value": "PIL",
-        "poTerm": "common_option_method_pills",
-        "defaultName": "Pilula"
-      }, {
-        "value": "INJ",
-        "poTerm": "common_option_method_injection",
-        "defaultName": "Injectável"
-      }, {
-        "value": "IMP",
-        "poTerm": "common_option_method_implant",
-        "defaultName": "Implante"
-      }, {
-        "value": "IUD",
-        "poTerm": "common_option_method_iud",
-        "defaultName": "DIU"
-      }, {
-        "value": "CON-M",
-        "poTerm": "common_option_method_condomMale",
-        "defaultName": "Preservativo Masculino"
-      }, {
-        "value": "CON-F",
-        "poTerm": "common_option_method_condomFemale",
-        "defaultName": "Preservativo Femenino"
-      }, {
-        "value": "OTH",
-        "poTerm": "common_option_method_other",
-        "defaultName": "Other"
-      }, {
-        "value": "NA",
-        "poTerm": "common_option_method_noResponse",
-        "defaultName": "Não quer responder"
-      }]
-    }, {
-      "dataPointRef": "householdDelivery",
-      "poTerm": "ipc_issueEntry_q_householdDelivery",
-      "defaultName": "Entrega em casa",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "YES"
-      }, {
-        "value": "NO"
-      }, {
-        "value": "undefined"
-      }],
-      "options": [{
-        "value": "YES-Nurse",
-        "poTerm": "common_option_householdDelivery_yesNurse",
-        "defaultName": "Sim, precisa consulta com enfermeira primeiro"
-      }, {
-        "value": "YES-Microgynon",
-        "poTerm": "common_option_householdDelivery_yesMicrogynon",
-        "defaultName": "Sim, qualifica para pílula Microgynon"
-      }, {
-        "value": "YES-Microlut",
-        "poTerm": "common_option_householdDelivery_yesMicrolut",
-        "defaultName": "Sim, qualifica para pílula Microlut"
-      }, {
-        "value": "YES-Injectables",
-        "poTerm": "common_option_householdDelivery_yesInjectables",
-        "defaultName": "Sim, qualifica para injectável"
-      }, {
-        "value": "NO",
-        "poTerm": "common_option_householdDelivery_no",
-        "defaultName": "Não quer"
-      }]
-    }, {
-      "dataPointRef": "addressCity",
-      "poTerm": "ipc_issueEntry_q_MZ_addressCity",
-      "defaultName": "Cidade (Onde vive)",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "City"
-      }, {
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }]
-    }, {
-      "dataPointRef": "addressNeighborhood",
-      "poTerm": "ipc_issueEntry_q_MZ_addressNeighborhood",
-      "defaultName": "Bairro (Onde vive)",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "Neighborhood"
-      }, {
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }]
-    }, {
-      "dataPointRef": "channelOfReferral",
-      "poTerm": "ipc_issueEntry_q_channelOfReferral",
-      "defaultName": "Como foi feita a referência",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "DD"
-      }, {
-        "value": "ID"
-      }, {
-        "value": "GS"
-      }],
-      "options": [{
-        "value": "ID",
-        "poTerm": "common_option_channelOfReferral_individual",
-        "defaultName": "Individual"
-      }, {
-        "value": "DD",
-        "poTerm": "common_option_channelOfReferral_doorToDoor",
-        "defaultName": "Porta a Porta"
-      }, {
-        "value": "GS",
-        "poTerm": "common_option_channelOfReferral_groupSession",
-        "defaultName": "Groupo"
-      }, {
-        "value": "SC",
-        "poTerm": "common_option_channelOfReferral_school",
-        "defaultName": "Escola"
-      }, {
-        "value": "MA",
-        "poTerm": "common_option_channelOfReferral_market",
-        "defaultName": "Mercado"
-      }]
-    }, {
-      "dataPointRef": "generateVoucher",
-      "poTerm": "ipc_issueEntry_q_isClientReferred",
-      "defaultName": "Emitir uma senha para beneficiária ir ter com a enfermira?",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "YES"
-      }, {
-        "value": "YES"
-      }, {
-        "value": "NO"
-      }],
-      "options": [{
-        "value": "YES",
-        "poTerm": "common_btn_yes",
-        "defaultName": "Sim"
-      }, {
-        "value": "NO",
-        "poTerm": "common_btn_no",
-        "defaultName": "Não"
-      }]
-    }],
-
-    "rulesSpecs": [{
-      "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "HER", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "phoneNumber", "do": "SHOW" },
-        { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "MF", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "phoneNumber", "do": "SHOW" },
-        { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "PAR", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "phoneNumber", "do": "SHOW" },
-        { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "SHA", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "phoneNumber", "do": "SHOW" },
-        { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "householdDelivery", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "YES-Nurse", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "addressCity", "do": "SHOW" },
-        { "dataPointRef": "addressNeighborhood", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "householdDelivery", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "YES-Microgynon", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "addressCity", "do": "SHOW" },
-        { "dataPointRef": "addressNeighborhood", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "householdDelivery", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "YES-Microlut", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "addressCity", "do": "SHOW" },
-        { "dataPointRef": "addressNeighborhood", "do": "SHOW" }
-      ]
-    }, {
-      "conditions": [{
-        "left": { "value": "householdDelivery", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "YES-Injectables", "type": "value" }
-      }],
-      "actions": [
-        { "dataPointRef": "addressCity", "do": "SHOW" },
-        { "dataPointRef": "addressNeighborhood", "do": "SHOW" }
-      ]
-    }]
+    ],
+    "actionsSpecs": [
+      {
+        "dataPointRef": "type",
+        "samples": [
+          {
+            "value": "issueReferral"
+          },
+          {
+            "value": "issueReferral"
+          },
+          {
+            "value": "issueReferral"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "actionId",
+        "samples": [
+          {
+            "value": "some_actionId-0"
+          },
+          {
+            "value": "some_actionId-1"
+          },
+          {
+            "value": "some_actionId-2"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "sourceAddedDateTime",
+        "samples": [
+          {
+            "value": "2017-10-27T10:00:00"
+          },
+          {
+            "value": "2017-10-28T11:00:00"
+          },
+          {
+            "value": "2017-10-29T12:00:00"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "voucher",
+        "samples": [
+          {
+            "value": "{\"type\": \"paper\", \"id\": \"1000000000\"}"
+          },
+          {
+            "value": "{\"type\": \"electronic\", \"id\": \"1000000001\"}"
+          },
+          {
+            "value": "{\"type\": \"novoucher\", \"id\": \"1000000002\"}"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "coordinates",
+        "samples": [
+          {
+            "value": "{\"latitude\": 10, \"longitude\": 10 }"
+          },
+          {
+            "value": "{\"latitude\": 20, \"longitude\": 20 }"
+          },
+          {
+            "value": "{\"latitude\": 30, \"longitude\": 30 }"
+          }
+        ]
+      }
+    ],
+    "dataValuesSpecs": [
+      {
+        "dataPointRef": "program",
+        "poTerm": "ipc_issueEntry_q_program",
+        "defaultName": "Programa",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "FPL"
+          },
+          {
+            "value": "FPL"
+          },
+          {
+            "value": "FPL"
+          }
+        ],
+        "options": [
+          {
+            "value": "FPL",
+            "poTerm": "common_option_program_familyPlanning",
+            "defaultName": "Planeamento familiar"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "firstName",
+        "poTerm": "ipc_issueEntry_q_firstName",
+        "defaultName": "Primeiro Nome",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "Sara"
+          },
+          {
+            "value": "Sam"
+          },
+          {
+            "value": "Bruno"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "lastName",
+        "poTerm": "ipc_issueEntry_q_lastName",
+        "defaultName": "Úlitmo Nome",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "PSI"
+          },
+          {
+            "value": "PSI"
+          },
+          {
+            "value": "Raimbault"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "birthProvince",
+        "poTerm": "ipc_issueEntry_q_MZ_birthProvince",
+        "defaultName": "Província de Nascimento",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "MZ01"
+          },
+          {
+            "value": "MZ02"
+          },
+          {
+            "value": "MZ03"
+          }
+        ],
+        "options": [
+          {
+            "value": "MZ01",
+            "poTerm": "common_option_MZ_province_cidadeDeMaputo",
+            "defaultName": "Maputo Cidade"
+          },
+          {
+            "value": "MZ02",
+            "poTerm": "common_option_MZ_province_maputo",
+            "defaultName": "Maputo"
+          },
+          {
+            "value": "MZ03",
+            "poTerm": "common_option_MZ_province_gaza",
+            "defaultName": "Gaza"
+          },
+          {
+            "value": "MZ04",
+            "poTerm": "common_option_MZ_province_inhambane",
+            "defaultName": "Inhambane"
+          },
+          {
+            "value": "MZ05",
+            "poTerm": "common_option_MZ_province_sofala",
+            "defaultName": "Sofala"
+          },
+          {
+            "value": "MZ06",
+            "poTerm": "common_option_MZ_province_zambezia",
+            "defaultName": "Zambézia"
+          },
+          {
+            "value": "MZ07",
+            "poTerm": "common_option_MZ_province_nampula",
+            "defaultName": "Nampula"
+          },
+          {
+            "value": "MZ08",
+            "poTerm": "common_option_MZ_province_niassa",
+            "defaultName": "Niassa"
+          },
+          {
+            "value": "MZ09",
+            "poTerm": "common_option_MZ_province_caboDelgado",
+            "defaultName": "Cabo Delgado"
+          },
+          {
+            "value": "MZ10",
+            "poTerm": "common_option_MZ_province_tete",
+            "defaultName": "Tete"
+          },
+          {
+            "value": "MZ11",
+            "poTerm": "common_option_MZ_province_manica",
+            "defaultName": "Manica"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "birthOrder",
+        "poTerm": "ipc_issueEntry_q_MZ_birthOrder",
+        "defaultName": "Ordem de Nascimento (entre irmãos)",
+        "controlType": "INT",
+        "samples": [
+          {
+            "value": "1"
+          },
+          {
+            "value": "2"
+          },
+          {
+            "value": "3"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "age",
+        "poTerm": "ipc_issueEntry_q_age",
+        "defaultName": "Idade",
+        "controlType": "INT",
+        "samples": [
+          {
+            "value": "40"
+          },
+          {
+            "value": "30"
+          },
+          {
+            "value": "20"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "phoneOwnership",
+        "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
+        "defaultName": "Tem telemóvel?",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "NO"
+          },
+          {
+            "value": "HER"
+          },
+          {
+            "value": "PAR"
+          }
+        ],
+        "options": [
+          {
+            "value": "NO",
+            "poTerm": "common_option_ownershipOfPhone_noMobile",
+            "defaultName": "Sem telemóvel"
+          },
+          {
+            "value": "HER",
+            "poTerm": "common_option_ownershipOfPhone_herNumber",
+            "defaultName": "Contacto dela"
+          },
+          {
+            "value": "MF",
+            "poTerm": "common_option_ownershipOfPhone_parent",
+            "defaultName": "Número do pai"
+          },
+          {
+            "value": "PAR",
+            "poTerm": "common_option_ownershipOfPhone_husbandPartner",
+            "defaultName": "Esposo/parceiro"
+          },
+          {
+            "value": "SHA",
+            "poTerm": "common_option_ownershipOfPhone_shared",
+            "defaultName": "Partilhado"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "phoneNumber",
+        "poTerm": "ipc_issueEntry_q_phoneNumber",
+        "defaultName": "Número de telemóvel",
+        "controlType": "PHONE_NUMBER",
+        "samples": [
+          {
+            "value": "undefined",
+            "provider": "undefined"
+          },
+          {
+            "value": "+33611901852",
+            "provider": "FR-SFR"
+          },
+          {
+            "value": "+33611901852",
+            "provider": "FR-SFR"
+          },
+          {
+            "value": "+258846270057",
+            "provider": "MZ-Vodacom"
+          },
+          {
+            "value": "+258824242092",
+            "provider": "MZ-mCcel"
+          },
+          {
+            "value": "+258867013670",
+            "provider": "MZ-Movitel"
+          }
+        ],
+        "format": {
+          "accepted": [
+            {
+              "starts": "8",
+              "length": "9",
+              "comment": "national"
+            },
+            {
+              "starts": "+",
+              "comment": "international"
+            },
+            {
+              "starts": "00",
+              "comment": "international"
+            }
+          ],
+          "details": {
+            "trunkPrefix": "",
+            "dialingCode": "+258"
+          }
+        }
+      },
+      {
+        "dataPointRef": "phoneContactConsent",
+        "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
+        "defaultName": "Permissão para contactar a beneficiária",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "YESP"
+          },
+          {
+            "value": "YESPP"
+          }
+        ],
+        "options": [
+          {
+            "value": "NO",
+            "poTerm": "common_option_furtherInformationConsent_no",
+            "defaultName": "Não"
+          },
+          {
+            "value": "YESP",
+            "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
+            "defaultName": "Sim - Da PSI"
+          },
+          {
+            "value": "YESPP",
+            "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
+            "defaultName": "Sim - Da PSI e parceiros"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "currentMethod",
+        "poTerm": "ipc_issueEntry_q_currentMethod",
+        "defaultName": "Método contraceptivo actual",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "PIL"
+          },
+          {
+            "value": "INJ"
+          },
+          {
+            "value": "CON"
+          }
+        ],
+        "options": [
+          {
+            "value": "NON",
+            "poTerm": "common_option_method_none",
+            "defaultName": "Nenhum"
+          },
+          {
+            "value": "PIL",
+            "poTerm": "common_option_method_pills",
+            "defaultName": "Pilula"
+          },
+          {
+            "value": "INJ",
+            "poTerm": "common_option_method_injection",
+            "defaultName": "Injectável"
+          },
+          {
+            "value": "IMP",
+            "poTerm": "common_option_method_implant",
+            "defaultName": "Implante"
+          },
+          {
+            "value": "IUD",
+            "poTerm": "common_option_method_iud",
+            "defaultName": "DIU"
+          },
+          {
+            "value": "CON-M",
+            "poTerm": "common_option_method_condomMale",
+            "defaultName": "Preservativo Masculino"
+          },
+          {
+            "value": "CON-F",
+            "poTerm": "common_option_method_condomFemale",
+            "defaultName": "Preservativo Femenino"
+          },
+          {
+            "value": "OTH",
+            "poTerm": "common_option_method_other",
+            "defaultName": "Other"
+          },
+          {
+            "value": "NA",
+            "poTerm": "common_option_method_noResponse",
+            "defaultName": "Não quer responder"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "householdDelivery",
+        "poTerm": "ipc_issueEntry_q_householdDelivery",
+        "defaultName": "Entrega em casa",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "YES"
+          },
+          {
+            "value": "NO"
+          },
+          {
+            "value": "undefined"
+          }
+        ],
+        "options": [
+          {
+            "value": "YES-Nurse",
+            "poTerm": "common_option_householdDelivery_yesNurse",
+            "defaultName": "Sim, precisa consulta com enfermeira primeiro"
+          },
+          {
+            "value": "YES-Microgynon",
+            "poTerm": "common_option_householdDelivery_yesMicrogynon",
+            "defaultName": "Sim, qualifica para pílula Microgynon"
+          },
+          {
+            "value": "YES-Microlut",
+            "poTerm": "common_option_householdDelivery_yesMicrolut",
+            "defaultName": "Sim, qualifica para pílula Microlut"
+          },
+          {
+            "value": "YES-Injectables",
+            "poTerm": "common_option_householdDelivery_yesInjectables",
+            "defaultName": "Sim, qualifica para injectável"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_option_householdDelivery_no",
+            "defaultName": "Não quer"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "addressCity",
+        "poTerm": "ipc_issueEntry_q_MZ_addressCity",
+        "defaultName": "Cidade (Onde vive)",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "City"
+          },
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "addressNeighborhood",
+        "poTerm": "ipc_issueEntry_q_MZ_addressNeighborhood",
+        "defaultName": "Bairro (Onde vive)",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "Neighborhood"
+          },
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "channelOfReferral",
+        "poTerm": "ipc_issueEntry_q_channelOfReferral",
+        "defaultName": "Como foi feita a referência",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "DD"
+          },
+          {
+            "value": "ID"
+          },
+          {
+            "value": "GS"
+          }
+        ],
+        "options": [
+          {
+            "value": "ID",
+            "poTerm": "common_option_channelOfReferral_individual",
+            "defaultName": "Individual"
+          },
+          {
+            "value": "DD",
+            "poTerm": "common_option_channelOfReferral_doorToDoor",
+            "defaultName": "Porta a Porta"
+          },
+          {
+            "value": "GS",
+            "poTerm": "common_option_channelOfReferral_groupSession",
+            "defaultName": "Groupo"
+          },
+          {
+            "value": "SC",
+            "poTerm": "common_option_channelOfReferral_school",
+            "defaultName": "Escola"
+          },
+          {
+            "value": "MA",
+            "poTerm": "common_option_channelOfReferral_market",
+            "defaultName": "Mercado"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "generateVoucher",
+        "poTerm": "ipc_issueEntry_q_isClientReferred",
+        "defaultName": "Emitir uma senha para beneficiária ir ter com a enfermira?",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "YES"
+          },
+          {
+            "value": "YES"
+          },
+          {
+            "value": "NO"
+          }
+        ],
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "common_btn_yes",
+            "defaultName": "Sim"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_btn_no",
+            "defaultName": "Não"
+          }
+        ]
+      }
+    ],
+    "rulesSpecs": [
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "HER",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "MF",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "PAR",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "SHA",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "householdDelivery",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES-Nurse",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressCity",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "addressNeighborhood",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "householdDelivery",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES-Microgynon",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressCity",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "addressNeighborhood",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "householdDelivery",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES-Microlut",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressCity",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "addressNeighborhood",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "householdDelivery",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES-Injectables",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressCity",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "addressNeighborhood",
+            "do": "SHOW"
+          }
+        ]
+      }
+    ]
   }
 }

@@ -83,7 +83,7 @@ public class AnswerDB extends BaseModel {
     }
 
     public static void deleteById(Long id) {
-         new Delete()
+        new Delete()
                 .from(AnswerDB.class)
                 .where(AnswerDB_Table.id_answer.eq(id));
     }

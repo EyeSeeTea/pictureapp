@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.os.Bundle;
 import android.view.View;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -14,17 +13,13 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 import org.eyeseetea.malariacare.utils.Constants;
-
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
-    DashboardUnsentFragment stockFragment;
+    StockSurveysFragment stockFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -48,10 +43,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        stockFragment = new DashboardUnsentFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(DashboardUnsentFragmentStrategy.IS_STOCK_FRAGMENT, true);
-        stockFragment.setArguments(bundle);
+        if (stockFragment == null) {
+            stockFragment = new StockSurveysFragment();
+        }
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 stockFragment);
         stockFragment.reloadData();
@@ -96,6 +90,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean beforeExit(boolean isBackPressed) {
         SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        SurveyDB stockSurvey = Session.getStockSurveyDB();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
             malariaSurvey.getValuesFromDB();
@@ -105,6 +100,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
                     Session.setMalariaSurveyDB(null);
                     malariaSurvey.delete();
+                    Session.setStockSurveyDB(null);
+                    stockSurvey.delete();
                 }
                 isBackPressed = false;
             }

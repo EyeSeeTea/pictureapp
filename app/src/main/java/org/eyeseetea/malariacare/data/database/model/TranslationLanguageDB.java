@@ -5,13 +5,11 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.sql.language.Select;
-
-import java.util.Date;
-
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -47,6 +45,13 @@ public class TranslationLanguageDB extends BaseModel {
         return new Select()
                 .from(TranslationLanguageDB.class)
                 .queryList();
+    }
+
+    public static boolean isEmpty() {
+        long count = new Select()
+                .from(TranslationLanguageDB.class)
+                .count();
+        return count < 1;
     }
 
     public static String getDefaultLanguage() {

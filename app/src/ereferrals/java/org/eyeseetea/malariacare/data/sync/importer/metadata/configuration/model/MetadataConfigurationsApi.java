@@ -17,6 +17,11 @@ public class MetadataConfigurationsApi {
     public static class Question {
         public static final String TYPE_DATA_POINT_REF ="dataPointRef";
         public static final String TYPE_VALUE ="value";
+
+        public static final String DISPLAY_PRIORITY_VISIBLE ="VISIBLE";
+        public static final String DISPLAY_PRIORITY_INVISIBLE ="INVISIBLE";
+        public static final String DISPLAY_PRIORITY_IMPORTANT ="IMPORTANT";
+
         public static final String OPERATOR_EQUAL ="==";
         public static final String OPERATOR_GREATER_THAN =">";
         public static final String OPERATOR_GREATER_OR_EQUAL_THAN =">=";
@@ -53,7 +58,7 @@ public class MetadataConfigurationsApi {
         @JsonProperty("options")
         public List<Option> options;
 
-        public boolean visibility = true;
+        public String queueDisplayPriority = DISPLAY_PRIORITY_VISIBLE;
 
         @JsonProperty("format")
         public PhoneFormat phoneFormat;

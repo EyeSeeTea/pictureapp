@@ -56,8 +56,6 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyScheduleDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TabGroupDB;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
-import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
@@ -111,8 +109,6 @@ public class PopulateDB {
             SurveyDB.class,
             ValueDB.class,
             UserDB.class,
-            TranslationDB.class,
-            TranslationLanguageDB.class,
             ProgramDB.class,
             TabDB.class,
             HeaderDB.class,

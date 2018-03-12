@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.database.convert;
 
+import static junit.framework.TestCase.assertTrue;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -43,7 +45,9 @@ public class QuestionConvertFromDomainVisitorShould {
     public void convert_a_domain_question_with_no_options_to_questiondb()
             throws Exception {
 
-        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWithNonOptions());
+        Question question = givenADomainQuestionBuilderWithNonOptions();
+
+        QuestionDB questionToEvaluate = converter.visit(question);
 
         QuestionDB expectedQuestion = givenAQuestionDBNonOptions();
 
@@ -188,6 +192,26 @@ public class QuestionConvertFromDomainVisitorShould {
 
     }
 
+    @Test
+    public void convert_a_domain_question_with_visibility_important() {
+        Question domainImportantQuestion = givenADomainQuestionWithVisibility(
+                Question.Visibility.IMPORTANT);
+
+        QuestionDB dbImportantQuestion = converter.visit(domainImportantQuestion);
+
+        assertTrue(dbImportantQuestion.isImportant());
+    }
+
+    @Test
+    public void convert_a_domain_question_with_visibility_invisible() {
+        Question domainImportantQuestion = givenADomainQuestionWithVisibility(
+                Question.Visibility.INVISIBLE);
+
+        QuestionDB dbImportantQuestion = converter.visit(domainImportantQuestion);
+
+        assertTrue(dbImportantQuestion.isInvisible());
+    }
+
     private void assertEqualQuestionsProperties(QuestionDB questionToEvaluate,
             QuestionDB expectedQuestion) {
         assertThat(questionToEvaluate.getCode(), is(expectedQuestion.getCode()));
@@ -202,66 +226,54 @@ public class QuestionConvertFromDomainVisitorShould {
 
         assertEqualQuestionsProperties(questionToEvaluate, expectedQuestion);
 
-
-        List<QuestionOptionDB> questionOptionDBSToEvaluate =
-                questionToEvaluate.getQuestionOptionDBS();
-
-        List<QuestionOptionDB> questionOptionDBSToExpected =
-                expectedQuestion.getQuestionOptionDBS();
-        if (questionOptionDBSToEvaluate != null && questionOptionDBSToExpected != null) {
-            assertEqual(questionOptionDBSToEvaluate, questionOptionDBSToExpected);
-        }
     }
-
-    private void assertEqual(List<QuestionOptionDB> questionOptionDBSToEvaluate,
-            List<QuestionOptionDB> questionOptionDBSToExpected) {
-
-        int sizeQuestionOptions = questionOptionDBSToEvaluate.size();
-        for (int i = 0; i < sizeQuestionOptions; i++) {
-
-            QuestionOptionDB questionOptionDBToEvaluate = questionOptionDBSToEvaluate.get(i);
-            QuestionOptionDB expectedQuestionOptionDB = questionOptionDBSToExpected.get(i);
-
-            assertEqual(questionOptionDBToEvaluate, expectedQuestionOptionDB);
-        }
-    }
-
-    private void assertEqual(QuestionOptionDB questionOptionDBToEvaluate, QuestionOptionDB
-            expectedQuestionOptionDB) {
-
-        OptionDB optionDBToEvaluate = questionOptionDBToEvaluate.getOptionDB();
-        OptionDB expectedOptionDB = expectedQuestionOptionDB.getOptionDB();
-
-        assertThat(optionDBToEvaluate.getCode(), is(expectedOptionDB.getCode()));
-        assertThat(optionDBToEvaluate.getName(), is(expectedOptionDB.getName()));
-    }
-
 
     private Question givenADomainQuestionWith(Question.Type type) {
-        Question question = givenADomainQuestionWithNonOptions();
-        question.setType(type);
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .type(type)
+                .compulsory(true).build();
+
 
         return question;
     }
 
     private Question givenADomainQuestionOneOption() {
-        Question question = givenADomainQuestionWithNonOptions();
+        List<Option> options = new ArrayList<>(1);
 
-        question.setOptions(new ArrayList<Option>(1));
+        Option firstOption = Option.newBuilder()
+                .code("FPL")
+                .name("common_option_program_familyPlanning")
+                .build();
 
-        Option firstOption = new Option();
-        firstOption.setCode("FPL");
-        firstOption.setName("common_option_program_familyPlanning");
+        options.add(firstOption);
 
-        question.getOptions().add(firstOption);
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .options(options)
+                .compulsory(true).build();
 
+        return question;
+    }
 
+    private Question givenADomainQuestionWithVisibility(Question.Visibility visibility) {
+        Question question = givenADomainQuestionBuilderWithNonOptions();
+        question.setVisibility(visibility);
         return question;
     }
 
     private QuestionDB givenADBQuestionWithOneOption() {
         QuestionDB questionDB = givenAQuestionDB();
-        List<QuestionOptionDB> questionOptionDBS = new ArrayList<>(1);
 
         OptionDB optionDB = new OptionDB();
         optionDB.setCode("FPL");
@@ -270,23 +282,18 @@ public class QuestionConvertFromDomainVisitorShould {
         QuestionOptionDB questionOptionDB = new QuestionOptionDB();
         questionOptionDB.setOption(optionDB);
 
-        questionOptionDBS.add(questionOptionDB);
-
-        questionDB.setQuestionOptionDBS(questionOptionDBS);
-
         return questionDB;
     }
 
-    private Question givenADomainQuestionWithNonOptions() {
-        Question question = new Question();
-        question.setCode("program");
-        question.setName("ipc_issueEntry_q_program");
-        question.setType(Question.Type.DROPDOWN_LIST);
-        question.setVisibility(Question.Visibility.VISIBLE);
-        question.setCompulsory(true);
-
-
-        return question;
+    private Question givenADomainQuestionBuilderWithNonOptions() {
+        return Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .compulsory(true).build();
     }
 
     private QuestionDB givenADBQuestionWithOutput(int output) {

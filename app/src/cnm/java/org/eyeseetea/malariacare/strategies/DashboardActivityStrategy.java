@@ -159,11 +159,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
             @Override
             public void onTabChanged(String tabId) {
-                /** If current tab is android */
-
-                //set the tabs background as transparent
-//                setTabsBackgroundColor(R.color.tab_unpressed_background);
-
                 //If change of tab from surveyFragment or FeedbackFragment they could be closed.
                 if (isSurveyFragmentActive(surveyFragment)) {
                     mDashboardActivity.onSurveyBackPressed();

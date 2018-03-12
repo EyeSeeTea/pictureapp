@@ -8,4 +8,6 @@ public interface IProgramRepository {
     void saveUserProgramId(Program program);
 
     Program getUserProgram();
+
+    Program getProgramWithId(String programId);
 }

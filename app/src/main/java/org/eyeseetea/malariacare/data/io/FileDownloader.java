@@ -177,7 +177,7 @@ public class FileDownloader implements IFileDownloader {
     private static Media convertInMedia(com.google.api.services.drive.model.File file,
             String program) {
         if (!file.getMimeType().equals("application/vnd.google-apps.folder")) {
-            Media.MediaType mediaType = Media.MediaType.VIDEO;
+            Media.MediaType mediaType = Media.MediaType.UNKNOWN;
             if (file.getMimeType().contains("image")) {
                 mediaType = Media.MediaType.PICTURE;
             } else if (file.getMimeType().contains("video")) {

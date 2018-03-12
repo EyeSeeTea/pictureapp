@@ -13,7 +13,13 @@ public interface ISurveyRepository {
 
     void getUnsentSurveys(IDataSourceCallback<List<Survey>> callback);
 
+    List<Survey> getUnsentSurveys();
+
     List<Survey> getAllQuarantineSurveys();
 
-    void save(Survey survey);
+    long save(Survey survey);
+
+    List<Survey> getAllCompletedSurveys();
+
+    List<Survey> getSurveysByProgram(String idProgram);
 }

@@ -37,9 +37,9 @@ public class TreatmentDB extends BaseModel {
     @Column
     Long id_partner_fk;
     @Column
-    Long diagnosis;
+    String diagnosis;
     @Column
-    Long message;
+    String message;
     @Column
     int type;
     /**
@@ -51,7 +51,7 @@ public class TreatmentDB extends BaseModel {
     public TreatmentDB() {
     }
 
-    public TreatmentDB(long id_treatment, long id_organisation, Long diagnosis, Long message,
+    public TreatmentDB(long id_treatment, long id_organisation, String diagnosis, String message,
             int type) {
         this.id_treatment = id_treatment;
         this.id_partner_fk = id_organisation;
@@ -82,11 +82,13 @@ public class TreatmentDB extends BaseModel {
     }
 
     public List<TreatmentDB> getAlternativeTreatments() {
-        MatchDB matchDB =new Select()
+        MatchDB matchDB = new Select()
                 .from(MatchDB.class).as(matchName)
                 .join(TreatmentMatchDB.class, Join.JoinType.INNER).as(treatmentMatchName)
-                .on(MatchDB_Table.id_match.withTable(matchAlias).is(TreatmentMatchDB_Table.id_match_fk.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatchDB_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(id_treatment))
+                .on(MatchDB_Table.id_match.withTable(matchAlias).is(
+                        TreatmentMatchDB_Table.id_match_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatchDB_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(
+                        id_treatment))
                 .querySingle();
         List<TreatmentDB> treatmentDBs = new Select()
                 .from(TreatmentDB.class).as(treatmentName)
@@ -133,19 +135,19 @@ public class TreatmentDB extends BaseModel {
         this.id_partner_fk = (partnerDB != null) ? partnerDB.getId_partner() : null;
     }
 
-    public Long getDiagnosis() {
+    public String getDiagnosis() {
         return diagnosis;
     }
 
-    public void setDiagnosis(Long diagnosis) {
+    public void setDiagnosis(String diagnosis) {
         this.diagnosis = diagnosis;
     }
 
-    public Long getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(Long message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

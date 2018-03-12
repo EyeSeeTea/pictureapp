@@ -64,4 +64,8 @@ public abstract class ADashboardUnsentFragmentStrategy {
     public void onReceiveSurveys(Intent intent) {
 
     }
+
+    public void deleteSurvey(SurveyDB surveyDB){
+        surveyDB.delete();
+    }
 }

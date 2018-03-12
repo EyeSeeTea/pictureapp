@@ -11,12 +11,13 @@ public class Value {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
+    public Value(String value, String questionUId) {
+        this.value = value;
+        this.questionUId = questionUId;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public String getValue() {
+        return value;
     }
 
     public String getBackgroundColor() {

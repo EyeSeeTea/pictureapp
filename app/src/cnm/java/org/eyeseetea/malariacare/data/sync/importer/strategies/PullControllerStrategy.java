@@ -33,9 +33,11 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.organisationunit
         .ExistsMoreThanOneOrgUnitByPhoneException;
@@ -64,6 +66,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
     public PullControllerStrategy(PullController pullController) {
         super(pullController);
+        organisationUnitRepository = new OrganisationUnitRepository();
     }
 
     @Override
@@ -79,6 +82,13 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 autoConfigureByPhone(context, callback, pullFilters);
             } else {
                 downloadMetadata(pullFilters, callback);
+
+                OrganisationUnit selectedOrganisationUnit =
+                        organisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.CACHE);
+
+                if(selectedOrganisationUnit !=null) {
+                    setProgramByOrganisationUnit(selectedOrganisationUnit);
+                }
             }
 
         } catch (Exception ex) {
@@ -92,7 +102,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
             final IPullController.Callback callback, final PullFilters pullFilters)
             throws NetworkException, ApiCallException, AutoconfigureException {
 
-        organisationUnitRepository = new OrganisationUnitRepository();
         deviceRepository = new DeviceDataSource();
         authenticationManager = new AuthenticationManager(context);
 
@@ -106,6 +115,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 throw new AutoconfigureException();
             } else {
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
+                setProgramByOrganisationUnit(organisationUnit);
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
 
                 AppInfo appInfo = appInfoDataSource.getAppInfo();
@@ -132,6 +142,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 }
             }
         }
+    }
+
+    private void setProgramByOrganisationUnit(OrganisationUnit organisationUnit)
+            throws NetworkException, ApiCallException {
+        Program program =
+                organisationUnitRepository.getOrganisationUnitGroupFromRemote(organisationUnit);
+
+        organisationUnitRepository.saveCurrentProgram(program);
     }
 
     private OrganisationUnit getOrganisationUnitByPhone(IPullController.Callback callback)
@@ -207,6 +225,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
                     authenticationManager.getHardcodedServerCredentials(
                             ServerAPIController.getServerUrl());
         } catch (ConfigJsonIOException e) {
+            e.printStackTrace();
+            callback.onError(e);
+        } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);
         }

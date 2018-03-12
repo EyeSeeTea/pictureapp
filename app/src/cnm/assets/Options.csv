@@ -22,4 +22,8 @@
 22;'common_option_treatment_other';'Other';0;12;19
 23;'common_option_referred_yes';true;0;14;20
 24;'common_option_referred_no';false;0;14;21
-25;'common_option_diagnosis_not_tested';'NotTested';0;1;22
+25;'common_option_diagnosis_not_tested';'NTest';0;1;22
+26;'common_option_not_tested_refused';'Refused';0;19;23
+27;'common_option_not_tested_rdt_out_stock';'StkOut';0;19;24
+28;'common_option_not_tested_danger_signs';'Danger';0;19;25
+29;'common_option_not_tested_referred';'Referred';0;19;26

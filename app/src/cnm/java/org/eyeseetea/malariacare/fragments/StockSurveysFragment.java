@@ -116,13 +116,14 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
     public void initAddButtons() {
         final ImageButton addBalance = (ImageButton) mView.findViewById(R.id.add_balance_survey);
         final ImageButton addReceipt = (ImageButton) mView.findViewById(R.id.add_receipt_survey);
+        final ImageButton addExpense = (ImageButton) mView.findViewById(R.id.add_expense_survey);
         mView.findViewById(R.id.add_stock_survey).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isAddShowing) {
-                    hideAddMenu(addReceipt, addBalance);
+                    hideAddMenu(addReceipt, addBalance, addExpense);
                 } else {
-                    showAddMenu(addReceipt, addBalance);
+                    showAddMenu(addReceipt, addBalance, addExpense);
                 }
             }
         });
@@ -138,6 +139,12 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
                 mStockSurveysPresenter.onAddReceiptClick();
             }
         });
+        addExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStockSurveysPresenter.onAddExpenseClick();
+            }
+        });
     }
 
     @Override
@@ -145,7 +152,8 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         showNewReceiptBalanceFragment(type);
     }
 
-    private void showAddMenu(ImageButton receiptButton, ImageButton balanceButton) {
+    private void showAddMenu(ImageButton receiptButton, ImageButton balanceButton,
+            ImageButton expenseButton) {
         isAddShowing = true;
         receiptButton.animate().translationY(
                 -getActivity().getResources().getDimension(
@@ -153,12 +161,17 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         balanceButton.animate().translationY(
                 -getActivity().getResources().getDimension(
                         R.dimen.bigger_translation));
+        expenseButton.animate().translationY(
+                -getActivity().getResources().getDimension(
+                        R.dimen.biggest_translation));
     }
 
-    private void hideAddMenu(ImageButton receiptButton, ImageButton balanceButton) {
+    private void hideAddMenu(ImageButton receiptButton, ImageButton balanceButton,
+            ImageButton expenseButton) {
         isAddShowing = false;
         receiptButton.animate().translationY(0);
         balanceButton.animate().translationY(0);
+        expenseButton.animate().translationY(0);
     }
 
 

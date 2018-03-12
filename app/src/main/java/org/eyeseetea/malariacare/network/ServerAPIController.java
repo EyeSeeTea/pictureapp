@@ -465,7 +465,7 @@ public class ServerAPIController {
             throw new ApiCallException(e);
         }
 
-        JSONObject jsonObject = validateEmptyOrMoreThanOneJSOnArray("getOrganisationUnitGroupBy",
+        JSONObject jsonObject = validateEmptyOrMoreThanOneJSOnArray("getOrganisationUnitGroupFromRemote",
                 orgUnitCode, url, orgUnitsArray);
 
         return parseOrganisationGroup(jsonObject);

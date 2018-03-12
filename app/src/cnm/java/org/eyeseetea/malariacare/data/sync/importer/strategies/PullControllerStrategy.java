@@ -146,7 +146,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void saveOrganisationUnitGroup(OrganisationUnit organisationUnit)
             throws NetworkException, ApiCallException {
         OrganisationUnitGroup organisationUnitGroup =
-                organisationUnitRepository.getOrganisationUnitGroupBy(organisationUnit);
+                organisationUnitRepository.getOrganisationUnitGroupFromRemote(organisationUnit);
 
         organisationUnitRepository.saveCurrentOrganisationUnitGroup(organisationUnitGroup);
     }

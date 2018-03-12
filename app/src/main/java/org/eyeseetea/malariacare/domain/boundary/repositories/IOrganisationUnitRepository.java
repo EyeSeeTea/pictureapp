@@ -35,7 +35,7 @@ public interface IOrganisationUnitRepository {
 
     void saveCurrentOrganisationUnitGroup(OrganisationUnitGroup organisationUnitGroup);
 
-    OrganisationUnitGroup getOrganisationUnitGroupBy(OrganisationUnit organisationUnit)
+    OrganisationUnitGroup getOrganisationUnitGroupFromRemote(OrganisationUnit organisationUnit)
             throws NetworkException, ApiCallException;
 
 }

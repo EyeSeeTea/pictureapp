@@ -42,6 +42,28 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         return organisationUnit;
     }
 
+    private void verifyBanChanged(OrganisationUnit organisationUnit) {
+        OrgUnitDB cachedOrganisationUnit =
+                OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
+
+        if (cachedOrganisationUnit != null
+                && organisationUnit.isBanned() != cachedOrganisationUnit.isBanned()) {
+            mBanOrgUnitChangeListener.onBanOrgUnitChanged(organisationUnit);
+        }
+    }
+
+    private OrganisationUnit getFromRemote() throws NetworkException, ApiCallException {
+        requiredNetworkConnection();
+
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit = ServerAPIController.getCurrentOrgUnit();
+        } catch (Exception e) {
+            throw new ApiCallException("Error checking banned call");
+        }
+        return organisationUnit;
+    }
+
     @Override
     public void saveOrganisationUnit(OrganisationUnit organisationUnit) {
         ServerAPIController.saveOrganisationUnit(organisationUnit);
@@ -89,47 +111,6 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
         PreferencesState.getInstance().setOrganisationUnitGroup(organisationUnitGroup);
     }
 
-    @Override
-    public OrganisationUnitGroup getOrganisationUnitGroupBy(OrganisationUnit organisationUnit)
-            throws NetworkException, ApiCallException {
-
-        requiredNetworkConnection();
-
-        return ServerAPIController.getOrganisationUnitGroupBy(organisationUnit.getUid());
-    }
-
-    @Override
-    public void removeCurrentOrganisationUnit() {
-        if (OrgUnitDB.getByName(PreferencesState.getInstance().getOrgUnit()) != null) {
-            OrgUnitDB orgUnitDB = OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
-            orgUnitDB.delete();
-        }
-        PreferencesState.getInstance().setOrgUnit(null);
-    }
-
-    private void verifyBanChanged(OrganisationUnit organisationUnit) {
-        OrgUnitDB cachedOrganisationUnit =
-                OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
-
-        if (cachedOrganisationUnit != null
-                && organisationUnit.isBanned() != cachedOrganisationUnit.isBanned()) {
-            mBanOrgUnitChangeListener.onBanOrgUnitChanged(organisationUnit);
-        }
-    }
-
-    private OrganisationUnit getFromRemote() throws NetworkException, ApiCallException {
-
-        requiredNetworkConnection();
-
-        OrganisationUnit organisationUnit = null;
-        try {
-            organisationUnit = ServerAPIController.getCurrentOrgUnit();
-        } catch (Exception e) {
-            throw new ApiCallException("Error checking banned call");
-        }
-        return organisationUnit;
-    }
-
     private void requiredNetworkConnection() throws NetworkException {
         if (!isNetworkAvailable()) {
             throw new NetworkException();
@@ -142,6 +123,23 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
                         Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public OrganisationUnitGroup getOrganisationUnitGroupFromRemote(OrganisationUnit organisationUnit)
+            throws NetworkException, ApiCallException {
+        requiredNetworkConnection();
+
+        return ServerAPIController.getOrganisationUnitGroupBy(organisationUnit.getUid());
+    }
+
+    @Override
+    public void removeCurrentOrganisationUnit() {
+        if (OrgUnitDB.getByName(PreferencesState.getInstance().getOrgUnit()) != null) {
+            OrgUnitDB orgUnitDB = OrgUnitDB.findByName(PreferencesState.getInstance().getOrgUnit());
+            orgUnitDB.delete();
+        }
+        PreferencesState.getInstance().setOrgUnit(null);
     }
 
     public OrganisationUnit getOrganisationUnitByName(String name) {

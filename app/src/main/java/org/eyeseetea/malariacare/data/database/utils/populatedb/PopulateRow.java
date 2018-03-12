@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.APopulateRowStrategy;
@@ -87,8 +88,7 @@ public class PopulateRow {
         return programDB;
     }
 
-    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK,
-            @Nullable TabDB tabDB) {
+    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK, @Nullable TabDB tabDB) {
         if (tabDB == null) {
             tabDB = new TabDB();
         }
@@ -126,8 +126,7 @@ public class PopulateRow {
         return questionThresholdDB;
     }
 
-    static QuestionOptionDB populateQuestionOption(String[] line,
-            HashMap<Long, QuestionDB> questionFK,
+    static QuestionOptionDB populateQuestionOption(String[] line, HashMap<Long, QuestionDB> questionFK,
             HashMap<Long, OptionDB> optionFK, HashMap<Long, MatchDB> matchFK,
             @Nullable QuestionOptionDB questionOptionDB) {
         if (questionOptionDB == null) {
@@ -240,6 +239,7 @@ public class PopulateRow {
         }
         return optionDB;
     }
+
 
     public static PhoneFormatDB populatePhoneFormat(String[] line,
             Map<Integer, ProgramDB> programFK, @Nullable PhoneFormatDB phoneFormatDB) {

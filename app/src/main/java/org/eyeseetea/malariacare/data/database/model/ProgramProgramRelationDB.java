@@ -4,9 +4,13 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+
+import java.util.List;
 
 @Table(database = AppDatabase.class, name = "ProgramProgramRelation")
 public class ProgramProgramRelationDB extends BaseModel {
@@ -40,5 +44,19 @@ public class ProgramProgramRelationDB extends BaseModel {
 
     public long getId_aux_program() {
         return id_aux_program;
+    }
+
+    public static List<ProgramDB> getRelatedPrograms(long idProgram) {
+        return new Select().from(ProgramDB.class)
+                .as(AppDatabase.programName)
+                .join(ProgramProgramRelationDB.class, Join.JoinType.INNER).as(
+                        AppDatabase.programProgramRelationName)
+                .on(ProgramDB_Table.id_program.withTable(AppDatabase.programAlias)
+                        .eq(ProgramProgramRelationDB_Table.id_aux_program.withTable(
+                                AppDatabase.programProgramRelationAlias)))
+                .where(ProgramProgramRelationDB_Table.id_main_program.withTable(
+                        AppDatabase.programProgramRelationAlias)
+                        .is(idProgram))
+                .queryList();
     }
 }

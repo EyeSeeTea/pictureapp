@@ -7,19 +7,27 @@ import android.view.View;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
+
+import java.util.Date;
 
 /**
  * Created by manuel on 28/12/16.
  */
-import org.eyeseetea.malariacare.utils.Constants;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
@@ -63,21 +71,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void newSurvey(Activity activity) {
         ProgramDB program = ProgramDB.findByUID(
                 activity.getString(R.string.malaria_program_uid));
-        ProgramDB stockProgram = ProgramDB.findByUID(
-                activity.getString(R.string.stock_program_uid));
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);
         SurveyDB survey = new SurveyDB(orgUnit, program, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
-        SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
-                Constants.SURVEY_ISSUE);
-        stockSurvey.setEventDate(
-                survey.getEventDate());//asociate the malaria survey to the stock survey
-        stockSurvey.save();
-        Session.setStockSurveyDB(stockSurvey);
-
+        createStockProgramIfNecessary(activity, survey, orgUnit);
         //Look for coordinates
         prepareLocationListener(activity, survey);
         activity.findViewById(R.id.common_header).setVisibility(View.GONE);
@@ -85,10 +85,43 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
+    private void createStockProgramIfNecessary(final Activity activity, final SurveyDB malariaSurvey,
+            final OrgUnitDB orgUnit) {
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
+                new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
+                        programRepository);
+        hasToGenerateStockProgramUseCase.execute(malariaSurvey.getProgramDB().getUid(),
+                new HasToGenerateStockProgramUseCase.Callback() {
+                    @Override
+                    public void hasToCreateStock(boolean create) {
+                        if (create) {
+                            generateStockProgram(malariaSurvey.getEventDate(), orgUnit, activity);
+                        }
+                    }
+                });
+    }
+
+    private void generateStockProgram(Date eventDate,
+            OrgUnitDB orgUnit,Activity activity) {
+        ProgramDB stockProgram = ProgramDB.findByUID(
+                activity.getString(R.string.stock_program_uid));
+        SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
+                Constants.SURVEY_ISSUE);
+        stockSurvey.setEventDate(eventDate);//asociate the malaria survey to the stock survey
+        stockSurvey.save();
+        Session.setStockSurveyDB(stockSurvey);
+    }
+
+
     @Override
     public void sendSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
-        Session.getStockSurveyDB().updateSurveyStatus();
+        if (Session.getStockSurveyDB() != null) {
+            Session.getStockSurveyDB().updateSurveyStatus();
+        }
         mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
     }
 
@@ -106,7 +139,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     Session.setMalariaSurveyDB(null);
                     malariaSurvey.delete();
                     Session.setStockSurveyDB(null);
-                    stockSurvey.delete();
+                    if (stockSurvey != null) {
+                        stockSurvey.delete();
+                    }
                 }
                 isBackPressed = false;
             }
@@ -118,7 +153,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void completeSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
         //Complete stockSurvey
-        Session.getStockSurveyDB().updateSurveyStatus();
+        if (Session.getStockSurveyDB() != null) {
+            Session.getStockSurveyDB().updateSurveyStatus();
+        }
     }
 
     @Override

@@ -52,7 +52,9 @@ public abstract class ADynamicTabAdapterStrategy {
     public void finishOrNext() {
         try {
             System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());
+            if (Session.getStockSurveyDB() != null) {
+                System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());
+            }
         } catch (Exception e) {
         }
         if (Validation.hasErrors()) {

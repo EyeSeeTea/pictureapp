@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 public class Program {
     private String code;
     private String id;
@@ -8,24 +10,16 @@ public class Program {
     }
 
     public Program(String code, String id) {
-        this.code = code;
-        this.id = id;
+        this.id = required(id,"ID is required");
+        this.code = required(code,"Code is required");
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     @Override

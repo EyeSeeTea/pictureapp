@@ -63,7 +63,6 @@ public class StockSurveysPresenter {
         mStockView.showNewReceiptSurvey(Constants.SURVEY_ISSUE);
     }
 
-
     public void reloadData() {
         getStockSurveys();
     }

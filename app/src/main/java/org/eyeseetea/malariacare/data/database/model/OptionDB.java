@@ -61,9 +61,10 @@ public class OptionDB extends BaseModel {
      */
     AnswerDB mAnswerDB;
 
-    public boolean hasMatches(){
-        return matchQuestionsCode !=null;
+    public boolean hasMatches() {
+        return matchQuestionsCode != null;
     }
+
     public List<String> getMatchQuestionsCode() {
         return matchQuestionsCode;
     }
@@ -124,7 +125,7 @@ public class OptionDB extends BaseModel {
         return new Select().from(OptionDB.class).queryList();
     }
 
-    public static int getOptionsDBCount(){
+    public static int getOptionsDBCount() {
         return getAllOptions().size();
     }
 
@@ -160,7 +161,7 @@ public class OptionDB extends BaseModel {
     }
 
     public static void deleteByAnswer(long answerID) {
-         new Delete()
+        new Delete()
                 .from(OptionDB.class)
                 .where(OptionDB_Table.id_answer_fk.eq(answerID));
     }

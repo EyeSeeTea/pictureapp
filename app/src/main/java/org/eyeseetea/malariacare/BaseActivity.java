@@ -121,7 +121,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             }
         } else {
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-            homeIntent.addCategory( Intent.CATEGORY_HOME );
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
         }
@@ -341,7 +341,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param rawId   Id of the raw text resource in HTML format
      */
     public void showAlertWithHtmlMessage(int titleId, int rawId) {
-        InputStream message = getApplicationContext().getResources().openRawResource(rawId);
+        InputStream message = getResources().openRawResource(rawId);
         final SpannableString linkedMessage = new SpannableString(
                 Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
         Linkify.addLinks(linkedMessage, Linkify.ALL);
@@ -418,7 +418,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     private void showAlert(int titleId, CharSequence text) {
         final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(getApplicationContext().getString(titleId))
+                .setTitle(getString(titleId))
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null).create();
         dialog.show();

@@ -204,16 +204,21 @@ public class MetadataConfigurationApiClientShould {
 
     private Question givenAValidQuestionForMZ() {
 
-        Question mzQuestion = new Question();
-        mzQuestion.setCode("program");
-        mzQuestion.setName("ipc_issueEntry_q_program");
-        mzQuestion.setType(Question.Type.DROPDOWN_LIST);
-        mzQuestion.setCompulsory(true);
-        mzQuestion.setOptions(new ArrayList<Option>(1));
+        Question mzQuestion = Question.
+                newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .compulsory(true)
+                .options(new ArrayList<Option>(1))
+                .build();
 
-        Option firstOption = new Option();
-        firstOption.setCode("FPL");
-        firstOption.setName("common_option_program_familyPlanning");
+        Option firstOption = Option
+                .newBuilder()
+                .code("FPL")
+                .name("common_option_program_familyPlanning")
+                .build();
 
         mzQuestion.getOptions().add(firstOption);
 
@@ -222,16 +227,22 @@ public class MetadataConfigurationApiClientShould {
 
     private Question givenAValidQuestionForNP() {
 
-        Question mzQuestion = new Question();
-        mzQuestion.setCode("program");
-        mzQuestion.setName("ipc_issueEntry_q_program");
-        mzQuestion.setType(Question.Type.DROPDOWN_LIST);
-        mzQuestion.setCompulsory(true);
-        mzQuestion.setOptions(new ArrayList<Option>(1));
+        Question mzQuestion = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .compulsory(true)
+                .visibility(Question.Visibility.VISIBLE)
+                .options(new ArrayList<Option>(1))
+                .build();
 
-        Option firstOption = new Option();
-        firstOption.setCode("FPL");
-        firstOption.setName("common_option_program_familyPlanning");
+        Option firstOption = Option
+                .newBuilder()
+                .code("FPL")
+                .name("common_option_program_familyPlanning")
+                .build();
 
         mzQuestion.getOptions().add(firstOption);
 
@@ -240,26 +251,28 @@ public class MetadataConfigurationApiClientShould {
 
     private Question givenAValidQuestionForTZ() {
 
-        Question tzQuestion = new Question();
-        tzQuestion.setCode("firstName");
-        tzQuestion.setName("ipc_issueEntry_q_firstName");
-        tzQuestion.setType(Question.Type.SHORT_TEXT);
-        tzQuestion.setCompulsory(true);
-        tzQuestion.setOptions(null);
-
-        return tzQuestion;
+        return Question
+                .newBuilder()
+                .uid("uid")
+                .code("firstName")
+                .name("ipc_issueEntry_q_firstName")
+                .type(Question.Type.SHORT_TEXT)
+                .compulsory(true)
+                .options(null)
+                .build();
     }
 
     private Question givenAValidQuestionForZW() {
 
-        Question zwQuestion = new Question();
-        zwQuestion.setCode("age");
-        zwQuestion.setName("ipc_issueEntry_q_age");
-        zwQuestion.setType(Question.Type.INT);
-        zwQuestion.setCompulsory(true);
-        zwQuestion.setOptions(null);
-
-        return zwQuestion;
+       return Question
+                .newBuilder()
+                .uid("uid")
+                .code("age")
+                .name("ipc_issueEntry_q_age")
+                .type(Question.Type.INT)
+                .compulsory(true)
+                .options(null)
+                .build();
     }
 
     private void whenA404ErrorHappen() throws Exception {

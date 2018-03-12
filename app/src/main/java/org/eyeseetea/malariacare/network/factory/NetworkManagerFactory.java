@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.network.ConnectivityStatus;
 
 public class NetworkManagerFactory {
 

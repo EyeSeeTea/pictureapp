@@ -80,7 +80,8 @@ public abstract class ADynamicTabAdapterStrategy {
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
                         CommonQuestionView.hideKeyboard(
-                                PreferencesState.getInstance().getContext(), mDynamicTabAdapter.getKeyboardView());
+                                PreferencesState.getInstance().getContext(),
+                                mDynamicTabAdapter.getKeyboardView());
                         DynamicTabAdapter.setIsClicked(false);
                     }
                     return;

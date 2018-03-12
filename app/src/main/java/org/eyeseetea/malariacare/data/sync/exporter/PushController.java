@@ -27,6 +27,8 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
+import org.eyeseetea.malariacare.data.sync.exporter.strategies.APushControllerStrategy;
+import org.eyeseetea.malariacare.data.sync.exporter.strategies.PushControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
@@ -54,12 +56,14 @@ public class PushController implements IPushController {
     private Context mContext;
     private PushDhisSDKDataSource mPushDhisSDKDataSource;
     private ConvertToSDKVisitor mConvertToSDKVisitor;
+    private APushControllerStrategy mPushControllerStrategy;
 
 
     public PushController(Context context) {
         mContext = context;
         mPushDhisSDKDataSource = new PushDhisSDKDataSource();
         mConvertToSDKVisitor = new ConvertToSDKVisitor(mContext);
+        mPushControllerStrategy = new PushControllerStrategy();
     }
 
     public void push(final IPushControllerCallback callback) {
@@ -70,7 +74,7 @@ public class PushController implements IPushController {
         } else {
             Log.d(TAG, "Network connected");
 
-            List<SurveyDB> surveyDBs = SurveyDB.getAllCompletedSurveysNoReceiptReset();
+            List<SurveyDB> surveyDBs = mPushControllerStrategy.getSurveysToPush();
             Boolean isUserClosed = false;
 
             UserDB loggedUserDB = UserDB.getLoggedUser();

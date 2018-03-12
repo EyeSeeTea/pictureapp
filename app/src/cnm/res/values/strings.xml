@@ -20,6 +20,7 @@
 <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at 011 771 811"</string>
 <string name="dialog_reopen_org_unit">"Outlet %s is reopen."</string>
 <string name="dynamic_error_phone_format">"Invalid format for phone number ( 0NN NNN NNN{N} )"</string>
+<string name="dynamic_error_invalid_positive_number">"Invalid positive number"</string>
 <string name="dynamic_error_age">"Invalid age"</string>
 <string name="pref_header_general">"General"</string>
 <string name="dialog_title_push">"Pushing data"</string>
@@ -250,7 +251,7 @@
 <string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
 <string name="common_option_referred_yes">Yes</string>
 <string name="common_option_referred_no">No</string>
-
+<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
 <string name="date_survey_format">"dd-MMM-yy"</string>
 <string name="hour_survey_format">"hh:mm a"</string>
 <string name="new_cases">New Cases</string>
@@ -258,24 +259,20 @@
 <string name="past_cases">Past Cases</string>
 <string name="cases_history">History - Cases Already Uploaded</string>
 <string name="tab_village_residence">Village of Residence</string>
-
-<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
+<string name="ipc_issueEntry_q_not_reason_tested">Reason not tested</string>
+<string name="common_option_not_tested_refused">Patient refused</string>
+<string name="common_option_not_tested_rdt_out_stock">RDT Stock out</string>
+<string name="common_option_not_tested_danger_signs">Danger Signs</string>
+<string name="common_option_not_tested_referred">Referred</string>
 <string name="imei">"IMEI"</string>
 <string name="imei_error">"Error getting IMEI"</string>
-<string name="dynamic_error_invalid_positive_number">"Invalid positive number"</string>
 <string name="error_downloading_languages">"Error downloading languages"</string>
-
 <string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
 <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
 <string name="common_option_diagnosis_not_tested">Not tested</string>
 <string name="save">Save</string>
-<string name="ipc_issueEntry_q_not_reason_tested">Reason not tested</string>
-<string name="common_option_not_tested_refused">Patient refused</string>
-<string name="common_option_not_tested_rdt_out_stock">RDT Stock out</string>
-<string name="common_option_not_tested_danger_signs">Danger Signs</string>
-<string name="common_option_not_tested_referred">Referred</string>
 <string name="ipc_issueEntry_q_referred">Referred</string>
 <string name="common_option_referred_suspected">Suspected treatment failure</string>
 <string name="common_option_referred_danger">Danger Signs</string>
@@ -286,5 +283,18 @@
 <string name="common_option_treatment_asmq_100_200_3">3 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
-
+<string name="login_unexpected_error">"Unexpected error while login"</string>
+<string name="lastcommit_unavailable"><![CDATA[
+<p>This option requires some changes in the git repository.</p>
+<p>Steps:</p>
+<p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
+<p>2. If the file does not exist, add the following lines: </p>
+<p>#!/bin/sh </p>
+<p>gitPath=$(git rev-parse --show-toplevel)</p>
+<p>sh ${gitPath}/generate_last_commit.sh </p>
+<p>2. If the file already exists, you only need add the following lines at the end:</p>
+<p>gitPath=$(git rev-parse --show-toplevel)</p>
+<p>sh ${gitPath}/generate_last_commit.sh </p>
+<p>3. Run "git checkout". </p>]]>
+</string>
 </resources>

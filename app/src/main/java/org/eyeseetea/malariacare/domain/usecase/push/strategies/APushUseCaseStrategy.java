@@ -286,7 +286,7 @@ public abstract class APushUseCaseStrategy {
         });
     }
 
-    protected void treatApiCallException(ApiCallException e){
+    protected void treatApiCallException(ApiCallException e) {
 
     }
 

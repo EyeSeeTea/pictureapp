@@ -290,8 +290,8 @@ public class QuestionThresholdDB extends BaseModel {
     private static IProperty[] getAllPropertiesWithAlias() {
         IProperty[] properties = QuestionThresholdDB_Table.getAllColumnProperties();
 
-        for (int i =0; i< properties.length; i++) {
-            IProperty property =  properties[i];
+        for (int i = 0; i < properties.length; i++) {
+            IProperty property = properties[i];
             properties[i] = property.withTable(questionThresholdAlias);
         }
         return properties;

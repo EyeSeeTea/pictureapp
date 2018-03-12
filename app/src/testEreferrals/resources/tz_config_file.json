@@ -5,372 +5,629 @@
   "version": "2",
   "updateDate": "2017-12-20 12:00",
   "updateUser": "BR",
-  "languages": ["en", "sw"],
+  "languages": [
+    "en",
+    "sw"
+  ],
   "issuing_capture": {
     "validSamples": [],
-
     "payloadSpecs": [
-      { "dataPointRef": "url" },
-      { "dataPointRef": "version" },
-      { "dataPointRef": "csvVersion" },
-      { "dataPointRef": "source" },
-      { "dataPointRef": "androidInfo" },
-      { "dataPointRef": "language" },
-      { "dataPointRef": "userName" },
-      { "dataPointRef": "password" },
-      { "dataPointRef": "settings", "mandatory": "false" },
-      { "dataPointRef": "type" },
-      { "dataPointRef": "actionId" },
-      { "dataPointRef": "sourceAddedDateTime" },
-      { "dataPointRef": "voucher" },
-      { "dataPointRef": "coordinates" }
+      {
+        "dataPointRef": "url"
+      },
+      {
+        "dataPointRef": "version"
+      },
+      {
+        "dataPointRef": "csvVersion"
+      },
+      {
+        "dataPointRef": "source"
+      },
+      {
+        "dataPointRef": "androidInfo"
+      },
+      {
+        "dataPointRef": "language"
+      },
+      {
+        "dataPointRef": "userName"
+      },
+      {
+        "dataPointRef": "password"
+      },
+      {
+        "dataPointRef": "settings",
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "type"
+      },
+      {
+        "dataPointRef": "actionId"
+      },
+      {
+        "dataPointRef": "sourceAddedDateTime"
+      },
+      {
+        "dataPointRef": "voucher"
+      },
+      {
+        "dataPointRef": "coordinates"
+      }
     ],
-
     "dataValuesSpecs": [
-
-      { "dataPointRef": "program",
+      {
+        "dataPointRef": "program",
         "poTerm": "ipc_issueEntry_q_program",
         "defaultName": "Program",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "FPL",
+          {
+            "value": "FPL",
             "poTerm": "common_option_program_familyPlanning",
             "defaultName": "Family Planning"
           },
-          { "value": "FPL-A360-ADO",
+          {
+            "value": "FPL-A360-ADO",
             "poTerm": "common_option_program_familyPlanning_a360adolsecents",
             "defaultName": "Kuwa Mjanja - Girls"
           },
-          { "value": "FPL-A360-PAR",
+          {
+            "value": "FPL-A360-PAR",
             "poTerm": "common_option_program_familyPlanning_a360parents",
             "defaultName": "Kuwa Mjanja - Parents"
           }
         ]
       },
-      { "dataPointRef": "firstName",
+      {
+        "dataPointRef": "firstName",
         "poTerm": "ipc_issueEntry_q_firstName",
         "defaultName": "First name",
         "controlType": "SHORT_TEXT"
       },
-      { "dataPointRef": "lastName",
+      {
+        "dataPointRef": "lastName",
         "poTerm": "ipc_issueEntry_q_lastName",
         "defaultName": "Last name",
         "controlType": "SHORT_TEXT"
       },
-      { "dataPointRef": "gender",
+      {
+        "dataPointRef": "gender",
         "poTerm": "ipc_issueEntry_q_gender",
         "defaultName": "Gender",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "F",
+          {
+            "value": "F",
             "poTerm": "common_option_gender_female",
             "defaultName": "Female"
           },
-          { "value": "M",
+          {
+            "value": "M",
             "poTerm": "common_option_gender_male",
             "defaultName": "Male"
-          }]
+          }
+        ]
       },
-      { "dataPointRef": "adolescentDaughters",
+      {
+        "dataPointRef": "adolescentDaughters",
         "poTerm": "ipc_issueEntry_q_adolescentDaughters",
         "defaultName": "# Daughters 15-19 y/o",
         "controlType": "INT"
       },
-      { "dataPointRef": "motherName",
+      {
+        "dataPointRef": "motherName",
         "poTerm": "ipc_issueEntry_q_motherName",
         "defaultName": "First name of mother",
         "controlType": "SHORT_TEXT"
       },
-      { "dataPointRef": "birthDistrict",
+      {
+        "dataPointRef": "birthDistrict",
         "poTerm": "ipc_issueEntry_q_birthDistrict",
         "defaultName": "District of birth",
         "controlType": "SHORT_TEXT"
       },
-      { "dataPointRef": "yearOfBirth",
+      {
+        "dataPointRef": "yearOfBirth",
         "poTerm": "ipc_issueEntry_q_yearOfBirth",
         "defaultName": "Year of Birth",
         "controlType": "YEAR"
       },
-      { "dataPointRef": "civilStatus",
+      {
+        "dataPointRef": "civilStatus",
         "poTerm": "ipc_issueEntry_q_civilStatus",
         "defaultName": "Marital status ",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "MAR",
+          {
+            "value": "MAR",
             "poTerm": "common_option_civilStatus_married",
             "defaultName": "Married"
           },
-          { "value": "UNMAR",
+          {
+            "value": "UNMAR",
             "poTerm": "common_option_civilStatus_unmarried",
             "defaultName": "Unmarried"
           },
-          { "value": "DIV",
+          {
+            "value": "DIV",
             "poTerm": "common_option_civilStatus_divorced",
             "defaultName": "Divorced"
           },
-          { "value": "WID",
+          {
+            "value": "WID",
             "poTerm": "common_option_civilStatus_widowed",
             "defaultName": "Widowed"
-          }]
+          }
+        ]
       },
-      { "dataPointRef": "noOfLivingChildren",
+      {
+        "dataPointRef": "noOfLivingChildren",
         "poTerm": "ipc_issueEntry_q_numberOfChildren",
         "defaultName": "Number of living children",
         "controlType": "INT"
       },
-      { "dataPointRef": "ageYoungest",
+      {
+        "dataPointRef": "ageYoungest",
         "poTerm": "ipc_issueEntry_afterIssuing_q1_title",
         "defaultName": "Age of youngest child",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "0-6M",
+          {
+            "value": "0-6M",
             "poTerm": "ipc_issueEntry_afterIssuing_q1_option1",
             "defaultName": "0 - 6 months"
           },
-          { "value": "6-12M",
+          {
+            "value": "6-12M",
             "poTerm": "ipc_issueEntry_afterIssuing_q1_option2",
             "defaultName": "6 - 12 months"
           },
-          { "value": "1-2Y",
+          {
+            "value": "1-2Y",
             "poTerm": "ipc_issueEntry_afterIssuing_q1_option3",
             "defaultName": "1 - 2 years"
           },
-          { "value": "2+Y",
+          {
+            "value": "2+Y",
             "poTerm": "ipc_issueEntry_afterIssuing_q1_option4",
             "defaultName": "Above 2 years"
-          }]
+          }
+        ]
       },
-      { "dataPointRef": "segment",
+      {
+        "dataPointRef": "segment",
         "poTerm": "ipc_issueEntry_q_TZA360_segment",
         "defaultName": "Segment",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "Farida",
+          {
+            "value": "Farida",
             "poTerm": "common_option_TZA360_segment_farida",
             "defaultName": "Farida"
           },
-          { "value": "Bahati",
+          {
+            "value": "Bahati",
             "poTerm": "common_option_TZA360_segment_bahati",
             "defaultName": "Bahati"
           },
-          { "value": "Pendo",
+          {
+            "value": "Pendo",
             "poTerm": "common_option_TZA360_segment_pendo",
             "defaultName": "Pendo"
           },
-          { "value": "Furaha",
+          {
+            "value": "Furaha",
             "poTerm": "common_option_TZA360_segment_furaha",
             "defaultName": "Furaha"
           },
-          { "value": "ND",
+          {
+            "value": "ND",
             "poTerm": "common_option_TZA360_segment_nd",
             "defaultName": "Not determined"
-          }]
+          }
+        ]
       },
-      { "dataPointRef": "currentMethod",
+      {
+        "dataPointRef": "currentMethod",
         "poTerm": "ipc_issueEntry_q_currentMethod",
         "defaultName": "Current method",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "NON",
+          {
+            "value": "NON",
             "poTerm": "common_option_method_none",
             "defaultName": "None"
           },
-          { "value": "CON",
+          {
+            "value": "CON",
             "poTerm": "common_option_method_condom",
             "defaultName": "Condom"
           },
-          { "value": "EC",
+          {
+            "value": "EC",
             "poTerm": "common_option_method_ec",
             "defaultName": "EC"
           },
-          { "value": "PIL",
+          {
+            "value": "PIL",
             "poTerm": "common_option_method_pills",
             "defaultName": "Pills"
           },
-          { "value": "INJ",
+          {
+            "value": "INJ",
             "poTerm": "common_option_method_injection",
             "defaultName": "Injection"
           },
-          { "value": "IMP",
+          {
+            "value": "IMP",
             "poTerm": "common_option_method_implant",
             "defaultName": "Implant"
           },
-          { "value": "IUD",
+          {
+            "value": "IUD",
             "poTerm": "common_option_method_iud",
             "defaultName": "IUD"
           },
-          { "value": "OTH",
+          {
+            "value": "OTH",
             "poTerm": "common_option_method_other",
             "defaultName": "Other"
           }
         ]
       },
-      { "dataPointRef": "phoneOwnership",
+      {
+        "dataPointRef": "phoneOwnership",
         "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
         "defaultName": "Phone ownership",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "NO",
+          {
+            "value": "NO",
             "poTerm": "common_option_ownershipOfPhone_noMobile",
             "defaultName": "No Number"
           },
-          { "value": "HER",
+          {
+            "value": "HER",
             "poTerm": "common_option_ownershipOfPhone_herNumber",
             "defaultName": "Her Number"
           },
-          { "value": "MF",
+          {
+            "value": "MF",
             "poTerm": "common_option_ownershipOfPhone_parent",
             "defaultName": "Parent's Number"
           },
-          { "value": "PAR",
+          {
+            "value": "PAR",
             "poTerm": "common_option_ownershipOfPhone_husbandPartner",
             "defaultName": "Husband/Partner"
           },
-          { "value": "SHA",
+          {
+            "value": "SHA",
             "poTerm": "common_option_ownershipOfPhone_shared",
             "defaultName": "Shared"
-          }]
+          }
+        ]
       },
-      { "dataPointRef": "phoneNumber",
+      {
+        "dataPointRef": "phoneNumber",
         "poTerm": "ipc_issueEntry_q_phoneNumber",
         "defaultName": "Phone number",
         "controlType": "PHONE_NUMBER",
         "format": {
           "accepted": [
-            { "starts": "6", "length": "9", "comment": "national" },
-            { "starts": "7", "length": "9", "comment": "national" },
-            { "starts": "+", "comment": "international" },
-            { "starts": "00", "comment": "international" }
+            {
+              "starts": "6",
+              "length": "9",
+              "comment": "national"
+            },
+            {
+              "starts": "7",
+              "length": "9",
+              "comment": "national"
+            },
+            {
+              "starts": "+",
+              "comment": "international"
+            },
+            {
+              "starts": "00",
+              "comment": "international"
+            }
           ],
-          "details": { "trunkPrefix": "0", "dialingCode": "+255" }
+          "details": {
+            "trunkPrefix": "0",
+            "dialingCode": "+255"
+          }
         }
       },
-      { "dataPointRef": "phoneContactConsent",
+      {
+        "dataPointRef": "phoneContactConsent",
         "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
         "defaultName": "Further phone contact consent",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "NO",
+          {
+            "value": "NO",
             "poTerm": "common_option_furtherInformationConsent_no",
             "defaultName": "No"
           },
-          { "value": "YESP",
+          {
+            "value": "YESP",
             "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
             "defaultName": "Yes - Kuwa Mjanja (PSI)"
           },
-          { "value": "YESPP",
+          {
+            "value": "YESPP",
             "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
             "defaultName": "Yes - Kuwa Mjanja (PSI) & Partners"
-          }]
+          }
+        ]
       },
-      { "dataPointRef": "channelReferredTo",
+      {
+        "dataPointRef": "channelReferredTo",
         "poTerm": "ipc_issueEntry_q_channelReferredTo",
         "defaultName": "Refered to which program channel?",
         "controlType": "DROPDOWN_LIST",
         "options": [
-          { "value": "GCLINIC",
+          {
+            "value": "GCLINIC",
             "poTerm": "common_option_channelReferredTo_girlsClinic",
             "defaultName": "KM Girls Clinic"
           },
-          { "value": "POPUP",
+          {
+            "value": "POPUP",
             "poTerm": "common_option_channelReferredTo_popup",
             "defaultName": "KM Pop-up"
           },
-          { "value": "PROV",
+          {
+            "value": "PROV",
             "poTerm": "common_option_channelReferredTo_provider",
             "defaultName": "Provider"
-          }]
-      }],
-
+          }
+        ]
+      }
+    ],
     "rulesSpecs": [
-      { "conditions": [{
-        "left": { "value": "program", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "FPL", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "program",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "FPL",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "gender", "do": "SHOW" },
-          { "dataPointRef": "motherName", "do": "SHOW" },
-          { "dataPointRef": "birthDistrict", "do": "SHOW" },
-          { "dataPointRef": "yearOfBirth", "do": "SHOW" },
-          { "dataPointRef": "civilStatus", "do": "SHOW" },
-          { "dataPointRef": "noOfLivingChildren", "do": "SHOW" },
-          { "dataPointRef": "ageYoungest", "do": "SHOW" },
-          { "dataPointRef": "currentMethod", "do": "SHOW" },
-          { "dataPointRef": "channelOfReferral", "do": "SHOW" }
+          {
+            "dataPointRef": "gender",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "motherName",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "birthDistrict",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "yearOfBirth",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "civilStatus",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "noOfLivingChildren",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "ageYoungest",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "currentMethod",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "channelOfReferral",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "program", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "FPL-A360-ADO", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "program",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "FPL-A360-ADO",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "motherName", "do": "SHOW" },
-          { "dataPointRef": "birthDistrict", "do": "SHOW" },
-          { "dataPointRef": "yearOfBirth", "do": "SHOW" },
-          { "dataPointRef": "segment", "do": "SHOW" },
-          { "dataPointRef": "currentMethod", "do": "SHOW" },
-          { "dataPointRef": "channelReferredTo", "do": "SHOW" }
+          {
+            "dataPointRef": "motherName",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "birthDistrict",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "yearOfBirth",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "segment",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "currentMethod",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "channelReferredTo",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "noOfLivingChildren", "type": "dataPointRef" },
-        "operator": ">",
-        "right": { "value": "0", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "noOfLivingChildren",
+              "type": "dataPointRef"
+            },
+            "operator": ">",
+            "right": {
+              "value": "0",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "ageYoungest", "do": "SHOW" }
+          {
+            "dataPointRef": "ageYoungest",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "program", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "FPL-A360-PAR", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "program",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "FPL-A360-PAR",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "gender", "do": "SHOW" },
-          { "dataPointRef": "adolescentDaughters", "do": "SHOW" }
+          {
+            "dataPointRef": "gender",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "adolescentDaughters",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "HER", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "HER",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "phoneNumber", "do": "SHOW" },
-          { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "MF", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "MF",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "phoneNumber", "do": "SHOW" },
-          { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "PAR", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "PAR",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "phoneNumber", "do": "SHOW" },
-          { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
         ]
       },
-      { "conditions": [{
-        "left": { "value": "phoneOwnership", "type": "dataPointRef" },
-        "operator": "==",
-        "right": { "value": "SHA", "type": "value" }
-      }],
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "SHA",
+              "type": "value"
+            }
+          }
+        ],
         "actions": [
-          { "dataPointRef": "phoneNumber", "do": "SHOW" },
-          { "dataPointRef": "phoneContactConsent", "do": "SHOW" }
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
         ]
       }
     ]

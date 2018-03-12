@@ -25,6 +25,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
 
     List<ImageOptionView> mImageOptionViews = new ArrayList<>();
     private int mColumnsCount = 1;
+    private int mTotalOptions = 1;
 
     public ImageOptionSingleQuestionView(Context context) {
         super(context);
@@ -35,7 +36,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     @Override
     public void setOptions(List<OptionDB> optionDBs) {
         TableRow tableRow = null;
-
+        mTotalOptions = optionDBs.size();
         for (int i = 0; i < optionDBs.size(); i++) {
             OptionDB optionDB = optionDBs.get(i);
 
@@ -101,7 +102,8 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
 
     @NonNull
     private ImageOptionView createOptionView(OptionDB optionDB) {
-        ImageOptionView imageOptionView = new ImageOptionView(getContext(),mColumnsCount);
+        ImageOptionView imageOptionView = new ImageOptionView(getContext(), mColumnsCount,
+                mTotalOptions);
         imageOptionView.setOption(optionDB, mQuestionDB);
         imageOptionView.setOnOptionSelectedListener(this);
         imageOptionView.setEnabled(isEnabled());

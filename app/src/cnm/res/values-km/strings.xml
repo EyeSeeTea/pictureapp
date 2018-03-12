@@ -22,7 +22,7 @@
 ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
 <string name="dialog_reopen_org_unit">"ហាង %s គឺបើក។"</string>
 <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )"</string>
-    <string name="dynamic_error_invalid_positive_number">"លេខវិជ្ជមានមិនត្រឹមត្រូវ"</string>
+<string name="dynamic_error_invalid_positive_number">"លេខវិជ្ជមានមិនត្រឹមត្រូវ"</string>
 <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
 <string name="pref_header_general">"ទូទៅ"</string>
 <string name="dialog_title_push">"ទិន្នន័យដែលបាន ជំរុញឱ្យមាន"</string>
@@ -284,9 +284,7 @@
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 គ្រាប់ថ្នាំ ASMQ នៃថ្នាំ 100/200 មីក្រូក្រាម 15 មីលីក្រាម PQ</string>
 <string name="lastcommit_unavailable">
 <![CDATA[
-<string name="common_option_diagnosis_not_tested">Not tested</string>
-    <string name="save">រក្សាទុក</string>
-    <string name="lastcommit_unavailable"><![CDATA[
+<string name="lastcommit_unavailable"><![CDATA[
 <p> ជម្រើសនេះត្រូវការការផ្លាស់ប្តូរខ្លះនៅក្នុងឃ្លាំង git ។ </ p>
 <p> ជំហាន: </ p>
 <p> 1 ។ សូមបើកឬបង្កើតឯកសារ .git / hooks / post-commit និង .git / hooks / post-checkout ។ </ p>
@@ -299,5 +297,4 @@
 <p> sh $ {gitPath} /generate_last_commit.sh </ p>
 <p> 3 ។ រត់ "git checkout" ។ </ p>]]>
 </string>
->>>>>>> Temporary merge branch 2
 </resources>

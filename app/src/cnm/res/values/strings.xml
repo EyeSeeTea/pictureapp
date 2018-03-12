@@ -285,6 +285,14 @@
 <string name="common_option_treatment_asmq_100_200_3">3 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
+<string name="ipc_issueEntry_q_patient_name">Patient name</string>
+<string name="ipc_issueEntry_q_patient_weight">Weight</string>
+<string name="ipc_issueEntry_q_patient_pregnant_month">Month</string>
+<string name="ipc_issueEntry_q_patient_temperature">Temperature (Celsius)</string>
+<string name="ipc_issueEntry_q_patient_status">Patient status</string>
+<string name="ipc_issueEntry_q_mcs_dot">MCS - DOT</string>
+<string name="common_option_dot_complete">Complete</string>
+<string name="common_option_dot_non_complete">Non-complete</string>
 
     <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>

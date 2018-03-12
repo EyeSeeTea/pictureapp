@@ -21,9 +21,11 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -31,11 +33,11 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit
-        .ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -63,6 +65,11 @@ public class ServerAPIController {
     private static final String TAG_ID = "id";
 
     /**
+     * Tag for code in json response
+     */
+    private static final String TAG_CODE= "code";
+
+    /**
      * Tag for closedDate (orgUnit) in json response
      */
     private static final String TAG_CLOSEDDATE = "closedDate";
@@ -79,6 +86,7 @@ public class ServerAPIController {
      * Tag for organisationUnits in json response
      */
     private static final String TAG_ORGANISATIONUNITS = "organisationUnits";
+    private static final String TAG_ORGANISATION_UNIT_GROUP = "organisationUnitGroups";
 
     /**
      * Date format to the closedDate attribute
@@ -96,6 +104,13 @@ public class ServerAPIController {
     private static final String DHIS_PULL_ORG_UNIT_API =
             "/api/organisationUnits.json?paging=false&fields=id,name,code,closedDate,"
                     + "description&filter=code:eq:%s&filter:programs:id:eq:%s";
+
+    /**
+     * Endpoint to retrieve orgUnitsGroup info filtering by CODE (API)
+     */
+    private static final String DHIS_PULL_ORG_UNIT_GROUP_API =
+            "/api/organisationUnitGroups.json?paging=false&fields=id,name"
+                    + "&filter=organisationUnits.id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
@@ -140,6 +155,11 @@ public class ServerAPIController {
      * Current program UID (once is calculated never changes)
      */
     private static String programUID;
+
+    private static String DEFAULT_ORG_UNIT_GROUP_CODE_HC ="HC";
+
+    private static String DEFAULT_ORG_UNIT_GROUP_CODE_VMW ="VMW";
+
 
 
     /**
@@ -338,6 +358,7 @@ public class ServerAPIController {
         elementObject.put(TAG_CLOSEDDATE, dateFormatted);
         return elementObject;
     }
+
     /**
      * Prepare the closing value.
      *
@@ -420,9 +441,42 @@ public class ServerAPIController {
         }
 
         //0| >1 matches -> Error
+        return validateEmptyOrMoreThanOneJSOnArray("getOrgUnitData",orgUnitNameOrCode, url, orgUnitsArray);
+    }
+
+    /**
+     * Returns the Program by the given server according to its current version
+     * @param orgUnitCode the organisationUnit code
+     * @return a JSONObject representing a OrganisationUnitGroup object
+     */
+     public static Program getOrganisationUnitGroupByOrganisationUnit(@NotNull String orgUnitCode) throws ApiCallException {
+        //Version is required to choose which field to match
+        String url = PreferencesState.getInstance().getDhisURL();
+
+        String urlOrgUnitData = getOrgUnitGroupDataUrl(url, orgUnitCode);
+        Response response = ServerApiCallExecution.executeCall(null, urlOrgUnitData, "GET");
+        //{"organisationUnits":[{}]}
+        JSONObject jsonResponse = ServerApiUtils.getApiResponseAsJSONObject(response);
+        JSONArray orgUnitsArray = null;
+        try {
+            orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATION_UNIT_GROUP);
+        } catch (JSONException e) {
+            throw new ApiCallException(e);
+        }
+
+        JSONObject jsonObject = validateEmptyOrMoreThanOneJSOnArray("getOrganisationUnitGroupFromRemote",
+                orgUnitCode, url, orgUnitsArray);
+
+        return parseOrganisationGroup(jsonObject);
+    }
+
+    @Nullable
+    private static JSONObject validateEmptyOrMoreThanOneJSOnArray(@NotNull String logMethodName, @NotNull String orgUnitCode,
+            String url, JSONArray orgUnitsArray) throws ApiCallException {
+        //0| >1 matches -> Error
         if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
-            Log.e(TAG, String.format("getOrgUnitData(%s,%s) -> Found %d matches", url,
-                    orgUnitNameOrCode, orgUnitsArray.length()));
+            Log.e(TAG, String.format("logMethodName(%s,%s) -> Found %d matches", url,
+                    orgUnitCode, orgUnitsArray.length()));
             return null;
         }
         try {
@@ -586,20 +640,19 @@ public class ServerAPIController {
                     }
                 }
 
-                org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
-                        .malariacare.domain.entity.Program();
+                org.eyeseetea.malariacare.domain.entity.Program program = null;
 
                 JSONArray ancestors = orgUnitJO.has(ANCESTORS) ? orgUnitJO.getJSONArray(ANCESTORS)
                         : null;
                 for (int i = 0; ancestors != null && i < ancestors.length(); i++) {
                     if (ancestors.getJSONObject(i).has(LEVEL) && ancestors.getJSONObject(i).getInt(
                             LEVEL) == ORG_UNIT_LEVEL) {
-                        program.setId(
-                                ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(
-                                        i).getString(TAG_ID) : "");
-                        program.setCode(
-                                ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(
-                                        i).getString(CODE) : "");
+                        program = new org.eyeseetea
+                                .malariacare.domain.entity.Program(
+                                ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(i)
+                                        .getString(CODE) : "",
+                                ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(i)
+                                        .getString(TAG_ID) : "");
                     }
                 }
 
@@ -610,6 +663,29 @@ public class ServerAPIController {
                     return new OrganisationUnit(uid, name, code, description,
                             closedDate, pin, program);
                 }
+            } catch (JSONException e) {
+                throw new ApiCallException(e);
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    private static Program parseOrganisationGroup(
+            JSONObject organisationUnitGroupJSON)
+            throws ApiCallException {
+        if (organisationUnitGroupJSON != null) {
+
+            try {
+                String uid = organisationUnitGroupJSON.getString(TAG_ID);
+
+                String code = organisationUnitGroupJSON.has(TAG_CODE)
+                        ? organisationUnitGroupJSON.getString(TAG_CODE)
+                        : DEFAULT_ORG_UNIT_GROUP_CODE_HC;
+
+                return new Program(uid, code);
+
             } catch (JSONException e) {
                 throw new ApiCallException(e);
             }
@@ -673,6 +749,21 @@ public class ServerAPIController {
         endpoint = ServerApiUtils.encodeBlanks(endpoint);
         Log.d(TAG, String.format("getOrgUnitDataUrl(%s,%s,%s) -> %s", url, serverVersion,
                 orgUnitNameOrCode, endpoint));
+
+        return endpoint;
+    }
+
+    /**
+     * Returns the right endpoint depending on the server version
+     */
+    static String getOrgUnitGroupDataUrl(String url, String orgUnitId) {
+        String endpoint = url;
+            endpoint += String.format(DHIS_PULL_ORG_UNIT_GROUP_API, orgUnitId);
+
+        endpoint = ServerApiUtils.encodeBlanks(endpoint);
+        Log.d(TAG, String.format("getOrgUnitGroupDataUrl(%s,%s) -> %s", url,
+                orgUnitId, endpoint));
+
         return endpoint;
     }
 

@@ -210,7 +210,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         } catch (ConfigJsonIOException e) {
             e.printStackTrace();
             callback.onError(e);
-        } catch (LanguagesDownloadException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);
         }

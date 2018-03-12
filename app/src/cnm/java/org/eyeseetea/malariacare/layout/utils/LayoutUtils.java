@@ -13,7 +13,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 public class LayoutUtils extends BaseLayoutUtils {
 
     public static void setActionBar(android.support.v7.app.ActionBar actionBar) {
-            LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBarLogo(actionBar);
         actionBar.setDisplayUseLogoEnabled(false);
         // Uncomment in case of we want the logo out
         // actionBar.setLogo(null);

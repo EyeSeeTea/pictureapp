@@ -17,17 +17,7 @@ public class Question {
     private int index;
     private Visibility visibility;
     private List<Rule> rules;
-    private String mQuestionText;
     private Value mValue;
-
-    public Question() {
-    }
-
-
-    public Question(String uid, String questionText) {
-        this.uid = required(uid, "uid is required");
-        this.mQuestionText = required(questionText, "questionText is required");
-    }
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
@@ -112,10 +102,6 @@ public class Question {
 
     public Value getValue() {
         return mValue;
-    }
-
-    public String getQuestionText() {
-        return mQuestionText;
     }
 
     @Override

@@ -243,6 +243,12 @@ public class TabDB extends BaseModel {
                 .where(TabDB_Table.id_tab.eq(id)).querySingle();
     }
 
+    public static List<TabDB> findTabByProgram(Long id) {
+        return new Select()
+                .from(TabDB.class)
+                .where(TabDB_Table.id_program_fk.eq(id)).queryList();
+    }
+
     public static TabDB getFirstTab() {
         return new Select().from(TabDB.class).querySingle();
     }

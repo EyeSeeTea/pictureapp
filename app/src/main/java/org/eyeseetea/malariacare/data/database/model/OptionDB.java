@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.data.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -59,6 +60,29 @@ public class OptionDB extends BaseModel {
      * Reference to parent mAnswerDB (loaded lazily)
      */
     AnswerDB mAnswerDB;
+
+    public boolean hasMatches() {
+        return matchQuestionsCode != null;
+    }
+
+    public List<String> getMatchQuestionsCode() {
+        return matchQuestionsCode;
+    }
+
+    public void setMatchQuestionsCode(List<String> matchQuestionsCode) {
+        this.matchQuestionsCode = matchQuestionsCode;
+    }
+
+    private List<String> matchQuestionsCode;
+
+
+    public long getId_option_attribute_fk() {
+        return id_option_attribute_fk;
+    }
+
+    public void setId_option_attribute_fk(long id_option_attribute_fk) {
+        this.id_option_attribute_fk = id_option_attribute_fk;
+    }
 
     @Column
     long id_option_attribute_fk;
@@ -101,6 +125,10 @@ public class OptionDB extends BaseModel {
         return new Select().from(OptionDB.class).queryList();
     }
 
+    public static int getOptionsDBCount() {
+        return getAllOptions().size();
+    }
+
     public static void deleteAll() {
         for (OptionDB optionDB : getAllOptions()) {
             optionDB.delete();
@@ -130,6 +158,12 @@ public class OptionDB extends BaseModel {
                 .from(OptionDB.class)
                 .where(OptionDB_Table.name.eq(name))
                 .and(OptionDB_Table.code.eq(code)).querySingle();
+    }
+
+    public static void deleteByAnswer(long answerID) {
+        new Delete()
+                .from(OptionDB.class)
+                .where(OptionDB_Table.id_answer_fk.eq(answerID));
     }
 
 

@@ -7,4 +7,6 @@ import java.util.List;
 public interface IValueRepository {
 
     List<Value> getValuesFromSurvey(Long idSurvey);
+
+    void saveValue(Value value, long idSurvey);
 }

@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 /**
  * Created by adrian on 14/02/15.
  */
+@Deprecated
 @Table(database = AppDatabase.class, name = "Score")
 public class ScoreDB extends BaseModel {
 

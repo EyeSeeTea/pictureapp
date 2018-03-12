@@ -8,8 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.layout.listeners.strategies.ASwipeTouchListenerStrategy;
+import org.eyeseetea.malariacare.layout.listeners.strategies.SwipeTouchListenerStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,10 @@ public class SwipeTouchListener implements View.OnTouchListener {
      */
     private final List<View> clickableViews;
 
+    private ASwipeTouchListenerStrategy mSwipeTouchListenerStrategy;
+
     public SwipeTouchListener(Context ctx) {
+        mSwipeTouchListenerStrategy = new SwipeTouchListenerStrategy();
         gestureDetector = new GestureDetector(ctx, new GestureListener());
         clickableViews = new ArrayList<>();
     }
@@ -39,26 +42,9 @@ public class SwipeTouchListener implements View.OnTouchListener {
      * Delegates any touch into the our custom gesture detector
      */
     public boolean onTouch(View v, MotionEvent event) {
-        if (scrollView != null) {
-            fixScrollEventY(event);
-            scrollView.onTouchEvent(event);
-        }
-        return gestureDetector.onTouchEvent(event);
+        return mSwipeTouchListenerStrategy.onTouch(scrollView, gestureDetector, event);
     }
 
-
-    /**
-     * Fix the position of the touch removing the space of the navigation layout
-     */
-    private void fixScrollEventY(MotionEvent event) {
-        float x = event.getAxisValue(0);
-        float y = event.getAxisValue(1);
-        event.setLocation(x, y
-                - PreferencesState.getInstance().getContext().getResources().getDimensionPixelSize(
-
-
-                R.dimen.footer_navigation_size));
-    }
 
     /**
      * Adds a clickable view

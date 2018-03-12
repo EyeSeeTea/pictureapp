@@ -1,7 +1,10 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -15,6 +18,33 @@ public class ValueLocalDataSource implements IValueRepository {
     public List<Value> getValuesFromSurvey(Long idSurvey) {
         return getValuesFromDBValues(getDBOrderValues(idSurvey));
 
+    }
+
+    @Override
+    public void saveValue(Value value, long idSurvey) {
+        ValueDB valueDB = ValueDB.findValueFromDatabase(
+                QuestionDB.findByUID(value.getQuestionUId()).getId_question(),
+                SurveyDB.findById(idSurvey));
+
+        if (value.getOptionCode() != null && !value.getOptionCode().isEmpty()) {
+            if (valueDB == null) {
+                valueDB = new ValueDB(OptionDB.findByCode(value.getOptionCode()),
+                        QuestionDB.findByUID(value.getQuestionUId()),
+                        SurveyDB.findById(idSurvey));
+            } else {
+                valueDB.setValue(value.getValue());
+                valueDB.setOptionDB(OptionDB.findByCode(value.getOptionCode()));
+            }
+        } else {
+            if (valueDB == null) {
+                valueDB = new ValueDB(value.getValue(),
+                        QuestionDB.findByUID(value.getQuestionUId()),
+                        SurveyDB.findById(idSurvey));
+            } else {
+                valueDB.setValue(value.getValue());
+            }
+        }
+        valueDB.save();
     }
 
     private List<Value> getValuesFromDBValues(

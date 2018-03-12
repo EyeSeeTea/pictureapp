@@ -109,6 +109,11 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         return false;
     }
 
+    @Override
+    public void requestAnswerFocus() {
+        switchView.requestFocus();
+    }
+
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_switch_row, this);
 
@@ -123,5 +128,7 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
                 notifyAnswerChanged((isChecked) ? mTrueOptionDB : mFalseOptionDB);
             }
         });
+        switchView.setFocusable(true);
+        switchView.setFocusableInTouchMode(true);
     }
 }

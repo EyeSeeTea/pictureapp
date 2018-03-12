@@ -57,6 +57,12 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
         return false;
     }
 
+    @Override
+    public void requestAnswerFocus() {
+        yearText.requestFocus();
+        yearText.performClick();
+    }
+
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_year_selector, this);
         header = (TextView) findViewById(R.id.row_header_text);
@@ -77,9 +83,10 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
                     });
                     yearPicker.show(mActivity.getFragmentManager(), TAG);
                 }
+                hideKeyboard(view);
             }
         });
-
+        yearText.setFocusable(true);
     }
 
     protected void notifyAnswerChanged(String newValue) {

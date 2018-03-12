@@ -179,6 +179,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         SurveyDB surveyDB = (SurveyDB) appMapObjects.get(sdkDataValueExtended.getEvent());
         String questionUID = sdkDataValueExtended.getDataElement();
 
+        mConvertFromSDKVisitorStrategy.visit(sdkDataValueExtended, surveyDB);
+
         //Data valueDB is a valueDB from compositeScore -> ignore
         if (appMapObjects.get(questionUID) instanceof CompositeScoreDB) {
             return;

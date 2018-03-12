@@ -260,10 +260,12 @@
 <string name="exists_more_than_one_org_unit_by_phone">ការព្រមាន: អង្គភាពច្រើនជាងមួយត្រូវបានតំឡើងសម្រាប់ទូរស័ព្ទនេះ (IMEI: %s)</string>
 <string name="imei">"IMEI"</string>
 <string name="imei_error">"កំហុសក្នុងការទទួល IMEI"</string>
+<string name="error_downloading_languages">"កំហុសក្នុងការទាញយកភាសា"</string>
 <string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
 <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+<string name="save">រក្សាទុក</string>
 <string name="common_option_diagnosis_not_tested">មិនបានសាកល្បង</string>
 <string name="ipc_issueEntry_q_not_reason_tested">មូលហេតុដែលមិនបានសាកល្បង</string>
 <string name="common_option_not_tested_refused">អ្នកជំងឺបានបដិសេធ</string>
@@ -280,7 +282,6 @@
 <string name="common_option_treatment_asmq_100_200_3">3 គ្រាប់ថ្នាំ ASMQ 100/200 មីលីក្រាម</string>
 <string name="common_option_treatment_asmq_100_200_6">6 គ្រាប់ថ្នាំ ASMQ 100/200 មីលីក្រាម</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 គ្រាប់ថ្នាំ ASMQ នៃថ្នាំ 100/200 មីក្រូក្រាម 15 មីលីក្រាម PQ</string>
-<string name="save">រក្សាទុក</string>
 <string name="lastcommit_unavailable"><![CDATA[
 <p> ជម្រើសនេះត្រូវការការផ្លាស់ប្តូរខ្លះនៅក្នុងឃ្លាំង git ។ </ p>
 <p> ជំហាន: </ p>
@@ -294,5 +295,4 @@
 <p> sh $ {gitPath} /generate_last_commit.sh </ p>
 <p> 3 ។ រត់ "git checkout" ។ </ p>]]>
 </string>
->>>>>>>>> Temporary merge branch 2
 </resources>

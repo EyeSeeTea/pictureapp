@@ -272,6 +272,11 @@
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
 <string name="common_option_diagnosis_not_tested">Not tested</string>
+<string name="ipc_issueEntry_q_referred">Referred</string>
+<string name="common_option_referred_suspected">Suspected treatment failure</string>
+<string name="common_option_referred_danger">Danger Signs</string>
+<string name="common_option_referred_stock_out">ACT/PQ stock out</string>
+<string name="common_option_referred_unable">Unable to treat</string>
 <string name="save">Save</string>
 <string name="login_unexpected_error">"Unexpected error while login"</string>
 <string name="lastcommit_unavailable"><![CDATA[

@@ -27,3 +27,7 @@
 27;'common_option_not_tested_rdt_out_stock';'StkOut';0;19;24
 28;'common_option_not_tested_danger_signs';'Danger';0;19;25
 29;'common_option_not_tested_referred';'Referred';0;19;26
+30;'common_option_referred_suspected';'Failure';0;20;27
+31;'common_option_referred_danger';'Danger';0;20;28
+32;'common_option_referred_stock_out';'StkOut';0;20;29
+33;'common_option_referred_unable';'Unable';0;20;30

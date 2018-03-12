@@ -270,6 +270,11 @@
 <string name="common_option_not_tested_rdt_out_stock">RDT ស្តុកចេញ</string>
 <string name="common_option_not_tested_danger_signs">សញ្ញាគ្រោះថ្នាក់</string>
 <string name="common_option_not_tested_referred">សំដៅលើ</string>
+<string name="ipc_issueEntry_q_referred">សំដៅលើ</string>
+<string name="common_option_referred_suspected">ការបរាជ័យនៃការព្យាបាល</string>
+<string name="common_option_referred_danger">សញ្ញាគ្រោះថ្នាក់</string>
+<string name="common_option_referred_stock_out">ភាគហ៊ុន ACT / PQ ចេញ</string>
+<string name="common_option_referred_unable">មិនអាចព្យាបាលបាន</string>
 <string name="save">រក្សាទុក</string>
 <string name="lastcommit_unavailable"><![CDATA[
 <p> ជម្រើសនេះត្រូវការការផ្លាស់ប្តូរខ្លះនៅក្នុងឃ្លាំង git ។ </ p>

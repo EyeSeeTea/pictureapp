@@ -166,7 +166,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                     == null && mPullUseCase != null && mPullFilters != null) {
                 executePull(mPullUseCase, mPullFilters);
             } else {
-                EyeSeeTeaApplication.permissions.requestNextPermission();
+                EyeSeeTeaApplication.permissions.requestNextPermission(activity);
             }
         } else {
             if (requestCode == Permissions.PHONE_STATE_REQUEST_CODE) {

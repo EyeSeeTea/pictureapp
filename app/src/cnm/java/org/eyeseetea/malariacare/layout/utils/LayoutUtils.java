@@ -4,7 +4,6 @@ import android.view.View;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 /**
@@ -14,12 +13,14 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 public class LayoutUtils extends BaseLayoutUtils {
 
     public static void setActionBar(android.support.v7.app.ActionBar actionBar) {
-        ProgramDB program = ProgramDB.getFirstProgram();
-        if (program != null && !PreferencesState.getInstance().getOrgUnit().equals("")) {
-            LayoutUtils.setActionBarWithOrgUnit(actionBar);
-        } else {
-            LayoutUtils.setActionBarLogo(actionBar);
-        }
+        LayoutUtils.setActionBarLogo(actionBar);
+        actionBar.setDisplayUseLogoEnabled(false);
+        // Uncomment in case of we want the logo out
+        // actionBar.setLogo(null);
+        // actionBar.setIcon(null);
+        actionBar.setTitle(PreferencesState.getInstance().getContext().getResources().getString(
+                R.string.malaria_case_based_reporting));
+
     }
 
     public static void setTabHosts(DashboardActivity dashboardActivity) {
@@ -36,9 +37,6 @@ public class LayoutUtils extends BaseLayoutUtils {
 
 
     public static void fixRowViewBackground(View row, int position) {
-        row.setBackgroundColor(
-                row.getContext().getResources().getColor(R.color.tab_pressed_background));
     }
-
 
 }

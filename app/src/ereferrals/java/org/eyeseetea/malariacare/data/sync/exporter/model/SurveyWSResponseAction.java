@@ -67,6 +67,10 @@ public class SurveyWSResponseAction {
         return status.equals(SUCCESS);
     }
 
+    public boolean isFailed() {
+        return status.equals(FAILED);
+    }
+
     public String getTimeOnQueue() {
         return timeOnQueue;
     }

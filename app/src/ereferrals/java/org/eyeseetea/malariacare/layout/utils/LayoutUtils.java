@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.ListAdapter;
@@ -13,7 +12,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.network.ConnectivityStatus;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -83,11 +82,6 @@ public class LayoutUtils extends BaseLayoutUtils {
     }
 
     public static void setListRowBackgroundColor(View row) {
-        int myColor = ContextCompat.getColor(
-                PreferencesState.getInstance().getContext(),
-                android.R.color.transparent
-        );
-        row.setBackgroundColor(myColor);
     }
 
 

@@ -20,6 +20,7 @@
         android:inputType="text"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_left_padding"
+        android:editable="false"
         android:textColor="@color/text_first_color"
         android:textColorHint="@color/text_first_color"
         android:textSize="?attr/font_small"

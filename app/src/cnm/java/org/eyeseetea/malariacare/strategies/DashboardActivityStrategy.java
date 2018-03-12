@@ -1,8 +1,9 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
-import android.os.Bundle;
+import android.app.Fragment;
 import android.view.View;
+import android.widget.TabHost;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -12,17 +13,17 @@ import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
-    DashboardUnsentFragment stockFragment;
+    StockSurveysFragment stockFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -46,13 +47,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        stockFragment = new DashboardUnsentFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(DashboardUnsentFragmentStrategy.IS_STOCK_FRAGMENT, true);
-        stockFragment.setArguments(bundle);
-        stockFragment.reloadData();
+        if (stockFragment == null) {
+            stockFragment = new StockSurveysFragment();
+        }
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 stockFragment);
+        stockFragment.reloadData();
         stockFragment.reloadHeader(activity);
 
         return isMoveToLeft;
@@ -94,6 +94,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean beforeExit(boolean isBackPressed) {
         SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        SurveyDB stockSurvey = Session.getStockSurveyDB();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
             malariaSurvey.getValuesFromDB();
@@ -103,6 +104,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     mDashboardActivity.findViewById(R.id.common_header).setVisibility(View.VISIBLE);
                     Session.setMalariaSurveyDB(null);
                     malariaSurvey.delete();
+                    Session.setStockSurveyDB(null);
+                    stockSurvey.delete();
                 }
                 isBackPressed = false;
             }
@@ -119,6 +122,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
+        if (isFragmentActive(activity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_container)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
+        Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
         return false;
     }
 
@@ -132,4 +147,57 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
 
     }
+
+    public void initTabWidget(TabHost tabHost, Fragment reviewFragment,
+            final Fragment surveyFragment,
+            final boolean isReadOnly) {
+         /* set tabs in order */
+        LayoutUtils.setTabHosts(mDashboardActivity);
+        LayoutUtils.setTabDivider(mDashboardActivity);
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
+                if (isSurveyFragmentActive(surveyFragment)) {
+                    mDashboardActivity.onSurveyBackPressed();
+                }
+                if (isReviewFragmentActive(surveyFragment)) {
+                    mDashboardActivity.exitReviewOnChangeTab(null);
+                }
+                if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_assess))) {
+                    if (!isReadOnly) {
+                        reloadFirstFragment();
+                    }
+                    reloadFirstFragmentHeader();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_improve))) {
+                    reloadSecondFragment();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_stock))) {
+                    reloadStockFragment(mDashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_monitor))) {
+                    if (GradleVariantConfig.isMonitoringFragmentActive()) {
+                        reloadFourthFragment();
+                    }
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
+                    reloadAVFragment();
+                }
+            }
+        });
+        // init tabHost
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_below_line);
+        }
+        tabHost.getTabWidget().setStripEnabled(true);
+        tabHost.getTabWidget().setRightStripDrawable(R.drawable.background_odd);
+        tabHost.getTabWidget().setLeftStripDrawable(R.drawable.background_odd);
+    }
+
+
 }

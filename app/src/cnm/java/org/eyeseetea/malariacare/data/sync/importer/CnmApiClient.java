@@ -7,6 +7,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrgUnitTree;
 import org.eyeseetea.malariacare.data.sync.importer.models.Version;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +29,8 @@ public class CnmApiClient {
     private OrganisationUnitTreeApiClient mOrganisationUnitTreeApiClient;
 
 
-    public CnmApiClient(String baseAddress) throws ApiCallException, ConfigJsonIOException {
+    public CnmApiClient(String baseAddress)
+            throws ApiCallException, ConfigJsonIOException, LanguagesDownloadException {
         mBaseAddress = baseAddress;
 
 

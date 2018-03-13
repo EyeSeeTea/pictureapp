@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.MatchDB;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
@@ -41,6 +42,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             QuestionRelationDB.class,
             MatchDB.class,
             QuestionOptionDB.class,
+            ProgramProgramRelationDB.class,
             TreatmentDB.class,
             DrugCombinationDB.class,
             TreatmentMatchDB.class,

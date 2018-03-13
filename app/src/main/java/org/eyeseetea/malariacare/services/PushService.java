@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -74,6 +75,9 @@ public class PushService extends IntentService {
                 SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
+        Intent broadcastIntent = new Intent(SurveyService.RELOAD_DASHBOARD_ACTION);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(broadcastIntent);
     }
 
     @Override

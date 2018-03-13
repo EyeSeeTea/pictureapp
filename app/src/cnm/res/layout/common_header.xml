@@ -57,4 +57,15 @@
         android:textSize="?attr/font_small"
         app:font_name="@string/normal_font" />
 
+    <ImageView
+        android:id="@+id/header_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="14dp"
+        android:layout_weight="1"
+        android:scaleType="fitEnd"
+        android:src="@drawable/ic_arrow_survey_expense"
+        android:visibility="gone" />
+
 </LinearLayout>

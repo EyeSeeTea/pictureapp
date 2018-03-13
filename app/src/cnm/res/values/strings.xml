@@ -251,14 +251,16 @@
 <string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
 <string name="common_option_referred_yes">Yes</string>
 <string name="common_option_referred_no">No</string>
-<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
+
 <string name="date_survey_format">"dd-MMM-yy"</string>
+<string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
 <string name="hour_survey_format">"hh:mm a"</string>
 <string name="new_cases">New Cases</string>
 <string name="cases_pending">Cases Pending to be Uploaded</string>
 <string name="past_cases">Past Cases</string>
 <string name="cases_history">History - Cases Already Uploaded</string>
 <string name="tab_village_residence">Village of Residence</string>
+
 <string name="ipc_issueEntry_q_not_reason_tested">Reason not tested</string>
 <string name="common_option_not_tested_refused">Patient refused</string>
 <string name="common_option_not_tested_rdt_out_stock">RDT Stock out</string>

@@ -1,10 +1,12 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
@@ -55,9 +57,6 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             } else {
                 importantValues += ", ";
             }
-            if (value.getQuestionDB() != null) {
-                visibleValues += value.getQuestionDB().getInternationalizedForm_name() + " : ";
-            }
             if (value.getOptionDB() != null) {
                 importantValues += value.getOptionDB().getInternationalizedName();
             } else {
@@ -71,6 +70,8 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             } else {
                 visibleValues += ", ";
             }
+            visibleValues += value.getQuestionDB().getInternationalizedForm_name();
+            visibleValues += " : ";
             if (value.getOptionDB() != null) {
                 visibleValues += value.getOptionDB().getInternationalizedName();
             } else {
@@ -78,14 +79,21 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             }
         }
 
-        String firstText = date + " / " + hour + " / " + importantValues;
+        String firstText = "[ " + date + " - " + hour + " ] " + importantValues;
         firstLine.setText(firstText);
         secondLine.setText(visibleValues);
         if (visibleValues.isEmpty()) {
             secondLine.setVisibility(View.GONE);
         }
 
+        setBackgroundToLayout(important, rowView);
+    }
 
+    private void setBackgroundToLayout(List<ValueDB> important, View rowView) {
+        if (!important.isEmpty()) {
+            rowView.setBackgroundColor(Color.parseColor("#" + important.get(
+                    0).getOptionDB().getBackground_colour()));
+        }
     }
 
     @Override

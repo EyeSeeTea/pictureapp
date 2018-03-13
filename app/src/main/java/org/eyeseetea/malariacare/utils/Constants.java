@@ -58,7 +58,8 @@ public class Constants {
             IMAGE_RADIO_GROUP_NO_DATAELEMENT,
             IMAGE_RADIO_GROUP,
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON,
-            DROPDOWN_LIST_OU_TREE
+            DROPDOWN_LIST_OU_TREE,
+            IMAGES_VERTICAL
     );
 
     public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT =

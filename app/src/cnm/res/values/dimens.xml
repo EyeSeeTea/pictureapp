@@ -6,7 +6,7 @@
     <dimen name="image_option_2_size">120dp</dimen>
     <dimen name="image_option_4_size">90dp</dimen>
     <dimen name="image_option_6_size">60dp</dimen>
+    <dimen name="dashboard_row_padding">12dp</dimen>
     <dimen name="padding_right_progress">-5dp</dimen>
     <dimen name="dropdown_padding">-5dp</dimen>
-    <dimen name="dashboard_row_padding">12dp</dimen>
 </resources>

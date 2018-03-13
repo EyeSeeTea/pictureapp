@@ -109,7 +109,7 @@ public class ServerAPIController {
      * Endpoint to retrieve orgUnitsGroup info filtering by CODE (API)
      */
     private static final String DHIS_PULL_ORG_UNIT_GROUP_API =
-            "/api/organisationUnitGroups.json?paging=false&fields=id,name"
+            "/api/organisationUnitGroups.json?paging=false&fields=id,name,code"
                     + "&filter=organisationUnits.id:eq:%s";
 
     /**
@@ -684,7 +684,7 @@ public class ServerAPIController {
                         ? organisationUnitGroupJSON.getString(TAG_CODE)
                         : DEFAULT_ORG_UNIT_GROUP_CODE_HC;
 
-                return new Program(uid, code);
+                return new Program(code,uid);
 
             } catch (JSONException e) {
                 throw new ApiCallException(e);

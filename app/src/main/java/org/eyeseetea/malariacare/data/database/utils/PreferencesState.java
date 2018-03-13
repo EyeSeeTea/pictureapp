@@ -253,6 +253,18 @@ public class PreferencesState {
         saveStringPreference(R.string.program_code, program.getCode());
     }
 
+    public Program getUserProgram() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+
+       String id = sharedPreferences.getString(
+                instance.getContext().getString(R.string.program_id), "");
+
+        String code = sharedPreferences.getString(
+                instance.getContext().getString(R.string.program_code), "");
+
+        return new Program(code,id);
+    }
     public String getDhisURL() {
         return dhisURL;
     }

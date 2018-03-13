@@ -12,13 +12,17 @@ import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSourc
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -73,8 +77,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        ProgramDB program = ProgramDB.findByUID(
-                activity.getString(R.string.malaria_program_uid));
+
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram  = programRepository.getUserProgram();
+        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
+
+        TabDB userProgramTab =  TabDB.findTabByProgram(program.getId_program()).get(0);
+        try {
+            NavigationBuilder.getInstance().buildController(userProgramTab);
+        } catch (LoadingNavigationControllerException e) {
+            e.printStackTrace();
+        }
+
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);

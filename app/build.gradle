@@ -3,12 +3,16 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
         mavenLocal()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -92,7 +96,7 @@ android {
     }
     productFlavors {
         cambodia {
-            applicationId 'org.eyeseetea.surveillance_kh_bb'
+            applicationId 'org.eyeseetea.surveillance_kh_dev'
             versionName "1.3.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -115,7 +119,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         laos {
-            applicationId 'org.eyeseetea.surveillance_la_bb'
+            applicationId 'org.eyeseetea.surveillance_la_dev'
             versionName "1.2.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -138,7 +142,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         myanmar {
-            applicationId 'org.eyeseetea.surveillance_mm_bb'
+            applicationId 'org.eyeseetea.surveillance_mm_dev'
             versionName "1.0.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -161,7 +165,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         ereferrals {
-            applicationId 'org.eyeseetea.surveillance_ref_bb'
+            applicationId 'org.eyeseetea.surveillance_ref_dev'
             versionName "1.1.1"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
@@ -186,7 +190,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
         }
         cnm {
-            applicationId 'org.eyeseetea.surveillance_cnm_bb'
+            applicationId 'org.eyeseetea.surveillance_cnm_dev'
             versionName "0.2.0"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -207,6 +211,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
         }
 
     }
@@ -234,6 +239,8 @@ dependencies {
     compile project(":core-rules")
     compile project(":ui-bindings")
     compile project(":EyeSeeTea-sdk")
+    compile project(":bugshaker")
+
 
     // App dependencies
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -241,10 +248,14 @@ dependencies {
     apply plugin: 'android-apt'
     apply plugin: 'com.github.dcendents.android-maven'
 
+    //Support Libraries
+    compile "com.android.support:design:${libs.supportVersion}"
+
     //Android support
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
+
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
     compile "com.android.support:recyclerview-v7:${libs.supportVersion}"

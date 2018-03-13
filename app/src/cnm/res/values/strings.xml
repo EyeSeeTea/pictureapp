@@ -251,8 +251,7 @@
 <string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
 <string name="common_option_referred_yes">Yes</string>
 <string name="common_option_referred_no">No</string>
-
-<string name="date_survey_format">"dd-MMM-yy"</string>
+<string name="date_survey_format">"dd MMM yy"</string>
 <string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
 <string name="hour_survey_format">"hh:mm a"</string>
 <string name="new_cases">New Cases</string>

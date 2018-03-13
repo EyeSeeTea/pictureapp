@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConvertFromApiVisitor implements IConvertFromApiVisitor {
-    private final String DEFAULT_OPTION_COLOR="eecf00";
+    private final String DEFAULT_OPTION_COLOR="e2ffb2";
     private static String TAG = "ConvertFromApiVisitor";
     @Override
     public void visit(List<OrgUnitTree> orgUnitTrees) {

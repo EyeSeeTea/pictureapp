@@ -20,9 +20,9 @@
         android:text="@string/empty_string"
         android:padding="8dp"
         android:background="@android:color/transparent"
-        android:textColor="@color/white"
-        android:textSize="?attr/font_medium"
-        app:font_name="@string/normal_font" />
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/bold_font" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/review_answer"
@@ -33,9 +33,9 @@
         android:gravity="left|center"
         android:padding="8dp"
         android:text="@string/empty_string"
-        android:textColor="@color/white"
-        android:textSize="?attr/font_medium"
-        app:font_name="@string/normal_font" />
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/bold_font" />
 
 
 </TableRow>

@@ -3,7 +3,9 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
         mavenLocal()
-        google()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 
     dependencies {
@@ -247,8 +249,6 @@ dependencies {
     apply plugin: 'com.github.dcendents.android-maven'
 
     //Support Libraries
-    //implementation "com.android.support:appcompat-v7:${versions.support_library}"
-    //compile "com.android.support:design:${versions.support_library}"
     compile "com.android.support:design:${libs.supportVersion}"
 
     //Android support

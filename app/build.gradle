@@ -3,12 +3,14 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
         mavenLocal()
+        google()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -186,7 +188,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
         }
         cnm {
-            applicationId 'org.eyeseetea.surveillance_cnm_bb'
+            applicationId 'org.eyeseetea.surveillance_cnm_dev'
             versionName "0.2.0"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -207,6 +209,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
         }
 
     }
@@ -234,6 +237,8 @@ dependencies {
     compile project(":core-rules")
     compile project(":ui-bindings")
     compile project(":EyeSeeTea-sdk")
+    compile project(":bugshaker")
+
 
     // App dependencies
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -241,10 +246,16 @@ dependencies {
     apply plugin: 'android-apt'
     apply plugin: 'com.github.dcendents.android-maven'
 
+    //Support Libraries
+    //implementation "com.android.support:appcompat-v7:${versions.support_library}"
+    //compile "com.android.support:design:${versions.support_library}"
+    compile "com.android.support:design:${libs.supportVersion}"
+
     //Android support
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
+
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
     compile "com.android.support:recyclerview-v7:${libs.supportVersion}"

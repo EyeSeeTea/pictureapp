@@ -307,4 +307,7 @@
 <p>sh ${gitPath}/generate_last_commit.sh </p>
 <p>3. Run "git checkout". </p>]]>
 </string>
+<string name="ipc_issueEntry_q_test_result">"Test result"</string>
+<string name="common_option_non_mobile">"Non mobile"</string>
+<string name="common_option_mobile">"Mobile"</string>
 </resources>

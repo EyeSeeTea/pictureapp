@@ -94,4 +94,6 @@
     <string name="default_drive_folder" translatable="false">0B7TXlu17DcAbNHNvRUxnSDd4LUk</string>
     <string name="drive_key" translatable="false">drive_key</string>
     <string name="default_language" translatable="false">en</string>
+    <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
+    <string name="fragment_new_expense" translatable="false">fragment_new_expense</string>
 </resources>

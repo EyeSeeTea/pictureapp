@@ -21,10 +21,13 @@ package utils;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by rhardjono on 08/11/2016
@@ -32,27 +35,46 @@ import org.eyeseetea.malariacare.R;
 public class ProgressUtils {
 
     public static void updateProgressBarStatus(View view, int currentPage, int totalPages) {
-        ProgressBar progressView = (ProgressBar) view.findViewById(R.id.dynamic_progress);
-        TextView progressText = (TextView) view.findViewById(R.id.dynamic_progress_text);
-        progressView.setMax(totalPages);
-        progressView.setProgress(currentPage + 1);
-        progressText.setText(
-                getLocaleProgressStatus(progressView.getContext(), progressView.getProgress(),
-                        progressView.getMax()));
+        ArrayList<View> progressViews = new ArrayList<>();
+        LinearLayout progressContainer = (LinearLayout) view.findViewById(R.id.dynamic_progress);
+        setTotalPages(progressContainer, totalPages);
+        setProgress(progressViews, currentPage + 1, progressContainer, totalPages);
+    }
+
+    private static void setProgress(ArrayList<View> progressViews, int currentPage,
+            LinearLayout progressContainer, int totalPages) {
+        Context context = progressContainer.getContext();
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        lp.weight = 1;
+
+        for (int i = 0; i < totalPages; i++) {
+            int backgroundColor = i < currentPage ? R.color.tab_pressed_background
+                    : R.color.tab_unpressed_background;
+            View progress = new View(context);
+            progress.setBackgroundColor(
+                    context.getResources().getColor(backgroundColor));
+            progress.setLayoutParams(lp);
+            progressContainer.addView(progress);
+            if (i < totalPages - 1) {
+                ImageView imageView = new ImageView(context);
+                imageView.setImageResource(R.drawable.tab_line);
+                progressContainer.addView(imageView);
+                imageView.setBackgroundColor(
+                        context.getResources().getColor(backgroundColor));
+                imageView.setPadding(0, 0,
+                        context.getResources().getDimensionPixelSize(
+                                R.dimen.padding_right_progress),
+                        0);
+            }
+        }
+    }
+
+    private static void setTotalPages(LinearLayout progressContainer,
+            int totalPages) {
+        progressContainer.setWeightSum(totalPages);
     }
 
     public static void setProgressBarText(View view, String newText) {
-        ((TextView) view.findViewById(R.id.dynamic_progress_text)).setText(newText);
-    }
-
-    private static String getLocaleProgressStatus(Context context, int currentPage,
-            int totalPages) {
-        String current = context.getResources().getString(
-                context.getResources().getIdentifier("number_" + currentPage, "string",
-                        context.getPackageName()));
-        String total = context.getResources().getString(
-                context.getResources().getIdentifier("number_" + totalPages, "string",
-                        context.getPackageName()));
-        return current.concat("/").concat(total);
     }
 }

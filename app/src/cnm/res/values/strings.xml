@@ -251,8 +251,7 @@
 <string name="ipc_issueEntry_q_referred_hospital">Referred to Hospital:</string>
 <string name="common_option_referred_yes">Yes</string>
 <string name="common_option_referred_no">No</string>
-
-<string name="date_survey_format">"dd-MMM-yy"</string>
+<string name="date_survey_format">"dd MMM yy"</string>
 <string name="exists_more_than_one_org_unit_by_phone">Warning: More than one organisation units have been configured for this phone (IMEI: %s)</string>
 <string name="hour_survey_format">"hh:mm a"</string>
 <string name="new_cases">New Cases</string>
@@ -286,6 +285,7 @@
 <string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
 <string name="login_unexpected_error">"Unexpected error while login"</string>
+
 <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>
 <p>Steps:</p>

@@ -6,7 +6,7 @@
     android:layout_weight="1"
     android:paddingTop="30dp"
     android:orientation="vertical"
-    android:background="@color/green"
+    android:background="@color/default_background_survey"
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
 
@@ -27,16 +27,24 @@
         android:id="@+id/answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/white_rounded_background"
-        android:gravity="left"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:gravity="center"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:inputType="number"
         android:layout_gravity="center"
         android:maxLength="2"
+        android:textColor="@color/gray_text_survey"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_text_survey"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
     <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/dynamic_positiveInt_btn"

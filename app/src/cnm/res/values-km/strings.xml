@@ -296,4 +296,7 @@
 <p> sh $ {gitPath} /generate_last_commit.sh </ p>
 <p> 3 ។ រត់ "git checkout" ។ </ p>]]>
 </string>
+<string name="ipc_issueEntry_q_test_result">លទ្ធផលតេស្ត</string>
+<string name="common_option_non_mobile">"មិនមែនចល័ត"</string>
+<string name="common_option_mobile">"ទូរស័ព្ទចល័ត"</string>
 </resources>

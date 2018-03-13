@@ -42,7 +42,6 @@ public class Constants {
             DROPDOWN_LIST_OU_TREE = 31,
             IMAGES_VERTICAL = 32;
 
-
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
             DROPDOWN_LIST,
             RADIO_GROUP_HORIZONTAL,

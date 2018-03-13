@@ -24,9 +24,9 @@
 24;'MCS - Gender (with pregnancy)';'ipc_issueEntry_q_patient_gender_pregnant';;'ipc_issueEntry_q_patient_gender_pregnant';'NoDataElementSexPregnancy';4;0;0;5;24;;20;1;0;;1
 25;'MCS - Gender';'ipc_issueEntry_q_patient_gender';;'ipc_issueEntry_q_patient_gender';'uA8F2A6w2Ex';5;0;0;5;25;;21;1;0;;1
 26;'MCS - pregnant (months)';'ipc_issueEntry_q_patient_pregnant_month';;'ipc_issueEntry_q_patient_pregnant_month';'n0ZxPa2rJ58';6;0;0;5;26;;29;1;0;;1
-27;'MCS - Weight';'ipc_issueEntry_q_patient_weight';;'ipc_issueEntry_q_patient_weight';'vSXZVMi6kiU';7;0;0;5;27;;2;1;0;;1
+27;'MCS - Weight';'ipc_issueEntry_q_patient_weight';;'ipc_issueEntry_q_patient_weight';'vSXZVMi6kiU';7;0;0;5;27;;6;1;0;;1
 28;'MCS - Temperature (Celsius)';'ipc_issueEntry_q_patient_temperature';;'ipc_issueEntry_q_patient_temperature';'JSRLPE3NaOt';8;0;0;5;28;;6;1;0;;1
 29;'MCS - Patient status';'ipc_issueEntry_q_patient_status';;'ipc_issueEntry_q_patient_status';'cl5cDW7AxAj';9;0;0;5;29;;10;1;0;;1
 30;'MCS - Treatment (with dose)';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'rBonfqEGNdS';10;0;0;5;30;;14;1;0;;1
 31;'MCS - Referred reason';'ipc_issueEntry_q_referred';;'ipc_issueEntry_q_referred';'KV6ssVm0Avk';10;0;0;5;31;;32;1;0;;1
-32;'MCS - DOT';'ipc_issueEntry_q_mcs_dot';;'ipc_issueEntry_q_mcs_dot';'ax04nLeSaXw';11;0;0;5;32;;32;1;0;;1
+32;'MCS - DOT';'ipc_issueEntry_q_mcs_dot';;'ipc_issueEntry_q_mcs_dot';'ax04nLeSaXw';11;0;0;5;32;;10;1;0;;1

@@ -36,7 +36,9 @@ public class SurveyFragmentStrategy {
         Context context = PreferencesState.getInstance().getContext();
         if (question.getQuestionProgram().getUid().equals(
                 context.getString(R.string.stock_program_uid))) {
-            return Session.getStockSurveyDB();
+
+            return Session.getStockSurveyDB() != null ? Session.getStockSurveyDB()
+                    : Session.getMalariaSurveyDB();
         }
         return Session.getMalariaSurveyDB();
     }

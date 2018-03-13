@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
@@ -56,9 +57,6 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             } else {
                 importantValues += ", ";
             }
-            if (value.getQuestionDB() != null) {
-                visibleValues += value.getQuestionDB().getInternationalizedForm_name() + " : ";
-            }
             if (value.getOptionDB() != null) {
                 importantValues += value.getOptionDB().getInternationalizedName();
             } else {
@@ -72,6 +70,8 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
             } else {
                 visibleValues += ", ";
             }
+            visibleValues += value.getQuestionDB().getInternationalizedForm_name();
+            visibleValues += " : ";
             if (value.getOptionDB() != null) {
                 visibleValues += value.getOptionDB().getInternationalizedName();
             } else {

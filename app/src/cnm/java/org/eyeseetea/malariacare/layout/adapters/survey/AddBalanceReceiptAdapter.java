@@ -16,8 +16,6 @@ import org.eyeseetea.malariacare.domain.entity.Question;
 import java.util.List;
 
 public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int VIEW_TYPE_QUESTION = 0;
-    private static final int VIEW_TYPE_SAVE = 1;
     private List<Question> mQuestions;
     private onInteractionListener mOnInteractionListener;
     private String mDefValue;
@@ -32,34 +30,14 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_QUESTION) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.add_balance_receipt_row, parent, false);
             return new QuestionViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.add_receipt_balance_save_row, parent, false);
-            return new SaveViewHolder(view);
-        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int viewType = getItemViewType(position);
-        if (viewType == VIEW_TYPE_QUESTION) {
             putValuesToQuestion(mQuestions.get(position), (QuestionViewHolder) holder);
-        } else {
-            initSave((SaveViewHolder) holder);
-        }
-    }
-
-    private void initSave(SaveViewHolder holder) {
-        holder.save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnInteractionListener.onSaveClick();
-            }
-        });
     }
 
     private void putValuesToQuestion(final Question question, final QuestionViewHolder holder) {
@@ -87,7 +65,7 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemCount() {
-        return mQuestions.size() + 1;
+        return mQuestions.size();
     }
 
     public static class QuestionViewHolder extends RecyclerView.ViewHolder {
@@ -101,23 +79,9 @@ public class AddBalanceReceiptAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return position < mQuestions.size() ? VIEW_TYPE_QUESTION : VIEW_TYPE_SAVE;
-    }
-
     public interface onInteractionListener {
-        void onSaveClick();
 
         void onQuestionAnswered(Question question, String answeredValue);
     }
 
-    public static class SaveViewHolder extends RecyclerView.ViewHolder {
-        Button save;
-
-        public SaveViewHolder(View itemView) {
-            super(itemView);
-            save = (Button) itemView.findViewById(R.id.save);
-        }
-    }
 }

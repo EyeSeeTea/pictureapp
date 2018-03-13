@@ -259,6 +259,7 @@
 <string name="past_cases">Past Cases</string>
 <string name="cases_history">History - Cases Already Uploaded</string>
 <string name="tab_village_residence">Village of Residence</string>
+
 <string name="ipc_issueEntry_q_not_reason_tested">Reason not tested</string>
 <string name="common_option_not_tested_refused">Patient refused</string>
 <string name="common_option_not_tested_rdt_out_stock">RDT Stock out</string>
@@ -283,8 +284,11 @@
 <string name="common_option_treatment_asmq_100_200_3">3 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6">6 ASMQ Tablets of 100/200 mg</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
-<string name="login_unexpected_error">"Unexpected error while login"</string>
-<string name="lastcommit_unavailable"><![CDATA[
+
+    <string name="login_unexpected_error">"Unexpected error while login"</string>
+
+
+    <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>
 <p>Steps:</p>
 <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>

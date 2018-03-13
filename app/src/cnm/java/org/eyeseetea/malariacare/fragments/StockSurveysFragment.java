@@ -184,7 +184,9 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
 
             int headerString = R.string.fragment_new_receipt;
             if (type == Constants.SURVEY_RESET) {
-                headerString = R.string.fragment_new_reset;
+                headerString = R.string.fragment_new_balance;
+            } else if (type == Constants.SURVEY_ISSUE) {
+                headerString = R.string.fragment_new_expense;
             }
             DashboardHeaderStrategy.getInstance().init(activity, headerString);
             if (activity instanceof DashboardActivity) {

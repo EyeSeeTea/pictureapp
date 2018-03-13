@@ -31,7 +31,7 @@
     <color name="text_first_color">@color/black</color>
     <color name="text_secondary_color">@color/white</color>
     <color name="fragment_header_title_text">@color/white</color>
-    <color name="tab_pressed_background">#cccccc</color>
+    <color name="tab_pressed_background">#008b17</color>
     <color name="tab_unpressed_background">#eecf00</color>
     <color name="spinner_color">@color/headerColor</color>
     <color name="monitor_background">@color/light_grey</color>

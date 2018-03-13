@@ -92,6 +92,8 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
         return R.drawable.ic_arrow_survey_expense;
     }
 
+
+
     public class SurveyHolder extends RecyclerView.ViewHolder {
         ImageView stockImage;
         TextView date;

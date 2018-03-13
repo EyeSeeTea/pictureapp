@@ -94,7 +94,7 @@ android {
     }
     productFlavors {
         cambodia {
-            applicationId 'org.eyeseetea.surveillance_kh_bb'
+            applicationId 'org.eyeseetea.surveillance_kh_dev'
             versionName "1.3.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -117,7 +117,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         laos {
-            applicationId 'org.eyeseetea.surveillance_la_bb'
+            applicationId 'org.eyeseetea.surveillance_la_dev'
             versionName "1.2.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -140,7 +140,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         myanmar {
-            applicationId 'org.eyeseetea.surveillance_mm_bb'
+            applicationId 'org.eyeseetea.surveillance_mm_dev'
             versionName "1.0.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -163,7 +163,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
         }
         ereferrals {
-            applicationId 'org.eyeseetea.surveillance_ref_bb'
+            applicationId 'org.eyeseetea.surveillance_ref_dev'
             versionName "1.1.1"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"

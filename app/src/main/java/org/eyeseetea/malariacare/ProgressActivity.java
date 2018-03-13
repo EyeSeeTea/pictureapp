@@ -39,6 +39,7 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 import org.eyeseetea.malariacare.views.FontUtils;
 
@@ -102,6 +103,7 @@ public class ProgressActivity extends Activity {
     }
 
     private void executeLogout() {
+        AlarmPushReceiver.cancelPushAlarm(this);
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

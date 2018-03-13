@@ -50,6 +50,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
 
         mLoginUseCase = new LoginUseCase(mAuthenticationManager, asyncExecutor, mainExecutor);
+        mBaseActivity.createActionBar();
     }
 
     @Override

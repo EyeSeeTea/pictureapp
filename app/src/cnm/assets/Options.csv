@@ -34,10 +34,10 @@
 34;'common_option_treatment_asmq_100_200_6';'6AQ100200';0;12;33
 35;'common_option_treatment_asmq_100_200_6_pq_1';'6AQ+1PQ';0;12;18
 36;'common_option_not_tested_referred';'Referred';0;12;35
-37;'common_option_rdt_negative';'Negative';0;21;7
-38;'common_option_rdt_pf';'Pf';0;21;8
-39;'common_option_rdt_pv';'Pv';0;21;9
-40;'common_option_rdt_mixed';'Mix';0;21;10
+37;'common_option_rdt_negative';'Negative';0;21;3
+38;'common_option_rdt_pf';'Pf';0;21;4
+39;'common_option_rdt_pv';'Pv';0;21;5
+40;'common_option_rdt_mixed';'Mix';0;21;6
 41;'common_option_male';'NoDataElemM';0;24;11
 42;'common_option_female';'NoDataElemF';0;24;12
 43;'common_option_female_pregnant';'NoDataElemFP';0;24;13

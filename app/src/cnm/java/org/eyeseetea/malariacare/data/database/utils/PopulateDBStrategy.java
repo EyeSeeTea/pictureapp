@@ -43,7 +43,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             MatchDB.class,
             QuestionOptionDB.class,
             ProgramProgramRelationDB.class,
-            QuestionOptionDB.class,
             TreatmentDB.class,
             DrugCombinationDB.class,
             TreatmentMatchDB.class,

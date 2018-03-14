@@ -27,7 +27,7 @@ public class ProgramLocalDataSource implements IProgramRepository {
         ProgramDB programDB = ProgramDB.findByName(userProgramPreferences.getCode());
 
         if (programDB == null) {
-            return null;
+            programDB = ProgramDB.getFirstProgram();
         }
         return new Program(programDB.getName(), programDB.getUid());
     }

@@ -41,11 +41,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.ExportDataException;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
@@ -165,12 +167,14 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Adds actionbar to the activity
      */
     public void createActionBar() {
-        ProgramDB programDB = ProgramDB.getFirstProgram();
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram  = programRepository.getUserProgram();
 
-        if (programDB != null) {
+        if (userProgram != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit() +"-"+
+                            userProgram.getCode(),
                     this.getResources().getString(R.string.malaria_case_based_reporting));
         }
     }

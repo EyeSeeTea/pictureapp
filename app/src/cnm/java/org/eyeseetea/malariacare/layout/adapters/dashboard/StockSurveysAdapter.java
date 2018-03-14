@@ -55,7 +55,7 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
             } else {
                 visibleValues += ", ";
             }
-            visibleValues += Utils.getInternationalizedString(question.getName()) + " : ";
+            visibleValues += Utils.getInternationalizedString(question.getName(), mContext) + " : ";
 
             visibleValues += question.getValue().getValue();
         }

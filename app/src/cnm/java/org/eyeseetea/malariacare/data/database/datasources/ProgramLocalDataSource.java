@@ -22,9 +22,18 @@ public class ProgramLocalDataSource implements IProgramRepository {
     @Override
     public Program getUserProgram() {
         PreferencesState preferences = PreferencesState.getInstance();
-        Program userProgramPreferences = preferences.getUserProgram();
-
-        ProgramDB programDB = ProgramDB.findByName(userProgramPreferences.getCode());
+        Program userProgramPreferences = null;
+        try {
+            userProgramPreferences = preferences.getUserProgram();
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+        ProgramDB programDB;
+        if(userProgramPreferences == null){
+            programDB = ProgramDB.getFirstProgram();
+        } else {
+            programDB = ProgramDB.findByName(userProgramPreferences.getCode());
+        }
 
         if (programDB == null) {
             return null;

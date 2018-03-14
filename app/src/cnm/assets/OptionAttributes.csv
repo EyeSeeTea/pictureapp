@@ -33,3 +33,7 @@
 33;'e2ffb2';'question_images/p12_treatment_asmq.png';'1';'0';0
 34;'c9ff6e';'question_images/p13_referred_stock_out.png';'1';'0';0;
 35;'e2ffb2';'question_images/p12_treatment_referred.png';'1';'0';0;
+36;'ffee78';'question_images/p15_dot_completed.png';'1';'0';0;
+37;'fff7b9';'question_images/p15_dot_nocompleted.png';'1';'0';0;
+38;'ffee78';'question_images/p16_dot_mobile.png';'1';'0';0;
+39;'fff7b9';'question_images/p16_dot_nomobile.png';'1';'0';0;

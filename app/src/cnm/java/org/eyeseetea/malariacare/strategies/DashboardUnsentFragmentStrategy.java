@@ -30,8 +30,11 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     public void deleteSurvey(SurveyDB surveyDB) {
         Context context = PreferencesState.getInstance().getContext();
         Date date = surveyDB.getEventDate();
-        SurveyDB.findSurveysWithProgramAndEventDate(
-                context.getResources().getString(R.string.stock_program_uid), date).delete();
         surveyDB.delete();
+        SurveyDB stockSurvey = SurveyDB.findSurveysWithProgramAndEventDate(
+                context.getResources().getString(R.string.stock_program_uid), date);
+        if(stockSurvey!=null) {
+            stockSurvey.delete();
+        }
     }
 }

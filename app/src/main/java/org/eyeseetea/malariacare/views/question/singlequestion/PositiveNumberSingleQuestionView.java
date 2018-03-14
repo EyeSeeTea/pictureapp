@@ -90,6 +90,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         });
     }
 
+    @Override
     public void setQuestionDB(QuestionDB questionDB) {
         mPositiveNumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
     }

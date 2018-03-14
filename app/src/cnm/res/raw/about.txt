@@ -15,15 +15,9 @@
 
 <p><b>Clinton Health Access Initiative (CHAI)</b></p>
 
-<p><b><i>Lead implementation</i></b></p>
+<p><i>Lead implementation</i></p>
 
 <p>CHAI has been working with governments since 2007 to deploy information systems that support data collection and management, patient tracking, electronic medical records, health surveillance, laboratory management, and supply chain management in 22 countries and across disease areas, including maternal and newborn health, reproductive health, vaccines, HIV/AIDS, and malaria</p>
-
-<p><b>EyeSeeTea (EST)</b></p>
-
-<p><i>Lead technical development</i></p>
-
-<p>EyeSeeTea LTD is a London based company dedicated to:</p>
 
 <p><b><i>EyeSeeTea (EST)</i></b></p>
 

@@ -15,10 +15,8 @@ import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .APositiveNumberSingleQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .PositiveNumberSingleQuestionViewStrategyStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.NumberSingleQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.SingleQuestionViewStrategyStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
@@ -26,12 +24,12 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         IQuestionView {
     CustomEditText numberPicker;
     CustomButton sendButton;
-    private APositiveNumberSingleQuestionViewStrategy mPositiveNumberSingleQuestionViewStrategy;
+    private NumberSingleQuestionViewStrategy mPositiveNumberSingleQuestionViewStrategy;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
         mPositiveNumberSingleQuestionViewStrategy =
-                new PositiveNumberSingleQuestionViewStrategyStrategy();
+                new SingleQuestionViewStrategyStrategy();
         init(context);
     }
 

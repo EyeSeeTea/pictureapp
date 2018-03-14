@@ -26,11 +26,18 @@
             android:name=".LoginActivity"
             android:finishOnTaskLaunch="true"
             android:label="@string/malaria_case_based_reporting"
+            android:theme="@style/LoginScreenThemeCNN"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SettingsActivity" />
+                android:value=".SettingsActivity"/>
         </activity>
+
+        <activity
+            android:name=".ProgressActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/malaria_case_based_reporting"
+            android:theme="@style/LoginScreenThemeCNN"/>
 
     </application>
 

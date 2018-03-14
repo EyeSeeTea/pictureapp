@@ -23,7 +23,7 @@ public class QuestionLocalDataSource implements IQuestionRepository {
                     Question.newBuilder()
                             .id(questionDB.getId_question())
                             .code(questionDB.getCode())
-                            .name(questionDB.getInternationalizedForm_name())
+                            .name(questionDB.getForm_name())
                             .uid(questionDB.getUid())
                             .type(mapOutputToQuestionType(questionDB.getOutput()))
                             .build());

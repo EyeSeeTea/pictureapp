@@ -97,6 +97,24 @@ public class Utils {
         }
     }
 
+    @NonNull
+    public static String getInternationalizedString(@NonNull String key,Context context) {
+        String defaultLanguage = context.getString(R.string.default_language);
+        String language = getUserLanguage(context);
+        String translation = getLocalizedStringFromDB(key, language, defaultLanguage);
+
+        if (key == null) {
+            return "";
+        }
+
+        if (BuildConfig.downloadLanguagesFromServer &&
+                wasTranslationFound(translation)) {
+            return translation;
+        } else {
+            return findStringFromAndroidResource(context, key, language);
+        }
+    }
+
     public static String getUserLanguageOrDefault(Context context) {
         String language = getUserLanguage(context);
 

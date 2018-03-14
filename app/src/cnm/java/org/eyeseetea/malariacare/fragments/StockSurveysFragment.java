@@ -1,10 +1,12 @@
 package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -20,12 +22,14 @@ import android.widget.ImageButton;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.StockSurveysAdapter;
+import org.eyeseetea.malariacare.layout.listeners.SwipeDismissRecyclerViewTouchListener;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.StockSurveysPresenter;
@@ -127,6 +131,55 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         stockSurveysRecycler.setLayoutManager(mLayoutManager);
         stockSurveysRecycler.setAdapter(mStockSurveysAdapter);
+
+        // Create a ListView-specific touch listener. ListViews are given special treatment because
+        // by default they handle touches for their list items... i.e. they're in charge of drawing
+        // the pressed state (the list selector), handling list item clicks, etc.
+        SwipeDismissRecyclerViewTouchListener touchListener =
+                new SwipeDismissRecyclerViewTouchListener(
+                        stockSurveysRecycler,
+                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                if(position > -1 && position <= mStockSurveysAdapter.getItemCount()){
+                                    long surveyId = mStockSurveysAdapter.getItemId(
+                                            position );
+                                    SurveyDB surveyDB = SurveyDB.findById(surveyId);
+                                    if(surveyDB!=null && !surveyDB.isSent()) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public void onDismiss(final RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (final int position : reverseSortedPositions) {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle(getActivity().getString(
+                                                    R.string.dialog_title_delete_survey))
+                                            .setMessage(getActivity().getString(
+                                                    R.string.dialog_info_delete_survey))
+                                            .setPositiveButton(android.R.string.yes,
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface arg0,
+                                                                int arg1) {
+                                                            long surveyId = mStockSurveysAdapter.getItemId(
+                                                                    position );
+                                                            SurveyDB surveyDB = SurveyDB.findById(surveyId);
+                                                            if(surveyDB!=null && !surveyDB.isSent()) {
+                                                                surveyDB.delete();
+                                                                reloadData();
+                                                            }
+                                                        }
+                                                    })
+                                            .setNegativeButton(android.R.string.no,
+                                                    null).create().show();
+                                }
+
+                            }
+                        });
+        stockSurveysRecycler.setOnTouchListener(touchListener);
     }
 
     @Override
@@ -147,18 +200,21 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         addBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(addReceipt, addBalance, addExpense);
                 mStockSurveysPresenter.onAddBalanceClick();
             }
         });
         addReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(addReceipt, addBalance, addExpense);
                 mStockSurveysPresenter.onAddReceiptClick();
             }
         });
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(addReceipt, addBalance, addExpense);
                 mStockSurveysPresenter.onAddExpenseClick();
             }
         });

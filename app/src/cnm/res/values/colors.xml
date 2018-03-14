@@ -23,4 +23,5 @@
     <color name="default_background_survey">#e2ffb2</color>
     <color name="green_option">#a5e183</color>
     <color name="green_option_2">#c9ff6e</color>
+    <color name="dark_blue">#FF1D5288</color>
 </resources>

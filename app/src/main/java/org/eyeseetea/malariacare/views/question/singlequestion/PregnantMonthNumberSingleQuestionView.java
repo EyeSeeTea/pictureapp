@@ -8,12 +8,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PregnantMonthNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPregnantMonthNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .APregnantMonthNumberSingleQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .PregnantMonthNumberSingleQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
@@ -22,11 +27,12 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
     CustomEditText numberPicker;
     CustomButton sendButton;
     Boolean isClicked = false;
-
+    APregnantMonthNumberSingleQuestionViewStrategy pregnantQuestionViewStrategy;
     public PregnantMonthNumberSingleQuestionView(Context context) {
         super(context);
 
         init(context);
+        pregnantQuestionViewStrategy = new PregnantMonthNumberSingleQuestionViewStrategy();
     }
 
     @Override
@@ -102,6 +108,10 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
             }
             isClicked = false;
         }
+    }
+
+    public void setQuestionDB(QuestionDB questionDB) {
+        pregnantQuestionViewStrategy.setQuestionDB(this, questionDB);
     }
 
 }

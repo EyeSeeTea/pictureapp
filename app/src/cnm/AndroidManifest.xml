@@ -13,7 +13,7 @@
 
         <provider
             android:name=".data.database.utils.CNMDBProvider"
-            android:authorities="org.eyeseetea.malariacare.data.database.utils.CNMDBProvider"
+            android:authorities="${applicationId}.data.database.utils.CNMDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">
@@ -26,11 +26,18 @@
             android:name=".LoginActivity"
             android:finishOnTaskLaunch="true"
             android:label="@string/malaria_case_based_reporting"
+            android:theme="@style/LoginScreenThemeCNN"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SettingsActivity" />
+                android:value=".SettingsActivity"/>
         </activity>
+
+        <activity
+            android:name=".ProgressActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/malaria_case_based_reporting"
+            android:theme="@style/LoginScreenThemeCNN"/>
 
     </application>
 

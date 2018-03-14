@@ -3,9 +3,14 @@
     <item>
         <shape android:shape="oval">
             <size
-                android:width="50dp"
-                android:height="50dp" />
+                android:width="65dp"
+                android:height="65dp" />
             <solid android:color="@color/tab_pressed_background" />
+            <padding
+                android:left="8dp"
+                android:top="8dp"
+                android:right="8dp"
+                android:bottom="8dp" />
         </shape>
     </item>
     <item android:drawable="@drawable/ic_add_white" />

@@ -55,7 +55,7 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
             } else {
                 visibleValues += ", ";
             }
-            visibleValues += Utils.getInternationalizedString(question.getName()) + " : ";
+            visibleValues += Utils.getInternationalizedString(question.getName(), mContext) + " : ";
 
             visibleValues += question.getValue().getValue();
         }
@@ -84,7 +84,8 @@ public class StockSurveysAdapter extends RecyclerView.Adapter<StockSurveysAdapte
     private boolean isSurveyUnsent(int surveyStatus) {
         return surveyStatus == Constants.SURVEY_IN_PROGRESS
                 || surveyStatus == Constants.SURVEY_SENDING
-                || surveyStatus == Constants.SURVEY_COMPLETED;
+                || surveyStatus == Constants.SURVEY_COMPLETED
+                || surveyStatus==Constants.SURVEY_QUARANTINE;
     }
 
     private int getImageForSurvey(Survey survey) {

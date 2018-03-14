@@ -9,7 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 
 public abstract class ABaseActivityStrategy {
     protected BaseActivity mBaseActivity;
@@ -51,5 +55,16 @@ public abstract class ABaseActivityStrategy {
         final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
         Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
         mBaseActivity.showAlertWithLogoAndVersion(titleId, linkedMessage, context);
+    }
+
+    public void createActionBar() {
+        ProgramDB programDB = ProgramDB.getFirstProgram();
+
+        if (programDB != null) {
+            android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
+            LayoutUtils.setActionBarLogo(actionBar);
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
+                    mBaseActivity.getResources().getString(R.string.malaria_case_based_reporting));
+        }
     }
 }

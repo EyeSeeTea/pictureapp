@@ -41,7 +41,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -165,14 +164,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Adds actionbar to the activity
      */
     public void createActionBar() {
-        ProgramDB programDB = ProgramDB.getFirstProgram();
-
-        if (programDB != null) {
-            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-            LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
-                    this.getResources().getString(R.string.malaria_case_based_reporting));
-        }
+        mBaseActivityStrategy.createActionBar();
     }
 
     /**

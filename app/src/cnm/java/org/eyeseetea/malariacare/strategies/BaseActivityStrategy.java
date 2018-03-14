@@ -8,11 +8,14 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -50,6 +53,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
 
         mLoginUseCase = new LoginUseCase(mAuthenticationManager, asyncExecutor, mainExecutor);
+        mBaseActivity.createActionBar();
     }
 
     @Override
@@ -164,5 +168,21 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithHtmlMessage(app_copyright, copyright);
+    }
+
+    @Override
+    public void createActionBar() {
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram = programRepository.getUserProgram();
+
+        if (userProgram != null && PreferencesState.getInstance().getOrgUnit() != null &&
+                !PreferencesState.getInstance().getOrgUnit().isEmpty()) {
+            android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
+            LayoutUtils.setActionBarLogo(actionBar);
+            LayoutUtils.setActionBarText(actionBar,
+                    PreferencesState.getInstance().getOrgUnit() + " - " +
+                            userProgram.getCode(),
+                    mBaseActivity.getResources().getString(R.string.malaria_case_based_reporting));
+        }
     }
 }

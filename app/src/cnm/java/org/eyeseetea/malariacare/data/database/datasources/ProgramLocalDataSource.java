@@ -29,15 +29,13 @@ public class ProgramLocalDataSource implements IProgramRepository {
             e.printStackTrace();
         }
         ProgramDB programDB;
-        if(userProgramPreferences == null){
-            programDB = ProgramDB.getFirstProgram();
-        } else {
+
+        if (userProgramPreferences != null) {
             programDB = ProgramDB.findByName(userProgramPreferences.getCode());
+        } else {
+            programDB = ProgramDB.getFirstProgram();
         }
 
-        if (programDB == null) {
-            return null;
-        }
         return new Program(programDB.getName(), programDB.getUid());
     }
 

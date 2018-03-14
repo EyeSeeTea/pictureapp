@@ -115,7 +115,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
                     .program(program)
                     .type(surveyDB.getType())
                     .questions(questions)
-                    .surveyDate(surveyDB.getCompletionDate())
+                    .surveyDate(surveyDB.getEventDate())
                     .status(surveyDB.getStatus())
                     .build();
             surveys.add(survey);

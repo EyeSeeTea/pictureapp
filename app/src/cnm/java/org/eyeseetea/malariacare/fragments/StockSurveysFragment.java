@@ -145,7 +145,8 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
                                     long surveyId = mStockSurveysAdapter.getItemId(
                                             position );
                                     SurveyDB surveyDB = SurveyDB.findById(surveyId);
-                                    if(surveyDB!=null && !surveyDB.isSent()) {
+                                    if(surveyDB!=null && !surveyDB.isSent()
+                                            && !surveyDB.isConflict()) {
                                         return true;
                                     }
                                 }
@@ -167,7 +168,8 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
                                                             long surveyId = mStockSurveysAdapter.getItemId(
                                                                     position );
                                                             SurveyDB surveyDB = SurveyDB.findById(surveyId);
-                                                            if(surveyDB!=null && !surveyDB.isSent()) {
+                                                            if(surveyDB!=null && !surveyDB.isSent()
+                                                                    && !surveyDB.isConflict()) {
                                                                 surveyDB.delete();
                                                                 reloadData();
                                                             }
@@ -176,7 +178,6 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
                                             .setNegativeButton(android.R.string.no,
                                                     null).create().show();
                                 }
-
                             }
                         });
         stockSurveysRecycler.setOnTouchListener(touchListener);

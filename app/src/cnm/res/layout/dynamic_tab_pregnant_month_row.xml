@@ -37,6 +37,7 @@
         android:gravity="center"
         android:inputType="number"
         android:paddingLeft="16dp"
+        android:maxLength="1"
         android:paddingRight="16dp"
         android:textColor="@color/gray_text_survey"
         android:textSize="?attr/font_medium"

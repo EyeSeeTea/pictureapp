@@ -200,18 +200,21 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         addBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(addReceipt, addBalance, addExpense);
                 mStockSurveysPresenter.onAddBalanceClick();
             }
         });
         addReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(addReceipt, addBalance, addExpense);
                 mStockSurveysPresenter.onAddReceiptClick();
             }
         });
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(addReceipt, addBalance, addExpense);
                 mStockSurveysPresenter.onAddExpenseClick();
             }
         });

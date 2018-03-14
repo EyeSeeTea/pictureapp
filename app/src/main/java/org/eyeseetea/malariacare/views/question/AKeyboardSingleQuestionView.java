@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare.views.question;
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+
 public abstract class AKeyboardSingleQuestionView extends AKeyboardQuestionView {
 
     Boolean isClicked = false;
@@ -30,4 +32,8 @@ public abstract class AKeyboardSingleQuestionView extends AKeyboardQuestionView 
     }
 
     protected abstract void validateAnswer(Context context);
+
+    public void setQuestionDB(QuestionDB questionDB) {
+
+    }
 }

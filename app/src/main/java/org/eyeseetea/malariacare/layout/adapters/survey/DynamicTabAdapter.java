@@ -74,6 +74,7 @@ import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
@@ -83,9 +84,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -622,8 +621,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((AOptionQuestionView) questionView).setOptions(
                         optionsToShow);
             }
-            if (questionView instanceof PositiveNumberSingleQuestionView) {
-                ((PositiveNumberSingleQuestionView) questionView).setQuestionDB(screenQuestionDB);
+            if (questionView instanceof AKeyboardSingleQuestionView) {
+                ((AKeyboardSingleQuestionView) questionView).setQuestionDB(screenQuestionDB);
             }
             mDynamicTabAdapterStrategy.instanceOfSingleQuestion(questionView, screenQuestionDB);
 

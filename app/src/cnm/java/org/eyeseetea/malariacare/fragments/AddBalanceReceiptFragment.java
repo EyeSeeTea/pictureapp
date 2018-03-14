@@ -112,13 +112,11 @@ public class AddBalanceReceiptFragment extends Fragment implements
                 userRepository);
         GetQuestionsByProgramUseCase getQuestionsByProgramUseCase =
                 new GetQuestionsByProgramUseCase(mainExecutor, asyncExecutor, questionRepository);
-        SaveValueUseCase saveValueUseCase = new SaveValueUseCase(asyncExecutor, mainExecutor,
-                valueRepository);
         SaveSurveyUseCase saveSurveyUseCase = new SaveSurveyUseCase(asyncExecutor, mainExecutor,
                 surveyRepository);
 
         mAddBalanceReceiptPresenter = new AddBalanceReceiptPresenter(createSurveyUseCase,
-                getQuestionsByProgramUseCase, saveValueUseCase, saveSurveyUseCase);
+                getQuestionsByProgramUseCase, valueRepository, saveSurveyUseCase);
         mAddBalanceReceiptPresenter.attachView(this,
                 getActivity().getResources().getString(R.string.stock_program_uid), typeSurvey);
     }

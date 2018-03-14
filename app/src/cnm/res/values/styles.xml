@@ -1,0 +1,8 @@
+<resources>
+    <style name="LoginScreenThemeCNN" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/navy_blue</item>
+        <item name="colorPrimaryDark">@color/dark_blue</item>
+        <item name="android:windowBackground">@color/dark_blue</item>
+    </style>
+</resources>

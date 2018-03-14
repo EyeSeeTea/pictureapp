@@ -261,10 +261,10 @@
 <string name="imei">"IMEI"</string>
 <string name="imei_error">"កំហុសក្នុងការទទួល IMEI"</string>
 <string name="error_downloading_languages">"កំហុសក្នុងការទាញយកភាសា"</string>
-<string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
-<string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
+<string name="ipc_issueEntry_q_stock_asmq_100_200">គ្រាប់ 100/200 ម</string>
+<string name="ipc_issueEntry_q_stock_asmq_25_50">គ្រាប់ 25/50 ម</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
-<string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+<string name="ipc_issueEntry_q_stock_rdt">បន្ថែម</string>
 <string name="save">រក្សាទុក</string>
 <string name="common_option_diagnosis_not_tested">មិនបានសាកល្បង</string>
 <string name="ipc_issueEntry_q_not_reason_tested">មូលហេតុដែលមិនបានសាកល្បង</string>
@@ -299,4 +299,7 @@
 <string name="ipc_issueEntry_q_test_result">លទ្ធផលតេស្ត</string>
 <string name="common_option_non_mobile">"មិនមែនចល័ត"</string>
 <string name="common_option_mobile">"ទូរស័ព្ទចល័ត"</string>
+<string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
+<string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
+<string name="tab_stock">"ហ៊ុន"</string>
 </resources>

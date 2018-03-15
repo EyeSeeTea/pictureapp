@@ -783,7 +783,7 @@ public class ServerAPIController {
     /**
      * Call to DHIS Server
      */
-    static Response executeCall(JSONObject data, String url, String method) throws IOException {
+    static Response executeCall(JSONObject data, String url, String method) throws Exception {
         final String DHIS_URL = url;
 
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
@@ -830,34 +830,5 @@ public class ServerAPIController {
         } catch (Exception ex) {
             return null;
         }
-    }
-
-
-}
-
-/**
- * Basic authenticator required for calls
- */
-class BasicAuthenticator implements Authenticator {
-
-    public final String AUTHORIZATION_HEADER = "Authorization";
-    private String credentials;
-
-    BasicAuthenticator() {
-        credentials = AuthenticationApiStrategy.getApiCredentials();
-    }
-
-    @Override
-    public Request authenticate(Proxy proxy, Response response) throws IOException {
-        return response.request().newBuilder().header(AUTHORIZATION_HEADER, credentials).build();
-    }
-
-    @Override
-    public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-        return null;
-    }
-
-    public String getCredentials() {
-        return credentials;
     }
 }

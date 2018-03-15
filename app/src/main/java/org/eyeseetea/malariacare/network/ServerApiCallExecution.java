@@ -71,37 +71,3 @@ public class ServerApiCallExecution {
         return response;
     }
 }
-
-/**
- * Basic authenticator required for calls
- */
-class BasicAuthenticator implements Authenticator {
-
-    public final String AUTHORIZATION_HEADER = "Authorization";
-    private String credentials;
-
-    BasicAuthenticator() throws ApiCallException {
-        try {
-            credentials = AuthenticationApiStrategy.getApiCredentials();
-        } catch (ConfigJsonIOException e) {
-            throw new ApiCallException(e);
-        } catch (LanguagesDownloadException e) {
-            e.printStackTrace();
-            throw new ApiCallException(e);
-        }
-    }
-
-    @Override
-    public Request authenticate(Proxy proxy, Response response) throws IOException {
-        return response.request().newBuilder().header(AUTHORIZATION_HEADER, credentials).build();
-    }
-
-    @Override
-    public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-        return null;
-    }
-
-    public String getCredentials() {
-        return credentials;
-    }
-}

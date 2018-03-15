@@ -62,28 +62,28 @@ public class SurveyChecker {
      */
     public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
             Date maxDate) throws ApiCallException {
-            Response response;
+        Response response;
 
-            String DHIS_URL = PreferencesState.getInstance().getDhisURL();
-            String startDate = EventExtended.format(minDate, EventExtended.AMERICAN_DATE_FORMAT);
-            String endDate = EventExtended.format(
-                    new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
-                    EventExtended.AMERICAN_DATE_FORMAT);
-            String url = SurveyCheckerStrategy.getApiEventUrl(DHIS_URL, program, orgUnit, startDate,
-                    endDate);
-            Log.d(TAG, url);
-            url = ServerApiUtils.encodeBlanks(url);
+        String DHIS_URL = PreferencesState.getInstance().getDhisURL();
+        String startDate = EventExtended.format(minDate, EventExtended.AMERICAN_DATE_FORMAT);
+        String endDate = EventExtended.format(
+                new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
+                EventExtended.AMERICAN_DATE_FORMAT);
+        String url = SurveyCheckerStrategy.getApiEventUrl(DHIS_URL, program, orgUnit, startDate,
+                endDate);
+        Log.d(TAG, url);
+        url = ServerApiUtils.encodeBlanks(url);
 
-            response = ServerApiCallExecution.executeCall(null, url, "GET");
-            JSONObject events = null;
-            try {
-                events = new JSONObject(ServerApiUtils.getReadableBodyResponse(response));
-            } catch (JSONException ex) {
-                throw new ApiCallException(ex);
-            }
-            JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(events);
+        response = ServerApiCallExecution.executeCall(null, url, "GET");
+        JSONObject events = null;
+        try {
+            events = new JSONObject(ServerApiUtils.getReadableBodyResponse(response));
+        } catch (JSONException ex) {
+            throw new ApiCallException(ex);
+        }
+        JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(events);
 
-            return getEvents(jsonNode);
+        return getEvents(jsonNode);
     }
 
     /**

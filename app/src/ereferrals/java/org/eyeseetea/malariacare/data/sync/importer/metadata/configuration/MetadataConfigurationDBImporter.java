@@ -77,7 +77,7 @@ public class MetadataConfigurationDBImporter {
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
                 if (domainCountry.getUid().equals(program.getId())) {
-                    String countryCode = domainCountry.getCountry();
+                    String countryCode = domainCountry.getUid();
                     int version = domainCountry.getVersion();
 
                     if (isCountryNotAlreadyAdded(countryCode)) {

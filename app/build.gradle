@@ -109,6 +109,7 @@ android {
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider\""
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
         }
     }
     lintOptions {
@@ -194,4 +195,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
+    compile (project(path: ':bugshaker')){
+        exclude group:"com.google.android.gms"
+    }
 }

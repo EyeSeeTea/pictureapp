@@ -946,4 +946,5 @@
 <string name="error_unable_to_download_translations">Não é possível baixar traduções</string>
 <string name="error_unable_to_download_configuration_files">Não é possível baixar os arquivos de configuração</string>
 <string name="error_unable_to_download_translations_and_configuration_files">Não é possível baixar traduções e arquivos de configuração</string>
+<string name="upgrading_metadata">Atualizando metadados</string>
 </resources>

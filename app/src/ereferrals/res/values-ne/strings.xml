@@ -951,4 +951,5 @@
 <string name="error_unable_to_download_translations">अनुवादहरू डाउनलोड गर्न असमर्थ</string>
 <string name="error_unable_to_download_configuration_files">विन्यास फाईल डाउनलोड गर्न असमर्थ</string>
 <string name="error_unable_to_download_translations_and_configuration_files">अनुवादहरू र कन्फिगरेसन फाइलहरू डाउनलोड गर्न असमर्थ</string>
+<string name="upgrading_metadata">मेटाडेटा स्तरवृद्धि गर्दै</string>
 </resources>

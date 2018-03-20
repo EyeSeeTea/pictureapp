@@ -65,7 +65,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     private static final int DUMP_REQUEST_CODE = 0;
     protected static String TAG = ".BaseActivity";
-    private AlarmPushReceiver alarmPush;
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
@@ -88,18 +87,15 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
         initView(savedInstanceState);
-        if (PreferencesState.getInstance().isPushInProgress()) {
-            List<Survey> surveys = Survey.getAllSendingSurveys();
-            Log.d(TAG, "The app was closed in the middle of a push. Surveys sending: "
-                    + surveys.size());
-            for (Survey survey : surveys) {
-                survey.setStatus(Constants.SURVEY_QUARANTINE);
-                survey.save();
-            }
-            PreferencesState.getInstance().setPushInProgress(false);
+
+        PreferencesState.getInstance().setPushInProgress(false);
+        List<Survey> surveys = Survey.getAllSendingSurveys();
+        Log.d(TAG, "Surveys sending: " + surveys.size());
+        for (Survey survey : surveys) {
+            survey.setStatus(Constants.SURVEY_QUARANTINE);
+            survey.save();
         }
-        alarmPush = new AlarmPushReceiver();
-        alarmPush.setPushAlarm(this);
+        AlarmPushReceiver.setPushAlarm(this);
 
         mBaseActivityStrategy.onCreate();
     }
@@ -441,6 +437,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        alarmPush.cancelPushAlarm(this);
+        AlarmPushReceiver.cancelPushAlarm(this);
     }
 }

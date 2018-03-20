@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -86,6 +87,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void logout() {
+        AlarmPushReceiver.cancelPushAlarm(mBaseActivity);
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

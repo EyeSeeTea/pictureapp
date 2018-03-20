@@ -40,15 +40,19 @@ public class AlarmPushReceiver extends BroadcastReceiver {
 
     //TODO: period has to be parameterized
     private static final long SECONDS = 1000;
+    private static AlarmManager alarmManagerInstance;
 
     public static void cancelPushAlarm(Context context) {
         Log.d(TAG, "cancelPushAlarm");
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmPushReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.cancel(sender);
+        if(alarmManagerInstance!=null) {
+            Log.d(TAG, "canceling PushAlarm");
+            Intent intent = new Intent(context, AlarmPushReceiver.class);
+            PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManagerInstance.cancel(sender);
+            alarmManagerInstance=null;
+        }
 
     }
 
@@ -61,22 +65,21 @@ public class AlarmPushReceiver extends BroadcastReceiver {
         context.startService(pushIntent);
     }
 
-    public void setPushAlarm(Context context) {
+    public static void setPushAlarm(Context context) {
         Log.d(TAG, "setPushAlarm");
+        if(alarmManagerInstance==null) {
+            Log.d(TAG, "create new alarmManagerInstance");
+            alarmManagerInstance =(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        long pushPeriod = Long.parseLong(context.getString(R.string.PUSH_PERIOD));
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmPushReceiver.class);
-        //Note FLAG_UPDATE_CURRENT
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pushPeriod * SECONDS,
-                pi);
-
-        //others modes:
-        //am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-        // AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
-
+            long pushPeriod = Long.parseLong(context.getString(R.string.PUSH_PERIOD));
+            Intent intent = new Intent(context, AlarmPushReceiver.class);
+            //Note FLAG_UPDATE_CURRENT
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManagerInstance.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+                    pushPeriod * SECONDS,
+                    pi);
+        }
     }
 
 }

@@ -46,7 +46,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -54,7 +53,6 @@ import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.io.InputStream;
 import java.util.List;
@@ -251,6 +249,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             MenuItem item = menu.findItem(R.id.export_db);
             item.setVisible(false);
         }
+        mBaseActivityStrategy.onPrepareOptionsMenu(menu);
         return true;
     }
 
@@ -435,7 +434,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Logs a debug message using current activity SimpleName as tag. Ex:
      * SurveyActivity => ".SurveyActivity"
      */
-    private void debugMessage(String message) {
+    public void debugMessage(String message) {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 

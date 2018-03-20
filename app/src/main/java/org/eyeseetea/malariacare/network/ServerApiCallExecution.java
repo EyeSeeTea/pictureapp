@@ -9,14 +9,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
-import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.Proxy;
 
 public class ServerApiCallExecution {
 

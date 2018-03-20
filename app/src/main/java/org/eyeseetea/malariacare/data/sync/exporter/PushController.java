@@ -29,13 +29,13 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 
 import java.util.List;
 import java.util.Map;
@@ -109,18 +109,22 @@ public class PushController implements IPushController {
 
     private void pushData(final IPushControllerCallback callback) {
         mPushDhisSDKDataSource.pushData(
-                new IDataSourceCallback<Map<String, ImportSummary>>() {
+                new IDataSourceCallback<Map<String, PushReport>>() {
                     @Override
                     public void onSuccess(
-                            Map<String, ImportSummary> mapEventsImportSummary) {
-                        mConvertToSDKVisitor.saveSurveyStatus(mapEventsImportSummary, callback);
+                            Map<String, PushReport> mapEventsReports) {
+                        if(mapEventsReports==null || mapEventsReports.size()==0){
+                            onError(new PushReportException("EventReport is null or empty"));
+                            return;
+                        }
+                        mConvertToSDKVisitor.saveSurveyStatus(mapEventsReports, callback);
                         ServerAPIController.banOrgUnitIfRequired();
                         callback.onComplete();
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
-                        if(throwable instanceof ImportSummaryErrorException) {
+                        if(throwable instanceof PushReportException) {
                             mConvertToSDKVisitor.setSurveysAsQuarantine();
                             ServerAPIController.banOrgUnitIfRequired();
                         }

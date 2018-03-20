@@ -245,6 +245,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             MenuItem item = menu.findItem(R.id.export_db);
             item.setVisible(false);
         }
+        mBaseActivityStrategy.onPrepareOptionsMenu(menu);
         return true;
     }
 
@@ -429,7 +430,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Logs a debug message using current activity SimpleName as tag. Ex:
      * SurveyActivity => ".SurveyActivity"
      */
-    private void debugMessage(String message) {
+    public void debugMessage(String message) {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 

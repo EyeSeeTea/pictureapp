@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -76,6 +77,44 @@ public class ExportData {
             return null;
         }
         return createEmailIntent(activity, compressedFile);
+    }
+
+    public static Intent dumpAssetFileAndSendToIntent(Activity activity, String filename) {
+        File file = getFileFromAssets(filename, activity);
+        ExportData.removeDumpIfExist(activity);
+        File tempFolder = new File(getCacheDir() + "/" + EXPORT_DATA_FOLDER);
+        tempFolder.mkdir();
+        copyFile(file, new File(tempFolder, file.getName()));
+        //compress and send
+        File compressedFile = compressFolder(tempFolder);
+        if (compressedFile == null) {
+            return null;
+        }
+        return createEmailIntent(activity, compressedFile);
+    }
+
+    private static File getFileFromAssets(String filename, Activity activity) {
+
+        File f = new File(getCacheDir() + "/" + filename);
+        if (!f.exists()) {
+            try {
+
+                InputStream is = activity.getAssets().open(filename);
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+
+
+                FileOutputStream fos = new FileOutputStream(f);
+                fos.write(buffer);
+                fos.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return f;
     }
 
     /**

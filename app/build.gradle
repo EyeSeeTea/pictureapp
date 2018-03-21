@@ -108,8 +108,9 @@ android {
             buildConfigField "boolean", "multiuser", "true"
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
-            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider\""
+            buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.SCMMDBProvider\""
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            resValue "string", "authority", applicationId + versionName + "_SCMM_DHIS2_DEFAULT_AUTHORITY"
         }
     }
     lintOptions {

@@ -2,22 +2,29 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.utils.ExportData;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     static String TAG = "BaseActivityStrategy";
     private static final int MENU_ITEM_LOGOUT = 99;
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
+    private static final int DUMP_REQUEST_TREATMENT = 109;
+    private static final String TREATMENT_TABLE_FILE_NAME = "TreatmentTable.csv";
 
     LogoutUseCase mLogoutUseCase;
     IAuthenticationManager mAuthenticationManager;
@@ -64,6 +71,15 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                                     }
                                 }).create().show();
                 break;
+
+            case R.id.export_treatment_table:
+                mBaseActivity.debugMessage("Export treatment table");
+                Intent emailIntent = ExportData.dumpAssetFileAndSendToIntent(mBaseActivity,
+                        TREATMENT_TABLE_FILE_NAME);
+                if (emailIntent != null) {
+                    mBaseActivity.startActivityForResult(emailIntent, DUMP_REQUEST_TREATMENT);
+                }
+                break;
             default:
                 return false;
         }
@@ -71,6 +87,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void logout() {
+        AlarmPushReceiver.cancelPushAlarm(mBaseActivity);
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
@@ -82,5 +99,14 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 Log.d(TAG, message);
             }
         });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (!PreferencesState.getInstance().isDevelopOptionActive()
+                || !BuildConfig.developerOptions) {
+            MenuItem item = menu.findItem(R.id.export_treatment_table);
+            item.setVisible(false);
+        }
     }
 }

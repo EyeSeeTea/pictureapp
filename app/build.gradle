@@ -97,7 +97,7 @@ android {
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.LADBProvider\""
         }
         myanmar {
-            applicationId 'org.eyeseetea.surveillance_mm_bb'
+            applicationId 'org.eyeseetea.surveillance_mm_dev'
             versionName "1.0.3"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
@@ -108,7 +108,9 @@ android {
             buildConfigField "boolean", "multiuser", "true"
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
-            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider\""
+            buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.SCMMDBProvider\""
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            resValue "string", "authority", applicationId + versionName + "_SCMM_DHIS2_DEFAULT_AUTHORITY"
         }
     }
     lintOptions {
@@ -194,4 +196,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
+    compile (project(path: ':bugshaker')){
+        exclude group:"com.google.android.gms"
+    }
 }

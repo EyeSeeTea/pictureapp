@@ -5,8 +5,10 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -80,7 +82,9 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
             } catch (NumberFormatException exception) {
                 invalids = 1;
             }
-            if (answersMap.get(rdtQuestion).getValue().equals("Invalid")) {
+            if (answersMap.get(rdtQuestion).getValue().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.invalid_option_code))) {
                 rdtUsed = invalids;
             } else {
                 rdtUsed += invalids;

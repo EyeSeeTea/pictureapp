@@ -13,7 +13,7 @@
 
         <provider
             android:name=".data.database.utils.SCMMDBProvider"
-            android:authorities="org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider"
+            android:authorities="${applicationId}.data.database.utils.SCMMDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">

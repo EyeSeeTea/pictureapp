@@ -16,6 +16,6 @@ public class ACT6RowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return Math.round(Float.parseFloat(new SurveyQuestionValue(surveyMonitor.getSurvey()).getACT6Value()));
+        return  (int) Math.ceil(Float.parseFloat(new SurveyQuestionValue(surveyMonitor.getSurvey()).getACT6Value()));
     }
 }

@@ -16,6 +16,6 @@ public class CqRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return Math.round(Float.parseFloat(new SurveyQuestionValue(surveyMonitor.getSurvey()).getCqValue()));
+        return  (int) Math.ceil(Float.parseFloat(new SurveyQuestionValue(surveyMonitor.getSurvey()).getCqValue()));
     }
 }

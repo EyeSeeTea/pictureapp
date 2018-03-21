@@ -161,7 +161,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        int value = 0;
+        float value = 0;
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             Option option = (Option) customRadioButton.getTag();
@@ -180,7 +180,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     PreferencesState.getInstance().getContext().getString(
                             R.string.yes_option_identifier)))
                     && checkedId == customRadioButton.getId()) {
-                value = (int) dose;
+                value =  dose;
             }
 
             if (checkedId == customRadioButton.getId()

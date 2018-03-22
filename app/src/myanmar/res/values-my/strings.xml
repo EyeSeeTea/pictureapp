@@ -329,4 +329,6 @@
 <string name="survey_third_step">"အဆောက်အအုံစစ်တမ်းကုသ matrix ကို..."</string>
 <string name="survey_fourth_step">"စစ်တမ်းဖန်တီးနေ..."</string>
 <string name="export_treatment_table_title">"ပို့ကုန်ကုသမှုစားပွဲပေါ်မှာ"</string>
+<string name="treatment_table_csv">"TreatmentTable.csv"</string>
+<string name="db">"db"</string>
 </resources>

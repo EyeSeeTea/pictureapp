@@ -337,4 +337,6 @@
 <string name="survey_third_step">"Building treatment matrix..."</string>
 <string name="survey_fourth_step">"Creating screens..."</string>
 <string name="export_treatment_table_title">"Export treatments"</string>
+<string name="treatment_table_csv">"TreatmentTable.csv"</string>
+<string name="db">"db"</string>
 </resources>

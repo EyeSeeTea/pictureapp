@@ -78,12 +78,8 @@ public class ExportData {
         }
         String intentMessage = "Local " + PreferencesState.getInstance().getContext().getString(
                 R.string.malaria_case_based_reporting)
-                + " "
-                + PreferencesState.getInstance().getContext().getString(
-                R.string.db)
-                + " "
-                + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
-                Calendar.getInstance().getTime());
+                + " " + PreferencesState.getInstance().getContext().getString(
+                R.string.db) + " " + getTime();
         return createEmailIntent(activity, compressedFile, intentMessage);
     }
 
@@ -100,13 +96,14 @@ public class ExportData {
         }
         String intentMessage = "Local " + PreferencesState.getInstance().getContext().getString(
                 R.string.malaria_case_based_reporting)
-                + " "
-                + PreferencesState.getInstance().getContext().getString(
-                R.string.treatment_table_csv)
-                + " "
-                + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
-                Calendar.getInstance().getTime());
+                + " " + PreferencesState.getInstance().getContext().getString(
+                R.string.treatment_table_csv) + " " + getTime();
         return createEmailIntent(activity, compressedFile, intentMessage);
+    }
+
+    private static String getTime() {
+        return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
+                Calendar.getInstance().getTime());
     }
 
     private static File getFileFromAssets(String filename, Activity activity) {

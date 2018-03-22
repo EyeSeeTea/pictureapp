@@ -323,4 +323,6 @@
 <string name="survey_third_step">"建筑调查处理矩阵"</string>
 <string name="survey_fourth_step">"正在创建调查..."</string>
 <string name="export_treatment_table_title">"出口治疗表"</string>
+<string name="treatment_table_csv">"TreatmentTable.csv"</string>
+<string name="db">"db"</string>
 </resources>

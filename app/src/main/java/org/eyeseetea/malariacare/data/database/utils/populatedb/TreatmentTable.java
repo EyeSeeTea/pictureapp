@@ -117,18 +117,20 @@ public class TreatmentTable {
      */
     private void deleteRelatedTablesLines(TreatmentMatch treatmentMatch) throws IOException {
         Match match = treatmentMatch.getMatch();
-        List<QuestionOption> questionOptions = QuestionOption.getQuestionOptionsWithMatchId(
-                match.getId_match());
+        if (match != null) {
+            List<QuestionOption> questionOptions = QuestionOption.getQuestionOptionsWithMatchId(
+                    match.getId_match());
 
-        for (QuestionOption questionOption : questionOptions) {
-            questionOption.delete();
+            for (QuestionOption questionOption : questionOptions) {
+                questionOption.delete();
+            }
+            List<QuestionThreshold> questionThresholds =
+                    QuestionThreshold.getQuestionThresholdsWithMatch(match.getId_match());
+            for (QuestionThreshold questionThreshold : questionThresholds) {
+                questionThreshold.delete();
+            }
+            match.delete();
         }
-        List<QuestionThreshold> questionThresholds =
-                QuestionThreshold.getQuestionThresholdsWithMatch(match.getId_match());
-        for (QuestionThreshold questionThreshold : questionThresholds) {
-            questionThreshold.delete();
-        }
-        match.delete();
     }
 
     private void splitTreatmentTableToCsvs() throws IOException {

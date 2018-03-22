@@ -76,7 +76,15 @@ public class ExportData {
         if (compressedFile == null) {
             return null;
         }
-        return createEmailIntent(activity, compressedFile);
+        String intentMessage = "Local " + PreferencesState.getInstance().getContext().getString(
+                R.string.malaria_case_based_reporting)
+                + " "
+                + PreferencesState.getInstance().getContext().getString(
+                R.string.db)
+                + " "
+                + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
+                Calendar.getInstance().getTime());
+        return createEmailIntent(activity, compressedFile, intentMessage);
     }
 
     public static Intent dumpAssetFileAndSendToIntent(Activity activity, String filename) {
@@ -90,7 +98,15 @@ public class ExportData {
         if (compressedFile == null) {
             return null;
         }
-        return createEmailIntent(activity, compressedFile);
+        String intentMessage = "Local " + PreferencesState.getInstance().getContext().getString(
+                R.string.malaria_case_based_reporting)
+                + " "
+                + PreferencesState.getInstance().getContext().getString(
+                R.string.treatment_table_csv)
+                + " "
+                + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
+                Calendar.getInstance().getTime());
+        return createEmailIntent(activity, compressedFile, intentMessage);
     }
 
     private static File getFileFromAssets(String filename, Activity activity) {
@@ -270,15 +286,12 @@ public class ExportData {
     /**
      * This method create the email intent
      */
-    private static Intent createEmailIntent(Activity activity, File data) {
+    private static Intent createEmailIntent(Activity activity, File data, String message) {
         final Uri uri = FileProvider.getUriForFile(activity, BuildConfig.AuthoritiesProvider, data);
 
         final Intent chooser = ShareCompat.IntentBuilder.from(activity)
                 .setType("application/zip")
-                .setSubject("Local " + PreferencesState.getInstance().getContext().getString(
-                        R.string.malaria_case_based_reporting)
-                        + " db " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
-                        Calendar.getInstance().getTime()))
+                .setSubject(message)
                 .setStream(uri)
                 .setChooserTitle(
                         activity.getResources().getString(R.string.export_data_option_title))

@@ -161,9 +161,14 @@ public class PullControllerStrategy extends APullControllerStrategy {
             throws IOException, WarningException {
         currentUser.setCanAddSurveys(true);
         userDataSource.saveLoggedUser(currentUser);
-
+        try{
         if (isNetworkAvailable()) {
             downloadMetadataFromConfigurationFiles(userProgram);
+        }
+        }catch (WarningException e){
+            currentUser.setCanAddSurveys(false);
+            userDataSource.saveLoggedUser(currentUser);
+            throw e;
         }
     }
 

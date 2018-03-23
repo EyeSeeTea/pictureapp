@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class MetadataConfigurationDBImporter {
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
+                throw new WarningException(exception.getMessage());
             }
         }
     }

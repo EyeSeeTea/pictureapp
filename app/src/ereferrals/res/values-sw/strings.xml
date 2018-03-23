@@ -1006,4 +1006,5 @@ Ameahidi kuhudhuria"</string>
 <string name="error_unable_to_download_configuration_files">Haiwezi kupakua faili za usanidi</string>
 <string name="error_unable_to_download_translations_and_configuration_files">Haiwezi kupakua tafsiri na faili za usanidi</string>
 <string name="upgrading_metadata">Kuboresha metadata</string>
+<string name="warning_message">"WARNING:: "</string>
 </resources>

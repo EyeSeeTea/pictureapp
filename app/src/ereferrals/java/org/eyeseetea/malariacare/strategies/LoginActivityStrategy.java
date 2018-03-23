@@ -486,6 +486,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onWarning(WarningException warning) {
                 Log.w(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
+                loginActivity.showError(
+                        loginActivity.getString(R.string.warning_message) + warning.getMessage());
             }
 
             @Override

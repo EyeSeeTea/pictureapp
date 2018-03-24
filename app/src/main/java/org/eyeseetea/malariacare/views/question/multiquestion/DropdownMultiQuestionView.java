@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -117,8 +118,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
-                    if (position > 0)
-                    notifyAnswerChanged(optionDB);
+                    if (position > 0) {
+                        notifyAnswerChanged(optionDB);
+                    }
+                    mDropdownMultiQuestionViewStrategy.onItemSelected(
+                            DropdownMultiQuestionView.this, position);
                 } else {
                     optionSetFromSavedValue = false;
                 }
@@ -138,6 +142,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 return false;
             }
         });
+        mDropdownMultiQuestionViewStrategy.init(this);
     }
 
     public Spinner getSpinnerOptions() {

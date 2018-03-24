@@ -11,6 +11,10 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .ATextMultiQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .TextMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -18,11 +22,12 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText mCustomEditText;
+    ATextMultiQuestionViewStrategy mTextMultiQuestionViewStrategy;
 
 
     public TextMultiQuestionView(Context context) {
         super(context);
-
+        mTextMultiQuestionViewStrategy = new TextMultiQuestionViewStrategy();
         init(context);
     }
 
@@ -79,6 +84,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                mTextMultiQuestionViewStrategy.beforeTextChange(TextMultiQuestionView.this);
             }
 
             @Override
@@ -86,7 +92,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
                 notifyAnswerChanged(String.valueOf(s));
             }
         });
-
+        mTextMultiQuestionViewStrategy.init(this);
     }
 
     public void setInputType(int value) {

@@ -361,6 +361,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                                 .and(Survey_Table.status.withTable(surveyAlias)
                                         .is(Constants.SURVEY_SENT))
                                 .or(Survey_Table.status.withTable(surveyAlias)
+                                        .is(Constants.SURVEY_CONFLICT))
+                                .or(Survey_Table.status.withTable(surveyAlias)
                                         .is(Constants.SURVEY_QUARANTINE))))
                 .orderBy(Survey_Table.event_date, false).queryList();
     }

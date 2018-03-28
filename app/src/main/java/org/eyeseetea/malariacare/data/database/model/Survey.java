@@ -61,7 +61,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
-import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.domain.entity.*;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -971,6 +971,11 @@ public class Survey extends BaseModel implements VisitableToSDK {
             localQuestion = localQuestion.getSibling();
         }
         if (localQuestion.isStockQuestion() || !localQuestion.isCompulsory()) {
+            numRequired--;
+        }
+        org.eyeseetea.malariacare.domain.entity.Treatment treatment = new org.eyeseetea.malariacare.domain.entity.Treatment(Session.getMalariaSurvey(),
+                Session.getStockSurvey());
+        if (!treatment.hasTreatment()) {
             numRequired--;
         }
 

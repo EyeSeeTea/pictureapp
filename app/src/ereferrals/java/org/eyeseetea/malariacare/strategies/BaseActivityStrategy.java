@@ -26,13 +26,17 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -52,6 +56,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     LogoutUseCase mLogoutUseCase;
     private IAuthenticationManager mAuthenticationManager;
     private int notConnectedText = R.string.offline_status;
+    private boolean comesFromNotConected = false;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
@@ -69,13 +74,31 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             connection.setText(notConnected
                     ? R.string.action_bar_offline : R.string.action_bar_online);
             if (notConnected) {
+                comesFromNotConected = true;
                 Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
             } else {
+                if(comesFromNotConected){
+                    showLoginIfUserReadOnlyMode();
+                }
+                comesFromNotConected = false;
                 Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
             }
             DashboardActivity.dashboardActivity.refreshStatus();
         }
     };
+
+    private void showLoginIfUserReadOnlyMode() {
+        IUserRepository userRepository=new UserAccountDataSource();
+        GetUserUserAccountUseCase getUserUserAccountUseCase =new GetUserUserAccountUseCase(userRepository);
+        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
+            @Override
+            public void onGetUserAccount(UserAccount userAccount) {
+                if(!userAccount.canAddSurveys()){
+                    showLogin();
+                }
+            }
+        });
+    }
 
     private void applicationWillEnterForeground() {
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
@@ -271,12 +294,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             showLoginIfConfigFileObsolete(intent);
         }
-
-        private void showLoginIfConfigFileObsolete(Intent intent) {
-            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
-                showLogin();
-            }
-        }
     };
+
+    private void showLoginIfConfigFileObsolete(Intent intent) {
+        if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+            showLogin();
+        }
+    }
 
 }

@@ -97,7 +97,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         EventExtended event = null;
         try {
             //Precondition
-            if (isEmpty(survey)) {
+            if (isEmpty(survey) && survey.getType().equals(Constants.SURVEY_NO_TYPE)) {
                 survey.delete();
                 return;
             }

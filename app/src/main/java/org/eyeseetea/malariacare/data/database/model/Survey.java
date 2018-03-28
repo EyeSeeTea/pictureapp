@@ -962,6 +962,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         Program program = Program.getFirstProgram();
         Tab tab = program.getTabs().get(0);
+        if(tab.isMultiQuestionTab()){
+            //First parent is calculated when tab is multiquestiontab
+            numRequired=0;
+        }
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
         while (localQuestion.getSibling() != null) {

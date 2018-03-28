@@ -851,6 +851,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         navigationController.getCurrentTab().getType())) {
                     UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
                     isClicked = false;
+                    mDynamicTabAdapterStrategy.showValidationErrors();
                     return;
                 } else {
                     isClicked = false;

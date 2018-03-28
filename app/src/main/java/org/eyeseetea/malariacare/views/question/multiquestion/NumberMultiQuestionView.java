@@ -11,6 +11,10 @@ import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .ANumberMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .NumberMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -18,10 +22,11 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText numberPicker;
+    private ANumberMultiquestionViewStrategy mNumberMultiquestionViewStrategy;
 
     public NumberMultiQuestionView(Context context) {
         super(context);
-
+        mNumberMultiquestionViewStrategy = new NumberMultiQuestionViewStrategy(this);
         init(context);
     }
 
@@ -70,6 +75,7 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(numberPicker);
+        mNumberMultiquestionViewStrategy.init();
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -81,10 +87,10 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                 } catch (NumberFormatException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_number));
-                    //numberPicker.setError(context.getString(R.string.dynamic_error_number));
                 }
 
                 notifyAnswerChanged(numberPicker.getText().toString());
+                mNumberMultiquestionViewStrategy.afterAnswerChange();
             }
 
             @Override

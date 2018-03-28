@@ -121,11 +121,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                     if (position > 0) {
                         notifyAnswerChanged(optionDB);
                     }
-                    mDropdownMultiQuestionViewStrategy.onItemSelected(
-                            DropdownMultiQuestionView.this, position);
                 } else {
                     optionSetFromSavedValue = false;
                 }
+                mDropdownMultiQuestionViewStrategy.onItemSelected(
+                        DropdownMultiQuestionView.this, position);
             }
 
             @Override
@@ -147,5 +147,23 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
     public Spinner getSpinnerOptions() {
         return spinnerOptions;
+    }
+
+    @Override
+    public void activateQuestion() {
+        setActive(true);
+        Object inputView = this.findViewById(R.id.row_header_text);
+        if (inputView != null) {
+            Validation.getInstance().addInput(inputView);
+        }
+    }
+
+    @Override
+    public void deactivateQuestion() {
+        setActive(false);
+        Object inputView = this.findViewById(R.id.row_header_text);
+        if (inputView != null) {
+            Validation.getInstance().removeInputError(inputView);
+        }
     }
 }

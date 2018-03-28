@@ -80,6 +80,7 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(mCustomEditText);
+        mPhoneMultiquestionViewStrategy.init();
         mPhoneMultiquestionViewStrategy.addTextChangeListener(mCustomEditText);
     }
 }

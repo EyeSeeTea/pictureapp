@@ -27,6 +27,11 @@ public class DropdownMultiQuestionViewStrategy extends ADropdownMultiQuestionVie
         TextView header = (TextView) dropdownMultiQuestionView.findViewById(R.id.row_header_text);
         if (position > 0) {
             Validation.getInstance().removeInputError(header);
+            header.setError(null);
+        } else {
+            Validation.getInstance().addinvalidInput(header,
+                    dropdownMultiQuestionView.getContext().getString(
+                            R.string.error_empty_question));
         }
     }
 }

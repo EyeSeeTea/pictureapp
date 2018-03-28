@@ -17,8 +17,14 @@ public class TextMultiQuestionViewStrategy extends ATextMultiQuestionViewStrateg
     }
 
     @Override
-    public void beforeTextChange(TextMultiQuestionView textMultiQuestionView) {
+    public void afterTextChange(TextMultiQuestionView textMultiQuestionView) {
         EditText editText = (EditText) textMultiQuestionView.findViewById(R.id.answer);
-        Validation.getInstance().removeInputError(editText);
+        if (!editText.getText().toString().isEmpty()) {
+            Validation.getInstance().removeInputError(editText);
+        } else {
+            Validation.getInstance().addinvalidInput(editText,
+                    textMultiQuestionView.getContext().getString(
+                            R.string.error_empty_question));
+        }
     }
 }

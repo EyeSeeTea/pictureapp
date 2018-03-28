@@ -11,6 +11,10 @@ import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChanged
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .AYearSelectorQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .YearSelectorQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.dialogs.YearPicker;
 
 public class YearSelectorQuestionView extends CommonQuestionView implements IQuestionView,
@@ -22,11 +26,13 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
     private Activity mActivity;
     private String TAG = "YearPicker";
     private boolean enabled;
+    private AYearSelectorQuestionViewStrategy mYearSelectorQuestionViewStrategy;
 
     public YearSelectorQuestionView(Context context) {
         super(context);
         mActivity = (Activity) context;
         enabled = true;
+        mYearSelectorQuestionViewStrategy = new YearSelectorQuestionViewStrategy(this);
         init(context);
     }
 
@@ -87,12 +93,14 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             }
         });
         yearText.setFocusable(true);
+        mYearSelectorQuestionViewStrategy.init();
     }
 
     protected void notifyAnswerChanged(String newValue) {
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
+        mYearSelectorQuestionViewStrategy.afterTextChange();
     }
 
     public interface onAnswerChangedListener {

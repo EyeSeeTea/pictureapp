@@ -14,6 +14,8 @@ import org.eyeseetea.malariacare.views.DatePickerFragment;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .DatePickerQuestionViewStrategy;
 
 
 public class DatePickerQuestionView extends CommonQuestionView implements IQuestionView,
@@ -25,12 +27,14 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     private Activity mActivity;
     private String TAG = "DatePickerQuestionView";
     private boolean enabled;
+    private DatePickerQuestionViewStrategy mDatePickerQuestionViewStrategy;
 
 
     public DatePickerQuestionView(Context context) {
         super(context);
         mActivity = (Activity) context;
         enabled = true;
+        mDatePickerQuestionViewStrategy = new DatePickerQuestionViewStrategy(this);
         init(context);
     }
 
@@ -70,6 +74,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
+        mDatePickerQuestionViewStrategy.onAnswerChange();
     }
 
     @Override
@@ -105,6 +110,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
             }
         });
         dateText.setFocusable(true);
+        mDatePickerQuestionViewStrategy.init();
     }
 
 }

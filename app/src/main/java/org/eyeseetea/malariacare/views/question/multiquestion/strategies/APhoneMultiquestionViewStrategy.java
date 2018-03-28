@@ -59,4 +59,7 @@ public abstract class APhoneMultiquestionViewStrategy {
         }
     }
 
+    public void init() {
+    }
+
 }

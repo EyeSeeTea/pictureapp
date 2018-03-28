@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetPhoneFormatUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrategy {
     public PhoneMultiquestionViewStrategy(
@@ -67,5 +68,14 @@ public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrat
                 Log.e(getClass().getName(), "Error getting phone fromat");
             }
         });
+    }
+
+    @Override
+    public void init() {
+        EditText customEditText = (CustomEditText) mPhoneMultiQuestionView.findViewById(
+                R.id.answer);
+        Validation.getInstance().addinvalidInput(customEditText,
+                mPhoneMultiQuestionView.getContext().getString(
+                        R.string.dynamic_error_phone_format));
     }
 }

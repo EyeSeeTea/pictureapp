@@ -67,6 +67,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                 propagateQuestion.insertValue(rdtStockValue.getValue(),
                         Session.getMalariaSurvey()).save();
             }
+            Session.getStockSurvey().complete();
         }
     }
 

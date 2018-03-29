@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.remote.strategies.AAuthenticationDhisSDKDataSourceStrategy;
+import org.eyeseetea.malariacare.data.remote.strategies.AuthenticationDhisSDKDataSourceStrategy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -24,9 +26,11 @@ import rx.schedulers.Schedulers;
 
 public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSource {
     private Context mContext;
+    private AAuthenticationDhisSDKDataSourceStrategy mAuthenticationDhisSDKDataSourceStrategy;
 
     public AuthenticationDhisSDKDataSource(Context context) {
         mContext = context;
+        mAuthenticationDhisSDKDataSourceStrategy = new AuthenticationDhisSDKDataSourceStrategy();
     }
 
     @Override
@@ -82,10 +86,9 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                         @Override
                         public void call(
                                 org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
-                            UserAccount userAccount = new UserAccount(credentials.getUsername(),
-                                    dhisUserAccount.getUId(),
-                                    credentials.isDemoCredentials());
-                            callback.onSuccess(userAccount);
+                            callback.onSuccess(
+                                    mAuthenticationDhisSDKDataSourceStrategy.createUserAccount(
+                                            dhisUserAccount, credentials));
                         }
                     }, new Action1<Throwable>() {
                         @Override

@@ -222,6 +222,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     private void showLogin() {
         Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
+        loginIntent.putExtra(LoginActivityStrategy.START_PULL, true);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mBaseActivity.startActivity(loginIntent);
     }

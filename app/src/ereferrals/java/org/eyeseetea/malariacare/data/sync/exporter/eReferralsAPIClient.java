@@ -87,25 +87,25 @@ public class eReferralsAPIClient {
         } catch (IOException e) {
             wsClientCallBack.onError(e);
         }
-//        if (response != null && response.code() == 401) {
-//            ConversionException conversionException = new ConversionException(null);
-//            wsClientCallBack.onError(conversionException);
-//        } else if (response != null && response.code() == 402) {
-//            //This exception is created when the the hardcoded credentials was invalid.
-//            InvalidCredentialsException invalidCredentialsException =
-//                    new InvalidCredentialsException();
-//            wsClientCallBack.onError(invalidCredentialsException);
-//        } else if (response != null && response.code() == 209) {
+        if (response != null && response.code() == 401) {
+            ConversionException conversionException = new ConversionException(null);
+            wsClientCallBack.onError(conversionException);
+        } else if (response != null && response.code() == 402) {
+            //This exception is created when the the hardcoded credentials was invalid.
+            InvalidCredentialsException invalidCredentialsException =
+                    new InvalidCredentialsException();
+            wsClientCallBack.onError(invalidCredentialsException);
+        } else if (response != null && response.code() == 209) {
             ConfigFileObsoleteException configFileObsoleteException =
                     new ConfigFileObsoleteException();
             wsClientCallBack.onSuccess(response.body());
             wsClientCallBack.onError(configFileObsoleteException);
-//        } else if (response != null && response.isSuccessful()) {
-//            wsClientCallBack.onSuccess(response.body());
-//        } else {
-//            Log.e(TAG, "Failed response when pushing surveys");
-//            wsClientCallBack.onError(new ConversionException(null));
-//        }
+        } else if (response != null && response.isSuccessful()) {
+            wsClientCallBack.onSuccess(response.body());
+        } else {
+            Log.e(TAG, "Failed response when pushing surveys");
+            wsClientCallBack.onError(new ConversionException(null));
+        }
 
     }
 

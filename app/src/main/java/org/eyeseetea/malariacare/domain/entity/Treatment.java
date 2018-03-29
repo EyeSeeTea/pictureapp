@@ -166,14 +166,18 @@ public class Treatment {
         if (mTreatment != null) {
             putACTDefaultYes();
             mQuestions = getQuestionsForTreatment(mTreatment);
-            saveTreatmentInTreatmentQuestion(mTreatment);
+            String diagnosisMessage = Utils.getInternationalizedString(
+                    String.valueOf(mTreatment.getDiagnosis()));
+            String defaultDiagnosisMessage = Translation.getLocalizedString(mTreatment.getDiagnosis(),
+                    Translation.DEFAULT_LANGUAGE);
+            saveTreatmentInTreatmentQuestion(diagnosisMessage, defaultDiagnosisMessage);
         }
         return mTreatment != null;
     }
 
-    private void putACTDefaultYes() {
+    private static void putACTDefaultYes() {
         Question actHiddenQuestion = Question.findByUID(
-                getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
+                PreferencesState.getInstance().getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
         List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
         Value actValue = null;
         for (Value value : values) {
@@ -183,11 +187,11 @@ public class Treatment {
         }
         if (actValue == null) {
             actValue = new Value(
-                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)),
+                    Option.findByCode(PreferencesState.getInstance().getContext().getString(R.string.dynamic_treatment_yes_code)),
                     actHiddenQuestion, Session.getMalariaSurvey());
         } else {
             actValue.setOption(
-                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)));
+                    Option.findByCode(PreferencesState.getInstance().getContext().getString(R.string.dynamic_treatment_yes_code)));
         }
         actValue.save();
     }
@@ -394,22 +398,17 @@ public class Treatment {
                 getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
     }
 
-    private void saveTreatmentInTreatmentQuestion(
-            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
-        Question treatmentQuestionSend = Question.findByUID(
-                getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
-        Question treatmentQuestionShow = Question.findByUID(
-                getContext().getResources().getString(R.string.treatmentDiagnosisVisibleQuestion));
+    private static void saveTreatmentInTreatmentQuestion(String diangosisMessage, String defaultDiagnosisMessage) {
+        Question treatmentQuestionSend = Question.findByUID(PreferencesState.getInstance().getContext()
+                .getResources().getString(R.string.dynamicTreatmentQuestionUID));
+        Question treatmentQuestionShow = Question.findByUID(PreferencesState.getInstance().getContext()
+                        .getResources().getString(R.string.treatmentDiagnosisVisibleQuestion));
         Survey malariaSurvey = Session.getMalariaSurvey();
         List<Value> values =
                 malariaSurvey.getValues();//this values should be get from memory because the
         // treatment options are in memory
         boolean questionInSurvey = false;
         boolean questionShowInSurvey = false;
-        String diagnosisMessage = Utils.getInternationalizedString(
-                String.valueOf(treatment.getDiagnosis()));
-        String defaultDiagnosisMessage = Translation.getLocalizedString(treatment.getDiagnosis(),
-                Translation.DEFAULT_LANGUAGE);
         for (Value value : values) {
             if (value.getQuestion() == null) {
                 continue;
@@ -420,13 +419,13 @@ public class Treatment {
                 value.save();
             }
             if (value.getQuestion().equals(treatmentQuestionShow)) {
-                value.setValue(diagnosisMessage);
+                value.setValue(diangosisMessage);
                 questionShowInSurvey = true;
                 value.save();
             }
         }
         if (!questionShowInSurvey) {
-            Value value = new Value(diagnosisMessage, treatmentQuestionShow,
+            Value value = new Value(diangosisMessage, treatmentQuestionShow,
                     malariaSurvey);
             value.insert();
         }
@@ -453,8 +452,34 @@ public class Treatment {
                 getContext().getResources().getResourceName(R.string.error_no_treatment));
         treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
+        treatmentQuestion.setTotalQuestions(7);
         questions.add(treatmentQuestion);
-
+        cleanNotTreatmentFound();
         return questions;
+    }
+    public void cleanNotTreatmentFound(){
+        putACTDefaultYes();
+
+        String diagnosisMessage = Utils.getInternationalizedString(
+                String.valueOf(getContext().getResources().getResourceName(R.string.error_no_treatment)));
+        String defaultDiagnosisMessage = Utils.getInternationalizedString(
+                String.valueOf(getContext().getResources().getResourceName(R.string.error_no_treatment)));
+        saveTreatmentInTreatmentQuestion(diagnosisMessage, defaultDiagnosisMessage);
+    }
+    public static void cleanNotTreatmentQuestion(){
+        putACTDefaultYes();
+        saveTreatmentInTreatmentQuestion("", "");
+        String actHiddenQuestion =
+                PreferencesState.getInstance().getContext().getString(R.string.dynamicTreatmentHideQuestionUID);
+        String referallHiddenQuestion =
+                PreferencesState.getInstance().getContext().getString(R.string.referralQuestionUID);
+
+        List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
+        for (Value value : values) {
+            if (value.getQuestion().getUid().equals(actHiddenQuestion)
+                    || value.getQuestion().getUid().equals(referallHiddenQuestion)) {
+                value.delete();
+            }
+        }
     }
 }

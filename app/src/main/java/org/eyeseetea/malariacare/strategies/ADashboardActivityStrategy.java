@@ -34,7 +34,6 @@ public abstract class ADashboardActivityStrategy {
     protected MonitorFragment monitorFragment;
 
     public void onCreate() {
-
     }
 
     public abstract void reloadStockFragment(Activity activity);
@@ -236,5 +235,9 @@ public abstract class ADashboardActivityStrategy {
     }
     public void onConnectivityStatusChange() {
 
+    }
+
+    public void onStart(){
+        SurveyDB.removeInProgress();
     }
 }

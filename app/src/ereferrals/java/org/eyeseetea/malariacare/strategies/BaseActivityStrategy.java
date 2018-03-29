@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +28,7 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -34,6 +36,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -160,11 +163,22 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
                 if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
-                    showLogin();
+                    checkIfSurveyIsOpenAndShowLogin();
                 }
             }
         }
     };
+
+    private void checkIfSurveyIsOpenAndShowLogin() {
+        Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
+                R.id.dashboard_details_container);
+        if (f instanceof SurveyFragment) {
+            Session.setHasSurveyToComplete(true);
+        }else {
+            Session.setHasSurveyToComplete(false);
+        }
+        showLogin();
+    }
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);

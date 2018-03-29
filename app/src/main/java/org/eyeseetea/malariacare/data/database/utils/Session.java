@@ -68,6 +68,8 @@ public class Session {
      * The current phone metadata
      */
     private static PhoneMetaData phoneMetaData;
+
+    private static boolean hasSurveyToComplete;
     /**
      * The exitOfSurvey
      */
@@ -226,5 +228,13 @@ public class Session {
 
     public static void setNavigationController(NavigationController navigationController) {
         sNavigationController = navigationController;
+    }
+
+    public static boolean hasSurveyToComplete() {
+        return hasSurveyToComplete;
+    }
+
+    public static void setHasSurveyToComplete(boolean hasSurveyToComplete) {
+        Session.hasSurveyToComplete = hasSurveyToComplete;
     }
 }

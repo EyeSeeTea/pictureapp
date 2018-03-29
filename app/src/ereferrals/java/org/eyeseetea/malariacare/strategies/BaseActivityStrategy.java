@@ -94,7 +94,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             @Override
             public void onGetUserAccount(UserAccount userAccount) {
                 if(!userAccount.canAddSurveys()){
-                    showLogin();
+                    showLogin(true);
                 }
             }
         });
@@ -183,7 +183,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
                 if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
-                    showLogin();
+                    showLogin(false);
                 }
             }
         }
@@ -233,7 +233,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                showLogin();
+                showLogin(false);
             }
 
             @Override
@@ -243,9 +243,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         });
     }
 
-    private void showLogin() {
+    private void showLogin(boolean pull) {
         Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
-        loginIntent.putExtra(LoginActivityStrategy.START_PULL, true);
+        loginIntent.putExtra(LoginActivityStrategy.START_PULL, pull);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mBaseActivity.startActivity(loginIntent);
     }
@@ -298,7 +298,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     private void showLoginIfConfigFileObsolete(Intent intent) {
         if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
-            showLogin();
+            showLogin(true);
         }
     }
 

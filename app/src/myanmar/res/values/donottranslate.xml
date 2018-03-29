@@ -43,6 +43,7 @@
     <string name="dynamicTreatmentQuestionUID" translatable="false">yPACdIBZEeZ</string>
     <string name="stockRDTQuestionUID" translatable="false">FGG1GvvS8Xg</string>
     <string name="confirmInvalidQuestionUID" translatable="false">lhJLBNebHcz</string>
+    <string name="negativeQuestionUID" translatable="false">NoDataElementNegative</string>
     <string name="residenceVillageUID" translatable="false">NoDataElementOrgUnit</string>
     <string name="patientResidenceVillageOtherCode" translatable="false">Dropdown parent</string>
     <string name="myanmar_locale" translatable="false">my</string>

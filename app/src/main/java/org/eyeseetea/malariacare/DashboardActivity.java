@@ -89,6 +89,8 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isReadOnly = false;
 
+    private String currentTabId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -122,7 +124,7 @@ public class DashboardActivity extends BaseActivity {
             @Override
             public void onTabChanged(String tabId) {
                 /** If current tab is android */
-
+                currentTabId = tabId;
                 //set the tabs background as transparent
                 setTabsBackgroundColor(R.color.tab_unpressed_background);
 
@@ -160,6 +162,29 @@ public class DashboardActivity extends BaseActivity {
         }
 
         getSurveysFromService();
+        currentTabId = getResources().getString(R.string.tab_tag_assess);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (currentTabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
+            if (!isReadOnly) {
+                unsentFragment.reloadData();
+            }
+            unsentFragment.reloadHeader(dashboardActivity);
+        } else if (currentTabId.equalsIgnoreCase(
+                getResources().getString(R.string.tab_tag_improve))) {
+            sentFragment.reloadData();
+            sentFragment.reloadHeader(dashboardActivity);
+        } else if (currentTabId.equalsIgnoreCase(
+                getResources().getString(R.string.tab_tag_stock))) {
+            mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
+        } else if (currentTabId.equalsIgnoreCase(
+                getResources().getString(R.string.tab_tag_monitor))) {
+            monitorFragment.reloadData();
+            monitorFragment.reloadHeader(dashboardActivity);
+        }
     }
 
     public void setTabHostsWithText() {

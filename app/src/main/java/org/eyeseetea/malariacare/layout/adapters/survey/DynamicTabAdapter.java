@@ -475,6 +475,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     doseByQuestion = treatment.getDoseByQuestion();
                 } else {
                     screenQuestions = treatment.getNoTreatmentQuestions();
+                    navigationController.setTotalPages(7);
                 }
 
             } else if (Tab.isMultiQuestionTab(tabType)) {
@@ -1002,6 +1003,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Question question = navigationController.getCurrentQuestion();
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
+                    if (question!=null && (question.isNegative() || question.isRDT())){
+                        Treatment.cleanNotTreatmentQuestion();
+                        Session.getMalariaSurvey().deleteStockValues();
+                        for(Value stockValue:Session.getStockSurvey().getValuesFromDB()){
+                            if(stockValue.getQuestion()!=null && !stockValue.getQuestion().isRDT()){
+                                stockValue.delete();
+                            }
+                        }
+                    }
                     navigationController.isMovingToForward = false;
                     if (!wasPatientTested() || !BuildConfig.reviewScreen) {
                         surveyShowDone();

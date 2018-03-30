@@ -752,7 +752,7 @@
 <string name="feedback_view_image">"तस्वीर खोल्नुहोस् ..."</string>
 <string name="drive_title">"ड्राइभ मूल फोल्डर"</string>
 <string name="new_survey_disable">"नयाँ संस्करणको मेटाडाटा स्थापना गर्न सकिएन किनकि त्यहाँ पठाउन बाँकी सर्वेक्षणहरू छन् । नयाँ सर्वेक्षण बटम अस्थायी रूपमा निस्क्रिय गरिएको छ । "</string>
-<string name="csv_version">"\"CVS संस्करण:% s "</string>
+<string name="config_version">"\"Config संस्करण:% s "</string>
 <string name="av_progress">"सामग्री डाउनलोड गर्दै ... कृपया प्रतीक्षा गर्नुहोस्"</string>
 <string name="ipc_issueEntry_q_eventType">"भरिएको बेला"</string>
 <string name="ipc_issueEntry_q_heardAbout">"जानकारी स्रोत"</string>

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
@@ -20,12 +21,12 @@ public class AppInfoDataSource implements IAppInfoRepository {
 
     @Override
     public AppInfo getAppInfo() {
-        return new AppInfo(getMetadataVersion(), getAppVersion());
+        return new AppInfo(getMetadataVersion(), getConfigFileVersion(), getAppVersion());
     }
 
     @Override
     public void getAppInfo(IDataSourceCallback<AppInfo> callback) {
-        callback.onSuccess(new AppInfo(getMetadataVersion(), getAppVersion()));
+        callback.onSuccess(new AppInfo(getMetadataVersion(), getConfigFileVersion(), getAppVersion()));
     }
 
     @Override
@@ -41,6 +42,10 @@ public class AppInfoDataSource implements IAppInfoRepository {
             Log.e(TAG, "Error getting metadata version: " + e.getMessage());
         }
         return null;
+    }
+    //TODO Replace  getMetadataVersion with this implentation
+    public String getConfigFileVersion() {
+           return String.valueOf(CountryVersionDB.getMetadataVersion());
     }
 
     private String getAppVersion() {

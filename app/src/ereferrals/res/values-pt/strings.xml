@@ -748,7 +748,7 @@
 <string name="feedback_view_image">"Abrir imagen com…"</string>
 <string name="drive_title">"Unidade pasta principal"</string>
 <string name="new_survey_disable">"A nova versão de metadata não foi instalada porque há formulários pendentes por enviar. O botão do novo formulário temporariamente desabilitado."</string>
-<string name="csv_version">"CSV versão: %s"</string>
+<string name="config_version">"Config versão: %s"</string>
 <string name="av_progress">"Baixando conteúdo…por favor aguarde"</string>
 <string name="ipc_issueEntry_q_eventType">"Preenchido durante"</string>
 <string name="ipc_issueEntry_q_heardAbout">"Fonte de informação"</string>

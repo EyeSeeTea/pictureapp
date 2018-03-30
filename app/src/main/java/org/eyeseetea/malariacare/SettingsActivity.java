@@ -35,7 +35,6 @@ import android.util.DisplayMetrics;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
@@ -278,10 +277,7 @@ public class SettingsActivity extends PreferenceActivity implements
         List<String> entries = new ArrayList<>();
         List<String> entryValues = new ArrayList<>();
 
-        for (FontStyle fontStyle:FontStyle.values()) {
-            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
-            entryValues.add(String.valueOf(fontStyle.getResId()));
-        }
+        mSettingsActivityStrategy.addFontStyleEntries(entries, entryValues);
 
         listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
         listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));

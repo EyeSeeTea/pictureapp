@@ -26,6 +26,9 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.stkent.bugshaker.BugShaker;
+import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
+import com.github.stkent.bugshaker.github.GitHubConfiguration;
 import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
@@ -72,6 +75,7 @@ public class EyeSeeTeaApplication extends Application {
                 .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
                 .build();
         FlowManager.init(flowConfig);
+        initBugShaker();
     }
 
     @Override
@@ -118,5 +122,19 @@ public class EyeSeeTeaApplication extends Application {
 
     public void setIsBackPressed(boolean isBackPressed) {
         EyeSeeTeaApplication.isBackPressed = isBackPressed;
+    }
+
+    private void initBugShaker() {
+        BugShaker.get(this)
+                .setEmailAddresses("someone@example.com")
+                .setLoggingEnabled(BuildConfig.DEBUG)
+                .setAlertDialogType(AlertDialogType.APP_COMPAT)
+                .setGitHubInfo(new GitHubConfiguration(
+                        "eyeseetea/pictureapp",
+                        BuildConfig.GIT_HUB_BOT_TOKEN,
+                        "eyeseeteabottest/snapshots",
+                        "master"))
+                .assemble()
+                .start();
     }
 }

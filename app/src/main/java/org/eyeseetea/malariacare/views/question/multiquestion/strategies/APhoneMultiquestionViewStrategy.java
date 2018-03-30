@@ -58,8 +58,4 @@ public abstract class APhoneMultiquestionViewStrategy {
             onAnswerChangedListener.onAnswerChanged(mPhoneMultiQuestionView, value);
         }
     }
-
-    public void init() {
-    }
-
 }

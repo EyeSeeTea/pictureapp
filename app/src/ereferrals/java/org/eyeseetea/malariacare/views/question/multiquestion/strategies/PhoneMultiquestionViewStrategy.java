@@ -69,13 +69,4 @@ public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrat
             }
         });
     }
-
-    @Override
-    public void init() {
-        EditText customEditText = (CustomEditText) mPhoneMultiQuestionView.findViewById(
-                R.id.answer);
-        Validation.getInstance().addinvalidInput(customEditText,
-                mPhoneMultiQuestionView.getContext().getString(
-                        R.string.dynamic_error_phone_format));
-    }
 }

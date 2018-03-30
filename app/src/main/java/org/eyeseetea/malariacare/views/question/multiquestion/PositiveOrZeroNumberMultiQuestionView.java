@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
@@ -13,10 +14,6 @@ import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberExc
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .APositiveOrZeroNumberMultiQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .PositiveOrZeroNumberMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -27,13 +24,8 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
     CustomEditText numberPicker;
     PositiveOrZeroNumber positiveOrZeroNumber;
 
-    private APositiveOrZeroNumberMultiQuestionViewStrategy
-            mPositiveOrZeroNumberMultiQuestionViewStrategy;
-
     public PositiveOrZeroNumberMultiQuestionView(Context context) {
         super(context);
-        mPositiveOrZeroNumberMultiQuestionViewStrategy =
-                new PositiveOrZeroNumberMultiQuestionViewStrategy(this);
         init(context);
     }
 
@@ -81,7 +73,14 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
-        mPositiveOrZeroNumberMultiQuestionViewStrategy.init();
+        if (BuildConfig.validationInline) {
+            if (!numberPicker.getText().toString().isEmpty()) {
+                Validation.getInstance().removeInputError(numberPicker);
+            } else {
+                Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        }
         Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
@@ -96,7 +95,11 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_age));
                 }
-                mPositiveOrZeroNumberMultiQuestionViewStrategy.afterTextChange();
+                if (BuildConfig.validationInline) {
+                    Validation.getInstance().addInput(numberPicker);
+                    Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
+                            R.string.error_empty_question));
+                }
             }
 
             @Override

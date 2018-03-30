@@ -14,24 +14,4 @@ public class DropdownMultiQuestionViewStrategy extends ADropdownMultiQuestionVie
         super(context);
     }
 
-    @Override
-    public void init(DropdownMultiQuestionView dropdownMultiQuestionView) {
-        TextView header = (TextView) dropdownMultiQuestionView.findViewById(R.id.row_header_text);
-        Validation.getInstance().addInput(header);
-        Validation.getInstance().addinvalidInput(header,
-                dropdownMultiQuestionView.getContext().getString(R.string.error_empty_question));
-    }
-
-    @Override
-    public void onItemSelected(DropdownMultiQuestionView dropdownMultiQuestionView, int position) {
-        TextView header = (TextView) dropdownMultiQuestionView.findViewById(R.id.row_header_text);
-        if (position > 0) {
-            Validation.getInstance().removeInputError(header);
-            header.setError(null);
-        } else {
-            Validation.getInstance().addinvalidInput(header,
-                    dropdownMultiQuestionView.getContext().getString(
-                            R.string.error_empty_question));
-        }
-    }
 }

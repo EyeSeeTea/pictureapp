@@ -17,12 +17,4 @@ public abstract class ADropdownMultiQuestionViewStrategy {
     public OptionDB getDefaultOption(QuestionDB questionDB) {
         return new OptionDB(Constants.DEFAULT_SELECT_OPTION);
     }
-
-    public void init(DropdownMultiQuestionView dropdownMultiQuestionView){
-
-    }
-
-    public void onItemSelected(DropdownMultiQuestionView dropdownMultiQuestionView, int position) {
-
-    }
 }

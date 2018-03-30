@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -124,8 +125,15 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 } else {
                     optionSetFromSavedValue = false;
                 }
-                mDropdownMultiQuestionViewStrategy.onItemSelected(
-                        DropdownMultiQuestionView.this, position);
+                if (BuildConfig.validationInline) {
+                    if (position > 0) {
+                        Validation.getInstance().removeInputError(header);
+                        header.setError(null);
+                    } else {
+                        Validation.getInstance().addinvalidInput(header, getContext().getString(
+                                R.string.error_empty_question));
+                    }
+                }
             }
 
             @Override
@@ -142,7 +150,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 return false;
             }
         });
-        mDropdownMultiQuestionViewStrategy.init(this);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addInput(header);
+            Validation.getInstance().addinvalidInput(header,
+                    getResources().getString(R.string.error_empty_question));
+        }
     }
 
     public Spinner getSpinnerOptions() {

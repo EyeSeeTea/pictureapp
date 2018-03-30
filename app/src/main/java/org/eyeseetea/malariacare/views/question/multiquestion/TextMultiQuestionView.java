@@ -6,15 +6,13 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .ATextMultiQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .TextMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -22,12 +20,10 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText mCustomEditText;
-    ATextMultiQuestionViewStrategy mTextMultiQuestionViewStrategy;
 
 
     public TextMultiQuestionView(Context context) {
         super(context);
-        mTextMultiQuestionViewStrategy = new TextMultiQuestionViewStrategy();
         init(context);
     }
 
@@ -80,7 +76,14 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         mCustomEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                mTextMultiQuestionViewStrategy.afterTextChange(TextMultiQuestionView.this);
+                if (BuildConfig.validationInline) {
+                    if (!mCustomEditText.getText().toString().isEmpty()) {
+                        Validation.getInstance().removeInputError(mCustomEditText);
+                    } else {
+                        Validation.getInstance().addinvalidInput(mCustomEditText,
+                                getContext().getString(R.string.error_empty_question));
+                    }
+                }
             }
 
             @Override
@@ -92,7 +95,11 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
                 notifyAnswerChanged(String.valueOf(s));
             }
         });
-        mTextMultiQuestionViewStrategy.init(this);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addInput(mCustomEditText);
+            Validation.getInstance().addinvalidInput(mCustomEditText, getContext().getString(
+                    R.string.error_empty_question));
+        }
     }
 
     public void setInputType(int value) {

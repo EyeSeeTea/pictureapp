@@ -5,16 +5,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .ANumberMultiquestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .NumberMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -22,11 +19,9 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText numberPicker;
-    private ANumberMultiquestionViewStrategy mNumberMultiquestionViewStrategy;
 
     public NumberMultiQuestionView(Context context) {
         super(context);
-        mNumberMultiquestionViewStrategy = new NumberMultiQuestionViewStrategy(this);
         init(context);
     }
 
@@ -75,7 +70,10 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(numberPicker);
-        mNumberMultiquestionViewStrategy.init();
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addinvalidInput(numberPicker,
+                    getContext().getString(R.string.dynamic_error_number));
+        }
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -90,7 +88,6 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                 }
 
                 notifyAnswerChanged(numberPicker.getText().toString());
-                mNumberMultiquestionViewStrategy.afterAnswerChange();
             }
 
             @Override

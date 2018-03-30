@@ -5,16 +5,14 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .AYearSelectorQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .YearSelectorQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.dialogs.YearPicker;
 
 public class YearSelectorQuestionView extends CommonQuestionView implements IQuestionView,
@@ -26,13 +24,11 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
     private Activity mActivity;
     private String TAG = "YearPicker";
     private boolean enabled;
-    private AYearSelectorQuestionViewStrategy mYearSelectorQuestionViewStrategy;
 
     public YearSelectorQuestionView(Context context) {
         super(context);
         mActivity = (Activity) context;
         enabled = true;
-        mYearSelectorQuestionViewStrategy = new YearSelectorQuestionViewStrategy(this);
         init(context);
     }
 
@@ -93,14 +89,26 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             }
         });
         yearText.setFocusable(true);
-        mYearSelectorQuestionViewStrategy.init();
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addInput(yearText);
+            Validation.getInstance().addinvalidInput(yearText, getContext().getString(
+                    R.string.error_empty_question));
+        }
     }
 
     protected void notifyAnswerChanged(String newValue) {
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
-        mYearSelectorQuestionViewStrategy.afterTextChange();
+        if (BuildConfig.validationInline) {
+            if (!yearText.getText().toString().isEmpty()) {
+                Validation.getInstance().removeInputError(yearText);
+                yearText.setError(null);
+            } else {
+                Validation.getInstance().addinvalidInput(yearText, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        }
     }
 
     public interface onAnswerChangedListener {

@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -148,18 +149,26 @@ public class PullControllerStrategy extends APullControllerStrategy {
             } catch (IOException e) {
                 e.printStackTrace();
                 callback.onError(e);
+            } catch (WarningException e) {
+                e.printStackTrace();
+                callback.onWarning(e);
             }
         }
     }
 
     private void downloadMetadataAndRepopulateDB(IUserRepository userDataSource,
             UserAccount currentUser, Program userProgram)
-            throws IOException {
+            throws IOException, WarningException {
         currentUser.setCanAddSurveys(true);
         userDataSource.saveLoggedUser(currentUser);
-
+        try{
         if (isNetworkAvailable()) {
             downloadMetadataFromConfigurationFiles(userProgram);
+        }
+        }catch (WarningException e){
+            currentUser.setCanAddSurveys(false);
+            userDataSource.saveLoggedUser(currentUser);
+            throw e;
         }
     }
 
@@ -172,13 +181,16 @@ public class PullControllerStrategy extends APullControllerStrategy {
     }
 
     private void downloadMetadataFromConfigurationFiles(
-            Program actualProgram) {
+            Program actualProgram) throws WarningException {
         try {
             downloadAsyncLanguagesFromServer();
             importer.importMetadata(actualProgram);
+        }catch (WarningException e1){
+            throw e1;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public void downloadAsyncLanguagesFromServer() throws Exception {

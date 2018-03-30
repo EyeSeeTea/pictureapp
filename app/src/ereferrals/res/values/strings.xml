@@ -1107,5 +1107,7 @@
 <string name="error_unable_to_download_translations">Unable to download translations</string>
 <string name="error_unable_to_download_configuration_files">Unable to download configuration files</string>
 <string name="error_unable_to_download_translations_and_configuration_files">Unable to download translations and configuration files</string>
+<string name="upgrading_metadata">Upgrading metadata</string>
+<string name="warning_message">"WARNING: "</string>
 
 </resources>

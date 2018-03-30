@@ -113,6 +113,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "validationInline", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -136,6 +137,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "validationInline", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -159,6 +161,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "validationInline", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_bb'
@@ -184,6 +187,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
+            buildConfigField "boolean", "validationInline", "true"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -207,6 +211,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "validationInline", "false"
         }
 
     }

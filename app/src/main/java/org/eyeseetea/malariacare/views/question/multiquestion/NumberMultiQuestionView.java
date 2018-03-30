@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -21,7 +22,6 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
 
     public NumberMultiQuestionView(Context context) {
         super(context);
-
         init(context);
     }
 
@@ -70,6 +70,10 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(numberPicker);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addinvalidInput(numberPicker,
+                    getContext().getString(R.string.dynamic_error_number));
+        }
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -81,7 +85,6 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                 } catch (NumberFormatException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_number));
-                    //numberPicker.setError(context.getString(R.string.dynamic_error_number));
                 }
 
                 notifyAnswerChanged(numberPicker.getText().toString());

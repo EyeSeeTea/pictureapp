@@ -100,4 +100,7 @@ public abstract class ADynamicTabAdapterStrategy {
 
     public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB){
     }
+
+    public void showValidationErrors(){
+    }
 }

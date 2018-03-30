@@ -164,7 +164,7 @@ android {
             buildConfigField "boolean", "validationInline", "false"
         }
         ereferrals {
-            applicationId 'org.eyeseetea.surveillance_ref_bb'
+            applicationId 'org.eyeseetea.surveillance_ref_dev'
             versionName "1.1.2"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"

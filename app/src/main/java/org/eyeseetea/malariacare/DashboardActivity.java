@@ -135,23 +135,7 @@ public class DashboardActivity extends BaseActivity {
                 if (isReviewFragmentActive()) {
                     exitReviewOnChangeTab(null);
                 }
-                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    if (!isReadOnly) {
-                        unsentFragment.reloadData();
-                    }
-                    unsentFragment.reloadHeader(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_improve))) {
-                    sentFragment.reloadData();
-                    sentFragment.reloadHeader(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_stock))) {
-                    mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_monitor))) {
-                    monitorFragment.reloadData();
-                    monitorFragment.reloadHeader(dashboardActivity);
-                }
+                reloadFragmentData();
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));
             }
@@ -168,6 +152,10 @@ public class DashboardActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        reloadFragmentData();
+    }
+
+    private void reloadFragmentData(){
         if (currentTabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
             if (!isReadOnly) {
                 unsentFragment.reloadData();

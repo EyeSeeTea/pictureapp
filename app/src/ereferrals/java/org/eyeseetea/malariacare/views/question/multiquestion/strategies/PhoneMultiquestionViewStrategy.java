@@ -18,7 +18,6 @@ import org.eyeseetea.malariacare.domain.usecase.GetPhoneFormatUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
-import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrategy {
     public PhoneMultiquestionViewStrategy(

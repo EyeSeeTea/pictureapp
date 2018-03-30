@@ -5,7 +5,6 @@ import android.content.Context;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 
 public abstract class ADropdownMultiQuestionViewStrategy {
     protected Context mContext;
@@ -17,4 +16,5 @@ public abstract class ADropdownMultiQuestionViewStrategy {
     public OptionDB getDefaultOption(QuestionDB questionDB) {
         return new OptionDB(Constants.DEFAULT_SELECT_OPTION);
     }
+
 }

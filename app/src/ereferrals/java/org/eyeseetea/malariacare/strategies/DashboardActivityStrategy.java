@@ -18,7 +18,8 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth
+        .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -73,6 +74,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
@@ -229,6 +231,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         //Look for coordinates
         prepareLocationListener(activity, survey);
         mDashboardActivity.initSurvey();
+    }
+
+    private void openUncompletedSurvey() {
+        SurveyDB survey;
+        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+        if (!uncompletedSurveys.isEmpty()) {
+            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
+            Session.setMalariaSurveyDB(survey);
+            //Look for coordinates
+            prepareLocationListener(mDashboardActivity, survey);
+            mDashboardActivity.initSurvey();
+        }
     }
 
     @Override
@@ -590,5 +604,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void onConnectivityStatusChange() {
         downloadMedia();
+    }
+
+    @Override
+    public void onStart() {
+        if (Session.hasSurveyToComplete()) {
+            openUncompletedSurvey();
+            Session.setHasSurveyToComplete(false);
+        } else {
+            SurveyDB.removeInProgress();
+        }
     }
 }

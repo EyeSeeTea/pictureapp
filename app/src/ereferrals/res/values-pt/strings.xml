@@ -948,5 +948,5 @@
 <string name="error_unable_to_download_translations_and_configuration_files">Não é possível baixar traduções e arquivos de configuração</string>
 <string name="upgrading_metadata">Atualizando metadados</string>
 <string name="warning_message">"ATENÇÃO: "</string>
-<string name="error_empty_question">"Erro na pergunta vazia"</string>
+<string name="error_empty_question">"Campo obrigatório vazio"</string>
 </resources>

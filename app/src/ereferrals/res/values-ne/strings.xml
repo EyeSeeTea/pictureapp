@@ -953,5 +953,5 @@
 <string name="error_unable_to_download_translations_and_configuration_files">अनुवादहरू र कन्फिगरेसन फाइलहरू डाउनलोड गर्न असमर्थ</string>
 <string name="upgrading_metadata">मेटाडेटा स्तरवृद्धि गर्दै</string>
 <string name="warning_message">"चेतावनी: "</string>
-<string name="error_empty_question">"त्रुटि प्रश्न खाली छ"</string>
+<string name="error_empty_question">"अनिवार्य क्षेत्र खाली गर्नुहोस्"</string>
 </resources>

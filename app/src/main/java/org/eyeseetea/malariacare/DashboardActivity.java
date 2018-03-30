@@ -708,7 +708,6 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onCreate();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
-        SurveyDB.removeInProgress();
         if (savedInstanceState == null) {
             initImprove();
             if(GradleVariantConfig.isMonitoringFragmentActive()) {
@@ -788,6 +787,12 @@ public class DashboardActivity extends BaseActivity {
                 ex.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDashboardActivityStrategy.onStart();
     }
 
     /**

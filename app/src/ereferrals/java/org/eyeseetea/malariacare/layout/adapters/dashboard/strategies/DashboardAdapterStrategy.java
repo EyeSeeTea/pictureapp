@@ -140,9 +140,10 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     private boolean hasPhone(SurveyDB survey) {
         Context context = PreferencesState.getInstance().getContext();
-        return !(survey.getOptionSelectedForQuestionCode(
-                context.getString(R.string.phone_ownership_qc)).getName().equals(
-                context.getString(R.string.no_phone_on)));
+        OptionDB optionDB = (survey.getOptionSelectedForQuestionCode(
+                context.getString(R.string.phone_ownership_qc)));
+        return optionDB != null && !optionDB.getName().equals(
+                context.getString(R.string.no_phone_on));
         }
 }
 

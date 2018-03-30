@@ -280,7 +280,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void showAbout(final int titleId, int rawId, final Context context) {
         final String stringMessage = mBaseActivity.getMessageWithCommit(rawId, context);
-        final IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         GetAppInfoUseCase getAppInfoUseCase = new GetAppInfoUseCase(mainExecutor, asyncExecutor,
@@ -291,7 +291,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
                         String.format(context.getResources().getString(R.string.config_version),
-                                appInfoDataSource.getConfigFileVersion()));
+                                appInfo.getConfigFileVersion()));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(
                         Html.fromHtml(aboutBuilder.toString()));

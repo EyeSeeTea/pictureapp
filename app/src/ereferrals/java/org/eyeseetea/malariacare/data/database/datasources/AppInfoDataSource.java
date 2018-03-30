@@ -21,12 +21,12 @@ public class AppInfoDataSource implements IAppInfoRepository {
 
     @Override
     public AppInfo getAppInfo() {
-        return new AppInfo(getMetadataVersion(), getAppVersion());
+        return new AppInfo(getMetadataVersion(), getConfigFileVersion(), getAppVersion());
     }
 
     @Override
     public void getAppInfo(IDataSourceCallback<AppInfo> callback) {
-        callback.onSuccess(new AppInfo(getMetadataVersion(), getAppVersion()));
+        callback.onSuccess(new AppInfo(getMetadataVersion(), getConfigFileVersion(), getAppVersion()));
     }
 
     @Override

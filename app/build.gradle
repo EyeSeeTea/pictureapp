@@ -188,6 +188,7 @@ android {
             buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
             buildConfigField "boolean", "validationInline", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_bb'
@@ -308,4 +309,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
+    compile(project(path: ':bugshaker')) {
+        exclude group: "com.google.android.gms"
+    }
 }

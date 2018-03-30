@@ -162,4 +162,12 @@ public class CountryVersionDB extends BaseModel {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+    public static int getMetadataVersion() {
+        CountryVersionDB countryVersionDB = new Select(CountryVersionDB_Table.version)
+                .from(CountryVersionDB.class)
+                .querySingle();
+
+        return (countryVersionDB != null) ? countryVersionDB.getVersion() : 0;
+    }
 }

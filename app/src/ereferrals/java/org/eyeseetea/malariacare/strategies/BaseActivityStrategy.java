@@ -290,8 +290,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             public void onAppInfoLoaded(AppInfo appInfo) {
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
-                        String.format(context.getResources().getString(R.string.csv_version),
-                                appInfo.getMetadataVersion()));
+                        String.format(context.getResources().getString(R.string.config_version),
+                                appInfo.getConfigFileVersion()));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(
                         Html.fromHtml(aboutBuilder.toString()));

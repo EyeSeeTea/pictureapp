@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -80,6 +81,10 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(mCustomEditText);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addinvalidInput(mCustomEditText, getContext().getString(
+                    R.string.dynamic_error_phone_format));
+        }
         mPhoneMultiquestionViewStrategy.addTextChangeListener(mCustomEditText);
     }
 }

@@ -7,14 +7,15 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.views.DatePickerFragment;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-
 
 public class DatePickerQuestionView extends CommonQuestionView implements IQuestionView,
         IMultiQuestionView {
@@ -70,6 +71,16 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
+        if(BuildConfig.validationInline) {
+            if (dateText.getText().toString().isEmpty()) {
+                Validation.getInstance().addinvalidInput(dateText,
+                        getResources().getString(
+                                R.string.error_empty_question));
+            } else {
+                Validation.getInstance().removeInputError(dateText);
+                dateText.setError(null);
+            }
+        }
     }
 
     @Override
@@ -105,6 +116,11 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
             }
         });
         dateText.setFocusable(true);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addInput(dateText);
+            Validation.getInstance().addinvalidInput(dateText, getResources().getString(
+                    R.string.error_empty_question));
+        }
     }
 
 }

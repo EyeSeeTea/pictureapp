@@ -175,7 +175,7 @@
     <string name="ws_unknown_exception">Unknown exception.</string>
     <string name="feedback_view_image">Öppna bild med...</string>
     <string name="drive_title">Kör rotmapp</string>
-    <string name="csv_version">CVS Version: %s \n</string>
+    <string name="config_version">Config Version: %s \n</string>
     <string name="av_progress">Hämtar innehåll ... vänligen vänta</string>
     <string name="new_survey_disable">Toleo jipya la metadata halikuweza kufungwa kwa sababu kuna tafiti zinazojitokeza kutuma. Kipindi kipya cha utafiti kinazima</string>
 
@@ -1005,4 +1005,7 @@ Ameahidi kuhudhuria"</string>
     <string name="error_unable_to_download_translations">Haiwezi kupakua tafsiri</string>
     <string name="error_unable_to_download_configuration_files">Haiwezi kupakua faili za usanidi</string>
     <string name="error_unable_to_download_translations_and_configuration_files">Haiwezi kupakua tafsiri na faili za usanidi</string>
+<string name="upgrading_metadata">Kuboresha metadata</string>
+<string name="warning_message">"WARNING:: "</string>
+<string name="error_empty_question">"Weka shamba la lazima"</string>
 </resources>

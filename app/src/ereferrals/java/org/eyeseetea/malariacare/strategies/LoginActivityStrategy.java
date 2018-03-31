@@ -56,6 +56,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final java.lang.String TAG = ".LoginActivityStrategy";
     public static final java.lang.String EXIT = "exit";
+    public static final String START_PULL = "StartPull";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
     private View serverURLContainer;
@@ -185,8 +186,19 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             loginActivity.getUsernameEditText().setText("");
 
                         }
+                        launchUpgradeMetadataIfComeFrom209();
                     }
                 });
+    }
+
+
+    private void launchUpgradeMetadataIfComeFrom209() {
+        if (loginActivity.getIntent() != null && loginActivity.getIntent().getBooleanExtra(
+                START_PULL, false)) {
+            loginActivity.showProgressBar();
+            launchPull(false);
+            loginActivity.findViewById(R.id.progress_message).setVisibility(View.VISIBLE);
+        }
     }
 
     private void initLogoutButton() {
@@ -474,6 +486,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onWarning(WarningException warning) {
                 Log.w(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
+                loginActivity.showError(
+                        loginActivity.getString(R.string.warning_message) + warning.getMessage());
             }
 
             @Override

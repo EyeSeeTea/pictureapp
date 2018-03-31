@@ -124,4 +124,12 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
         }
     }
 
+    @Override
+    public void showValidationErrors() {
+        if (Validation.hasErrors()) {
+            Validation.showErrors();
+            DynamicTabAdapter.setIsClicked(false);
+            return;
+        }
+    }
 }

@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
@@ -117,6 +118,8 @@ public class WSPushController implements IPushController {
                         int status = Constants.SURVEY_CONFLICT;
                         if (e instanceof NetworkException) {
                             status = Constants.SURVEY_COMPLETED;
+                        } else if (e instanceof ConfigFileObsoleteException) {
+                            status = Constants.SURVEY_SENT;
                         }
                         changeSurveysStatusTo(status);
                         mCallback.onError(e);

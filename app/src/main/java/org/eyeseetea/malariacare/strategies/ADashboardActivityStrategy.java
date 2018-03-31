@@ -37,7 +37,6 @@ public abstract class ADashboardActivityStrategy {
     protected MonitorFragment monitorFragment;
 
     public void onCreate() {
-
     }
 
     public abstract void reloadStockFragment(Activity activity);
@@ -337,5 +336,9 @@ public abstract class ADashboardActivityStrategy {
             tabHost.getTabWidget().getChildAt(i).setBackgroundColor(
                     mDashboardActivity.getResources().getColor(color));
         }
+    }
+
+    public void onStart(){
+        SurveyDB.removeInProgress();
     }
 }

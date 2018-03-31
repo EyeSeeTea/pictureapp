@@ -25,7 +25,12 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
+import org.eyeseetea.malariacare.utils.CustomFontStyles;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
+
+import java.util.List;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -172,4 +177,12 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             }
         }
     };
+
+    @Override
+    public void addFontStyleEntries(List<String> entries, List<String> entryValues) {
+        for (CustomFontStyles fontStyle:CustomFontStyles.values()) {
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
+            entryValues.add(String.valueOf(fontStyle.getResId()));
+        }
+    }
 }

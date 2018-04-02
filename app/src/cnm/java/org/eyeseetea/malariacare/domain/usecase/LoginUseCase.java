@@ -40,22 +40,33 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             onErrorCallback(mCallback,
                     new IllegalArgumentException("Credentials could not be null"));
         } else {
-            mAuthenticationManager.login(mCredentials,
-                    new IAuthenticationManager.Callback<UserAccount>() {
-                        @Override
-                        public void onSuccess(UserAccount userAccount) {
-                            if (!mCredentials.isDemoCredentials()) {
-                                logoutAndHardcodedLogin(mCredentials, mCallback);
-                            } else {
-                                mCallback.onLoginSuccess();
-                            }
-                        }
+            mAuthenticationManager.logout(new IAuthenticationManager.Callback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    mAuthenticationManager.login(mCredentials,
+                            new IAuthenticationManager.Callback<UserAccount>() {
+                                @Override
+                                public void onSuccess(UserAccount userAccount) {
+                                    if (mCredentials.isDemoCredentials()) {
+                                        logoutAndHardcodedLogin(mCredentials, mCallback);
+                                    } else {
+                                        mCallback.onLoginSuccess();
+                                    }
+                                }
 
-                        @Override
-                        public void onError(Throwable throwable) {
-                            onErrorCallback(mCallback, throwable);
-                        }
-                    });
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    onErrorCallback(mCallback, throwable);
+                                }
+                            });
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    onErrorCallback(mCallback, throwable);
+                }
+            });
+
         }
     }
 

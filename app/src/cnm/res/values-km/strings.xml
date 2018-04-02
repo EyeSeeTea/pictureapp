@@ -302,4 +302,5 @@
 <string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
 <string name="tab_stock">"ហ៊ុន"</string>
+<string name="ipc_issueEntry_q_patient_weight">ទម្ងន់ (គីឡូក្រាម)</string>
 </resources>

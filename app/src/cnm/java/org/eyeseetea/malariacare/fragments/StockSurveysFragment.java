@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -187,27 +188,32 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
     public void initAddButtons() {
         final ImageButton addReceipt = (ImageButton) mView.findViewById(R.id.add_receipt_survey);
         final ImageButton addExpense = (ImageButton) mView.findViewById(R.id.add_expense_survey);
+        final LinearLayout receiptContainer =
+                (LinearLayout) mView.findViewById(R.id.add_receipt_container);
+        final LinearLayout expenseContainer = (LinearLayout) mView.findViewById(
+                R.id.add_expense_container);
+        ;
         mView.findViewById(R.id.add_stock_survey).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isAddShowing) {
-                    hideAddMenu(addReceipt, addExpense);
+                    hideAddMenu(receiptContainer, expenseContainer);
                 } else {
-                    showAddMenu(addReceipt, addExpense);
+                    showAddMenu(receiptContainer, expenseContainer);
                 }
             }
         });
         addReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideAddMenu(addReceipt, addExpense);
+                hideAddMenu(receiptContainer, expenseContainer);
                 mStockSurveysPresenter.onAddReceiptClick();
             }
         });
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideAddMenu(addReceipt, addExpense);
+                hideAddMenu(receiptContainer, expenseContainer);
                 mStockSurveysPresenter.onAddExpenseClick();
             }
         });
@@ -218,22 +224,26 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         showNewReceiptBalanceFragment(type);
     }
 
-    private void showAddMenu(ImageButton receiptButton,
-            ImageButton expenseButton) {
+    private void showAddMenu(LinearLayout receiptContainer,
+            LinearLayout expenseContainer) {
         isAddShowing = true;
-        receiptButton.animate().translationY(
+        receiptContainer.animate().translationY(
                 -getActivity().getResources().getDimension(
                         R.dimen.smaller_translation));
-        expenseButton.animate().translationY(
+        expenseContainer.animate().translationY(
                 -getActivity().getResources().getDimension(
                         R.dimen.bigger_translation));
+        mView.findViewById(R.id.add_receipt_text).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.add_expense_text).setVisibility(View.VISIBLE);
     }
 
-    private void hideAddMenu(ImageButton receiptButton,
-            ImageButton expenseButton) {
+    private void hideAddMenu(LinearLayout receiptContainer,
+            LinearLayout expenseContainer) {
         isAddShowing = false;
-        receiptButton.animate().translationY(0);
-        expenseButton.animate().translationY(0);
+        receiptContainer.animate().translationY(0);
+        expenseContainer.animate().translationY(0);
+        mView.findViewById(R.id.add_receipt_text).setVisibility(View.GONE);
+        mView.findViewById(R.id.add_expense_text).setVisibility(View.GONE);
     }
 
 

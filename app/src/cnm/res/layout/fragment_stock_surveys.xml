@@ -23,13 +23,6 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/ic_menu_add_receipt" />
 
-        <ImageButton
-            android:id="@+id/add_balance_survey"
-            android:layout_width="@dimen/stock_mini_fab_buttons_size"
-            android:layout_height="@dimen/stock_mini_fab_buttons_size"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_menu_add_balance" />
 
         <ImageButton
             android:id="@+id/add_expense_survey"

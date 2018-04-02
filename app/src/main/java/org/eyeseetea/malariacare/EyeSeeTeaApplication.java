@@ -60,17 +60,6 @@ public class EyeSeeTeaApplication extends Application {
         super.onCreate();
         Log.d(TAG, "onCreate");
         mInstance = this;
-        BugShaker.get(this)
-                .setEmailAddresses("someone@example.com")
-                .setLoggingEnabled(BuildConfig.DEBUG)
-                .setAlertDialogType(AlertDialogType.APP_COMPAT)
-                .setGitHubInfo(new GitHubConfiguration(
-                        "eyeseetea/pictureapp",
-                        BuildConfig.GIT_HUB_BOT_TOKEN,
-                        "eyeseeteabottest/snapshots",
-                        "master"))
-                .assemble()
-                .start();
 
         //Apply for Release build
         if (!BuildConfig.DEBUG) {

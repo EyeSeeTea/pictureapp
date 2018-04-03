@@ -54,7 +54,7 @@ public class DateFilterTest {
     }
 
     public static Calendar toCalendar(Date date) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Madrid"));
+        Calendar cal = Calendar.getInstance(new Locale("en","UK"));
         cal.setTime(date);
         return cal;
     }
@@ -71,7 +71,7 @@ public class DateFilterTest {
     }
 
     public Date getToDateAfterDays(Date date, Integer day) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Madrid"));
+        Calendar cal = Calendar.getInstance(new Locale("en","UK"));
         cal.setTime(date);
         cal.add(Calendar.DATE, day);
         return cal.getTime();
@@ -156,5 +156,5 @@ public class DateFilterTest {
         System.out.println("test 4: Invalid date");
         assertFalse(mSurveyFilter.isDateBetweenDates(endDateOut, filterStart, filterEnd));
     }
-    
+
 }

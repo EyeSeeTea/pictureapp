@@ -20,13 +20,9 @@ android:
   - sys-img-armeabi-v7a-android-22
   - extra-android-support
 script:
-- "./gradlew --no-daemon testCnmDebugUnitTest --stacktrace"
-- "ls -la app"
-- "ls -la app/src/cnm/res/raw/"
+- "./gradlew --no-daemon testCnmDebugUnitTest"
 before_script:
 - "./travis_before_script.sh"
-- "ls -la app"
-- "ls -la app/src/cnm/res/raw/"
 notifications:
   slack:
     secure: V8Wxde5RTNbNiOzulv6idvMpbWtjVc4DPwApjAgfDI01OD6nLkuogr/z3qqyKbA/uwWnzu5g7+vegFtSdjW1z32kiIO0bO2c0m2L/E542D1/zmWT9N0IPghQIZ+9BAj1ZrgG286tiX85lSV8uLy0r9bAefPWlbdrHhirYi3cTsI=

@@ -54,7 +54,7 @@ public class DateFilterTest {
     }
 
     public static Calendar toCalendar(Date date) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Madrid"));
         cal.setTime(date);
         return cal;
     }

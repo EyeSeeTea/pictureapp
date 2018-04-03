@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateFilterTest {
     DateFilter mSurveyFilter;
@@ -53,7 +54,7 @@ public class DateFilterTest {
     }
 
     public static Calendar toCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.setTime(date);
         return cal;
     }

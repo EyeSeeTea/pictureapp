@@ -2,8 +2,6 @@ language: android
 sudo: false
 jdk:
 - oraclejdk8
-#branches:
-#- master
 android:
   components:
   - tools
@@ -24,8 +22,9 @@ script:
 before_script:
 - "./travis_before_script.sh"
 notifications:
-  #slack: eyeseetea:QKoFVvp1SBfdedLtD5OiKe2B
   email: true
+  slack:
+    secure: UBpdguE3WEoG0nUIBaSZO4gDANbjQVhPLy0eb8XKI8O01pZJLMr9zxdMYApvzETc/n+Ij9EM0/TtVB1p+e1U0KTB/MSDstwgnFaVE+Gs3z3Loh4KxOkH+6kjzjWy/S8frCBCbMTH2GMy1FXFHMfIbb8eGYTpGCIPv/3tJon5cFrf0rlx7vcvk5pGXLnLQxypx3wlq+UMG55uLY+ZjPShhpRCtqZ49shu/tsfEcs6xFuJx/lVSvvfn5aJ9QdKNSbQphnpaf0x2V6w4N63Cii3fY2a5BSmJvivv9MBt+C5FPO0nerbRMOPUoYD9FORUFuicS9UFgCxckNREJfYAz1VgFduOjKTdsJ4Y0hdgaoZE8ItyRMtTeAxg8JbTug9UM5j65ctxL/RjNA9bXBk9//QldFnVFkr6mzPzMpzs/PCguFhV9ZJ6zlv9Eh9YRkmkmKFvIZzSFvGeMJPYDgxK4DL+AILfjQvu1hiDeriOMp28O5WtfmlsgtojFv29R8+NSWQsaaYmf0mZ0KEUtoNuQ7v/uwHC/Yt8p5bwC00RlO9x58vDw0GY0LDAvUgthKPwZU9bSSYfPW+xbivb9yDhvGOSq3tm6iWEpYptY+BDSEtB4DZ9TtQWXPWuS4o8e/XfosfgKGnkPNqUAuN9EDtKCEK4adufMtDh4AAFI6uAb8jbFE=
 cache:
   directories:
   - "$HOME/.m2"

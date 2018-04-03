@@ -46,6 +46,7 @@ public class DateFilterTest {
 
     @Before
     public void setup() {
+        //Set european locale date to force the start date of week in monday.
         Locale.setDefault(new Locale("es", "ES"));
         mSurveyFilter = new DateFilter();
     }
@@ -55,7 +56,7 @@ public class DateFilterTest {
     }
 
     public static Calendar toCalendar(Date date) {
-        Calendar cal = Calendar.getInstance(new Locale("en","UK"));
+        Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
     }
@@ -72,7 +73,7 @@ public class DateFilterTest {
     }
 
     public Date getToDateAfterDays(Date date, Integer day) {
-        Calendar cal = Calendar.getInstance(new Locale("en","UK"));
+        Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.add(Calendar.DATE, day);
         return cal.getTime();

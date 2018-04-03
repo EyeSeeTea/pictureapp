@@ -21,6 +21,8 @@ android:
   - extra-android-support
 script:
 - "./gradlew --no-daemon testCnmDebugUnitTest --stacktrace"
+- "ls -la app"
+- "ls -la app/src/cnm/res/raw/"
 before_script:
 - "./travis_before_script.sh"
 - "ls -la app"

@@ -46,6 +46,7 @@ public class DateFilterTest {
 
     @Before
     public void setup() {
+        Locale.setDefault(new Locale("es", "ES"));
         mSurveyFilter = new DateFilter();
     }
 

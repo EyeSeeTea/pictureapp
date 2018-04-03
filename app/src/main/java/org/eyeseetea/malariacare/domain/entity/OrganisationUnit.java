@@ -24,7 +24,7 @@ public class OrganisationUnit {
     public OrganisationUnit(String uid, String name, String description, Date closedDate) {
         this.uid = required(uid,"UID is required");
         this.name = required(name,"Name is required");
-        this.description = required(description,"Description is required");
+        this.description = description;
         this.closedDate = closedDate;
     }
 

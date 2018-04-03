@@ -71,7 +71,7 @@ public class DateFilterTest {
     }
 
     public Date getToDateAfterDays(Date date, Integer day) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Madrid"));
         cal.setTime(date);
         cal.add(Calendar.DATE, day);
         return cal.getTime();

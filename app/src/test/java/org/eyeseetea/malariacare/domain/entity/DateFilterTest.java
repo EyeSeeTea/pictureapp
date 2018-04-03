@@ -156,4 +156,5 @@ public class DateFilterTest {
         System.out.println("test 4: Invalid date");
         assertFalse(mSurveyFilter.isDateBetweenDates(endDateOut, filterStart, filterEnd));
     }
+    
 }

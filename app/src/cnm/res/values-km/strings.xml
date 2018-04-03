@@ -302,4 +302,7 @@
 <string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
 <string name="tab_stock">"ហ៊ុន"</string>
+<string name="ipc_issueEntry_q_mcs_rdt_stock">"ភាគហ៊ុន RDT ចេញ?"</string>
+<string name="common_option_tested">"សាកល្បង"</string>
+<string name="common_option_stock_out">"RDT ស្តុកចេញ"</string>
 </resources>

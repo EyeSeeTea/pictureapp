@@ -24,7 +24,7 @@ script:
 before_script:
 - "./travis_before_script.sh"
 notifications:
-    slack: eyeseetea:QKoFVvp1SBfdedLtD5OiKe2B
+  #slack: eyeseetea:QKoFVvp1SBfdedLtD5OiKe2B
   email: true
 cache:
   directories:

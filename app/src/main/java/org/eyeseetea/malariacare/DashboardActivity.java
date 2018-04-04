@@ -161,8 +161,7 @@ public class DashboardActivity extends BaseActivity {
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
                 context.getResources().getDrawable(R.drawable.tab_improve));
         if (GradleVariantConfig.isStockFragmentActive()) {
-            setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getDrawable(R.drawable.tab_stock));
+            mDashboardActivityStrategy.setStockTab(tabHost);
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,

@@ -310,4 +310,6 @@
 <string name="common_option_non_mobile">"Non mobile"</string>
 <string name="common_option_mobile">"Mobile"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">Pregnant Months</string>
+<string name="add_new_receipt">Add new receipt</string>
+<string name="add_new_expense">Add new expense</string>
 </resources>

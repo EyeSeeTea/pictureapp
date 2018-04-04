@@ -302,4 +302,6 @@
 <string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
 <string name="tab_stock">"ហ៊ុន"</string>
+<string name="add_new_receipt">បន្ថែមវិក័យប័ត្រថ្មី</string>
+<string name="add_new_expense">បន្ថែមការចំណាយថ្មី</string>
 </resources>

@@ -42,10 +42,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
     StockSurveysFragment stockFragment;
+    private boolean showStock;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
         mDashboardActivity = dashboardActivity;
+        showStock = false;
     }
 
     @Override
@@ -55,24 +57,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-        if (stockFragment != null && stockFragment.isAdded()) {
-            stockFragment.reloadHeader(activity);
-            stockFragment.reloadData();
-        } else {
-            showStockFragment(activity, false);
+        if (showStock) {
+            if (stockFragment != null && stockFragment.isAdded()) {
+                stockFragment.reloadHeader(activity);
+                stockFragment.reloadData();
+            } else {
+                showStockFragment(activity, false);
+            }
         }
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        if (stockFragment == null) {
-            stockFragment = new StockSurveysFragment();
+        if (showStock) {
+            if (stockFragment == null) {
+                stockFragment = new StockSurveysFragment();
+            }
+            mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+                    stockFragment);
+            stockFragment.reloadData();
+            stockFragment.reloadHeader(activity);
         }
-        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
-                stockFragment);
-        stockFragment.reloadData();
-        stockFragment.reloadHeader(activity);
-
         return isMoveToLeft;
     }
 
@@ -273,6 +278,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         new HasToGenerateStockProgramUseCase.Callback() {
                             @Override
                             public void hasToCreateStock(boolean create) {
+                                showStock = create;
                                 if (create) {
                                     addStockTab(tabHost);
                                 }

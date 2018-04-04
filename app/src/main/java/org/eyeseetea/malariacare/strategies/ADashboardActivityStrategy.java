@@ -5,13 +5,19 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -331,11 +337,39 @@ public abstract class ADashboardActivityStrategy {
         }
     }
 
-    private void setTabsBackgroundColor(int color, TabHost tabHost) {
+    protected void setTabsBackgroundColor(int color, TabHost tabHost) {
         //set the tabs background as transparent
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setBackgroundColor(
                     mDashboardActivity.getResources().getColor(color));
         }
+    }
+
+    public void setStockTab(TabHost tabHost) {
+        setTab(tabHost, mDashboardActivity.getResources().getString(R.string.tab_tag_stock),
+                R.id.tab_stock_layout,
+                mDashboardActivity.getResources().getDrawable(R.drawable.tab_stock));
+    }
+
+    protected void setTab(TabHost tabHost, String tabName, int layout, Drawable image) {
+        TabHost.TabSpec tab = tabHost.newTabSpec(tabName);
+        tab.setContent(layout);
+        tab.setIndicator("", image);
+        tabHost.addTab(tab);
+        addTagToLastTab(tabHost, tabName);
+    }
+
+    private void addTagToLastTab(TabHost tabHost, String tabName) {
+        TabWidget tabWidget = tabHost.getTabWidget();
+        int numTabs = tabWidget.getTabCount();
+        ViewGroup tabIndicator = (ViewGroup) tabWidget.getChildTabViewAt(numTabs - 1);
+
+        ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
+        imageView.setTag(tabName);
+        TextView textView = (TextView) tabIndicator.getChildAt(1);
+        textView.setGravity(Gravity.CENTER);
+        textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+
     }
 }

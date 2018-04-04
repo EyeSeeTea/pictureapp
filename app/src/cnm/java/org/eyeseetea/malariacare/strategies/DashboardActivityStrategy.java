@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
 
@@ -20,16 +21,16 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
-
 
 import java.util.Date;
 
@@ -255,5 +256,48 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         tabHost.getTabWidget().setLeftStripDrawable(R.drawable.background_odd);
     }
 
+    @Override
+    public void setStockTab(final TabHost tabHost) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+                programRepository, mainExecutor, asyncExecutor);
+        final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
+                new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
+                        programRepository);
+        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                hasToGenerateStockProgramUseCase.execute(uid,
+                        new HasToGenerateStockProgramUseCase.Callback() {
+                            @Override
+                            public void hasToCreateStock(boolean create) {
+                                if (create) {
+                                    addStockTab(tabHost);
+                                }
+                            }
+                        });
+            }
 
+            @Override
+            public void onError() {
+                Log.e(getClass().getName(), "Error getting program");
+            }
+        });
+    }
+
+    private void addStockTab(TabHost tabHost) {
+        setTab(tabHost, mDashboardActivity.getResources().getString(
+                R.string.tab_tag_stock),
+                R.id.tab_stock_layout,
+                mDashboardActivity.getResources().getDrawable(
+                        R.drawable.tab_stock));
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount();
+                i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(
+                    R.drawable.tab_below_line);
+        }
+    }
 }

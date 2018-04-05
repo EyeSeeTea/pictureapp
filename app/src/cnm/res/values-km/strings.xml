@@ -305,4 +305,7 @@
 <string name="add_new_receipt">បន្ថែមវិក័យប័ត្រថ្មី</string>
 <string name="add_new_expense">បន្ថែមការចំណាយថ្មី</string>
 <string name="ipc_issueEntry_q_patient_weight">ទម្ងន់ (គីឡូក្រាម)</string>
+<string name="ipc_issueEntry_q_mcs_rdt_stock">"ភាគហ៊ុន RDT ចេញ?"</string>
+<string name="common_option_tested">"សាកល្បង"</string>
+<string name="common_option_stock_out">"RDT ស្តុកចេញ"</string>
 </resources>

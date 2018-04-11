@@ -98,7 +98,7 @@ android {
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
-            versionName "1.0.5"
+            versionName "1.0.6"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"

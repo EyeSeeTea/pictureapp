@@ -1580,6 +1580,10 @@ public class Question extends BaseModel {
         return uid_question.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
     }
 
+    public boolean isNegative() {
+        return uid_question.equals(getContext().getString(R.string.negativeQuestionUID));
+    }
+
     public boolean isACT6() {
         return uid_question.equals(getContext().getString(R.string.act6QuestionUID));
     }
@@ -1823,6 +1827,10 @@ public class Question extends BaseModel {
                 ", visible=" + visible +
                 ", path=" + path +
                 '}';
+    }
+
+    public static  List<Question> getQuestionsWithoutHeader(){
+        return  new Select().from(Question.class).where(Question_Table.id_header_fk.isNull()).queryList();
     }
 
     public List<Question> getPropagationQuestions() {

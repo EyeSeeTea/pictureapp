@@ -310,4 +310,9 @@
 <string name="common_option_non_mobile">"Non mobile"</string>
 <string name="common_option_mobile">"Mobile"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">Pregnant Months</string>
+    <string-array name="languages_strings">
+        <item>System defined</item>
+        <item>English</item>
+        <item>Khmer</item>
+    </string-array>
 </resources>

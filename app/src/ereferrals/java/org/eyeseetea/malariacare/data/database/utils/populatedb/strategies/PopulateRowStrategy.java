@@ -1,9 +1,16 @@
 package org.eyeseetea.malariacare.data.database.utils.populatedb.strategies;
 
-public class PopulateRowStartegy extends APopulateRowStrategy {
+import android.support.annotation.Nullable;
+
+import org.eyeseetea.malariacare.data.database.model.PartnerDB;
+import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
+
+import java.util.HashMap;
+
+public class PopulateRowStrategy extends APopulateRowStrategy {
 
     @Override
-    public  TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
+    public TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
             @Nullable TreatmentDB treatmentDB) {
         if (treatmentDB == null) {
             treatmentDB = new TreatmentDB();

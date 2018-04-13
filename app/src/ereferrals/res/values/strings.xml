@@ -1108,4 +1108,11 @@
     <string name="error_unable_to_download_configuration_files">Unable to download configuration files</string>
     <string name="error_unable_to_download_translations_and_configuration_files">Unable to download translations and configuration files</string>
 
+    <string-array name="languages_strings">
+        <item>System defined</item>
+        <item>English</item>
+        <item>Portuguese</item>
+        <item>Nepali</item>
+        <item>Swahili</item>
+    </string-array>
 </resources>

@@ -51,7 +51,7 @@ public class eReferralsAPIClient {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        mOkHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor)
+        mOkHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
                 .readTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
                 .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)

@@ -587,4 +587,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void onConnectivityStatusChange() {
         downloadMedia();
     }
+
+    public void initStockControlFragment() {
+
+    }
 }

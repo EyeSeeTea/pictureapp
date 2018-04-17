@@ -117,6 +117,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -140,6 +141,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -163,6 +165,7 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
@@ -188,6 +191,8 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
@@ -213,6 +218,7 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             resValue "string", "authority", applicationId + versionName + "_CNM_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "boolean", "activeStockControlFragment", "true"
         }
 
     }

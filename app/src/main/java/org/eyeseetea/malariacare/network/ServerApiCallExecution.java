@@ -84,7 +84,7 @@ class BasicAuthenticator implements Authenticator {
             credentials = AuthenticationApiStrategy.getApiCredentials();
         } catch (ConfigJsonIOException e) {
             throw new ApiCallException(e);
-        } catch (LanguagesDownloadException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ApiCallException(e);
         }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.utils.Constants;
 

@@ -5,6 +5,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 
+import java.util.List;
+
 
 public class ProgramLocalDataSource implements IProgramRepository {
 
@@ -22,6 +24,16 @@ public class ProgramLocalDataSource implements IProgramRepository {
                         PreferencesEReferral.getUserProgramId());
         Program program = new Program(databaseProgramDB.getName(), databaseProgramDB.getUid());
         return program;
+    }
+
+    @Override
+    public Program getProgramWithId(String programId) {
+        return null;
+    }
+
+    @Override
+    public List<Program> getRelatedPrograms(String programId) {
+        return null;
     }
 
 

@@ -338,4 +338,8 @@ public abstract class ADashboardActivityStrategy {
                     mDashboardActivity.getResources().getColor(color));
         }
     }
+
+    public void initStockControlFragment() {
+
+    }
 }

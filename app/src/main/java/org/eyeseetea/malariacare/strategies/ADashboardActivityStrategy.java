@@ -325,6 +325,7 @@ public abstract class ADashboardActivityStrategy {
                         mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
             }
         });
+
         // init tabHost
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);

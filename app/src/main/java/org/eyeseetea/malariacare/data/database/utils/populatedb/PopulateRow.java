@@ -21,7 +21,7 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.APopulateRowStrategy;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.PopulateRowStartegy;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.PopulateRowStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -192,7 +192,7 @@ public class PopulateRow {
      */
     static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
  @Nullable TreatmentDB treatmentDB) {
-        APopulateRowStrategy populateRowStrategy = new PopulateRowStartegy();
+        APopulateRowStrategy populateRowStrategy = new PopulateRowStrategy();
         return populateRowStrategy.populateTreatments(line, organisationFK,
                 treatmentDB);
     }

@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 
 import java.util.HashMap;
 
-public class PopulateRowStartegy extends APopulateRowStrategy {
+public class PopulateRowStrategy extends APopulateRowStrategy {
 
     @Override
     public TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,

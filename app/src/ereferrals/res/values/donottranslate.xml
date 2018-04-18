@@ -65,4 +65,11 @@
     <p>sh ${gitPath}/generate_last_commit.sh </p>
     <p>3. Run "git checkout". </p>]]>
     </string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>pt</item>
+        <item>ne</item>
+        <item>sw</item>
+    </string-array>
 </resources>

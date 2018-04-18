@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class PopulateRowStartegy extends APopulateRowStrategy {
 
     @Override
-    public  TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
+    public TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
             @Nullable TreatmentDB treatmentDB) {
         if (treatmentDB == null) {
             treatmentDB = new TreatmentDB();

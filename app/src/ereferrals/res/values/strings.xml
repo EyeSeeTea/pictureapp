@@ -1111,4 +1111,11 @@
 <string name="warning_message">"WARNING: "</string>
 
 <string name="error_empty_question">"Empty mandatory field"</string>
+    <string-array name="languages_strings">
+        <item>System defined</item>
+        <item>English</item>
+        <item>Portuguese</item>
+        <item>Nepali</item>
+        <item>Swahili</item>
+    </string-array>
 </resources>

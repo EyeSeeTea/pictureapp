@@ -302,4 +302,9 @@
 <string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
 <string name="tab_stock">"ហ៊ុន"</string>
+    <string-array name="languages_strings">
+        <item>បានកំណត់ប្រព័ន្ធ</item>
+        <item>អង់គ្លេស</item>
+        <item>ភាសាខ្មែរ</item>
+    </string-array>
 </resources>

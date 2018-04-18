@@ -951,4 +951,11 @@
     <string name="error_unable_to_download_translations">अनुवादहरू डाउनलोड गर्न असमर्थ</string>
     <string name="error_unable_to_download_configuration_files">विन्यास फाईल डाउनलोड गर्न असमर्थ</string>
     <string name="error_unable_to_download_translations_and_configuration_files">अनुवादहरू र कन्फिगरेसन फाइलहरू डाउनलोड गर्न असमर्थ</string>
+    <string-array name="languages_strings">
+        <item>प्रणाली परिभाषित</item>
+        <item>अंग्रेजी</item>
+        <item>पोर्तुगल</item>
+        <item>नेपाली</item>
+        <item>स्वाहिली</item>
+    </string-array>
 </resources>

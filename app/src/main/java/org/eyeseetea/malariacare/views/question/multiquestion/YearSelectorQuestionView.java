@@ -5,8 +5,10 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
@@ -87,11 +89,25 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             }
         });
         yearText.setFocusable(true);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addInput(yearText);
+            Validation.getInstance().addinvalidInput(yearText, getContext().getString(
+                    R.string.error_empty_question));
+        }
     }
 
     protected void notifyAnswerChanged(String newValue) {
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
+        }
+        if (BuildConfig.validationInline) {
+            if (!yearText.getText().toString().isEmpty()) {
+                Validation.getInstance().removeInputError(yearText);
+                yearText.setError(null);
+            } else {
+                Validation.getInstance().addinvalidInput(yearText, getContext().getString(
+                        R.string.error_empty_question));
+            }
         }
     }
 

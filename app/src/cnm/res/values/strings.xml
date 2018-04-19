@@ -315,4 +315,5 @@
         <item>English</item>
         <item>Khmer</item>
     </string-array>
+    <string name="error_empty_question">"Empty mandatory field"</string>
 </resources>

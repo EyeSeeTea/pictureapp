@@ -89,7 +89,7 @@
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:paddingTop="2dip"
-                    android:spinnerMode="dropdown"
+                    android:spinnerMode="dialog"
                     app:backgroundTint="@color/black" />
             </LinearLayout>
         </LinearLayout>

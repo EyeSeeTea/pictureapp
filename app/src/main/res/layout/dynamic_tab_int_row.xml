@@ -19,6 +19,7 @@
         android:background="@color/transparent"
         android:gravity="left"
         android:layout_gravity="center"
+        android:textColor="@color/black"
         android:textSize="?attr/font_xsmall"
         app:font_name="@string/font_name_bold"/>
 
@@ -34,11 +35,13 @@
         android:paddingRight="16dp"
         android:inputType="number"
         android:layout_gravity="center"
+        android:textColor="@color/black"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:background="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
 

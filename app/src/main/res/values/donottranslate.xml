@@ -97,4 +97,5 @@
     <string name="default_language" translatable="false">en</string>
     <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
     <string name="fragment_new_expense" translatable="false">fragment_new_expense</string>
+    <string name="fragment_stock_table" translatable="false">stock_table_fragment</string>
 </resources>

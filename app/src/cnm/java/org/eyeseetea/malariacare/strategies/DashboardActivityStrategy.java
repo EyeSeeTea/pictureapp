@@ -12,8 +12,10 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -34,6 +36,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by manuel on 28/12/16.
@@ -138,7 +141,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 Constants.SURVEY_ISSUE);
         stockSurvey.setEventDate(eventDate);//asociate the malaria survey to the stock survey
         stockSurvey.save();
+        initStockValues(stockSurvey, stockProgram);
         Session.setStockSurveyDB(stockSurvey);
+    }
+
+    private void initStockValues(SurveyDB stockSurvey, ProgramDB stockProgram) {
+        List<QuestionDB> stockQuestions = QuestionDB.listByProgram(stockProgram);
+        for (QuestionDB questionDB : stockQuestions) {
+            ValueDB valueDB = new ValueDB("0", questionDB, stockSurvey);
+            valueDB.save();
+        }
     }
 
 
@@ -250,6 +262,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 } else if (tabId.equalsIgnoreCase(
                         mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
                     reloadAVFragment();
+                } else if (tabId.equalsIgnoreCase(mDashboardActivity.getResources().getString(
+                        R.string.tab_tag_stock_control))) {
+                    initStockControlFragment();
                 }
             }
         });

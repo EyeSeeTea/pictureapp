@@ -82,7 +82,7 @@ public class GetStockTableValuesUseCase implements UseCase {
             if (survey.getType() == surveyType) {
                 for (Question question : survey.getQuestions()) {
                     if (question.getUid().equals(questionRow.getUid())) {
-                        drugSum++;
+                        drugSum += Integer.parseInt(question.getValue().getValue());
                     }
                 }
             }
@@ -97,7 +97,7 @@ public class GetStockTableValuesUseCase implements UseCase {
             if (survey.getType() == surveyType && survey.getSurveyDate().after(date)) {
                 for (Question question : survey.getQuestions()) {
                     if (question.getUid().equals(questionRow.getUid())) {
-                        drugSum++;
+                        drugSum += Integer.parseInt(question.getValue().getValue());
                     }
                 }
             }

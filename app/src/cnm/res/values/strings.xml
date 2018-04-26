@@ -325,5 +325,6 @@
 <string name="used">Used</string>
 <string name="delivered">Delivered</string>
 <string name="total">Total</string>
+<string name="stock_table">Stock Reporting</string>
 
 </resources>

@@ -532,6 +532,11 @@ public class DashboardActivity extends BaseActivity {
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
     }
 
+    public void closeStockTableFragment(){
+        mDashboardActivityStrategy.initStockControlFragment();
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+    }
+
 
     /**
      * This method closes the Feedback Fragment and loads the Improve fragment

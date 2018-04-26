@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.presentation.presenters;
 
 import org.eyeseetea.malariacare.domain.entity.DrugValues;
 import org.eyeseetea.malariacare.domain.usecase.GetStockTableValuesUseCase;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class StockTablePresenter {
 
     public void attachView(View view) {
         mView = view;
+        mView.initRecyclerView();
+        mView.initAddButtons();
         getStockValues();
     }
 
@@ -23,7 +26,9 @@ public class StockTablePresenter {
         mGetStockTableValuesUseCase.execute(new GetStockTableValuesUseCase.Callback() {
             @Override
             public void onGetStockValues(List<DrugValues> drugValues) {
-                mView.showStockValues(drugValues);
+                if (mView != null) {
+                    mView.showStockValues(drugValues);
+                }
             }
         });
     }
@@ -37,12 +42,23 @@ public class StockTablePresenter {
         getStockValues();
     }
 
+    public void onAddReceiptClick() {
+        mView.showNewReceiptSurvey(Constants.SURVEY_RECEIPT);
+    }
+
+    public void onAddExpenseClick() {
+        mView.showNewReceiptSurvey(Constants.SURVEY_ISSUE);
+    }
+
 
     public interface View {
+        void showNewReceiptSurvey(int type);
+
+        void initRecyclerView();
+
         void showStockValues(List<DrugValues> drugsValuesList);
 
-        void showError();
-
+        void initAddButtons();
     }
 
 

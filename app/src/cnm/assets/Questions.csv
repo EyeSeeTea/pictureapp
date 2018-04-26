@@ -11,8 +11,8 @@
 11;'Code: Diagnosis Type';'ipc_issueEntry_q_diagnosis_type';;'ipc_issueEntry_q_diagnosis_type';'o7mG7zUBGsM';10;0;0;3;11;;32;7;0;;1
 12;'Code: Treatment';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'rBonfqEGNdS';11;0;0;3;12;;14;7;0;;1
 13;'Code: Other Treatment';'ipc_issueEntry_q_treatment_other';;'ipc_issueEntry_q_treatment_other';'V8q06yRjHqg';12;0;0;3;13;;3;7;0;;1
-14;'MCS STK - ASMQ 100/200 m';'ipc_issueEntry_q_stock_asmq_100_200';;'ipc_issueEntry_q_stock_asmq_100_200';'Y0rvgxJm28P';1;0;0;4;15;;26;4;0;;1
-15;'MCS STK - ASMQ 25/50 mg';'ipc_issueEntry_q_stock_asmq_25_50';;'ipc_issueEntry_q_stock_asmq_25_50';'WA1ouIgQyCr';2;0;0;4;16;;26;4;0;;1
+14;'MCS STK - ASMQ 100/200 m';'ipc_issueEntry_q_stock_asmq_100_200';;'ipc_issueEntry_q_stock_asmq_100_200';'Y0rvgxJm28P';2;0;0;4;15;;26;4;0;;1
+15;'MCS STK - ASMQ 25/50 mg';'ipc_issueEntry_q_stock_asmq_25_50';;'ipc_issueEntry_q_stock_asmq_25_50';'WA1ouIgQyCr';1;0;0;4;16;;26;4;0;;1
 16;'MCS STK – Primaquine';'ipc_issueEntry_q_stock_primaquine';;'ipc_issueEntry_q_stock_primaquine';'LLP04MYE6LM';3;0;0;4;17;;26;4;0;;1
 17;'MCS STK – RDTs';'ipc_issueEntry_q_stock_rdt';;'ipc_issueEntry_q_stock_rdt';'wYekTzcJE6c';4;0;0;4;18;;26;4;0;;1
 18;'Code: Not Tested Reason';'ipc_issueEntry_q_not_reason_tested';;'ipc_issueEntry_q_not_reason_tested';'h34mDGMtzuW';2;0;0;1;19;;32;2;1;;1

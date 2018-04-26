@@ -61,6 +61,8 @@ public class Constants {
             IMAGES_VERTICAL
     );
 
+    public static final String SYSTEM_DEFINED_LANGUAGE = "system_defined";
+
     public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT =
             ConstantsStrategy.QUESTION_TYPES_NO_DATA_ELEMENT;
 

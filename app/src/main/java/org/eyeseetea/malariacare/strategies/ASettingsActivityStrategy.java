@@ -7,6 +7,10 @@ import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
+
+import java.util.List;
 
 public abstract class ASettingsActivityStrategy {
 
@@ -48,5 +52,12 @@ public abstract class ASettingsActivityStrategy {
         PreferencesState.getInstance().setMetaDataDownload(false);
         PreferencesState.getInstance().setPullDataAfterMetadata(true);
         PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
+    }
+
+    public void addFontStyleEntries(List<String> entries,List<String> entryValues){
+        for (FontStyle fontStyle:FontStyle.values()) {
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
+            entryValues.add(String.valueOf(fontStyle.getResId()));
+        }
     }
 }

@@ -7,17 +7,17 @@
 
 <p><b><u>Contributing organizations</u></b></p>
 
-<p><b>Department of Informatics at  the University of Oslo (UiO)</b></p>
-
-<p><i>Lead implementation and conceptualization</i></p>
-
-<p>UiO has demonstrated the capacity to develop and implement at scale appropriate technology for low resource settings, allowing DHIS2 to attain a unique position as a cross-cutting health information platform with a large support community, particularly in Africa and Asia.</p>
-
 <p><b>Clinton Health Access Initiative (CHAI)</b></p>
 
 <p><i>Lead implementation</i></p>
 
 <p>CHAI has been working with governments since 2007 to deploy information systems that support data collection and management, patient tracking, electronic medical records, health surveillance, laboratory management, and supply chain management in 22 countries and across disease areas, including maternal and newborn health, reproductive health, vaccines, HIV/AIDS, and malaria</p>
+
+<p><b>Department of Informatics at  the University of Oslo (UiO)</b></p>
+
+<p><i>Lead implementation and conceptualization</i></p>
+
+<p>UiO has demonstrated the capacity to develop and implement at scale appropriate technology for low resource settings, allowing DHIS2 to attain a unique position as a cross-cutting health information platform with a large support community, particularly in Africa and Asia.</p>
 
 <p><b><i>EyeSeeTea (EST)</i></b></p>
 

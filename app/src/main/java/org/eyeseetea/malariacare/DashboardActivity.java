@@ -160,8 +160,7 @@ public class DashboardActivity extends BaseActivity {
         setTab(getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
                 getResources().getDrawable(R.drawable.tab_improve));
         if (GradleVariantConfig.isStockFragmentActive()) {
-            setTab(getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    getResources().getDrawable(R.drawable.tab_stock));
+            mDashboardActivityStrategy.setStockTab(tabHost);
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
             setTab(getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
@@ -712,7 +711,6 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onCreate();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
-        SurveyDB.removeInProgress();
         if (savedInstanceState == null) {
             initImprove();
             if(GradleVariantConfig.isMonitoringFragmentActive()) {
@@ -747,6 +745,12 @@ public class DashboardActivity extends BaseActivity {
 
     private void initStockControlFragment() {
         mDashboardActivityStrategy.initStockControlFragment();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDashboardActivityStrategy.onStart();
     }
 
     /**

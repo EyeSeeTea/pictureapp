@@ -108,4 +108,7 @@ public abstract class ADynamicTabAdapterStrategy {
             QuestionRelationDB questionRelationDB) {
 
     }
+
+    public void showValidationErrors(){
+    }
 }

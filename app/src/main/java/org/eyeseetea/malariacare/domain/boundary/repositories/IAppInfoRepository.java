@@ -8,4 +8,5 @@ public interface IAppInfoRepository {
 
     void getAppInfo(IDataSourceCallback<AppInfo> callback);
     void saveAppInfo(AppInfo appInfo);
+    String getConfigFileVersion();
 }

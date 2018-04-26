@@ -45,4 +45,9 @@
     <string name="control_data_element_stock_type_balance" translatable="false">BALANCE</string>
     <string name="control_data_element_stock_type_issue" translatable="false">ISSUE</string>
     <string name="control_data_element_stock_type_receipt" translatable="false">RECEIPT</string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>km</item>
+    </string-array>
 </resources>

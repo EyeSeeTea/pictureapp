@@ -29,7 +29,7 @@ public class DrugValues {
         return expense;
     }
 
-    private int getTotal() {
+    public int getTotal() {
         return received - expense;
     }
 }

@@ -16,10 +16,10 @@ public class StockTablePresenter {
 
     public void attachView(View view) {
         mView = view;
-        initValues();
+        getStockValues();
     }
 
-    private void initValues() {
+    private void getStockValues() {
         mGetStockTableValuesUseCase.execute(new GetStockTableValuesUseCase.Callback() {
             @Override
             public void onGetStockValues(List<DrugValues> drugValues) {
@@ -31,6 +31,10 @@ public class StockTablePresenter {
 
     public void detachView() {
         mView = null;
+    }
+
+    public void reloadData() {
+        getStockValues();
     }
 
 

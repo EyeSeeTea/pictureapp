@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="250" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="187"
+        android:drawableTop="@drawable/ic_arrow_survey_receipt"
+        android:gravity="center"
+        android:text="@string/received"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/normal_font"/>
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="187"
+        android:drawableTop="@drawable/ic_arrow_survey_expense"
+        android:gravity="center"
+        android:text="@string/used"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/normal_font"/>
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="187"
+        android:drawableTop="@drawable/ic_arrow_survey_expense"
+        android:gravity="center"
+        android:text="@string/delivered"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/normal_font"/>
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="187"
+        android:drawableTop="@drawable/ic_arrow_survey_expense"
+        android:gravity="center"
+        android:text="@string/total"
+        android:textAllCaps="true"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/normal_font"/>
+
+</LinearLayout>

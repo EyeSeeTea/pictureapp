@@ -25,6 +25,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
+import org.eyeseetea.malariacare.fragments.StockTableFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -42,6 +43,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
     StockSurveysFragment stockFragment;
+    StockTableFragment mStockTableFragment;
     private boolean showStock;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
@@ -305,5 +307,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             tabHost.getTabWidget().getChildAt(i).setBackgroundResource(
                     R.drawable.tab_below_line);
         }
+    }
+
+    @Override
+    public void initStockControlFragment() {
+        if (mStockTableFragment == null) {
+            mStockTableFragment = new StockTableFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_stock_table_container,
+                mStockTableFragment);
+        mStockTableFragment.reloadData();
+        mStockTableFragment.reloadHeader(mDashboardActivity);
     }
 }

@@ -377,34 +377,6 @@ public abstract class ADashboardActivityStrategy {
         SurveyDB.removeInProgress();
     }
 
-    public void setStockTab(TabHost tabHost) {
-        setTab(tabHost, mDashboardActivity.getResources().getString(R.string.tab_tag_stock),
-                R.id.tab_stock_layout,
-                mDashboardActivity.getResources().getDrawable(R.drawable.tab_stock));
-    }
-
-    protected void setTab(TabHost tabHost, String tabName, int layout, Drawable image) {
-        TabHost.TabSpec tab = tabHost.newTabSpec(tabName);
-        tab.setContent(layout);
-        tab.setIndicator("", image);
-        tabHost.addTab(tab);
-        addTagToLastTab(tabHost, tabName);
-    }
-
-    private void addTagToLastTab(TabHost tabHost, String tabName) {
-        TabWidget tabWidget = tabHost.getTabWidget();
-        int numTabs = tabWidget.getTabCount();
-        ViewGroup tabIndicator = (ViewGroup) tabWidget.getChildTabViewAt(numTabs - 1);
-
-        ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
-        imageView.setTag(tabName);
-        TextView textView = (TextView) tabIndicator.getChildAt(1);
-        textView.setGravity(Gravity.CENTER);
-        textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-        textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-
-    }
-
     public void initStockControlFragment() {
 
     }

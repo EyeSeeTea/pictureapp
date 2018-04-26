@@ -11,7 +11,8 @@ import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
-import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
+import org.eyeseetea.malariacare.domain.entity.DrugValues;
+import org.eyeseetea.malariacare.domain.usecase.GetStockTableValuesUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.StockTablePresenter;
@@ -33,9 +34,9 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        GetSurveysByProgram getSurveysByProgram = new GetSurveysByProgram(asyncExecutor,
-                mainExecutor, surveyRepository);
-        mStockTablePresenter = new StockTablePresenter(getSurveysByProgram);
+        GetStockTableValuesUseCase getStockTableValuesUseCase = new GetStockTableValuesUseCase(
+                asyncExecutor, mainExecutor, surveyRepository);
+        mStockTablePresenter = new StockTablePresenter(getStockTableValuesUseCase);
         mStockTablePresenter.attachView(this);
     }
 
@@ -47,7 +48,7 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
     }
 
     @Override
-    public void showStockValues(List<String[]> drugsValuesList) {
+    public void showStockValues(List<DrugValues> drugsValuesList) {
 
     }
 

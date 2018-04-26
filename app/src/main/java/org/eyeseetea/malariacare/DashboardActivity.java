@@ -174,7 +174,7 @@ public class DashboardActivity extends BaseActivity {
         if(GradleVariantConfig.isStockControlActive()){
             setTab(getResources().getString(R.string.tab_tag_stock_control),
                     R.id.dashboard_stock_table_container,
-                    getResources().getDrawable(R.drawable.tab_monitor));
+                    getResources().getDrawable(R.drawable.tab_stock));
         }
     }
 

@@ -20,9 +20,11 @@ import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.datasources.QuestionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IQuestionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.DrugValues;
 import org.eyeseetea.malariacare.domain.usecase.GetStockTableValuesUseCase;
@@ -70,8 +72,9 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        IQuestionRepository questionRepository = new QuestionLocalDataSource();
         GetStockTableValuesUseCase getStockTableValuesUseCase = new GetStockTableValuesUseCase(
-                asyncExecutor, mainExecutor, surveyRepository);
+                asyncExecutor, mainExecutor, surveyRepository, questionRepository);
         mStockTablePresenter = new StockTablePresenter(getStockTableValuesUseCase);
         mStockTablePresenter.attachView(this);
     }
@@ -110,7 +113,6 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
                 (LinearLayout) mView.findViewById(R.id.add_receipt_container);
         final LinearLayout expenseContainer = (LinearLayout) mView.findViewById(
                 R.id.add_expense_container);
-        ;
         mView.findViewById(R.id.add_stock_survey).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

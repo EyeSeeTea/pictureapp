@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IQuestionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.DrugValues;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -17,15 +18,17 @@ public class GetStockTableValuesUseCase implements UseCase {
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
     private ISurveyRepository mSurveyRepository;
+    private IQuestionRepository mQuestionRepository;
     private Callback mCallback;
 
     public GetStockTableValuesUseCase(
             IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor,
-            ISurveyRepository surveyRepository) {
+            ISurveyRepository surveyRepository, IQuestionRepository questionRepository) {
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
         mSurveyRepository = surveyRepository;
+        mQuestionRepository = questionRepository;
     }
 
     public void execute(Callback callback) {
@@ -57,7 +60,8 @@ public class GetStockTableValuesUseCase implements UseCase {
 
     private List<DrugValues> initDrugsValuesList(List<Survey> surveys) {
         List<DrugValues> drugsValuesList = new ArrayList<>();
-        for (Question question : surveys.get(0).getQuestions()) {
+        for (Question question : mQuestionRepository.getQuestionsByProgram(surveys.get(
+                0).getProgram().getId())) {
             drugsValuesList.add(createDrugRow(question, surveys));
         }
         return drugsValuesList;

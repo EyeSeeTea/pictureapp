@@ -350,8 +350,7 @@ public class QuestionDB extends BaseModel {
                 .where(ProgramDB_Table.id_program.withTable(programAlias)
                         .eq(programDB.getId_program()))
                 .orderBy(OrderBy.fromProperty(TabDB_Table.order_pos.withTable(tabAlias)))
-                .orderBy(OrderBy.fromProperty(
-                        QuestionDB_Table.order_pos.withTable(questionAlias))).queryList();
+                .orderBy(QuestionDB_Table.order_pos.withTable(questionAlias), true).queryList();
 
     }
 

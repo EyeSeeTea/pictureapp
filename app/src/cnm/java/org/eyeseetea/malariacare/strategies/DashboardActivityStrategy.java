@@ -141,18 +141,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 Constants.SURVEY_ISSUE);
         stockSurvey.setEventDate(eventDate);//asociate the malaria survey to the stock survey
         stockSurvey.save();
-        initStockValues(stockSurvey, stockProgram);
         Session.setStockSurveyDB(stockSurvey);
     }
-
-    private void initStockValues(SurveyDB stockSurvey, ProgramDB stockProgram) {
-        List<QuestionDB> stockQuestions = QuestionDB.listByProgram(stockProgram);
-        for (QuestionDB questionDB : stockQuestions) {
-            ValueDB valueDB = new ValueDB("0", questionDB, stockSurvey);
-            valueDB.save();
-        }
-    }
-
 
     @Override
     public void sendSurvey() {

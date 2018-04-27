@@ -9,14 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingBottom="80dp" />
+        android:paddingBottom="@dimen/stock_table_padding_bottom_list" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginBottom="@dimen/stock_table_button_container_margin_bottom"
+        android:layout_marginRight="@dimen/stock_table_button_container_margin_right">
 
         <LinearLayout
             android:id="@+id/add_receipt_container"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/stock_table_button_margin_right"
             android:orientation="horizontal">
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/stock_table_button_margin_right"
                 android:text="@string/add_new_receipt"
                 android:visibility="gone"
                 app:font_name="@string/font_name_light" />
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/stock_table_button_margin_right"
             android:orientation="horizontal">
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/stock_table_button_margin_right"
                 android:text="@string/add_new_expense"
                 android:visibility="gone"
                 app:font_name="@string/font_name_light" />

@@ -326,5 +326,6 @@
 <string name="delivered">Delivered</string>
 <string name="total">Total</string>
 <string name="stock_table">Stock Reporting</string>
+<string name="stock_table_error">"Error getting values for stock table"</string>
 
 </resources>

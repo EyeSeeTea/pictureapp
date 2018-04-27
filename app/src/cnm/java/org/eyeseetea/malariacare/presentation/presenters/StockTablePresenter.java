@@ -30,6 +30,13 @@ public class StockTablePresenter {
                     mView.showStockValues(drugValues);
                 }
             }
+
+            @Override
+            public void onError(Exception e) {
+                if (mView != null) {
+                    mView.showError(e);
+                }
+            }
         });
     }
 
@@ -59,6 +66,8 @@ public class StockTablePresenter {
         void showStockValues(List<DrugValues> drugsValuesList);
 
         void initAddButtons();
+
+        void showError(Exception e);
     }
 
 

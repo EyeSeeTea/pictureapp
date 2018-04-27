@@ -318,4 +318,5 @@
 <string name="delivered">បានបញ្ជូន</string>
 <string name="total">សរុប</string>
 <string name="stock_table">របាយការណ៍ភាគហ៊ុន</string>
+<string name="stock_table_error">"កំហុសក្នុងការទទួលយកតម្លៃសម្រាប់តារាងភាគហ៊ុន"</string>
 </resources>

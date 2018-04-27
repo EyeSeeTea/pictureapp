@@ -38,8 +38,13 @@ public class GetStockTableValuesUseCase implements UseCase {
 
     @Override
     public void run() {
-        List<DrugValues> drugValues = getStockSurveysValues();
-        notifyGetStockValues(drugValues);
+        try {
+            List<DrugValues> drugValues = getStockSurveysValues();
+            notifyGetStockValues(drugValues);
+        } catch (Exception exception) {
+            notifyError(exception);
+        }
+
     }
 
     private List<DrugValues> getStockSurveysValues() {
@@ -60,9 +65,11 @@ public class GetStockTableValuesUseCase implements UseCase {
 
     private List<DrugValues> initDrugsValuesList(List<Survey> surveys) {
         List<DrugValues> drugsValuesList = new ArrayList<>();
-        for (Question question : mQuestionRepository.getQuestionsByProgram(surveys.get(
-                0).getProgram().getId())) {
-            drugsValuesList.add(createDrugRow(question, surveys));
+        if (!surveys.isEmpty()) {
+            for (Question question : mQuestionRepository.getQuestionsByProgram(surveys.get(
+                    0).getProgram().getId())) {
+                drugsValuesList.add(createDrugRow(question, surveys));
+            }
         }
         return drugsValuesList;
     }
@@ -118,8 +125,19 @@ public class GetStockTableValuesUseCase implements UseCase {
         });
     }
 
+    private void notifyError(final Exception exception) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onError(exception);
+            }
+        });
+    }
+
 
     public interface Callback {
         void onGetStockValues(List<DrugValues> drugValues);
+
+        void onError(Exception e);
     }
 }

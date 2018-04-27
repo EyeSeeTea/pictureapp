@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -137,6 +138,11 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
                 mStockTablePresenter.onAddExpenseClick();
             }
         });
+    }
+
+    @Override
+    public void showError(Exception e) {
+        Toast.makeText(getActivity(), R.string.stock_table_error, Toast.LENGTH_LONG).show();
     }
 
     private void showAddMenu(LinearLayout receiptContainer,

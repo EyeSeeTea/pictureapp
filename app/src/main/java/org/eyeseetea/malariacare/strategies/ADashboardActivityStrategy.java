@@ -325,11 +325,12 @@ public abstract class ADashboardActivityStrategy {
                 } else if (tabId.equalsIgnoreCase(
                         mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
                     reloadAVFragment();
-                }
+                } 
                 tabHost.getCurrentTabView().setBackgroundColor(
                         mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
             }
         });
+
         // init tabHost
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
@@ -342,10 +343,6 @@ public abstract class ADashboardActivityStrategy {
             tabHost.getTabWidget().getChildAt(i).setBackgroundColor(
                     mDashboardActivity.getResources().getColor(color));
         }
-    }
-
-    public void onStart(){
-        SurveyDB.removeInProgress();
     }
 
     public void setStockTab(TabHost tabHost) {
@@ -373,6 +370,14 @@ public abstract class ADashboardActivityStrategy {
         textView.setGravity(Gravity.CENTER);
         textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+    }
+
+    public void onStart(){
+        SurveyDB.removeInProgress();
+    }
+
+    public void initStockControlFragment() {
 
     }
 }

@@ -6,7 +6,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 public class TextSingleQuestionViewStrategy extends ATextSingleQuestionViewStrategy {
 
-
     @Override
     public void setQuestionDB(View view, QuestionDB questionDB) {
 

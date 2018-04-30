@@ -606,6 +606,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         downloadMedia();
     }
 
+    public void initStockControlFragment() {
+
+    }
+
     @Override
     public void onStart() {
         if (Session.hasSurveyToComplete()) {

@@ -57,6 +57,7 @@
     <string name="fragment_new_reset" translatable="false">fragment_new_balance</string>
     <string name="fragment_historic_receipt_balance" translatable="false">fragment_historic_receipt_balance</string>
     <string name="fragment_historic_reset" translatable="false">fragment_historic_reset</string>
+    <string name="tab_tag_stock_control" translatable="false">tab_tag_stock_control</string>
 
     <item name="developer_option" translatable="false" type="string">show_dev_options</item>
     <item name="export_data_option" translatable="false" type="string">export_data_option</item>
@@ -96,4 +97,5 @@
     <string name="default_language" translatable="false">en</string>
     <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
     <string name="fragment_new_expense" translatable="false">fragment_new_expense</string>
+    <string name="fragment_stock_table" translatable="false">stock_table_fragment</string>
 </resources>

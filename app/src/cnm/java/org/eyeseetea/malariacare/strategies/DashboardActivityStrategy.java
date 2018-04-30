@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerExc
 import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.fragments.StockSummaryFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -42,6 +43,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
     StockSurveysFragment stockFragment;
+    StockSummaryFragment mStockSummaryFragment;
     private boolean showStock;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
@@ -138,7 +140,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockSurvey.save();
         Session.setStockSurveyDB(stockSurvey);
     }
-
 
     @Override
     public void sendSurvey() {
@@ -248,6 +249,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 } else if (tabId.equalsIgnoreCase(
                         mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
                     reloadAVFragment();
+                } else if (tabId.equalsIgnoreCase(mDashboardActivity.getResources().getString(
+                        R.string.tab_tag_stock_control))) {
+                    initStockControlFragment();
                 }
             }
         });
@@ -305,5 +309,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             tabHost.getTabWidget().getChildAt(i).setBackgroundResource(
                     R.drawable.tab_below_line);
         }
+    }
+
+    @Override
+    public void initStockControlFragment() {
+        if (mStockSummaryFragment == null) {
+            mStockSummaryFragment = new StockSummaryFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_stock_table_container,
+                mStockSummaryFragment);
+        mStockSummaryFragment.reloadData();
+        mStockSummaryFragment.reloadHeader(mDashboardActivity);
     }
 }

@@ -1,20 +1,20 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-public class DrugValues {
-    private String drugLabel;
+public class StockSummary {
+    private String stockName;
     private int received;
     private int usedToday;
     private int expense;
 
-    public DrugValues(String drugLabel, int received, int usedToday, int expense) {
-        this.drugLabel = drugLabel;
+    public StockSummary(String stockName, int received, int usedToday, int expense) {
+        this.stockName = stockName;
         this.received = received;
         this.usedToday = usedToday;
         this.expense = expense;
     }
 
-    public String getDrugLabel() {
-        return drugLabel;
+    public String getStockName() {
+        return stockName;
     }
 
     public int getReceived() {

@@ -1,18 +1,18 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
-import org.eyeseetea.malariacare.domain.entity.DrugValues;
-import org.eyeseetea.malariacare.domain.usecase.GetStockTableValuesUseCase;
+import org.eyeseetea.malariacare.domain.entity.StockSummary;
+import org.eyeseetea.malariacare.domain.usecase.GetStockSummaryUseCase;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-public class StockTablePresenter {
+public class StockSummaryPresenter {
     View mView;
-    private GetStockTableValuesUseCase mGetStockTableValuesUseCase;
+    private GetStockSummaryUseCase mGetStockSummaryUseCase;
 
-    public StockTablePresenter(
-            GetStockTableValuesUseCase getStockTableValuesUseCase) {
-        mGetStockTableValuesUseCase = getStockTableValuesUseCase;
+    public StockSummaryPresenter(
+            GetStockSummaryUseCase getStockSummaryUseCase) {
+        mGetStockSummaryUseCase = getStockSummaryUseCase;
     }
 
     public void attachView(View view) {
@@ -23,9 +23,9 @@ public class StockTablePresenter {
     }
 
     private void getStockValues() {
-        mGetStockTableValuesUseCase.execute(new GetStockTableValuesUseCase.Callback() {
+        mGetStockSummaryUseCase.execute(new GetStockSummaryUseCase.Callback() {
             @Override
-            public void onGetStockValues(List<DrugValues> drugValues) {
+            public void onGetStockValues(List<StockSummary> drugValues) {
                 if (mView != null) {
                     mView.showStockValues(drugValues);
                 }
@@ -63,7 +63,7 @@ public class StockTablePresenter {
 
         void initRecyclerView();
 
-        void showStockValues(List<DrugValues> drugsValuesList);
+        void showStockValues(List<StockSummary> drugsValuesList);
 
         void initAddButtons();
 

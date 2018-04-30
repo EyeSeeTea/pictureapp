@@ -27,12 +27,12 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IQuestionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
-import org.eyeseetea.malariacare.domain.entity.DrugValues;
-import org.eyeseetea.malariacare.domain.usecase.GetStockTableValuesUseCase;
+import org.eyeseetea.malariacare.domain.entity.StockSummary;
+import org.eyeseetea.malariacare.domain.usecase.GetStockSummaryUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.StockTableAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.presentation.presenters.StockTablePresenter;
+import org.eyeseetea.malariacare.presentation.presenters.StockSummaryPresenter;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -40,8 +40,9 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockTableFragment extends Fragment implements StockTablePresenter.View ,IDashboardFragment{
-    private StockTablePresenter mStockTablePresenter;
+public class StockSummaryFragment extends Fragment implements StockSummaryPresenter.View,
+        IDashboardFragment {
+    private StockSummaryPresenter mStockSummaryPresenter;
     private View mView;
     private boolean isAddShowing;
 
@@ -53,7 +54,7 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.stock_table_fragment,
+        mView = inflater.inflate(R.layout.stock_summary_fragment,
                 container, false);
         initPresenter();
         return mView;
@@ -64,7 +65,7 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
         mStockTable = (RecyclerView) mView.findViewById(R.id.stock_table);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mStockTable.setLayoutManager(layoutManager);
-        mStockTableAdapter = new StockTableAdapter(new ArrayList<DrugValues>());
+        mStockTableAdapter = new StockTableAdapter(new ArrayList<StockSummary>());
         mStockTable.setAdapter(mStockTableAdapter);
     }
 
@@ -74,29 +75,29 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IQuestionRepository questionRepository = new QuestionLocalDataSource();
-        GetStockTableValuesUseCase getStockTableValuesUseCase = new GetStockTableValuesUseCase(
+        GetStockSummaryUseCase getStockSummaryUseCase = new GetStockSummaryUseCase(
                 asyncExecutor, mainExecutor, surveyRepository, questionRepository);
-        mStockTablePresenter = new StockTablePresenter(getStockTableValuesUseCase);
-        mStockTablePresenter.attachView(this);
+        mStockSummaryPresenter = new StockSummaryPresenter(getStockSummaryUseCase);
+        mStockSummaryPresenter.attachView(this);
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mStockTablePresenter.detachView();
+        mStockSummaryPresenter.detachView();
     }
 
     @Override
-    public void showStockValues(List<DrugValues> drugsValuesList) {
+    public void showStockValues(List<StockSummary> drugsValuesList) {
         mStockTableAdapter.replaceValues(drugsValuesList);
     }
 
 
     @Override
     public void reloadData() {
-        if(mStockTablePresenter!=null){
-            mStockTablePresenter.reloadData();
+        if (mStockSummaryPresenter != null) {
+            mStockSummaryPresenter.reloadData();
         }
     }
 
@@ -128,14 +129,14 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
             @Override
             public void onClick(View v) {
                 hideAddMenu(receiptContainer, expenseContainer);
-                mStockTablePresenter.onAddReceiptClick();
+                mStockSummaryPresenter.onAddReceiptClick();
             }
         });
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideAddMenu(receiptContainer, expenseContainer);
-                mStockTablePresenter.onAddExpenseClick();
+                mStockSummaryPresenter.onAddExpenseClick();
             }
         });
     }
@@ -226,9 +227,9 @@ public class StockTableFragment extends Fragment implements StockTablePresenter.
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mStockTablePresenter != null && intent.getAction() != null
+            if (mStockSummaryPresenter != null && intent.getAction() != null
                     && intent.getAction().equals(SurveyService.RELOAD_DASHBOARD_ACTION)) {
-                mStockTablePresenter.reloadData();
+                mStockSummaryPresenter.reloadData();
             }
         }
     }

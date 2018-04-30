@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.entity.DrugValues;
+import org.eyeseetea.malariacare.domain.entity.StockSummary;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
@@ -17,10 +17,10 @@ public class StockTableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VALUES_ROW = 1;
 
 
-    private List<DrugValues> mDrugValues;
+    private List<StockSummary> mDrugValues;
 
     public StockTableAdapter(
-            List<DrugValues> drugValues) {
+            List<StockSummary> drugValues) {
         mDrugValues = drugValues;
     }
 
@@ -28,11 +28,11 @@ public class StockTableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == FIRST_ROW) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.stock_table_first_row, parent, false);
+                    .inflate(R.layout.stock_summary_first_row, parent, false);
             return new FirstRowViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.stock_table_row, parent, false);
+                    .inflate(R.layout.stock_summary_row, parent, false);
             return new DrugValuesViewHolder(view);
         }
     }
@@ -44,19 +44,19 @@ public class StockTableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void putValuesToRow(DrugValues drugValues, DrugValuesViewHolder holder) {
-        holder.drugLabel.setText(Utils.getInternationalizedString(drugValues.getDrugLabel()));
-        holder.received.setText(getStringForValue(drugValues.getReceived()));
-        holder.used.setText(getStringForValue(drugValues.getUsedToday()));
-        holder.delivered.setText(getStringForValue(drugValues.getExpense()));
-        holder.total.setText(getStringForValue(drugValues.getTotal()));
+    private void putValuesToRow(StockSummary stockSummary, DrugValuesViewHolder holder) {
+        holder.drugLabel.setText(Utils.getInternationalizedString(stockSummary.getStockName()));
+        holder.received.setText(getStringForValue(stockSummary.getReceived()));
+        holder.used.setText(getStringForValue(stockSummary.getUsedToday()));
+        holder.delivered.setText(getStringForValue(stockSummary.getExpense()));
+        holder.total.setText(getStringForValue(stockSummary.getTotal()));
     }
 
     private String getStringForValue(int value) {
         return value == 0 ? "-" : String.valueOf(value);
     }
 
-    public void replaceValues(List<DrugValues> drugValues) {
+    public void replaceValues(List<StockSummary> drugValues) {
         mDrugValues = drugValues;
         notifyDataSetChanged();
     }

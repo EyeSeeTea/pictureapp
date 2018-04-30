@@ -12,10 +12,8 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -26,8 +24,8 @@ import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerExc
 import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.fragments.StockSummaryFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
-import org.eyeseetea.malariacare.fragments.StockTableFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -36,7 +34,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by manuel on 28/12/16.
@@ -46,7 +43,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
     StockSurveysFragment stockFragment;
-    StockTableFragment mStockTableFragment;
+    StockSummaryFragment mStockSummaryFragment;
     private boolean showStock;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
@@ -316,12 +313,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void initStockControlFragment() {
-        if (mStockTableFragment == null) {
-            mStockTableFragment = new StockTableFragment();
+        if (mStockSummaryFragment == null) {
+            mStockSummaryFragment = new StockSummaryFragment();
         }
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_table_container,
-                mStockTableFragment);
-        mStockTableFragment.reloadData();
-        mStockTableFragment.reloadHeader(mDashboardActivity);
+                mStockSummaryFragment);
+        mStockSummaryFragment.reloadData();
+        mStockSummaryFragment.reloadHeader(mDashboardActivity);
     }
 }

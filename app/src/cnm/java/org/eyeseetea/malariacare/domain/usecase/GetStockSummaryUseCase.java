@@ -4,8 +4,8 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IQuestionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
-import org.eyeseetea.malariacare.domain.entity.DrugValues;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.domain.entity.StockSummary;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GetStockTableValuesUseCase implements UseCase {
+public class GetStockSummaryUseCase implements UseCase {
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
     private ISurveyRepository mSurveyRepository;
     private IQuestionRepository mQuestionRepository;
     private Callback mCallback;
 
-    public GetStockTableValuesUseCase(
+    public GetStockSummaryUseCase(
             IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor,
             ISurveyRepository surveyRepository, IQuestionRepository questionRepository) {
@@ -39,7 +39,7 @@ public class GetStockTableValuesUseCase implements UseCase {
     @Override
     public void run() {
         try {
-            List<DrugValues> drugValues = getStockSurveysValues();
+            List<StockSummary> drugValues = getStockSummaryValues();
             notifyGetStockValues(drugValues);
         } catch (Exception exception) {
             notifyError(exception);
@@ -47,12 +47,12 @@ public class GetStockTableValuesUseCase implements UseCase {
 
     }
 
-    private List<DrugValues> getStockSurveysValues() {
+    private List<StockSummary> getStockSummaryValues() {
         List<Survey> surveys = mSurveyRepository.getAllCompletedSurveys();
         return getDrugValuesFromSurveys(surveys);
     }
 
-    private List<DrugValues> getDrugValuesFromSurveys(List<Survey> surveys) {
+    private List<StockSummary> getDrugValuesFromSurveys(List<Survey> surveys) {
         List<Survey> stockSurveys = new ArrayList<>();
         for (Survey survey : surveys) {
             if (survey.getType() != Constants.SURVEY_NO_TYPE) {
@@ -63,18 +63,18 @@ public class GetStockTableValuesUseCase implements UseCase {
     }
 
 
-    private List<DrugValues> initDrugsValuesList(List<Survey> surveys) {
-        List<DrugValues> drugsValuesList = new ArrayList<>();
+    private List<StockSummary> initDrugsValuesList(List<Survey> surveys) {
+        List<StockSummary> drugsValuesList = new ArrayList<>();
         if (!surveys.isEmpty()) {
             for (Question question : mQuestionRepository.getQuestionsByProgram(surveys.get(
                     0).getProgram().getId())) {
-                drugsValuesList.add(createDrugRow(question, surveys));
+                drugsValuesList.add(createStockSummaryRow(question, surveys));
             }
         }
         return drugsValuesList;
     }
 
-    private DrugValues createDrugRow(Question question, List<Survey> surveys) {
+    private StockSummary createStockSummaryRow(Question question, List<Survey> surveys) {
         String drugLabel = question.getName();
         int received = getValuesForDrugAndSurveyType(question, Constants.SURVEY_RECEIPT,
                 surveys);
@@ -82,7 +82,7 @@ public class GetStockTableValuesUseCase implements UseCase {
                 Utils.getTodayDate(), surveys);
         int expense = getValuesForDrugAndSurveyType(question, Constants.SURVEY_ISSUE,
                 surveys);
-        return new DrugValues(drugLabel, received, usedToday, expense);
+        return new StockSummary(drugLabel, received, usedToday, expense);
     }
 
 
@@ -116,7 +116,7 @@ public class GetStockTableValuesUseCase implements UseCase {
         return drugSum;
     }
 
-    private void notifyGetStockValues(final List<DrugValues> drugValues) {
+    private void notifyGetStockValues(final List<StockSummary> drugValues) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -136,7 +136,7 @@ public class GetStockTableValuesUseCase implements UseCase {
 
 
     public interface Callback {
-        void onGetStockValues(List<DrugValues> drugValues);
+        void onGetStockValues(List<StockSummary> drugValues);
 
         void onError(Exception e);
     }

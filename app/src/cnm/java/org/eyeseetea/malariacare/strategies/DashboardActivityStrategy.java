@@ -197,7 +197,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
         Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
-        if (currentFragment.getClass().equals(fragmentClass)) {
+        if (currentFragment != null && currentFragment.getClass().equals(fragmentClass)) {
             return true;
         }
         return false;

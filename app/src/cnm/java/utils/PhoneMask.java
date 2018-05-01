@@ -13,9 +13,9 @@ public class PhoneMask {
     public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
 
     /**
-     * PLAIN telephone mask: 0NNNNNNNN{N}
+     * PLAIN telephone mask: *
      */
-    public static final String PLAIN_PHONENUMBER_MASK = "0\\d{8,9}";
+    public static final String PLAIN_PHONENUMBER_MASK = "\\d*";
 
     /**
      * Formats number according to mask 0NN NNN NNN{N}

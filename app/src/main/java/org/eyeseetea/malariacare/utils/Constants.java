@@ -40,7 +40,8 @@ public class Constants {
             PREGNANT_MONTH_INT = 29,
             YEAR = 30,
             DROPDOWN_LIST_OU_TREE = 31,
-            IMAGES_VERTICAL = 32;
+            IMAGES_VERTICAL = 32,
+            AGE_MONTH_NUMBER = 33;
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
             DROPDOWN_LIST,

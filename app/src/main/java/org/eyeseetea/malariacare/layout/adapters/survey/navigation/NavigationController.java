@@ -5,6 +5,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -200,6 +201,40 @@ public class NavigationController {
         return nextNode.getQuestionDB();
     }
 
+    public QuestionDB next(int value) {
+        Log.d(TAG, String.format("next(%s)...", value));
+        QuestionNode nextNode;
+
+        //First movement -> nothing to check
+        if (isInitialMove()) {
+            nextNode = findNext(value);
+        } else {
+            //Check if current values trigger a warning
+            nextNode = getCurrentNode().findWarningActivated();
+        }
+
+        //No warning activated -> try normal
+        if (nextNode == null) {
+            //No trigger -> next as usual
+            nextNode = findNext(value);
+        }
+
+        //No next
+        if (nextNode == null) {
+            return null;
+        }
+
+        //Found
+        visit(nextNode);
+        QuestionDB nextQuestionDB = nextNode.getQuestionDB();
+
+
+        //Return next question
+        Log.d(TAG, String.format("next(%s)->%s", value,
+                nextQuestionDB.getCode()));
+        return nextNode.getQuestionDB();
+    }
+
     public boolean existsPendingCounter(OptionDB optionDB) {
         Map<Long, QuestionCounter> counters = getCurrentNode().getCountersMap();
 
@@ -382,6 +417,18 @@ public class NavigationController {
                     nextNode.getQuestionDB().getCode() + ""));
         }
         return nextNode;
+    }
+
+    private QuestionNode findNext(int value) {
+        QuestionDB actualQuestionDB = getCurrentNode().getQuestionDB();
+        QuestionDB nextQuestion = QuestionThresholdDB.getQuestionChildWithThreshold(
+                actualQuestionDB.getId_question(), value);
+        if (nextQuestion == null) {
+            return null;
+        }
+        QuestionNode questionNode = new QuestionNode(nextQuestion);
+        questionNode.setParentNode(getCurrentNode());
+        return questionNode;
     }
 
     /**

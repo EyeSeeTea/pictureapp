@@ -321,4 +321,5 @@
 <string name="ipc_issueEntry_q_mcs_rdt_stock">"RDT stock out?"</string>
 <string name="common_option_tested">"Tested"</string>
 <string name="common_option_stock_out">"RDT Stock out"</string>
+<string name="ipc_issueEntry_q_patient_months_age">Age in months</string>
 </resources>

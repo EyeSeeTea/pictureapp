@@ -31,7 +31,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 
 public class AppDatabase {
     public static final String NAME = "EyeSeeTeaDB";
-    public static final int VERSION = 15;
+    public static final int VERSION = 16;
 
 
     // Aliases used for EyeSeeTea DB queries

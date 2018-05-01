@@ -328,5 +328,5 @@
 <string name="stock_table">Stock Reporting</string>
 <string name="stock_table_error">"Error getting values for stock table"</string>
 
-<string name="ipc_issueEntry_q_patient_months_age">Age in months</string>
+<string name="ipc_issueEntry_q_patient_months_age">"Age in months"</string>
 </resources>

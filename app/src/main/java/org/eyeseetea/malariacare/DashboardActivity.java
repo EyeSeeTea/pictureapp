@@ -553,6 +553,10 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.newSurvey(this);
     }
 
+    public void newSurvey() {
+        mDashboardActivityStrategy.newSurvey(dashboardActivity);
+    }
+
     /**
      * Called when the user clicks the exit Review button
      */
@@ -734,6 +738,7 @@ public class DashboardActivity extends BaseActivity {
                 ex.printStackTrace();
             }
         }
+        mDashboardActivityStrategy.checkIntent(getIntent());
     }
 
     @Override

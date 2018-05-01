@@ -21,6 +21,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth
         .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.gson.JsonArray;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -71,6 +72,8 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.util.Date;
@@ -613,6 +616,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             Session.setHasSurveyToComplete(false);
         } else {
             SurveyDB.removeInProgress();
+        }
+    }
+    @Override
+    public void checkIntent(Intent intent) {
+        if(intent.getBooleanExtra("openSurvey",false)){
+            mDashboardActivity.newSurvey();
         }
     }
 }

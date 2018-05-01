@@ -375,4 +375,7 @@ public abstract class ADashboardActivityStrategy {
         textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     }
+
+    public void checkIntent(Intent intent) {
+    }
 }

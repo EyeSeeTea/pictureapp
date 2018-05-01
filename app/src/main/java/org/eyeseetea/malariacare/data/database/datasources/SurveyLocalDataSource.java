@@ -72,9 +72,17 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     @Override
     public List<Survey> getAllCompletedSurveys() {
         List<Survey> completedSurveys = new ArrayList<>();
-        for (SurveyDB surveyDB : SurveyDB.getAllCompletedSurveys()) {
-            Survey survey = new Survey(surveyDB.getEventDate());
-            completedSurveys.add(survey);
+        for (SurveyDB surveyDB : SurveyDB.getAllCompletedSentSurveys()) {
+            completedSurveys.add(buildSurvey(surveyDB));
+        }
+        return completedSurveys;
+    }
+
+    @Override
+    public List<Survey> getAllCompletedSentSurveys() {
+        List<Survey> completedSurveys = new ArrayList<>();
+        for (SurveyDB surveyDB : SurveyDB.getAllCompletedSentSurveys()) {
+            completedSurveys.add(buildSurvey(surveyDB));
         }
         return completedSurveys;
     }
@@ -106,19 +114,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         List<Survey> surveys = new ArrayList<>();
 
         for (SurveyDB surveyDB : surveysDB) {
-            List<Question> questions = getQuestionsBySurvey(surveyDB);
-            ProgramDB programDB = surveyDB.getProgramDB();
-            Program program = new Program(programDB.getName(), programDB.getUid());
-
-            Survey survey = new Survey.Builder()
-                    .id(surveyDB.getId_survey())
-                    .program(program)
-                    .type(surveyDB.getType())
-                    .questions(questions)
-                    .surveyDate(surveyDB.getCompletionDate())
-                    .status(surveyDB.getStatus())
-                    .build();
-            surveys.add(survey);
+            surveys.add(buildSurvey(surveyDB));
         }
         return surveys;
     }
@@ -141,5 +137,21 @@ public class SurveyLocalDataSource implements ISurveyRepository {
             questions.add(question);
         }
         return questions;
+    }
+
+    private Survey buildSurvey(SurveyDB surveyDB) {
+        List<Question> questions = getQuestionsBySurvey(surveyDB);
+        ProgramDB programDB = surveyDB.getProgramDB();
+        Program program = new Program(programDB.getName(), programDB.getUid());
+
+        Survey survey = new Survey.Builder()
+                .id(surveyDB.getId_survey())
+                .program(program)
+                .type(surveyDB.getType())
+                .questions(questions)
+                .surveyDate(surveyDB.getEventDate())
+                .status(surveyDB.getStatus())
+                .build();
+        return survey;
     }
 }

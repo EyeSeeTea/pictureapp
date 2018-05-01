@@ -1,10 +1,12 @@
 package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -16,16 +18,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.StockSurveysAdapter;
+import org.eyeseetea.malariacare.layout.listeners.SwipeDismissRecyclerViewTouchListener;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.StockSurveysPresenter;
@@ -127,38 +132,88 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         stockSurveysRecycler.setLayoutManager(mLayoutManager);
         stockSurveysRecycler.setAdapter(mStockSurveysAdapter);
+
+        // Create a ListView-specific touch listener. ListViews are given special treatment because
+        // by default they handle touches for their list items... i.e. they're in charge of drawing
+        // the pressed state (the list selector), handling list item clicks, etc.
+        SwipeDismissRecyclerViewTouchListener touchListener =
+                new SwipeDismissRecyclerViewTouchListener(
+                        stockSurveysRecycler,
+                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                if(position > -1 && position <= mStockSurveysAdapter.getItemCount()){
+                                    long surveyId = mStockSurveysAdapter.getItemId(
+                                            position );
+                                    SurveyDB surveyDB = SurveyDB.findById(surveyId);
+                                    if(surveyDB!=null && !surveyDB.isSent()
+                                            && !surveyDB.isConflict()) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public void onDismiss(final RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (final int position : reverseSortedPositions) {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle(getActivity().getString(
+                                                    R.string.dialog_title_delete_survey))
+                                            .setMessage(getActivity().getString(
+                                                    R.string.dialog_info_delete_survey))
+                                            .setPositiveButton(android.R.string.yes,
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface arg0,
+                                                                int arg1) {
+                                                            long surveyId = mStockSurveysAdapter.getItemId(
+                                                                    position );
+                                                            SurveyDB surveyDB = SurveyDB.findById(surveyId);
+                                                            if(surveyDB!=null && !surveyDB.isSent()
+                                                                    && !surveyDB.isConflict()) {
+                                                                surveyDB.delete();
+                                                                reloadData();
+                                                            }
+                                                        }
+                                                    })
+                                            .setNegativeButton(android.R.string.no,
+                                                    null).create().show();
+                                }
+                            }
+                        });
+        stockSurveysRecycler.setOnTouchListener(touchListener);
     }
 
     @Override
     public void initAddButtons() {
-        final ImageButton addBalance = (ImageButton) mView.findViewById(R.id.add_balance_survey);
         final ImageButton addReceipt = (ImageButton) mView.findViewById(R.id.add_receipt_survey);
         final ImageButton addExpense = (ImageButton) mView.findViewById(R.id.add_expense_survey);
+        final LinearLayout receiptContainer =
+                (LinearLayout) mView.findViewById(R.id.add_receipt_container);
+        final LinearLayout expenseContainer = (LinearLayout) mView.findViewById(
+                R.id.add_expense_container);
+        ;
         mView.findViewById(R.id.add_stock_survey).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isAddShowing) {
-                    hideAddMenu(addReceipt, addBalance, addExpense);
+                    hideAddMenu(receiptContainer, expenseContainer);
                 } else {
-                    showAddMenu(addReceipt, addBalance, addExpense);
+                    showAddMenu(receiptContainer, expenseContainer);
                 }
-            }
-        });
-        addBalance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mStockSurveysPresenter.onAddBalanceClick();
             }
         });
         addReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(receiptContainer, expenseContainer);
                 mStockSurveysPresenter.onAddReceiptClick();
             }
         });
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAddMenu(receiptContainer, expenseContainer);
                 mStockSurveysPresenter.onAddExpenseClick();
             }
         });
@@ -169,26 +224,26 @@ public class StockSurveysFragment extends Fragment implements IDashboardFragment
         showNewReceiptBalanceFragment(type);
     }
 
-    private void showAddMenu(ImageButton receiptButton, ImageButton balanceButton,
-            ImageButton expenseButton) {
+    private void showAddMenu(LinearLayout receiptContainer,
+            LinearLayout expenseContainer) {
         isAddShowing = true;
-        receiptButton.animate().translationY(
+        receiptContainer.animate().translationY(
                 -getActivity().getResources().getDimension(
                         R.dimen.smaller_translation));
-        balanceButton.animate().translationY(
+        expenseContainer.animate().translationY(
                 -getActivity().getResources().getDimension(
                         R.dimen.bigger_translation));
-        expenseButton.animate().translationY(
-                -getActivity().getResources().getDimension(
-                        R.dimen.biggest_translation));
+        mView.findViewById(R.id.add_receipt_text).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.add_expense_text).setVisibility(View.VISIBLE);
     }
 
-    private void hideAddMenu(ImageButton receiptButton, ImageButton balanceButton,
-            ImageButton expenseButton) {
+    private void hideAddMenu(LinearLayout receiptContainer,
+            LinearLayout expenseContainer) {
         isAddShowing = false;
-        receiptButton.animate().translationY(0);
-        balanceButton.animate().translationY(0);
-        expenseButton.animate().translationY(0);
+        receiptContainer.animate().translationY(0);
+        expenseContainer.animate().translationY(0);
+        mView.findViewById(R.id.add_receipt_text).setVisibility(View.GONE);
+        mView.findViewById(R.id.add_expense_text).setVisibility(View.GONE);
     }
 
 

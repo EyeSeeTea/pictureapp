@@ -42,7 +42,7 @@ public class CommonQuestionView extends LinearLayout {
         }
     }
 
-    private void setActive(Boolean value) {
+    protected void setActive(Boolean value) {
         isActive = value;
     }
 

@@ -23,7 +23,7 @@ public class QuestionLocalDataSource implements IQuestionRepository {
                     Question.newBuilder()
                             .id(questionDB.getId_question())
                             .code(questionDB.getCode())
-                            .name(questionDB.getInternationalizedForm_name())
+                            .name(questionDB.getForm_name())
                             .uid(questionDB.getUid())
                             .type(mapOutputToQuestionType(questionDB.getOutput()))
                             .build());
@@ -123,6 +123,9 @@ public class QuestionLocalDataSource implements IQuestionRepository {
                 questionType = Question.Type.YEAR;
                 break;
             case Constants.DROPDOWN_LIST_OU_TREE:
+                questionType = Question.Type.DROPDOWN_LIST_OU_TREE;
+                break;
+            case Constants.IMAGES_VERTICAL:
                 questionType = Question.Type.DROPDOWN_LIST_OU_TREE;
                 break;
             default:

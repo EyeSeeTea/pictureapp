@@ -286,7 +286,7 @@
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 ASMQ Tablets of 100/200mg + one 15mg PQ Tablet</string>
 <string name="login_unexpected_error">"Unexpected error while login"</string>
 <string name="ipc_issueEntry_q_patient_name">Patient name</string>
-<string name="ipc_issueEntry_q_patient_weight">Weight</string>
+<string name="ipc_issueEntry_q_patient_weight">Weight (Kg)</string>
 <string name="ipc_issueEntry_q_patient_pregnant_month">Month</string>
 <string name="ipc_issueEntry_q_patient_temperature">Temperature (Celsius)</string>
 <string name="ipc_issueEntry_q_patient_status">Patient status</string>
@@ -309,4 +309,23 @@
 <string name="ipc_issueEntry_q_test_result">"Test result"</string>
 <string name="common_option_non_mobile">"Non mobile"</string>
 <string name="common_option_mobile">"Mobile"</string>
+<string name="ipc_issueEntry_q_patient_pregnant">Pregnant Months</string>
+    <string-array name="languages_strings">
+        <item>System defined</item>
+        <item>English</item>
+        <item>Khmer</item>
+    </string-array>
+    <string name="error_empty_question">"Empty mandatory field"</string>
+<string name="add_new_receipt">Add new receipt</string>
+<string name="add_new_expense">Add new expense</string>
+<string name="ipc_issueEntry_q_mcs_rdt_stock">"RDT stock out?"</string>
+<string name="common_option_tested">"Tested"</string>
+<string name="common_option_stock_out">"RDT Stock out"</string>
+<string name="received">Received</string>
+<string name="used">Used</string>
+<string name="delivered">Delivered</string>
+<string name="total">Total</string>
+<string name="stock_table">Stock Reporting</string>
+<string name="stock_table_error">"Error getting values for stock table"</string>
+
 </resources>

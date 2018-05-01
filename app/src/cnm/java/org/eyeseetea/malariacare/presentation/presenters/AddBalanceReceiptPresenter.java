@@ -1,6 +1,9 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
 
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
@@ -8,6 +11,8 @@ import org.eyeseetea.malariacare.domain.usecase.CreateSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetQuestionsByProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
@@ -17,16 +22,17 @@ public class AddBalanceReceiptPresenter {
     AddBalanceReceiptView mView;
     private CreateSurveyUseCase mCreateSurveyUseCase;
     private GetQuestionsByProgramUseCase mGetQuestionsByProgramUseCase;
-    private SaveValueUseCase mSaveValueUseCase;
     private SaveSurveyUseCase mSaveSurveyUseCase;
+    private IValueRepository mValueRepository;
     private Survey mSurvey;
     public AddBalanceReceiptPresenter(
             CreateSurveyUseCase createSurveyUseCase,
             GetQuestionsByProgramUseCase getQuestionsByProgramUseCase,
-            SaveValueUseCase saveValueUseCase, SaveSurveyUseCase saveSurveyUseCase) {
+            IValueRepository valueRepository,
+            SaveSurveyUseCase saveSurveyUseCase) {
+        mValueRepository = valueRepository;
         mCreateSurveyUseCase = createSurveyUseCase;
         mGetQuestionsByProgramUseCase = getQuestionsByProgramUseCase;
-        mSaveValueUseCase = saveValueUseCase;
         mSaveSurveyUseCase = saveSurveyUseCase;
     }
 
@@ -61,7 +67,11 @@ public class AddBalanceReceiptPresenter {
 
     public void onQuestionAnswerTextChange(String questionUID, String value) {
         String valueToSave = value.isEmpty() ? "0" : value;
-        mSaveValueUseCase.execute(new SaveValueUseCase.Callback() {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        SaveValueUseCase saveValueUseCase = new SaveValueUseCase(asyncExecutor, mainExecutor,
+                mValueRepository);
+        saveValueUseCase.execute(new SaveValueUseCase.Callback() {
             @Override
             public void onValueSaved(Value value) {
             }

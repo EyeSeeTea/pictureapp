@@ -9,18 +9,23 @@ import org.eyeseetea.malariacare.domain.entity.AppInfo;
 public class AppInfoDataSource implements IAppInfoRepository {
     @Override
     public AppInfo getAppInfo() {
-        return new AppInfo(getMetadataDownloaded(), getMetadataVersion());
+        return new AppInfo(getMetadataDownloaded(), getMetadataVersion(),getMetadataVersion());
     }
 
     @Override
     public void getAppInfo(IDataSourceCallback<AppInfo> callback) {
-        callback.onSuccess(new AppInfo(getMetadataDownloaded(), getMetadataVersion()));
+        callback.onSuccess(new AppInfo(getMetadataDownloaded(), getMetadataVersion(),getMetadataVersion()));
     }
 
     @Override
     public void saveAppInfo(AppInfo appInfo) {
         PreferencesCNM.setMetadataDownloaded(appInfo.isMetadataDownloaded());
         PreferencesCNM.saveMetadataVersion(appInfo.getMetadataVersion());
+    }
+
+    @Override
+    public String getConfigFileVersion() {
+        return null;
     }
 
     private boolean getMetadataDownloaded() {

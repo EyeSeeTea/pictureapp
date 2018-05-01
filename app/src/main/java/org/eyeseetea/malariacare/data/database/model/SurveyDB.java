@@ -461,6 +461,16 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(SurveyDB_Table.id_org_unit_fk)).queryList();
     }
 
+    public static List<SurveyDB> getAllCompletedSentSurveys() {
+        return new Select().from(SurveyDB.class)
+                .where(SurveyDB_Table.status.eq(Constants.SURVEY_COMPLETED))
+                .or(SurveyDB_Table.status.eq(Constants.SURVEY_SENT))
+                .or(SurveyDB_Table.status.eq(Constants.SURVEY_CONFLICT))
+                .or(SurveyDB_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date))
+                .orderBy(OrderBy.fromProperty(SurveyDB_Table.id_org_unit_fk)).queryList();
+    }
+
     public static List<SurveyDB> getAllCompletedSurveysNoReceiptReset() {
         return new Select().from(SurveyDB.class)
                 .where(SurveyDB_Table.status.eq(Constants.SURVEY_COMPLETED))
@@ -571,7 +581,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .where(ProgramDB_Table.uid_program.withTable(programAlias)
                         .eq(programUID))
                 .and(SurveyDB_Table.status.withTable(surveyAlias).isNot(
-                        Constants.SURVEY_IN_PROGRESS)).queryList();
+                        Constants.SURVEY_IN_PROGRESS))
+                .orderBy(SurveyDB_Table.event_date, false).queryList();
     }
 
     /**

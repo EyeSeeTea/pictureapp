@@ -155,23 +155,26 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void setTabHostsWithImages() {
-        Context context = PreferencesState.getInstance().getContext();
-        setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getDrawable(R.drawable.tab_assess));
-        setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getDrawable(R.drawable.tab_improve));
+        setTab(getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
+                getResources().getDrawable(R.drawable.tab_assess));
+        setTab(getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
+                getResources().getDrawable(R.drawable.tab_improve));
         if (GradleVariantConfig.isStockFragmentActive()) {
-            setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                    context.getResources().getDrawable(R.drawable.tab_stock));
+            mDashboardActivityStrategy.setStockTab(tabHost);
         }
         if (GradleVariantConfig.isAVFragmentActive()) {
-            setTab(context.getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
-                    context.getResources().getDrawable(R.drawable.statics));
+            setTab(getResources().getString(R.string.tab_tag_av), R.id.tab_av_layout,
+                    getResources().getDrawable(R.drawable.statics));
         }
         if(GradleVariantConfig.isMonitoringFragmentActive()) {
-            setTab(context.getResources().getString(R.string.tab_tag_monitor),
+            setTab(getResources().getString(R.string.tab_tag_monitor),
                     R.id.tab_monitor_layout,
-                    context.getResources().getDrawable(R.drawable.tab_monitor));
+                    getResources().getDrawable(R.drawable.tab_monitor));
+        }
+        if(GradleVariantConfig.isStockControlActive()){
+            setTab(getResources().getString(R.string.tab_tag_stock_control),
+                    R.id.dashboard_stock_table_container,
+                    getResources().getDrawable(R.drawable.tab_stock));
         }
     }
 
@@ -529,6 +532,11 @@ public class DashboardActivity extends BaseActivity {
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
     }
 
+    public void closeStockTableFragment(){
+        mDashboardActivityStrategy.initStockControlFragment();
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+    }
+
 
     /**
      * This method closes the Feedback Fragment and loads the Improve fragment
@@ -708,7 +716,6 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onCreate();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
-        SurveyDB.removeInProgress();
         if (savedInstanceState == null) {
             initImprove();
             if(GradleVariantConfig.isMonitoringFragmentActive()) {
@@ -721,6 +728,9 @@ public class DashboardActivity extends BaseActivity {
             }
             if (GradleVariantConfig.isAVFragmentActive()) {
                 initAV();
+            }
+            if(GradleVariantConfig.isStockControlActive()){
+                initStockControlFragment();
             }
             initAssess();
         }
@@ -736,6 +746,16 @@ public class DashboardActivity extends BaseActivity {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void initStockControlFragment() {
+        mDashboardActivityStrategy.initStockControlFragment();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDashboardActivityStrategy.onStart();
     }
 
     /**

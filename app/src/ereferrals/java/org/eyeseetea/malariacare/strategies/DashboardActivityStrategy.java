@@ -51,6 +51,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -73,6 +74,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
@@ -92,41 +94,45 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void onCreate() {
 
-        IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
-        ILanguageRepository languageRepository = new LanguagesLocalDataSource();
-
-        VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
-                new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
-                        configurationRepository, languageRepository,
-                        new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
-                    @Override
-                    public void onSoftLoginStringTranslationFailed() {
-                        showToast(R.string.warning_strings_download_failed);
-                    }
-
-                    @Override
-                    public void onFullLoginStringTranslationOrConfigFilesFailed(
-                            TypeOfFailure typeOfFailed) {
-                        switch (typeOfFailed) {
-                            case TRANSLATIONS:
-                                showToast(R.string.error_unable_to_download_translations);
-                                break;
-                            case CONFIGURATION_FILES:
-                                showToast(R.string.error_unable_to_download_configuration_files);
-                                break;
-                            case TRANSLATIONS_AND_CONFIGURATION_FILES:
-                                showToast(
-                                        R.string.error_unable_to_download_translations_and_configuration_files);
-                                break;
-                        }
-
-                        mDashboardActivity.finishAndGo(LoginActivity.class);
-                    }
-                });
-
-        downloadedUseCase.run();
-
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
+
+        Credentials credentials = iCredentialsRepository.getOrganisationCredentials();
+        if (credentials != null && !credentials.isDemoCredentials()) {
+            IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
+            ILanguageRepository languageRepository = new LanguagesLocalDataSource();
+
+            VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
+                    new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
+                            configurationRepository, languageRepository,
+                            new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
+                                @Override
+                                public void onSoftLoginStringTranslationFailed() {
+                                    showToast(R.string.warning_strings_download_failed);
+                                }
+
+                                @Override
+                                public void onFullLoginStringTranslationOrConfigFilesFailed(
+                                        TypeOfFailure typeOfFailed) {
+                                    switch (typeOfFailed) {
+                                        case TRANSLATIONS:
+                                            showToast(R.string.error_unable_to_download_translations);
+                                            break;
+                                        case CONFIGURATION_FILES:
+                                            showToast(R.string.error_unable_to_download_configuration_files);
+                                            break;
+                                        case TRANSLATIONS_AND_CONFIGURATION_FILES:
+                                            showToast(
+                                                    R.string.error_unable_to_download_translations_and_configuration_files);
+                                            break;
+                                    }
+
+                                    mDashboardActivity.finishAndGo(LoginActivity.class);
+                                }
+                            });
+
+            downloadedUseCase.run();
+        }
+
         mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
                 iCredentialsRepository);
 
@@ -225,6 +231,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         //Look for coordinates
         prepareLocationListener(activity, survey);
         mDashboardActivity.initSurvey();
+    }
+
+    private void openUncompletedSurvey() {
+        SurveyDB survey;
+        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+        if (!uncompletedSurveys.isEmpty()) {
+            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
+            Session.setMalariaSurveyDB(survey);
+            //Look for coordinates
+            prepareLocationListener(mDashboardActivity, survey);
+            mDashboardActivity.initSurvey();
+        }
     }
 
     @Override
@@ -586,5 +604,19 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void onConnectivityStatusChange() {
         downloadMedia();
+    }
+
+    public void initStockControlFragment() {
+
+    }
+
+    @Override
+    public void onStart() {
+        if (Session.hasSurveyToComplete()) {
+            openUncompletedSurvey();
+            Session.setHasSurveyToComplete(false);
+        } else {
+            SurveyDB.removeInProgress();
+        }
     }
 }

@@ -261,10 +261,10 @@
 <string name="imei">"IMEI"</string>
 <string name="imei_error">"កំហុសក្នុងការទទួល IMEI"</string>
 <string name="error_downloading_languages">"កំហុសក្នុងការទាញយកភាសា"</string>
-<string name="ipc_issueEntry_q_stock_asmq_100_200">ASMQ 100/200 mg</string>
-<string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
+<string name="ipc_issueEntry_q_stock_asmq_100_200">គ្រាប់ 100/200 ម</string>
+<string name="ipc_issueEntry_q_stock_asmq_25_50">គ្រាប់ 25/50 ម</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
-<string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
+<string name="ipc_issueEntry_q_stock_rdt">បន្ថែម</string>
 <string name="save">រក្សាទុក</string>
 <string name="common_option_diagnosis_not_tested">មិនបានសាកល្បង</string>
 <string name="ipc_issueEntry_q_not_reason_tested">មូលហេតុដែលមិនបានសាកល្បង</string>
@@ -299,4 +299,24 @@
 <string name="ipc_issueEntry_q_test_result">លទ្ធផលតេស្ត</string>
 <string name="common_option_non_mobile">"មិនមែនចល័ត"</string>
 <string name="common_option_mobile">"ទូរស័ព្ទចល័ត"</string>
+<string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
+<string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
+<string name="tab_stock">"ហ៊ុន"</string>
+    <string-array name="languages_strings">
+        <item>បានកំណត់ប្រព័ន្ធ</item>
+        <item>អង់គ្លេស</item>
+        <item>ភាសាខ្មែរ</item>
+    </string-array>
+<string name="add_new_receipt">បន្ថែមវិក័យប័ត្រថ្មី</string>
+<string name="add_new_expense">បន្ថែមការចំណាយថ្មី</string>
+<string name="ipc_issueEntry_q_patient_weight">ទម្ងន់ (គីឡូក្រាម)</string>
+<string name="ipc_issueEntry_q_mcs_rdt_stock">"ភាគហ៊ុន RDT ចេញ?"</string>
+<string name="common_option_tested">"សាកល្បង"</string>
+<string name="common_option_stock_out">"RDT ស្តុកចេញ"</string>
+<string name="received">បានទទួល</string>
+<string name="used">ប្រើ</string>
+<string name="delivered">បានបញ្ជូន</string>
+<string name="total">សរុប</string>
+<string name="stock_table">របាយការណ៍ភាគហ៊ុន</string>
+<string name="stock_table_error">"កំហុសក្នុងការទទួលយកតម្លៃសម្រាប់តារាងភាគហ៊ុន"</string>
 </resources>

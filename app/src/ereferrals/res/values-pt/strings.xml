@@ -748,7 +748,7 @@
 <string name="feedback_view_image">"Abrir imagen com…"</string>
 <string name="drive_title">"Unidade pasta principal"</string>
 <string name="new_survey_disable">"A nova versão de metadata não foi instalada porque há formulários pendentes por enviar. O botão do novo formulário temporariamente desabilitado."</string>
-<string name="csv_version">"CSV versão: %s"</string>
+<string name="config_version">"Config versão: %s"</string>
 <string name="av_progress">"Baixando conteúdo…por favor aguarde"</string>
 <string name="ipc_issueEntry_q_eventType">"Preenchido durante"</string>
 <string name="ipc_issueEntry_q_heardAbout">"Fonte de informação"</string>
@@ -946,4 +946,14 @@
     <string name="error_unable_to_download_translations">Não é possível baixar traduções</string>
     <string name="error_unable_to_download_configuration_files">Não é possível baixar os arquivos de configuração</string>
     <string name="error_unable_to_download_translations_and_configuration_files">Não é possível baixar traduções e arquivos de configuração</string>
+    <string-array name="languages_strings">
+        <item>Sistema definido</item>
+        <item>Inglês</item>
+        <item>Português</item>
+        <item>Nepalês</item>
+        <item>Suaíli</item>
+    </string-array>
+    <string name="upgrading_metadata">Atualizando metadados</string>
+    <string name="warning_message">"ATENÇÃO: "</string>
+    <string name="error_empty_question">"Campo obrigatório vazio"</string>
 </resources>

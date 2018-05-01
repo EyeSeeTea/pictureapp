@@ -32,7 +32,6 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-    <string name="authority" translatable="false">CNM_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="google_play_required" translatable="false"></string>
     <string name="feedback_view_image" translatable="false"></string>
     <string name="autoconfigure_preference" translatable="false">autoconfigure_preference</string>
@@ -46,4 +45,9 @@
     <string name="control_data_element_stock_type_balance" translatable="false">BALANCE</string>
     <string name="control_data_element_stock_type_issue" translatable="false">ISSUE</string>
     <string name="control_data_element_stock_type_receipt" translatable="false">RECEIPT</string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>km</item>
+    </string-array>
 </resources>

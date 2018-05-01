@@ -29,14 +29,12 @@ public class SplashScreenActivity extends Activity {
 
     private static final String TAG = ".SplashScreenActivity";
     private SplashActivityStrategy splashActivityStrategy;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        splashActivityStrategy = new SplashActivityStrategy(this);
+        splashActivityStrategy = new SplashActivityStrategy(this, getIntent().getExtras());
         if (splashActivityStrategy.canEnterApp()) {
-            setContentView(R.layout.activity_splash);
             AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
             asyncInitApplication.execute((Void) null);
         }

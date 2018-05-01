@@ -4,7 +4,9 @@ import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,8 +21,13 @@ import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCa
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
-    public SplashActivityStrategy(Activity mActivity) {
+    private Bundle extras;
+    private Activity activity;
+
+    public SplashActivityStrategy(Activity mActivity, Bundle extras) {
         super(mActivity);
+        this.activity = mActivity;
+        this.extras = extras;
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
@@ -28,7 +35,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        super.finishAndGo(LoginActivity.class);
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.putExtra("extra", extras);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
     @Override

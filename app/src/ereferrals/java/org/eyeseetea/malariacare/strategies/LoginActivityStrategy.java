@@ -6,6 +6,7 @@ import static org.eyeseetea.malariacare.views.ViewUtils.toggleVisibility;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -92,6 +93,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             loginActivity.finish();
         }
         showDashboardIfDemoUser();
+        showSurveyWhenSoftLoginAndValidCredentials();
     }
 
     private void showDashboardIfDemoUser() {
@@ -106,6 +108,35 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onGetUsername(Credentials credentials) {
                 if (credentials != null && credentials.isDemoCredentials()) {
                     finishAndGo(DashboardActivity.class);
+                }
+            }
+        });
+    }
+
+    private void showSurveyWhenSoftLoginAndValidCredentials() {
+        if(loginActivity.getIntent().getExtras()==null || loginActivity.getIntent().getExtras().getBundle("extra")==null) {
+            return;
+        }
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
+                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
+                        credentialsRepository);
+        getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
+            @Override
+            public void onGetUsername(Credentials credentials) {
+                if (credentials != null && !credentials.isEmpty()) {
+                    Bundle bundle = loginActivity.getIntent().getExtras().getBundle("extra");
+                    String user = bundle.getBundle("credentials").getString("user");
+                    String password = bundle.getBundle("credentials").getString("password");
+                    if(user !=null && user.equals(credentials.getUsername())
+                            && password!=null && password.equals(credentials.getPassword())){
+                        Intent intent = new Intent(loginActivity, DashboardActivity.class);
+                        intent.putExtra("openSurvey", true);
+                        loginActivity.startActivity(intent);
+                        loginActivity.finish();
+                    }
                 }
             }
         });

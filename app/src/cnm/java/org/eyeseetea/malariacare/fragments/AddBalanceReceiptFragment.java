@@ -135,7 +135,7 @@ public class AddBalanceReceiptFragment extends Fragment implements
 
     @Override
     public void closeFragment() {
-        ((DashboardActivity) getActivity()).closeReceiptBalanceFragment();
+        ((DashboardActivity) getActivity()).closeStockTableFragment();
     }
 
     @Override

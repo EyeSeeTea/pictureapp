@@ -319,5 +319,12 @@
 <string name="total">សរុប</string>
 <string name="stock_table">របាយការណ៍ភាគហ៊ុន</string>
 <string name="stock_table_error">"កំហុសក្នុងការទទួលយកតម្លៃសម្រាប់តារាងភាគហ៊ុន"</string>
+<string name="ipc_issueEntry_q_patient_name">ឈ្មោះអ្នកជម្ងឺ</string>
+<string name="ipc_issueEntry_q_patient_temperature">សីតុណ្ហភាព (អង្សាសេ)</string>
+<string name="ipc_issueEntry_q_patient_status">ស្ថានភាពអ្នកជម្ងឺ</string>
+<string name="ipc_issueEntry_q_mcs_dot">MCS - DOT</string>
+<string name="common_option_dot_complete">បញ្ចប់</string>
+<string name="common_option_dot_non_complete">មិនពេញលេញ</string>
+<string name="ipc_issueEntry_q_telephone">លេខទូរសព្ទ</string>
 <string name="ipc_issueEntry_q_patient_months_age">"អាយុជាខែ"</string>
 </resources>

@@ -162,7 +162,6 @@ public class NavigationController {
 
     public QuestionDB next(OptionDB optionDB) {
         Log.d(TAG, String.format("next(%s)...", optionDB == null ? "" : optionDB.getCode()));
-        QuestionNode nextNode;
 
         //Trigger counters -> no movement
         if (!isInitialMove() && existsPendingCounter(optionDB)) {
@@ -170,44 +169,19 @@ public class NavigationController {
                     getCurrentQuestion().getCode()));
             return getCurrentQuestion();
         }
-
-        //First movement -> nothing to check
-        if (isInitialMove()) {
-            nextNode = findNext(optionDB);
-        } else {
-            //Check if current values trigger a warning
-            nextNode = getCurrentNode().findWarningActivated();
-        }
-
-        //No warning activated -> try normal
-        if (nextNode == null) {
-            //No trigger -> next as usual
-            nextNode = findNext(optionDB);
-        }
-
-        //No next
-        if (nextNode == null) {
-            return null;
-        }
-
-        //Found
-        visit(nextNode);
-        QuestionDB nextQuestionDB = nextNode.getQuestionDB();
-
-
-        //Return next question
-        Log.d(TAG, String.format("next(%s)->%s", optionDB == null ? "" : optionDB.getCode(),
-                nextQuestionDB.getCode()));
-        return nextNode.getQuestionDB();
+        return findNextQuestionWithAnswer(optionDB);
     }
 
     public QuestionDB next(int value) {
         Log.d(TAG, String.format("next(%s)...", value));
-        QuestionNode nextNode;
+        return findNextQuestionWithAnswer(value);
+    }
 
+    private QuestionDB findNextQuestionWithAnswer(Object answer) {
+        QuestionNode nextNode;
         //First movement -> nothing to check
         if (isInitialMove()) {
-            nextNode = findNext(value);
+            nextNode = findNext(answer);
         } else {
             //Check if current values trigger a warning
             nextNode = getCurrentNode().findWarningActivated();
@@ -216,7 +190,7 @@ public class NavigationController {
         //No warning activated -> try normal
         if (nextNode == null) {
             //No trigger -> next as usual
-            nextNode = findNext(value);
+            nextNode = findNext(answer);
         }
 
         //No next
@@ -230,9 +204,27 @@ public class NavigationController {
 
 
         //Return next question
-        Log.d(TAG, String.format("next(%s)->%s", value,
-                nextQuestionDB.getCode()));
+        printResult(nextQuestionDB, answer);
         return nextNode.getQuestionDB();
+    }
+
+    private QuestionNode findNext(Object answer) {
+        if (answer instanceof OptionDB || answer == null) {
+            return findNext((OptionDB) answer);
+        } else {
+            return findNext((int) answer);
+        }
+    }
+
+    private void printResult(QuestionDB nextQuestionDB, Object answer) {
+        if (answer instanceof OptionDB || answer == null) {
+            Log.d(TAG, String.format("next(%s)->%s",
+                    answer == null ? "" : ((OptionDB) answer).getCode(),
+                    nextQuestionDB.getCode()));
+        } else {
+            Log.d(TAG, String.format("next(%s)->%s", answer,
+                    nextQuestionDB.getCode()));
+        }
     }
 
     public boolean existsPendingCounter(OptionDB optionDB) {

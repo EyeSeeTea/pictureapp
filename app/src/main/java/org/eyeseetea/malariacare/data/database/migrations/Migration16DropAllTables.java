@@ -10,8 +10,8 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 
-@Migration(version = 15, database = AppDatabase.class)
-public class Migration13DropAllTables extends BaseMigration {
+@Migration(version = 16, database = AppDatabase.class)
+public class Migration16DropAllTables extends BaseMigration {
     @Override
     public void migrate(DatabaseWrapper database) {
 

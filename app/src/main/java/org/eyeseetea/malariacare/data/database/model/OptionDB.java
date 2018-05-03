@@ -374,6 +374,13 @@ public class OptionDB extends BaseModel {
                 .queryList();
     }
 
+    public static OptionDB getOptionsByQuestionAndValue(QuestionDB questionDB, String value) {
+        return new Select().from(OptionDB.class)
+                .where(OptionDB_Table.id_answer_fk.eq(questionDB.getAnswerDB().getId_answer()))
+                .and(OptionDB_Table.code.eq(value))
+                .orderBy(OptionDB_Table.name, true)
+                .querySingle();
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

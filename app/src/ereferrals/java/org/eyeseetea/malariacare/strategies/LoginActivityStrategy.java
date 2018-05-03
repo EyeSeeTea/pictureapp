@@ -128,18 +128,29 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onGetUsername(Credentials credentials) {
                 if (credentials != null && !credentials.isEmpty()) {
                     Bundle bundle = loginActivity.getIntent().getExtras().getBundle("extra");
-                    String user = bundle.getBundle("credentials").getString("user");
-                    String password = bundle.getBundle("credentials").getString("password");
-                    if(user !=null && user.equals(credentials.getUsername())
-                            && password!=null && password.equals(credentials.getPassword())){
-                        Intent intent = new Intent(loginActivity, DashboardActivity.class);
-                        intent.putExtra("openSurvey", true);
-                        loginActivity.startActivity(intent);
-                        loginActivity.finish();
+                    if(bundle != null && bundle.getBundle("credentialsBundle") != null && bundle.getBundle("valuesBundle") != null) {
+                        String user = bundle.getBundle("credentialsBundle").getString("user");
+                        String password = bundle.getBundle("credentialsBundle").getString(
+                                "password");
+                        if (user != null && user.equals(credentials.getUsername())
+                                && password != null && password.equals(credentials.getPassword())) {
+                            moveToDashboardAndCreateSurveyWithValues(bundle);
+                        }
                     }
                 }
             }
         });
+    }
+
+    private void moveToDashboardAndCreateSurveyWithValues(Bundle bundle) {
+        Intent intent = new Intent(loginActivity, DashboardActivity.class);
+        intent.putExtra("openSurvey", true);
+        intent.putExtra("valuesBundle",
+                bundle.getBundle("valuesBundle").getString("values"));
+        loginActivity.getIntent().removeExtra("credentialsBundle");
+        loginActivity.getIntent().removeExtra("valuesBundle");
+        loginActivity.startActivity(intent);
+        loginActivity.finish();
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {

@@ -345,7 +345,9 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public void onStart(){
-        SurveyDB.removeInProgress();
+        if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+            SurveyDB.removeInProgress();
+        }
     }
 
     public void setStockTab(TabHost tabHost) {

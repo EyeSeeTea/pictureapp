@@ -34,9 +34,17 @@ public class SplashScreenActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         splashActivityStrategy = new SplashActivityStrategy(this, getIntent().getExtras());
+        clearIntentExtras();
         if (splashActivityStrategy.canEnterApp()) {
             AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
             asyncInitApplication.execute((Void) null);
+        }
+    }
+
+    private void clearIntentExtras() {
+        if(getIntent().getExtras()!=null) {
+            //remove intent extras.
+            setIntent(getIntent().replaceExtras(new Bundle()));
         }
     }
 

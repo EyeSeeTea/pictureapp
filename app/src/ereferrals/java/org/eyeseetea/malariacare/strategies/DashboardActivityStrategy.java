@@ -21,7 +21,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth
         .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.gson.JsonArray;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -34,8 +33,10 @@ import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSourc
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -72,11 +73,12 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -230,10 +232,56 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         // Put new survey in session
         SurveyDB survey = new SurveyDB(null, programDB, Session.getUserDB());
         survey.save();
+        saveValuesFromIntent(activity, survey);
         Session.setMalariaSurveyDB(survey);
         //Look for coordinates
         prepareLocationListener(activity, survey);
         mDashboardActivity.initSurvey();
+    }
+
+    private void saveValuesFromIntent(Activity activity, SurveyDB survey) {
+        if (activity.getIntent() != null && activity.getIntent().getExtras() != null){
+            String values = activity.getIntent().getExtras().getString("valuesBundle");
+            if(values !=null && !values.isEmpty()){
+                try {
+                    parseJsonValuesAndSave(survey, values);
+                    survey.save();
+                    if(survey.getValuesFromDB().size()>0) {
+                        DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            activity.getIntent().removeExtra("valuesBundle");
+            activity.getIntent().removeExtra("openSurvey");
+        }
+    }
+
+    private void parseJsonValuesAndSave(SurveyDB survey, String values) throws JSONException {
+        JSONObject jsonObject = new JSONObject(values);
+        Iterator<?> keys = jsonObject.keys();
+        while( keys.hasNext() ) {
+            String key = (String)keys.next();
+            if ( jsonObject.getString(key) !=null){
+                String value = jsonObject.getString(key);
+                saveValue(survey, key, value);
+            }
+        }
+    }
+
+    private void saveValue(SurveyDB survey, String key, String value) {
+        QuestionDB questionDB = QuestionDB.findByUID(key);
+        if(questionDB!=null) {
+            OptionDB optionDBS = OptionDB.getOptionsByQuestionAndValue(questionDB, value);
+            ValueDB valueDB;
+            if(optionDBS!=null){
+                valueDB = new ValueDB(optionDBS, questionDB, survey);
+            }else {
+                valueDB = new ValueDB(value, questionDB, survey);
+            }
+            valueDB.save();
+        }
     }
 
     private void openUncompletedSurvey() {
@@ -615,7 +663,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
         } else {
-            SurveyDB.removeInProgress();
+            if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+                SurveyDB.removeInProgress();
+            }
         }
     }
     @Override

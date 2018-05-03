@@ -121,7 +121,7 @@ public class SurveyFragment extends Fragment {
     public void onPause() {
         Log.d(TAG, "onPause");
         if (!DashboardActivity.dashboardActivity.isLoadingReview()
-                && !areActiveSurveysInQuarantine()) {
+                && !areActiveSurveysInQuarantine() && !DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
             beforeExit();
         }
         super.onPause();

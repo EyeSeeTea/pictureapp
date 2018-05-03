@@ -86,7 +86,6 @@ import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuesti
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -823,7 +822,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 }
 
-                Log.d(TAG, "Questions with failed validation " + failedValidations);
+                Log.d(TAG, "Questions with failed validation " + failedValidations + " ; errors: "+questionsWithError);
                 if (failedValidations == 0 && !questionsWithError) {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);

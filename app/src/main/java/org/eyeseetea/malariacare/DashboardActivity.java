@@ -100,6 +100,8 @@ public class DashboardActivity extends BaseActivity {
 
     private boolean mIsInForegroundMode;
 
+    private static boolean loadingPreLoadSurvey;
+
     // Some function.
     public boolean isInForeground() {
         return mIsInForegroundMode;
@@ -521,6 +523,9 @@ public class DashboardActivity extends BaseActivity {
             showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
         }
+
+        DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(false);
+        SurveyDB.removeInProgress();
     }
 
     public void closeReceiptBalanceFragment() {
@@ -790,6 +795,14 @@ public class DashboardActivity extends BaseActivity {
     public void refreshStatus() {
         mDashboardActivityStrategy.reloadFirstFragmentHeader();
         mDashboardActivityStrategy.onConnectivityStatusChange();
+    }
+
+    public boolean isPreLoadSurveyOpenning() {
+        return loadingPreLoadSurvey;
+    }
+
+    public void setPreLoadSurveyOpenning( boolean value) {
+        this.loadingPreLoadSurvey = value;
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {

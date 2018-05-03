@@ -571,7 +571,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void exitReview() {
+    public void exitReview(boolean fromSurveyList) {
         if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
             sendSurvey();

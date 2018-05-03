@@ -261,10 +261,12 @@ public class DashboardActivity extends BaseActivity {
 
     /**
      * This method initializes the reviewFragment
+     * @param fromReviewList
      */
-    public void initReview() {
-        surveyFragment.mReviewMode = true;
-
+    public void initReview(final boolean fromReviewList) {
+        if (surveyFragment != null) {
+            surveyFragment.mReviewMode = true;
+        }
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }
@@ -273,7 +275,7 @@ public class DashboardActivity extends BaseActivity {
         reviewFragment.setOnEndReviewListener(new ReviewFragment.OnEndReviewListener() {
             @Override
             public void onEndReview() {
-                exitReview();
+                exitReview(fromReviewList);
             }
         });
     }
@@ -305,13 +307,20 @@ public class DashboardActivity extends BaseActivity {
     public void initSurvey() {
         isBackPressed = false;
         tabHost.getTabWidget().setVisibility(View.GONE);
-        if (surveyFragment == null) {
-            surveyFragment = new SurveyFragment();
+        if (Session.getMalariaSurveyDB().isInProgress()
+                || !BuildConfig.openReviewCompletedSurveys) {
+            if (surveyFragment == null) {
+                surveyFragment = new SurveyFragment();
+            }
+            surveyFragment.reloadHeader(dashboardActivity);
+            replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
+            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+            LayoutUtils.setSurveyActionBar(actionBar);
+        } else {
+            findViewById(R.id.common_header).setVisibility(View.GONE);
+            initReview(true);
         }
-        surveyFragment.reloadHeader(dashboardActivity);
-        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setSurveyActionBar(actionBar);
+
     }
 
     /**
@@ -491,7 +500,7 @@ public class DashboardActivity extends BaseActivity {
      */
     public void showReviewFragment() {
         isLoadingReview = true;
-        initReview();
+        initReview(false);
     }
 
 
@@ -564,9 +573,10 @@ public class DashboardActivity extends BaseActivity {
 
     /**
      * Called when the user clicks the exit Review button
+     * @param fromReviewList
      */
-    public void exitReview() {
-       mDashboardActivityStrategy.exitReview();
+    public void exitReview(boolean fromReviewList) {
+        mDashboardActivityStrategy.exitReview(fromReviewList);
     }
 
     public void sendSurvey(View view) {
@@ -604,8 +614,18 @@ public class DashboardActivity extends BaseActivity {
 
     /**
      * Show a final dialog to announce the survey is over
+     * @param fromSurveysList
      */
-    public void reviewShowDone() {
+    public void reviewShowDone(boolean fromSurveysList) {
+        if (!fromSurveysList) {
+            showSendSurveyDialog();
+        } else {
+            DynamicTabAdapter.isClicked = false;
+            exitReviewScreen();
+        }
+    }
+
+    private void showSendSurveyDialog() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)
@@ -625,6 +645,14 @@ public class DashboardActivity extends BaseActivity {
                 });
 
         msgConfirmation.create().show();
+    }
+
+    private void exitReviewScreen() {
+        if (!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            closeSurveyFragment();
+            DynamicTabAdapter.isClicked = false;
+        }
     }
 
     /**

@@ -232,10 +232,10 @@ public abstract class ADashboardActivityStrategy {
 
     }
 
-    public void exitReview(){
-        if (!DynamicTabAdapter.isClicked) {
+    public void exitReview(boolean fromSurveysList) {
+        if (!DynamicTabAdapter.isClicked || fromSurveysList) {
             DynamicTabAdapter.isClicked = true;
-            mDashboardActivity.reviewShowDone();
+            mDashboardActivity.reviewShowDone(fromSurveysList);
         }
     }
 

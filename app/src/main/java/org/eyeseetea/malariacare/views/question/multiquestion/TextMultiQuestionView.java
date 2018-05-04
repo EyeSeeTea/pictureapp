@@ -46,6 +46,11 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             mCustomEditText.setText(valueDB.getValue());
+            if (BuildConfig.validationInline) {
+                if (!mCustomEditText.getText().toString().isEmpty()) {
+                    Validation.getInstance().removeInputError(mCustomEditText);
+                }
+            }
         }
     }
 

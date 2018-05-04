@@ -48,6 +48,11 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             mCustomEditText.setText(valueDB.getValue());
+            if (BuildConfig.validationInline) {
+                if (!mCustomEditText.getText().toString().isEmpty()) {
+                    Validation.getInstance().removeInputError(mCustomEditText);
+                }
+            }
         }
     }
 

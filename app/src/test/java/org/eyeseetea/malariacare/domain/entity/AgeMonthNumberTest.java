@@ -32,11 +32,11 @@ public class AgeMonthNumberTest {
     public void return_age_number_if_create_with_number_input_between_0_and_12()
             throws InvalidAgeMonthNumberException {
 
-        AgeMonthNumber ageMonthNumber = new AgeMonthNumber(0);
+        AgeMonthNumber ageMonthNumber = new AgeMonthNumber(AgeMonthNumber.MIN_AGE);
 
         assertThat(ageMonthNumber, notNullValue());
 
-        ageMonthNumber = new AgeMonthNumber(12);
+        ageMonthNumber = new AgeMonthNumber(AgeMonthNumber.MAX_AGE);
 
         assertThat(ageMonthNumber, notNullValue());
     }
@@ -45,11 +45,11 @@ public class AgeMonthNumberTest {
     public void return_age_number_if_create_with_text_number_input_between_0_and_12()
             throws InvalidAgeMonthNumberException {
 
-        AgeMonthNumber ageMonthNumber = AgeMonthNumber.parse("0");
+        AgeMonthNumber ageMonthNumber = AgeMonthNumber.parse("" + AgeMonthNumber.MIN_AGE);
 
         assertThat(ageMonthNumber, notNullValue());
 
-        ageMonthNumber = AgeMonthNumber.parse("12");
+        ageMonthNumber = AgeMonthNumber.parse("" + AgeMonthNumber.MAX_AGE);
 
         assertThat(ageMonthNumber, notNullValue());
     }
@@ -58,7 +58,7 @@ public class AgeMonthNumberTest {
     public void throw_InvalidAgeMonthNumberException_if_number_is_over_max()
             throws InvalidAgeMonthNumberException {
         thrown.expect(InvalidAgeMonthNumberException.class);
-        AgeMonthNumber ageMonthNumber = new AgeMonthNumber(13);
+        AgeMonthNumber ageMonthNumber = new AgeMonthNumber(AgeMonthNumber.MAX_AGE + 1);
     }
 
 
@@ -66,6 +66,6 @@ public class AgeMonthNumberTest {
     public void throw_InvalidAgeMonthNumberException_if_text_to_parse_is_number_is_over_max()
             throws InvalidAgeMonthNumberException {
         thrown.expect(InvalidAgeMonthNumberException.class);
-        AgeMonthNumber.parse("15");
+        AgeMonthNumber.parse("" + (AgeMonthNumber.MAX_AGE + 2));
     }
 }

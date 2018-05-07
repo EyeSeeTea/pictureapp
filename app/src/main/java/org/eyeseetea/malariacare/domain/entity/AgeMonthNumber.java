@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.domain.entity;
 import org.eyeseetea.malariacare.domain.exception.InvalidAgeMonthNumberException;
 
 public class AgeMonthNumber {
+    public static final int MIN_AGE=0;
+    public static final int MAX_AGE=11;
     private int value;
 
     public AgeMonthNumber(int value) throws InvalidAgeMonthNumberException {
@@ -27,7 +29,7 @@ public class AgeMonthNumber {
     }
 
     private boolean isValid(int value) {
-        return (value >= 0 && value <= 12);
+        return (value >= MIN_AGE && value <= MAX_AGE);
     }
 
     public int getValue() {

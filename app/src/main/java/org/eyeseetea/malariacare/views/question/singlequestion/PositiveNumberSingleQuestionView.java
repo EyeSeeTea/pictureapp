@@ -15,8 +15,8 @@ import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.NumberSingleQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.SingleQuestionViewStrategyStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ANumberSingleQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.NumberSingleQuestionViewStrategyStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
@@ -24,12 +24,12 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         IQuestionView {
     CustomEditText numberPicker;
     CustomButton sendButton;
-    private NumberSingleQuestionViewStrategy mPositiveNumberSingleQuestionViewStrategy;
+    private ANumberSingleQuestionViewStrategy mPositiveANumberSingleQuestionViewStrategy;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
-        mPositiveNumberSingleQuestionViewStrategy =
-                new SingleQuestionViewStrategyStrategy();
+        mPositiveANumberSingleQuestionViewStrategy =
+                new NumberSingleQuestionViewStrategyStrategy();
         init(context);
     }
 
@@ -92,7 +92,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
 
     @Override
     public void setQuestionDB(QuestionDB questionDB) {
-        mPositiveNumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
+        mPositiveANumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
     }
 
     @Override

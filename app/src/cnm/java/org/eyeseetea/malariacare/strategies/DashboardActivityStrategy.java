@@ -376,4 +376,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     R.drawable.tab_below_line);
         }
     }
+
+    @Override
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_table_container)) {
+            return true;
+        }
+        return false;
+    }
 }

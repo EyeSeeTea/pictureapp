@@ -383,4 +383,8 @@ public abstract class ADashboardActivityStrategy {
     public void setStockControlTab(TabHost tabHost) {
 
     }
+
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+        return false;
+    }
 }

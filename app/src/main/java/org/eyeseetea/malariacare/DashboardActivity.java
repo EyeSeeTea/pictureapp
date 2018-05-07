@@ -254,6 +254,9 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void restoreAssess() {
+        if (surveyFragment == null) {
+            surveyFragment = new SurveyFragment();
+        }
         replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
     }
 

@@ -121,6 +121,7 @@ android {
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         laos {
@@ -149,6 +150,7 @@ android {
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         myanmar {
@@ -177,6 +179,7 @@ android {
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         ereferrals {
@@ -208,6 +211,7 @@ android {
             buildConfigField "boolean", "validationInline", "true"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         cnm {
@@ -237,6 +241,7 @@ android {
             buildConfigField "boolean", "activeStockControlFragment", "true"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "boolean", "openReviewCompletedSurveys", "true"
+            buildConfigField "boolean", "pullDataDropdown", "false"
             buildConfigField "boolean", "showReviewInReadMode", "true"
         }
 

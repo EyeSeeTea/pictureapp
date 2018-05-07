@@ -154,7 +154,11 @@ public class LoginActivity extends Activity {
 
         //add spinner
         Spinner spinner = (Spinner) findViewById(R.id.data_spinner);
-        spinner.setVisibility(View.VISIBLE);
+        if(BuildConfig.pullDataDropdown) {
+            spinner.setVisibility(View.VISIBLE);
+        }else{
+            (findViewById(R.id.date_spinner_container)).setVisibility(View.GONE);
+        }
         spinner.setAdapter(spinnerArrayAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

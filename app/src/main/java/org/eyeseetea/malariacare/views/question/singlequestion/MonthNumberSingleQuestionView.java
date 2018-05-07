@@ -105,7 +105,7 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
             } catch (InvalidAgeMonthNumberException e) {
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
-                numberPicker.setError(context.getString(R.string.dynamic_error_pregnant_month));
+                numberPicker.setError(context.getString(R.string.dynamic_error_month_age));
             }
             isClicked = false;
         }

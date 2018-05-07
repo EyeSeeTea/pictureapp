@@ -328,4 +328,5 @@
 <string name="ipc_issueEntry_q_telephone">លេខទូរសព្ទ</string>
 <string name="ipc_issueEntry_q_patient_months_age">"អាយុជាខែ"</string>
 <string name="error_saving_survey">"មានកំហុសក្នុងការរក្សាទុកការស្ទង់មតិ"</string>
+<string name="dynamic_error_month_age">"អាយុមិនត្រឹមត្រូវក្នុងខែ"</string>
 </resources>

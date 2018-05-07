@@ -3,13 +3,15 @@
 
 <p><b>Build Version %s</b></p>
 
-<p><i>Lead implementation and conceptualization</i></p>
-
-<p>CNM has led the strategy development and implementation of all malaria activities in Cambodia with the current targets of Pf elimination by 2020 and Pv elimination by 2025. A core strategy of the CNM’s Malaria Elimination Action Framework (MEAF) is the strengthening of Surveillance systems to facilitate the implementation of all elimination activities.</p>
-
 <p>This Software Application (“App”) was developed by the the University of Oslo (UiO) and Clinton Health Access Initiative (CHAI), and is a derivative of the Malaria Case Surveillance (MCS) app conceptualized and developed by Population Services International (PSI), for improving malaria case surveillance in the public health care sector in Cambodia.</p>
 
 <p><b><u>Contributing organizations</u></b></p>
+
+<p><b>National Center for Parasitology, Entomology and Malaria Control (CNM)</b></p>
+
+<p><i>Lead implementation and conceptualization</i></p>
+
+<p>CNM has led the strategy development and implementation of all malaria activities in Cambodia with the current targets of Pf elimination by 2020 and Pv elimination by 2025. A core strategy of the CNM’s Malaria Elimination Action Framework (MEAF) is the strengthening of Surveillance systems to facilitate the implementation of all elimination activities.</p>
 
 <p><b>Clinton Health Access Initiative (CHAI)</b></p>
 

@@ -44,6 +44,7 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
@@ -225,7 +226,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 Log.d(TAG, "onSwipeLeft(next)");
-                if (readOnly)
+                if (readOnly && !BuildConfig.showReviewInReadMode)
                     next();
                 else if (navigationController.isNextAllowed()) {
                     CommonQuestionView.hideKeyboard(listView.getContext(), listView);
@@ -1056,7 +1057,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
-        mDynamicTabAdapterStrategy.finishOrNext();
+        mDynamicTabAdapterStrategy.finishOrNext(readOnly);
     }
 
     /**

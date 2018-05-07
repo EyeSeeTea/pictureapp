@@ -122,6 +122,7 @@ android {
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -150,6 +151,7 @@ android {
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -178,6 +180,7 @@ android {
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
@@ -209,6 +212,7 @@ android {
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
@@ -238,6 +242,7 @@ android {
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "boolean", "openReviewCompletedSurveys", "true"
             buildConfigField "boolean", "pullDataDropdown", "false"
+            buildConfigField "boolean", "showReviewInReadMode", "true"
         }
 
     }

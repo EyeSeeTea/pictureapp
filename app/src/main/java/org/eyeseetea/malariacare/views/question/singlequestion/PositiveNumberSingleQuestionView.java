@@ -105,8 +105,8 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
             notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
         } catch (InvalidPositiveNumberException e) {
             Validation.getInstance().addinvalidInput(numberPicker,
-                    context.getString(R.string.dynamic_error_age));
-            numberPicker.setError(context.getString(R.string.dynamic_error_age));
+                    context.getString(R.string.dynamic_error_invalid_positive_number));
+            numberPicker.setError(context.getString(R.string.dynamic_error_invalid_positive_number));
         }
     }
 }

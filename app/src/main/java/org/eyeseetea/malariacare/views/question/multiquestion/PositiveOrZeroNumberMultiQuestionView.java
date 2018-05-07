@@ -93,7 +93,7 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
 
                 } catch (InvalidPositiveOrZeroNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
-                            context.getString(R.string.dynamic_error_age));
+                            context.getString(R.string.dynamic_error_invalid_positive_number));
                 }
                 if (BuildConfig.validationInline) {
                     Validation.getInstance().addInput(numberPicker);

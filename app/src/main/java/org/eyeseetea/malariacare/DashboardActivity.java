@@ -445,6 +445,8 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isNewHistoricReceiptBalanceFragmentActive()) {
             closeReceiptBalanceFragment();
+        } else if (isStockTableFragmentActive()) {
+            closeStockTableFragment();
         } else {
             if (!mDashboardActivityStrategy.onWebViewBackPressed(tabHost)) {
                 confirmExitApp();
@@ -671,6 +673,10 @@ public class DashboardActivity extends BaseActivity {
 
     private boolean isNewHistoricReceiptBalanceFragmentActive() {
         return mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
+    }
+
+    private boolean isStockTableFragmentActive() {
+        return mDashboardActivityStrategy.isStockTableFragmentActive(this);
     }
 
     private boolean isFragmentActive(Class fragmentClass, int layout) {

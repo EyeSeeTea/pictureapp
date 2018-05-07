@@ -329,4 +329,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mStockSummaryFragment.reloadData();
         mStockSummaryFragment.reloadHeader(mDashboardActivity);
     }
+
+    @Override
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_table_container)) {
+            return true;
+        }
+        return false;
+    }
 }

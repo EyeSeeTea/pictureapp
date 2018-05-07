@@ -154,11 +154,6 @@ public class LoginActivity extends Activity {
 
         //add spinner
         Spinner spinner = (Spinner) findViewById(R.id.data_spinner);
-        if(BuildConfig.pullDataDropdown) {
-            spinner.setVisibility(View.VISIBLE);
-        }else{
-            (findViewById(R.id.date_spinner_container)).setVisibility(View.GONE);
-        }
         spinner.setAdapter(spinnerArrayAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -176,6 +171,12 @@ public class LoginActivity extends Activity {
             spinner.setSelection(spinnerArrayAdapter.getPosition(getString(R.string.no_data)));
         } else {
             spinner.setSelection(spinnerArrayAdapter.getPosition(dateLimit));
+        }
+        if(BuildConfig.pullDataDropdown) {
+            spinner.setVisibility(View.VISIBLE);
+        }else{
+            (findViewById(R.id.date_spinner_container)).setVisibility(View.GONE);
+            PreferencesState.getInstance().setDataLimitedByDate(getString(R.string.no_data));
         }
     }
 

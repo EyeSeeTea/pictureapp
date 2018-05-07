@@ -13,9 +13,8 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.NumberSingleQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .SingleQuestionViewStrategyStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ANumberSingleQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.NumberSingleQuestionViewStrategyStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
@@ -23,12 +22,12 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
         IQuestionView {
     CustomEditText numberPicker;
     CustomButton sendButton;
-    private NumberSingleQuestionViewStrategy mQuestionViewStrategy;
+    private ANumberSingleQuestionViewStrategy mQuestionViewStrategy;
 
     public NumberSingleQuestionView(Context context) {
         super(context);
         mQuestionViewStrategy =
-                new SingleQuestionViewStrategyStrategy();
+                new NumberSingleQuestionViewStrategyStrategy();
 
         init(context);
     }

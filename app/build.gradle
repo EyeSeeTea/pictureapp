@@ -120,6 +120,7 @@ android {
             buildConfigField "boolean", "activeStockControlFragment", "false"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -146,6 +147,7 @@ android {
             buildConfigField "boolean", "activeStockControlFragment", "false"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -172,6 +174,7 @@ android {
             buildConfigField "boolean", "activeStockControlFragment", "false"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
@@ -201,6 +204,7 @@ android {
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "validationInline", "true"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
@@ -228,6 +232,7 @@ android {
             resValue "string", "authority", applicationId + versionName + "_CNM_DHIS2_DEFAULT_AUTHORITY"
             buildConfigField "boolean", "activeStockControlFragment", "true"
             buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "boolean", "openReviewCompletedSurveys", "true"
         }
 
     }

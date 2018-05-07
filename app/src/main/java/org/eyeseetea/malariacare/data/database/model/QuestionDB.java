@@ -1374,10 +1374,22 @@ public class QuestionDB extends BaseModel {
 
     public void saveValuesText(String answer) {
         ValueDB valueDB = getValueBySession();
+        if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()) {
+            valueDB.getQuestionDB().deleteThresholdValues(valueDB);
+        }
         SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
         SurveyFragmentStrategy.saveValuesText(valueDB, answer, this, surveyDB);
-
     }
+
+    private void deleteThresholdValues(ValueDB valueDB) {
+        for (QuestionDB question : getPropagationThresholdsQuestionDB()) {
+            ValueDB valueRelated = question.getValueBySurvey(valueDB.getSurveyDB());
+            if (valueRelated != null) {
+                valueRelated.delete();
+            }
+        }
+    }
+
 
     public void deleteValues(ValueDB valueDB) {
         if (valueDB != null) {
@@ -2050,7 +2062,30 @@ public class QuestionDB extends BaseModel {
                         QuestionRelationDB.MATCH_PROPAGATE))
                 .and(QuestionOptionDB_Table.id_question_fk.withTable(questionOptionAlias).is(
                         id_question)).queryList();
+
         return mPropagationQuestionDB;
+    }
+
+    private List<QuestionDB> getPropagationThresholdsQuestionDB() {
+        return new Select().from(QuestionDB.class).as(questionName)
+                //QuestionDB + QuestioRelation
+                .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                .on(QuestionDB_Table.id_question.withTable(questionAlias)
+                        .eq(QuestionRelationDB_Table.id_question_fk.withTable(
+                                questionRelationAlias)))
+                //+MatchDB
+                .join(MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName)
+                .on(QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias)
+                        .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+                //+QuestionThreshold
+                .join(QuestionThresholdDB.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
+                .on(QuestionThresholdDB_Table.id_match_fk.withTable(questionThresholdAlias)
+                        .eq(MatchDB_Table.id_match.withTable(matchAlias)))
+                //Parent child relationship
+                .where(QuestionRelationDB_Table.operation.withTable(questionRelationAlias).eq(
+                        QuestionRelationDB.PARENT_CHILD))
+                .and(QuestionThresholdDB_Table.id_question_fk.withTable(questionThresholdAlias).is(
+                        id_question)).queryList();
     }
 
     public static boolean isEmpty() {

@@ -85,8 +85,8 @@ import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestion
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -1192,7 +1192,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             navigationController.isMovingToForward = false;
             return;
         }
-        navigationController.next(valueDB != null ? valueDB.getOptionDB() : null);
+        QuestionDB question = null;
+        if (questionDB.hasQuestionThresholds()) {
+            question = navigationController.next(Integer.parseInt(valueDB.getValue()));
+        }
+        if (question == null) {
+            navigationController.next(valueDB != null ? valueDB.getOptionDB() : null);
+        }
 
         notifyDataSetChanged();
         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(), keyboardView);

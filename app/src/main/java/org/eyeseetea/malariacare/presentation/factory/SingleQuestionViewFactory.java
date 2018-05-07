@@ -7,6 +7,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.MonthNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
@@ -56,6 +57,8 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
                 return new TextSingleQuestionView(context);
+            case Constants.AGE_MONTH_NUMBER:
+                return new MonthNumberSingleQuestionView(context);
             default:
                 return SingleQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
         }

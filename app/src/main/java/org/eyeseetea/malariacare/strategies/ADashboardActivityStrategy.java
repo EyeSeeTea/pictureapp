@@ -380,4 +380,8 @@ public abstract class ADashboardActivityStrategy {
     public void initStockControlFragment() {
 
     }
+
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+        return false;
+    }
 }

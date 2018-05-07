@@ -328,5 +328,6 @@
 <string name="total">Total</string>
 <string name="stock_table">Stock Reporting</string>
 <string name="stock_table_error">"Error getting values for stock table"</string>
+<string name="error_saving_survey">"There was an error saving the survey"</string>
 
 </resources>

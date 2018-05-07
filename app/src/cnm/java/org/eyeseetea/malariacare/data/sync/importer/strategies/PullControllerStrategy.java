@@ -37,10 +37,8 @@ import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
-import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit
-        .ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -78,7 +76,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             callback.onStep(PullStep.METADATA);
             mPullController.populateMetadataFromCsvs(pullFilters.isAutoConfig());
 
-            if (pullFilters.isAutoConfig()) {
+            if (pullFilters.isAutoConfig() && PreferencesState.getInstance().getOrgUnit().isEmpty()) {
                 autoConfigureByPhone(context, callback, pullFilters);
             } else {
                 downloadMetadata(pullFilters, callback);

@@ -331,4 +331,5 @@
 <string name="error_saving_survey">"There was an error saving the survey"</string>
 
 <string name="ipc_issueEntry_q_patient_months_age">"Age in months"</string>
+<string name="dynamic_error_month_age">"Invalid age in months"</string>
 </resources>

@@ -326,4 +326,5 @@
 <string name="common_option_dot_complete">បញ្ចប់</string>
 <string name="common_option_dot_non_complete">មិនពេញលេញ</string>
 <string name="ipc_issueEntry_q_telephone">លេខទូរសព្ទ</string>
+<string name="error_saving_survey">"មានកំហុសក្នុងការរក្សាទុកការស្ទង់មតិ"</string>
 </resources>

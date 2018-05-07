@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -143,7 +144,14 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurveyDB().updateSurveyStatus();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        if (malariaSurvey != null && malariaSurvey.getId_survey() != null
+                && malariaSurvey.getId_survey() != 0) {
+            malariaSurvey.updateSurveyStatus();
+        } else {
+            Toast.makeText(mDashboardActivity, R.string.error_saving_survey,
+                    Toast.LENGTH_LONG).show();
+        }
         if (Session.getStockSurveyDB() != null) {
             Session.getStockSurveyDB().updateSurveyStatus();
         }

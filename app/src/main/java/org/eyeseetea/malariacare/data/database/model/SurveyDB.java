@@ -816,9 +816,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         QuestionDB localQuestionDB = rootQuestionDB;
         numRequired = SurveyFragmentStrategy.getNumRequired(numRequired, localQuestionDB);
 
-        //Add children required by each parent (value+mQuestionDB)
-        SurveyDB surveyDB = SurveyDB.findById(id_survey);
-        for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
+        for (ValueDB valueDB : getValuesFromDB()) {
             if (valueDB.getQuestionDB().isCompulsory() && valueDB.getId_option() != null) {
                 numRequired += QuestionDB.countChildrenByOptionValue(valueDB.getId_option());
             }

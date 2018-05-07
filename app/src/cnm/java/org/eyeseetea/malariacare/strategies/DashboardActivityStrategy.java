@@ -46,6 +46,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     StockSurveysFragment stockFragment;
     StockSummaryFragment mStockSummaryFragment;
     private boolean showStock;
+    private boolean showStockControl;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -305,6 +306,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         });
     }
 
+
     private void addStockTab(TabHost tabHost) {
         setTab(tabHost, mDashboardActivity.getResources().getString(
                 R.string.tab_tag_stock),
@@ -321,12 +323,66 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void initStockControlFragment() {
-        if (mStockSummaryFragment == null) {
-            mStockSummaryFragment = new StockSummaryFragment();
+        if (showStockControl) {
+            if (mStockSummaryFragment == null) {
+                mStockSummaryFragment = new StockSummaryFragment();
+            }
+            mDashboardActivity.replaceFragment(R.id.dashboard_stock_table_container,
+                    mStockSummaryFragment);
+            mStockSummaryFragment.reloadData();
+            mStockSummaryFragment.reloadHeader(mDashboardActivity);
         }
-        mDashboardActivity.replaceFragment(R.id.dashboard_stock_table_container,
-                mStockSummaryFragment);
-        mStockSummaryFragment.reloadData();
-        mStockSummaryFragment.reloadHeader(mDashboardActivity);
+    }
+
+    public void setStockControlTab(final TabHost tabHost) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+                programRepository, mainExecutor, asyncExecutor);
+        final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
+                new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
+                        programRepository);
+        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                hasToGenerateStockProgramUseCase.execute(uid,
+                        new HasToGenerateStockProgramUseCase.Callback() {
+                            @Override
+                            public void hasToCreateStock(boolean create) {
+                                showStockControl = create;
+                                if (create) {
+                                    addStockControlTab(tabHost);
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onError() {
+                Log.e(getClass().getName(), "Error getting program");
+            }
+        });
+    }
+
+    private void addStockControlTab(TabHost tabHost) {
+        setTab(tabHost, mDashboardActivity.getResources().getString(R.string.tab_tag_stock_control),
+                R.id.dashboard_stock_table_container,
+                mDashboardActivity.getResources().getDrawable(R.drawable.tab_stock));
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount();
+                i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(
+                    R.drawable.tab_below_line);
+        }
+    }
+
+    @Override
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_table_container)) {
+            return true;
+        }
+        return false;
     }
 }

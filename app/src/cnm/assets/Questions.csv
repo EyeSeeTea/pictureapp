@@ -30,7 +30,7 @@
 30;'MCS - Treatment (with dose)';'ipc_issueEntry_q_treatment';;'ipc_issueEntry_q_treatment';'rBonfqEGNdS';12;0;0;5;30;;14;11;0;;1
 31;'MCS - Referred reason';'ipc_issueEntry_q_referred';;'ipc_issueEntry_q_referred';'KV6ssVm0Avk';11;0;0;5;31;;32;12;0;;1
 32;'MCS - Stockout';'ipc_issueEntry_q_mcs_rdt_stock';;'ipc_issueEntry_q_mcs_rdt_stock';'tbzKIf7D56h';1;0;0;5;33;;10;11;10;;1
-33;'Code: Telephone';'ipc_issueEntry_q_telephone';;'ipc_issueEntry_q_telephone';'ADMdN4SQyoZ';11;0;0;3;34;;13;8;0;;1
-34;'MCS: Telephone';'ipc_issueEntry_q_telephone';;'ipc_issueEntry_q_telephone';'ADMdN4SQyoZ';11;0;0;3;35;;13;11;0;;1
+33;'Code: Telephone';'ipc_issueEntry_q_telephone';;'ipc_issueEntry_q_telephone';'ADMdN4SQyoZ';11;0;0;3;34;;13;8;0;;0
+34;'MCS: Telephone';'ipc_issueEntry_q_telephone';;'ipc_issueEntry_q_telephone';'ADMdN4SQyoZ';11;0;0;3;35;;13;11;0;;0
 35;'Code: Age Months';'ipc_issueEntry_q_patient_months_age';;'ipc_issueEntry_q_patient_months_age';'M4zmCaobylU';7;0;0;3;7;;33;7;0;;1
 36;'MCS - Age (Months)';'ipc_issueEntry_q_patient_months_age';;'ipc_issueEntry_q_patient_months_age';'M4zmCaobylU';5;0;0;5;23;;33;1;0

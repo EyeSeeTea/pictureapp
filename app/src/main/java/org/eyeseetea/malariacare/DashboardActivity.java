@@ -172,9 +172,7 @@ public class DashboardActivity extends BaseActivity {
                     getResources().getDrawable(R.drawable.tab_monitor));
         }
         if(GradleVariantConfig.isStockControlActive()){
-            setTab(getResources().getString(R.string.tab_tag_stock_control),
-                    R.id.dashboard_stock_table_container,
-                    getResources().getDrawable(R.drawable.tab_stock));
+            mDashboardActivityStrategy.setStockControlTab(tabHost);
         }
     }
 
@@ -256,6 +254,9 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void restoreAssess() {
+        if (surveyFragment == null) {
+            surveyFragment = new SurveyFragment();
+        }
         replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
     }
 
@@ -445,6 +446,8 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isNewHistoricReceiptBalanceFragmentActive()) {
             closeReceiptBalanceFragment();
+        } else if (isStockTableFragmentActive()) {
+            closeStockTableFragment();
         } else {
             if (!mDashboardActivityStrategy.onWebViewBackPressed(tabHost)) {
                 confirmExitApp();
@@ -671,6 +674,10 @@ public class DashboardActivity extends BaseActivity {
 
     private boolean isNewHistoricReceiptBalanceFragmentActive() {
         return mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
+    }
+
+    private boolean isStockTableFragmentActive() {
+        return mDashboardActivityStrategy.isStockTableFragmentActive(this);
     }
 
     private boolean isFragmentActive(Class fragmentClass, int layout) {

@@ -1118,4 +1118,5 @@
         <item>Nepali</item>
         <item>Swahili</item>
     </string-array>
+<string name="format_error">Json format error</string>
 </resources>

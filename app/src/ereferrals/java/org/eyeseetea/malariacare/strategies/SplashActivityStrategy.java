@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
@@ -21,13 +21,15 @@ import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCa
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
-    private Bundle extras;
+    private String connectVoucher="";
     private Activity activity;
 
-    public SplashActivityStrategy(Activity mActivity, Bundle extras) {
+    public SplashActivityStrategy(Activity mActivity, String connectVoucher) {
         super(mActivity);
         this.activity = mActivity;
-        this.extras = extras;
+        if(connectVoucher!=null) {
+            this.connectVoucher = connectVoucher;
+        }
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
@@ -36,7 +38,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void finishAndGo() {
         Intent intent = new Intent(activity, LoginActivity.class);
-        intent.putExtra("extra", extras);
+        intent.putExtra(SplashScreenActivity.intentKey, connectVoucher);
         activity.startActivity(intent);
         activity.finish();
     }

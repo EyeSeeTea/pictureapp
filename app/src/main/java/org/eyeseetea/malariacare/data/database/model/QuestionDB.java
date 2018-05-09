@@ -2054,6 +2054,13 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
+    public boolean hasOptions() {
+        return new Select().from(OptionDB.class)
+                .where(OptionDB_Table.id_answer_fk.eq(getAnswerDB().getId_answer()))
+                .orderBy(OptionDB_Table.name, true)
+                .count()>0;
+    }
+
     public static boolean isEmpty() {
         long count = new Select()
                 .from(QuestionDB.class)

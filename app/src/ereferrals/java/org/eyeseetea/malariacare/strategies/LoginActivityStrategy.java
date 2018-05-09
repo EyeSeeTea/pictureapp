@@ -6,7 +6,6 @@ import static org.eyeseetea.malariacare.views.ViewUtils.toggleVisibility;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,16 +16,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -53,10 +57,14 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
+import java.io.IOException;
+
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final java.lang.String TAG = ".LoginActivityStrategy";
     public static final java.lang.String EXIT = "exit";
+    public static final java.lang.String CREATED_SURVEY_FROM_OTHER_APP = "openSurvey";
+    public static final java.lang.String VALUES_BUNDLE = "valuesBundle";
     public static final String START_PULL = "StartPull";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
@@ -65,6 +73,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
+    private boolean comeFromOtherApp;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -92,6 +101,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
+        comeFromOtherApp = false;
         showDashboardIfDemoUser();
         showSurveyWhenSoftLoginAndValidCredentials();
     }
@@ -114,7 +124,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void showSurveyWhenSoftLoginAndValidCredentials() {
-        if(loginActivity.getIntent().getExtras()==null || loginActivity.getIntent().getExtras().getBundle("extra")==null) {
+        if(loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY)==null
+                || loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY).isEmpty()) {
             return;
         }
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -127,28 +138,61 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onGetUsername(Credentials credentials) {
                 if (credentials != null && !credentials.isEmpty()) {
-                    Bundle bundle = loginActivity.getIntent().getExtras().getBundle("extra");
-                    if(bundle != null && bundle.getBundle("credentialsBundle") != null && bundle.getBundle("valuesBundle") != null) {
-                        String user = bundle.getBundle("credentialsBundle").getString("user");
-                        String password = bundle.getBundle("credentialsBundle").getString(
-                                "password");
-                        if (user != null && user.equals(credentials.getUsername())
-                                && password != null && password.equals(credentials.getPassword())) {
-                            moveToDashboardAndCreateSurveyWithValues(bundle);
+                    String value = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
+                    ConnectVoucher connectVoucher = parseJson(value);
+                    if(connectVoucher != null && connectVoucher.getAuth()!=null) {
+                        if (connectVoucher.getAuth().getUserName().equals(credentials.getUsername())
+                                && connectVoucher.getAuth().getPassword().equals(credentials.getPassword())) {
+                            moveToDashboardAndCreateSurveyWithValues(value);
+                        }else{
+                            showToastAndClose(R.string.different_user_error);
                         }
+                    } else if (connectVoucher.getAuth() == null && connectVoucher.getValues()!=null){
+                        comeFromOtherApp = true;
                     }
+                }else{
+                    showToastAndClose(R.string.no_user_error);
                 }
             }
+
         });
     }
 
-    private void moveToDashboardAndCreateSurveyWithValues(Bundle bundle) {
+    private void showToastAndClose(int error) {
+        Toast.makeText(loginActivity, error, Toast.LENGTH_LONG).show();
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
+                    //fixme the app is reopened after close using this intent.
+                    int pid = android.os.Process.myPid();
+                    android.os.Process.killProcess(pid);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
+
+    private ConnectVoucher parseJson(String jsonToSend) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ConnectVoucher connectVoucher = mapper.readValue(jsonToSend, ConnectVoucher.class);
+            return connectVoucher;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(loginActivity, R.string.format_error, Toast.LENGTH_LONG).show();
+            return null;
+        }
+    }
+
+    private void moveToDashboardAndCreateSurveyWithValues(String valueJson) {
         Intent intent = new Intent(loginActivity, DashboardActivity.class);
-        intent.putExtra("openSurvey", true);
-        intent.putExtra("valuesBundle",
-                bundle.getBundle("valuesBundle").getString("values"));
-        loginActivity.getIntent().removeExtra("credentialsBundle");
-        loginActivity.getIntent().removeExtra("valuesBundle");
+        intent.putExtra(CREATED_SURVEY_FROM_OTHER_APP, true);
+        intent.putExtra(VALUES_BUNDLE, valueJson);
+        loginActivity.getIntent().putExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY,"");
         loginActivity.startActivity(intent);
         loginActivity.finish();
     }
@@ -499,7 +543,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onComplete() {
                 loginActivity.onFinishLoading(null);
-                finishAndGo(DashboardActivity.class);
+                if(comeFromOtherApp) {
+                    String value = loginActivity.getIntent().getExtras().getString(
+                            SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
+                    moveToDashboardAndCreateSurveyWithValues(value);
+                }else {
+                    finishAndGo(DashboardActivity.class);
+                }
             }
 
             @Override

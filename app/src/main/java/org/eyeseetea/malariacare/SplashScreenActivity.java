@@ -28,13 +28,14 @@ public class SplashScreenActivity extends Activity {
 
 
     private static final String TAG = ".SplashScreenActivity";
-    public static final String intentKey = "ConnectVoucher";
+    public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private SplashActivityStrategy splashActivityStrategy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        splashActivityStrategy = new SplashActivityStrategy(this, getIntent().getStringExtra(intentKey));
+        splashActivityStrategy = new SplashActivityStrategy(this, getIntent().getStringExtra(
+                INTENT_JSON_EXTRA_KEY));
         clearIntentExtras();
         if (splashActivityStrategy.canEnterApp()) {
             AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);

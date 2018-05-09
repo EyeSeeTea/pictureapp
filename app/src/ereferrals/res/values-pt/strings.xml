@@ -957,4 +957,6 @@
     <string name="warning_message">"ATENÇÃO: "</string>
     <string name="error_empty_question">"Campo obrigatório vazio"</string>
     <string name="format_error">Erro de formato Json</string>
+    <string name="no_user_error">Nenhum usuário logado.</string>
+    <string name="different_user_error">Usuário logado é diferente.</string>
 </resources>

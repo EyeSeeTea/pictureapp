@@ -1119,4 +1119,6 @@
         <item>Swahili</item>
     </string-array>
 <string name="format_error">Json format error</string>
+<string name="no_user_error">No user logged in.</string>
+<string name="different_user_error">User logged in is different.</string>
 </resources>

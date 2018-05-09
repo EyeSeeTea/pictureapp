@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.googleapis.extensions.android.gms.auth
-        .GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
 import org.eyeseetea.malariacare.data.io.FileDownloader;
 import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
@@ -73,13 +74,13 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
@@ -241,46 +242,52 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private void saveValuesFromIntent(Activity activity, SurveyDB survey) {
         if (activity.getIntent() != null && activity.getIntent().getExtras() != null){
-            String values = activity.getIntent().getExtras().getString("valuesBundle");
+            String values = activity.getIntent().getExtras().getString(LoginActivityStrategy.VALUES_BUNDLE);
             if(values !=null && !values.isEmpty()){
                 try {
-                    parseJsonValuesAndSave(survey, values);
                     survey.save();
+                    parseJsonValuesAndSave(survey, values);
                     if(survey.getValuesFromDB().size()>0) {
                         DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(true);
                     }
-                } catch (JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            activity.getIntent().removeExtra("valuesBundle");
-            activity.getIntent().removeExtra("openSurvey");
+            activity.getIntent().removeExtra(LoginActivityStrategy.VALUES_BUNDLE);
+            activity.getIntent().removeExtra(LoginActivityStrategy.CREATED_SURVEY_FROM_OTHER_APP);
         }
     }
 
-    private void parseJsonValuesAndSave(SurveyDB survey, String values) throws JSONException {
-        JSONObject jsonObject = new JSONObject(values);
-        Iterator<?> keys = jsonObject.keys();
-        while( keys.hasNext() ) {
-            String key = (String)keys.next();
-            if ( jsonObject.getString(key) !=null){
-                String value = jsonObject.getString(key);
-                saveValue(survey, key, value);
-            }
+    private void parseJsonValuesAndSave(SurveyDB survey, String jsonValues) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ConnectVoucher connectVoucher;
+            connectVoucher = mapper.readValue(jsonValues, ConnectVoucher.class);
+        Iterator it = connectVoucher.getValues().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            saveValue(survey, pair.getKey().toString(),  pair.getValue().toString());
+            it.remove(); // avoids a ConcurrentModificationException
         }
     }
 
     private void saveValue(SurveyDB survey, String key, String value) {
         QuestionDB questionDB = QuestionDB.findByUID(key);
+        ValueDB valueDB = null;
         if(questionDB!=null) {
-            OptionDB optionDBS = OptionDB.getOptionsByQuestionAndValue(questionDB, value);
-            ValueDB valueDB;
-            if(optionDBS!=null){
-                valueDB = new ValueDB(optionDBS, questionDB, survey);
+            if(questionDB.hasOptions()) {
+                OptionDB optionDBS = OptionDB.getOptionsByQuestionAndValue(questionDB, value);
+                if (optionDBS != null) {
+                    valueDB = new ValueDB(optionDBS, questionDB, survey);
+                }else{
+                    Log.d("parsing", "wrong value "+value+" will be ignored");
+                }
             }else {
                 valueDB = new ValueDB(value, questionDB, survey);
             }
-            valueDB.save();
+            if(valueDB!=null) {
+                valueDB.save();
+            }
         }
     }
 
@@ -670,7 +677,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
     @Override
     public void checkIntent(Intent intent) {
-        if(intent.getBooleanExtra("openSurvey",false)){
+        if(intent.getBooleanExtra(LoginActivityStrategy.CREATED_SURVEY_FROM_OTHER_APP,false)){
             mDashboardActivity.newSurvey();
         }
     }

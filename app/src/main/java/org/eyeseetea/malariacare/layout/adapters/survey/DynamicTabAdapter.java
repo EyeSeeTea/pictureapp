@@ -638,7 +638,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
-                questionView.setValue(valueDB);
+                if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning() || (valueDB != null && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB))) {
+                    questionView.setValue(valueDB);
+                } else {
+                    ((CommonQuestionView)questionView).deactivateQuestion();
+                }
+
             }
 
             setupNavigationByQuestionView(rowView.getRootView(), questionView);

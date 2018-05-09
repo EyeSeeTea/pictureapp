@@ -38,7 +38,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void finishAndGo() {
         Intent intent = new Intent(activity, LoginActivity.class);
-        intent.putExtra(SplashScreenActivity.intentKey, connectVoucher);
+        intent.putExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY, connectVoucher);
         activity.startActivity(intent);
         activity.finish();
     }

@@ -94,6 +94,7 @@ public abstract class ADynamicTabAdapterStrategy {
             }
         }, 750);
     }
+
     public abstract void addScrollToSwipeTouchListener(View rowView);
 
     protected boolean shouldShowReviewScreen() {

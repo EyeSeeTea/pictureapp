@@ -165,9 +165,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void run() {
                 try {
                     Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
-                    //fixme the app is reopened after close using this intent.
-                    int pid = android.os.Process.myPid();
-                    android.os.Process.killProcess(pid);
+                    onBackPressed();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

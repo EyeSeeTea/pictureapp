@@ -6,8 +6,9 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import java.util.ArrayList;
 
 
 public class ProgramLocalDataSource implements IProgramRepository {

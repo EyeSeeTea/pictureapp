@@ -4,20 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
+    android:background="@color/default_background_survey"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/phone_row_padding"
     android:paddingRight="@dimen/phone_row_padding">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <org.eyeseetea.sdk.presentation.views.CustomEditText
         android:id="@+id/answer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.6"
-        android:background="@drawable/edit_text_bottom_border"
+        android:layout_gravity="center"
         android:gravity="center"
+        android:background="@color/transparent"
         android:imeOptions="actionDone"
         android:inputType="phone"
+        android:textColor="@color/gray_text_survey"
         android:singleLine="true"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
@@ -25,10 +31,20 @@
     <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/row_phone_btn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_margin="10dp"
         android:layout_weight="0.4"
+        android:background="@color/transparent"
+        android:textColor="@color/gray_text_survey"
         android:text="@string/provider_redeemEntry_msg_matchingOk"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/gray_text_survey" />
 </LinearLayout>

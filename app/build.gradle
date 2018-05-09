@@ -117,8 +117,12 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -142,8 +146,12 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -167,8 +175,12 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
             buildConfigField "boolean", "validationInline", "false"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
@@ -194,12 +206,17 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             buildConfigField "boolean", "validationInline", "true"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
-            versionName "0.3.1"
+            versionName "0.4.0"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -208,7 +225,7 @@ android {
             buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
-            buildConfigField "boolean", "activeStockFragment", "true"
+            buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
             buildConfigField "boolean", "activeAVFragment", "false"
             buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.CNMDBProvider\""
@@ -221,7 +238,11 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             resValue "string", "authority", applicationId + versionName + "_CNM_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "boolean", "activeStockControlFragment", "true"
             buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "boolean", "openReviewCompletedSurveys", "true"
+            buildConfigField "boolean", "pullDataDropdown", "false"
+            buildConfigField "boolean", "showReviewInReadMode", "true"
         }
 
     }

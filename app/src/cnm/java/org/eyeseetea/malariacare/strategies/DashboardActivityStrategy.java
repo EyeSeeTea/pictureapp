@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -24,6 +25,7 @@ import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerExc
 import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
+import org.eyeseetea.malariacare.fragments.StockSummaryFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -42,7 +44,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     DashboardActivity mDashboardActivity;
     StockSurveysFragment stockFragment;
+    StockSummaryFragment mStockSummaryFragment;
     private boolean showStock;
+    private boolean showStockControl;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -139,10 +143,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Session.setStockSurveyDB(stockSurvey);
     }
 
-
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurveyDB().updateSurveyStatus();
+        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+        if (malariaSurvey != null && malariaSurvey.getId_survey() != null
+                && malariaSurvey.getId_survey() != 0) {
+            malariaSurvey.updateSurveyStatus();
+        } else {
+            Toast.makeText(mDashboardActivity, R.string.error_saving_survey,
+                    Toast.LENGTH_LONG).show();
+        }
         if (Session.getStockSurveyDB() != null) {
             Session.getStockSurveyDB().updateSurveyStatus();
         }
@@ -193,7 +203,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
         Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
-        if (currentFragment.getClass().equals(fragmentClass)) {
+        if (currentFragment != null && currentFragment.getClass().equals(fragmentClass)) {
             return true;
         }
         return false;
@@ -248,6 +258,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 } else if (tabId.equalsIgnoreCase(
                         mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
                     reloadAVFragment();
+                } else if (tabId.equalsIgnoreCase(mDashboardActivity.getResources().getString(
+                        R.string.tab_tag_stock_control))) {
+                    initStockControlFragment();
                 }
             }
         });
@@ -293,6 +306,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         });
     }
 
+
     private void addStockTab(TabHost tabHost) {
         setTab(tabHost, mDashboardActivity.getResources().getString(
                 R.string.tab_tag_stock),
@@ -305,5 +319,70 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             tabHost.getTabWidget().getChildAt(i).setBackgroundResource(
                     R.drawable.tab_below_line);
         }
+    }
+
+    @Override
+    public void initStockControlFragment() {
+        if (showStockControl) {
+            if (mStockSummaryFragment == null) {
+                mStockSummaryFragment = new StockSummaryFragment();
+            }
+            mDashboardActivity.replaceFragment(R.id.dashboard_stock_table_container,
+                    mStockSummaryFragment);
+            mStockSummaryFragment.reloadData();
+            mStockSummaryFragment.reloadHeader(mDashboardActivity);
+        }
+    }
+
+    public void setStockControlTab(final TabHost tabHost) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+                programRepository, mainExecutor, asyncExecutor);
+        final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
+                new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
+                        programRepository);
+        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                hasToGenerateStockProgramUseCase.execute(uid,
+                        new HasToGenerateStockProgramUseCase.Callback() {
+                            @Override
+                            public void hasToCreateStock(boolean create) {
+                                showStockControl = create;
+                                if (create) {
+                                    addStockControlTab(tabHost);
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onError() {
+                Log.e(getClass().getName(), "Error getting program");
+            }
+        });
+    }
+
+    private void addStockControlTab(TabHost tabHost) {
+        setTab(tabHost, mDashboardActivity.getResources().getString(R.string.tab_tag_stock_control),
+                R.id.dashboard_stock_table_container,
+                mDashboardActivity.getResources().getDrawable(R.drawable.tab_stock));
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount();
+                i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+            tabHost.getTabWidget().getChildAt(i).setBackgroundResource(
+                    R.drawable.tab_below_line);
+        }
+    }
+
+    @Override
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+                R.id.dashboard_stock_table_container)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -125,6 +125,12 @@ public class QuestionLocalDataSource implements IQuestionRepository {
             case Constants.DROPDOWN_LIST_OU_TREE:
                 questionType = Question.Type.DROPDOWN_LIST_OU_TREE;
                 break;
+            case Constants.IMAGES_VERTICAL:
+                questionType = Question.Type.DROPDOWN_LIST_OU_TREE;
+                break;
+            case Constants.AGE_MONTH_NUMBER:
+                questionType = Question.Type.AGE_MONTH_NUMBER;
+                break;
             default:
                 throw new IllegalArgumentException("There are not domain type for output" + output);
         }

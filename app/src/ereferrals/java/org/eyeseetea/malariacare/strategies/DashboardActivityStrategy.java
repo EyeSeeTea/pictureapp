@@ -629,7 +629,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void exitReview() {
+    public void exitReview(boolean fromSurveyList) {
         if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
             sendSurvey();
@@ -662,6 +662,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void onConnectivityStatusChange() {
         downloadMedia();
+    }
+
+    public void initStockControlFragment() {
+
     }
 
     @Override

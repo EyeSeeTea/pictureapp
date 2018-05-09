@@ -461,6 +461,16 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(SurveyDB_Table.id_org_unit_fk)).queryList();
     }
 
+    public static List<SurveyDB> getAllCompletedSentSurveys() {
+        return new Select().from(SurveyDB.class)
+                .where(SurveyDB_Table.status.eq(Constants.SURVEY_COMPLETED))
+                .or(SurveyDB_Table.status.eq(Constants.SURVEY_SENT))
+                .or(SurveyDB_Table.status.eq(Constants.SURVEY_CONFLICT))
+                .or(SurveyDB_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date))
+                .orderBy(OrderBy.fromProperty(SurveyDB_Table.id_org_unit_fk)).queryList();
+    }
+
     public static List<SurveyDB> getAllCompletedSurveysNoReceiptReset() {
         return new Select().from(SurveyDB.class)
                 .where(SurveyDB_Table.status.eq(Constants.SURVEY_COMPLETED))
@@ -806,9 +816,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         QuestionDB localQuestionDB = rootQuestionDB;
         numRequired = SurveyFragmentStrategy.getNumRequired(numRequired, localQuestionDB);
 
-        //Add children required by each parent (value+mQuestionDB)
-        SurveyDB surveyDB = SurveyDB.findById(id_survey);
-        for (ValueDB valueDB : surveyDB.getValuesFromDB()) {
+        for (ValueDB valueDB : getValuesFromDB()) {
             if (valueDB.getQuestionDB().isCompulsory() && valueDB.getId_option() != null) {
                 numRequired += QuestionDB.countChildrenByOptionValue(valueDB.getId_option());
             }

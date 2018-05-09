@@ -313,4 +313,20 @@
 <string name="ipc_issueEntry_q_mcs_rdt_stock">"ភាគហ៊ុន RDT ចេញ?"</string>
 <string name="common_option_tested">"សាកល្បង"</string>
 <string name="common_option_stock_out">"RDT ស្តុកចេញ"</string>
+<string name="received">បានទទួល</string>
+<string name="used">ប្រើ</string>
+<string name="delivered">បានបញ្ជូន</string>
+<string name="total">សរុប</string>
+<string name="stock_table">របាយការណ៍ភាគហ៊ុន</string>
+<string name="stock_table_error">"កំហុសក្នុងការទទួលយកតម្លៃសម្រាប់តារាងភាគហ៊ុន"</string>
+<string name="ipc_issueEntry_q_patient_name">ឈ្មោះអ្នកជម្ងឺ</string>
+<string name="ipc_issueEntry_q_patient_temperature">សីតុណ្ហភាព (អង្សាសេ)</string>
+<string name="ipc_issueEntry_q_patient_status">ស្ថានភាពអ្នកជម្ងឺ</string>
+<string name="ipc_issueEntry_q_mcs_dot">MCS - DOT</string>
+<string name="common_option_dot_complete">បញ្ចប់</string>
+<string name="common_option_dot_non_complete">មិនពេញលេញ</string>
+<string name="ipc_issueEntry_q_telephone">លេខទូរសព្ទ</string>
+<string name="ipc_issueEntry_q_patient_months_age">"អាយុជាខែ"</string>
+<string name="error_saving_survey">"មានកំហុសក្នុងការរក្សាទុកការស្ទង់មតិ"</string>
+<string name="dynamic_error_month_age">"អាយុមិនត្រឹមត្រូវក្នុងខែ"</string>
 </resources>

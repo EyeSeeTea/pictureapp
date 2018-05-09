@@ -78,10 +78,8 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
                 R.id.scrolled_table)).findViewById(R.id.table_scroll));
     }
 
-
-
     @Override
-    public void finishOrNext() {
+    public void finishOrNext(final boolean readOnly) {
         try {
             System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
             System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());

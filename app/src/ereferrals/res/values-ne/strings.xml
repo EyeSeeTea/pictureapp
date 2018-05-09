@@ -964,4 +964,5 @@
     <string name="format_error">Json ढाँचा त्रुटि</string>
     <string name="no_user_error">कुनै प्रयोगकर्ता लगइन छैन।</string>
     <string name="different_user_error">प्रयोगकर्ता लग इन भिन्न छ।</string>
+    <string name="dynamic_error_month_age">"महिनामा अवैध उमेर"</string>
 </resources>

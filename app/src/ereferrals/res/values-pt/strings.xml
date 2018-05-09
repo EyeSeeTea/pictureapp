@@ -959,4 +959,5 @@
     <string name="format_error">Erro de formato Json</string>
     <string name="no_user_error">Nenhum usuário logado.</string>
     <string name="different_user_error">Usuário logado é diferente.</string>
+    <string name="dynamic_error_month_age">"Idade inválida em meses"</string>
 </resources>

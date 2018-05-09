@@ -1121,4 +1121,5 @@
 <string name="format_error">Json format error</string>
 <string name="no_user_error">No user logged in.</string>
 <string name="different_user_error">User logged in is different.</string>
+<string name="dynamic_error_month_age">"Invalid age in months"</string>
 </resources>

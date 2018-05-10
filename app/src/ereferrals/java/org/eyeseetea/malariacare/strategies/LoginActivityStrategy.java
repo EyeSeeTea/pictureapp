@@ -137,17 +137,20 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
             @Override
             public void onGetUsername(Credentials credentials) {
+                String value = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
+                ConnectVoucher connectVoucher = parseJson(value);
+                if(connectVoucher == null){
+                    return;
+                }
                 if (credentials != null && !credentials.isEmpty()) {
-                    String value = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
-                    ConnectVoucher connectVoucher = parseJson(value);
-                    if(connectVoucher != null && connectVoucher.getAuth()!=null) {
+                    if(connectVoucher.hasAuth()) {
                         if (connectVoucher.getAuth().getUserName().equals(credentials.getUsername())
                                 && connectVoucher.getAuth().getPassword().equals(credentials.getPassword())) {
                             moveToDashboardAndCreateSurveyWithValues(value);
                         }else{
                             showToastAndClose(R.string.different_user_error);
                         }
-                    } else if (connectVoucher.getAuth() == null && connectVoucher.getValues()!=null){
+                    } else {
                         comeFromOtherApp = true;
                     }
                 }else{

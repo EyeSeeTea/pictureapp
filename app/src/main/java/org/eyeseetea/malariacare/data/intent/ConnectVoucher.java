@@ -22,4 +22,11 @@ public class ConnectVoucher {
     public HashMap<String, String> getValues() {
         return values;
     }
+
+    public boolean hasAuth() {
+        return  (getAuth() != null &&
+                ((getAuth().getUserName()!=null && !getAuth().getUserName().isEmpty())
+                        && (getAuth().getPassword()!=null && !getAuth().getPassword().isEmpty())
+                ));
+    }
 }

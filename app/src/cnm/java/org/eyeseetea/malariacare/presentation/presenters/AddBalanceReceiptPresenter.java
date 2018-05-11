@@ -73,7 +73,7 @@ public class AddBalanceReceiptPresenter {
                 mValueRepository);
         saveValueUseCase.execute(new SaveValueUseCase.Callback() {
             @Override
-            public void onValueSaved(Value value) {
+            public void onValueSaved(List<Value> value) {
             }
         }, mSurvey.getId(), new Value(valueToSave, questionUID));
     }

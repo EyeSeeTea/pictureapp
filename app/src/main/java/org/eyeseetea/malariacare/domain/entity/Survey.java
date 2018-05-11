@@ -41,6 +41,14 @@ public class Survey {
         mType = required(type, "Type is required");
     }
 
+    public Survey(long id, Program program,
+                  UserAccount userAccount, int status) {
+        mProgram = required(program, "Program is required");
+        mUserAccount = required(userAccount, "userAccount is required");
+        this.id = required(id, "id is required");
+        this.status = required(status, "status is required");
+    }
+
     public Survey(Date surveyDate) {
         mSurveyDate = surveyDate;
     }

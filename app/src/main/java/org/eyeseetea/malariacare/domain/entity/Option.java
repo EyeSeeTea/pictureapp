@@ -22,6 +22,12 @@ public class Option {
         this.rules = rules;
     }
 
+    public Option(Long id, String code, String name) {
+        this.id = required(id, "id is required");
+        this.code = required(code, "code is required");
+        this.name = required(name, "name is required");
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }

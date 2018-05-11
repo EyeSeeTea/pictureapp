@@ -46,7 +46,7 @@ public class SplashScreenActivity extends Activity {
     private void clearIntentExtras() {
         if(getIntent().getExtras()!=null) {
             //remove intent extras.
-            setIntent(getIntent().replaceExtras(new Bundle()));
+            setIntent(getIntent().putExtra(INTENT_JSON_EXTRA_KEY, ""));
         }
     }
 

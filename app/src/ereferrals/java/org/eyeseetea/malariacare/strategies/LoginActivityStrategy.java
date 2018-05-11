@@ -71,6 +71,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button demoButton;
     private Button advancedOptions;
     private boolean comeFromOtherApp;
+    private String valueFromOtherApp;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -99,6 +100,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             loginActivity.finish();
         }
         comeFromOtherApp = false;
+        valueFromOtherApp = null;
+        if(loginActivity.getIntent().getExtras()!=null) {
+            valueFromOtherApp = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
+            loginActivity.getIntent().putExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY, "");
+        }
         showDashboardIfDemoUser();
         decideConnectVoucherAction();
     }
@@ -131,14 +137,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
             @Override
             public void onGetUsername(Credentials credentials) {
-                String value = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
-                ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(value);
+                ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(valueFromOtherApp);
                 if(connectVoucher == null){
                     Toast.makeText(loginActivity, R.string.format_error, Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (credentials != null && !credentials.isEmpty()) {
-                    connectVoucherValueAfterSoftLoginResult(credentials, value, connectVoucher);
+                    connectVoucherValueAfterSoftLoginResult(credentials, valueFromOtherApp, connectVoucher);
                 }else{
                     showToastAndClose(R.string.no_user_error);
                 }
@@ -148,8 +153,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private boolean discardEmptyConnectVoucherJson() {
-        if(loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY)==null
-                || loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY).isEmpty()) {
+        if(valueFromOtherApp==null
+                || valueFromOtherApp.isEmpty()) {
             return true;
         }
         return false;
@@ -187,7 +192,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         Intent intent = new Intent(loginActivity, DashboardActivity.class);
         intent.putExtra(CREATED_SURVEY_FROM_OTHER_APP, true);
         intent.putExtra(VALUES_BUNDLE, valueJson);
-        loginActivity.getIntent().putExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY,"");
         loginActivity.startActivity(intent);
         loginActivity.finish();
     }
@@ -539,9 +543,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onComplete() {
                 loginActivity.onFinishLoading(null);
                 if(comeFromOtherApp) {
-                    String value = loginActivity.getIntent().getExtras().getString(
-                            SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
-                    moveToDashboardAndCreateSurveyWithValues(value);
+                    moveToDashboardAndCreateSurveyWithValues(valueFromOtherApp);
                 }else {
                     finishAndGo(DashboardActivity.class);
                 }

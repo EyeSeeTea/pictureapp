@@ -162,6 +162,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }else{
                 showToastAndClose(R.string.different_user_error);
             }
+        }else{
             comeFromOtherApp = true;
         }
     }

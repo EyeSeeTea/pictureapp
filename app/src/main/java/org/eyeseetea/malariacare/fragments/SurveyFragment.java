@@ -211,7 +211,7 @@ public class SurveyFragment extends Fragment {
 
     private void showSurvey() {
         try {
-            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+            LayoutInflater inflater = LayoutInflater.from(PreferencesState.getInstance().getContext().getApplicationContext());
 
             dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
 

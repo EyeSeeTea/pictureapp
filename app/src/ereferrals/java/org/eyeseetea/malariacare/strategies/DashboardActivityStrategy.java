@@ -248,7 +248,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 program, userAccount
                 , Constants.SURVEY_IN_PROGRESS);
         saveValuesFromIntent(activity, survey);
-        if(DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+        if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
             mDashboardActivity.initSurvey();
         }
     }
@@ -270,7 +270,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         it.remove(); // avoids a ConcurrentModificationException
                     }
                     if(values.size()>0) {
-                        DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(true);
                         saveValues(survey, values);
                     }
             }
@@ -684,7 +683,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void checkIntent(Intent intent) {
         if(intent.getBooleanExtra(LoginActivityStrategy.CREATED_SURVEY_FROM_OTHER_APP,false)){
+            DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(true);
             mDashboardActivity.newSurvey();
+        }else{
+            DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(false);
         }
     }
 }

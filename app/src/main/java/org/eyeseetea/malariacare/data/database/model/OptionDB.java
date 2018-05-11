@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -32,6 +33,13 @@ import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.Comparator;
 import java.util.List;
+
+import static org.eyeseetea.malariacare.data.database.AppDatabase.answerAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.answerName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionName;
 
 @Table(database = AppDatabase.class, name = "Option")
 public class OptionDB extends BaseModel {
@@ -374,11 +382,23 @@ public class OptionDB extends BaseModel {
                 .queryList();
     }
 
-    public static OptionDB getOptionsByQuestionAndValue(QuestionDB questionDB, String value) {
+    public static OptionDB getById(Long id_option) {
         return new Select().from(OptionDB.class)
-                .where(OptionDB_Table.id_answer_fk.eq(questionDB.getAnswerDB().getId_answer()))
-                .and(OptionDB_Table.code.eq(value))
-                .orderBy(OptionDB_Table.name, true)
+                .where(OptionDB_Table.id_option.eq(id_option))
+                .querySingle();
+    }
+
+    public static OptionDB getOptionsByQuestionAndValue(String questionUId, String value) {
+        return new Select().from(OptionDB.class).as(optionName)
+                .join(AnswerDB.class, Join.JoinType.LEFT_OUTER).as(answerName)
+                .on(OptionDB_Table.id_answer_fk.withTable(optionAlias)
+                        .eq(AnswerDB_Table.id_answer.withTable(answerAlias)))
+                .join(QuestionDB.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(QuestionDB_Table.id_answer_fk.withTable(questionAlias)
+                        .eq(AnswerDB_Table.id_answer.withTable(answerAlias)))
+                .where(QuestionDB_Table.uid_question.withTable(questionAlias).eq(questionUId))
+                .and(OptionDB_Table.code.withTable(optionAlias).eq(value))
+                .orderBy(OptionDB_Table.name.withTable(optionAlias), true)
                 .querySingle();
     }
     @Override

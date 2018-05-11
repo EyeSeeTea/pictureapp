@@ -56,6 +56,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -1374,7 +1375,8 @@ public class QuestionDB extends BaseModel {
 
     public void saveValuesText(String answer) {
         ValueDB valueDB = getValueBySession();
-        if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()) {
+        if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()
+                && !DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
             valueDB.getQuestionDB().deleteThresholdValues(valueDB);
         }
         SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));

@@ -18,8 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
@@ -31,6 +29,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
+import org.eyeseetea.malariacare.data.mappers.ConnectVoucherMapper;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -56,8 +55,6 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
-
-import java.io.IOException;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -103,7 +100,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         }
         comeFromOtherApp = false;
         showDashboardIfDemoUser();
-        showSurveyWhenSoftLoginAndValidCredentials();
+        decideConnectVoucherAction();
     }
 
     private void showDashboardIfDemoUser() {
@@ -123,11 +120,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
     }
 
-    private void showSurveyWhenSoftLoginAndValidCredentials() {
-        if(loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY)==null
-                || loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY).isEmpty()) {
-            return;
-        }
+    private void decideConnectVoucherAction() {
+        if (discardEmptyConnectVoucherJson()) return;
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
@@ -138,21 +132,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onGetUsername(Credentials credentials) {
                 String value = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
-                ConnectVoucher connectVoucher = parseJson(value);
+                ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(value);
                 if(connectVoucher == null){
+                    Toast.makeText(loginActivity, R.string.format_error, Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (credentials != null && !credentials.isEmpty()) {
-                    if(connectVoucher.hasAuth()) {
-                        if (connectVoucher.getAuth().getUserName().equals(credentials.getUsername())
-                                && connectVoucher.getAuth().getPassword().equals(credentials.getPassword())) {
-                            moveToDashboardAndCreateSurveyWithValues(value);
-                        }else{
-                            showToastAndClose(R.string.different_user_error);
-                        }
-                    } else {
-                        comeFromOtherApp = true;
-                    }
+                    connectVoucherValueAfterSoftLoginResult(credentials, value, connectVoucher);
                 }else{
                     showToastAndClose(R.string.no_user_error);
                 }
@@ -161,32 +147,39 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
     }
 
-    private void showToastAndClose(int error) {
-        Toast.makeText(loginActivity, error, Toast.LENGTH_LONG).show();
-        Thread thread = new Thread(){
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
-                    onBackPressed();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
+    private boolean discardEmptyConnectVoucherJson() {
+        if(loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY)==null
+                || loginActivity.getIntent().getStringExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY).isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
-    private ConnectVoucher parseJson(String jsonToSend) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            ConnectVoucher connectVoucher = mapper.readValue(jsonToSend, ConnectVoucher.class);
-            return connectVoucher;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(loginActivity, R.string.format_error, Toast.LENGTH_LONG).show();
-            return null;
+    private void connectVoucherValueAfterSoftLoginResult(Credentials credentials, String value, ConnectVoucher connectVoucher) {
+        if(connectVoucher.hasAuth()) {
+            if (isValidUserAndPassword(credentials, connectVoucher)) {
+                moveToDashboardAndCreateSurveyWithValues(value);
+            }else{
+                showToastAndClose(R.string.different_user_error);
+            }
+            comeFromOtherApp = true;
         }
+    }
+
+    private boolean isValidUserAndPassword(Credentials credentials, ConnectVoucher connectVoucher) {
+        return connectVoucher.getAuth().getUserName().equals(credentials.getUsername())
+                && connectVoucher.getAuth().getPassword().equals(credentials.getPassword());
+    }
+
+    private void showToastAndClose(int error) {
+        Toast.makeText(loginActivity, error, Toast.LENGTH_LONG).show();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                loginActivity.onBackPressed();
+            }
+        };
+        new Handler().postDelayed(runnable, 3500);
     }
 
     private void moveToDashboardAndCreateSurveyWithValues(String valueJson) {

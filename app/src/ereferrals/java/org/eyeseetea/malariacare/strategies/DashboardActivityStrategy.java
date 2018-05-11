@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -31,18 +30,19 @@ import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDat
 import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
 import org.eyeseetea.malariacare.data.io.FileDownloader;
 import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
+import org.eyeseetea.malariacare.data.mappers.ConnectVoucherMapper;
+import org.eyeseetea.malariacare.data.mappers.ConnectVoucherValueMapper;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
@@ -55,13 +55,17 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepositor
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.AVFragment;
@@ -76,7 +80,7 @@ import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -231,64 +235,62 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private void openNewSurvey(Activity activity) {
         ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
         // Put new survey in session
-        SurveyDB survey = new SurveyDB(null, programDB, Session.getUserDB());
-        survey.save();
-        saveValuesFromIntent(activity, survey);
-        Session.setMalariaSurveyDB(survey);
+        SurveyDB surveyDB = new SurveyDB(null, programDB, Session.getUserDB());
+        UserAccount userAccount = new UserAccount(Session.getUserDB().getName(),
+                Session.getUserDB().getUid(),
+                PreferencesState.getCredentialsFromPreferences().isDemoCredentials());
+        surveyDB.save();
+        Session.setMalariaSurveyDB(surveyDB);
         //Look for coordinates
-        prepareLocationListener(activity, survey);
-        mDashboardActivity.initSurvey();
+        prepareLocationListener(activity, surveyDB);
+        Program program = new Program(programDB.getUid(), programDB.getUid());
+        Survey survey = new Survey(surveyDB.getId_survey(),
+                program, userAccount
+                , Constants.SURVEY_IN_PROGRESS);
+        saveValuesFromIntent(activity, survey);
+        if(DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+            mDashboardActivity.initSurvey();
+        }
     }
 
-    private void saveValuesFromIntent(Activity activity, SurveyDB survey) {
+    private void saveValuesFromIntent(Activity activity, Survey survey) {
         if (activity.getIntent() != null && activity.getIntent().getExtras() != null){
-            String values = activity.getIntent().getExtras().getString(LoginActivityStrategy.VALUES_BUNDLE);
-            if(values !=null && !values.isEmpty()){
-                try {
-                    survey.save();
-                    parseJsonValuesAndSave(survey, values);
-                    if(survey.getValuesFromDB().size()>0) {
-                        DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(true);
+            String valuesJson = activity.getIntent().getExtras().getString(LoginActivityStrategy.VALUES_BUNDLE);
+            if(valuesJson !=null && !valuesJson.isEmpty()){
+                    ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(valuesJson);
+                    Iterator it = connectVoucher.getValues().entrySet().iterator();
+                    List<Value> values = new ArrayList<>();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+
+                        Value value = ConnectVoucherValueMapper.mapValueFromConnectVoucher(pair.getKey().toString(), pair.getValue().toString());
+                        if(value!=null && !values.contains(value)) {
+                            values.add(value);
+                        }
+                        it.remove(); // avoids a ConcurrentModificationException
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    if(values.size()>0) {
+                        DashboardActivity.dashboardActivity.setPreLoadSurveyOpenning(true);
+                        saveValues(survey, values);
+                    }
             }
             activity.getIntent().removeExtra(LoginActivityStrategy.VALUES_BUNDLE);
             activity.getIntent().removeExtra(LoginActivityStrategy.CREATED_SURVEY_FROM_OTHER_APP);
         }
     }
 
-    private void parseJsonValuesAndSave(SurveyDB survey, String jsonValues) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        ConnectVoucher connectVoucher;
-            connectVoucher = mapper.readValue(jsonValues, ConnectVoucher.class);
-        Iterator it = connectVoucher.getValues().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            saveValue(survey, pair.getKey().toString(),  pair.getValue().toString());
-            it.remove(); // avoids a ConcurrentModificationException
-        }
-    }
 
-    private void saveValue(SurveyDB survey, String key, String value) {
-        QuestionDB questionDB = QuestionDB.findByUID(key);
-        ValueDB valueDB = null;
-        if(questionDB!=null) {
-            if(questionDB.hasOptions()) {
-                OptionDB optionDBS = OptionDB.getOptionsByQuestionAndValue(questionDB, value);
-                if (optionDBS != null) {
-                    valueDB = new ValueDB(optionDBS, questionDB, survey);
-                }else{
-                    Log.d("parsing", "wrong value "+value+" will be ignored");
-                }
-            }else {
-                valueDB = new ValueDB(value, questionDB, survey);
+    public void saveValues(Survey survey, List<Value> values) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        SaveValueUseCase saveValueUseCase = new SaveValueUseCase(asyncExecutor, mainExecutor,
+                new ValueLocalDataSource());
+        saveValueUseCase.execute(new SaveValueUseCase.Callback() {
+            @Override
+            public void onValueSaved(List<Value> value) {
+                mDashboardActivity.initSurvey();
             }
-            if(valueDB!=null) {
-                valueDB.save();
-            }
-        }
+        }, survey.getId(), values);
     }
 
     private void openUncompletedSurvey() {

@@ -31,6 +31,18 @@ public class QuestionLocalDataSource implements IQuestionRepository {
         return questions;
     }
 
+    @Override
+    public boolean hasOptions(String questionUId) {
+        QuestionDB questionDB = QuestionDB.findByUID(questionUId);
+        return questionDB!=null && questionDB.hasOptions();
+    }
+
+    @Override
+    public boolean existsByUId(String questionUId) {
+        QuestionDB questionDB = QuestionDB.findByUID(questionUId);
+        return questionDB!=null;
+    }
+
     public static Question.Type mapOutputToQuestionType(int output) {
         Question.Type questionType;
 

@@ -7,11 +7,13 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +107,14 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         }
         surveyDB.setStatus(survey.getStatus());
         surveyDB.update();
+        setSurveyOnSession(surveyDB);
         return surveyDB.getId_survey();
+    }
+
+    private void setSurveyOnSession(SurveyDB surveyDB) {
+        if(surveyDB.getType() == Constants.SURVEY_NO_TYPE){
+            Session.setMalariaSurveyDB(surveyDB);
+        }
     }
 
 

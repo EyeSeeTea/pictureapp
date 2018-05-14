@@ -18,7 +18,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .APositiveOrZeroNumberSingleQuestionViewStrategy;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .PositiveOrZeroNumberSingleQuestionViewStrategyStrategy;
+        .PositiveOrZeroNumberSingleQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
@@ -32,7 +32,7 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
     public PositiveOrZeroNumberSingleQuestionView(Context context) {
         super(context);
         mPositiveOrZeroNumberSingleQuestionViewStrategy =
-                new PositiveOrZeroNumberSingleQuestionViewStrategyStrategy();
+                new PositiveOrZeroNumberSingleQuestionViewStrategy();
 
         init(context);
     }

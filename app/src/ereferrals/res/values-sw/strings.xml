@@ -1015,4 +1015,5 @@ Ameahidi kuhudhuria"</string>
 <string name="upgrading_metadata">Kuboresha metadata</string>
 <string name="warning_message">"WARNING:: "</string>
 <string name="error_empty_question">"Weka shamba la lazima"</string>
+<string name="dynamic_error_month_age">"Umri usio sahihi kwa miezi"</string>
 </resources>

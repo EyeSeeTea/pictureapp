@@ -5,7 +5,7 @@ import android.view.View;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 
 public class PositiveOrZeroNumberSingleQuestionViewStrategy extends
-        APositiveOrZeroNumberSingleQuestionView {
+        APositiveOrZeroNumberSingleQuestionViewStrategy {
     @Override
     public void setQuestionDB(View view, QuestionDB questionDB) {
 

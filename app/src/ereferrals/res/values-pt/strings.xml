@@ -956,4 +956,5 @@
     <string name="upgrading_metadata">Atualizando metadados</string>
     <string name="warning_message">"ATENÇÃO: "</string>
     <string name="error_empty_question">"Campo obrigatório vazio"</string>
+    <string name="dynamic_error_month_age">"Idade inválida em meses"</string>
 </resources>

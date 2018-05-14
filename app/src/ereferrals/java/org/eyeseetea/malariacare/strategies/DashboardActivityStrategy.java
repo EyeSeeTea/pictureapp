@@ -29,6 +29,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -53,6 +54,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepo
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
@@ -65,6 +67,7 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
@@ -232,46 +235,42 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     }
 
-    private void openNewSurvey(Activity activity) {
+    private void openNewSurvey(final Activity activity) {
+        Survey survey = createNewConnectSurvey();
+
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        SaveSurveyUseCase saveSurveyUseCase = new SaveSurveyUseCase(asyncExecutor, mainExecutor, surveyRepository);
+
+        saveSurveyUseCase.execute(survey, new SaveSurveyUseCase.Callback() {
+            @Override
+            public void onSurveySaved(Survey survey) {
+                saveValuesFromIntent(activity, survey);
+                if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+                    mDashboardActivity.initSurvey();
+                }
+            }
+        });
+    }
+
+    private Survey createNewConnectSurvey() {
         ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
-        // Put new survey in session
-        SurveyDB surveyDB = new SurveyDB(null, programDB, Session.getUserDB());
         UserAccount userAccount = new UserAccount(Session.getUserDB().getName(),
                 Session.getUserDB().getUid(),
                 PreferencesState.getCredentialsFromPreferences().isDemoCredentials());
-        surveyDB.save();
-        Session.setMalariaSurveyDB(surveyDB);
-        //Look for coordinates
-        prepareLocationListener(activity, surveyDB);
         Program program = new Program(programDB.getUid(), programDB.getUid());
-        Survey survey = new Survey(surveyDB.getId_survey(),
-                program, userAccount
-                , Constants.SURVEY_IN_PROGRESS);
-        saveValuesFromIntent(activity, survey);
-        if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
-            mDashboardActivity.initSurvey();
-        }
+        return Survey.createNewConnectSurvey(program, userAccount);
     }
 
     private void saveValuesFromIntent(Activity activity, Survey survey) {
         if (activity.getIntent() != null && activity.getIntent().getExtras() != null){
             String valuesJson = activity.getIntent().getExtras().getString(LoginActivityStrategy.VALUES_BUNDLE);
             if(valuesJson !=null && !valuesJson.isEmpty()){
-                    ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(valuesJson);
-                    Iterator it = connectVoucher.getValues().entrySet().iterator();
-                    List<Value> values = new ArrayList<>();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-
-                        Value value = ConnectVoucherValueMapper.mapValueFromConnectVoucher(pair.getKey().toString(), pair.getValue().toString());
-                        if(value!=null && !values.contains(value)) {
-                            values.add(value);
-                        }
-                        it.remove(); // avoids a ConcurrentModificationException
-                    }
-                    if(values.size()>0) {
-                        saveValues(survey, values);
-                    }
+                List<Value> values = ConnectVoucherValueMapper.mapValueFromConnectVoucher(valuesJson);
+                if(values.size()>0) {
+                    saveValues(survey, values);
+                }
             }
             activity.getIntent().removeExtra(LoginActivityStrategy.VALUES_BUNDLE);
             activity.getIntent().removeExtra(LoginActivityStrategy.CREATED_SURVEY_FROM_OTHER_APP);

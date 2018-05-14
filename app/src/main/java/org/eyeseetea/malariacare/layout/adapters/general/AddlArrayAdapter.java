@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
     private Integer layout;
     private Integer dropdownLayout;
-    private Integer dropdownItemSize = 0;
+    private Integer dropdownItemSize;
 
     public AddlArrayAdapter(Context context, List<T> objects) {
         super(context, R.layout.simple_spinner_item, objects);

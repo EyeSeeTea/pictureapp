@@ -30,7 +30,7 @@ public class SaveSurveyUseCase implements UseCase {
 
     @Override
     public void run() {
-        mSurveyRepository.save(mSurvey);
+        mSurvey.setId(mSurveyRepository.save(mSurvey));
         notifySurveySaved();
     }
 
@@ -38,12 +38,12 @@ public class SaveSurveyUseCase implements UseCase {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onSurveySaved();
+                mCallback.onSurveySaved(mSurvey);
             }
         });
     }
 
     public interface Callback {
-        void onSurveySaved();
+        void onSurveySaved(Survey survey);
     }
 }

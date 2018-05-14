@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -234,8 +235,6 @@ public class SettingsActivity extends PreferenceActivity implements
         bindPreferenceSummaryToValue(
                 findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        loadFontStyleListPreference();
-
         autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(
                 getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(
@@ -267,6 +266,8 @@ public class SettingsActivity extends PreferenceActivity implements
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
 
+        loadFontStyleListPreference();
+
         mSettingsActivityStrategy.addExtraPreferences();
     }
 
@@ -281,7 +282,16 @@ public class SettingsActivity extends PreferenceActivity implements
 
         listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
         listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
-        listPreference.setDefaultValue(String.valueOf(FontStyle.Medium.getResId()));
+        CheckBoxPreference customizeFont = ((CheckBoxPreference)getPreferenceScreen().findPreference(
+                this.getResources().getString(R.string.customize_fonts)));
+        if(customizeFont.isChecked()) {
+            for(int i=0; listPreference.getEntryValues().length>i;i++){
+                if(listPreference.getEntryValues()[i].equals(listPreference.getValue())){
+                    listPreference.setValueIndex(i);
+                    listPreference.setSummary(listPreference.getEntry());
+                }
+            }
+        }
     }
 
     @Override

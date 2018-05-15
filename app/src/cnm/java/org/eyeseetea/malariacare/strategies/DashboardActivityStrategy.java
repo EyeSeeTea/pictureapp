@@ -92,10 +92,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void newSurvey(Activity activity) {
 
         IProgramRepository programRepository = new ProgramLocalDataSource();
-        Program userProgram  = programRepository.getUserProgram();
+        Program userProgram = programRepository.getUserProgram();
         ProgramDB program = ProgramDB.findByName(userProgram.getCode());
 
-        TabDB userProgramTab =  TabDB.findTabByProgram(program.getId_program()).get(0);
+        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
         try {
             NavigationBuilder.getInstance().buildController(userProgramTab);
         } catch (LoadingNavigationControllerException e) {
@@ -116,7 +116,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
-    private void createStockProgramIfNecessary(final Activity activity, final SurveyDB malariaSurvey,
+    private void createStockProgramIfNecessary(final Activity activity,
+            final SurveyDB malariaSurvey,
             final OrgUnitDB orgUnit) {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -136,7 +137,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void generateStockProgram(Date eventDate,
-            OrgUnitDB orgUnit,Activity activity) {
+            OrgUnitDB orgUnit, Activity activity) {
         ProgramDB stockProgram = ProgramDB.findByUID(
                 activity.getString(R.string.stock_program_uid));
         SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
@@ -215,6 +216,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static void onLogoutSuccess() {
         DashboardActivity.dashboardActivity.finishAndGo(SettingsActivity.class);
     }
+
     public void openSentSurvey() {
         mDashboardActivity.getTabHost().setCurrentTabByTag(
                 mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
@@ -226,7 +228,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void initTabWidget(TabHost tabHost, Fragment reviewFragment,
             final Fragment surveyFragment,
             final boolean isReadOnly) {
-         /* set tabs in order */
+        /* set tabs in order */
         LayoutUtils.setTabHosts(mDashboardActivity);
         LayoutUtils.setTabDivider(mDashboardActivity);
 
@@ -382,7 +384,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
-     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+        if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
                 R.id.dashboard_stock_table_container)) {
             return true;
         }
@@ -392,43 +394,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void onStart() {
         if (Session.hasSurveyToComplete()) {
-            openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
         } else {
             SurveyDB.removeInProgress();
         }
-    }
-
-    private void openUncompletedSurvey() {
-        SurveyDB survey;
-        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
-        if (!uncompletedSurveys.isEmpty()) {
-            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
-            Session.setMalariaSurveyDB(survey);
-            //Look for coordinates
-            prepareLocationListener(mDashboardActivity, survey);
-            mDashboardActivity.hideReview(lastAnsweredQuestionUid(survey));
-        }
-    }
-
-    private String lastAnsweredQuestionUid(SurveyDB surveyDB) {
-        QuestionDB questionDB = surveyDB.getQuestionsFromValues().get(0);
-        for (QuestionDB quesiton : surveyDB.getQuestionsFromValues()) {
-            if (quesiton.getOrder_pos() > questionDB.getOrder_pos() && questionsHasValue(
-                    surveyDB, quesiton.getUid())) {
-                questionDB = quesiton;
-            }
-        }
-        return questionDB.getUid();
-    }
-
-    private boolean questionsHasValue(SurveyDB surveyDB, String questionUID) {
-        for (ValueDB valueDB : surveyDB.getValueDBs()) {
-            if (questionUID.equals(valueDB.getQuestionDB().getUid()) && valueDB.getValue() != null
-                    && !valueDB.getValue().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

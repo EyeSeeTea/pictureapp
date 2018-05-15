@@ -45,18 +45,18 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStart() {
-        applicationWillEnterForeground();
+        annotateAppInForeground();
     }
 
-    private void applicationWillEnterForeground() {
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+    private void annotateAppInForeground() {
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(false);
         }
     }
 
-    public void applicationdidenterbackground() {
+    public void annotateAppInBackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
             checkIfSurveyIsOpenAndSaveSatus();
         }
     }
@@ -64,8 +64,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStop() {
-        applicationdidenterbackground();
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+        annotateAppInBackground();
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
         }

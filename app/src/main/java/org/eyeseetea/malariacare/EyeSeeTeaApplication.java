@@ -47,7 +47,7 @@ public class EyeSeeTeaApplication extends Application {
     private static final String TAG = ".EyeSeeTeaApplication";
     public static Permissions permissions;
 
-    private static boolean isAppWentToBg = false;
+    private static boolean isAppInBackground = false;
 
     private static boolean isWindowFocused = false;
 
@@ -100,12 +100,12 @@ public class EyeSeeTeaApplication extends Application {
         return mInstance;
     }
 
-    public boolean isAppWentToBg() {
-        return isAppWentToBg;
+    public boolean isAppInBackground() {
+        return isAppInBackground;
     }
 
-    public void setIsAppWentToBg(boolean isAppWentToBg) {
-        EyeSeeTeaApplication.isAppWentToBg = isAppWentToBg;
+    public void setAppInBackground(boolean isAppInBackground) {
+        EyeSeeTeaApplication.isAppInBackground = isAppInBackground;
     }
 
     public boolean isWindowFocused() {

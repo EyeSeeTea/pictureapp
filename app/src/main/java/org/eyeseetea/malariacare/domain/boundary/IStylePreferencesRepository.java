@@ -6,5 +6,5 @@ public interface IStylePreferencesRepository {
     
     ListStyle getListStyle();
 
-    void saveListStyle(ListStyle string);
+    void saveListStyle(ListStyle listStyle);
 }

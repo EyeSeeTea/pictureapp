@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by manuel on 28/12/16.
@@ -384,5 +385,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onStart() {
+        if (Session.hasSurveyToComplete()) {
+            openUncompletedSurvey();
+            Session.setHasSurveyToComplete(false);
+        } else {
+            SurveyDB.removeInProgress();
+        }
+    }
+
+    private void openUncompletedSurvey() {
+        SurveyDB survey;
+        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+        if (!uncompletedSurveys.isEmpty()) {
+            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
+            Session.setMalariaSurveyDB(survey);
+            //Look for coordinates
+            prepareLocationListener(mDashboardActivity, survey);
+            mDashboardActivity.initSurvey();
+        }
     }
 }

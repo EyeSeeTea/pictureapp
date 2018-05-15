@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
+import org.eyeseetea.malariacare.domain.boundary.IStylePreferencesRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 
@@ -9,12 +10,13 @@ public class MediaPresenter {
 
     View mView;
     private GetMediaUseCase mGetMediaUseCase;
-    private boolean isListMode = true;
+    private IStylePreferencesRepository.ListStyle listStyle;
     List<Media> mMediaList;
 
     public MediaPresenter(
-            GetMediaUseCase getMediaUseCase) {
+            GetMediaUseCase getMediaUseCase, IStylePreferencesRepository.ListStyle listStyle) {
         mGetMediaUseCase = getMediaUseCase;
+        this.listStyle = listStyle;
     }
 
     public void attachView(final View view) {
@@ -45,15 +47,15 @@ public class MediaPresenter {
     }
 
     private void showMediaItems() {
-        if (isListMode) {
+        if (listStyle.equals(IStylePreferencesRepository.ListStyle.LIST)) {
             mView.showMediaListMode(mMediaList);
-        } else {
+        } else if (listStyle.equals(IStylePreferencesRepository.ListStyle.GRID)){
             mView.showMediaGridMode(mMediaList);
         }
     }
 
-    public void onClickChangeMode(boolean isListMode) {
-        this.isListMode = isListMode;
+    public void onClickChangeMode(IStylePreferencesRepository.ListStyle listStyle) {
+        this.listStyle = listStyle;
         showMediaItems();
     }
 

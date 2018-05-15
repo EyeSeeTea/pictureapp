@@ -105,4 +105,6 @@
     <string name="default_drive_folder" translatable="false">0B7TXlu17DcAbNHNvRUxnSDd4LUk</string>
     <string name="drive_key" translatable="false">drive_key</string>
     <string name="default_language" translatable="false">en</string>
+    <string name="media_list_style_preference" translatable="false">media_list_style_preference</string>
+
 </resources>

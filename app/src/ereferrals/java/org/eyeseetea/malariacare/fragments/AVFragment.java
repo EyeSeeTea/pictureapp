@@ -37,11 +37,13 @@ import android.widget.ImageButton;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.StylePreferenceLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.IStylePreferencesRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
@@ -63,6 +65,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     CustomTextView mTextProgressView;
     private CustomTextView mErrorMessage;
     IMainExecutor mainExecutor;
+    IStylePreferencesRepository stylePreferencesRepository;
 
     View rootView;
 
@@ -95,7 +98,8 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
-        mPresenter = new MediaPresenter(getMediaUseCase);
+        stylePreferencesRepository = new StylePreferenceLocalDataSource();
+        mPresenter = new MediaPresenter(getMediaUseCase, stylePreferencesRepository.getListStyle());
         mPresenter.attachView(this);
     }
 
@@ -113,13 +117,15 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         gridMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.onClickChangeMode(false);
+                stylePreferencesRepository.saveListStyle(IStylePreferencesRepository.ListStyle.GRID);
+                mPresenter.onClickChangeMode(IStylePreferencesRepository.ListStyle.GRID);
             }
         });
         listMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.onClickChangeMode(true);
+                stylePreferencesRepository.saveListStyle(IStylePreferencesRepository.ListStyle.LIST);
+                mPresenter.onClickChangeMode(IStylePreferencesRepository.ListStyle.LIST);
             }
         });
     }

@@ -13,8 +13,10 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -405,7 +407,28 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             Session.setMalariaSurveyDB(survey);
             //Look for coordinates
             prepareLocationListener(mDashboardActivity, survey);
-            mDashboardActivity.initSurvey();
+            mDashboardActivity.hideReview(lastAnsweredQuestionUid(survey));
         }
+    }
+
+    private String lastAnsweredQuestionUid(SurveyDB surveyDB) {
+        QuestionDB questionDB = surveyDB.getQuestionsFromValues().get(0);
+        for (QuestionDB quesiton : surveyDB.getQuestionsFromValues()) {
+            if (quesiton.getOrder_pos() > questionDB.getOrder_pos() && questionsHasValue(
+                    surveyDB, quesiton.getUid())) {
+                questionDB = quesiton;
+            }
+        }
+        return questionDB.getUid();
+    }
+
+    private boolean questionsHasValue(SurveyDB surveyDB, String questionUID) {
+        for (ValueDB valueDB : surveyDB.getValueDBs()) {
+            if (questionUID.equals(valueDB.getQuestionDB().getUid()) && valueDB.getValue() != null
+                    && !valueDB.getValue().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

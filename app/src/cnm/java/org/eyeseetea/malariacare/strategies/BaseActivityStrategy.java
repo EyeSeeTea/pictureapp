@@ -1,15 +1,22 @@
 package org.eyeseetea.malariacare.strategies;
 
+import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
+import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -18,10 +25,12 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.utils.LockScreenStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -36,12 +45,30 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStart() {
-
+        annotateAppInForeground();
     }
+
+    private void annotateAppInForeground() {
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(false);
+        }
+    }
+
+    public void annotateAppInBackground() {
+        if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
+            checkIfSurveyIsOpenAndSaveSatus();
+        }
+    }
+
 
     @Override
     public void onStop() {
-
+        annotateAppInBackground();
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
+                mBaseActivity)) {
+            ActivityCompat.finishAffinity(mBaseActivity);
+        }
     }
 
     @Override
@@ -54,6 +81,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
         mLoginUseCase = new LoginUseCase(mAuthenticationManager, asyncExecutor, mainExecutor);
         mBaseActivity.createActionBar();
+
+        IntentFilter screenStateFilter = new IntentFilter();
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mBaseActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
     }
 
     @Override
@@ -184,5 +216,33 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                             userProgram.getCode(),
                     mBaseActivity.getResources().getString(R.string.malaria_case_based_reporting));
         }
+    }
+
+    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.d(TAG, "Screen off");
+                if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
+                    checkIfSurveyIsOpenAndSaveSatus();
+                }
+            }
+        }
+    };
+
+    private void checkIfSurveyIsOpenAndSaveSatus() {
+        Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
+                R.id.dashboard_details_container);
+        if (f instanceof SurveyFragment) {
+            Session.setHasSurveyToComplete(true);
+        } else {
+            Session.setHasSurveyToComplete(false);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        mBaseActivity.unregisterReceiver(mScreenOffReceiver);
     }
 }

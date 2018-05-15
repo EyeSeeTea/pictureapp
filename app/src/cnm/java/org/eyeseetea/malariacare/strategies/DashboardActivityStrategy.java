@@ -13,8 +13,10 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -35,6 +37,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by manuel on 28/12/16.
@@ -89,10 +92,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void newSurvey(Activity activity) {
 
         IProgramRepository programRepository = new ProgramLocalDataSource();
-        Program userProgram  = programRepository.getUserProgram();
+        Program userProgram = programRepository.getUserProgram();
         ProgramDB program = ProgramDB.findByName(userProgram.getCode());
 
-        TabDB userProgramTab =  TabDB.findTabByProgram(program.getId_program()).get(0);
+        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
         try {
             NavigationBuilder.getInstance().buildController(userProgramTab);
         } catch (LoadingNavigationControllerException e) {
@@ -113,7 +116,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
-    private void createStockProgramIfNecessary(final Activity activity, final SurveyDB malariaSurvey,
+    private void createStockProgramIfNecessary(final Activity activity,
+            final SurveyDB malariaSurvey,
             final OrgUnitDB orgUnit) {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -133,7 +137,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void generateStockProgram(Date eventDate,
-            OrgUnitDB orgUnit,Activity activity) {
+            OrgUnitDB orgUnit, Activity activity) {
         ProgramDB stockProgram = ProgramDB.findByUID(
                 activity.getString(R.string.stock_program_uid));
         SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
@@ -212,6 +216,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static void onLogoutSuccess() {
         DashboardActivity.dashboardActivity.finishAndGo(SettingsActivity.class);
     }
+
     public void openSentSurvey() {
         mDashboardActivity.getTabHost().setCurrentTabByTag(
                 mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
@@ -223,7 +228,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void initTabWidget(TabHost tabHost, Fragment reviewFragment,
             final Fragment surveyFragment,
             final boolean isReadOnly) {
-         /* set tabs in order */
+        /* set tabs in order */
         LayoutUtils.setTabHosts(mDashboardActivity);
         LayoutUtils.setTabDivider(mDashboardActivity);
 
@@ -379,10 +384,19 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
-     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+        if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
                 R.id.dashboard_stock_table_container)) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onStart() {
+        if (Session.hasSurveyToComplete()) {
+            Session.setHasSurveyToComplete(false);
+        } else {
+            SurveyDB.removeInProgress();
+        }
     }
 }

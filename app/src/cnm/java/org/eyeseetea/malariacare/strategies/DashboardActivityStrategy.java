@@ -418,6 +418,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         if (!uncompletedSurveys.isEmpty()) {
                             SurveyDB survey;
                             survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
+                            survey.getValuesFromDB();
                             Session.setMalariaSurveyDB(survey);
                             mDashboardActivity.initSurvey();
                         }

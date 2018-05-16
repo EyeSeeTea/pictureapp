@@ -195,7 +195,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private void checkIfSurveyIsOpenAndShowLogin() {
         Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
                 R.id.dashboard_details_container);
-        if (f instanceof SurveyFragment) {
+        if (f instanceof SurveyFragment || f instanceof ReviewFragment) {
             Session.setHasSurveyToComplete(true);
         }else {
             Session.setHasSurveyToComplete(false);

@@ -25,6 +25,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -234,7 +235,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private void checkIfSurveyIsOpenAndSaveSatus() {
         Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
                 R.id.dashboard_details_container);
-        if (f instanceof SurveyFragment) {
+        if (f instanceof SurveyFragment || f instanceof ReviewFragment) {
             Session.setHasSurveyToComplete(true);
         } else {
             Session.setHasSurveyToComplete(false);

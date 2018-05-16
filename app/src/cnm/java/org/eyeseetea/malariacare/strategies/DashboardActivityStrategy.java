@@ -13,10 +13,8 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -394,9 +392,36 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void onStart() {
         if (Session.hasSurveyToComplete()) {
+            openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
         } else {
             SurveyDB.removeInProgress();
         }
+    }
+
+    private void openUncompletedSurvey() {
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram = programRepository.getUserProgram();
+        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
+
+        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
+        try {
+            NavigationBuilder.getInstance().buildController(userProgramTab);
+        } catch (LoadingNavigationControllerException e) {
+            e.printStackTrace();
+        }
+        NavigationBuilder.getInstance().setLoadBuildControllerListener(
+                new NavigationBuilder.LoadBuildControllerListener() {
+                    @Override
+                    public void onLoadFinished() {
+                        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+                        if (!uncompletedSurveys.isEmpty()) {
+                            SurveyDB survey;
+                            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
+                            Session.setMalariaSurveyDB(survey);
+                            mDashboardActivity.initSurvey();
+                        }
+                    }
+                });
     }
 }

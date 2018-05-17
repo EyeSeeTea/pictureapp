@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -33,6 +34,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private String url;
     private int title;
     private WebView mWebView;
+    private boolean loadedFirstTime;
 
     @Nullable
     @Override
@@ -63,6 +65,12 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         mWebView = (WebView) view.findViewById(R.id.web_view);
         mWebView.setWebViewClient(new WebViewClient());
         loadUrlInWebView();
+        view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadUrlInWebView();
+            }
+        });
     }
 
     private void manageBundle(Bundle savedInstanceState) {
@@ -73,7 +81,6 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     @Override
     public void reloadData() {
-        loadUrlInWebView();
     }
 
 
@@ -122,7 +129,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                     Activity.CONNECTIVITY_SERVICE);
             if (cm != null && cm.getActiveNetworkInfo() != null
                     && cm.getActiveNetworkInfo().isConnected()) {
-                loadValidUrl();
+                    loadValidUrl();
             } else {
                 mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
                         getString(R.string.error_web)));
@@ -141,6 +148,15 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             mWebView.getSettings().setDomStorageEnabled(true);
             clearCookies(getActivity());
             mWebView.loadUrl(url);
+            mWebView.setWebViewClient(new WebViewClient(){
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    loadedFirstTime = true;
+                }
+            });
+
         }
     }
 
@@ -148,7 +164,9 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityStatus.isConnected(getActivity())) {
-                loadValidUrl();
+                if (!loadedFirstTime) {
+                    loadValidUrl();
+                }
             }
         }
     };

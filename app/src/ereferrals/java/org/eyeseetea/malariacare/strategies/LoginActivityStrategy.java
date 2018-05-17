@@ -4,7 +4,6 @@ import static org.eyeseetea.malariacare.views.ViewUtils.toggleText;
 import static org.eyeseetea.malariacare.views.ViewUtils.toggleVisibility;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
@@ -13,13 +12,10 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -78,14 +74,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
-
-    private void replaceDhisLogoToHNQISLogo(LoginActivity loginActivity) {
-        FrameLayout progressBarContainer = (FrameLayout) loginActivity.findViewById(R.id.layout_dhis_logo);
-        ((TextView)progressBarContainer.getChildAt(2)).setText("");
-
-        LayoutInflater inflater = (LayoutInflater) loginActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        progressBarContainer.addView(inflater.inflate(R.layout.progress_logo_item, null));
-    }
     /**
      * LoginActivity does NOT admin going backwads since it is always the first activity.
      * Thus onBackPressed closes the app
@@ -104,7 +92,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             loginActivity.finish();
         }
         showDashboardIfDemoUser();
-        replaceDhisLogoToHNQISLogo(loginActivity);
     }
 
     private void showDashboardIfDemoUser() {

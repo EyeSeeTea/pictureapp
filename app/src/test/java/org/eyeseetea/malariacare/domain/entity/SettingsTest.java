@@ -62,4 +62,17 @@ public class SettingsTest {
         new Settings(systemLanguage, currentLanguage);
     }
 
+    @Test
+    public void should_return_default_media_mode_if_is_not_provided() {
+        Settings settings = new Settings(null);
+
+        assertThat(settings.getMediaListMode(), is(settings.DEFAULT_LIST_STYLE));
+    }
+    
+    @Test
+    public void should_return_media_mode_if_is_provided() {
+        Settings settings = new Settings(Settings.MediaListMode.LIST);
+
+        assertThat(settings.getMediaListMode(), is(Settings.MediaListMode.LIST));
+    }
 }

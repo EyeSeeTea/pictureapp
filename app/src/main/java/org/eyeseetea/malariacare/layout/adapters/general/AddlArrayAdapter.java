@@ -74,7 +74,7 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
 
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
-        DropdownAdapterStrategy.drawDropDown(position, convertView, parent);
+        DropdownAdapterStrategy.drawDropDown(position, convertView, parent, getContext());
         if(dropdownItemSize!=null) {
             ((CustomTextView) convertView).setTextSize(dropdownItemSize);
         }

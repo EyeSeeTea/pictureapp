@@ -13,6 +13,7 @@
         <item name="logo">@drawable/pictureapp_logo</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:tabWidgetStyle">@style/CustomTabWidget</item>
+        <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
@@ -68,5 +69,10 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SpinnerStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 </resources>

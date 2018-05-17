@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
-import org.eyeseetea.malariacare.domain.boundary.IStylePreferencesRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 
 import java.util.List;
@@ -10,13 +10,13 @@ public class MediaPresenter {
 
     View mView;
     private GetMediaUseCase mGetMediaUseCase;
-    private IStylePreferencesRepository.ListStyle listStyle;
+    private Settings settings;
     List<Media> mMediaList;
 
     public MediaPresenter(
-            GetMediaUseCase getMediaUseCase, IStylePreferencesRepository.ListStyle listStyle) {
+            GetMediaUseCase getMediaUseCase, Settings settings) {
         mGetMediaUseCase = getMediaUseCase;
-        this.listStyle = listStyle;
+        this.settings = settings;
     }
 
     public void attachView(final View view) {
@@ -47,15 +47,15 @@ public class MediaPresenter {
     }
 
     private void showMediaItems() {
-        if (listStyle.equals(IStylePreferencesRepository.ListStyle.LIST)) {
+        if (settings.getMediaListMode().equals(Settings.MediaListMode.LIST)) {
             mView.showMediaListMode(mMediaList);
-        } else if (listStyle.equals(IStylePreferencesRepository.ListStyle.GRID)){
+        } else if (settings.getMediaListMode().equals(Settings.MediaListMode.GRID)){
             mView.showMediaGridMode(mMediaList);
         }
     }
 
-    public void onClickChangeMode(IStylePreferencesRepository.ListStyle listStyle) {
-        this.listStyle = listStyle;
+    public void onClickChangeMode(Settings.MediaListMode mediaListMode) {
+        settings.setMediaListMode(mediaListMode);
         showMediaItems();
     }
 

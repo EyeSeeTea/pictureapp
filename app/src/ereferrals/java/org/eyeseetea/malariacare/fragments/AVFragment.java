@@ -37,14 +37,15 @@ import android.widget.ImageButton;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.StylePreferenceLocalDataSource;
+import org.eyeseetea.malariacare.data.MediaModeLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
-import org.eyeseetea.malariacare.domain.boundary.IStylePreferencesRepository;
+import org.eyeseetea.malariacare.domain.boundary.IMediaModeRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -65,7 +66,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     CustomTextView mTextProgressView;
     private CustomTextView mErrorMessage;
     IMainExecutor mainExecutor;
-    IStylePreferencesRepository stylePreferencesRepository;
+    IMediaModeRepository stylePreferencesRepository;
 
     View rootView;
 
@@ -98,8 +99,9 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
-        stylePreferencesRepository = new StylePreferenceLocalDataSource();
-        mPresenter = new MediaPresenter(getMediaUseCase, stylePreferencesRepository.getListStyle());
+        stylePreferencesRepository = new MediaModeLocalDataSource();
+        Settings settings = new Settings(stylePreferencesRepository.getMediaListMode());
+        mPresenter = new MediaPresenter(getMediaUseCase, settings);
         mPresenter.attachView(this);
     }
 
@@ -117,15 +119,15 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         gridMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stylePreferencesRepository.saveListStyle(IStylePreferencesRepository.ListStyle.GRID);
-                mPresenter.onClickChangeMode(IStylePreferencesRepository.ListStyle.GRID);
+                stylePreferencesRepository.saveMediaListMode(Settings.MediaListMode.GRID);
+                mPresenter.onClickChangeMode(Settings.MediaListMode.GRID);
             }
         });
         listMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stylePreferencesRepository.saveListStyle(IStylePreferencesRepository.ListStyle.LIST);
-                mPresenter.onClickChangeMode(IStylePreferencesRepository.ListStyle.LIST);
+                stylePreferencesRepository.saveMediaListMode(Settings.MediaListMode.LIST);
+                mPresenter.onClickChangeMode(Settings.MediaListMode.LIST);
             }
         });
     }

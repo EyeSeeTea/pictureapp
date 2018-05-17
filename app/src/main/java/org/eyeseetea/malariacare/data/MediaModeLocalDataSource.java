@@ -6,15 +6,15 @@ import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.boundary.IStylePreferencesRepository;
+import org.eyeseetea.malariacare.domain.boundary.IMediaModeRepository;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 
 
-public class StylePreferenceLocalDataSource implements IStylePreferencesRepository {
-    private final static ListStyle DEFAULT_LIST_STYLE = ListStyle.GRID;
+public class MediaModeLocalDataSource implements IMediaModeRepository {
 
     private final Context context;
 
-    public StylePreferenceLocalDataSource(){
+    public MediaModeLocalDataSource(){
         context =PreferencesState.getInstance().getContext();
     }
 
@@ -31,22 +31,22 @@ public class StylePreferenceLocalDataSource implements IStylePreferencesReposito
                 context);
         return sharedPreferences.getString(
                 context.getResources().getString(R.string.media_list_style_preference),
-                DEFAULT_LIST_STYLE.toString());
+                "");
     }
 
     @Override
-    public ListStyle getListStyle() {
-        IStylePreferencesRepository.ListStyle listStyle = null;
-        if(getMediaPreference().equals(IStylePreferencesRepository.ListStyle.GRID.toString())){
-            listStyle = IStylePreferencesRepository.ListStyle.GRID;
-        }else if(getMediaPreference().equals(IStylePreferencesRepository.ListStyle.LIST.toString())){
-            listStyle = IStylePreferencesRepository.ListStyle.LIST;
+    public Settings.MediaListMode getMediaListMode() {
+        Settings.MediaListMode mediaListMode = null;
+        if(getMediaPreference().equals(Settings.MediaListMode.GRID.toString())){
+            mediaListMode = Settings.MediaListMode.GRID;
+        }else if(getMediaPreference().equals(Settings.MediaListMode.LIST.toString())){
+            mediaListMode = Settings.MediaListMode.LIST;
         }
-        return listStyle;
+        return mediaListMode;
     }
 
     @Override
-    public void saveListStyle(ListStyle listStyle) {
-        setMediaPreference(listStyle.toString());
+    public void saveMediaListMode(Settings.MediaListMode mediaListMode) {
+        setMediaPreference(mediaListMode.toString());
     }
 }

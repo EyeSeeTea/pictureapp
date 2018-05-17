@@ -22,7 +22,6 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
-import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.strategies.GetUserProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
@@ -36,6 +35,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by manuel on 28/12/16.

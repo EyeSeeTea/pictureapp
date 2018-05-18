@@ -121,6 +121,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
             EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            checkHastSurveyToComplete();
         }
     }
 
@@ -193,6 +194,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     };
 
     private void checkIfSurveyIsOpenAndShowLogin() {
+      checkHastSurveyToComplete();
+        showLogin(false);
+    }
+    private void checkHastSurveyToComplete(){
         Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
                 R.id.dashboard_details_container);
         if (f instanceof SurveyFragment) {
@@ -200,7 +205,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         }else {
             Session.setHasSurveyToComplete(false);
         }
-        showLogin(false);
     }
 
     public void showCopyRight(int app_copyright, int copyright) {

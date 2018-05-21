@@ -27,27 +27,26 @@ import org.hisp.dhis.client.sdk.android.api.D2;
 public class SplashScreenActivity extends Activity {
 
 
+    public interface Callback {
+        void onSuccess();
+    }
+
     private static final String TAG = ".SplashScreenActivity";
-    public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private SplashActivityStrategy splashActivityStrategy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        splashActivityStrategy = new SplashActivityStrategy(this, getIntent().getStringExtra(
-                INTENT_JSON_EXTRA_KEY));
-        clearIntentExtras();
-        if (splashActivityStrategy.canEnterApp()) {
-            AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
-            asyncInitApplication.execute((Void) null);
-        }
-    }
-
-    private void clearIntentExtras() {
-        if(getIntent().getExtras()!=null) {
-            //remove intent extras.
-            setIntent(getIntent().putExtra(INTENT_JSON_EXTRA_KEY, ""));
-        }
+        splashActivityStrategy = new SplashActivityStrategy(this, new Callback() {
+            @Override
+            public void onSuccess() {
+                if (splashActivityStrategy.canEnterApp()) {
+                    AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
+                    asyncInitApplication.execute((Void) null);
+                }
+            }
+        });
     }
 
     private void init() {

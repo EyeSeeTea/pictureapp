@@ -28,7 +28,7 @@ public class SplashScreenActivity extends Activity {
 
 
     public interface Callback {
-        void onSuccess();
+        void onSuccess(boolean canEnterApp);
     }
 
     private static final String TAG = ".SplashScreenActivity";
@@ -38,11 +38,13 @@ public class SplashScreenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        splashActivityStrategy = new SplashActivityStrategy(this, new Callback() {
+        final Activity activity = this;
+        splashActivityStrategy = new SplashActivityStrategy(this);
+        splashActivityStrategy.init(new Callback() {
             @Override
-            public void onSuccess() {
-                if (splashActivityStrategy.canEnterApp()) {
-                    AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
+            public void onSuccess(boolean canEnterApp) {
+                if (canEnterApp) {
+                    AsyncInitApplication asyncInitApplication = new AsyncInitApplication(activity);
                     asyncInitApplication.execute((Void) null);
                 }
             }

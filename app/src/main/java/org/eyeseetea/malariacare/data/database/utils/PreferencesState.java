@@ -546,7 +546,11 @@ public class PreferencesState {
         String password = sharedPreferences.getString(
                 context.getResources().getString(R.string.intent_credentials_password),
                 null);
-        return new Auth(user, password);;
+        if(user == null || password == null) {
+            return null;
+        }else {
+            return new Auth(user, password);
+        }
 
     }
 

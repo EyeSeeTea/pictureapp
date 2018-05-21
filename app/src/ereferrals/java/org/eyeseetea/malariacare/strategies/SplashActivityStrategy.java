@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.SplashScreenActivity.INTENT_JSON_EXTRA_KEY;
 import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy.TAG;
 
 import android.app.Activity;
@@ -23,37 +22,50 @@ import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCa
 import org.eyeseetea.malariacare.domain.utils.IntentSurveyCreator;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
+import java.io.IOException;
+
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
 
-    public SplashActivityStrategy(Activity mActivity, final SplashScreenActivity.Callback callback) {
-        super(mActivity);
+    public interface Callback {
+        void onSuccess();
+    }
 
+    public SplashActivityStrategy(Activity mActivity) {
+        super(mActivity);
         this.activity = mActivity;
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+    }
 
-        String connectVoucherJson = mActivity.getIntent().getStringExtra(
+    public void init(final SplashScreenActivity.Callback callback) {
+        String connectVoucherJson = activity.getIntent().getStringExtra(
                 INTENT_JSON_EXTRA_KEY);
         if(connectVoucherJson!=null) {
-            ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(connectVoucherJson);
-            if(connectVoucher.getValues()!=null && connectVoucher.getValues().size()>0) {
-                saveAuthFromIntent(connectVoucher);
-                IntentSurveyCreator intentSurveyCreator = new IntentSurveyCreator();
-                intentSurveyCreator.createFromConnectVoucher(connectVoucher.getValues(), new SplashScreenActivity.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        clearIntentExtras();
-                        callback.onSuccess();
-                    }
-                });
+            ConnectVoucher connectVoucher = null;
+            try {
+                connectVoucher = ConnectVoucherMapper.parseJson(connectVoucherJson);
+                if(connectVoucher.getValues()!=null && connectVoucher.getValues().size()>0) {
+                    saveAuthFromIntent(connectVoucher);
+                    IntentSurveyCreator intentSurveyCreator = new IntentSurveyCreator();
+                    intentSurveyCreator.createFromConnectVoucher(connectVoucher.getValues(), new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            clearIntentExtras();
+                            callback.onSuccess(canEnterApp());
+                        }
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(activity, R.string.format_error, Toast.LENGTH_LONG).show();
             }
         }else{
             PreferencesState.getInstance().clearIntentCredentials();
             clearIntentExtras();
-            callback.onSuccess();
+            callback.onSuccess(canEnterApp());
         }
     }
 

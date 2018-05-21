@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SplashScreenActivity;
@@ -28,6 +29,7 @@ import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLoc
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.intent.Auth;
 import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
 import org.eyeseetea.malariacare.data.mappers.ConnectVoucherMapper;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
@@ -70,15 +72,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
-    private boolean comeFromOtherApp;
-    private String valueFromOtherApp;
+    private Auth auth;
+    IPullController pullController;
+    IAsyncExecutor asyncExecutor;
+    IMainExecutor mainExecutor;
+    ICredentialsRepository credentialsRepository;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
-        IPullController pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        pullController = new PullController(loginActivity);
+        asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-
+        credentialsRepository = new CredentialsLocalDataSource();
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
@@ -99,12 +104,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
-        comeFromOtherApp = false;
-        valueFromOtherApp = null;
-        if(loginActivity.getIntent().getExtras()!=null) {
-            valueFromOtherApp = loginActivity.getIntent().getExtras().getString(SplashScreenActivity.INTENT_JSON_EXTRA_KEY);
-            loginActivity.getIntent().putExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY, "");
-        }
+        auth = PreferencesState.getInstance().getIntentCredentials();
         showDashboardIfDemoUser();
         decideConnectVoucherAction();
     }
@@ -127,7 +127,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void decideConnectVoucherAction() {
-        if (discardEmptyConnectVoucherJson()) return;
+        if (auth == null) return;
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
@@ -137,13 +137,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
             @Override
             public void onGetUsername(Credentials credentials) {
-                ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(valueFromOtherApp);
-                if(connectVoucher == null){
-                    Toast.makeText(loginActivity, R.string.format_error, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 if (credentials != null && !credentials.isEmpty()) {
-                    connectVoucherValueAfterSoftLoginResult(credentials, valueFromOtherApp, connectVoucher);
+                    connectVoucherValueAfterSoftLoginResult(credentials, auth);
                 }else{
                     showToastAndClose(R.string.no_user_error);
                 }
@@ -152,29 +147,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
     }
 
-    private boolean discardEmptyConnectVoucherJson() {
-        if(valueFromOtherApp==null
-                || valueFromOtherApp.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    private void connectVoucherValueAfterSoftLoginResult(Credentials credentials, String value, ConnectVoucher connectVoucher) {
-        if(connectVoucher.hasAuth()) {
-            if (isValidUserAndPassword(credentials, connectVoucher)) {
-                moveToDashboardAndCreateSurveyWithValues(value);
+    private void connectVoucherValueAfterSoftLoginResult(Credentials credentials, Auth auth) {
+        if(auth.hasAuth()) {
+            if (isValidUserAndPassword(credentials, auth)) {
+                finishAndGo(DashboardActivity.class);
             }else{
                 showToastAndClose(R.string.different_user_error);
             }
         }else{
-            comeFromOtherApp = true;
+            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
         }
     }
 
-    private boolean isValidUserAndPassword(Credentials credentials, ConnectVoucher connectVoucher) {
-        return connectVoucher.getAuth().getUserName().equals(credentials.getUsername())
-                && connectVoucher.getAuth().getPassword().equals(credentials.getPassword());
+    private boolean isValidUserAndPassword(Credentials credentials, Auth auth) {
+        return auth.getUserName().equals(credentials.getUsername())
+                && auth.getPassword().equals(credentials.getPassword());
     }
 
     private void showToastAndClose(int error) {
@@ -186,14 +173,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
         };
         new Handler().postDelayed(runnable, 3500);
-    }
-
-    private void moveToDashboardAndCreateSurveyWithValues(String valueJson) {
-        Intent intent = new Intent(loginActivity, DashboardActivity.class);
-        intent.putExtra(CREATED_SURVEY_FROM_OTHER_APP, true);
-        intent.putExtra(VALUES_BUNDLE, valueJson);
-        loginActivity.startActivity(intent);
-        loginActivity.finish();
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -542,11 +521,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onComplete() {
                 loginActivity.onFinishLoading(null);
-                if(comeFromOtherApp) {
-                    moveToDashboardAndCreateSurveyWithValues(valueFromOtherApp);
-                }else {
-                    finishAndGo(DashboardActivity.class);
-                }
+                finishAndGo(DashboardActivity.class);
             }
 
             @Override

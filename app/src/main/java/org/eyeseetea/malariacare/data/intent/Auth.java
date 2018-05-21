@@ -19,4 +19,9 @@ public class Auth {
     public String getPassword() {
         return password;
     }
+
+    public boolean hasAuth() {
+        return  ((getUserName()!=null && !getUserName().isEmpty())
+                        && (getPassword()!=null && !getPassword().isEmpty()));
+    }
 }

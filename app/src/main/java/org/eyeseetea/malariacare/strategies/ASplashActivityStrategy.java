@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
@@ -87,5 +88,9 @@ public abstract class ASplashActivityStrategy {
 
     public void downloadLanguagesFromServer() {
         //By default, variants do nothing
+    }
+
+    public void init(SplashActivityStrategy.Callback callback) {
+        callback.onSuccess();
     }
 }

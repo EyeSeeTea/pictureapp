@@ -19,15 +19,16 @@ import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class IntentSurveyCreator {
     HashMap<String, String> keyValueList;
-    SplashScreenActivity.Callback callback;
+    SplashActivityStrategy.Callback callback;
 
-    public void createFromConnectVoucher(HashMap<String, String> values, SplashScreenActivity.Callback callback) {
+    public void createFromConnectVoucher(HashMap<String, String> values, SplashActivityStrategy.Callback callback) {
         this.keyValueList=values;
         this.callback = callback;
         openNewSurvey();

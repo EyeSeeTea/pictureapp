@@ -7,15 +7,15 @@ import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Value;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class ConnectVoucherValueMapper {
 
-    public static List<Value> mapValueFromConnectVoucher(String valuesJson) {
-        ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(valuesJson);
-        Iterator it = connectVoucher.getValues().entrySet().iterator();
+    public static List<Value> mapValueFromConnectVoucher(HashMap<String, String> valuesPairKeyValue) {
+        Iterator it = valuesPairKeyValue.entrySet().iterator();
         List<Value> values = addValues(it);
         return values;
     }

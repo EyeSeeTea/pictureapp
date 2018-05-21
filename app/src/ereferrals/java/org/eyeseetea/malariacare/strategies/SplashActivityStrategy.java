@@ -1,10 +1,10 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.SplashScreenActivity.INTENT_JSON_EXTRA_KEY;
 import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy.TAG;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -16,31 +16,54 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
+import org.eyeseetea.malariacare.data.mappers.ConnectVoucherMapper;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
+import org.eyeseetea.malariacare.domain.utils.IntentSurveyCreator;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
-    private String connectVoucher="";
+    public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
 
-    public SplashActivityStrategy(Activity mActivity, String connectVoucher) {
+    public SplashActivityStrategy(Activity mActivity, final SplashScreenActivity.Callback callback) {
         super(mActivity);
+
         this.activity = mActivity;
-        if(connectVoucher!=null) {
-            this.connectVoucher = connectVoucher;
-        }
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+
+        String connectVoucherJson = mActivity.getIntent().getStringExtra(
+                INTENT_JSON_EXTRA_KEY);
+        if(connectVoucherJson!=null) {
+            ConnectVoucher connectVoucher = ConnectVoucherMapper.parseJson(connectVoucherJson);
+            if(connectVoucher.getValues()!=null && connectVoucher.getValues().size()>0) {
+                saveAuthFromIntent(connectVoucher);
+                IntentSurveyCreator intentSurveyCreator = new IntentSurveyCreator();
+                intentSurveyCreator.createFromConnectVoucher(connectVoucher.getValues(), new SplashScreenActivity.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        clearIntentExtras();
+                        callback.onSuccess();
+                    }
+                });
+            }
+        }else{
+            PreferencesState.getInstance().clearIntentCredentials();
+            clearIntentExtras();
+            callback.onSuccess();
+        }
+    }
+
+    private void saveAuthFromIntent(ConnectVoucher connectVoucher) {
+        PreferencesState.getInstance().setIntentCredentials(connectVoucher.getAuth());
     }
 
     @Override
     public void finishAndGo() {
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.putExtra(SplashScreenActivity.INTENT_JSON_EXTRA_KEY, connectVoucher);
-        activity.startActivity(intent);
-        activity.finish();
+        super.finishAndGo(LoginActivity.class);
     }
 
     @Override
@@ -96,5 +119,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                         Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+
+    private void clearIntentExtras() {
+        if(activity.getIntent().getExtras()!=null) {
+            //remove intent extras.
+            activity.setIntent(activity.getIntent().putExtra(INTENT_JSON_EXTRA_KEY, ""));
+        }
     }
 }

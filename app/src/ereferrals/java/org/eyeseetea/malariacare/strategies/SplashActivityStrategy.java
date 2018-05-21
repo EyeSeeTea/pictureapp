@@ -43,17 +43,18 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public void init(final SplashScreenActivity.Callback callback) {
         String connectVoucherJson = activity.getIntent().getStringExtra(
                 INTENT_JSON_EXTRA_KEY);
+        clearIntentExtras();
         if(connectVoucherJson!=null) {
             ConnectVoucher connectVoucher = null;
             try {
                 connectVoucher = ConnectVoucherMapper.parseJson(connectVoucherJson);
                 if(connectVoucher.getValues()!=null && connectVoucher.getValues().size()>0) {
+                    //a existing auth with empty user and password identifies a connect voucher from other app without credentials.
                     saveAuthFromIntent(connectVoucher);
                     IntentSurveyCreator intentSurveyCreator = new IntentSurveyCreator();
                     intentSurveyCreator.createFromConnectVoucher(connectVoucher.getValues(), new Callback() {
                         @Override
                         public void onSuccess() {
-                            clearIntentExtras();
                             callback.onSuccess(canEnterApp());
                         }
                     });
@@ -63,8 +64,8 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 Toast.makeText(activity, R.string.format_error, Toast.LENGTH_LONG).show();
             }
         }else{
+            //when the connect voucher from other app not exists, the auth is null
             PreferencesState.getInstance().clearIntentCredentials();
-            clearIntentExtras();
             callback.onSuccess(canEnterApp());
         }
     }

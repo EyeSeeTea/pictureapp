@@ -128,6 +128,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void decideConnectVoucherAction() {
         if (auth == null) return;
+        EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
@@ -141,6 +142,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     connectVoucherValueAfterSoftLoginResult(credentials, auth);
                 }else{
                     showToastAndClose(R.string.no_user_error);
+                    EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
                 }
             }
 
@@ -151,10 +153,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if(auth.hasAuth()) {
             if (isValidUserAndPassword(credentials, auth)) {
                 finishAndGo(DashboardActivity.class);
-            }else{
+                EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            } else {
                 showToastAndClose(R.string.different_user_error);
+                EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
             }
         }else{
+            //empty auth but in this case the user can be try to login and the survey voucher is valid
             EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
         }
     }

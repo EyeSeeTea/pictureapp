@@ -137,7 +137,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
             @Override
             public void onGetUsername(Credentials credentials) {
-                if (credentials != null && !credentials.isEmpty()) {
+                if (hasCredentials(credentials)) {
                     connectVoucherValueAfterSoftLoginResult(credentials, auth);
                 }else{
                     showToastAndClose(R.string.no_user_error);
@@ -146,6 +146,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
         });
+    }
+
+    private boolean hasCredentials(Credentials credentials) {
+        return credentials != null && !credentials.isEmpty();
     }
 
     private void connectVoucherValueAfterSoftLoginResult(Credentials credentials, Auth auth) {

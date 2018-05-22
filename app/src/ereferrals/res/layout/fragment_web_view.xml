@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/main_window_background">
+    android:layout_height="match_parent">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_window_background">
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    </ScrollView>
 
-</ScrollView>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="32dp"
+        android:paddingRight="16dp">
+
+        <android.support.design.widget.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh_webview"
+            app:backgroundTint="@color/create_button_background"
+            app:fabSize="normal"
+            app:layout_anchorGravity="bottom|right|end" />
+    </FrameLayout>
+
+</RelativeLayout>

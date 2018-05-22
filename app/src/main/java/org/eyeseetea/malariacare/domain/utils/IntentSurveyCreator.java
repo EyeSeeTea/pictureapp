@@ -27,10 +27,14 @@ import java.util.List;
 public class IntentSurveyCreator {
     HashMap<String, String> keyValueList;
     SplashActivityStrategy.Callback callback;
+    IMainExecutor mainExecutor;
+    IAsyncExecutor asyncExecutor;
 
     public void createFromConnectVoucher(HashMap<String, String> values, SplashActivityStrategy.Callback callback) {
         this.keyValueList=values;
         this.callback = callback;
+        mainExecutor = new UIThreadExecutor();
+        asyncExecutor = new AsyncExecutor();
         openNewSurvey();
     }
 
@@ -38,8 +42,6 @@ public class IntentSurveyCreator {
     private void openNewSurvey() {
         Survey survey = createNewConnectSurvey();
 
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         SaveSurveyUseCase saveSurveyUseCase = new SaveSurveyUseCase(asyncExecutor, mainExecutor, surveyRepository);
 
@@ -69,8 +71,6 @@ public class IntentSurveyCreator {
 
 
     public void saveValues(Survey survey, List<Value> values) {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         SaveValueUseCase saveValueUseCase = new SaveValueUseCase(asyncExecutor, mainExecutor,
                 new ValueLocalDataSource());
         saveValueUseCase.execute(new SaveValueUseCase.Callback() {

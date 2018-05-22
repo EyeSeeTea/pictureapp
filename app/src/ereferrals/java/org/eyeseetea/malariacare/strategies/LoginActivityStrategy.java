@@ -28,6 +28,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.intent.Auth;
 import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
@@ -74,14 +75,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button advancedOptions;
     private Auth auth;
     IPullController pullController;
-    IAsyncExecutor asyncExecutor;
-    IMainExecutor mainExecutor;
     ICredentialsRepository credentialsRepository;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
         pullController = new PullController(loginActivity);
-        asyncExecutor = new AsyncExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         credentialsRepository = new CredentialsLocalDataSource();
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
@@ -128,7 +127,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void decideConnectVoucherAction() {
         if (auth == null) return;
-        EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+        Session.setHasSurveyToComplete(true);
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
@@ -142,7 +141,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     connectVoucherValueAfterSoftLoginResult(credentials, auth);
                 }else{
                     showToastAndClose(R.string.no_user_error);
-                    EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+                    Session.setHasSurveyToComplete(false);
                 }
             }
 
@@ -153,14 +152,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if(auth.hasAuth()) {
             if (isValidUserAndPassword(credentials, auth)) {
                 finishAndGo(DashboardActivity.class);
-                EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+                Session.setHasSurveyToComplete(true);
             } else {
                 showToastAndClose(R.string.different_user_error);
-                EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+                Session.setHasSurveyToComplete(false);
             }
         }else{
             //empty auth but in this case the user can be try to login and the survey voucher is valid
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            Session.setHasSurveyToComplete(true);
         }
     }
 
@@ -230,8 +229,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void setUpSoftOrFullLoginOptions() {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);

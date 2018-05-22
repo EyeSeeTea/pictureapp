@@ -114,4 +114,11 @@ public abstract class ADynamicTabAdapterStrategy {
 
     public void showValidationErrors(){
     }
+
+    public void finishScreenView() {
+    }
+
+    public boolean isValueCreatedBeforeFromIntentSurvey(){
+        return false;
+    }
 }

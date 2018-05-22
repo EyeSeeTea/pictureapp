@@ -1373,14 +1373,17 @@ public class QuestionDB extends BaseModel {
         }
     }
 
-    public void saveValuesText(String answer) {
+    public void saveValuesText(String answer, boolean isValueLoadedFromOtherApp) {
         ValueDB valueDB = getValueBySession();
         if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()
-                && !DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+                && !isValueLoadedFromOtherApp) {
             valueDB.getQuestionDB().deleteThresholdValues(valueDB);
         }
         SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
         SurveyFragmentStrategy.saveValuesText(valueDB, answer, this, surveyDB);
+    }
+    public void saveValuesText(String answer) {
+        saveValuesText(answer, false);
     }
 
     private void deleteThresholdValues(ValueDB valueDB) {
@@ -2103,6 +2106,10 @@ public class QuestionDB extends BaseModel {
                 .from(QuestionDB.class)
                 .count();
         return count < 1;
+    }
+
+    public ValueDB getValueByQuestion(SurveyDB surveyDB, QuestionDB screenQuestionDB) {
+        return ValueDB.findValue(screenQuestionDB.getId_question(), surveyDB);
     }
 
     public static class QuestionOrderComparator implements Comparator {

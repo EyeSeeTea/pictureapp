@@ -303,7 +303,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
-        questionDB.saveValuesText(newValue);
+        questionDB.saveValuesText(newValue, mDynamicTabAdapterStrategy.isValueCreatedBeforeFromIntentSurvey());
         executeTabLogic(questionDB, null);
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -564,7 +564,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
-
+        mDynamicTabAdapterStrategy.finishScreenView();
         return rowView;
     }
 
@@ -640,10 +640,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
-                if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning() || (valueDB != null && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB))) {
-                    questionView.setValue(valueDB);
-                } else {
+                if(shouldDisableNotVisibleChildQuestion(screenQuestionDB, surveyDB)) {
                     ((CommonQuestionView)questionView).deactivateQuestion();
+                } else {
+                    questionView.setValue(valueDB);
                 }
 
             }
@@ -672,6 +672,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (questionView instanceof CommonQuestionView) {
                 ((CommonQuestionView) questionView).initContainers(tableRow, tableLayout);
             }
+        }
+    }
+
+    private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
+        if(!mDynamicTabAdapterStrategy.isValueCreatedBeforeFromIntentSurvey()){
+            //if the survey is not coming from a other app intent this is not necessary
+            return false;
+        }else {
+            //if the question is not visible and the value is null the question value should be empty and the validation ignored
+            return (screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB));
         }
     }
 

@@ -40,10 +40,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/two"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/number_text_size"
                 app:font_name="@string/normal_font"/>
+
+            <include layout="@layout/progress_logo_item"></include>
 
         </FrameLayout>
 

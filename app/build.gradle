@@ -54,7 +54,7 @@ android {
         signingConfig signingConfigs.config
         buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
         buildConfigField "boolean", "downloadLanguagesFromServer", "false"
-
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
 

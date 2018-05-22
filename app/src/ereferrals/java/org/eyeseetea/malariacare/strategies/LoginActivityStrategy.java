@@ -19,10 +19,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
@@ -31,8 +29,6 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.intent.Auth;
-import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
-import org.eyeseetea.malariacare.data.mappers.ConnectVoucherMapper;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -138,7 +134,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onGetUsername(Credentials credentials) {
                 if (hasCredentials(credentials)) {
-                    connectVoucherValueAfterSoftLoginResult(credentials, auth);
+                    decideConnectSurveyIntentFromOtherAppAction(credentials, auth);
                 }else{
                     showToastAndClose(R.string.no_user_error);
                     Session.setHasSurveyToComplete(false);
@@ -152,7 +148,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         return credentials != null && !credentials.isEmpty();
     }
 
-    private void connectVoucherValueAfterSoftLoginResult(Credentials credentials, Auth auth) {
+    private void decideConnectSurveyIntentFromOtherAppAction(Credentials credentials, Auth auth) {
         if(auth.hasAuth()) {
             if (isValidUserAndPassword(credentials, auth)) {
                 finishAndGo(DashboardActivity.class);

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="110dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:weightSum="1">
+
+<android.support.v7.widget.AppCompatImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/image_view_logo"
+    android:orientation="vertical" android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_weight="0.55"
+    android:scaleType="fitCenter"
+    app:srcCompat="@drawable/ic_connect"/>
+</LinearLayout>

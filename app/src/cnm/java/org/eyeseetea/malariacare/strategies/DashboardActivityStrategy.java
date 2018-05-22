@@ -14,20 +14,17 @@ import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSourc
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.strategies.GetUserProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.StockSummaryFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -399,11 +396,17 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private void openUncompletedSurvey() {
         List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
         if (!uncompletedSurveys.isEmpty()) {
-            SurveyDB survey;
-            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
-            survey.getValuesFromDB();
-            Session.setMalariaSurveyDB(survey);
-            mDashboardActivity.initSurvey();
+            SurveyDB survey = null;
+            for (SurveyDB surveyToOpen : uncompletedSurveys) {
+                if (!surveyToOpen.isStockSurvey()) {
+                    survey = surveyToOpen;
+                }
+            }
+            if (survey != null) {
+                survey.getValuesFromDB();
+                Session.setMalariaSurveyDB(survey);
+                mDashboardActivity.initSurvey();
+            }
         }
     }
 }

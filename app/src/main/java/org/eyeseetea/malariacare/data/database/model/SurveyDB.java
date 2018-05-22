@@ -1186,6 +1186,10 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 }).build().execute();
     }
 
+    public boolean isStockSurvey() {
+        return type != Constants.SURVEY_NO_TYPE;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1228,6 +1232,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         return type != null ? type.equals(surveyDB.type) : surveyDB.type == null;
 
     }
+
 
     @Override
     public int hashCode() {

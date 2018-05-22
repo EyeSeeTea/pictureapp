@@ -9,7 +9,6 @@
         <item name="logo">@drawable/pictureapp_logo</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionOverflowButtonStyle">@style/EyeSeeTheme.OverFlow</item>
-        <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
@@ -20,9 +19,8 @@
         <item name="android:src">@drawable/custom_dots</item>
     </style>
 
-    <style name="SpinnerStyle"  parent="android:Widget.ListView.DropDown">
-        <item name="android:divider">@color/custom_background_grey</item>
-        <item name="android:dividerHeight">1dp</item>
+    <style name="SpinnerStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:background">@drawable/spinner_divider</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingLeft">10dp</item>

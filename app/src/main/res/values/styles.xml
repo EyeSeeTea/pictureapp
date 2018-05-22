@@ -70,9 +70,4 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
     </style>
-
-    <style name="SpinnerStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
 </resources>

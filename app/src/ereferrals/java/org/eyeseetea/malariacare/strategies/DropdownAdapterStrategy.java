@@ -1,13 +1,11 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public class DropdownAdapterStrategy {
 
@@ -21,12 +19,6 @@ public class DropdownAdapterStrategy {
                 if(listView.getCheckedItemPosition()==position){
                     convertView.setBackgroundColor(selected);
                 }
-                ColorDrawable myColor = new ColorDrawable(
-                        PreferencesState.getInstance().getContext().getResources().getColor(
-                                R.color.black_grey_purple)
-                );
-                listView.setDivider(myColor);
-                listView.setDividerHeight(1);
             }
             }else{
                 convertView.setBackgroundColor(transparent);

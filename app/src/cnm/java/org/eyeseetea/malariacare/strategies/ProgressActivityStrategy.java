@@ -5,6 +5,8 @@ import android.content.Intent;
 
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 
 public class ProgressActivityStrategy extends AProgressActivityStrategy {
 
@@ -21,5 +23,14 @@ public class ProgressActivityStrategy extends AProgressActivityStrategy {
 
         progressActivity.finish();
         progressActivity.startActivity(intent);
+    }
+
+    @Override
+    public void initAppValuesAfterPull() {
+        try {
+            NavigationBuilder.getInstance().buildControllerByProgram();
+        } catch (LoadingNavigationControllerException e) {
+            e.printStackTrace();
+        }
     }
 }

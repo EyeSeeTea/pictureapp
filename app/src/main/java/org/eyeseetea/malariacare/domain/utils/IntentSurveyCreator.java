@@ -70,7 +70,7 @@ public class IntentSurveyCreator {
     }
 
 
-    public void saveValues(Survey survey, List<Value> values) {
+    private void saveValues(Survey survey, List<Value> values) {
         SaveValueUseCase saveValueUseCase = new SaveValueUseCase(asyncExecutor, mainExecutor,
                 new ValueLocalDataSource());
         saveValueUseCase.execute(new SaveValueUseCase.Callback() {

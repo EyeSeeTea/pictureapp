@@ -345,12 +345,6 @@ public abstract class ADashboardActivityStrategy {
         }
     }
 
-    public void onStart(){
-        if(!DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
-            SurveyDB.removeInProgress();
-        }
-    }
-
     public void setStockTab(TabHost tabHost) {
         setTab(tabHost, mDashboardActivity.getResources().getString(R.string.tab_tag_stock),
                 R.id.tab_stock_layout,
@@ -379,7 +373,8 @@ public abstract class ADashboardActivityStrategy {
 
     }
 
-    public void checkIntent(Intent intent) {
+    public void onStart(){
+        SurveyDB.removeInProgress();
     }
 
     public void initStockControlFragment() {

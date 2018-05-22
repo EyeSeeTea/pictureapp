@@ -121,7 +121,7 @@ public class SurveyFragment extends Fragment {
     public void onPause() {
         Log.d(TAG, "onPause");
         if (!DashboardActivity.dashboardActivity.isLoadingReview()
-                && !areActiveSurveysInQuarantine() && !DashboardActivity.dashboardActivity.isPreLoadSurveyOpenning()) {
+                && !areActiveSurveysInQuarantine()) {
             beforeExit();
         }
         super.onPause();
@@ -211,7 +211,7 @@ public class SurveyFragment extends Fragment {
 
     private void showSurvey() {
         try {
-            LayoutInflater inflater = LayoutInflater.from(PreferencesState.getInstance().getContext().getApplicationContext());
+            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
             dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
 

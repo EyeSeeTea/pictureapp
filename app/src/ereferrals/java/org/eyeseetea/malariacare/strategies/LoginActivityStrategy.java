@@ -71,13 +71,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button advancedOptions;
     private Auth auth;
     IPullController pullController;
+    IAsyncExecutor asyncExecutor;
+    IMainExecutor mainExecutor;
     ICredentialsRepository credentialsRepository;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
         pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
+        asyncExecutor = new AsyncExecutor();
+        mainExecutor = new UIThreadExecutor();
         credentialsRepository = new CredentialsLocalDataSource();
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
@@ -105,9 +107,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void showDashboardIfDemoUser() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);
@@ -124,9 +123,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void decideConnectVoucherAction() {
         if (auth == null) return;
         Session.setHasSurveyToComplete(true);
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);
@@ -227,8 +223,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void setUpSoftOrFullLoginOptions() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);
@@ -352,8 +346,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void onForgotPassword() {
         loginActivity.onStartLoading();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IAuthenticationManager authenticationManager = new AuthenticationManager(loginActivity);
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
                 asyncExecutor, authenticationManager);
@@ -404,8 +396,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void checkEnableLogin() {
         IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         mIsLoginEnableUseCase = new IsLoginEnableUseCase(
                 invalidLoginAttemptsLocalDataSource, mainExecutor, asyncExecutor);
         mIsLoginEnableUseCase.execute(new IsLoginEnableUseCase.Callback() {
@@ -464,8 +454,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     public void initLoginUseCase(IAuthenticationManager authenticationManager) {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
         IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
         IInvalidLoginAttemptsRepository
@@ -640,9 +628,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
         PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
 
         PullFilters pullFilters = new PullFilters();

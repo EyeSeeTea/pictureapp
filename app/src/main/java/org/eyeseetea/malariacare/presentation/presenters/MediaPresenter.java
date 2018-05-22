@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.entity.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 
@@ -47,14 +48,14 @@ public class MediaPresenter {
     }
 
     private void showMediaItems() {
-        if (settings.getMediaListMode().equals(Settings.MediaListMode.LIST)) {
+        if (settings.getMediaListMode().equals(MediaListMode.LIST)) {
             mView.showMediaListMode(mMediaList);
-        } else if (settings.getMediaListMode().equals(Settings.MediaListMode.GRID)){
+        } else if (settings.getMediaListMode().equals(MediaListMode.GRID)){
             mView.showMediaGridMode(mMediaList);
         }
     }
 
-    public void onClickChangeMode(Settings.MediaListMode mediaListMode) {
+    public void onClickChangeMode(MediaListMode mediaListMode) {
         settings.setMediaListMode(mediaListMode);
         showMediaItems();
     }

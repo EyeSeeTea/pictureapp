@@ -513,7 +513,6 @@ public class DashboardActivity extends BaseActivity {
             beforeExit();
         }
 
-        surveyFragment.closeView();
         if (isSent) {
             showUnsentFragment();
             if (exitFromSurveyToImproveTab) {

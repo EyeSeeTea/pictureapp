@@ -231,8 +231,4 @@ public class SurveyFragment extends Fragment {
             new LoadingSurveyException(e);
         }
     }
-
-    public void closeView(){
-        llLayout.removeAllViews();
-    }
 }

@@ -18,8 +18,8 @@ import java.util.Locale;
 public class SettingsDataSource implements ISettingsRepository {
     private final Context context;
 
-    public SettingsDataSource() {
-        context = PreferencesState.getInstance().getContext();
+    public SettingsDataSource(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -27,6 +27,11 @@ public class SettingsDataSource implements ISettingsRepository {
         String systemLanguage = getCurrentLocale().getLanguage();
         String currentLanguage = PreferencesState.getInstance().getLanguageCode();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode());
+    }
+
+    @Override
+    public void saveSettings(Settings settings) {
+        setMediaPreference(settings.getMediaListMode().toString());
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -37,6 +42,16 @@ public class SettingsDataSource implements ISettingsRepository {
             //noinspection deprecation
             return Resources.getSystem().getConfiguration().locale;
         }
+    }
+
+    private MediaListMode getMediaListMode() {
+        MediaListMode mediaListMode = null;
+        if(getMediaPreference().equals(MediaListMode.GRID.toString())){
+            mediaListMode = MediaListMode.GRID;
+        }else if(getMediaPreference().equals(MediaListMode.LIST.toString())){
+            mediaListMode = MediaListMode.LIST;
+        }
+        return mediaListMode;
     }
 
     private void setMediaPreference(String listType) {
@@ -53,21 +68,5 @@ public class SettingsDataSource implements ISettingsRepository {
         return sharedPreferences.getString(
                 context.getResources().getString(R.string.media_list_style_preference),
                 "");
-    }
-
-    @Override
-    public MediaListMode getMediaListMode() {
-        MediaListMode mediaListMode = null;
-        if(getMediaPreference().equals(MediaListMode.GRID.toString())){
-            mediaListMode = MediaListMode.GRID;
-        }else if(getMediaPreference().equals(MediaListMode.LIST.toString())){
-            mediaListMode = MediaListMode.LIST;
-        }
-        return mediaListMode;
-    }
-
-    @Override
-    public void saveMediaListMode(MediaListMode mediaListMode) {
-        setMediaPreference(mediaListMode.toString());
     }
 }

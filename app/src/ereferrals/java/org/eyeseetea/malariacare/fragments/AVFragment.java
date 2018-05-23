@@ -48,6 +48,8 @@ import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.entity.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AVAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -67,7 +69,6 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     CustomTextView mTextProgressView;
     private CustomTextView mErrorMessage;
     IMainExecutor mainExecutor;
-    ISettingsRepository settingsDataSource;
 
     View rootView;
 
@@ -98,11 +99,14 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMediaRepository mediaRepository = new MediaRepository();
 
+        SettingsDataSource settingsDataSource = new SettingsDataSource(getActivity().getBaseContext());
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
-        settingsDataSource = new SettingsDataSource();
-
-        mPresenter = new MediaPresenter(getMediaUseCase, settingsDataSource.getSettings());
+        GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(mainExecutor, asyncExecutor,
+                settingsDataSource);
+        SaveSettingsUseCase saveSettingsUseCase = new SaveSettingsUseCase(mainExecutor, asyncExecutor,
+                settingsDataSource);
+        mPresenter = new MediaPresenter(getMediaUseCase, getSettingsUseCase, saveSettingsUseCase);
         mPresenter.attachView(this);
     }
 
@@ -120,14 +124,12 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         gridMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingsDataSource.saveMediaListMode(MediaListMode.GRID);
                 mPresenter.onClickChangeMode(MediaListMode.GRID);
             }
         });
         listMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                settingsDataSource.saveMediaListMode(MediaListMode.LIST);
                 mPresenter.onClickChangeMode(MediaListMode.LIST);
             }
         });
@@ -144,7 +146,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
     }
 
     @Override
-    public void OpenMedia(String resourcePath) {
+    public void openMedia(String resourcePath) {
         Intent implicitIntent = new Intent();
         implicitIntent.setAction(Intent.ACTION_VIEW);
         File file = new File(resourcePath);

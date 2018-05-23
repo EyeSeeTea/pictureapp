@@ -4,20 +4,25 @@ import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.entity.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 
 import java.util.List;
+import java.util.Set;
 
 public class MediaPresenter {
 
     View mView;
     private GetMediaUseCase mGetMediaUseCase;
-    private Settings settings;
+    private GetSettingsUseCase mGetSettingsUseCase;
+    private SaveSettingsUseCase mSaveSettingsUseCase;
     List<Media> mMediaList;
 
     public MediaPresenter(
-            GetMediaUseCase getMediaUseCase, Settings settings) {
+            GetMediaUseCase getMediaUseCase, GetSettingsUseCase getSettingsUseCase, SaveSettingsUseCase saveSettingsUseCase) {
         mGetMediaUseCase = getMediaUseCase;
-        this.settings = settings;
+        mGetSettingsUseCase = getSettingsUseCase;
+        mSaveSettingsUseCase = saveSettingsUseCase;
     }
 
     public void attachView(final View view) {
@@ -31,23 +36,29 @@ public class MediaPresenter {
     }
 
     private void loadData() {
-        mGetMediaUseCase.execute(new GetMediaUseCase.Callback() {
-            @Override
-            public void onSuccess(List<Media> medias) {
-                mMediaList = medias;
-                if (mView != null) {
-                    showMediaItems();
-                }
-            }
+        mGetSettingsUseCase.execute(new GetSettingsUseCase.Callback(){
 
             @Override
-            public void onError() {
-                System.out.println("Error getting media");
+            public void onSuccess(final Settings setting) {
+                mGetMediaUseCase.execute(new GetMediaUseCase.Callback() {
+                    @Override
+                    public void onSuccess(List<Media> medias) {
+                        mMediaList = medias;
+                        if (mView != null) {
+                            showMediaItems(setting);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        System.out.println("Error getting media");
+                    }
+                });
             }
         });
     }
 
-    private void showMediaItems() {
+    private void showMediaItems(Settings settings) {
         if (settings.getMediaListMode().equals(MediaListMode.LIST)) {
             mView.showMediaListMode(mMediaList);
         } else if (settings.getMediaListMode().equals(MediaListMode.GRID)){
@@ -55,14 +66,24 @@ public class MediaPresenter {
         }
     }
 
-    public void onClickChangeMode(MediaListMode mediaListMode) {
-        settings.setMediaListMode(mediaListMode);
-        showMediaItems();
+    public void onClickChangeMode(final MediaListMode mediaListMode) {
+        mGetSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(final Settings setting) {
+                setting.setMediaListMode(mediaListMode);
+                mSaveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        showMediaItems(setting);
+                    }
+                }, setting);
+            }
+        });
     }
 
     public void onClickMedia(Media media) {
         if (mView != null) {
-            mView.OpenMedia(media.getResourcePath());
+            mView.openMedia(media.getResourcePath());
         }
     }
 
@@ -71,7 +92,7 @@ public class MediaPresenter {
 
         void showMediaListMode(List<Media> medias);
 
-        void OpenMedia(String resourcePath);
+        void openMedia(String resourcePath);
     }
 
     public boolean canShowErrorMessage() {

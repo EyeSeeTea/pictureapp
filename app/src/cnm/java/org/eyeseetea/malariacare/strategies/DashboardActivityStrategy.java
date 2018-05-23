@@ -14,20 +14,17 @@ import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSourc
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.strategies.GetUserProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.StockSummaryFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -48,6 +45,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     StockSummaryFragment mStockSummaryFragment;
     private boolean showStock;
     private boolean showStockControl;
+    private ProgramDB mProgramDB;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -88,22 +86,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-
-        IProgramRepository programRepository = new ProgramLocalDataSource();
-        Program userProgram = programRepository.getUserProgram();
-        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
-
-        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
-        try {
-            NavigationBuilder.getInstance().buildController(userProgramTab);
-        } catch (LoadingNavigationControllerException e) {
-            e.printStackTrace();
-        }
+        getCurrentProgram();
 
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);
-        SurveyDB survey = new SurveyDB(orgUnit, program, Session.getUserDB());
+        SurveyDB survey = new SurveyDB(orgUnit, mProgramDB, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
         createStockProgramIfNecessary(activity, survey, orgUnit);
@@ -112,6 +100,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         activity.findViewById(R.id.common_header).setVisibility(View.GONE);
 
         mDashboardActivity.initSurvey();
+    }
+
+    private void getCurrentProgram() {
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram = programRepository.getUserProgram();
+        mProgramDB = ProgramDB.findByName(userProgram.getCode());
     }
 
     private void createStockProgramIfNecessary(final Activity activity,
@@ -395,34 +389,24 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
         } else {
-            SurveyDB.removeInProgress();
+            super.onStart();
         }
     }
 
     private void openUncompletedSurvey() {
-        IProgramRepository programRepository = new ProgramLocalDataSource();
-        Program userProgram = programRepository.getUserProgram();
-        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
-
-        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
-        try {
-            NavigationBuilder.getInstance().buildController(userProgramTab);
-        } catch (LoadingNavigationControllerException e) {
-            e.printStackTrace();
+        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+        if (!uncompletedSurveys.isEmpty()) {
+            SurveyDB survey = null;
+            for (SurveyDB surveyToOpen : uncompletedSurveys) {
+                if (!surveyToOpen.isStockSurvey()) {
+                    survey = surveyToOpen;
+                }
+            }
+            if (survey != null) {
+                survey.getValuesFromDB();
+                Session.setMalariaSurveyDB(survey);
+                mDashboardActivity.initSurvey();
+            }
         }
-        NavigationBuilder.getInstance().setLoadBuildControllerListener(
-                new NavigationBuilder.LoadBuildControllerListener() {
-                    @Override
-                    public void onLoadFinished() {
-                        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
-                        if (!uncompletedSurveys.isEmpty()) {
-                            SurveyDB survey;
-                            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
-                            survey.getValuesFromDB();
-                            Session.setMalariaSurveyDB(survey);
-                            mDashboardActivity.initSurvey();
-                        }
-                    }
-                });
     }
 }

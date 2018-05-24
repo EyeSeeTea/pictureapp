@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository.MediaListMode;
+
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 public class Settings {

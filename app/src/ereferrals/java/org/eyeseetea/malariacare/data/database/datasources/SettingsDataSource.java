@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
-import org.eyeseetea.malariacare.domain.entity.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 
 import java.util.Locale;

@@ -1,14 +1,13 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Media;
-import org.eyeseetea.malariacare.domain.entity.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 
 import java.util.List;
-import java.util.Set;
 
 public class MediaPresenter {
 

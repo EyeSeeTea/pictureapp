@@ -43,6 +43,7 @@ import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository.MediaListMode;
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
@@ -97,7 +98,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMediaRepository mediaRepository = new MediaRepository();
 
-        SettingsDataSource settingsDataSource = new SettingsDataSource(getActivity().getBaseContext());
+        ISettingsRepository settingsDataSource = new SettingsDataSource(getActivity().getBaseContext());
         GetMediaUseCase getMediaUseCase = new GetMediaUseCase(mainExecutor, asyncExecutor,
                 mediaRepository);
         GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(mainExecutor, asyncExecutor,

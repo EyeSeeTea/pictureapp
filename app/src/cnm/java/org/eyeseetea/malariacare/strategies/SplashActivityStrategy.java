@@ -30,8 +30,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     private PullFilters mPullFilters;
     private Activity mActivity;
     private boolean hasAutoconfigureError;
-    public SplashActivityStrategy(Activity mActivity
-    public SplashActivityStrategy(Activity mActivity, final SplashScreenActivity.Callback callback) {
+    public SplashActivityStrategy(Activity mActivity) {
         super(mActivity);
         this.mActivity = mActivity;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -48,7 +47,6 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                         permission.getCode());
             }
         }
-        callback.onSuccess();
 
     }
 

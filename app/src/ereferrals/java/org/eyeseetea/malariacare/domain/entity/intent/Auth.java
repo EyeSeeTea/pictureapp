@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.intent;
+package org.eyeseetea.malariacare.domain.entity.intent;
 
 public class Auth {
     private String userName;

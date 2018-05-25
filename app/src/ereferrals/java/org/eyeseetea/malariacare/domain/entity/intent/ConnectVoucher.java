@@ -1,6 +1,7 @@
-package org.eyeseetea.malariacare.data.intent;
+package org.eyeseetea.malariacare.domain.entity.intent;
 
 import java.util.HashMap;
+import org.eyeseetea.malariacare.domain.entity.intent.Auth;
 
 public class ConnectVoucher {
     private Auth auth;

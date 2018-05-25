@@ -24,4 +24,6 @@ public interface ISurveyRepository {
     List<Survey> getAllCompletedSurveys();
 
     List<Survey> getSurveysByProgram(String idProgram);
+
+    Survey createNewConnectSurvey();
 }

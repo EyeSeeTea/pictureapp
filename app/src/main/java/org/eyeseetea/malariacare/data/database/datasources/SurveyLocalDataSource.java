@@ -7,11 +7,14 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -126,6 +129,16 @@ public class SurveyLocalDataSource implements ISurveyRepository {
             surveys.add(buildSurvey(surveyDB));
         }
         return surveys;
+    }
+
+    @Override
+    public Survey createNewConnectSurvey() {
+        ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
+        UserAccount userAccount = new UserAccount(Session.getUserDB().getName(),
+                Session.getUserDB().getUid(),
+                PreferencesState.getCredentialsFromPreferences().isDemoCredentials());
+        Program program = new Program(programDB.getUid(), programDB.getUid());
+        return Survey.createNewConnectSurvey(program, userAccount);
     }
 
     private List<Question> getQuestionsBySurvey(SurveyDB surveyDB) {

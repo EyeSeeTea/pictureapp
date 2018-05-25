@@ -24,10 +24,8 @@ import java.util.List;
 
 public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
 
-    public boolean isSurveyCreatedInOtherApp;
     public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter) {
         super(dynamicTabAdapter);
-        isSurveyCreatedInOtherApp = PreferencesState.getInstance().getIntentCredentials()!=null;
     }
 
     @Override
@@ -80,6 +78,8 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
                 R.id.scrolled_table)).findViewById(R.id.table_scroll));
     }
 
+
+
     @Override
     public void finishOrNext(final boolean readOnly) {
         try {
@@ -131,15 +131,5 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             DynamicTabAdapter.setIsClicked(false);
             return;
         }
-    }
-
-    @Override
-    public void finishScreenView() {
-        isSurveyCreatedInOtherApp = false;
-    }
-
-    @Override
-    public boolean isValueCreatedBeforeFromIntentSurvey(){
-        return isSurveyCreatedInOtherApp;
     }
 }

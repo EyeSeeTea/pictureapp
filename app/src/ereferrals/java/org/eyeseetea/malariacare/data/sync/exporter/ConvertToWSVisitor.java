@@ -128,6 +128,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         Location location = LocationMemory.get(survey.getId_survey());
         surveySendAction.setCoordinate(
                 new Coordinate(location.getLatitude(), location.getLongitude()));
+        surveySendAction.setAccuracy(location.getAccuracy());
         mSurveyContainerWSObject.getActions().add(surveySendAction);
     }
 

@@ -1,19 +1,25 @@
 package org.eyeseetea.malariacare.strategies;
 
+import android.content.Context;
+
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
+import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.intent.Auth;
+import org.eyeseetea.malariacare.domain.usecase.GetAuthUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyFragmentStrategy {
-
 
     public static SurveyDB getRenderSurvey(QuestionDB screenQuestion) {
         return Session.getMalariaSurveyDB();
@@ -88,5 +94,15 @@ public class SurveyFragmentStrategy {
 
     public void removeSurveysInSession() {
         Session.setMalariaSurveyDB(null);
+    }
+
+    public static void isSurveyCreatedFromOtherApp(final ASurveyFragmentStrategy.Callback callback, Context context){
+        GetAuthUseCase getAuthUseCase = new GetAuthUseCase( new UIThreadExecutor(), new AsyncExecutor(), new AuthDataSource(context));
+        getAuthUseCase.execute(new GetAuthUseCase.Callback() {
+            @Override
+            public void onGetAuth(Auth auth) {
+                callback.loadIsSurveyCreatedInOtherApp(auth!=null);
+            }
+        });
     }
 }

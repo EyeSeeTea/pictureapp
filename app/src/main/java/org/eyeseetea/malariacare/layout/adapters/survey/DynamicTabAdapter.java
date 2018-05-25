@@ -137,8 +137,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
     private boolean isBackward = true;
+    private boolean isASurveyCreatedInOtherApp;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode) throws NullPointerException {
+    public DynamicTabAdapter(Context context, boolean reviewMode, boolean isASurveyCreatedInOtherApp) throws NullPointerException {
+        this.isASurveyCreatedInOtherApp = isASurveyCreatedInOtherApp;
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -303,7 +305,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
-        questionDB.saveValuesText(newValue, mDynamicTabAdapterStrategy.isValueCreatedBeforeFromIntentSurvey());
+        questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
         executeTabLogic(questionDB, null);
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -676,7 +678,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
-        if(!mDynamicTabAdapterStrategy.isValueCreatedBeforeFromIntentSurvey()){
+        if(!BuildConfig.validationInline || !isASurveyCreatedInOtherApp){
             //if the survey is not coming from a other app intent this is not necessary
             return false;
         }else {

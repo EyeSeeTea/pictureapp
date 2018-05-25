@@ -187,4 +187,8 @@ public class SurveyFragmentStrategy {
         return (TreatmentQueries.isStockQuestion(questionDB)) ? Session.getStockSurveyDB()
                 : Session.getMalariaSurveyDB();
     }
+
+    public static boolean isSurveyCreatedFromOtherApp(final ASurveyFragmentStrategy.Callback callback, Context context) {
+        return false;
+    }
 }

@@ -2071,12 +2071,12 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
-    public boolean hasOptions() {
+    public List<OptionDB> getOptions() {
         List<OptionDB> optionDBS = new Select().from(OptionDB.class)
                     .where(OptionDB_Table.id_answer_fk.eq(getAnswerDB().getId_answer()))
                     .orderBy(OptionDB_Table.name, true)
                     .queryList();
-        return optionDBS!=null && optionDBS.size()>0;
+        return optionDBS;
     }
 
     private List<QuestionDB> getPropagationThresholdsQuestionDB() {

@@ -1,8 +1,11 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IQuestionRepository;
+import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -32,15 +35,66 @@ public class QuestionLocalDataSource implements IQuestionRepository {
     }
 
     @Override
-    public boolean hasOptions(String questionUId) {
+    public Question getByUId(String questionUId) {
         QuestionDB questionDB = QuestionDB.findByUID(questionUId);
-        return questionDB!=null && questionDB.hasOptions();
-    }
+        if(questionDB==null){
+            return null;
+        }
+        List<Option> options = new ArrayList<>();
+        List<OptionDB> optionDBS = questionDB.getOptions();
+        for(OptionDB optionDB : optionDBS) {
+            int verticalAlignment = optionDB.getOptionAttributeDB().getVertical_alignment();
+            Option.Attribute.VerticalAlignment verticalAlignmentEnum = Option.Attribute.VerticalAlignment.NONE;
+            switch (verticalAlignment){
+                case OptionAttributeDB.VERTICAL_ALIGNMENT_BOTTOM:
+                    verticalAlignmentEnum =Option.Attribute.VerticalAlignment.BOTTOM;
+                    break;
+                case OptionAttributeDB.VERTICAL_ALIGNMENT_MIDDLE:
+                    verticalAlignmentEnum =Option.Attribute.VerticalAlignment.MIDDLE;
+                    break;
+                case OptionAttributeDB.VERTICAL_ALIGNMENT_NONE:
+                    verticalAlignmentEnum =Option.Attribute.VerticalAlignment.NONE;
+                    break;
+                case OptionAttributeDB.VERTICAL_ALIGNMENT_TOP:
+                    verticalAlignmentEnum =Option.Attribute.VerticalAlignment.TOP;
+                    break;
+            }
+            Option.Attribute.HorizontalAlignment horizontalAlignmentEnum = Option.Attribute.HorizontalAlignment.NONE;
+            switch (verticalAlignment){
+                case OptionAttributeDB.HORIZONTAL_ALIGNMENT_LEFT:
+                    horizontalAlignmentEnum =Option.Attribute.HorizontalAlignment.LEFT;
+                    break;
+                case OptionAttributeDB.HORIZONTAL_ALIGNMENT_RIGHT:
+                    horizontalAlignmentEnum =Option.Attribute.HorizontalAlignment.RIGHT;
+                    break;
+                case OptionAttributeDB.HORIZONTAL_ALIGNMENT_CENTER:
+                    horizontalAlignmentEnum =Option.Attribute.HorizontalAlignment.CENTER;
+                    break;
+                case OptionAttributeDB.HORIZONTAL_ALIGNMENT_NONE:
+                    horizontalAlignmentEnum =Option.Attribute.HorizontalAlignment.NONE;
+                    break;
+            }
+            Option.Attribute attribute = Option.Attribute.newBuilder()
+                    .id(optionDB.getOptionAttributeDB().getId_option_attribute())
+                    .backgroundColour(optionDB.getOptionAttributeDB().getBackground_colour())
+                    .verticalAlignment(verticalAlignmentEnum)
+                    .horizontalAlignment(horizontalAlignmentEnum)
+                    .textSize(optionDB.getOptionAttributeDB().getText_size()).build();
 
-    @Override
-    public boolean existsByUId(String questionUId) {
-        QuestionDB questionDB = QuestionDB.findByUID(questionUId);
-        return questionDB!=null;
+            options.add( Option.newBuilder()
+                    .id(optionDB.getId_option())
+                    .code(optionDB.getCode())
+                    .name(optionDB.getName())
+                    .attribute(attribute).build());
+        }
+        return Question.newBuilder()
+                        .id(questionDB.getId_question())
+                        .code(questionDB.getCode())
+                        .name(questionDB.getForm_name())
+                        .uid(questionDB.getUid())
+                        .type(mapOutputToQuestionType(questionDB.getOutput()))
+                        .options(options)
+                        .build();
     }
 
     public static Question.Type mapOutputToQuestionType(int output) {

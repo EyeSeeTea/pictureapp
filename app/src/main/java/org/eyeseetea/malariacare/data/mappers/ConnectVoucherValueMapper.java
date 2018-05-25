@@ -2,8 +2,8 @@ package org.eyeseetea.malariacare.data.mappers;
 
 import org.eyeseetea.malariacare.data.database.datasources.OptionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.QuestionLocalDataSource;
-import org.eyeseetea.malariacare.domain.entity.intent.ConnectVoucher;
 import org.eyeseetea.malariacare.domain.entity.Option;
+import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Value;
 
 import java.util.ArrayList;
@@ -37,10 +37,11 @@ public class ConnectVoucherValueMapper {
     private static Value addValue(String questionUId, String value) {
 
         QuestionLocalDataSource questionLocalDataSource = new QuestionLocalDataSource();
-        if(!questionLocalDataSource.existsByUId(questionUId)){
+        Question question = questionLocalDataSource.getByUId(questionUId);
+        if(question==null){
             return null;
         }
-        if(questionLocalDataSource.hasOptions(questionUId)){
+        if(question.hasOptions()){
             OptionLocalDataSource optionLocalDataSource = new OptionLocalDataSource();
             Option option = optionLocalDataSource.recoveryOptionsByQuestionAndValue(questionUId, value);
             if(option!=null) {

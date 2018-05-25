@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface IQuestionRepository {
     List<Question> getQuestionsByProgram(String programUID);
-    boolean hasOptions(String questionUId);
-    boolean existsByUId(String questionUId);
+    Question getByUId(String questionUId);
 }

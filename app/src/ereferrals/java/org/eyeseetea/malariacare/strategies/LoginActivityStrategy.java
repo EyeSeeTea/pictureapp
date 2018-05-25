@@ -24,17 +24,18 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.intent.Auth;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -42,6 +43,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.LoginType;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
@@ -59,8 +61,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final java.lang.String TAG = ".LoginActivityStrategy";
     public static final java.lang.String EXIT = "exit";
-    public static final java.lang.String CREATED_SURVEY_FROM_OTHER_APP = "openSurvey";
-    public static final java.lang.String VALUES_BUNDLE = "valuesBundle";
     public static final String START_PULL = "StartPull";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
@@ -69,11 +69,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
-    private Auth auth;
     IPullController pullController;
     IAsyncExecutor asyncExecutor;
     IMainExecutor mainExecutor;
     ICredentialsRepository credentialsRepository;
+    IAuthRepository authRepository;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -81,6 +81,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         asyncExecutor = new AsyncExecutor();
         mainExecutor = new UIThreadExecutor();
         credentialsRepository = new CredentialsLocalDataSource();
+        authRepository = new AuthDataSource(loginActivity.getApplicationContext());
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
@@ -101,9 +102,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
-        auth = PreferencesState.getInstance().getIntentCredentials();
         showDashboardIfDemoUser();
-        decideConnectVoucherAction();
+        runConnectVoucherFromOtherApp();
     }
 
     private void showDashboardIfDemoUser() {
@@ -120,48 +120,39 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         });
     }
 
-    private void decideConnectVoucherAction() {
-        if (auth == null) return;
-        Session.setHasSurveyToComplete(true);
-        GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
-                new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
-                        credentialsRepository);
-        getLastInsertedCredentialsUseCase.execute(new GetLastInsertedCredentialsUseCase.Callback() {
+    private void runConnectVoucherFromOtherApp() {
+        CheckAuthUseCase checkAuthUseCase =
+                new CheckAuthUseCase(mainExecutor, asyncExecutor,
+                        authRepository, credentialsRepository);
+        checkAuthUseCase.execute(new CheckAuthUseCase.Callback() {
+
             @Override
-            public void onGetUsername(Credentials credentials) {
-                if (hasCredentials(credentials)) {
-                    decideConnectSurveyIntentFromOtherAppAction(credentials, auth);
-                }else{
-                    showToastAndClose(R.string.no_user_error);
-                    Session.setHasSurveyToComplete(false);
-                }
+            public void onEmptyCredentials() {
+                Log.d(TAG, "Survey from other app but empty credentials");
+                showToastAndClose(R.string.no_user_error);
             }
 
-        });
-    }
-
-    private boolean hasCredentials(Credentials credentials) {
-        return credentials != null && !credentials.isEmpty();
-    }
-
-    private void decideConnectSurveyIntentFromOtherAppAction(Credentials credentials, Auth auth) {
-        if(auth.hasAuth()) {
-            if (isValidUserAndPassword(credentials, auth)) {
-                finishAndGo(DashboardActivity.class);
+            @Override
+            public void onEmptyAuth() {
+                Log.d(TAG, "Survey from other app with empty auth");
                 Session.setHasSurveyToComplete(true);
-            } else {
-                showToastAndClose(R.string.different_user_error);
-                Session.setHasSurveyToComplete(false);
             }
-        }else{
-            //empty auth but in this case the user can be try to login and the survey voucher is valid
-            Session.setHasSurveyToComplete(true);
-        }
-    }
 
-    private boolean isValidUserAndPassword(Credentials credentials, Auth auth) {
-        return auth.getUserName().equals(credentials.getUsername())
-                && auth.getPassword().equals(credentials.getPassword());
+            @Override
+            public void onValidAuth() {
+                Log.d(TAG, "Survey from other app with valid auth");
+                Session.setHasSurveyToComplete(true);
+                finishAndGo(DashboardActivity.class);
+
+            }
+
+            @Override
+            public void onInValidAuth() {
+                Log.d(TAG, "Survey from other app with invalid auth");
+                showToastAndClose(R.string.different_user_error);
+
+            }
+        });
     }
 
     private void showToastAndClose(int error) {

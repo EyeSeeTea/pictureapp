@@ -31,7 +31,6 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.entity.intent.Auth;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.DateFilter;

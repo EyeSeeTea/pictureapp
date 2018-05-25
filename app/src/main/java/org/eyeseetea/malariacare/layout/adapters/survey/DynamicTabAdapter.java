@@ -566,7 +566,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
-        mDynamicTabAdapterStrategy.finishScreenView();
         return rowView;
     }
 

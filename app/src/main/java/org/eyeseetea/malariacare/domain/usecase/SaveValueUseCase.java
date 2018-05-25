@@ -5,9 +5,6 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SaveValueUseCase implements UseCase {
 
     private IAsyncExecutor mAsyncExecutor;
@@ -15,7 +12,7 @@ public class SaveValueUseCase implements UseCase {
     private IValueRepository mValueRepository;
     private Callback mCallback;
     private long mIdSurvey;
-    private List<Value> mValues;
+    private Value mValue;
 
     public SaveValueUseCase(
             IAsyncExecutor asyncExecutor,
@@ -29,36 +26,27 @@ public class SaveValueUseCase implements UseCase {
     public void execute(Callback callback, long idSurvey, Value value) {
         mCallback = callback;
         mIdSurvey = idSurvey;
-        mValues = new ArrayList<>();
-        mValues.add(value);
+        mValue = value;
         mAsyncExecutor.run(this);
     }
 
-    public void execute(Callback callback, long idSurvey, List<Value> values) {
-        mCallback = callback;
-        mIdSurvey = idSurvey;
-        mValues = values;
-        mAsyncExecutor.run(this);
-    }
 
     @Override
     public void run() {
-        for(Value value : mValues) {
-            mValueRepository.saveValue(value, mIdSurvey);
-        }
-        notifyValueSaved(mValues);
+        mValueRepository.saveValue(mValue, mIdSurvey);
+        notifyValueSaved(mValue);
     }
 
-    private void notifyValueSaved(final List<Value> values) {
+    private void notifyValueSaved(final Value value) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onValueSaved(values);
+                mCallback.onValueSaved(value);
             }
         });
     }
 
     public interface Callback {
-        void onValueSaved(List<Value> values);
+        void onValueSaved(Value value);
     }
 }

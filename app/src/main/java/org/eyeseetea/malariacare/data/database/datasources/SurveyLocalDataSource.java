@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.mappers.QuestionMapper;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
@@ -147,15 +148,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         for (QuestionDB questionDB : questionsDB) {
             ValueDB valueDB = questionDB.getValueBySurvey(surveyDB);
             Value value = new Value(valueDB.getValue());
-            Question question = new Question.Builder()
-                    .code(questionDB.getCode())
-                    .id(questionDB.getId_question())
-                    .name(questionDB.getForm_name())
-                    .uid(questionDB.getUid())
-                    .type(QuestionLocalDataSource.mapOutputToQuestionType(
-                            questionDB.getOutput()))
-                    .value(value)
-                    .build();
+            Question question = QuestionMapper.mapFromDbToDomainWithValue(questionDB, value);
             questions.add(question);
         }
         return questions;

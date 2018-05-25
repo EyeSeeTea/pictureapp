@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.data.mappers;
 
 import org.eyeseetea.malariacare.data.database.datasources.OptionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.QuestionLocalDataSource;
-import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
+import org.eyeseetea.malariacare.domain.entity.intent.ConnectVoucher;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Value;
 

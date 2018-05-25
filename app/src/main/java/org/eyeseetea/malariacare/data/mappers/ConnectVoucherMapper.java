@@ -1,11 +1,8 @@
 package org.eyeseetea.malariacare.data.mappers;
 
-import android.widget.Toast;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.intent.ConnectVoucher;
+import org.eyeseetea.malariacare.domain.entity.intent.ConnectVoucher;
 
 import java.io.IOException;
 

@@ -78,6 +78,12 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 clearAuth(callback);
                 Toast.makeText(activity, R.string.format_error, Toast.LENGTH_LONG).show();
             }
+
+            @Override
+            public void onInvalidProgramOrUser() {
+                Log.d(TAG, "Invalid program or user");
+                callback.onSuccess(canEnterApp());
+            }
         });
     }
 
@@ -154,8 +160,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     private void clearIntentExtras() {
         if(activity.getIntent().getExtras()!=null) {
-            //remove intent extras.
-            activity.setIntent(activity.getIntent().putExtra(INTENT_JSON_EXTRA_KEY, ""));
+            activity.getIntent().removeExtra(INTENT_JSON_EXTRA_KEY);
         }
     }
 }

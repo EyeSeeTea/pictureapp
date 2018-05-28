@@ -135,9 +135,16 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     @Override
     public Survey createNewConnectSurvey() {
         ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
-        UserAccount userAccount = new UserAccount(Session.getUserDB().getName(),
-                Session.getUserDB().getUid(),
+        UserDB userDB = UserDB.getLoggedUser();
+        if(programDB == null || userDB == null){
+            return null;
+        }
+        UserAccount userAccount = new UserAccount( userDB.getName(),
+                userDB.getUid(),
                 PreferencesState.getCredentialsFromPreferences().isDemoCredentials());
+        if(programDB == null){
+            return null;
+        }
         Program program = new Program(programDB.getUid(), programDB.getUid());
         return Survey.createNewConnectSurvey(program, userAccount);
     }

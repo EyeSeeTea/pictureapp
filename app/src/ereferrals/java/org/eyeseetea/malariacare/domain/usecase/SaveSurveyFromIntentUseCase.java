@@ -1,8 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import android.widget.Toast;
-
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.mappers.ConnectVoucherMapper;
 import org.eyeseetea.malariacare.data.mappers.ConnectVoucherValueMapper;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -24,6 +21,7 @@ public class SaveSurveyFromIntentUseCase implements UseCase {
         void onSurveySaved(Survey survey);
         void onEmptySurvey();
         void onInvalidIntentJson();
+        void onInvalidProgramOrUser();
     }
 
     private IAsyncExecutor mAsyncExecutor;
@@ -83,6 +81,10 @@ public class SaveSurveyFromIntentUseCase implements UseCase {
 
         mAuthRepository.saveAuth(auth);
         mSurvey = mSurveyRepository.createNewConnectSurvey();
+        if(mSurvey==null){
+            mCallback.onInvalidProgramOrUser();
+            return;
+        }
         mSurvey.setId(mSurveyRepository.save(mSurvey));
         saveValuesFromIntent(mSurvey);
     }

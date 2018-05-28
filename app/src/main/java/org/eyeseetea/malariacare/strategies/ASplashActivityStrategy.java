@@ -93,16 +93,6 @@ public abstract class ASplashActivityStrategy {
     }
 
     public void downloadLanguagesFromServer() throws Exception {
-        if (BuildConfig.downloadLanguagesFromServer) {
-            Log.i(TAG, "Starting to download Languages From Server");
-            CredentialsReader credentialsReader = CredentialsReader.getInstance();
-            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
-                    activity);
 
-            DownloadLanguageTranslationUseCase downloader =
-                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
-
-            downloader.download();
-        }
     }
 }

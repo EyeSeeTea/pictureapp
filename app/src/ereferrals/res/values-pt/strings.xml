@@ -949,4 +949,5 @@
 <string name="upgrading_metadata">Atualizando metadados</string>
 <string name="warning_message">"ATENÇÃO: "</string>
 <string name="error_empty_question">"Campo obrigatório vazio"</string>
+<string name="allow_media_download_3g">"Permitir download de mídia acima de 3g"</string>
 </resources>

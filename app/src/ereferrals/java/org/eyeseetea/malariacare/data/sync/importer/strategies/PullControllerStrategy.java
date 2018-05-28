@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -30,6 +31,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
@@ -52,10 +54,12 @@ import java.util.List;
 public class PullControllerStrategy extends APullControllerStrategy {
     private MetadataUpdater mMetadataUpdater;
     private MetadataConfigurationDBImporter importer;
+    private Context mContext;
 
-    public PullControllerStrategy(PullController pullController) {
+    public PullControllerStrategy(PullController pullController, Context context) {
         super(pullController);
-        mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
+        mMetadataUpdater = new MetadataUpdater(context);
+        mContext = context;
     }
 
     @Override
@@ -199,9 +203,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
             CredentialsReader credentialsReader = CredentialsReader.getInstance();
             IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                     PreferencesState.getInstance().getContext());
+        ISettingsRepository settingsRepository = new SettingsDataSource(
+                PreferencesState.getInstance().getContext());
 
             DownloadLanguageTranslationUseCase downloader =
-                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
+                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity,
+                            settingsRepository);
 
             downloader.downloadAsync(asyncExecutor);
     }

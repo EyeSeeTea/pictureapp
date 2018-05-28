@@ -954,4 +954,5 @@
 <string name="upgrading_metadata">मेटाडेटा स्तरवृद्धि गर्दै</string>
 <string name="warning_message">"चेतावनी: "</string>
 <string name="error_empty_question">"अनिवार्य क्षेत्र खाली गर्नुहोस्"</string>
+<string name="allow_media_download_3g">"मिडिया डाउनलोड 3 जी भन्दा बढी डाउनलोड गर्नुहोस्"</string>
 </resources>

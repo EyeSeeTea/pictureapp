@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.usecase.pull;
+package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
@@ -7,7 +7,9 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Media;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.sdk.common.FileUtils;
@@ -30,6 +32,7 @@ public class DownloadMediaUseCase implements UseCase {
     private IConnectivityManager mConnectivityManager;
     private IProgramRepository mProgramRepository;
     private MediaRepository mMediaRepository;
+    private ISettingsRepository mSettingsRepository;
 
     public DownloadMediaUseCase(
             IAsyncExecutor asyncExecutor,
@@ -37,13 +40,14 @@ public class DownloadMediaUseCase implements UseCase {
             IFileDownloader fileDownloader,
             IConnectivityManager connectivityManager,
             IProgramRepository programRepository,
-            MediaRepository mediaRepository) {
+            MediaRepository mediaRepository, ISettingsRepository settingsRepository) {
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
         mFileDownloader = fileDownloader;
         mConnectivityManager = connectivityManager;
         mProgramRepository = programRepository;
         mMediaRepository = mediaRepository;
+        mSettingsRepository = settingsRepository;
 
     }
 
@@ -77,8 +81,9 @@ public class DownloadMediaUseCase implements UseCase {
             }
 
         };
+        Settings settings = mSettingsRepository.getSettings();
 
-        if (mConnectivityManager.isDeviceOnline()) {
+        if (mConnectivityManager.isDeviceOnline(settings.canDownloadWith3G())) {
             if (mFileDownloader.isFileDownloaderIProgress()) {
                 System.out.println("File downloader is already downloading");
                 return;

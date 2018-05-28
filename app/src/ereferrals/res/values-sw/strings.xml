@@ -1008,4 +1008,5 @@ Ameahidi kuhudhuria"</string>
 <string name="upgrading_metadata">Kuboresha metadata</string>
 <string name="warning_message">"WARNING:: "</string>
 <string name="error_empty_question">"Weka shamba la lazima"</string>
+    <string name="allow_media_download_3g">"Ruhusu kupakuliwa kwa vyombo vya habari juu ya 3g"</string>
 </resources>

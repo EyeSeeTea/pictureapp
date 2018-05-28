@@ -15,7 +15,7 @@ public class NetworkManagerFactory {
         if (sConnectivityManager == null) {
             sConnectivityManager = new IConnectivityManager() {
                 @Override
-                public boolean isDeviceOnline() {
+                public boolean isDeviceOnline(boolean canDownloadWith3G) {
                     return ConnectivityStatus.isConnected(context);
                 }
             };

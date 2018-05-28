@@ -57,7 +57,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private void init(Device device) {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        ISettingsRepository currentLanguageRepository = new SettingsDataSource();
+        ISettingsRepository currentLanguageRepository = new SettingsDataSource(PreferencesState.getInstance().getContext());
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
         AppInfo appInfo = appInfoDataSource.getAppInfo();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();

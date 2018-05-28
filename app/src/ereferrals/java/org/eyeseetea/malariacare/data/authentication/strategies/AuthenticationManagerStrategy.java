@@ -18,7 +18,7 @@ public class AuthenticationManagerStrategy extends AAuthenticationManagerStrateg
 
     public AuthenticationManagerStrategy(Context context) {
         mForgotPasswordDataSource = new ForgotPasswordDataSource(context);
-        mSettingsRepository = new SettingsDataSource();
+        mSettingsRepository = new SettingsDataSource(context);
     }
 
     @Override

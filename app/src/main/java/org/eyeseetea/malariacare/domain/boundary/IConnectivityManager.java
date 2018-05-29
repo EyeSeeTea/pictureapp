@@ -1,5 +1,9 @@
 package org.eyeseetea.malariacare.domain.boundary;
 
+import org.eyeseetea.malariacare.data.net.ConnectivityType;
+
 public interface IConnectivityManager {
-    boolean isDeviceOnline(boolean canDownloadWith3G);
+    boolean isDeviceOnline();
+
+    ConnectivityType getConnectivityType();
 }

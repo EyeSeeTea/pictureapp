@@ -38,7 +38,7 @@ public class LanguageDownloader {
 
 
     public void start() throws Exception {
-        if (connectivity.isDeviceOnline(mSettings.canDownloadWith3G())) {
+        if (connectivity.isDeviceOnline()) {
             List<Language> languagesFromServer = client.getLanguages();
 
             List<Language> languagesToDownload = getLanguagesToDownload(languagesFromServer);

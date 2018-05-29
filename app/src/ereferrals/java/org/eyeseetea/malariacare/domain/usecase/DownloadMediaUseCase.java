@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.net.ConnectivityType;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -11,7 +12,6 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepositor
 import org.eyeseetea.malariacare.domain.entity.Media;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.sdk.common.FileUtils;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class DownloadMediaUseCase implements UseCase {
         };
         Settings settings = mSettingsRepository.getSettings();
 
-        if (mConnectivityManager.isDeviceOnline(settings.canDownloadWith3G())) {
+        if (canDownloadMedia(settings)) {
             if (mFileDownloader.isFileDownloaderIProgress()) {
                 System.out.println("File downloader is already downloading");
                 return;
@@ -103,6 +103,17 @@ public class DownloadMediaUseCase implements UseCase {
             callback.onError(new NetworkException());
             mFileDownloader.changeFileDownloaderIProgress(false);
         }
+    }
+
+    private boolean canDownloadMedia(Settings settings) {
+        ConnectivityType connectivityType = mConnectivityManager.getConnectivityType();
+        if (connectivityType.equals(ConnectivityType.WIFI)) {
+            return true;
+        }
+        if (connectivityType.equals(ConnectivityType.MOBILE) && settings.canDownloadWith3G()) {
+            return true;
+        }
+        return false;
     }
 
     private int saveDownloadedMedia(List<Media> syncMedias) {

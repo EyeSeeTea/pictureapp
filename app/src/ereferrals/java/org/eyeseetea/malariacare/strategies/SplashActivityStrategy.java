@@ -13,10 +13,8 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
-import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
@@ -67,10 +65,8 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                         activity);
-                ISettingsRepository settingsRepository = new SettingsDataSource(activity);
                 DownloadLanguageTranslationUseCase downloader =
-                        new DownloadLanguageTranslationUseCase(credentialsReader, connectivity,
-                                settingsRepository);
+                        new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
                 downloader.download();
             }

@@ -26,14 +26,11 @@ public class LanguageDownloader {
 
     private ILanguagesClient client;
     private IConnectivityManager connectivity;
-    private Settings mSettings;
 
 
-    public LanguageDownloader(ILanguagesClient client, IConnectivityManager connectivity,
-            Settings settings) {
+    public LanguageDownloader(ILanguagesClient client, IConnectivityManager connectivity) {
         this.client = client;
         this.connectivity = connectivity;
-        mSettings = settings;
     }
 
 

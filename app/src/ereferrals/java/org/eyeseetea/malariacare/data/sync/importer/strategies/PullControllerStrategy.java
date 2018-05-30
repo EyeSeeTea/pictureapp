@@ -52,10 +52,12 @@ import java.util.List;
 public class PullControllerStrategy extends APullControllerStrategy {
     private MetadataUpdater mMetadataUpdater;
     private MetadataConfigurationDBImporter importer;
+    private Context mContext;
 
-    public PullControllerStrategy(PullController pullController) {
+    public PullControllerStrategy(PullController pullController, Context context) {
         super(pullController);
-        mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
+        mMetadataUpdater = new MetadataUpdater(context);
+        mContext = context;
     }
 
     @Override
@@ -199,7 +201,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
             CredentialsReader credentialsReader = CredentialsReader.getInstance();
             IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                     PreferencesState.getInstance().getContext());
-
             DownloadLanguageTranslationUseCase downloader =
                     new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 

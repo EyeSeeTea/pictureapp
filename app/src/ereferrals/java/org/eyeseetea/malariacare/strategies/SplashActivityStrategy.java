@@ -12,7 +12,11 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
+import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
@@ -56,7 +60,16 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void downloadLanguagesFromServer() throws Exception {
         try {
-            SplashActivityStrategy.super.downloadLanguagesFromServer();
+            if (BuildConfig.downloadLanguagesFromServer) {
+                Log.i(TAG, "Starting to download Languages From Server");
+                CredentialsReader credentialsReader = CredentialsReader.getInstance();
+                IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
+                        activity);
+                DownloadLanguageTranslationUseCase downloader =
+                        new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
+
+                downloader.download();
+            }
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server"
                     + e.getMessage());

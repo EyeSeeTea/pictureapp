@@ -50,7 +50,7 @@ public class PullController implements IPullController {
     PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     ConvertFromSDKVisitor mConverter;
     DataConverter mDataConverter;
-    private APullControllerStrategy mPullControllerStrategy = new PullControllerStrategy(this);
+    private APullControllerStrategy mPullControllerStrategy;
     private Context mContext;
     private boolean cancelPull;
 
@@ -61,6 +61,7 @@ public class PullController implements IPullController {
         mPullRemoteDataSource = new PullDhisSDKDataSource();
         mConverter = new ConvertFromSDKVisitor(context);
         mDataConverter = new DataConverter(context);
+        mPullControllerStrategy = new PullControllerStrategy(this, mContext);
     }
 
     @Override

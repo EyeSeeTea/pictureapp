@@ -1111,4 +1111,5 @@
 <string name="warning_message">"WARNING: "</string>
 
 <string name="error_empty_question">"Empty mandatory field"</string>
+<string name="allow_media_download_3g">"Allow media download over 3g"</string>
 </resources>

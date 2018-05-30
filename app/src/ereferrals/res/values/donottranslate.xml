@@ -51,4 +51,5 @@
     <string name="no_voucher_on" translatable="false">common_btn_no</string>
     <string name="demo_program_uid" translatable="false">demoProgram</string>
     <string name="default_language" translatable="false">en</string>
+    <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
 </resources>

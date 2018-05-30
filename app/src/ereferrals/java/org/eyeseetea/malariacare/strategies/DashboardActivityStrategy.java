@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -50,6 +51,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepo
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
@@ -60,7 +62,7 @@ import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
-import org.eyeseetea.malariacare.domain.usecase.pull.DownloadMediaUseCase;
+import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -148,9 +150,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 new File(path),
                 mDashboardActivity.getApplicationContext().getResources().openRawResource(
                         R.raw.driveserviceprivatekey));
+        ISettingsRepository settingsRepository = new SettingsDataSource(mDashboardActivity);
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mainExecutor,
                 fileDownloader,
-                mConnectivity, programRepository, mediaRepository);
+                mConnectivity, programRepository, mediaRepository,settingsRepository);
     }
 
     private void showToast(@StringRes int text) {

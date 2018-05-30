@@ -23,4 +23,20 @@ public class ConnectivityManager implements IConnectivityManager{
         return networkInfo.isConnected();
     }
 
+    @Override
+    public ConnectivityType getConnectivityType() {
+        android.net.ConnectivityManager connMgr =
+                (android.net.ConnectivityManager) DashboardActivity.dashboardActivity
+                        .getSystemService(
+                                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            return ConnectivityType.WIFI;
+        }
+        networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_MOBILE);
+        if (networkInfo.isConnected()) {
+            return ConnectivityType.MOBILE;
+        }
+        return ConnectivityType.NONE;
+    }
 }

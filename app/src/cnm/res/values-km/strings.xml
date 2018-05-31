@@ -282,31 +282,12 @@
 <string name="common_option_treatment_asmq_100_200_3">3 គ្រាប់ថ្នាំ ASMQ 100/200 មីលីក្រាម</string>
 <string name="common_option_treatment_asmq_100_200_6">6 គ្រាប់ថ្នាំ ASMQ 100/200 មីលីក្រាម</string>
 <string name="common_option_treatment_asmq_100_200_6_pq_1">6 គ្រាប់ថ្នាំ ASMQ នៃថ្នាំ 100/200 មីក្រូក្រាម 15 មីលីក្រាម PQ</string>
-<string name="lastcommit_unavailable">
-<![CDATA[
-<p> ជម្រើសនេះត្រូវការការផ្លាស់ប្តូរខ្លះនៅក្នុងឃ្លាំង git ។ </ p>
-<p> ជំហាន: </ p>
-<p> 1 ។ សូមបើកឬបង្កើតឯកសារ .git / hooks / post-commit និង .git / hooks / post-checkout ។ </ p>
-<p> 2 ។ ប្រសិនបើឯកសារមិនមានសូមបន្ថែមបន្ទាត់ខាងក្រោម: </ p>
-<p> #! / bin / sh </ p>
-<p> gitPath = $ (git rev-parse - show-toplevel) </ p>
-<p> sh $ {gitPath} /generate_last_commit.sh </ p>
-<p> 2 ។ ប្រសិនបើឯកសារមានរួចហើយអ្នកគ្រាន់តែត្រូវការបន្ថែមបន្ទាត់ខាងក្រោមនៅចុងបញ្ចប់: </ p>
-<p> gitPath = $ (git rev-parse - show-toplevel) </ p>
-<p> sh $ {gitPath} /generate_last_commit.sh </ p>
-<p> 3 ។ រត់ "git checkout" ។ </ p>]]>
-</string>
 <string name="ipc_issueEntry_q_test_result">លទ្ធផលតេស្ត</string>
 <string name="common_option_non_mobile">"មិនមែនចល័ត"</string>
 <string name="common_option_mobile">"ទូរស័ព្ទចល័ត"</string>
 <string name="ipc_issueEntry_q_patient_pregnant_month">"ខែ"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">ខែមានផ្ទៃពោះ</string>
 <string name="tab_stock">"ហ៊ុន"</string>
-    <string-array name="languages_strings">
-        <item>បានកំណត់ប្រព័ន្ធ</item>
-        <item>អង់គ្លេស</item>
-        <item>ភាសាខ្មែរ</item>
-    </string-array>
 <string name="add_new_receipt">បន្ថែមវិក័យប័ត្រថ្មី</string>
 <string name="add_new_expense">បន្ថែមការចំណាយថ្មី</string>
 <string name="ipc_issueEntry_q_patient_weight">ទម្ងន់ (គីឡូក្រាម)</string>
@@ -329,4 +310,10 @@
 <string name="ipc_issueEntry_q_patient_months_age">"អាយុជាខែ"</string>
 <string name="error_saving_survey">"មានកំហុសក្នុងការរក្សាទុកការស្ទង់មតិ"</string>
 <string name="dynamic_error_month_age">"អាយុមិនត្រឹមត្រូវក្នុងខែ"</string>
+
+<string-array name="languages_strings">
+    <item>បានកំណត់ប្រព័ន្ធ</item>
+    <item>អង់គ្លេស</item>
+    <item>ភាសាខ្មែរ</item>
+</string-array>
 </resources>

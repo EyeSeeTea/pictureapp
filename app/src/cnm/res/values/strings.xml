@@ -294,29 +294,12 @@
 <string name="ipc_issueEntry_q_telephone">Phone number</string>
 <string name="common_option_dot_complete">Complete</string>
 <string name="common_option_dot_non_complete">Non-complete</string>
-<string name="lastcommit_unavailable"><![CDATA[
-<p>This option requires some changes in the git repository.</p>
-<p>Steps:</p>
-<p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
-<p>2. If the file does not exist, add the following lines: </p>
-<p>#!/bin/sh </p>
-<p>gitPath=$(git rev-parse --show-toplevel)</p>
-<p>sh ${gitPath}/generate_last_commit.sh </p>
-<p>2. If the file already exists, you only need add the following lines at the end:</p>
-<p>gitPath=$(git rev-parse --show-toplevel)</p>
-<p>sh ${gitPath}/generate_last_commit.sh </p>
-<p>3. Run "git checkout". </p>]]>
-</string>
 <string name="ipc_issueEntry_q_test_result">"Test result"</string>
 <string name="common_option_non_mobile">"Non mobile"</string>
 <string name="common_option_mobile">"Mobile"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">Pregnant Months</string>
-    <string-array name="languages_strings">
-        <item>System defined</item>
-        <item>English</item>
-        <item>Khmer</item>
-    </string-array>
-    <string name="error_empty_question">"Empty mandatory field"</string>
+
+<string name="error_empty_question">"Empty mandatory field"</string>
 <string name="add_new_receipt">Add new receipt</string>
 <string name="add_new_expense">Add new expense</string>
 <string name="ipc_issueEntry_q_mcs_rdt_stock">"RDT stock out?"</string>
@@ -332,4 +315,10 @@
 
 <string name="ipc_issueEntry_q_patient_months_age">"Age in months"</string>
 <string name="dynamic_error_month_age">"Invalid age in months"</string>
+
+<string-array name="languages_strings">
+    <item>System defined</item>
+    <item>English</item>
+    <item>Khmer</item>
+</string-array>
 </resources>

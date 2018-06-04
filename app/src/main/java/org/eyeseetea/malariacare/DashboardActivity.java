@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare;
 
 import static org.eyeseetea.malariacare.BuildConfig.exitFromSurveyToImproveTab;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -46,6 +47,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -54,12 +56,15 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.RemoveSurveysInProgressUseCase;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
@@ -571,7 +576,16 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        mDashboardActivityStrategy.newSurvey(this);
+        final Activity activity = this;
+        AsyncExecutor asyncExecutor = new AsyncExecutor();
+        UIThreadExecutor mainExecutor = new UIThreadExecutor();
+        RemoveSurveysInProgressUseCase removeInProgressSurveyUseCase = new RemoveSurveysInProgressUseCase(mainExecutor, asyncExecutor, new SurveyLocalDataSource());
+        removeInProgressSurveyUseCase.execute(new RemoveSurveysInProgressUseCase.Callback() {
+            @Override
+            public void onSuccess() {
+                mDashboardActivityStrategy.newSurvey(activity);
+            }
+        });
     }
 
     /**

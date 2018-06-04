@@ -149,6 +149,11 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         return Survey.createNewConnectSurvey(program, userAccount);
     }
 
+    @Override
+    public void removeInProgress() {
+        SurveyDB.removeInProgress();
+    }
+
     private List<Question> getQuestionsBySurvey(SurveyDB surveyDB) {
         List<QuestionDB> questionsDB = surveyDB.getQuestionsFromValues();
         List<Question> questions = new ArrayList<>();

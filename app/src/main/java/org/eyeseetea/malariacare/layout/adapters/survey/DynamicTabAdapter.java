@@ -137,8 +137,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
     private boolean isBackward = true;
+    private boolean isASurveyCreatedInOtherApp;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode) throws NullPointerException {
+    public DynamicTabAdapter(Context context, boolean reviewMode, boolean isASurveyCreatedInOtherApp) throws NullPointerException {
+        this.isASurveyCreatedInOtherApp = isASurveyCreatedInOtherApp;
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -303,7 +305,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
-        questionDB.saveValuesText(newValue);
+        questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
         executeTabLogic(questionDB, null);
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -564,7 +566,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
-
         return rowView;
     }
 
@@ -640,7 +641,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
-                questionView.setValue(valueDB);
+                if(shouldDisableNotVisibleChildQuestion(screenQuestionDB, surveyDB)) {
+                    ((CommonQuestionView)questionView).deactivateQuestion();
+                } else {
+                    questionView.setValue(valueDB);
+                }
+
             }
 
             setupNavigationByQuestionView(rowView.getRootView(), questionView);
@@ -667,6 +673,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (questionView instanceof CommonQuestionView) {
                 ((CommonQuestionView) questionView).initContainers(tableRow, tableLayout);
             }
+        }
+    }
+
+    private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
+        if(!BuildConfig.validationInline || !isASurveyCreatedInOtherApp){
+            //if the survey is not coming from a other app intent this is not necessary
+            return false;
+        }else {
+            //if the question is not visible and the value is null the question value should be empty and the validation ignored
+            return (screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB));
         }
     }
 
@@ -824,7 +840,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 }
 
-                Log.d(TAG, "Questions with failed validation " + failedValidations);
+                Log.d(TAG, "Questions with failed validation " + failedValidations + " ; errors: "+questionsWithError);
                 if (failedValidations == 0 && !questionsWithError) {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);

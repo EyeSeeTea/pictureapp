@@ -5,6 +5,10 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 
 public abstract class ASurveyFragmentStrategy {
 
+    public interface Callback {
+        void loadIsSurveyCreatedInOtherApp(boolean value);
+    }
+
     abstract SurveyDB getRenderSurvey(QuestionDB screenQuestionDB);
 
     public boolean isDynamicStockQuestion(String uid) {

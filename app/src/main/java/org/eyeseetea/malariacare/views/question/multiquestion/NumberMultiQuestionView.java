@@ -49,6 +49,11 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             numberPicker.setText(valueDB.getValue());
+            if (BuildConfig.validationInline) {
+                if (!numberPicker.getText().toString().isEmpty()) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                }
+            }
         }
     }
 

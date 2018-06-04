@@ -66,7 +66,7 @@ public class Question {
     }
 
     public boolean hasOptions() {
-        return options != null;
+        return options != null && options.size()>0;
     }
 
     public Header getHeader() {

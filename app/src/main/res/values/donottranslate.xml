@@ -98,4 +98,7 @@
     <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
     <string name="fragment_new_expense" translatable="false">fragment_new_expense</string>
     <string name="fragment_stock_table" translatable="false">stock_table_fragment</string>
+    <string name="intent_credentials_user" translatable="false">intent_credentials_user</string>
+    <string name="intent_credentials_password" translatable="false">intent_credentials_password</string>
+
 </resources>

@@ -325,7 +325,7 @@ public abstract class ADashboardActivityStrategy {
                 } else if (tabId.equalsIgnoreCase(
                         mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
                     reloadAVFragment();
-                } 
+                }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
             }

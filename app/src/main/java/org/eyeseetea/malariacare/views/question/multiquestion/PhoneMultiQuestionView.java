@@ -10,10 +10,8 @@ import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .APhoneMultiquestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .PhoneMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies.APhoneMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies.PhoneMultiquestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 

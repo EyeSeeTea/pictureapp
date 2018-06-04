@@ -56,6 +56,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -1372,13 +1373,17 @@ public class QuestionDB extends BaseModel {
         }
     }
 
-    public void saveValuesText(String answer) {
+    public void saveValuesText(String answer, boolean isValueLoadedFromOtherApp) {
         ValueDB valueDB = getValueBySession();
-        if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()) {
+        if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()
+                && !isValueLoadedFromOtherApp) {
             valueDB.getQuestionDB().deleteThresholdValues(valueDB);
         }
         SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
         SurveyFragmentStrategy.saveValuesText(valueDB, answer, this, surveyDB);
+    }
+    public void saveValuesText(String answer) {
+        saveValuesText(answer, false);
     }
 
     private void deleteThresholdValues(ValueDB valueDB) {
@@ -2066,6 +2071,14 @@ public class QuestionDB extends BaseModel {
         return mPropagationQuestionDB;
     }
 
+    public List<OptionDB> getOptions() {
+        List<OptionDB> optionDBS = new Select().from(OptionDB.class)
+                    .where(OptionDB_Table.id_answer_fk.eq(getAnswerDB().getId_answer()))
+                    .orderBy(OptionDB_Table.name, true)
+                    .queryList();
+        return optionDBS;
+    }
+
     private List<QuestionDB> getPropagationThresholdsQuestionDB() {
         return new Select().from(QuestionDB.class).as(questionName)
                 //QuestionDB + QuestioRelation
@@ -2093,6 +2106,10 @@ public class QuestionDB extends BaseModel {
                 .from(QuestionDB.class)
                 .count();
         return count < 1;
+    }
+
+    public ValueDB getValueByQuestion(SurveyDB surveyDB, QuestionDB screenQuestionDB) {
+        return ValueDB.findValue(screenQuestionDB.getId_question(), surveyDB);
     }
 
     public static class QuestionOrderComparator implements Comparator {

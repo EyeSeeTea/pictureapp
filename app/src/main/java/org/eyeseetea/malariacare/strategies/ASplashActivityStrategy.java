@@ -88,4 +88,8 @@ public abstract class ASplashActivityStrategy {
     public void downloadLanguagesFromServer() {
         //By default, variants do nothing
     }
+
+    public void init(SplashActivityStrategy.Callback callback) {
+        callback.onSuccess();
+    }
 }

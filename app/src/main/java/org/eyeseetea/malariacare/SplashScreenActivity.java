@@ -27,6 +27,10 @@ import org.hisp.dhis.client.sdk.android.api.D2;
 public class SplashScreenActivity extends Activity {
 
 
+    public interface Callback {
+        void onSuccess(boolean canEnterApp);
+    }
+
     private static final String TAG = ".SplashScreenActivity";
     private SplashActivityStrategy splashActivityStrategy;
 
@@ -34,12 +38,17 @@ public class SplashScreenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        final Activity activity = this;
         splashActivityStrategy = new SplashActivityStrategy(this);
-        if (splashActivityStrategy.canEnterApp()) {
-            setContentView(R.layout.activity_splash);
-            AsyncInitApplication asyncInitApplication = new AsyncInitApplication(this);
-            asyncInitApplication.execute((Void) null);
-        }
+        splashActivityStrategy.init(new Callback() {
+            @Override
+            public void onSuccess(boolean canEnterApp) {
+                if (canEnterApp) {
+                    AsyncInitApplication asyncInitApplication = new AsyncInitApplication(activity);
+                    asyncInitApplication.execute((Void) null);
+                }
+            }
+        });
     }
 
     private void init() {

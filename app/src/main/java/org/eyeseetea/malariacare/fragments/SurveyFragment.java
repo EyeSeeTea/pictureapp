@@ -38,7 +38,9 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.LoadingSurveyException;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.strategies.ASurveyFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -211,22 +213,28 @@ public class SurveyFragment extends Fragment {
 
     private void showSurvey() {
         try {
-            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+            SurveyFragmentStrategy.isSurveyCreatedFromOtherApp(new ASurveyFragmentStrategy.Callback() {
 
-            dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
+                @Override
+                public void loadIsSurveyCreatedInOtherApp(boolean isSurveyCreatedInOtherApp) {
+                    LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
-            View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
+                    dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode, isSurveyCreatedInOtherApp);
 
-            content.removeAllViews();
-            content.addView(viewContent);
+                    View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
 
-            ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
+                    content.removeAllViews();
+                    content.addView(viewContent);
 
-            dynamicTabAdapter.addOnSwipeListener(listViewTab);
+                    ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
 
-            listViewTab.setAdapter(dynamicTabAdapter);
+                    dynamicTabAdapter.addOnSwipeListener(listViewTab);
 
-            hideProgress();
+                    listViewTab.setAdapter(dynamicTabAdapter);
+
+                    hideProgress();
+                }
+            }, getActivity().getApplicationContext());
         }catch (NullPointerException e){
             new LoadingSurveyException(e);
         }

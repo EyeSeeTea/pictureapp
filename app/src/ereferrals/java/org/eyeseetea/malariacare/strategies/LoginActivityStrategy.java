@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -23,8 +24,10 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -32,6 +35,7 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -39,6 +43,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.LoginType;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
@@ -64,13 +69,19 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
+    IPullController pullController;
+    IAsyncExecutor asyncExecutor;
+    IMainExecutor mainExecutor;
+    ICredentialsRepository credentialsRepository;
+    IAuthRepository authRepository;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
-        IPullController pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
+        pullController = new PullController(loginActivity);
+        asyncExecutor = new AsyncExecutor();
+        mainExecutor = new UIThreadExecutor();
+        credentialsRepository = new CredentialsLocalDataSource();
+        authRepository = new AuthDataSource(loginActivity.getApplicationContext());
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
@@ -92,12 +103,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             loginActivity.finish();
         }
         showDashboardIfDemoUser();
+        runConnectVoucherFromOtherApp();
     }
 
     private void showDashboardIfDemoUser() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);
@@ -109,6 +118,52 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 }
             }
         });
+    }
+
+    private void runConnectVoucherFromOtherApp() {
+        CheckAuthUseCase checkAuthUseCase =
+                new CheckAuthUseCase(mainExecutor, asyncExecutor,
+                        authRepository, credentialsRepository);
+        checkAuthUseCase.execute(new CheckAuthUseCase.Callback() {
+
+            @Override
+            public void onEmptyCredentials() {
+                Log.d(TAG, "Survey from other app but empty credentials");
+                showToastAndClose(R.string.no_user_error);
+            }
+
+            @Override
+            public void onEmptyAuth() {
+                Log.d(TAG, "Survey from other app with empty auth");
+                Session.setHasSurveyToComplete(true);
+            }
+
+            @Override
+            public void onValidAuth() {
+                Log.d(TAG, "Survey from other app with valid auth");
+                Session.setHasSurveyToComplete(true);
+                finishAndGo(DashboardActivity.class);
+
+            }
+
+            @Override
+            public void onInValidAuth() {
+                Log.d(TAG, "Survey from other app with invalid auth");
+                showToastAndClose(R.string.different_user_error);
+
+            }
+        });
+    }
+
+    private void showToastAndClose(int error) {
+        Toast.makeText(loginActivity, error, Toast.LENGTH_LONG).show();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                loginActivity.onBackPressed();
+            }
+        };
+        new Handler().postDelayed(runnable, 3500);
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -159,10 +214,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void setUpSoftOrFullLoginOptions() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-
         GetLastInsertedCredentialsUseCase getLastInsertedCredentialsUseCase =
                 new GetLastInsertedCredentialsUseCase(mainExecutor, asyncExecutor,
                         credentialsRepository);
@@ -286,8 +337,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void onForgotPassword() {
         loginActivity.onStartLoading();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IAuthenticationManager authenticationManager = new AuthenticationManager(loginActivity);
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
                 asyncExecutor, authenticationManager);
@@ -338,8 +387,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void checkEnableLogin() {
         IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         mIsLoginEnableUseCase = new IsLoginEnableUseCase(
                 invalidLoginAttemptsLocalDataSource, mainExecutor, asyncExecutor);
         mIsLoginEnableUseCase.execute(new IsLoginEnableUseCase.Callback() {
@@ -398,8 +445,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     public void initLoginUseCase(IAuthenticationManager authenticationManager) {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
         IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
         IInvalidLoginAttemptsRepository
@@ -574,9 +619,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
         PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
 
         PullFilters pullFilters = new PullFilters();

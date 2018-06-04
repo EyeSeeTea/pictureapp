@@ -7,11 +7,17 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.mappers.QuestionMapper;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +111,14 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         }
         surveyDB.setStatus(survey.getStatus());
         surveyDB.update();
+        setSurveyOnSession(surveyDB);
         return surveyDB.getId_survey();
+    }
+
+    private void setSurveyOnSession(SurveyDB surveyDB) {
+        if(surveyDB.getType() == Constants.SURVEY_NO_TYPE){
+            Session.setMalariaSurveyDB(surveyDB);
+        }
     }
 
 
@@ -119,21 +132,30 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         return surveys;
     }
 
+    @Override
+    public Survey createNewConnectSurvey() {
+        ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
+        UserDB userDB = UserDB.getLoggedUser();
+        if(programDB == null || userDB == null){
+            return null;
+        }
+        UserAccount userAccount = new UserAccount( userDB.getName(),
+                userDB.getUid(),
+                PreferencesState.getCredentialsFromPreferences().isDemoCredentials());
+        if(programDB == null){
+            return null;
+        }
+        Program program = new Program(programDB.getUid(), programDB.getUid());
+        return Survey.createNewConnectSurvey(program, userAccount);
+    }
+
     private List<Question> getQuestionsBySurvey(SurveyDB surveyDB) {
         List<QuestionDB> questionsDB = surveyDB.getQuestionsFromValues();
         List<Question> questions = new ArrayList<>();
         for (QuestionDB questionDB : questionsDB) {
             ValueDB valueDB = questionDB.getValueBySurvey(surveyDB);
             Value value = new Value(valueDB.getValue());
-            Question question = new Question.Builder()
-                    .code(questionDB.getCode())
-                    .id(questionDB.getId_question())
-                    .name(questionDB.getForm_name())
-                    .uid(questionDB.getUid())
-                    .type(QuestionLocalDataSource.mapOutputToQuestionType(
-                            questionDB.getOutput()))
-                    .value(value)
-                    .build();
+            Question question = QuestionMapper.mapFromDbToDomainWithValue(questionDB, value);
             questions.add(question);
         }
         return questions;

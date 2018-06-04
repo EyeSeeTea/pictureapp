@@ -1015,4 +1015,8 @@ Ameahidi kuhudhuria"</string>
 <string name="upgrading_metadata">Kuboresha metadata</string>
 <string name="warning_message">"WARNING:: "</string>
 <string name="error_empty_question">"Weka shamba la lazima"</string>
+<string name="format_error">Json-formatfel</string>
+<string name="no_user_error">Ingen användare inloggad.</string>
+<string name="different_user_error">Användaren inloggad är annorlunda.</string>
+<string name="dynamic_error_month_age">"Ogiltig ålder i månader"</string>
 </resources>

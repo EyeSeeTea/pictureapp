@@ -93,6 +93,16 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 break;
             }
         }
+
+        if (BuildConfig.validationInline) {
+            if (spinnerOptions.getSelectedItemPosition() > 0) {
+                Validation.getInstance().removeInputError(header);
+                header.setError(null);
+            } else {
+                Validation.getInstance().addinvalidInput(header, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        }
     }
 
     @Override

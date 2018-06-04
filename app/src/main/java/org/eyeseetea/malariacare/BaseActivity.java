@@ -297,7 +297,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param targetActivityClass Given target activity class
      */
     public void finishAndGo(Class targetActivityClass) {
-        Intent targetActivityIntent = new Intent(this, targetActivityClass);
+        Intent targetActivityIntent = new Intent(this.getApplicationContext(), targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }
@@ -308,7 +308,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param targetActivityClass Given target activity class
      */
     public void go(Class targetActivityClass) {
-        Intent targetActivityIntent = new Intent(this, targetActivityClass);
+        Intent targetActivityIntent = new Intent(this.getApplicationContext(), targetActivityClass);
         startActivity(targetActivityIntent);
     }
 

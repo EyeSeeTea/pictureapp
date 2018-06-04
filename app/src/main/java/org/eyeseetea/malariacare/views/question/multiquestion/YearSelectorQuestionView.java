@@ -46,6 +46,11 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             yearText.setText(valueDB.getValue());
+            if (BuildConfig.validationInline) {
+                if (!yearText.getText().toString().isEmpty()) {
+                    Validation.getInstance().removeInputError(yearText);
+                }
+            }
         }
     }
 

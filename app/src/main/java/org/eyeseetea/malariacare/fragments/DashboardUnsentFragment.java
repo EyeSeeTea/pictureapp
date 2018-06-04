@@ -64,6 +64,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
     private ADashboardUnsentFragmentStrategy mDashboardUnsentFragmentStrategy;
+    ListView listView;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
@@ -103,7 +104,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         initAdapter();
         initListView();
-        registerForContextMenu(getListView());
+        registerForContextMenu(listView);
     }
 
 
@@ -156,7 +157,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 inflater);
         final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
-        ListView listView = getListView();
+        listView = getListView();
         if (header != null) {
             listView.addHeaderView(header);
         }
@@ -264,13 +265,13 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
-            LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
+            LayoutUtils.measureListViewHeightBasedOnChildren(listView);
         }
     }
 
     public void reloadSurveysFromService(List<SurveyDB> surveysUnsentFromService) {
         reloadSurveys(surveysUnsentFromService);
-        LayoutUtils.setRowDivider(getListView());
+        LayoutUtils.setRowDivider(listView);
         // Measure the screen height
         int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
 

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import org.eyeseetea.malariacare.utils.Constants;
+
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import java.util.Date;
@@ -39,6 +41,13 @@ public class Survey {
         mOrganisationUnit = organisationUnit;
         mUserAccount = userAccount;
         mType = required(type, "Type is required");
+    }
+
+    public static Survey createNewConnectSurvey(Program program,
+                                                UserAccount userAccount) {
+        Survey survey = new Survey(program, null, userAccount, Constants.SURVEY_NO_TYPE);
+        survey.setStatus(Constants.SURVEY_IN_PROGRESS);
+        return survey;
     }
 
     public Survey(Date surveyDate) {

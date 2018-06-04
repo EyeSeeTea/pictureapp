@@ -88,7 +88,7 @@ public class LoginActivity extends Activity {
     private static final String IS_LOADING = "state:isLoading";
     public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
     public LoginUseCase mLoginUseCase;
-    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
+    public LoginActivityStrategy mLoginActivityStrategy;
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
@@ -122,6 +122,7 @@ public class LoginActivity extends Activity {
     }
 
     private void initLoginUseCase() {
+        mLoginActivityStrategy = new LoginActivityStrategy(this);
         mLoginActivityStrategy.initLoginUseCase(mAuthenticationManager);
     }
 

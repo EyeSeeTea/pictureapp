@@ -81,7 +81,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
 
 
     @Override
-    public void finishOrNext() {
+    public void finishOrNext(final boolean readOnly) {
         try {
             System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
             System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());

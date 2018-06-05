@@ -315,6 +315,10 @@
 
 <string name="ipc_issueEntry_q_patient_months_age">"Age in months"</string>
 <string name="dynamic_error_month_age">"Invalid age in months"</string>
+<string name="ipc_issueEntry_q_reported_case">"Have you reported the case within 24 hours?"</string>
+<string name="ipc_issueEntry_q_case_date">"Date of case"</string>
+<string name="common_option_reported_case_yes">"Yes"</string>
+<string name="common_option_reported_case_no">"No"</string>
 
 <string-array name="languages_strings">
     <item>System defined</item>

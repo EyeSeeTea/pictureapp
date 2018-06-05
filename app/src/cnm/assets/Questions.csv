@@ -35,3 +35,5 @@
 35;'Code: Age Months';'ipc_issueEntry_q_patient_months_age';;'ipc_issueEntry_q_patient_months_age';'M4zmCaobylU';7;0;0;3;7;;33;7;0;;1
 36;'MCS - Age (Months)';'ipc_issueEntry_q_patient_months_age';;'ipc_issueEntry_q_patient_months_age';'M4zmCaobylU';5;0;0;5;23;;33;1;0
 37;'Code: Patient name';'ipc_issueEntry_q_patient_name';;'ipc_issueEntry_q_patient_name';'rwgzuR5oI1L';5;0;0;3;22;;4;9;0;;1
+38;'Code: Reported case';'ipc_issueEntry_q_reported_case';;'ipc_issueEntry_q_reported_case';'uidudiuid';1;0;0;3;36;;32;2;0;;1
+39;'Code: Case date';'ipc_issueEntry_q_case_date';;'ipc_issueEntry_q_case_date';'uidudiuid2';2;0;0;3;37;;5;3;0;;1

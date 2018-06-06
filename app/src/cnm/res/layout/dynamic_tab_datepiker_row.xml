@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:paddingTop="30dp"
+    android:orientation="vertical"
+    android:background="@color/default_background_survey"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:gravity="left"
+        android:layout_gravity="center"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/font_name_bold"/>
+
+    <org.eyeseetea.sdk.presentation.views.CustomEditText
+        android:id="@+id/answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:focusable="false"
+        android:editable="false"
+        android:layout_gravity="center"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/normal_font" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_text_survey"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+</LinearLayout>

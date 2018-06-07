@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Date;
+
 public class SettingsTest {
 
     @Rule
@@ -18,7 +20,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = null;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, new Date());
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -28,7 +30,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, new Date());
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -38,7 +40,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "sw";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, new Date());
 
         assertThat(settings.getLanguage(), is(currentLanguage));
     }
@@ -50,7 +52,7 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false);
+        new Settings(systemLanguage, currentLanguage, null, false, new Date());
     }
 
     @Test
@@ -60,7 +62,7 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false);
+        new Settings(systemLanguage, currentLanguage, null, false, new Date());
     }
 
     @Test
@@ -69,7 +71,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, new Date());
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -80,7 +82,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, new Date());
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -88,14 +90,14 @@ public class SettingsTest {
 
     @Test
     public void should_return_default_media_mode_if_is_not_provided() {
-        Settings settings = new Settings("en", "en", null, false);
+        Settings settings = new Settings("en", "en", null, false, new Date());
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.GRID));
     }
     
     @Test
     public void should_return_media_mode_if_is_provided() {
-        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false);
+        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false, new Date());
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.LIST));
     }

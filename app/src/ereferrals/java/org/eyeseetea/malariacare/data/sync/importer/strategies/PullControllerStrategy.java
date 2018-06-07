@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -30,9 +31,11 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
@@ -47,17 +50,20 @@ import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
     private MetadataUpdater mMetadataUpdater;
     private MetadataConfigurationDBImporter importer;
     private Context mContext;
+    private ISettingsRepository mSettingsRepository;
 
     public PullControllerStrategy(PullController pullController, Context context) {
         super(pullController);
         mMetadataUpdater = new MetadataUpdater(context);
         mContext = context;
+        mSettingsRepository = new SettingsDataSource(mContext);
     }
 
     @Override
@@ -166,12 +172,21 @@ public class PullControllerStrategy extends APullControllerStrategy {
         try{
         if (isNetworkAvailable()) {
             downloadMetadataFromConfigurationFiles(userProgram);
+            updateDownloadMetadataDate();
         }
         }catch (WarningException e){
             currentUser.setCanAddSurveys(false);
             userDataSource.saveLoggedUser(currentUser);
             throw e;
         }
+    }
+
+    private void updateDownloadMetadataDate() {
+        Date date = new Date();
+        Settings settings = mSettingsRepository.getSettings();
+        settings = new Settings(settings.getSystemLanguage(), settings.getLanguage(),
+                settings.getMediaListMode(), settings.canDownloadWith3G(), date );
+        mSettingsRepository.saveSettings(settings);
     }
 
     private boolean isNetworkAvailable() {

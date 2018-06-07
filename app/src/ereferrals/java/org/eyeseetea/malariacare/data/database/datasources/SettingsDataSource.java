@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class SettingsDataSource implements ISettingsRepository {
@@ -26,12 +27,16 @@ public class SettingsDataSource implements ISettingsRepository {
         String systemLanguage = getCurrentLocale().getLanguage();
         String currentLanguage = PreferencesState.getInstance().getLanguageCode();
         boolean canDownloadMedia = canDownloadMediaWith3G();
-        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia);
+        Date updateMetadataDate = getUpdateMetadataDate();
+
+        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
+                updateMetadataDate);
     }
 
     @Override
     public void saveSettings(Settings settings) {
         setMediaPreference(settings.getMediaListMode().toString());
+        saveUpdateMetadataDate(settings.getUpdateMetadataDate());
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -75,5 +80,20 @@ public class SettingsDataSource implements ISettingsRepository {
                 context);
         return sharedPreferences.getBoolean(
                 context.getResources().getString(R.string.allow_media_download_3g_key), false);
+    }
+
+    private Date getUpdateMetadataDate() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return new Date(sharedPreferences.getLong(
+                context.getResources().getString(R.string.update_metadata_date), 0));
+    }
+
+    private void saveUpdateMetadataDate(Date updateMetadataName) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(context.getResources().getString(R.string.update_metadata_date),
+                updateMetadataName.getTime());
     }
 }

@@ -32,9 +32,9 @@ public class WSPushController implements IPushController {
     private IPushControllerCallback mCallback;
 
 
-    public WSPushController() throws IllegalArgumentException {
+    public WSPushController(Context context) throws IllegalArgumentException {
         mEReferralsAPIClient = new eReferralsAPIClient(PreferencesEReferral.getWSURL());
-        mConvertToWSVisitor = new ConvertToWSVisitor();
+        mConvertToWSVisitor = new ConvertToWSVisitor(context);
     }
 
     public WSPushController(eReferralsAPIClient eReferralsAPIClient, ConvertToWSVisitor convertToWSVisitor) {

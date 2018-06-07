@@ -26,6 +26,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.element.utils.ElementSDKManager;
 import com.github.stkent.bugshaker.BugShaker;
 import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
 import com.github.stkent.bugshaker.github.GitHubConfiguration;
@@ -59,6 +60,9 @@ public class EyeSeeTeaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        if(BuildConfig.elementSDK) {
+            ElementSDKManager.initElementSDK(this);
+        }
         mInstance = this;
 
         //Apply for Release build

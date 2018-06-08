@@ -23,6 +23,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.ElementScannerActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
@@ -72,11 +73,13 @@ import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
+    public static final int REQUEST_ELEMENT_VOUCHER = 103;
 
     static final int REQUEST_AUTHORIZATION = 101;
 
@@ -282,6 +285,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void completeSurvey() {
         Session.getMalariaSurveyDB().updateSurveyStatus();
+    }
+
+    private ArrayList<String> getAllElementUserIds() {
+        ArrayList<String> userIds = new ArrayList<>();
+        userIds.add("ina testing");
+        return userIds;
     }
 
     @Override
@@ -499,15 +508,24 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
-                if (resultCode != Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
+                    downloadMedia();
+                } else {
                     Toast.makeText(mDashboardActivity.getApplicationContext(),
                             mDashboardActivity.getApplicationContext().getString(
                                     R.string.google_play_required),
                             Toast.LENGTH_LONG);
-                } else {
-                    downloadMedia();
                 }
                 break;
+            case REQUEST_ELEMENT_VOUCHER:
+                if(resultCode == Activity.RESULT_OK){
+                    String voucherUId = data.getStringExtra(DashboardActivity.dashboardActivity.getString(R.string.survey_voucher_key));
+                    mDashboardActivity.showException("", String.format(
+                            mDashboardActivity.getResources().getString(R.string.give_voucher),
+                            voucherUId));
+                }else{
+
+                }
         }
     }
 
@@ -523,9 +541,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
-            mDashboardActivity.showException("", String.format(
-                    mDashboardActivity.getResources().getString(R.string.give_voucher),
-                    surveyDB.getEventUid()));
+            Intent intent = new Intent(DashboardActivity.dashboardActivity,
+                    ElementScannerActivity.class);
+            intent.putExtra(mDashboardActivity.getString(R.string.survey_voucher_key), surveyDB.getEventUid());
+            DashboardActivity.dashboardActivity.startActivityForResult(intent, REQUEST_ELEMENT_VOUCHER);
         }
     }
 

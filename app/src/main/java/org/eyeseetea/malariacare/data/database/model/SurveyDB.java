@@ -594,6 +594,14 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .querySingle();
     }
 
+    public static SurveyDB findByEventUId(String surveyUId) {
+        return new Select()
+                .from(SurveyDB.class)
+                .where(SurveyDB_Table.uid_event_fk
+                        .eq(surveyUId))
+                .querySingle();
+    }
+
     public static void removeValue(ValueDB valueDB) {
         valueDB.delete();
     }
@@ -1259,5 +1267,4 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
-
 }

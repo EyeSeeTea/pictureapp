@@ -18,6 +18,8 @@ public class DropdownAdapterStrategy {
                 ListView listView = ((ListView)parent);
                 if(listView.getCheckedItemPosition()==position){
                     convertView.setBackgroundColor(selected);
+                }else{
+                    convertView.setBackgroundColor(transparent);
                 }
             }
             }else{

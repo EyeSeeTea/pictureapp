@@ -43,7 +43,7 @@ public class AppInfoDataSource implements IAppInfoRepository {
 
     @Override
     public void saveAppInfo(AppInfo appInfo) {
-        saveUpdateMetadataDate(appInfo.getUpdateMetadataDate());
+        saveMetadataUpdateDate(appInfo.getUpdateMetadataDate());
     }
 
     private String getMetadataVersion() {
@@ -72,11 +72,11 @@ public class AppInfoDataSource implements IAppInfoRepository {
         return String.valueOf(pInfo.versionCode);
     }
 
-    private void saveUpdateMetadataDate(Date updateMetadataName) {
+    private void saveMetadataUpdateDate(Date updateMetadataName) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(context.getResources().getString(R.string.update_metadata_date),
+        editor.putLong(context.getResources().getString(R.string.metadata_update_date),
                 updateMetadataName.getTime());
         editor.commit();
     }
@@ -86,6 +86,6 @@ public class AppInfoDataSource implements IAppInfoRepository {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         return new Date(sharedPreferences.getLong(
-                context.getResources().getString(R.string.update_metadata_date), 0));
+                context.getResources().getString(R.string.metadata_update_date), 0));
     }
 }

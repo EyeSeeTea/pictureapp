@@ -36,7 +36,7 @@ public class eReferralsAPIClient {
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
     private OkHttpClient mOkHttpClient;
     public String mBaseAddress;
-    private final int DEFAULT_TIMEOUT = 10000;
+    private final int DEFAULT_TIMEOUT = 50000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
         mBaseAddress = baseAddress;

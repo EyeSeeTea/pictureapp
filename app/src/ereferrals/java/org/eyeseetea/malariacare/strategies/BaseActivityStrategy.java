@@ -329,6 +329,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     private void showLoginIfConfigFileObsolete(Intent intent) {
         if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+            SurveyFragment.closeKeyboard();
             showLogin(true);
         }
     }

@@ -177,7 +177,7 @@
     <string name="drive_title">Kör rotmapp</string>
     <string name="config_version">Config Version: %s \n</string>
     <string name="av_progress">Hämtar innehåll ... vänligen vänta</string>
-    <string name="new_survey_disable">Toleo jipya la metadata halikuweza kufungwa kwa sababu kuna tafiti zinazojitokeza kutuma. Kipindi kipya cha utafiti kinazima</string>
+    <string name="new_survey_disable">Den nya undersökningsknappen är tillfälligt inaktiverad eftersom den nya versionen av metadata inte kunde installeras korrekt.</string>
 
 
     <!-- TERMS FROM POEDITOR -->

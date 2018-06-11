@@ -39,6 +39,7 @@ import org.eyeseetea.malariacare.domain.exception.LoadingSurveyException;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class SurveyFragment extends Fragment {
      * Parent view of main content
      */
     private LinearLayout content;
+    private static ListView listView;
 
     public static void nextProgressMessage() {
         if (DashboardActivity.dashboardActivity != null) {
@@ -142,6 +144,13 @@ public class SurveyFragment extends Fragment {
 
     private void beforeExit() {
         DashboardActivity.dashboardActivity.beforeExit();
+    }
+
+    public static void  closeKeyboard(){
+        Log.d(TAG, "close keyboard");
+        if(listView!=null) {
+            CommonQuestionView.hideKeyboard(listView.getContext(), listView);
+        }
     }
 
     /**
@@ -220,11 +229,11 @@ public class SurveyFragment extends Fragment {
             content.removeAllViews();
             content.addView(viewContent);
 
-            ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
+            listView = (ListView) llLayout.findViewById(R.id.listView);
 
-            dynamicTabAdapter.addOnSwipeListener(listViewTab);
+            dynamicTabAdapter.addOnSwipeListener(listView);
 
-            listViewTab.setAdapter(dynamicTabAdapter);
+            listView.setAdapter(dynamicTabAdapter);
 
             hideProgress();
         }catch (NullPointerException e){

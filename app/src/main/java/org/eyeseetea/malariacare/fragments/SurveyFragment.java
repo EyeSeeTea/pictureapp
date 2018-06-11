@@ -122,7 +122,6 @@ public class SurveyFragment extends Fragment {
     @Override
     public void onPause() {
         Log.d(TAG, "onPause");
-        closeKeyboard();
         if (!DashboardActivity.dashboardActivity.isLoadingReview()
                 && !areActiveSurveysInQuarantine()) {
             beforeExit();

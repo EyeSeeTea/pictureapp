@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class SettingsDataSource implements ISettingsRepository {
@@ -26,6 +27,7 @@ public class SettingsDataSource implements ISettingsRepository {
         String systemLanguage = getCurrentLocale().getLanguage();
         String currentLanguage = PreferencesState.getInstance().getLanguageCode();
         boolean canDownloadMedia = canDownloadMediaWith3G();
+
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia);
     }
 

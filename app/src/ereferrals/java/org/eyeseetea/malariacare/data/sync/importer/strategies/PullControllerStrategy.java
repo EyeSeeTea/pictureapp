@@ -8,6 +8,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
@@ -27,11 +28,13 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
@@ -47,17 +50,20 @@ import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
     private MetadataUpdater mMetadataUpdater;
     private MetadataConfigurationDBImporter importer;
     private Context mContext;
+    private IAppInfoRepository mAppInfoRepository;
 
     public PullControllerStrategy(PullController pullController, Context context) {
         super(pullController);
         mMetadataUpdater = new MetadataUpdater(context);
         mContext = context;
+        mAppInfoRepository = new AppInfoDataSource(context);
     }
 
     @Override
@@ -166,12 +172,21 @@ public class PullControllerStrategy extends APullControllerStrategy {
         try{
         if (isNetworkAvailable()) {
             downloadMetadataFromConfigurationFiles(userProgram);
+            updateDownloadMetadataDate();
         }
         }catch (WarningException e){
             currentUser.setCanAddSurveys(false);
             userDataSource.saveLoggedUser(currentUser);
             throw e;
         }
+    }
+
+    private void updateDownloadMetadataDate() {
+        Date date = new Date();
+        AppInfo appInfo = mAppInfoRepository.getAppInfo();
+        appInfo = new AppInfo(appInfo.getMetadataVersion(), appInfo.getConfigFileVersion(),
+                appInfo.getAppVersion(), date);
+        mAppInfoRepository.saveAppInfo(appInfo);
     }
 
     private boolean isNetworkAvailable() {

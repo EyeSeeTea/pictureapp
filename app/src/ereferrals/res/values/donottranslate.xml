@@ -52,4 +52,5 @@
     <string name="demo_program_uid" translatable="false">demoProgram</string>
     <string name="default_language" translatable="false">en</string>
     <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
+    <string name="metadata_update_date" translatable="false">update_metadata_date</string>
 </resources>

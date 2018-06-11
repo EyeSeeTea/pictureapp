@@ -10,7 +10,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
@@ -61,7 +60,6 @@ public class AppInfoDataSource implements IAppInfoRepository {
     }
 
     private String getAppVersion() {
-        Context context = PreferencesState.getInstance().getContext();
         PackageInfo pInfo = null;
         try {
             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -83,9 +81,14 @@ public class AppInfoDataSource implements IAppInfoRepository {
 
 
     private Date getUpdateMetadataDate() {
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        return new Date(sharedPreferences.getLong(
-                context.getResources().getString(R.string.metadata_update_date), 0));
+        long timeMillis = sharedPreferences.getLong(
+                context.getResources().getString(R.string.metadata_update_date), 0);
+        if (timeMillis == 0) {
+            return null;
+        }
+        return new Date(timeMillis);
     }
 }

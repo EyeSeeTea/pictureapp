@@ -29,6 +29,10 @@ public class Settings {
         }
     }
 
+    public String getSystemLanguage() {
+        return systemLanguage;
+    }
+
     public MediaListMode getMediaListMode() {
         if(mediaListMode==null){
             return DEFAULT_LIST_STYLE;
@@ -43,4 +47,5 @@ public class Settings {
     public boolean canDownloadWith3G() {
         return canDownloadWith3G;
     }
+
 }

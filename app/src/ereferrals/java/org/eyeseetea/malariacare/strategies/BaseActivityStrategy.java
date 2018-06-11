@@ -297,10 +297,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 aboutBuilder.append(
                         String.format(context.getResources().getString(R.string.config_version),
                                 appInfo.getConfigFileVersion()));
+                aboutBuilder.append("<br/>");
                 aboutBuilder.append(
                         String.format(context.getResources().getString(R.string.metadata_update),
-                                Utils.parseDateToString(appInfo.getUpdateMetadataDate(),
-                                        "MM/dd/yyyy HH:mm:ss")));
+                                getUpdateDateFromAppInfo(appInfo)));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(
                         Html.fromHtml(aboutBuilder.toString()));
@@ -310,6 +310,14 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         });
 
 
+    }
+
+    private String getUpdateDateFromAppInfo(AppInfo appInfo) {
+        if (appInfo.getUpdateMetadataDate() == null) {
+            return " - ";
+        }
+        return Utils.parseDateToString(appInfo.getUpdateMetadataDate(),
+                "MM/dd/yyyy HH:mm:ss");
     }
 
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {

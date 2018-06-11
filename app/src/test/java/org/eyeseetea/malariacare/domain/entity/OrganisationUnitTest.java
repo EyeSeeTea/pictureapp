@@ -21,20 +21,20 @@ public class OrganisationUnitTest {
 
     @Test
     public void organisationunit_isbanned_after_ban() {
-        OrganisationUnit organisationUnit = new OrganisationUnit("", "", false);
+        OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", false);
         organisationUnit.ban();
         assertThat(organisationUnit.isBanned(), is(true));
     }
 
     @Test
     public void organisationunit_isbanned_constructor_banned() {
-        OrganisationUnit organisationUnit = new OrganisationUnit("", "", true);
+        OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", true);
         assertThat(organisationUnit.isBanned(), is(true));
     }
 
     @Test
     public void organisationunit_no_banned_constructor_no_banned() {
-        OrganisationUnit organisationUnit = new OrganisationUnit("", "", false);
+        OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", false);
         assertThat(organisationUnit.isBanned(), is(false));
     }
 
@@ -43,7 +43,7 @@ public class OrganisationUnitTest {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         Date date = calendar.getTime();
-        OrganisationUnit organisationUnit = new OrganisationUnit("", "", "", date);
+        OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", "description", date);
         assertThat(organisationUnit.isBanned(), is(true));
     }
 
@@ -52,7 +52,7 @@ public class OrganisationUnitTest {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 5);
         Date date = calendar.getTime();
-        OrganisationUnit organisationUnit = new OrganisationUnit("", "", "", date);
+        OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", "description", date);
         assertThat(organisationUnit.isBanned(), is(false));
     }
 

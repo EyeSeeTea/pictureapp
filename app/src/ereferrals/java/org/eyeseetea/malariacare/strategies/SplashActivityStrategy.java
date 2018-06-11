@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
+import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -31,6 +32,9 @@ import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
+import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
@@ -131,15 +135,16 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void downloadLanguagesFromServer() {
         try {
-            Log.i(TAG, "Starting to download Languages From Server");
-            CredentialsReader credentialsReader = CredentialsReader.getInstance();
-            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
-                    activity);
+            if (BuildConfig.downloadLanguagesFromServer) {
+                Log.i(TAG, "Starting to download Languages From Server");
+                CredentialsReader credentialsReader = CredentialsReader.getInstance();
+                IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
+                        activity);
+                DownloadLanguageTranslationUseCase downloader =
+                        new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-            DownloadLanguageTranslationUseCase downloader =
-                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
-
-            downloader.download();
+                downloader.download();
+            }
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());
             e.printStackTrace();

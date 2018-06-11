@@ -2,8 +2,8 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
+import org.eyeseetea.malariacare.data.sync.importer.LanguageDownloader;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
-import org.eyeseetea.malariacare.data.sync.importer.strategies.LanguageDownloader;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.locale.factory.LanguageFactory;

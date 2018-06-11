@@ -923,9 +923,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         for (QuestionDB childQuestionDB : questionDBChildren) {
                             //if the table row questionDB is child of the modified questionDB...
                             toggleChild(row, rowQuestionDB, childQuestionDB, parentQuestionDB);
-                            showOrHideChildren(childQuestionDB);
                         }
                     }
+                    toggleChild(row, rowQuestionDB, rowQuestionDB, parentQuestionDB);
                 }
             }
         }

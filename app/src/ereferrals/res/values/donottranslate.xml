@@ -72,4 +72,6 @@
         <item>ne</item>
         <item>sw</item>
     </string-array>
+    <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
+    <string name="metadata_update_date" translatable="false">update_metadata_date</string>
 </resources>

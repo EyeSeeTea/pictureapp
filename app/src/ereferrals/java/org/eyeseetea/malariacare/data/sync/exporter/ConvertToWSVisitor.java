@@ -44,10 +44,12 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private SurveyContainerWSObject mSurveyContainerWSObject;
     private String language;
+    private Context mContext;
 
-    public ConvertToWSVisitor() {
+    public ConvertToWSVisitor(Context context) {
         IDeviceRepository deviceDataSource = new DeviceDataSource();
         Device device = deviceDataSource.getDevice();
+        mContext = context;
         init(device);
     }
 
@@ -57,8 +59,8 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private void init(Device device) {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        ISettingsRepository currentLanguageRepository = new SettingsDataSource();
-        IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        ISettingsRepository currentLanguageRepository = new SettingsDataSource(PreferencesState.getInstance().getContext());
+        IAppInfoRepository appInfoDataSource = new AppInfoDataSource(mContext);
         AppInfo appInfo = appInfoDataSource.getAppInfo();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
         language = currentLanguageRepository.getSettings().getLanguage();
@@ -128,6 +130,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         Location location = LocationMemory.get(survey.getId_survey());
         surveySendAction.setCoordinate(
                 new Coordinate(location.getLatitude(), location.getLongitude()));
+        surveySendAction.setAccuracy(location.getAccuracy());
         mSurveyContainerWSObject.getActions().add(surveySendAction);
     }
 

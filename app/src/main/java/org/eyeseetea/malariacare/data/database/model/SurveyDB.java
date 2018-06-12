@@ -490,10 +490,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     }
 
     public static void removeInProgress() {
-        List<SurveyDB> inProgressSurveyDB = getAllUncompletedSurveys();
-        for (int i = inProgressSurveyDB.size() - 1; i >= 0; i--) {
-            inProgressSurveyDB.get(i).delete();
-        }
+        SQLite.delete(SurveyDB.class)
+                .where(SurveyDB_Table.status.is(Constants.SURVEY_IN_PROGRESS)).execute();
     }
 
     /**

@@ -617,8 +617,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         if (Session.hasSurveyToComplete()) {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
-        } else {
-            SurveyDB.removeInProgress();
         }
     }
 }

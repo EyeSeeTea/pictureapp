@@ -374,7 +374,6 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public void onStart(){
-        SurveyDB.removeInProgress();
     }
 
     public void initStockControlFragment() {

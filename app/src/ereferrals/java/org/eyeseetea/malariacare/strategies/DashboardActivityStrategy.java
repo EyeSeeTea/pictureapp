@@ -99,11 +99,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
     private DownloadMediaUseCase mDownloadMediaUseCase;
     public AVFragment avFragment;
-    public Context context;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
-        context = dashboardActivity.getBaseContext();
     }
 
     @Override
@@ -567,7 +565,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             final String voucherUId = surveyDB.getEventUid();
 
             GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
-                    new SettingsDataSource(context));
+                    new SettingsDataSource(mDashboardActivity.getBaseContext()));
             getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
                 @Override
                 public void onSuccess(Settings setting) {
@@ -576,7 +574,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         onClickListener = createOnClickListenerToSendVoucherToElement(voucherUId);
                     }
 
-                    mDashboardActivity.showException(context, "", String.format(
+                    mDashboardActivity.showException(mDashboardActivity, "", String.format(
                             mDashboardActivity.getResources().getString(R.string.give_voucher),
                             voucherUId), onClickListener);
                 }

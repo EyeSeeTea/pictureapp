@@ -18,4 +18,14 @@
     <style name="EyeSeeTheme.OverFlow">
         <item name="android:src">@drawable/custom_dots</item>
     </style>
+
+    <style name="SpinnerStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:background">@drawable/spinner_divider</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">left</item>
+    </style>
 </resources>

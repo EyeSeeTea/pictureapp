@@ -905,7 +905,7 @@
 <string name="ws_unknown_exception">"Unknown exception."</string>
 <string name="feedback_view_image">"Open image with..."</string>
 <string name="drive_title">"Drive root folder"</string>
-<string name="new_survey_disable">"The new version of metadata could not be installed because there are pending surveys to send. The new survey button temporarily disable"</string>
+<string name="new_survey_disable">"The new survey button is temporarily disabled because the new version of the metadata could not be installed correctly."</string>
 <string name="config_version">"Config Version: %s
 "</string>
 <string name="av_progress">"Downloading content... please wait"</string>
@@ -1122,4 +1122,6 @@
 <string name="no_user_error">No user logged in.</string>
 <string name="different_user_error">User logged in is different.</string>
 <string name="dynamic_error_month_age">"Invalid age in months"</string>
+<string name="allow_media_download_3g">"Allow media download over 3g"</string>
+<string name="metadata_update">"Last metadata upgrade: %s"</string>
 </resources>

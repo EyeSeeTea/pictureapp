@@ -72,4 +72,5 @@
         <item>ne</item>
         <item>sw</item>
     </string-array>
+    <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
 </resources>

@@ -128,7 +128,7 @@
             android:defaultValue="false"
             android:key="@string/activate_elements_key"
             android:summary="@string/activate_elements"
-            android:title="@string/activate_elements" />
+            android:title="@string/elements" />
     </PreferenceCategory>
 
 </PreferenceScreen>

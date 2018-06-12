@@ -57,6 +57,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -64,6 +65,7 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.usecase.ElementOnActivityResultUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ElementSentVoucherUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
@@ -97,9 +99,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
     private DownloadMediaUseCase mDownloadMediaUseCase;
     public AVFragment avFragment;
+    public Context context;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
+        context = dashboardActivity.getBaseContext();
     }
 
     @Override
@@ -560,10 +564,23 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
-            String voucherUId = surveyDB.getEventUid();
-            mDashboardActivity.showException("", String.format(
-                    mDashboardActivity.getResources().getString(R.string.give_voucher),
-                    voucherUId), createOnClickListenerToSendVoucherToElement(voucherUId));
+            final String voucherUId = surveyDB.getEventUid();
+
+            GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
+                    new SettingsDataSource(context));
+            getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+                @Override
+                public void onSuccess(Settings setting) {
+                    DialogInterface.OnClickListener onClickListener = null;
+                    if(setting.isElementActive()){
+                        onClickListener = createOnClickListenerToSendVoucherToElement(voucherUId);
+                    }
+
+                    mDashboardActivity.showException(context, "", String.format(
+                            mDashboardActivity.getResources().getString(R.string.give_voucher),
+                            voucherUId), onClickListener);
+                }
+            });
         }
     }
 

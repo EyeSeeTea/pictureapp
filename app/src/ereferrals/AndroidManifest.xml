@@ -27,8 +27,6 @@
             android:finishOnTaskLaunch="true"
             android:label="@string/malaria_case_based_reporting"
             android:windowSoftInputMode="adjustResize"></activity>
-        <activity
-            android:name=".ElementScannerActivity"></activity>
 
         <meta-data
             android:name="com.element.ApiKey"

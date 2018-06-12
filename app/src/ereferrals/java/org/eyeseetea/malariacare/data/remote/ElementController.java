@@ -24,7 +24,6 @@ public class ElementController implements IElementController, ElementSDKManager.
     public ElementController(Callback callback, Activity activity){
         mCallback = callback;
         mActivity = activity;
-
     }
 
     @Override

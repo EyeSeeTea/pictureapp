@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -23,7 +25,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.ElementScannerActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
@@ -41,6 +42,8 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.io.FileDownloader;
 import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
+import org.eyeseetea.malariacare.data.remote.ElementController;
+import org.eyeseetea.malariacare.domain.boundary.IElementController;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -57,6 +60,8 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
+import org.eyeseetea.malariacare.domain.usecase.ElementOnActivityResultUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ElementSentVoucherUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
@@ -78,8 +83,10 @@ import java.util.Date;
 import java.util.List;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
+
+    final private String TAG = "DashboardActivityS";
+
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 102;
-    public static final int REQUEST_ELEMENT_VOUCHER = 103;
 
     static final int REQUEST_AUTHORIZATION = 101;
 
@@ -517,16 +524,25 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                             Toast.LENGTH_LONG);
                 }
                 break;
-            case REQUEST_ELEMENT_VOUCHER:
-                if(resultCode == Activity.RESULT_OK){
-                    String voucherUId = data.getStringExtra(DashboardActivity.dashboardActivity.getString(R.string.survey_voucher_key));
-                    mDashboardActivity.showException("", String.format(
-                            mDashboardActivity.getResources().getString(R.string.give_voucher),
-                            voucherUId));
-                }else{
-
-                }
         }
+
+        receiveElementOnResult(requestCode, resultCode, data);
+    }
+
+    private void receiveElementOnResult(int requestCode, int resultCode, Intent data) {
+        IElementController elementController = new ElementController(new ElementController.Callback() {
+            @Override
+            public void onSuccess(String id) {
+                Log.d(TAG, "User created with id:"+ id);
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "User is not created");
+            }
+        }, DashboardActivity.dashboardActivity);
+        ElementOnActivityResultUseCase elementOnActivityResultUseCase = new ElementOnActivityResultUseCase(elementController);
+        elementOnActivityResultUseCase.execute(requestCode, resultCode, data);
     }
 
     @Override
@@ -541,11 +557,38 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
-            Intent intent = new Intent(DashboardActivity.dashboardActivity,
-                    ElementScannerActivity.class);
-            intent.putExtra(mDashboardActivity.getString(R.string.survey_voucher_key), surveyDB.getEventUid());
-            DashboardActivity.dashboardActivity.startActivityForResult(intent, REQUEST_ELEMENT_VOUCHER);
+            String voucherUId = surveyDB.getEventUid();
+            mDashboardActivity.showException("", String.format(
+                    mDashboardActivity.getResources().getString(R.string.give_voucher),
+                    voucherUId), createOnClickListenerToSendVoucherToElement(voucherUId));
         }
+    }
+
+    @NonNull
+    private DialogInterface.OnClickListener createOnClickListenerToSendVoucherToElement(final String voucherUId) {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sendVoucherUIdToElement(voucherUId);
+            }
+        };
+    }
+
+    private void sendVoucherUIdToElement(String voucherUId) {
+        ElementController elementController = new ElementController(new ElementController.Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                Log.d(TAG, "user sent to Element voucher: " + uid);
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "Error sending user to Element");
+
+            }
+        }, DashboardActivity.dashboardActivity);
+        ElementSentVoucherUseCase elementSentVoucherUseCase = new ElementSentVoucherUseCase(elementController);
+        elementSentVoucherUseCase.execute(voucherUId);
     }
 
     private boolean noIssueVoucher(SurveyDB survey) {

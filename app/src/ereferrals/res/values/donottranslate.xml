@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="element_first_name_uid" translatable="false">firstName</string>
-    <string name="element_last_name_uid" translatable="false">lastName</string>
-    <string name="survey_voucher_key" translatable="false">survey_id_key</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>

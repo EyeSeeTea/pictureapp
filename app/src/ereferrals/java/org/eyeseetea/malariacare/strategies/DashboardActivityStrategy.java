@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -299,12 +300,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Session.getMalariaSurveyDB().updateSurveyStatus();
     }
 
-    private ArrayList<String> getAllElementUserIds() {
-        ArrayList<String> userIds = new ArrayList<>();
-        userIds.add("ina testing");
-        return userIds;
-    }
-
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
         return false;
@@ -593,20 +588,36 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void sendVoucherUIdToElement(String voucherUId) {
-        ElementController elementController = new ElementController(new ElementController.Callback() {
-            @Override
-            public void onSuccess(String uid) {
-                Log.d(TAG, "user sent to Element voucher: " + uid);
-            }
+        if (appInstalled("com.element.palm.portal")) {
+            ElementController elementController = new ElementController(new ElementController.Callback() {
+                @Override
+                public void onSuccess(String uid) {
+                    Log.d(TAG, "user sent to Element voucher: " + uid);
+                }
 
-            @Override
-            public void onError() {
-                Log.d(TAG, "Error sending user to Element");
+                @Override
+                public void onError() {
+                    Log.d(TAG, "Error sending user to Element");
 
-            }
-        }, DashboardActivity.dashboardActivity);
-        ElementSentVoucherUseCase elementSentVoucherUseCase = new ElementSentVoucherUseCase(elementController);
-        elementSentVoucherUseCase.execute(voucherUId);
+                }
+            }, DashboardActivity.dashboardActivity);
+            ElementSentVoucherUseCase elementSentVoucherUseCase = new ElementSentVoucherUseCase(elementController);
+            elementSentVoucherUseCase.execute(voucherUId);
+        }
+        else {
+            Toast.makeText(DashboardActivity.dashboardActivity, R.string.element_not_installed, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean appInstalled(String uri) {
+        PackageManager pm = DashboardActivity.dashboardActivity.getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
     }
 
     private boolean noIssueVoucher(SurveyDB survey) {

@@ -1023,4 +1023,5 @@ Ameahidi kuhudhuria"</string>
 <string name="metadata_update">"Sasisha tarehe ya metadata: %s"</string>
 <string name="elements">"Elements"</string>
 <string name="activate_elements">"Aktivera element"</string>
+<string name="element_not_installed">"Element SDK är inte installerat!"</string>
 </resources>

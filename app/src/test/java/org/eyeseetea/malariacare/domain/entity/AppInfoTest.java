@@ -13,34 +13,34 @@ public class AppInfoTest {
     public void should_throw_exception_if_medatadataversion_is_null() {
         thrown.expect(IllegalArgumentException.class);
 
-        new AppInfo(null, "v1.3", "1.0");
+        new AppInfo(null, "v1.3", "1.0", null);
     }
 
     @Test
     public void should_throw_exception_if_medatadataversion_is_empty() {
         thrown.expect(IllegalArgumentException.class);
 
-        new AppInfo("", "v1.3", "1.0");
+        new AppInfo("", "v1.3", "1.0", null);
     }
 
     @Test
     public void should_throw_exception_if_appversion_is_null() {
         thrown.expect(IllegalArgumentException.class);
 
-        new AppInfo("v1", null, "1.0");
+        new AppInfo("v1", null, "1.0", null);
     }
 
     @Test
     public void should_throw_exception_if_appversion_is_empty() {
         thrown.expect(IllegalArgumentException.class);
 
-        new AppInfo("v1", "", null);
+        new AppInfo("v1", "", null,null);
     }
     @Test
     public void should_throw_exception_if_medatadataversion_is_null_with_metadata_boolean() {
         thrown.expect(IllegalArgumentException.class);
 
-        new AppInfo(null, "v1.3", "1.0");
+        new AppInfo(null, "v1.3", "1.0", null);
     }
     @Test
     public void should_throw_exception_if_appversion_is_null_with_metadata_boolean() {

@@ -13,6 +13,7 @@ public class SurveySendAction {
     private String program;
     private String sourceAddedDateTime;
     private Coordinate coordinate;
+    private float accuracy;
 
     public SurveySendAction() {
         dataValues = new ArrayList<>();
@@ -73,5 +74,13 @@ public class SurveySendAction {
 
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+    }
+
+    public float getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(float accuracy) {
+        this.accuracy = accuracy;
     }
 }

@@ -177,7 +177,7 @@
     <string name="drive_title">Kör rotmapp</string>
     <string name="config_version">Config Version: %s \n</string>
     <string name="av_progress">Hämtar innehåll ... vänligen vänta</string>
-    <string name="new_survey_disable">Toleo jipya la metadata halikuweza kufungwa kwa sababu kuna tafiti zinazojitokeza kutuma. Kipindi kipya cha utafiti kinazima</string>
+    <string name="new_survey_disable">Den nya undersökningsknappen är tillfälligt inaktiverad eftersom den nya versionen av metadata inte kunde installeras korrekt.</string>
 
 
     <!-- TERMS FROM POEDITOR -->
@@ -1019,6 +1019,8 @@ Ameahidi kuhudhuria"</string>
 <string name="no_user_error">Ingen användare inloggad.</string>
 <string name="different_user_error">Användaren inloggad är annorlunda.</string>
 <string name="dynamic_error_month_age">"Ogiltig ålder i månader"</string>
-    <string name="elements">"Elements"</string>
+<string name="allow_media_download_3g">"Ruhusu kupakuliwa kwa vyombo vya habari juu ya 3g"</string>
+<string name="metadata_update">"Sasisha tarehe ya metadata: %s"</string>
+<string name="elements">"Elements"</string>
 <string name="activate_elements">"Aktivera element"</string>
 </resources>

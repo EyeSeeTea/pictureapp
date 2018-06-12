@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/main_window_background">
+    android:layout_height="match_parent">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_window_background">
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    </ScrollView>
 
-</ScrollView>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true">
+
+        <android.support.design.widget.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/ic_refresh_webview"
+            app:backgroundTint="@color/create_button_background"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_horizontal|right"
+            android:layout_marginRight="16dp"
+            android:onClick="newSurvey"
+            app:fabSize="normal"
+            app:layout_anchorGravity="bottom|right|end" />
+    </FrameLayout>
+
+</RelativeLayout>

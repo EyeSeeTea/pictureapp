@@ -13,7 +13,9 @@
     android:paddingTop="5dp">
 
 
-    <include layout="@layout/back_button"></include>
+    <include
+        layout="@layout/back_button"
+        android:visibility="gone"></include>
 
     <Space
         android:layout_width="wrap_content"

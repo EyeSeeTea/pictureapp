@@ -26,17 +26,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.strategies.DropdownAdapterStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
 public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
     private Integer layout;
+    private Integer dropdownLayout;
     private Integer dropdownItemSize;
 
     public AddlArrayAdapter(Context context, List<T> objects) {
         super(context, R.layout.simple_spinner_item, objects);
         this.layout = R.layout.simple_spinner_item;
+        this.dropdownLayout = R.layout.simple_spinner_dropdown_item;
     }
 
     public AddlArrayAdapter(Context context, Integer layout, List<T> objects) {
@@ -66,11 +69,12 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(this.layout, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(this.dropdownLayout, parent, false);
         }
 
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
+        DropdownAdapterStrategy.drawDropDown(position, convertView, parent, getContext());
         if(dropdownItemSize!=null) {
             ((CustomTextView) convertView).setTextSize(dropdownItemSize);
         }

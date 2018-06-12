@@ -62,7 +62,14 @@ public class MediaMapper {
     }
 
     public static String getSizeInMB(String filename) {
-        return FileUtils.getSizeInMB(filename, PreferencesState.getInstance().getContext());
+        String size = "NaN";
+        try{
+            FileUtils.getSizeInMB(filename, PreferencesState.getInstance().getContext());
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            //The file not exist
+        }
+        return size;
     }
 
     public static MediaDB mapFromDomainToDb(Media media) {

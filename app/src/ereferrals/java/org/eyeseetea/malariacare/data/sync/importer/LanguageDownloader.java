@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.sync.importer.strategies;
+package org.eyeseetea.malariacare.data.sync.importer;
 
 
 import android.support.annotation.NonNull;
@@ -11,7 +11,10 @@ import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB;
 import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB_Table;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Language;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Term;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 
 import java.util.ArrayList;
 import java.util.HashMap;

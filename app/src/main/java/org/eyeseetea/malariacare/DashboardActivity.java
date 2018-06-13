@@ -849,9 +849,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void refreshStatus() {
-        if(!isSurveyFragmentActive()) {
-            mDashboardActivityStrategy.reloadFirstFragmentHeader();
-        }
+        mDashboardActivityStrategy.reloadFirstFragmentHeader();
         mDashboardActivityStrategy.onConnectivityStatusChange();
     }
 

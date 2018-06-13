@@ -323,7 +323,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadFirstFragmentHeader() {
-        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+        if(DashboardActivity.dashboardActivity.isSurveyFragmentActive()) {
+            mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+        }
     }
 
     @Override

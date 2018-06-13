@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -64,8 +63,8 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
-import org.eyeseetea.malariacare.domain.usecase.ExternalAppReceiverUseCase;
-import org.eyeseetea.malariacare.domain.usecase.ExternalVoucherRegistrySendUseCase;
+import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
@@ -531,7 +530,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private void externalVoucherSenderResultTreatment(int requestCode, int resultCode, Intent data) {
         IExternalVoucherRegistry elementController = new ElementController(DashboardActivity.dashboardActivity);
-        ExternalAppReceiverUseCase externalAppReceiverUseCase = new ExternalAppReceiverUseCase(elementController, new IExternalVoucherRegistry.Callback() {
+        TreatExternalAppResultUseCase treatExternalAppResultUseCase = new TreatExternalAppResultUseCase(elementController, new IExternalVoucherRegistry.Callback() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "User created");
@@ -542,7 +541,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 Log.d(TAG, "User is not created");
             }
         });
-        externalAppReceiverUseCase.execute(requestCode, resultCode, data);
+        treatExternalAppResultUseCase.execute(requestCode, resultCode, data);
     }
 
     @Override
@@ -566,7 +565,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 public void onSuccess(Settings setting) {
                     DialogInterface.OnClickListener onClickListener = null;
                     if(setting.isElementActive()){
-                        onClickListener = onClickListenerVoucherUIdSender(voucherUId);
+                        onClickListener = onClickListenerVoucherUIdSender(voucherUId, mDashboardActivity);
                     }
 
                     mDashboardActivity.showException(mDashboardActivity, "", String.format(
@@ -578,35 +577,23 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @NonNull
-    private DialogInterface.OnClickListener onClickListenerVoucherUIdSender(final String voucherUId) {
+    private DialogInterface.OnClickListener onClickListenerVoucherUIdSender(final String voucherUId, final Context context) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                sendVoucherUId(voucherUId);
+                IExternalVoucherRegistry elementController = new ElementController(context);
+                AsyncExecutor mAsyncExecutor = new AsyncExecutor();
+                UIThreadExecutor mMainExecutor = new UIThreadExecutor();
+                SendToExternalAppPaperVoucherUseCase elementSentVoucherUseCase = new SendToExternalAppPaperVoucherUseCase(mMainExecutor, mAsyncExecutor,
+                        elementController, new IExternalVoucherRegistry.SenderCallback() {
+                    @Override
+                    public void onNotInstalledApp() {
+                        Toast.makeText(context, context.getString(R.string.element_not_installed), Toast.LENGTH_LONG).show();
+                    }
+                });
+                elementSentVoucherUseCase.execute(voucherUId);
             }
         };
-    }
-
-    private void sendVoucherUId(String voucherUId) {
-        if (appInstalled("com.element.palm.portal")) {
-            IExternalVoucherRegistry elementController = new ElementController(DashboardActivity.dashboardActivity);
-            ExternalVoucherRegistrySendUseCase elementSentVoucherUseCase = new ExternalVoucherRegistrySendUseCase(elementController);
-            elementSentVoucherUseCase.execute(voucherUId);
-        }
-        else {
-            Toast.makeText(DashboardActivity.dashboardActivity, R.string.element_not_installed, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private boolean appInstalled(String uri) {
-        PackageManager pm = DashboardActivity.dashboardActivity.getPackageManager();
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-        }
-
-        return false;
     }
 
     private boolean noIssueVoucher(SurveyDB survey) {

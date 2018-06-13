@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
-public class ExternalAppReceiverUseCase implements UseCase {
+public class TreatExternalAppResultUseCase implements UseCase {
 
     int mRequestCode;
     int mResultCode;
@@ -12,7 +12,7 @@ public class ExternalAppReceiverUseCase implements UseCase {
 
     private IExternalVoucherRegistry mController;
 
-    public ExternalAppReceiverUseCase(
+    public TreatExternalAppResultUseCase(
             IExternalVoucherRegistry controller, IExternalVoucherRegistry.Callback callback){
         mController = controller;
         mCallback = callback;

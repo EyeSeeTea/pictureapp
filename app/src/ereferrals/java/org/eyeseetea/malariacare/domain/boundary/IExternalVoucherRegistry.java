@@ -1,9 +1,20 @@
 package org.eyeseetea.malariacare.domain.boundary;
 
-public interface IElementController {
+import org.eyeseetea.malariacare.data.remote.ElementController;
 
-    void sendVoucher(String voucherUId);
+public interface IExternalVoucherRegistry {
 
-    void onActivityResult(int requestCode, int resultCode,
-                          Object data);
+    interface Callback {
+        void onSuccess(String uid);
+
+        void onError();
+    }
+
+    void sendVoucherUId(String voucherUId);
+
+    void onResult(int requestCode, int resultCode,
+                  Object data, ElementController.Callback callback);
+
+    void init();
+
 }

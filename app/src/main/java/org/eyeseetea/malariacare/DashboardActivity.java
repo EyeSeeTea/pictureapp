@@ -68,6 +68,7 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 
@@ -685,7 +686,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Checks if a survey fragment is active
      */
-    private boolean isSurveyFragmentActive() {
+    public boolean isSurveyFragmentActive() {
         return isFragmentActive(surveyFragment, mDashboardActivityStrategy.getSurveyContainer());
     }
 

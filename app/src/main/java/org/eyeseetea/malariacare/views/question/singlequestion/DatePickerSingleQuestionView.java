@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views.question.singlequestion;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -97,15 +98,7 @@ public class DatePickerSingleQuestionView extends AKeyboardSingleQuestionView im
         datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String fixedMonth = String.valueOf(monthOfYear);
-                if(fixedMonth.length()==1){
-                    fixedMonth = 0 + fixedMonth;
-                }
-                String fixedDay = String.valueOf(dayOfMonth);
-                if(fixedDay.length()==1){
-                    fixedDay = 0 + fixedDay;
-                }
-                String date=year + "-" + fixedMonth + "-" + fixedDay;
+                String date = fixDate(year, monthOfYear, dayOfMonth);
                 dateText.setText(date);
                 notifyAnswerChanged(date);
                 action(context);
@@ -126,5 +119,18 @@ public class DatePickerSingleQuestionView extends AKeyboardSingleQuestionView im
             Validation.getInstance().addinvalidInput(dateText, getResources().getString(
                     R.string.error_empty_question));
         }
+    }
+
+    @NonNull
+    private String fixDate(int year, int monthOfYear, int dayOfMonth) {
+        String fixedMonth = String.valueOf(monthOfYear);
+        if(fixedMonth.length()==1){
+            fixedMonth = 0 + fixedMonth;
+        }
+        String fixedDay = String.valueOf(dayOfMonth);
+        if(fixedDay.length()==1){
+            fixedDay = 0 + fixedDay;
+        }
+        return year + "-" + fixedMonth + "-" + fixedDay;
     }
 }

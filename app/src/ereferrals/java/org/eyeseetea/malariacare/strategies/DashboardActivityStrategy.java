@@ -526,22 +526,20 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 break;
         }
 
-        ExternalVoucherSenderResultTreatment(requestCode, resultCode, data);
+        externalVoucherSenderResultTreatment(requestCode, resultCode, data);
     }
 
-    private void ExternalVoucherSenderResultTreatment(int requestCode, int resultCode, Intent data) {
+    private void externalVoucherSenderResultTreatment(int requestCode, int resultCode, Intent data) {
         IExternalVoucherRegistry elementController = new ElementController(DashboardActivity.dashboardActivity);
         ExternalAppReceiverUseCase externalAppReceiverUseCase = new ExternalAppReceiverUseCase(elementController, new IExternalVoucherRegistry.Callback() {
             @Override
             public void onSuccess(String uid) {
                 Log.d(TAG, "User created with id:"+ uid);
-
             }
 
             @Override
             public void onError() {
                 Log.d(TAG, "User is not created");
-
             }
         });
         externalAppReceiverUseCase.execute(requestCode, resultCode, data);

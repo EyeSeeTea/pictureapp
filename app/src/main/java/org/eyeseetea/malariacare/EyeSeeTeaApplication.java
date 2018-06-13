@@ -26,7 +26,6 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.element.utils.ElementSDKManager;
 import com.github.stkent.bugshaker.BugShaker;
 import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
 import com.github.stkent.bugshaker.github.GitHubConfiguration;

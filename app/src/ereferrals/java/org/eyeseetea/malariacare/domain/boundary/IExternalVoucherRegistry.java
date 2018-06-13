@@ -1,8 +1,12 @@
 package org.eyeseetea.malariacare.domain.boundary;
 
-import org.eyeseetea.malariacare.data.remote.ElementController;
+import org.eyeseetea.malariacare.domain.entity.intent.ConnectVoucher;
 
 public interface IExternalVoucherRegistry {
+
+    interface SenderCallback {
+        void onNotInstalledApp();
+    }
 
     interface Callback {
         void onSuccess();
@@ -10,10 +14,10 @@ public interface IExternalVoucherRegistry {
         void onError();
     }
 
-    void sendVoucherUId(String voucherUId);
+    void sendVoucher(ConnectVoucher voucher, SenderCallback senderCallback);
 
     void onResult(int requestCode, int resultCode,
-                  Object data, ElementController.Callback callback);
+                  Object data, Callback callback);
 
     void init();
 

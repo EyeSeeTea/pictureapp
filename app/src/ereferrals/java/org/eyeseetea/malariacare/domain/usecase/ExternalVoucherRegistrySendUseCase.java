@@ -3,13 +3,13 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
-public class ElementSentVoucherUseCase implements UseCase {
+public class ExternalVoucherRegistrySendUseCase implements UseCase {
 
     String mVoucherUId;
 
     private IExternalVoucherRegistry mController;
 
-    public ElementSentVoucherUseCase(
+    public ExternalVoucherRegistrySendUseCase(
             IExternalVoucherRegistry controller){
                 mController = controller;
     }

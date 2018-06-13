@@ -45,7 +45,7 @@ import org.eyeseetea.malariacare.data.io.FileDownloader;
 import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.remote.ElementController;
-import org.eyeseetea.malariacare.domain.boundary.IElementController;
+import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -64,8 +64,8 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
-import org.eyeseetea.malariacare.domain.usecase.ElementOnActivityResultUseCase;
-import org.eyeseetea.malariacare.domain.usecase.ElementSentVoucherUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ExternalAppReceiverUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ExternalVoucherRegistrySendUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
@@ -83,7 +83,6 @@ import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -512,6 +511,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
      * @param data        Intent (containing result data) returned by incoming
      *                    activity result.
      */
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
@@ -526,23 +526,25 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 break;
         }
 
-        receiveElementOnResult(requestCode, resultCode, data);
+        ExternalVoucherSenderResultTreatment(requestCode, resultCode, data);
     }
 
-    private void receiveElementOnResult(int requestCode, int resultCode, Intent data) {
-        IElementController elementController = new ElementController(new ElementController.Callback() {
+    private void ExternalVoucherSenderResultTreatment(int requestCode, int resultCode, Intent data) {
+        IExternalVoucherRegistry elementController = new ElementController(DashboardActivity.dashboardActivity);
+        ExternalAppReceiverUseCase externalAppReceiverUseCase = new ExternalAppReceiverUseCase(elementController, new IExternalVoucherRegistry.Callback() {
             @Override
-            public void onSuccess(String id) {
-                Log.d(TAG, "User created with id:"+ id);
+            public void onSuccess(String uid) {
+                Log.d(TAG, "User created with id:"+ uid);
+
             }
 
             @Override
             public void onError() {
                 Log.d(TAG, "User is not created");
+
             }
-        }, DashboardActivity.dashboardActivity);
-        ElementOnActivityResultUseCase elementOnActivityResultUseCase = new ElementOnActivityResultUseCase(elementController);
-        elementOnActivityResultUseCase.execute(requestCode, resultCode, data);
+        });
+        externalAppReceiverUseCase.execute(requestCode, resultCode, data);
     }
 
     @Override
@@ -566,7 +568,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 public void onSuccess(Settings setting) {
                     DialogInterface.OnClickListener onClickListener = null;
                     if(setting.isElementActive()){
-                        onClickListener = createOnClickListenerToSendVoucherToElement(voucherUId);
+                        onClickListener = onClickListenerVoucherUIdSender(voucherUId);
                     }
 
                     mDashboardActivity.showException(mDashboardActivity, "", String.format(
@@ -578,30 +580,19 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @NonNull
-    private DialogInterface.OnClickListener createOnClickListenerToSendVoucherToElement(final String voucherUId) {
+    private DialogInterface.OnClickListener onClickListenerVoucherUIdSender(final String voucherUId) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                sendVoucherUIdToElement(voucherUId);
+                sendVoucherUId(voucherUId);
             }
         };
     }
 
-    private void sendVoucherUIdToElement(String voucherUId) {
+    private void sendVoucherUId(String voucherUId) {
         if (appInstalled("com.element.palm.portal")) {
-            ElementController elementController = new ElementController(new ElementController.Callback() {
-                @Override
-                public void onSuccess(String uid) {
-                    Log.d(TAG, "user sent to Element voucher: " + uid);
-                }
-
-                @Override
-                public void onError() {
-                    Log.d(TAG, "Error sending user to Element");
-
-                }
-            }, DashboardActivity.dashboardActivity);
-            ElementSentVoucherUseCase elementSentVoucherUseCase = new ElementSentVoucherUseCase(elementController);
+            IExternalVoucherRegistry elementController = new ElementController(DashboardActivity.dashboardActivity);
+            ExternalVoucherRegistrySendUseCase elementSentVoucherUseCase = new ExternalVoucherRegistrySendUseCase(elementController);
             elementSentVoucherUseCase.execute(voucherUId);
         }
         else {

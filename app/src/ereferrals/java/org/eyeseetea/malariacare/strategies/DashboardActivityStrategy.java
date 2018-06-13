@@ -565,7 +565,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 public void onSuccess(Settings setting) {
                     DialogInterface.OnClickListener onClickListener = null;
                     if(setting.isElementActive()){
-                        onClickListener = onClickListenerVoucherUIdSender(voucherUId, mDashboardActivity);
+                        onClickListener = createOnClickListenerToSendVoucherToExternalApp(voucherUId, mDashboardActivity);
                     }
 
                     mDashboardActivity.showException(mDashboardActivity, "", String.format(
@@ -577,7 +577,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @NonNull
-    private DialogInterface.OnClickListener onClickListenerVoucherUIdSender(final String voucherUId, final Context context) {
+    private DialogInterface.OnClickListener createOnClickListenerToSendVoucherToExternalApp(final String voucherUId, final Context context) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

@@ -3,26 +3,19 @@ package org.eyeseetea.malariacare.views.question.singlequestion;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.views.DatePickerFragment;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ANumberSingleQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.NumberSingleQuestionViewStrategyStrategy;
-import org.eyeseetea.sdk.presentation.views.CustomButton;
-import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class DatePickerSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
@@ -104,7 +97,15 @@ public class DatePickerSingleQuestionView extends AKeyboardSingleQuestionView im
         datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String date=year + "-" + monthOfYear + "-" + dayOfMonth;
+                String fixedMonth = String.valueOf(monthOfYear);
+                if(fixedMonth.length()==1){
+                    fixedMonth = 0 + fixedMonth;
+                }
+                String fixedDay = String.valueOf(dayOfMonth);
+                if(fixedDay.length()==1){
+                    fixedDay = 0 + fixedDay;
+                }
+                String date=year + "-" + fixedMonth + "-" + fixedDay;
                 dateText.setText(date);
                 notifyAnswerChanged(date);
                 action(context);

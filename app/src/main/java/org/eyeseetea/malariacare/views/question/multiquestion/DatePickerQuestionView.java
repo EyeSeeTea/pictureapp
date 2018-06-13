@@ -101,7 +101,15 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String date=year + "-" + monthOfYear + "-" + dayOfMonth;
+                String fixedMonth = String.valueOf(monthOfYear);
+                if(fixedMonth.length()==1){
+                    fixedMonth = 0 + fixedMonth;
+                }
+                String fixedDay = String.valueOf(dayOfMonth);
+                if(fixedDay.length()==1){
+                    fixedDay = 0 + fixedDay;
+                }
+                String date=year + "-" + fixedMonth + "-" + fixedDay;
                 dateText.setText(date);
                 notifyAnswerChanged(date);
             }

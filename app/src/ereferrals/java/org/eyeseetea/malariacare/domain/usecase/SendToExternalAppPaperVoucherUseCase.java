@@ -35,12 +35,16 @@ public class SendToExternalAppPaperVoucherUseCase implements UseCase {
         mController.sendVoucher(voucher, new IExternalVoucherRegistry.SenderCallback() {
             @Override
             public void onNotInstalledApp() {
-                mMainExecutor.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSenderCallback.onNotInstalledApp();
-                    }
-                });
+                notifyAppIsNotInstalled();
+            }
+        });
+    }
+
+    private void notifyAppIsNotInstalled() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mSenderCallback.onNotInstalledApp();
             }
         });
     }

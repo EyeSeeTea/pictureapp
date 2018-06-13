@@ -967,4 +967,7 @@
     <string name="dynamic_error_month_age">"महिनामा अवैध उमेर"</string>
     <string name="allow_media_download_3g">"मिडिया डाउनलोड 3 जी भन्दा बढी डाउनलोड गर्नुहोस्"</string>
     <string name="metadata_update">"मेटाडेटा मिति अद्यावधिक गर्नुहोस्: %s"</string>
+    <string name="elements">"Elements"</string>
+    <string name="activate_elements">"तत्वहरू सक्रिय गर्नुहोस्"</string>
+    <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
 </resources>

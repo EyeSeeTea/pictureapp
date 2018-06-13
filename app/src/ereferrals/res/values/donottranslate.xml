@@ -74,4 +74,5 @@
     </string-array>
     <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
     <string name="metadata_update_date" translatable="false">update_metadata_date</string>
+    <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
 </resources>

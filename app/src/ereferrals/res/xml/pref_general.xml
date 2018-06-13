@@ -129,6 +129,11 @@
             android:key="@string/developer_option"
             android:summary="@string/developer_option_summary"
             android:title="@string/developer_option_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/activate_elements_key"
+            android:summary="@string/activate_elements"
+            android:title="@string/elements" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -142,7 +142,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void checkCompletedSurveys(final IPullController.Callback callback,
             Program userProgram) {
         ISurveyRepository surveyLocalDataSource = new SurveyLocalDataSource();
-        List<Survey> surveys = surveyLocalDataSource.getAllCompletedSurveys();
+        List<Survey> surveys = surveyLocalDataSource.getUnsentSurveys();
 
         IUserRepository userDataSource = new UserAccountDataSource();
         UserAccount currentUser = userDataSource.getLoggedUser();

@@ -1021,4 +1021,7 @@ Ameahidi kuhudhuria"</string>
 <string name="dynamic_error_month_age">"Ogiltig ålder i månader"</string>
 <string name="allow_media_download_3g">"Ruhusu kupakuliwa kwa vyombo vya habari juu ya 3g"</string>
 <string name="metadata_update">"Sasisha tarehe ya metadata: %s"</string>
+<string name="elements">"Elements"</string>
+<string name="activate_elements">"Aktivera element"</string>
+<string name="element_not_installed">"Element SDK är inte installerat!"</string>
 </resources>

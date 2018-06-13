@@ -533,8 +533,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         IExternalVoucherRegistry elementController = new ElementController(DashboardActivity.dashboardActivity);
         ExternalAppReceiverUseCase externalAppReceiverUseCase = new ExternalAppReceiverUseCase(elementController, new IExternalVoucherRegistry.Callback() {
             @Override
-            public void onSuccess(String uid) {
-                Log.d(TAG, "User created with id:"+ uid);
+            public void onSuccess() {
+                Log.d(TAG, "User created");
             }
 
             @Override

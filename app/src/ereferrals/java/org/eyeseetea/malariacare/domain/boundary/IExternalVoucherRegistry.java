@@ -5,7 +5,7 @@ import org.eyeseetea.malariacare.data.remote.ElementController;
 public interface IExternalVoucherRegistry {
 
     interface Callback {
-        void onSuccess(String uid);
+        void onSuccess();
 
         void onError();
     }

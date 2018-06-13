@@ -38,7 +38,7 @@ public class ElementController implements IExternalVoucherRegistry, ElementSDKMa
     @Override
     public void onUserEnrolled(String id, boolean isNewUser) {
         Log.d(TAG,  "onUserEnrolled id:"+ id +" new:"+ isNewUser);
-        mCallback.onSuccess(id);
+        mCallback.onSuccess();
     }
 
     @Override

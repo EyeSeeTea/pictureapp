@@ -111,7 +111,10 @@ public class DashboardActivity extends BaseActivity {
     }
 
     //Show dialog exception from class without activity.
-    public static void showException(final String title, final String errorMessage) {
+    public static void showException(Context context, final String title, final String errorMessage) {
+        showException(context, title, errorMessage, null);
+    }
+    public static void showException(Context context, final String title, final String errorMessage, final DialogInterface.OnClickListener listener) {
         String dialogTitle = "", dialogMessage = "";
         if (title != null) {
             dialogTitle = title;
@@ -119,11 +122,11 @@ public class DashboardActivity extends BaseActivity {
         if (errorMessage != null) {
             dialogMessage = errorMessage;
         }
-        new AlertDialog.Builder(dashboardActivity)
+        new AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setTitle(dialogTitle)
                 .setMessage(dialogMessage)
-                .setNeutralButton(android.R.string.ok, null)
+                .setNeutralButton(android.R.string.ok, listener)
                 .create().show();
     }
 

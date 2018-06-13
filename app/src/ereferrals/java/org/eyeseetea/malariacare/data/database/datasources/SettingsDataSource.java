@@ -27,8 +27,9 @@ public class SettingsDataSource implements ISettingsRepository {
         String systemLanguage = getCurrentLocale().getLanguage();
         String currentLanguage = PreferencesState.getInstance().getLanguageCode();
         boolean canDownloadMedia = canDownloadMediaWith3G();
+        boolean isElementActive = isElementActive();
 
-        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia);
+        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia, isElementActive);
     }
 
     @Override
@@ -77,5 +78,12 @@ public class SettingsDataSource implements ISettingsRepository {
                 context);
         return sharedPreferences.getBoolean(
                 context.getResources().getString(R.string.allow_media_download_3g_key), false);
+    }
+
+    private boolean isElementActive() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getBoolean(
+                context.getResources().getString(R.string.activate_elements_key), false);
     }
 }

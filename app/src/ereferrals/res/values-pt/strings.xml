@@ -962,4 +962,7 @@
     <string name="dynamic_error_month_age">"Idade inválida em meses"</string>
     <string name="allow_media_download_3g">"Permitir download de mídia acima de 3g"</string>
     <string name="metadata_update">"Atualizar data de metadados: %s"</string>
+    <string name="elements">"Elements"</string>
+    <string name="activate_elements">"Ativar elementos"</string>
+    <string name="element_not_installed">"Element SDK não está instalado!"</string>
 </resources>

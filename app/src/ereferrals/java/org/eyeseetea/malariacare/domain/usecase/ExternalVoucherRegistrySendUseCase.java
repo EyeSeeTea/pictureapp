@@ -1,16 +1,16 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.domain.boundary.IElementController;
+import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
 public class ElementSentVoucherUseCase implements UseCase {
 
     String mVoucherUId;
 
-    private IElementController mController;
+    private IExternalVoucherRegistry mController;
 
     public ElementSentVoucherUseCase(
-            IElementController controller){
+            IExternalVoucherRegistry controller){
                 mController = controller;
     }
 
@@ -22,6 +22,6 @@ public class ElementSentVoucherUseCase implements UseCase {
 
     @Override
     public void run() {
-        mController.sendVoucher(mVoucherUId);
+        mController.sendVoucherUId(mVoucherUId);
     }
 }

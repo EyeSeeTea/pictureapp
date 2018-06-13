@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.domain.boundary.IElementController;
+import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
 public class ElementOnActivityResultUseCase implements UseCase {
@@ -8,12 +8,14 @@ public class ElementOnActivityResultUseCase implements UseCase {
     int mRequestCode;
     int mResultCode;
     Object mData;
+    IExternalVoucherRegistry.Callback mCallback;
 
-    private IElementController mController;
+    private IExternalVoucherRegistry mController;
 
     public ElementOnActivityResultUseCase(
-            IElementController controller){
-                mController = controller;
+            IExternalVoucherRegistry controller, IExternalVoucherRegistry.Callback callback){
+        mController = controller;
+        mCallback = callback;
     }
 
     public void execute(int requestCode, int resultCode, Object data) {
@@ -26,6 +28,6 @@ public class ElementOnActivityResultUseCase implements UseCase {
 
     @Override
     public void run() {
-        mController.onActivityResult(mRequestCode, mResultCode, mData);
+        mController.onResult(mRequestCode, mResultCode, mData, mCallback);
     }
 }

@@ -6,11 +6,11 @@ import android.util.Log;
 
 import com.element.utils.ElementSDKManager;
 
-import org.eyeseetea.malariacare.domain.boundary.IElementController;
+import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 
-public class ElementController implements IElementController, ElementSDKManager.ElementActivityListener, ElementSDKManager.EnrollListener {
+public class ExternalVoucherRegistry implements IExternalVoucherRegistry, ElementSDKManager.ElementActivityListener, ElementSDKManager.EnrollListener {
 
-    final private String TAG = "ElementController";
+    final private String TAG = "ExternalVoucherRegistry";
 
     public interface Callback {
         void onSuccess(String uid);
@@ -21,13 +21,13 @@ public class ElementController implements IElementController, ElementSDKManager.
     private Activity mActivity;
     private Callback mCallback;
 
-    public ElementController(Callback callback, Activity activity){
+    public ExternalVoucherRegistry(Callback callback, Activity activity){
         mCallback = callback;
         mActivity = activity;
     }
 
     @Override
-    public void sendVoucher(String voucherUId) {
+    public void sendVoucherUId(String voucherUId) {
         ElementSDKManager.enrollNewUser(mActivity, voucherUId, null);
     }
 

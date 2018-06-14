@@ -344,10 +344,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
-                .where(SurveyDB_Table.status.withTable(surveyAlias)
-                        .is(Constants.SURVEY_COMPLETED))
-                .and(ProgramDB_Table.uid_program.withTable(programAlias)
-                        .is(malariaProgramUid))
+                .where(ProgramDB_Table.uid_program.withTable(programAlias).is(malariaProgramUid))
+                .and(SurveyDB_Table.status.withTable(surveyAlias).is(Constants.SURVEY_SENDING))
+                .or(SurveyDB_Table.status.withTable(surveyAlias).is(Constants.SURVEY_COMPLETED))
                 .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date.withTable(surveyAlias)))
                 .orderBy(OrderBy.fromProperty(
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();

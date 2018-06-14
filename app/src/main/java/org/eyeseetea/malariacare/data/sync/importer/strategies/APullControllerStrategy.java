@@ -38,7 +38,7 @@ public abstract class APullControllerStrategy {
                 callback.onComplete();
             } else {
 
-                mPullController.pullMetada(pullFilters, callback);
+                mPullController.pullMetadata(pullFilters, callback);
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());

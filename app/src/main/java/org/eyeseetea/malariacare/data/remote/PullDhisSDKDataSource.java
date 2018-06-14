@@ -17,6 +17,7 @@ import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
@@ -25,14 +26,18 @@ public class PullDhisSDKDataSource {
     private IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy =
             new PullDhisSDKDataSourceStrategy();
 
-    public void pullMetadata(final IDataSourceCallback<List<OrganisationUnit>> callback) {
+    public void pullMetadata(final IDataSourceCallback<List<OrganisationUnit>> callback, Set<String> uids) {
 
         boolean isNetworkAvailable = isNetworkAvailable();
 
         if (!isNetworkAvailable) {
             callback.onError(new NetworkException());
         } else {
-            new PullDhisSDKDataSourceStrategy().pullMetadata(mPullDhisSDKDataSourceStrategy, callback);
+            if(uids == null || uids.isEmpty()) {
+                new PullDhisSDKDataSourceStrategy().pullMetadata(mPullDhisSDKDataSourceStrategy, callback);
+            }else{
+                new PullDhisSDKDataSourceStrategy().pullMetadata(mPullDhisSDKDataSourceStrategy, callback, uids);
+            }
         }
     }
 

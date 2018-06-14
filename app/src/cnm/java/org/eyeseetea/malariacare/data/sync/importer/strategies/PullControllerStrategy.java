@@ -37,7 +37,6 @@ import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
-import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.organisationunit
         .ExistsMoreThanOneOrgUnitByPhoneException;
@@ -114,6 +113,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             if (organisationUnit == null) {
                 throw new AutoconfigureException();
             } else {
+                pullFilters.addOrgUnitUidToPull(organisationUnit.getUid());
                 organisationUnitRepository.saveCurrentOrganisationUnit(organisationUnit);
                 setProgramByOrganisationUnit(organisationUnit);
                 pullFilters.setDataByOrgUnit(organisationUnit.getName());
@@ -193,7 +193,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 if (pullFilters.isDemo() || appInfoLocal.isMetadataDownloaded()) {
                     callback.onComplete();
                 } else {
-                    mPullController.pullMetada(pullFilters, callback);
+                    mPullController.pullMetadata(pullFilters, callback);
                 }
             }
 

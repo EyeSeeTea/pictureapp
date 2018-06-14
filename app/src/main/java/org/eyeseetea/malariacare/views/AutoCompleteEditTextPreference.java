@@ -25,14 +25,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.AutoCompleteTextView;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
@@ -104,12 +102,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                PreferencesState.getInstance().getContext());
-        if (!BuildConfig.askEula || sharedPreferences.getBoolean(
-                PreferencesState.getInstance().getContext().getApplicationContext().getResources
-                        ().getString(
-                        R.string.eula_accepted), false) && positiveResult) {
+        if (positiveResult) {
             String value = mEditText.getText().toString();
 
             boolean pullRequired = false;

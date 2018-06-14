@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.AutoCompleteTextView;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
@@ -105,7 +106,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
     protected void onDialogClosed(boolean positiveResult) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 PreferencesState.getInstance().getContext());
-        if (sharedPreferences.getBoolean(
+        if (!BuildConfig.askEula || sharedPreferences.getBoolean(
                 PreferencesState.getInstance().getContext().getApplicationContext().getResources
                         ().getString(
                         R.string.eula_accepted), false) && positiveResult) {

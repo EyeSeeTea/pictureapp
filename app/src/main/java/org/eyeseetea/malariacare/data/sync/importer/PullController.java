@@ -73,7 +73,7 @@ public class PullController implements IPullController {
         cancelPull = true;
     }
 
-    public void pullMetada(final PullFilters pullFilters, final Callback callback) {
+    public void pullMetadata(final PullFilters pullFilters, final Callback callback) {
         if (cancelPull) {
             callback.onCancel();
             return;
@@ -127,7 +127,7 @@ public class PullController implements IPullController {
                         public void onError(Throwable throwable) {
                             callback.onError(throwable);
                         }
-                    });
+                    }, pullFilters.getListOfOrgUnitsToPull());
         } else {
             if (pullFilters.downloadData()) {
                 List<OrganisationUnit> organisationUnitsList =

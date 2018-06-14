@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.views.question.multiquestion;
+package org.eyeseetea.malariacare.views.question.singlequestion;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -14,13 +15,11 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.views.DatePickerFragment;
-import org.eyeseetea.malariacare.views.question.CommonQuestionView;
-import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class DatePickerQuestionView extends CommonQuestionView implements IQuestionView,
-        IMultiQuestionView {
-
+public class DatePickerSingleQuestionView extends AKeyboardSingleQuestionView implements
+        IQuestionView {
     TextView header;
     TextView dateText;
     private QuestionAnswerChangedListener mOnAnswerChangedListener;
@@ -29,7 +28,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     private boolean enabled;
 
 
-    public DatePickerQuestionView(Context context) {
+    public DatePickerSingleQuestionView(Context context) {
         super(context);
         mActivity = (Activity) context;
         enabled = true;
@@ -38,22 +37,6 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
 
     public void setOnAnswerChangedListener(QuestionAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
-    }
-
-    @Override
-    public void setHeader(String headerValue) {
-        header.setText(headerValue);
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
-    }
-
-    @Override
-    public void requestAnswerFocus() {
-        dateText.requestFocus();
-        dateText.performClick();
     }
 
     @Override
@@ -85,18 +68,31 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     }
 
     @Override
+    public EditText getAnswerView() {
+        return null;
+    }
+
+    @Override
+    protected void validateAnswer(Context context) {
+        if (dateText.getText().toString().isEmpty()) {
+            Validation.getInstance().addinvalidInput(dateText,
+                    getResources().getString(
+                            R.string.error_empty_question));
+        } else {
+            Validation.getInstance().removeInputError(dateText);
+            dateText.setError(null);
+            super.notifyAnswerChanged(dateText.getText().toString());
+        }
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.enabled = enabled;
     }
 
-    public interface onAnswerChangedListener {
-        void onAnswerChanged(View view, String newValue);
-    }
-
     private void init(final Context context) {
-        inflate(context, R.layout.multi_question_tab_year_selector, this);
-        header = (TextView) findViewById(R.id.row_header_text);
+        inflate(context, R.layout.dynamic_tab_datepiker_row, this);
         dateText = (TextView) findViewById(R.id.answer);
         final DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
@@ -105,6 +101,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
                 String date = fixDate(year, monthOfYear, dayOfMonth);
                 dateText.setText(date);
                 notifyAnswerChanged(date);
+                action(context);
             }
         });
         dateText.setOnClickListener(new View.OnClickListener() {

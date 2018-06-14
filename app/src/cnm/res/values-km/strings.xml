@@ -311,6 +311,11 @@
 <string name="error_saving_survey">"មានកំហុសក្នុងការរក្សាទុកការស្ទង់មតិ"</string>
 <string name="dynamic_error_month_age">"អាយុមិនត្រឹមត្រូវក្នុងខែ"</string>
 
+<string name="ipc_issueEntry_q_reported_case">"តើអ្នកបានរាយការណ៍រឿងក្តីនេះក្នុងរយៈពេល 24 ម៉ោងដែរឬទេ?"</string>
+<string name="ipc_issueEntry_q_case_date">"កាលបរិច្ឆេទនៃសំណុំរឿង"</string>
+<string name="common_option_reported_case_yes">"បាទ"</string>
+<string name="common_option_reported_case_no">"ទេ"</string>
+
 <string-array name="languages_strings">
     <item>បានកំណត់ប្រព័ន្ធ</item>
     <item>អង់គ្លេស</item>

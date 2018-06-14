@@ -314,4 +314,10 @@
 <string name="date_survey_format"></string>
 <string name="hour_survey_format"></string>
 <string name="error_empty_question"></string>
+
+<string-array name="languages_strings">
+    <item>បានកំណត់ប្រព័ន្ធ</item>
+    <item>អង់គ្លេស</item>
+    <item>ភាសាខ្មែរ</item>
+</string-array>
 </resources>

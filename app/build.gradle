@@ -123,6 +123,7 @@ android {
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -152,6 +153,7 @@ android {
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -181,6 +183,7 @@ android {
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
@@ -213,6 +216,7 @@ android {
             buildConfigField "boolean", "openReviewCompletedSurveys", "false"
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
@@ -243,6 +247,7 @@ android {
             buildConfigField "boolean", "openReviewCompletedSurveys", "true"
             buildConfigField "boolean", "pullDataDropdown", "false"
             buildConfigField "boolean", "showReviewInReadMode", "true"
+            buildConfigField "boolean", "askEula", "false"
         }
 
     }

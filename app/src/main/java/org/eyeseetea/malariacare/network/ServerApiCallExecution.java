@@ -2,23 +2,17 @@ package org.eyeseetea.malariacare.network;
 
 import android.util.Log;
 
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-
-import org.apache.commons.jexl2.UnifiedJEXL;
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
-import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 import org.eyeseetea.malariacare.network.factory.UnsafeOkHttpsClientFactory;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.Proxy;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ServerApiCallExecution {
 
@@ -34,10 +28,10 @@ public class ServerApiCallExecution {
             throws ApiCallException {
         final String DHIS_URL = url;
         Log.d(method, DHIS_URL);
-        OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
 
-        client.setAuthenticator(basicAuthenticator);
+        OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient(basicAuthenticator);
 
         Request.Builder builder = new Request.Builder()
                 .header(basicAuthenticator.AUTHORIZATION_HEADER,
@@ -72,36 +66,4 @@ public class ServerApiCallExecution {
         return response;
     }
 }
-/**
- * Basic authenticator required for calls
- */
-class BasicAuthenticator implements Authenticator {
 
-    public final String AUTHORIZATION_HEADER = "Authorization";
-    private String credentials;
-
-    BasicAuthenticator() throws ApiCallException {
-        try {
-            credentials = AuthenticationApiStrategy.getApiCredentials();
-        } catch (ConfigJsonIOException e) {
-            throw new ApiCallException(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ApiCallException(e);
-        }
-    }
-
-    @Override
-    public Request authenticate(Proxy proxy, Response response) throws IOException {
-        return response.request().newBuilder().header(AUTHORIZATION_HEADER, credentials).build();
-    }
-
-    @Override
-    public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-        return null;
-    }
-
-    public String getCredentials() {
-        return credentials;
-    }
-}

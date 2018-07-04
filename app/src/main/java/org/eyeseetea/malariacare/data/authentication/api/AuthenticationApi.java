@@ -2,11 +2,11 @@ package org.eyeseetea.malariacare.data.authentication.api;
 
 import android.support.annotation.NonNull;
 
-import com.squareup.okhttp.Credentials;
-
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+
+import okhttp3.Credentials;
 
 public class AuthenticationApi {
 

@@ -124,6 +124,7 @@ android {
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
             buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -154,6 +155,7 @@ android {
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
             buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -184,6 +186,7 @@ android {
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
             buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
@@ -217,10 +220,11 @@ android {
             buildConfigField "boolean", "pullDataDropdown", "true"
             buildConfigField "boolean", "showReviewInReadMode", "false"
             buildConfigField "boolean", "elementSDK", "true"
+            buildConfigField "boolean", "askEula", "true"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
-            versionName "0.4.0"
+            versionName "0.4.3"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -248,6 +252,7 @@ android {
             buildConfigField "boolean", "pullDataDropdown", "false"
             buildConfigField "boolean", "showReviewInReadMode", "true"
             buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "false"
         }
 
     }

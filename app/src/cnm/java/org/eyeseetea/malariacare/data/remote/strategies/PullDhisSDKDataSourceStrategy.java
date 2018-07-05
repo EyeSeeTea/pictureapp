@@ -7,6 +7,7 @@ import org.hisp.dhis.client.sdk.core.event.EventFilters;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.List;
+import java.util.Set;
 
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -19,7 +20,28 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
     @Override
     public void pullMetadata(
             final IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,
-            final IDataSourceCallback<List<OrganisationUnit>> callback) {
+            final IDataSourceCallback<List<OrganisationUnit>> callback,
+            Set<String> uids) {
+        D2.organisationUnits().pull(SyncStrategy.NO_DELETE, uids)
+            .subscribeOn(Schedulers.io()).
+            observeOn(Schedulers.io())
+            .subscribe(new Action1<List<OrganisationUnit>>() {
+                @Override
+                public void call(List<OrganisationUnit> organisationUnits) {
+                    mPullDhisSDKDataSourceStrategy.onMetadataSucceed(callback,
+                            organisationUnits);
+                }
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable throwable) {
+                    callback.onError(throwable);
+                }
+            });
+    }
+
+    @Override
+    public void pullMetadata(final IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,
+                             final IDataSourceCallback<List<OrganisationUnit>> callback) {
         D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE)
                 .subscribeOn(Schedulers.io()).
                 observeOn(Schedulers.io())

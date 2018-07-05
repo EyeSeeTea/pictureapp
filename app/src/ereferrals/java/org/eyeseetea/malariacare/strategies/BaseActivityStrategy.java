@@ -201,7 +201,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private void checkHastSurveyToComplete(){
         Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
                 R.id.dashboard_details_container);
-        if (f instanceof SurveyFragment) {
+        if (f instanceof SurveyFragment || f instanceof ReviewFragment) {
             Session.setHasSurveyToComplete(true);
         }else {
             Session.setHasSurveyToComplete(false);
@@ -224,7 +224,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStop() {
-        applicationdidenterbackground();
+        isAppInBackground();
         LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {

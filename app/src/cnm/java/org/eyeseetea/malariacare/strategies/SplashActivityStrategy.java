@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.domain.AutoconfigureException;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -151,7 +150,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     private void goNextActivity() {
         try {
-            NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
+            NavigationBuilder.getInstance().buildControllerByProgram();
             SplashActivityStrategy.this.finishAndGo(DashboardActivity.class);
         } catch (LoadingNavigationControllerException ex) {
             Log.e(this.getClass().getSimpleName(), ex.getMessage());

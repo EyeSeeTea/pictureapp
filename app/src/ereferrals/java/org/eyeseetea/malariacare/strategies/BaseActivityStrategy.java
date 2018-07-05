@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -105,8 +106,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private void applicationWillEnterForeground() {
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(false);
         }
     }
 
@@ -121,7 +122,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
             checkHastSurveyToComplete();
         }
     }
@@ -224,9 +225,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStop() {
-        isAppInBackground();
         LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
         }

@@ -29,6 +29,11 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     private PullFilters mPullFilters;
     private Activity mActivity;
     private boolean hasAutoconfigureError;
+
+    public interface Callback {
+        void onSuccess();
+    }
+
     public SplashActivityStrategy(Activity mActivity) {
         super(mActivity);
         this.mActivity = mActivity;

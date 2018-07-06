@@ -82,7 +82,8 @@ public class AddBalanceReceiptPresenter {
         mSurvey.setStatus(Constants.SURVEY_COMPLETED);
         mSaveSurveyUseCase.execute(mSurvey, new SaveSurveyUseCase.Callback() {
             @Override
-            public void onSurveySaved() {
+            public void onSurveySaved(Survey survey) {
+
             }
         });
         mView.closeFragment();

@@ -35,9 +35,8 @@ import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.ElementController;
-import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
-import org.eyeseetea.malariacare.domain.usecase.InitExternalVoucherRegisterUseCase;
+import org.eyeseetea.malariacare.strategies.AEyeSeeTeaApplicationStrategy;
+import org.eyeseetea.malariacare.strategies.EyeSeeTeaApplicationStrategy;
 import org.eyeseetea.malariacare.utils.Permissions;
 
 import io.fabric.sdk.android.Fabric;
@@ -58,15 +57,14 @@ public class EyeSeeTeaApplication extends Application {
 
     private static EyeSeeTeaApplication mInstance;
 
+    private AEyeSeeTeaApplicationStrategy mEyeSeeTeaApplicationStrategy;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        if(BuildConfig.elementSDK) {
-            IExternalVoucherRegistry elementController = new ElementController(getApplicationContext());
-            InitExternalVoucherRegisterUseCase initExternalVoucherRegisterUseCase = new InitExternalVoucherRegisterUseCase(elementController);
-            initExternalVoucherRegisterUseCase.execute();
-        }
+        mEyeSeeTeaApplicationStrategy = new EyeSeeTeaApplicationStrategy(this);
+        mEyeSeeTeaApplicationStrategy.onCreate();
         mInstance = this;
 
         //Apply for Release build

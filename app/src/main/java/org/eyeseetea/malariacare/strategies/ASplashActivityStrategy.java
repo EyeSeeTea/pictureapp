@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
@@ -98,7 +99,7 @@ public abstract class ASplashActivityStrategy {
         //By default, variants do nothing
     }
 
-    public void init(SplashActivityStrategy.Callback callback) {
-        callback.onSuccess();
+    public void init(SplashScreenActivity.Callback callback) {
+        callback.onSuccess(true);
     }
 }

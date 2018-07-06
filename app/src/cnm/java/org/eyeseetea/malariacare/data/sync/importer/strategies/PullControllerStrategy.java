@@ -62,10 +62,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
     IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
     PullFilters mPullFilters;
     IAppInfoRepository appInfoRemoteDataSource = new AppInfoRemoteDataSource();
+    Context mContext;
 
-    public PullControllerStrategy(PullController pullController) {
+    public PullControllerStrategy(PullController pullController, Context context) {
         super(pullController);
         organisationUnitRepository = new OrganisationUnitRepository();
+        mContext = context;
     }
 
     @Override

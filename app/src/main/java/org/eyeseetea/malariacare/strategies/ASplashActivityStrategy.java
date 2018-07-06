@@ -102,4 +102,7 @@ public abstract class ASplashActivityStrategy {
     public void init(SplashScreenActivity.Callback callback) {
         callback.onSuccess(true);
     }
+
+    public void setContentView() {
+    }
 }

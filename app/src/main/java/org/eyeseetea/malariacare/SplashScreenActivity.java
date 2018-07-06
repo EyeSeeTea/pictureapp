@@ -44,6 +44,7 @@ public class SplashScreenActivity extends Activity {
             @Override
             public void onSuccess(boolean canEnterApp) {
                 if (canEnterApp) {
+                    splashActivityStrategy.setContentView();
                     AsyncInitApplication asyncInitApplication = new AsyncInitApplication(activity);
                     asyncInitApplication.execute((Void) null);
                 }

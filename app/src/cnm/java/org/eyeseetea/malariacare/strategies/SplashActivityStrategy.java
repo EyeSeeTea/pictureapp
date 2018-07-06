@@ -184,4 +184,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
             }
         }
     }
+
+    @Override
+    public void setContentView() {
+        activity.setContentView(R.layout.activity_splash);
+    }
+
 }

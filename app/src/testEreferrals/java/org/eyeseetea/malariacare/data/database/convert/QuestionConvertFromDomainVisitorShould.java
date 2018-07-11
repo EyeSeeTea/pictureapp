@@ -8,10 +8,12 @@ import static org.hamcrest.core.Is.is;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.mappers.QuestionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +68,18 @@ public class QuestionConvertFromDomainVisitorShould {
 
         assertEqual(questionToEvaluate, expectedQuestion);
 
+    }
+
+    @Test
+    public void convert_a_domain_question_to_questiondb_with_regexp_and_regexp_error()
+            throws Exception {
+
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
+                "^(\\d{2})$", "some_error_msg_ref\""));
+
+        QuestionDB expectedQuestion =  givenADBQuestionWithValidation( "^(\\d{2})$", "some_error_msg_ref\"");
+
+        assertEqual(questionToEvaluate, expectedQuestion);
     }
 
     @Test
@@ -243,6 +257,22 @@ public class QuestionConvertFromDomainVisitorShould {
         return question;
     }
 
+    private Question givenADomainQuestionWith(String regexp, String regExpError) {
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .validation(regexp)
+                .validationError(regExpError)
+                .compulsory(true).build();
+
+
+        return question;
+    }
+
     private Question givenADomainQuestionOneOption() {
         List<Option> options = new ArrayList<>(1);
 
@@ -299,6 +329,13 @@ public class QuestionConvertFromDomainVisitorShould {
     private QuestionDB givenADBQuestionWithOutput(int output) {
         QuestionDB question = givenAQuestionDB();
         question.setOutput(output);
+        return question;
+    }
+
+    private QuestionDB givenADBQuestionWithValidation(String validation, String validationMessage) {
+        QuestionValidationDB questionValidation = new QuestionValidationDB(validation, validationMessage);
+        QuestionDB question = givenAQuestionDB();
+        question.setQuestionValidation(questionValidation);
         return question;
     }
 

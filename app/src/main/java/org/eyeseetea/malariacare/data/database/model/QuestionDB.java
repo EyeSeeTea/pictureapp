@@ -154,6 +154,14 @@ public class QuestionDB extends BaseModel {
      * Reference to the associated mAnswerDB (loaded lazily)
      */
     AnswerDB mAnswerDB;
+
+    @Column
+    Long id_question_validation_fk;
+
+    /**
+     * Reference to the associated mAnswerDB (loaded lazily)
+     */
+    QuestionValidationDB mQuestionValidation;
     @Column
     Integer output;
 
@@ -196,6 +204,10 @@ public class QuestionDB extends BaseModel {
 
     public Long getId_answer_fk() {
         return id_answer_fk;
+    }
+
+    public Long getId_question_validation_fk() {
+        return id_question_validation_fk;
     }
 
 
@@ -576,7 +588,6 @@ public class QuestionDB extends BaseModel {
                 .where(QuestionDB_Table.uid_question.withTable(questionAlias)
                         .eq(questionUID)).querySingle();
     }
-
     /**
      * Method to get all mQuestionOptionDBs related by id
      */
@@ -809,6 +820,26 @@ public class QuestionDB extends BaseModel {
                             .is(id_answer_fk)).querySingle();
         }
         return mAnswerDB;
+    }
+    public QuestionValidationDB getmQuestionValidation() {
+        if (mQuestionValidation == null) {
+            if (id_question_validation_fk == null) return null;
+            mQuestionValidation = new Select()
+                    .from(QuestionValidationDB.class)
+                    .where(QuestionValidationDB_Table.id_question_validation
+                            .is(id_question_validation_fk)).querySingle();
+        }
+        return mQuestionValidation;
+    }
+
+    public void setQuestionValidationDB(Long id) {
+        this.id_question_validation_fk = id;
+        this.mQuestionValidation = null;
+    }
+
+    public void setQuestionValidation(QuestionValidationDB questionValidation) {
+        this.mQuestionValidation = questionValidation;
+        this.id_question_validation_fk = (questionValidation != null) ? questionValidation.getId_question_validation() : null;
     }
 
     public void setAnswerDB(Long id_answer) {

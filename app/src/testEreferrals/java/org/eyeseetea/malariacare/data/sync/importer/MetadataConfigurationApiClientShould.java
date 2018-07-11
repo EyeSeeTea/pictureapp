@@ -272,6 +272,8 @@ public class MetadataConfigurationApiClientShould {
                 .type(Question.Type.INT)
                 .compulsory(true)
                 .options(null)
+                .validation("^(\\d{2})$")
+                .validationError("some_error_msg_ref")
                 .build();
     }
 

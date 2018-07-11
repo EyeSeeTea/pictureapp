@@ -19,12 +19,14 @@ public class Question {
     private Visibility visibility;
     private List<Rule> rules;
     private Value mValue;
+    private String validation;
+    private String validationError;
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             List<Option> options, Header header, int index,
             Visibility visibility,
-            List<Rule> rules, Value value) {
+            List<Rule> rules, Value value, String validation, String validationError) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -39,6 +41,8 @@ public class Question {
         this.visibility = visibility;
         this.rules = rules;
         mValue = value;
+        this.validation = validation;
+        this.validationError = validationError;
     }
 
     public static Builder newBuilder() {
@@ -105,6 +109,13 @@ public class Question {
         return mValue;
     }
 
+    public String getValidation() {
+        return validation;
+    }
+    public String getValidationError() {
+        return validationError;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,6 +127,8 @@ public class Question {
         if (compulsory != question.compulsory) return false;
         if (index != question.index) return false;
         if (code != null ? !code.equals(question.code) : question.code != null) return false;
+        if (validation != null ? !validation.equals(question.validation) : question.validation != null) return false;
+        if (validationError != null ? !validationError.equals(question.validationError) : question.validationError != null) return false;
         if (name != null ? !name.equals(question.name) : question.name != null) return false;
         if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
         if (phoneFormat != null ? !phoneFormat.equals(question.phoneFormat)
@@ -137,6 +150,8 @@ public class Question {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (validation != null ? validation.hashCode() : 0);
+        result = 31 * result + (validationError != null ? validationError.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (phoneFormat != null ? phoneFormat.hashCode() : 0);
@@ -165,6 +180,8 @@ public class Question {
                 ", index=" + index +
                 ", visibility=" + visibility +
                 ", rules=" + rules +
+                ", validation=" + validation +
+                ", validationError=" + validationError +
                 '}';
     }
 
@@ -192,6 +209,8 @@ public class Question {
         private List<Rule> rules;
         private long id;
         private Value mValue;
+        private String validation;
+        private String validationError;
 
         public Builder() {
         }
@@ -256,6 +275,16 @@ public class Question {
             return this;
         }
 
+        public Builder validation(String val) {
+            validation = val;
+            return this;
+        }
+
+        public Builder validationError(String val) {
+            validationError = val;
+            return this;
+        }
+
         public Question build() {
             return new Question(
                     this.id,
@@ -270,7 +299,9 @@ public class Question {
                     this.index,
                     this.visibility,
                     this.rules,
-                    mValue
+                    mValue,
+                    this.validation,
+                    this.validationError
             );
         }
 

@@ -40,7 +40,7 @@ public class QuestionValidationDB extends BaseModel {
     public QuestionValidationDB() {
     }
 
-    public QuestionValidationDB(String short_name, String name) {
+    public QuestionValidationDB(String regexp, String message) {
         this.regexp = regexp;
         this.message = message;
     }

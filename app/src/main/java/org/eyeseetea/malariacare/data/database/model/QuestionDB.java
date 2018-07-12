@@ -821,7 +821,7 @@ public class QuestionDB extends BaseModel {
         }
         return mAnswerDB;
     }
-    public QuestionValidationDB getmQuestionValidation() {
+    public QuestionValidationDB getQuestionValidation() {
         if (mQuestionValidation == null) {
             if (id_question_validation_fk == null) return null;
             mQuestionValidation = new Select()

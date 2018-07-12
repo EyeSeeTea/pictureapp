@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
@@ -48,8 +49,18 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
+        dbModel.setQuestionValidation(getQuestionValidationFrom(domainModel));
         dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
         return dbModel;
+    }
+
+    private QuestionValidationDB getQuestionValidationFrom(Question domain) {
+        QuestionValidationDB questionValidationDB = null;
+        if(domain.getValidation()!=null && !domain.getValidation().isEmpty()){
+            questionValidationDB = new QuestionValidationDB(domain.getValidation(), domain.getValidationError());
+            questionValidationDB.save();
+        }
+        return questionValidationDB;
     }
 
     private AnswerDB getAnswerDBFromDomain(@NotNull Question domainModel) {

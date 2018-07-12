@@ -75,7 +75,9 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
 
         if (BuildConfig.validationInline) {
             if (!numberPicker.getText().toString().isEmpty()) {
-                Validation.getInstance().removeInputError(numberPicker);
+                if(validateQuestionRegExp(numberPicker)) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                }
             } else {
                 Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
                         R.string.error_empty_question));
@@ -89,7 +91,9 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
                     positiveOrZeroNumber = PositiveOrZeroNumber.parse(
                             numberPicker.getText().toString());
                     notifyAnswerChanged(String.valueOf(positiveOrZeroNumber.getValue()));
-                    Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(numberPicker)) {
+                        Validation.getInstance().removeInputError(numberPicker);
+                    }
 
                 } catch (InvalidPositiveOrZeroNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,

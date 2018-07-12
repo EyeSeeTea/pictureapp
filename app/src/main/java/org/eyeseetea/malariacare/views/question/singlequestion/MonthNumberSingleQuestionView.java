@@ -9,11 +9,16 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.AgeMonthNumber;
+import org.eyeseetea.malariacare.domain.entity.RegExpValidator;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidAgeMonthNumberException;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .AMonthNumberSingleQuestionViewStrategy;
@@ -97,11 +102,14 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
         if (!isClicked) {
             isClicked = true;
             try {
+                String value = numberPicker.getText().toString();
                 AgeMonthNumber ageMonthNumber = AgeMonthNumber.parse(
-                        numberPicker.getText().toString());
-                Validation.getInstance().removeInputError(numberPicker);
-                hideKeyboard(numberPicker);
-                notifyAnswerChanged(String.valueOf(ageMonthNumber.getValue()));
+                        value);
+                if(validateQuestionRegExp(numberPicker)) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                    hideKeyboard(numberPicker);
+                    notifyAnswerChanged(String.valueOf(ageMonthNumber.getValue()));
+                }
             } catch (InvalidAgeMonthNumberException e) {
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
@@ -113,6 +121,8 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
 
     public void setQuestionDB(QuestionDB questionDB) {
         mMonthNumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
+        if(questionDB.getQuestionValidation()!=null) {
+            setRegExpValidator(questionDB.getQuestionValidation());
+        }
     }
-
 }

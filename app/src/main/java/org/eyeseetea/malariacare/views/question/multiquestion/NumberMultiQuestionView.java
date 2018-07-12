@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -51,7 +52,9 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
             numberPicker.setText(valueDB.getValue());
             if (BuildConfig.validationInline) {
                 if (!numberPicker.getText().toString().isEmpty()) {
-                    Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(numberPicker)) {
+                        Validation.getInstance().removeInputError(numberPicker);
+                    }
                 }
             }
         }
@@ -86,7 +89,9 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                 try {
                     int value = Integer.parseInt(s.toString());
                     notifyAnswerChanged(String.valueOf(value));
-                    Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(numberPicker)) {
+                        Validation.getInstance().removeInputError(numberPicker);
+                    }
                 } catch (NumberFormatException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_number));

@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ANumberSingleQuestionViewStrategy;
@@ -97,10 +98,12 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
     public void validateAnswer(Context context) {
         try {
             int value = Integer.parseInt(numberPicker.getText().toString());
-
-            Validation.getInstance().removeInputError(numberPicker);
-            hideKeyboard(numberPicker);
-            notifyAnswerChanged(String.valueOf(value));
+            if(validateQuestionRegExp(numberPicker)) {
+                Validation.getInstance().removeInputError(numberPicker);
+                validateQuestionRegExp(numberPicker);
+                hideKeyboard(numberPicker);
+                notifyAnswerChanged(String.valueOf(value));
+            }
         } catch (NumberFormatException e) {
             Validation.getInstance().addinvalidInput(numberPicker,
                     context.getString(R.string.dynamic_error_number));

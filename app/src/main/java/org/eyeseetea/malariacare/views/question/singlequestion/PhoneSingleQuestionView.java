@@ -88,9 +88,12 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         try {
             Phone phone = new Phone(mCustomEditText.getText().toString());
             hideKeyboard(mCustomEditText);
-            Validation.getInstance().removeInputError(mCustomEditText);
-            String value = phone.getValue();
-            notifyAnswerChanged(value);
+
+            if(validateQuestionRegExp(mCustomEditText)) {
+                Validation.getInstance().removeInputError(mCustomEditText);
+                String value = phone.getValue();
+                notifyAnswerChanged(value);
+            }
         } catch (InvalidPhoneException e) {
             Validation.getInstance().addinvalidInput(mCustomEditText,
                     context.getString(R.string.dynamic_error_phone_format));

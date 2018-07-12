@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -89,7 +90,9 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
                     } else {
                         notifyAnswerChanged(numberPicker.getText().toString());
                     }
-                    Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(numberPicker)) {
+                        Validation.getInstance().removeInputError(numberPicker);
+                    }
 
                 } catch (InvalidPositiveNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
@@ -97,7 +100,9 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
                 }
                 if (BuildConfig.validationInline) {
                     if (!numberPicker.getText().toString().isEmpty()) {
-                        Validation.getInstance().removeInputError(numberPicker);
+                        if(validateQuestionRegExp(numberPicker)) {
+                            Validation.getInstance().removeInputError(numberPicker);
+                        }
                     } else {
                         Validation.getInstance().addinvalidInput(numberPicker,
                                 getContext().getString(R.string.error_empty_question));

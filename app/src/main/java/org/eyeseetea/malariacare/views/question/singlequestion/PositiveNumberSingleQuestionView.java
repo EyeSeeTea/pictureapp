@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ANumberSingleQuestionViewStrategy;
@@ -100,9 +101,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         try {
             PositiveNumber positiveNumber = PositiveNumber.parse(
                     numberPicker.getText().toString());
-            Validation.getInstance().removeInputError(numberPicker);
-            hideKeyboard(numberPicker);
-            notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+            if(validateQuestionRegExp(numberPicker)) {
+                Validation.getInstance().removeInputError(numberPicker);
+                hideKeyboard(numberPicker);
+                notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+            }
         } catch (InvalidPositiveNumberException e) {
             Validation.getInstance().addinvalidInput(numberPicker,
                     context.getString(R.string.dynamic_error_invalid_positive_number));

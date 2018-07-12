@@ -615,7 +615,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         screenQuestionDB.getInternationalizedPath());
             }
             mDynamicTabAdapterStrategy.renderParticularSurvey(screenQuestionDB, surveyDB, questionView);
-
+            if(questionView instanceof CommonQuestionView){
+                ((CommonQuestionView) questionView).setRegExpValidator(screenQuestionDB.getQuestionValidation());
+            }
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestionDB(screenQuestionDB);
 

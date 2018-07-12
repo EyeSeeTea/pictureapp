@@ -8,15 +8,22 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
+import org.eyeseetea.malariacare.domain.entity.RegExpValidator;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
+import org.eyeseetea.malariacare.utils.Utils;
 
 public class CommonQuestionView extends LinearLayout {
     boolean isActive = true;
 
     private TableRow mTableRow;
     private ViewGroup mLayout;
+
+    public RegExpValidator regExpValidator;
 
     public CommonQuestionView(Context context) {
         super(context);
@@ -127,5 +134,28 @@ public class CommonQuestionView extends LinearLayout {
             return null;
         }
         return (IQuestionView) ((ViewGroup) nextView).getChildAt(0);
+    }
+
+    public void setRegExpValidator(QuestionValidationDB questionValidationDB){
+        if(questionValidationDB!=null && questionValidationDB.getRegexp()!=null) {
+            String message = Utils.getInternationalizedString(questionValidationDB.getMessage(), getContext());
+            this.regExpValidator = new RegExpValidator(questionValidationDB.getRegexp(), message);
+        }
+    }
+
+    public boolean validateQuestionRegExp(TextView view) {
+        try {
+            if(regExpValidator==null) {
+                return true;
+            }
+            regExpValidator.match(view.getText().toString());
+            return true;
+        } catch (RegExpValidationException e) {
+            e.printStackTrace();
+            Validation.getInstance().addinvalidInput(view,
+                    regExpValidator.getError());
+            view.setError(regExpValidator.getError());
+            return false;
+        }
     }
 }

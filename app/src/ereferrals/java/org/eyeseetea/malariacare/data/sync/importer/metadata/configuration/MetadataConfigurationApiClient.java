@@ -54,9 +54,6 @@ import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.VISIBL
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
@@ -92,11 +89,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
-        ObjectMapper mapper=new ObjectMapper();
-        mapper.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
-
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory( JacksonConverterFactory.create(mapper))
+                .addConverterFactory( JacksonConverterFactory.create())
                 .client(client)
                 .baseUrl(url)
                 .build();
@@ -572,6 +566,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
                     .rules(convertToDomainRules(apiQuestion.rules))
+                    .validation(apiQuestion.validationRegex)
+                    .validationError(apiQuestion.validationPoTerm)
                     .build();
         }
 

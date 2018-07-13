@@ -110,7 +110,7 @@ public class QuestionMapper {
                 questionType = Question.Type.LONG_TEXT;
                 break;
             case Constants.SHORT_TEXT:
-                questionType = Question.Type.DROPDOWN_LIST;
+                questionType = Question.Type.SHORT_TEXT;
                 break;
             case Constants.DATE:
                 questionType = Question.Type.DATE;
@@ -194,10 +194,16 @@ public class QuestionMapper {
                 questionType = Question.Type.DROPDOWN_LIST_OU_TREE;
                 break;
             case Constants.IMAGES_VERTICAL:
-                questionType = Question.Type.DROPDOWN_LIST_OU_TREE;
+                questionType = Question.Type.IMAGES_VERTICAL;
                 break;
             case Constants.AGE_MONTH_NUMBER:
                 questionType = Question.Type.AGE_MONTH_NUMBER;
+                break;
+            case Constants.DROPDOWN_LIST:
+                questionType = Question.Type.DROPDOWN_LIST;
+                break;
+            case Constants.AUTOCOMPLETE_TEXT:
+                questionType = Question.Type.AUTOCOMPLETE_TEXT;
                 break;
             default:
                 throw new IllegalArgumentException("There are not domain type for output" + output);

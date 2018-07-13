@@ -133,6 +133,10 @@ public class QuestionConvertFromDomainVisitor implements
                 finalOutput = Constants.SWITCH_BUTTON;
                 break;
 
+            case AUTOCOMPLETE_TEXT:
+                finalOutput=Constants.AUTOCOMPLETE_TEXT;
+                break;
+
         }
 
         return finalOutput;

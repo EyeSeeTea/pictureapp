@@ -1,12 +1,12 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.view.MotionEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
-import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
@@ -14,7 +14,6 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
-import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -28,6 +27,7 @@ public class AutocompleteEditTextMultiQuestionView extends AOptionQuestionView i
     private AutoCompleteTextView mAutoCompleteTextView;
     private QuestionDB mQuestionDB;
     private boolean optionSetFromSavedValue = false;
+    private List<OptionDB> mOptionDBS;
 
     public AutocompleteEditTextMultiQuestionView(Context context) {
         super(context);
@@ -36,7 +36,17 @@ public class AutocompleteEditTextMultiQuestionView extends AOptionQuestionView i
 
     @Override
     public void setOptions(List<OptionDB> optionDBs) {
-        mAutoCompleteTextView.setAdapter(new OptionArrayAdapter(getContext(), optionDBs));
+        mOptionDBS = optionDBs;
+        mAutoCompleteTextView.setAdapter(getAutoCompleteTextViewAdapter(optionDBs));
+    }
+
+    private ArrayAdapter<String> getAutoCompleteTextViewAdapter(List<OptionDB> optionDBs) {
+        String[] options = new String[optionDBs.size()];
+        for (int i = 0; i < optionDBs.size(); i++) {
+            options[i] = optionDBs.get(i).getInternationalizedName();
+        }
+        return new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line,
+                options);
     }
 
     @Override
@@ -108,40 +118,59 @@ public class AutocompleteEditTextMultiQuestionView extends AOptionQuestionView i
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         mAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.answer);
-        optionSetFromSavedValue = true;
+        mAutoCompleteTextView.setThreshold(1);
 
         mAutoCompleteTextView.setFocusable(true);
-        mAutoCompleteTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                OptionDB optionDB = getOptionFromString(
+                        (String) parent.getItemAtPosition(position));
                 if (!optionSetFromSavedValue) {
-                    if (position > 0) {
-                        notifyAnswerChanged(optionDB);
-                    }
+                    notifyAnswerChanged(optionDB);
                 } else {
                     optionSetFromSavedValue = false;
                 }
                 if (BuildConfig.validationInline) {
-                    if (position > 0) {
-                        Validation.getInstance().removeInputError(header);
-                        header.setError(null);
-                    } else {
-                        Validation.getInstance().addinvalidInput(header, getContext().getString(
-                                R.string.error_empty_question));
-                    }
+                    Validation.getInstance().removeInputError(header);
+                    header.setError(null);
                 }
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
         });
+        mAutoCompleteTextView.addTextChangedListener(getTextChangeListener());
         if (BuildConfig.validationInline) {
             Validation.getInstance().addInput(header);
             Validation.getInstance().addinvalidInput(header,
                     getResources().getString(R.string.error_empty_question));
         }
+    }
+
+    private OptionDB getOptionFromString(String optionName) {
+        for (OptionDB optionDB : mOptionDBS) {
+            if (optionName.equals(optionDB.getInternationalizedName())) {
+                return optionDB;
+            }
+        }
+        return null;
+    }
+
+    public TextWatcher getTextChangeListener() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Validation.getInstance().addinvalidInput(header, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        };
     }
 }

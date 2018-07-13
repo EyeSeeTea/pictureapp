@@ -89,8 +89,9 @@
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:paddingTop="2dip"
+                    android:singleLine="true"
                     android:spinnerMode="dialog"
-                    app:backgroundTint="@color/black" />
+                    app:backgroundTint="@color/transparent" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

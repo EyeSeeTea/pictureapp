@@ -86,10 +86,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
             EyeSeeTeaApplication.permissions.requestNextPermission(this);
         }else{
-            if(Session.getPhoneMetaDataValue().equals("")) {
-                PhoneMetaData phoneMetaData = getPhoneMetadata();
-                Session.setPhoneMetaData(phoneMetaData);
-            }
+            PhoneMetaData phoneMetaData = getPhoneMetadata();
+            Session.setPhoneMetaData(phoneMetaData);
         }
 
         initView(savedInstanceState);

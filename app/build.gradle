@@ -224,7 +224,7 @@ android {
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
-            versionName "0.4.3"
+            versionName "0.4.4"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -304,7 +304,7 @@ dependencies {
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
     compile "com.google.guava:guava:${libs.guavaVersion}"
-    compile "com.squareup.okhttp:okhttp:$rootProject.okhttpVersion"
+    compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
     compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
 

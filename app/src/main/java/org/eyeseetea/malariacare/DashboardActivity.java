@@ -409,6 +409,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onResume();
         super.onResume();
         mIsInForegroundMode = true;
+        getSurveysFromService();
     }
 
     @Override
@@ -796,7 +797,7 @@ public class DashboardActivity extends BaseActivity {
         initTabHost(savedInstanceState);
         mDashboardActivityStrategy.initTabWidget(tabHost,reviewFragment,surveyFragment,isReadOnly);
 
-        getSurveysFromService();
+
 
         if (BuildConfig.multiuser) {
             try {

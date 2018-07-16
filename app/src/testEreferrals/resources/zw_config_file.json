@@ -281,7 +281,7 @@
         "poTerm": "ipc_issueEntry_q_age",
         "defaultName": "Age",
         "controlType": "INT",
-        "validationRegex": "^(\d{2})$",
+        "validationRegex": "^(\\d{2})$",
         "validationPoTerm": "some_error_msg_ref",
         "samples": [
           {

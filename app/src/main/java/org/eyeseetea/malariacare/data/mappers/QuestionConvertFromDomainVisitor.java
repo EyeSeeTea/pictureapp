@@ -58,7 +58,6 @@ public class QuestionConvertFromDomainVisitor implements
         QuestionValidationDB questionValidationDB = null;
         if(domain.getValidation()!=null && !domain.getValidation().isEmpty()){
             questionValidationDB = new QuestionValidationDB(domain.getValidation(), domain.getValidationError());
-            questionValidationDB.save();
         }
         return questionValidationDB;
     }

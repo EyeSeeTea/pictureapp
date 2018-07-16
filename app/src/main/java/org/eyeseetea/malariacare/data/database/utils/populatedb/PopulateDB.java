@@ -47,15 +47,19 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.database.model.ScoreDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyScheduleDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TabGroupDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationDB;
+import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
@@ -63,6 +67,7 @@ import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Term;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -101,6 +106,7 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
+    // The TranslationLanguageDB, TranslationDB, ProgramProgramRelationDB tables are excluded from this list to avoid their deletion from the login / logoff / hardcoded login logic
     public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScoreDB.class,
             OrgUnitProgramRelationDB.class,
@@ -129,7 +135,9 @@ public class PopulateDB {
             OrgUnitLevelDB.class,
             OrgUnitDB.class,
             CountryVersionDB.class,
-            PhoneFormatDB.class
+            PhoneFormatDB.class,
+            QuestionValidationDB.class,
+            TabDB.class
     );
 
     private static final List<String> tables2populate = Arrays.asList(

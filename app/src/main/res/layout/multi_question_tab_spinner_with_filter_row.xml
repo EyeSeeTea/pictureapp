@@ -79,7 +79,7 @@
                 android:layout_marginTop="@dimen/input_edit_text_top_bottom"
                 android:background="@android:color/transparent">
 
-                <android.support.v7.widget.AppCompatAutoCompleteTextView
+                <org.eyeseetea.sdk.presentation.views.CustomEditText
                     android:id="@+id/answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,8 +89,10 @@
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:paddingTop="2dip"
-                    android:spinnerMode="dialog"
-                    app:backgroundTint="@color/black" />
+                    android:singleLine="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    app:backgroundTint="@color/transparent" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

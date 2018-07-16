@@ -159,7 +159,7 @@ public class QuestionDB extends BaseModel {
     Long id_question_validation_fk;
 
     /**
-     * Reference to the associated mAnswerDB (loaded lazily)
+     * Reference to the associated mQuestionValidation (loaded lazily)
      */
     QuestionValidationDB mQuestionValidation;
     @Column

@@ -4,11 +4,11 @@ import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
-public class RegExpValidator {
+public class RegExpValidation {
     String regExp;
     String message;
 
-    public RegExpValidator(String regExp, String message){
+    public RegExpValidation(String regExp, String message){
         this.regExp=required(regExp, "reg exp is required");
         this.message = message;
     }

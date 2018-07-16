@@ -9,16 +9,11 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.AgeMonthNumber;
-import org.eyeseetea.malariacare.domain.entity.RegExpValidator;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidAgeMonthNumberException;
-import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .AMonthNumberSingleQuestionViewStrategy;
@@ -122,7 +117,7 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
     public void setQuestionDB(QuestionDB questionDB) {
         mMonthNumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
         if(questionDB.getQuestionValidation()!=null) {
-            setRegExpValidator(questionDB.getQuestionValidation());
+            setRegExpValidation(questionDB.getQuestionValidation());
         }
     }
 }

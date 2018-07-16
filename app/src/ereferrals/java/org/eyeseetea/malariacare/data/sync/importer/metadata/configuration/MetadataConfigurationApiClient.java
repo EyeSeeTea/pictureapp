@@ -90,7 +90,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory( JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(client)
                 .baseUrl(url)
                 .build();

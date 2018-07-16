@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
-import org.eyeseetea.malariacare.domain.entity.RegExpValidator;
+import org.eyeseetea.malariacare.domain.entity.RegExpValidation;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -23,7 +23,7 @@ public class CommonQuestionView extends LinearLayout {
     private TableRow mTableRow;
     private ViewGroup mLayout;
 
-    public RegExpValidator regExpValidator;
+    public RegExpValidation regExpValidation;
 
     public CommonQuestionView(Context context) {
         super(context);
@@ -136,25 +136,25 @@ public class CommonQuestionView extends LinearLayout {
         return (IQuestionView) ((ViewGroup) nextView).getChildAt(0);
     }
 
-    public void setRegExpValidator(QuestionValidationDB questionValidationDB){
+    public void setRegExpValidation(QuestionValidationDB questionValidationDB){
         if(questionValidationDB!=null && questionValidationDB.getRegexp()!=null) {
             String message = Utils.getInternationalizedString(questionValidationDB.getMessage(), getContext());
-            this.regExpValidator = new RegExpValidator(questionValidationDB.getRegexp(), message);
+            this.regExpValidation = new RegExpValidation(questionValidationDB.getRegexp(), message);
         }
     }
 
     public boolean validateQuestionRegExp(TextView view) {
         try {
-            if(regExpValidator==null) {
+            if(regExpValidation ==null) {
                 return true;
             }
-            regExpValidator.match(view.getText().toString());
+            regExpValidation.match(view.getText().toString());
             return true;
         } catch (RegExpValidationException e) {
             e.printStackTrace();
             Validation.getInstance().addinvalidInput(view,
-                    regExpValidator.getError());
-            view.setError(regExpValidator.getError());
+                    regExpValidation.getError());
+            view.setError(regExpValidation.getError());
             return false;
         }
     }

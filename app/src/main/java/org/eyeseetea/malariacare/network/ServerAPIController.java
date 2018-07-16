@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
@@ -37,7 +36,8 @@ import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.organisationunit.ExistsMoreThanOneOrgUnitByPhoneException;
+import org.eyeseetea.malariacare.domain.exception.organisationunit
+        .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -46,6 +46,8 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import okhttp3.Response;
 
 /**
  * Utility class that shows specific operations to check server status with the given config

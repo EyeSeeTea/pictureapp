@@ -81,7 +81,7 @@ public class SaveSurveyFromIntentUseCase implements UseCase {
 
         mAuthRepository.saveAuth(auth);
         mSurveyRepository.removeInProgress();
-        mSurvey = mSurveyRepository.createNewConnectSurvey();
+        mSurvey = mSurveyRepository.createNewSurvey();
         if(mSurvey==null){
             mCallback.onInvalidProgramOrUser();
             return;

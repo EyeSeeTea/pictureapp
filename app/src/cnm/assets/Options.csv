@@ -59,3 +59,5 @@
 59;'common_option_dot_non_complete';'Non-complete';0;32;37
 60;'common_option_tested';'Tested';0;33;5
 61;'common_option_stock_out';'StkOut';0;33;29
+62;'common_option_reported_case_yes';true;0;36;40
+63;'common_option_reported_case_no';false;0;36;41

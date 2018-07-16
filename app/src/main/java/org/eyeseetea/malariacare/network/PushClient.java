@@ -25,12 +25,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.util.Log;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
@@ -53,7 +47,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class PushClient {
@@ -166,15 +165,9 @@ public class PushClient {
 
         final String DHIS_URL = getDhisURL();
 
-        OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
-
-        client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
-        client.setReadTimeout(30, TimeUnit.SECONDS);    // socket timeout
-        client.setWriteTimeout(30, TimeUnit.SECONDS);    // write timeout
-        client.setRetryOnConnectionFailure(false);    // Cancel retry on failure
-
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
-        client.setAuthenticator(basicAuthenticator);
+
+        OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient(basicAuthenticator);
 
         RequestBody body = RequestBody.create(JSON, data.toString());
         Request request = new Request.Builder()

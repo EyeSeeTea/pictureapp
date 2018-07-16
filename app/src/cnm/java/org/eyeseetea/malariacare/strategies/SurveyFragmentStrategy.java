@@ -102,6 +102,7 @@ public class SurveyFragmentStrategy {
     }
 
     public static boolean isSurveyCreatedFromOtherApp(final ASurveyFragmentStrategy.Callback callback, Context context) {
+        callback.loadIsSurveyCreatedInOtherApp(false);
         return false;
     }
 }

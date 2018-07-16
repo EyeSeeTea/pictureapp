@@ -145,7 +145,7 @@ public class ProgressActivity extends Activity {
         mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                showAndMoveOn();
+                onPullComplete();
             }
 
             @Override
@@ -216,6 +216,11 @@ public class ProgressActivity extends Activity {
         final int currentProgress = progressBar.getProgress();
         progressBar.setProgress(currentProgress + 1);
         textView.setText(getString(stringId));
+    }
+
+    private void onPullComplete() {
+        progressVariantAdapter.initAppValuesAfterPull();
+        showAndMoveOn();
     }
 
     private void showAndMoveOn() {

@@ -183,10 +183,10 @@ public class LoginActivity extends Activity {
 
     protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
-            askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
-        } else {
+        if (sharedPreferences.getBoolean(getString(R.string.eula_accepted), false) || !BuildConfig.askEula) {
             login(server.toString(), username.toString(), password.toString());
+        } else {
+            askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
         }
     }
 

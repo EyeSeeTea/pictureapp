@@ -48,7 +48,7 @@ public class ProgramLocalDataSource implements IProgramRepository {
 
     @Override
     public List<Program> getRelatedPrograms(String programId) {
-        ProgramDB programDB = ProgramDB.getProgram(programId);
+        ProgramDB programDB = ProgramDB.findByName(programId);
         List<ProgramDB> programDBS = ProgramProgramRelationDB.getRelatedPrograms(
                 programDB.getId_program());
         List<Program> programs = new ArrayList<>();

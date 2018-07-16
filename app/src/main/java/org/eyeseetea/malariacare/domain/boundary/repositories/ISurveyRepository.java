@@ -25,7 +25,7 @@ public interface ISurveyRepository {
 
     List<Survey> getSurveysByProgram(String idProgram);
 
-    Survey createNewConnectSurvey();
+    Survey createNewSurvey();
 
     void removeInProgress();
 }

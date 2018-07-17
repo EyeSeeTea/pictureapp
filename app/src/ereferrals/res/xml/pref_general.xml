@@ -88,6 +88,11 @@
             android:title="@string/drive_title" />
 
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/check_metadata_key"
+            android:title="@string/check_metadata_title" />
+
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/allow_media_download_3g_key"
             android:title="@string/allow_media_download_3g" />

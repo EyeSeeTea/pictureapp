@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
+import android.test.InstrumentationTestCase;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
@@ -16,7 +17,6 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -27,6 +27,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import java.util.List;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-public class WSPushControllerShould {
+public class WSPushControllerShould extends InstrumentationTestCase{
 
     private static final String PUSH_RESPONSE_CONFLICT = "push_response_conflict.json";
 
@@ -60,7 +61,7 @@ public class WSPushControllerShould {
         apiClient = initializeApiClient();
         Device device = new Device("phoneNumber", "imei", "version");
 
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device);
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, getInstrumentation().getContext());
         mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
     }
 

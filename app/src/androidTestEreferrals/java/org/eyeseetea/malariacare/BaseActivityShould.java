@@ -73,6 +73,7 @@ public class BaseActivityShould {
         saveTestCredentialsAndProgram();
         Intent intent = new Intent(PreferencesState.getInstance().getContext(),
                 DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         EyeSeeTeaApplication.getInstance().startActivity(intent);
     }
 

@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.test.InstrumentationTestCase;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
@@ -51,7 +52,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class PushServiceShould {
+public class PushServiceShould extends InstrumentationTestCase {
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private CustomMockServer mCustomMockServer;
     private eReferralsAPIClient mEReferralsAPIClient;
@@ -94,7 +95,7 @@ public class PushServiceShould {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"));
+                new Device("testPhone", "testIMEI", "test_version"), getInstrumentation().getContext());
         mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();

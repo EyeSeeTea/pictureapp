@@ -8,6 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.test.InstrumentationTestCase;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -49,7 +50,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class PushUseCaseShould {
+public class PushUseCaseShould extends InstrumentationTestCase {
 
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private CustomMockServer mCustomMockServer;
@@ -172,7 +173,7 @@ public class PushUseCaseShould {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"));
+                new Device("testPhone", "testIMEI", "test_version"), getInstrumentation().getContext());
         mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();

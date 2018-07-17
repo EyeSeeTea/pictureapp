@@ -4,11 +4,12 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
@@ -17,6 +18,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.general.DialogSpinnerAdapter;
+import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -30,7 +32,7 @@ import java.util.List;
 public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView implements
         IQuestionView, IMultiQuestionView {
     private CustomTextView header;
-    private TextView textViewButton;
+    private static Spinner spinnerAsButton;
     private QuestionDB mQuestionDB;
     View dialog;
     private boolean optionSetFromSavedValue = false;
@@ -56,85 +58,49 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
             return;
         }
         optionSetFromSavedValue = true;
-        textViewButton.setText(valueDB.getOptionDB().getInternationalizedName());
+        spinnerAsButton.setAdapter(new OptionArrayAdapter(getContext(), mOptionDBS));
+
+        spinnerAsButton.setSelection(findOptionPosition(valueDB.getOptionDB()));
         selectedOptionDB = valueDB.getOptionDB();
         if (BuildConfig.validationInline) {
-            if(textViewButton.getText()==null || textViewButton.getText().toString().isEmpty()) {
+            if(spinnerAsButton.getSelectedItem()==null) {
                 Validation.getInstance().addinvalidInput(header, getContext().getString(
                         R.string.error_empty_question));
             }
         }
     }
 
+    private int findOptionPosition(OptionDB optionDB) {
+        int position = 0;
+        while(spinnerAsButton.getItemAtPosition(position)!=null){
+            if(spinnerAsButton.getItemAtPosition(position).equals(optionDB)){
+                return position;
+            }else{
+                position++;
+            }
+        }
+        return position;
+    }
+
     private void init(final Context context) {
         mDropdownMultiQuestionViewStrategy = new DropdownMultiQuestionViewStrategy(context);
         inflate(context, R.layout.multi_question_tab_spinner_with_filter_row, this);
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        textViewButton = (TextView) findViewById(R.id.answer);
-        textViewButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog = inflate(context, R.layout.dialog_spinner_with_filter, null);
-                builder = new AlertDialog.Builder(context);
-                builder.setView(dialog);
-                final AlertDialog alertDialog = builder.show();
-                listView = (ListView) dialog.findViewById(R.id.listView);
-                EditText editText = (EditText) dialog.findViewById(R.id.filter);
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        spinnerAsButton = (Spinner) findViewById(R.id.answer);
+        if(isEnabled()){
+            spinnerAsButton.setOnTouchListener(new OnTouchListener(context));
+        }
 
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        filter(listView, s.toString());
-                    }
-                });
-                setOptions(mOptionDBS);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        alertDialog.dismiss();
-                        selectedOptionDB = null;
-                        OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
-                        textViewButton.setText(optionDB.getInternationalizedName().toString());
-                        if (!optionSetFromSavedValue) {
-                            if (position > 0) {
-                                notifyAnswerChanged(optionDB);
-                                selectedOptionDB = optionDB;
-                            }
-                        } else {
-                            optionSetFromSavedValue = false;
-                        }
-                        if (BuildConfig.validationInline) {
-                            if (position > 0) {
-                                Validation.getInstance().removeInputError(header);
-                                header.setError(null);
-                            } else {
-                                Validation.getInstance().addinvalidInput(header, getContext().getString(
-                                        R.string.error_empty_question));
-                            }
-                        }
-                    }
-                });
-                editText.requestFocus();
-            }
-        });
     }
 
-    private void filter(ListView listView, String s) {
+    private void filter(ListView listView, String text) {
         List<OptionDB> filteredOptions = new ArrayList<>();
-        if(s==null || s.isEmpty()){
+        if(text==null || text.isEmpty()){
+            setOptionsOnList(mOptionDBS, listView);
             return;
         }
         for(OptionDB option : mOptionDBS){
-            if(option.getInternationalizedName().toLowerCase().contains(s.toLowerCase())){
+            if(option.getInternationalizedName().toLowerCase().contains(text.toLowerCase())){
                 filteredOptions.add(option);
             }
         }
@@ -150,12 +116,16 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
     public void setOptions(List<OptionDB> optionDBs) {
         mOptionDBS = optionDBs;
         List<OptionDB> optionDBList = new ArrayList<>(optionDBs);
-        optionDBList.add(0, mDropdownMultiQuestionViewStrategy.getDefaultOption(mQuestionDB));
-
+        OptionDB optionDB = mDropdownMultiQuestionViewStrategy.getDefaultOption(mQuestionDB);
+        if(!mOptionDBS.contains(optionDB)) {
+            optionDBList.add(0, optionDB);
+        }
         if(listView==null){
             return;
         }
         setOptionsOnList(optionDBList, listView);
+        mOptionDBS = optionDBList;
+        spinnerAsButton.setAdapter(new OptionArrayAdapter(getContext(), mOptionDBS));
     }
 
     public void setQuestionDB(QuestionDB questionDB) {
@@ -170,7 +140,7 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
 
     @Override
     public void setEnabled(boolean enabled) {
-        textViewButton.setEnabled(enabled);
+        spinnerAsButton.setEnabled(enabled);
     }
 
     @Override
@@ -201,4 +171,77 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
         }
     }
 
+    private class OnTouchListener implements View.OnTouchListener {
+
+        Context context;
+        public OnTouchListener(Context context){
+            this.context = context;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                dialog = inflate(context, R.layout.dialog_spinner_with_filter, null);
+                builder = new AlertDialog.Builder(context);
+                builder.setView(dialog);
+                final AlertDialog alertDialog = builder.show();
+                listView = (ListView) dialog.findViewById(R.id.listView);
+                EditText editText = (EditText) dialog.findViewById(R.id.filter);
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        filter(listView, s.toString());
+                    }
+                });
+                setOptions(mOptionDBS);
+                listView.setOnItemClickListener(new OnItemClickListener(alertDialog));
+                editText.requestFocus();
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private class OnItemClickListener implements AdapterView.OnItemClickListener {
+        AlertDialog alertDialog;
+
+        public OnItemClickListener(AlertDialog alertDialog){
+            this.alertDialog = alertDialog;
+        }
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            alertDialog.dismiss();
+            selectedOptionDB = null;
+            OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
+            spinnerAsButton.setSelection(findOptionPosition(optionDB));
+            if (!optionSetFromSavedValue) {
+                if (position > 0) {
+                    notifyAnswerChanged(optionDB);
+                    selectedOptionDB = optionDB;
+                }
+            } else {
+                optionSetFromSavedValue = false;
+            }
+            if (BuildConfig.validationInline) {
+                if (position > 0) {
+                    Validation.getInstance().removeInputError(header);
+                    header.setError(null);
+                } else {
+                    Validation.getInstance().addinvalidInput(header, getContext().getString(
+                            R.string.error_empty_question));
+                }
+            }
+        }
+    }
 }

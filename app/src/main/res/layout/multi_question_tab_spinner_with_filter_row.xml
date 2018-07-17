@@ -79,7 +79,8 @@
                 android:layout_marginTop="@dimen/input_edit_text_top_bottom"
                 android:background="@android:color/transparent">
 
-                <org.eyeseetea.sdk.presentation.views.CustomEditText
+
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,10 +90,8 @@
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:paddingTop="2dip"
-                    android:singleLine="true"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    app:backgroundTint="@color/transparent" />
+                    android:spinnerMode="dialog"
+                    app:backgroundTint="@color/black" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

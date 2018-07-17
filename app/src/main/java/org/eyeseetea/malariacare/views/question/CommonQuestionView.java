@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
+import org.eyeseetea.malariacare.utils.Utils;
 
 public class CommonQuestionView extends LinearLayout {
     boolean isActive = true;
@@ -147,9 +148,10 @@ public class CommonQuestionView extends LinearLayout {
             return true;
         } catch (RegExpValidationException e) {
             e.printStackTrace();
+            String errorMessage = Utils.getInternationalizedString(question.getRegExpError(), getContext());
             Validation.getInstance().addinvalidInput(view,
-                    question.getRegExpError());
-            view.setError(question.getRegExpError());
+                    errorMessage);
+            view.setError(errorMessage);
             return false;
         }
     }

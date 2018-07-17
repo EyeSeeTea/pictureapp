@@ -14,6 +14,7 @@ public class Migration17AddQuestionValidation extends AlterTableMigration<Questi
     public Migration17AddQuestionValidation(
             Class<QuestionDB> table) {
         super(table);
-        addColumn(SQLiteType.INTEGER, "id_question_validation_fk");
+        addColumn(SQLiteType.TEXT, "validationRegExp");
+        addColumn(SQLiteType.TEXT, "validationMessage");
     }
 }

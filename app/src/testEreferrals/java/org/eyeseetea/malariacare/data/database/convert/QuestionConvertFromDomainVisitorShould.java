@@ -8,12 +8,10 @@ import static org.hamcrest.core.Is.is;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.mappers.QuestionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
-import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -265,8 +263,8 @@ public class QuestionConvertFromDomainVisitorShould {
                 .name("ipc_issueEntry_q_program")
                 .type(Question.Type.DROPDOWN_LIST)
                 .visibility(Question.Visibility.VISIBLE)
-                .validation(regexp)
-                .validationError(regExpError)
+                .regExp(regexp)
+                .regExpError(regExpError)
                 .compulsory(true).build();
 
 
@@ -333,9 +331,9 @@ public class QuestionConvertFromDomainVisitorShould {
     }
 
     private QuestionDB givenADBQuestionWithValidation(String validation, String validationMessage) {
-        QuestionValidationDB questionValidation = new QuestionValidationDB(validation, validationMessage);
         QuestionDB question = givenAQuestionDB();
-        question.setQuestionValidation(questionValidation);
+        question.setValidationRegExp(validation);
+        question.setValidationMessage(validationMessage);
         return question;
     }
 

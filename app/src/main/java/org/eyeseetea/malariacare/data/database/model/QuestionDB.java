@@ -56,7 +56,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -156,12 +155,10 @@ public class QuestionDB extends BaseModel {
     AnswerDB mAnswerDB;
 
     @Column
-    Long id_question_validation_fk;
+    String validationRegExp;
+    @Column
+    String validationMessage;
 
-    /**
-     * Reference to the associated mQuestionValidation (loaded lazily)
-     */
-    QuestionValidationDB mQuestionValidation;
     @Column
     Integer output;
 
@@ -204,10 +201,6 @@ public class QuestionDB extends BaseModel {
 
     public Long getId_answer_fk() {
         return id_answer_fk;
-    }
-
-    public Long getId_question_validation_fk() {
-        return id_question_validation_fk;
     }
 
 
@@ -811,6 +804,22 @@ public class QuestionDB extends BaseModel {
         this.visible = visible;
     }
 
+    public String getValidationRegExp() {
+        return validationRegExp;
+    }
+
+    public void setValidationRegExp(String validationRegExp) {
+        this.validationRegExp = validationRegExp;
+    }
+
+    public String getValidationMessage() {
+        return validationMessage;
+    }
+
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
+    }
+
     public AnswerDB getAnswerDB() {
         if (mAnswerDB == null) {
             if (id_answer_fk == null) return null;
@@ -820,26 +829,6 @@ public class QuestionDB extends BaseModel {
                             .is(id_answer_fk)).querySingle();
         }
         return mAnswerDB;
-    }
-    public QuestionValidationDB getQuestionValidation() {
-        if (mQuestionValidation == null) {
-            if (id_question_validation_fk == null) return null;
-            mQuestionValidation = new Select()
-                    .from(QuestionValidationDB.class)
-                    .where(QuestionValidationDB_Table.id_question_validation
-                            .is(id_question_validation_fk)).querySingle();
-        }
-        return mQuestionValidation;
-    }
-
-    public void setQuestionValidationDB(Long id) {
-        this.id_question_validation_fk = id;
-        this.mQuestionValidation = null;
-    }
-
-    public void setQuestionValidation(QuestionValidationDB questionValidation) {
-        this.mQuestionValidation = questionValidation;
-        this.id_question_validation_fk = (questionValidation != null) ? questionValidation.getId_question_validation() : null;
     }
 
     public void setAnswerDB(Long id_answer) {
@@ -2030,6 +2019,8 @@ public class QuestionDB extends BaseModel {
         result = 31 * result + (numerator_w != null ? numerator_w.hashCode() : 0);
         result = 31 * result + (denominator_w != null ? denominator_w.hashCode() : 0);
         result = 31 * result + (feedback != null ? feedback.hashCode() : 0);
+        result = 31 * result + (validationRegExp != null ? validationRegExp.hashCode() : 0);
+        result = 31 * result + (validationMessage != null ? validationMessage.hashCode() : 0);
         result = 31 * result + (id_header_fk != null ? id_header_fk.hashCode() : 0);
         result = 31 * result + (id_answer_fk != null ? id_answer_fk.hashCode() : 0);
         result = 31 * result + (output != null ? output.hashCode() : 0);
@@ -2062,6 +2053,8 @@ public class QuestionDB extends BaseModel {
                 ", output=" + output +
                 ", id_question_parent=" + id_question_parent +
                 ", id_composite_score=" + id_composite_score_fk +
+                ", validationRegExp=" + validationRegExp +
+                ", validationMessage=" + validationMessage +
                 ", total_questions=" + total_questions +
                 ", visible=" + visible +
                 ", path=" + path +

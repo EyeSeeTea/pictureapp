@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
+
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import java.util.List;
@@ -19,14 +21,14 @@ public class Question {
     private Visibility visibility;
     private List<Rule> rules;
     private Value mValue;
-    private String validation;
-    private String validationError;
+    private String regExp;
+    private String regExpError;
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             List<Option> options, Header header, int index,
             Visibility visibility,
-            List<Rule> rules, Value value, String validation, String validationError) {
+            List<Rule> rules, Value value, String regExp, String regExpError) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -41,8 +43,8 @@ public class Question {
         this.visibility = visibility;
         this.rules = rules;
         mValue = value;
-        this.validation = validation;
-        this.validationError = validationError;
+        this.regExp = regExp;
+        this.regExpError = regExpError;
     }
 
     public static Builder newBuilder() {
@@ -109,11 +111,19 @@ public class Question {
         return mValue;
     }
 
-    public String getValidation() {
-        return validation;
+    public String getRegExp() {
+        return regExp;
     }
-    public String getValidationError() {
-        return validationError;
+
+    public String getRegExpError() {
+        return regExpError;
+    }
+
+
+    public void match(String value) throws RegExpValidationException {
+        if (!value.matches(regExp)){
+            throw new RegExpValidationException(value);
+        }
     }
 
     @Override
@@ -127,8 +137,8 @@ public class Question {
         if (compulsory != question.compulsory) return false;
         if (index != question.index) return false;
         if (code != null ? !code.equals(question.code) : question.code != null) return false;
-        if (validation != null ? !validation.equals(question.validation) : question.validation != null) return false;
-        if (validationError != null ? !validationError.equals(question.validationError) : question.validationError != null) return false;
+        if (regExp != null ? !regExp.equals(question.regExp) : question.regExp != null) return false;
+        if (regExpError != null ? !regExpError.equals(question.regExpError) : question.regExpError != null) return false;
         if (name != null ? !name.equals(question.name) : question.name != null) return false;
         if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
         if (phoneFormat != null ? !phoneFormat.equals(question.phoneFormat)
@@ -150,8 +160,8 @@ public class Question {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (validation != null ? validation.hashCode() : 0);
-        result = 31 * result + (validationError != null ? validationError.hashCode() : 0);
+        result = 31 * result + (regExp != null ? regExp.hashCode() : 0);
+        result = 31 * result + (regExpError != null ? regExpError.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (phoneFormat != null ? phoneFormat.hashCode() : 0);
@@ -180,8 +190,8 @@ public class Question {
                 ", index=" + index +
                 ", visibility=" + visibility +
                 ", rules=" + rules +
-                ", validation=" + validation +
-                ", validationError=" + validationError +
+                ", regExp=" + regExp +
+                ", regExpError=" + regExpError +
                 '}';
     }
 
@@ -209,8 +219,8 @@ public class Question {
         private List<Rule> rules;
         private long id;
         private Value mValue;
-        private String validation;
-        private String validationError;
+        private String regExp;
+        private String regExpError;
 
         public Builder() {
         }
@@ -275,13 +285,13 @@ public class Question {
             return this;
         }
 
-        public Builder validation(String val) {
-            validation = val;
+        public Builder regExp(String val) {
+            regExp = val;
             return this;
         }
 
-        public Builder validationError(String val) {
-            validationError = val;
+        public Builder regExpError(String val) {
+            regExpError = val;
             return this;
         }
 
@@ -300,8 +310,8 @@ public class Question {
                     this.visibility,
                     this.rules,
                     mValue,
-                    this.validation,
-                    this.validationError
+                    this.regExp,
+                    this.regExpError
             );
         }
 

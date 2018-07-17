@@ -566,8 +566,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
                     .rules(convertToDomainRules(apiQuestion.rules))
-                    .validation(apiQuestion.validationRegex)
-                    .validationError(apiQuestion.validationPoTerm)
+                    .regExp(apiQuestion.validationRegex)
+                    .regExpError(apiQuestion.validationPoTerm)
                     .build();
         }
 

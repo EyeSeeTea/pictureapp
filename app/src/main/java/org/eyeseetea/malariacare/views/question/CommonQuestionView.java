@@ -11,11 +11,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
-import org.eyeseetea.malariacare.domain.entity.RegExpValidation;
+import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
-import org.eyeseetea.malariacare.utils.Utils;
 
 public class CommonQuestionView extends LinearLayout {
     boolean isActive = true;
@@ -23,7 +21,7 @@ public class CommonQuestionView extends LinearLayout {
     private TableRow mTableRow;
     private ViewGroup mLayout;
 
-    public RegExpValidation regExpValidation;
+    public Question question;
 
     public CommonQuestionView(Context context) {
         super(context);
@@ -136,25 +134,22 @@ public class CommonQuestionView extends LinearLayout {
         return (IQuestionView) ((ViewGroup) nextView).getChildAt(0);
     }
 
-    public void setRegExpValidation(QuestionValidationDB questionValidationDB){
-        if(questionValidationDB!=null && questionValidationDB.getRegexp()!=null) {
-            String message = Utils.getInternationalizedString(questionValidationDB.getMessage(), getContext());
-            this.regExpValidation = new RegExpValidation(questionValidationDB.getRegexp(), message);
-        }
+    public void setQuestion(Question question){
+        this.question = question;
     }
 
     public boolean validateQuestionRegExp(TextView view) {
         try {
-            if(regExpValidation ==null) {
+            if(question == null || question.getRegExp()==null || question.getRegExp().isEmpty()) {
                 return true;
             }
-            regExpValidation.match(view.getText().toString());
+            question.match(view.getText().toString());
             return true;
         } catch (RegExpValidationException e) {
             e.printStackTrace();
             Validation.getInstance().addinvalidInput(view,
-                    regExpValidation.getError());
-            view.setError(regExpValidation.getError());
+                    question.getRegExpError());
+            view.setError(question.getRegExpError());
             return false;
         }
     }

@@ -46,6 +46,8 @@ public class QuestionMapper {
                     .uid(questionDB.getUid())
                     .type(mapOutputToQuestionType(questionDB.getOutput()))
                     .options(options)
+                    .regExp(questionDB.getValidationRegExp())
+                    .regExpError(questionDB.getValidationMessage())
                     .build();
         }else{
             return Question.newBuilder()
@@ -55,6 +57,8 @@ public class QuestionMapper {
                     .uid(questionDB.getUid())
                     .type(mapOutputToQuestionType(questionDB.getOutput()))
                     .options(options)
+                    .regExp(questionDB.getValidationRegExp())
+                    .regExpError(questionDB.getValidationMessage())
                     .value(value)
                     .build();
         }

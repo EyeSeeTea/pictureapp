@@ -116,8 +116,6 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
 
     public void setQuestionDB(QuestionDB questionDB) {
         mMonthNumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
-        if(questionDB.getQuestionValidation()!=null) {
-            setRegExpValidation(questionDB.getQuestionValidation());
-        }
     }
+
 }

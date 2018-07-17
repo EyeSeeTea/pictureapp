@@ -58,6 +58,7 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.mappers.QuestionMapper;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ADynamicTabAdapterStrategy;
@@ -616,7 +617,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
             mDynamicTabAdapterStrategy.renderParticularSurvey(screenQuestionDB, surveyDB, questionView);
             if(questionView instanceof CommonQuestionView){
-                ((CommonQuestionView) questionView).setRegExpValidation(screenQuestionDB.getQuestionValidation());
+                ((CommonQuestionView) questionView).setQuestion(QuestionMapper.mapFromDbToDomain(screenQuestionDB));
             }
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestionDB(screenQuestionDB);

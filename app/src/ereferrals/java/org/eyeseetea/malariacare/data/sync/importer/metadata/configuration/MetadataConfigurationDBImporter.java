@@ -16,7 +16,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionValidationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
@@ -202,8 +201,6 @@ public class MetadataConfigurationDBImporter {
         for (Question question : questions) {
             QuestionDB questionDB = converter.visit(question);
             setQuestionRelations(questionDB, country);
-            //update question validation with db id
-            questionDB.setQuestionValidation(saveQuestionValidation(question));
             save(questionDB);
 
             mapQuestionsDBByCode.put(questionDB.getCode(), questionDB);
@@ -219,15 +216,6 @@ public class MetadataConfigurationDBImporter {
         }
 
         addingRulesToQuestion();
-    }
-
-    private QuestionValidationDB saveQuestionValidation(Question question) {
-        if(question.getValidation()!=null && question.getValidationError()!=null){
-            QuestionValidationDB questionValidationDB = new QuestionValidationDB(question.getValidation(), question.getValidationError());
-            questionValidationDB.save();
-            return questionValidationDB;
-        }
-        return null;
     }
 
     private void addThreshold(QuestionDB questionDB, Question.Rule rule,

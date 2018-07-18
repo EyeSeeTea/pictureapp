@@ -32,7 +32,7 @@ import java.util.List;
 public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView implements
         IQuestionView, IMultiQuestionView {
     private CustomTextView header;
-    private static Spinner spinnerAsButton;
+    private Spinner spinnerAsButton;
     private QuestionDB mQuestionDB;
     View dialog;
     private boolean optionSetFromSavedValue = false;
@@ -120,10 +120,6 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
         if(!mOptionDBS.contains(optionDB)) {
             optionDBList.add(0, optionDB);
         }
-        if(listView==null){
-            return;
-        }
-        setOptionsOnList(optionDBList, listView);
         mOptionDBS = optionDBList;
         spinnerAsButton.setAdapter(new OptionArrayAdapter(getContext(), mOptionDBS));
     }
@@ -204,7 +200,7 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
                         filter(listView, s.toString());
                     }
                 });
-                setOptions(mOptionDBS);
+                setOptionsOnList(mOptionDBS, listView);
                 listView.setOnItemClickListener(new OnItemClickListener(alertDialog));
                 editText.requestFocus();
                 return true;
@@ -224,7 +220,8 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
             alertDialog.dismiss();
             selectedOptionDB = null;
             OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
-            spinnerAsButton.setSelection(findOptionPosition(optionDB));
+            position = findOptionPosition(optionDB);
+            spinnerAsButton.setSelection(position);
             if (!optionSetFromSavedValue) {
                 if (position > 0) {
                     notifyAnswerChanged(optionDB);

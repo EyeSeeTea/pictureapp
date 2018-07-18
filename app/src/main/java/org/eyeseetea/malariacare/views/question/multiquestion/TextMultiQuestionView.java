@@ -48,7 +48,9 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
             mCustomEditText.setText(valueDB.getValue());
             if (BuildConfig.validationInline) {
                 if (!mCustomEditText.getText().toString().isEmpty()) {
-                    Validation.getInstance().removeInputError(mCustomEditText);
+                    if(validateQuestionRegExp(mCustomEditText)) {
+                        Validation.getInstance().removeInputError(mCustomEditText);
+                    }
                 }
             }
         }
@@ -83,7 +85,9 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
             public void afterTextChanged(Editable s) {
                 if (BuildConfig.validationInline) {
                     if (!mCustomEditText.getText().toString().isEmpty()) {
-                        Validation.getInstance().removeInputError(mCustomEditText);
+                        if(validateQuestionRegExp(mCustomEditText)) {
+                            Validation.getInstance().removeInputError(mCustomEditText);
+                        }
                     } else {
                         Validation.getInstance().addinvalidInput(mCustomEditText,
                                 getContext().getString(R.string.error_empty_question));

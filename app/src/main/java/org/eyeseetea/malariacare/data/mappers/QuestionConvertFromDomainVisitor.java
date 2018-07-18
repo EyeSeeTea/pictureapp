@@ -48,6 +48,8 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
+        dbModel.setValidationRegExp(domainModel.getRegExp());
+        dbModel.setValidationMessage(domainModel.getRegExpError());
         dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
         return dbModel;
     }

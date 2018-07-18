@@ -89,7 +89,9 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
                     } else {
                         notifyAnswerChanged(numberPicker.getText().toString());
                     }
-                    Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(numberPicker)) {
+                        Validation.getInstance().removeInputError(numberPicker);
+                    }
 
                 } catch (InvalidPositiveNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
@@ -97,7 +99,9 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
                 }
                 if (BuildConfig.validationInline) {
                     if (!numberPicker.getText().toString().isEmpty()) {
-                        Validation.getInstance().removeInputError(numberPicker);
+                        if(validateQuestionRegExp(numberPicker)) {
+                            Validation.getInstance().removeInputError(numberPicker);
+                        }
                     } else {
                         Validation.getInstance().addinvalidInput(numberPicker,
                                 getContext().getString(R.string.error_empty_question));

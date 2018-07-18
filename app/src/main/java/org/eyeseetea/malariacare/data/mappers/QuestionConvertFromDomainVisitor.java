@@ -51,6 +51,7 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setValidationRegExp(domainModel.getRegExp());
         dbModel.setValidationMessage(domainModel.getRegExpError());
         dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
+        dbModel.setDefaultValue(domainModel.getDefaultValue());
         return dbModel;
     }
 

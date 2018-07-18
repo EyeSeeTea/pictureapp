@@ -58,6 +58,9 @@ public class MetadataConfigurationsApi {
         @JsonProperty("validationPoTerm")
         public String validationPoTerm;
 
+        @JsonProperty("defaultValue")
+        public String defaultValue;
+
         @JsonProperty("mandatory")
         public boolean compulsory = true;
 

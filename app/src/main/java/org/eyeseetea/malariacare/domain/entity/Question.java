@@ -23,12 +23,14 @@ public class Question {
     private Value mValue;
     private String regExp;
     private String regExpError;
+    private String defaultValue;
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             List<Option> options, Header header, int index,
             Visibility visibility,
-            List<Rule> rules, Value value, String regExp, String regExpError) {
+            List<Rule> rules, Value value, String regExp,
+            String regExpError, String defaultValue) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -45,6 +47,7 @@ public class Question {
         mValue = value;
         this.regExp = regExp;
         this.regExpError = regExpError;
+        this.defaultValue = defaultValue;
     }
 
     public static Builder newBuilder() {
@@ -119,6 +122,7 @@ public class Question {
         return regExpError;
     }
 
+    public String getDefaultValue(){ return defaultValue;}
 
     public void match(String value) throws RegExpValidationException {
         if (!value.matches(regExp)){
@@ -140,6 +144,7 @@ public class Question {
         if (regExp != null ? !regExp.equals(question.regExp) : question.regExp != null) return false;
         if (regExpError != null ? !regExpError.equals(question.regExpError) : question.regExpError != null) return false;
         if (name != null ? !name.equals(question.name) : question.name != null) return false;
+        if (defaultValue != null ? !defaultValue.equals(question.defaultValue) : question.defaultValue != null) return false;
         if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
         if (phoneFormat != null ? !phoneFormat.equals(question.phoneFormat)
                 : question.phoneFormat != null) {
@@ -163,6 +168,7 @@ public class Question {
         result = 31 * result + (regExp != null ? regExp.hashCode() : 0);
         result = 31 * result + (regExpError != null ? regExpError.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (defaultValue != null ? defaultValue.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (phoneFormat != null ? phoneFormat.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
@@ -192,6 +198,7 @@ public class Question {
                 ", rules=" + rules +
                 ", regExp=" + regExp +
                 ", regExpError=" + regExpError +
+                ", defaultValue=" + defaultValue +
                 '}';
     }
 
@@ -221,6 +228,7 @@ public class Question {
         private Value mValue;
         private String regExp;
         private String regExpError;
+        private String defaultValue;
 
         public Builder() {
         }
@@ -295,6 +303,10 @@ public class Question {
             return this;
         }
 
+        public Builder defaultValue(String val) {
+            defaultValue = val;
+            return this;
+        }
         public Question build() {
             return new Question(
                     this.id,
@@ -311,7 +323,8 @@ public class Question {
                     this.rules,
                     mValue,
                     this.regExp,
-                    this.regExpError
+                    this.regExpError,
+                    this.defaultValue
             );
         }
 

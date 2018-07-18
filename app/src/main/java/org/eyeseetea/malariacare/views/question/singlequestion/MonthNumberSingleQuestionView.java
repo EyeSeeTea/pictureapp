@@ -97,11 +97,14 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
         if (!isClicked) {
             isClicked = true;
             try {
+                String value = numberPicker.getText().toString();
                 AgeMonthNumber ageMonthNumber = AgeMonthNumber.parse(
-                        numberPicker.getText().toString());
-                Validation.getInstance().removeInputError(numberPicker);
-                hideKeyboard(numberPicker);
-                notifyAnswerChanged(String.valueOf(ageMonthNumber.getValue()));
+                        value);
+                if(validateQuestionRegExp(numberPicker)) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                    hideKeyboard(numberPicker);
+                    notifyAnswerChanged(String.valueOf(ageMonthNumber.getValue()));
+                }
             } catch (InvalidAgeMonthNumberException e) {
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));

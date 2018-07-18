@@ -53,6 +53,12 @@ public class MetadataConfigurationsApi {
         @JsonProperty("controlType")
         public String output;
 
+        @JsonProperty("validationRegex")
+        public String validationRegex;
+
+        @JsonProperty("validationPoTerm")
+        public String validationPoTerm;
+
         @JsonProperty("mandatory")
         public boolean compulsory = true;
 

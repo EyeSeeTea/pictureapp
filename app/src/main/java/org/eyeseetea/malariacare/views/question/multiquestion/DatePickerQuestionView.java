@@ -77,8 +77,10 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
                         getResources().getString(
                                 R.string.error_empty_question));
             } else {
-                Validation.getInstance().removeInputError(dateText);
-                dateText.setError(null);
+                if(validateQuestionRegExp(dateText)) {
+                    Validation.getInstance().removeInputError(dateText);
+                    dateText.setError(null);
+                }
             }
         }
     }

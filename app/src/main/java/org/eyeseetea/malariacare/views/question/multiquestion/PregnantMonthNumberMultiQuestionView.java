@@ -80,8 +80,10 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
                 try {
                     monthNumber = PregnantMonthNumber.parse(
                             numberPicker.getText().toString());
-                    notifyAnswerChanged(String.valueOf(monthNumber.getValue()));
-                    Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(numberPicker)) {
+                        notifyAnswerChanged(String.valueOf(monthNumber.getValue()));
+                        Validation.getInstance().removeInputError(numberPicker);
+                    }
 
                 } catch (InvalidPregnantMonthNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,

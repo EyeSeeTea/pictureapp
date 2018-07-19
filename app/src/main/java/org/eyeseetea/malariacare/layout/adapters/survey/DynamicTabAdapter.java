@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -644,6 +645,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
+
+                valueDB = fillDefaultValue(screenQuestionDB, surveyDB, valueDB);
+
                 if(shouldDisableNotVisibleChildQuestion(screenQuestionDB, surveyDB)) {
                     ((CommonQuestionView)questionView).deactivateQuestion();
                 } else {
@@ -679,9 +683,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
+    @Nullable
+    private ValueDB fillDefaultValue(QuestionDB screenQuestionDB, SurveyDB surveyDB, ValueDB valueDB) {
+        if(!readOnly && valueDB == null && screenQuestionDB.getDefaultValue()!=null){
+            if(screenQuestionDB.hasOutputWithOptions() && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB)){
+                OptionDB optionDB = screenQuestionDB.findOptionByValue(screenQuestionDB.getDefaultValue());
+                if(optionDB!=null) {
+                    valueDB = new ValueDB(optionDB, screenQuestionDB, surveyDB);
+                    valueDB.save();
+                }
+            }else {
+                valueDB = new ValueDB(screenQuestionDB.getDefaultValue(), screenQuestionDB, surveyDB);
+                valueDB.save();
+            }
+        }
+        return valueDB;
+    }
+
     private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
-        if(!BuildConfig.validationInline || !isASurveyCreatedInOtherApp){
-            //if the survey is not coming from a other app intent this is not necessary
+        if(!BuildConfig.validationInline){
             return false;
         }else {
             //if the question is not visible and the value is null the question value should be empty and the validation ignored

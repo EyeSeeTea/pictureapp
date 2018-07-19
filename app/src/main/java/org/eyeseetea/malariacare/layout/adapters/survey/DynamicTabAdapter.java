@@ -685,8 +685,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     @Nullable
     private ValueDB fillDefaultValue(QuestionDB screenQuestionDB, SurveyDB surveyDB, ValueDB valueDB) {
-        if(!readOnly && valueDB == null && screenQuestionDB.getDefaultValue()!=null){
-            if(screenQuestionDB.hasOutputWithOptions() && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB)){
+        if(!readOnly && valueDB == null && screenQuestionDB.getDefaultValue()!=null && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB)){
+            if(screenQuestionDB.hasOutputWithOptions()){
                 OptionDB optionDB = screenQuestionDB.findOptionByValue(screenQuestionDB.getDefaultValue());
                 if(optionDB!=null) {
                     valueDB = new ValueDB(optionDB, screenQuestionDB, surveyDB);

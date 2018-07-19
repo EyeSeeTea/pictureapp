@@ -3,12 +3,10 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
-import android.test.InstrumentationTestCase;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
@@ -27,7 +25,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +33,7 @@ import java.util.List;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-public class WSPushControllerShould extends InstrumentationTestCase{
+public class WSPushControllerShould {
 
     private static final String PUSH_RESPONSE_CONFLICT = "push_response_conflict.json";
 
@@ -61,7 +58,8 @@ public class WSPushControllerShould extends InstrumentationTestCase{
         apiClient = initializeApiClient();
         Device device = new Device("phoneNumber", "imei", "version");
 
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, getInstrumentation().getContext());
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device,
+                InstrumentationRegistry.getTargetContext());
         mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
     }
 

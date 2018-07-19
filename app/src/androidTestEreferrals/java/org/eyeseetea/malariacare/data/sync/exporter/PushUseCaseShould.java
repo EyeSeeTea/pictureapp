@@ -8,15 +8,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.test.InstrumentationTestCase;
-
-import com.raizlabs.android.dbflow.config.FlowManager;
+import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
@@ -50,7 +46,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class PushUseCaseShould extends InstrumentationTestCase {
+public class PushUseCaseShould {
 
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private CustomMockServer mCustomMockServer;
@@ -173,7 +169,9 @@ public class PushUseCaseShould extends InstrumentationTestCase {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"), getInstrumentation().getContext());
+                new Device("testPhone", "testIMEI", "test_version"),
+                InstrumentationRegistry.getTargetContext());
+
         mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();

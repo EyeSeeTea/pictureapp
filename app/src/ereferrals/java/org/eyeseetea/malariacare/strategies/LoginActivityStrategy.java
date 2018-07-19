@@ -183,21 +183,26 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
-            @Override
-            public void onSuccess(Settings setting) {
-                if(setting.isMetadataUpdateActive()) {
-                    asyncExecutor.run(new Runnable() {
-                        @Override
-                        public void run() {
-                            launchPull(false);
-                        }
-                    });
-                }else{
-                    goToDashboard();
+        if(loginType==LoginType.FULL){
+            launchPull(false);
+            return;
+        }else {
+            getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+                @Override
+                public void onSuccess(Settings setting) {
+                    if (setting.isMetadataUpdateActive()) {
+                        asyncExecutor.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                launchPull(false);
+                            }
+                        });
+                    } else {
+                        goToDashboard();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

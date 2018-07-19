@@ -44,6 +44,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -1066,6 +1067,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.DROPDOWN_OU_LIST:
                 Spinner dropdown = (Spinner) tableRow.findViewById(R.id.answer);
                 dropdown.setSelection(0);
+                break;
+            case Constants.DATE:
+                ((DatePickerQuestionView) tableRow.getChildAt(0)).setValue(null);
+                break;
+            case Constants.YEAR:
+                ((YearSelectorQuestionView) tableRow.getChildAt(0)).setValue(null);
                 break;
             case Constants.SWITCH_BUTTON:
                 Switch switchView = (Switch) tableRow.findViewById(R.id.answer);

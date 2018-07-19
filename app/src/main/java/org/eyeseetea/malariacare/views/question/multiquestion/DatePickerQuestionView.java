@@ -46,7 +46,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
 
     @Override
     public boolean hasError() {
-        return false;
+        return dateText.getError() != null;
     }
 
     @Override

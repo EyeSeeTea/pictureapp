@@ -2,17 +2,16 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 public class Validation {
     private static Validation instance;
-    private static List<Object> activeInputs;
+    private static LinkedHashSet<Object> activeInputs;
     private static HashMap<Object, String> invalidInputs;
 
     public Validation() {
-        activeInputs = new ArrayList<>();
+        activeInputs = new LinkedHashSet<>();
         invalidInputs = new HashMap<>();
     }
 
@@ -57,7 +56,7 @@ public class Validation {
         invalidInputs.put(view, error);
     }
 
-    public List<Object> getActiveInputs() {
+    public LinkedHashSet<Object> getActiveInputs() {
         return activeInputs;
     }
 

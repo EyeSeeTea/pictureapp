@@ -41,6 +41,7 @@ public class MetadataConfigurationsApi {
         public static final String CONTROL_RADIO_GROUP_HORIZONTAL = "RADIO_GROUP_HORIZONTAL";
         public static final String CONTROL_QUESTION_LABEL = "QUESTION_LABEL";
         public static final String CONTROL_SWITCH_BUTTON = "SWITCH_BUTTON";
+        public static final String CONTROL_TYPE_AUTOCOMPLETE_TEXT = "AUTOCOMPLETE";
 
 
         @JsonProperty("dataPointRef")

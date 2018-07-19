@@ -59,8 +59,9 @@ public class eReferralsAPIClient {
                 .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper objectMapper = new ObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(mBaseAddress)
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))

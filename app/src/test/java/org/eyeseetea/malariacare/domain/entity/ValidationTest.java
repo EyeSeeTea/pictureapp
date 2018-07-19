@@ -11,7 +11,6 @@ import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 public class ValidationTest {
 

@@ -48,6 +48,8 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
+        dbModel.setValidationRegExp(domainModel.getRegExp());
+        dbModel.setValidationMessage(domainModel.getRegExpError());
         dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
         return dbModel;
     }
@@ -131,6 +133,10 @@ public class QuestionConvertFromDomainVisitor implements
 
             case SWITCH_BUTTON:
                 finalOutput = Constants.SWITCH_BUTTON;
+                break;
+
+            case AUTOCOMPLETE_TEXT:
+                finalOutput=Constants.AUTOCOMPLETE_TEXT;
                 break;
 
         }

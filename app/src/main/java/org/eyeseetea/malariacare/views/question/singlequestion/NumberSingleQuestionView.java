@@ -97,10 +97,12 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
     public void validateAnswer(Context context) {
         try {
             int value = Integer.parseInt(numberPicker.getText().toString());
-
-            Validation.getInstance().removeInputError(numberPicker);
-            hideKeyboard(numberPicker);
-            notifyAnswerChanged(String.valueOf(value));
+            if(validateQuestionRegExp(numberPicker)) {
+                Validation.getInstance().removeInputError(numberPicker);
+                validateQuestionRegExp(numberPicker);
+                hideKeyboard(numberPicker);
+                notifyAnswerChanged(String.valueOf(value));
+            }
         } catch (NumberFormatException e) {
             Validation.getInstance().addinvalidInput(numberPicker,
                     context.getString(R.string.dynamic_error_number));

@@ -100,9 +100,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         try {
             PositiveNumber positiveNumber = PositiveNumber.parse(
                     numberPicker.getText().toString());
-            Validation.getInstance().removeInputError(numberPicker);
-            hideKeyboard(numberPicker);
-            notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+            if(validateQuestionRegExp(numberPicker)) {
+                Validation.getInstance().removeInputError(numberPicker);
+                hideKeyboard(numberPicker);
+                notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+            }
         } catch (InvalidPositiveNumberException e) {
             Validation.getInstance().addinvalidInput(numberPicker,
                     context.getString(R.string.dynamic_error_invalid_positive_number));

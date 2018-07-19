@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 
-public abstract class APhoneMultiquestionViewStrategy {
+public abstract class APhoneMultiquestionViewStrategy  {
     protected PhoneMultiQuestionView mPhoneMultiQuestionView;
     protected AKeyboardQuestionView.onAnswerChangedListener onAnswerChangedListener;
 
@@ -31,9 +31,10 @@ public abstract class APhoneMultiquestionViewStrategy {
             public void afterTextChanged(Editable s) {
                 try {
                     Phone phone = new Phone(phoneText.getText().toString());
-                    notifyAnswerChanged(phone.getValue());
-                    Validation.getInstance().removeInputError(phoneText);
-
+                    if(mPhoneMultiQuestionView.validateQuestionRegExp(phoneText)) {
+                        notifyAnswerChanged(phone.getValue());
+                        Validation.getInstance().removeInputError(phoneText);
+                    }
                 } catch (InvalidPhoneException e) {
                     Validation.getInstance().addinvalidInput(phoneText,
                             mPhoneMultiQuestionView.getContext().getString(

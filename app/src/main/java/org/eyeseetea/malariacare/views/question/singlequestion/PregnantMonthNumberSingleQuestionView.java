@@ -98,9 +98,11 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
             try {
                 PregnantMonthNumber pregnantMonthNumber = PregnantMonthNumber.parse(
                         numberPicker.getText().toString());
-                Validation.getInstance().removeInputError(numberPicker);
-                hideKeyboard(numberPicker);
-                notifyAnswerChanged(String.valueOf(pregnantMonthNumber.getValue()));
+                if(validateQuestionRegExp(numberPicker)) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                    hideKeyboard(numberPicker);
+                    notifyAnswerChanged(String.valueOf(pregnantMonthNumber.getValue()));
+                }
             } catch (InvalidPregnantMonthNumberException e) {
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));

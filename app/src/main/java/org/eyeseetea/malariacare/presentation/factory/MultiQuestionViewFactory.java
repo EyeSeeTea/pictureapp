@@ -5,6 +5,7 @@ import android.text.InputType;
 
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.DropdownWithFilterMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
@@ -55,6 +56,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new YearSelectorQuestionView(context);
             case Constants.DATE:
                 return new DatePickerQuestionView(context);
+            case Constants.AUTOCOMPLETE_TEXT:
+                return new DropdownWithFilterMultiQuestionView(context);
             default:
                 return MultiQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
 

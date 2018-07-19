@@ -48,7 +48,9 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             yearText.setText(valueDB.getValue());
             if (BuildConfig.validationInline) {
                 if (!yearText.getText().toString().isEmpty()) {
-                    Validation.getInstance().removeInputError(yearText);
+                    if(validateQuestionRegExp(yearText)) {
+                        Validation.getInstance().removeInputError(yearText);
+                    }
                 }
             }
         }
@@ -107,8 +109,10 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
         }
         if (BuildConfig.validationInline) {
             if (!yearText.getText().toString().isEmpty()) {
-                Validation.getInstance().removeInputError(yearText);
-                yearText.setError(null);
+                if(validateQuestionRegExp(yearText)) {
+                    Validation.getInstance().removeInputError(yearText);
+                    yearText.setError(null);
+                }
             } else {
                 Validation.getInstance().addinvalidInput(yearText, getContext().getString(
                         R.string.error_empty_question));

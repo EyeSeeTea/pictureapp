@@ -8,15 +8,21 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
+import org.eyeseetea.malariacare.utils.Utils;
 
 public class CommonQuestionView extends LinearLayout {
     boolean isActive = true;
 
     private TableRow mTableRow;
     private ViewGroup mLayout;
+
+    public Question question;
 
     public CommonQuestionView(Context context) {
         super(context);
@@ -127,5 +133,26 @@ public class CommonQuestionView extends LinearLayout {
             return null;
         }
         return (IQuestionView) ((ViewGroup) nextView).getChildAt(0);
+    }
+
+    public void setQuestion(Question question){
+        this.question = question;
+    }
+
+    public boolean validateQuestionRegExp(TextView view) {
+        try {
+            if(question == null || question.getRegExp()==null || question.getRegExp().isEmpty()) {
+                return true;
+            }
+            question.match(view.getText().toString());
+            return true;
+        } catch (RegExpValidationException e) {
+            e.printStackTrace();
+            String errorMessage = Utils.getInternationalizedString(question.getRegExpError(), getContext());
+            Validation.getInstance().addinvalidInput(view,
+                    errorMessage);
+            view.setError(errorMessage);
+            return false;
+        }
     }
 }

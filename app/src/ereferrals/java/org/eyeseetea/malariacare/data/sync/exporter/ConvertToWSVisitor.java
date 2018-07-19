@@ -53,7 +53,8 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         init(device);
     }
 
-    public ConvertToWSVisitor(Device device) {
+    public ConvertToWSVisitor(Device device, Context context) {
+        mContext = context;
         init(device);
     }
 

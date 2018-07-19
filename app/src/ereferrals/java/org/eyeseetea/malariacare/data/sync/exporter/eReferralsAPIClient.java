@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import android.content.Context;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.R;
@@ -57,9 +59,12 @@ public class eReferralsAPIClient {
                 .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
                 .build();
 
+        ObjectMapper objectMapper = new ObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(mBaseAddress)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .client(mOkHttpClient)
                 .build();
 

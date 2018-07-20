@@ -53,6 +53,9 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
                     }
                 }
             }
+        }else{
+            Validation.getInstance().addinvalidInput(yearText, getContext().getString(
+                    R.string.error_empty_question));
         }
     }
 
@@ -63,7 +66,7 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
 
     @Override
     public boolean hasError() {
-        return false;
+        return yearText.getError() != null;
     }
 
     @Override

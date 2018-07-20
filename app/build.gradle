@@ -27,6 +27,21 @@ repositories {
 }
 
 android {
+
+    testOptions {
+        unitTests.all {
+            // All the usual Gradle options.
+            testLogging {
+                events "skipped", "failed", "standardOut", "standardError"
+                exceptionFormat "full"
+                showCauses true
+                showExceptions true
+                showStackTraces true
+                showStandardStreams true
+            }
+        }
+    }
+
     signingConfigs {
         config {}
     }
@@ -282,7 +297,6 @@ dependencies {
     compile project(":EyeSeeTea-sdk")
     compile project(":bugshaker")
 
-
     // App dependencies
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -339,7 +353,6 @@ dependencies {
     androidTestCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
     androidTestCompile "org.mockito:mockito-core:${libs.mockitoVersion}"
     androidTestCompile "com.linkedin.dexmaker:dexmaker-mockito:${libs.dexmakerMockitoVersion}"
-
 
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {

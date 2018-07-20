@@ -751,8 +751,8 @@
 <string name="ws_unknown_exception">"अज्ञात अपवाद।"</string>
 <string name="feedback_view_image">"तस्वीर खोल्नुहोस् ..."</string>
 <string name="drive_title">"ड्राइभ मूल फोल्डर"</string>
-<string name="new_survey_disable">"नयाँ संस्करणको मेटाडाटा स्थापना गर्न सकिएन किनकि त्यहाँ पठाउन बाँकी सर्वेक्षणहरू छन् । नयाँ सर्वेक्षण बटम अस्थायी रूपमा निस्क्रिय गरिएको छ । "</string>
-<string name="csv_version">"\"CVS संस्करण:% s "</string>
+<string name="new_survey_disable">"नयाँ सर्वेक्षण बटन अस्थायी रूपमा असक्षम गरिएको छ किनभने मेटाडाटाको नयाँ संस्करण सही तरिकाले स्थापना गर्न सकिएन।"</string>
+<string name="config_version">"\"Config संस्करण:% s "</string>
 <string name="av_progress">"सामग्री डाउनलोड गर्दै ... कृपया प्रतीक्षा गर्नुहोस्"</string>
 <string name="ipc_issueEntry_q_eventType">"भरिएको बेला"</string>
 <string name="ipc_issueEntry_q_heardAbout">"जानकारी स्रोत"</string>
@@ -951,4 +951,23 @@
     <string name="error_unable_to_download_translations">अनुवादहरू डाउनलोड गर्न असमर्थ</string>
     <string name="error_unable_to_download_configuration_files">विन्यास फाईल डाउनलोड गर्न असमर्थ</string>
     <string name="error_unable_to_download_translations_and_configuration_files">अनुवादहरू र कन्फिगरेसन फाइलहरू डाउनलोड गर्न असमर्थ</string>
+    <string-array name="languages_strings">
+        <item>प्रणाली परिभाषित</item>
+        <item>अंग्रेजी</item>
+        <item>पोर्तुगल</item>
+        <item>नेपाली</item>
+        <item>स्वाहिली</item>
+    </string-array>
+    <string name="upgrading_metadata">मेटाडेटा स्तरवृद्धि गर्दै</string>
+    <string name="warning_message">"चेतावनी: "</string>
+    <string name="error_empty_question">"अनिवार्य क्षेत्र खाली गर्नुहोस्"</string>
+    <string name="format_error">Json ढाँचा त्रुटि</string>
+    <string name="no_user_error">कुनै प्रयोगकर्ता लगइन छैन।</string>
+    <string name="different_user_error">प्रयोगकर्ता लग इन भिन्न छ।</string>
+    <string name="dynamic_error_month_age">"महिनामा अवैध उमेर"</string>
+    <string name="allow_media_download_3g">"मिडिया डाउनलोड 3 जी भन्दा बढी डाउनलोड गर्नुहोस्"</string>
+    <string name="metadata_update">"मेटाडेटा मिति अद्यावधिक गर्नुहोस्: %s"</string>
+    <string name="elements">"Elements"</string>
+    <string name="activate_elements">"तत्वहरू सक्रिय गर्नुहोस्"</string>
+    <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
 </resources>

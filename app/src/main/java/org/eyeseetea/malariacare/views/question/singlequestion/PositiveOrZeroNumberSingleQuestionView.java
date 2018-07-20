@@ -8,12 +8,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .APositiveOrZeroNumberSingleQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .PositiveOrZeroNumberSingleQuestionViewStrategyStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
@@ -22,9 +27,12 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
     CustomEditText numberPicker;
     CustomButton sendButton;
     Boolean isClicked=false;
+    APositiveOrZeroNumberSingleQuestionViewStrategy mPositiveOrZeroNumberSingleQuestionViewStrategy;
 
     public PositiveOrZeroNumberSingleQuestionView(Context context) {
         super(context);
+        mPositiveOrZeroNumberSingleQuestionViewStrategy =
+                new PositiveOrZeroNumberSingleQuestionViewStrategyStrategy();
 
         init(context);
     }
@@ -102,5 +110,10 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
             }
             isClicked = false;
         }
+    }
+
+    @Override
+    public void setQuestionDB(QuestionDB questionDB) {
+        mPositiveOrZeroNumberSingleQuestionViewStrategy.setQuestionDB(this, questionDB);
     }
 }

@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.data.database.utils;
 
+import static org.eyeseetea.malariacare.utils.Constants.SYSTEM_DEFINED_LANGUAGE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -78,8 +80,6 @@ public class PreferencesState {
 
     private boolean userAccept;
 
-    private String phoneLanguage;
-
     private PreferencesState() {
     }
 
@@ -127,9 +127,6 @@ public class PreferencesState {
     }
 
     public void init(Context context) {
-        if (phoneLanguage == null) {
-            phoneLanguage = Locale.getDefault().getLanguage();
-        }
         PreferencesState.context = context;
         reloadPreferences();
     }
@@ -155,10 +152,20 @@ public class PreferencesState {
      * Returns 'language code' from sharedPreferences
      */
     private String initLanguageCode() {
+        String languagePreferenceKey = instance.getContext().getString(R.string.language_code);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
-        return sharedPreferences.getString(instance.getContext().getString(R.string.language_code),
-                "");
+
+        String languageCode = sharedPreferences.getString(languagePreferenceKey,"");
+
+        if (languageCode.isEmpty()) {
+            languageCode = SYSTEM_DEFINED_LANGUAGE;
+
+            putStringOnPreferences(sharedPreferences, languagePreferenceKey, languageCode);
+        }
+
+        return languageCode;
     }
 
     /**
@@ -371,8 +378,8 @@ public class PreferencesState {
     }
     public String getCurrentLocale() {
         String temLanguageCode = languageCode;
-        if (languageCode.equals("")) {
-            temLanguageCode = phoneLanguage;
+        if(languageCode.equals(SYSTEM_DEFINED_LANGUAGE)) {
+            temLanguageCode = getPhoneLanguage();
         }
         return temLanguageCode;
     }
@@ -489,11 +496,28 @@ public class PreferencesState {
         setDataFilteredByOrgUnit(value);
     }
 
-    public String getPhoneLanguage() {
-        return phoneLanguage;
+    private String getPhoneLanguage() {
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = Resources.getSystem().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            locale = Resources.getSystem().getConfiguration().locale;
+        }
+        //Taking only the 2 first elements of the string, for e.g en_US => en, fr_CA => fr..etc.
+        return locale.getLanguage().substring(0, 2);
     }
 
     public void setContext(Context targetContext) {
         context = targetContext;
+    }
+
+    private void putStringOnPreferences(SharedPreferences sharedPreferences,
+            String languagePreferenceKey,
+            String languageCode) {
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(languagePreferenceKey, languageCode);
+        editor.apply();
     }
 }

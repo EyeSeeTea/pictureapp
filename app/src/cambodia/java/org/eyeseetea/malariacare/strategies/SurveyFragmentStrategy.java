@@ -89,4 +89,8 @@ public class SurveyFragmentStrategy {
     public void removeSurveysInSession() {
         Session.setMalariaSurveyDB(null);
     }
+
+    public static boolean isSurveyCreatedFromOtherApp(final ASurveyFragmentStrategy.Callback callback, Context context) {
+        return false;
+    }
 }

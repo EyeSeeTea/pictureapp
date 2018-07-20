@@ -65,4 +65,14 @@
     <p>sh ${gitPath}/generate_last_commit.sh </p>
     <p>3. Run "git checkout". </p>]]>
     </string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>pt</item>
+        <item>ne</item>
+        <item>sw</item>
+    </string-array>
+    <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
+    <string name="metadata_update_date" translatable="false">update_metadata_date</string>
+    <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
 </resources>

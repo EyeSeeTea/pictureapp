@@ -25,7 +25,12 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
+import org.eyeseetea.malariacare.utils.CustomFontStyles;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
+
+import java.util.List;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -55,14 +60,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
                 settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
         }
     }
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
         }
     }
 
@@ -109,8 +114,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 new IntentFilter(PushService.class.getName()));
     }
     private void applicationWillEnterForeground() {
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(false);
         }
     }
 
@@ -172,4 +177,12 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             }
         }
     };
+
+    @Override
+    public void addFontStyleEntries(List<String> entries, List<String> entryValues) {
+        for (CustomFontStyles fontStyle:CustomFontStyles.values()) {
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
+            entryValues.add(String.valueOf(fontStyle.getResId()));
+        }
+    }
 }

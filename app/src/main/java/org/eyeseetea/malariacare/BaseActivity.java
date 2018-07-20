@@ -86,10 +86,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
             EyeSeeTeaApplication.permissions.requestNextPermission(this);
         }else{
-            if(Session.getPhoneMetaDataValue().equals("")) {
-                PhoneMetaData phoneMetaData = getPhoneMetadata();
-                Session.setPhoneMetaData(phoneMetaData);
-            }
+            PhoneMetaData phoneMetaData = getPhoneMetadata();
+            Session.setPhoneMetaData(phoneMetaData);
         }
 
         initView(savedInstanceState);
@@ -297,7 +295,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param targetActivityClass Given target activity class
      */
     public void finishAndGo(Class targetActivityClass) {
-        Intent targetActivityIntent = new Intent(this, targetActivityClass);
+        Intent targetActivityIntent = new Intent(this.getApplicationContext(), targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }
@@ -308,7 +306,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param targetActivityClass Given target activity class
      */
     public void go(Class targetActivityClass) {
-        Intent targetActivityIntent = new Intent(this, targetActivityClass);
+        Intent targetActivityIntent = new Intent(this.getApplicationContext(), targetActivityClass);
         startActivity(targetActivityIntent);
     }
 

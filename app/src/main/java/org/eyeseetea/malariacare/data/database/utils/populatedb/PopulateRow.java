@@ -18,7 +18,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.database.model.TranslationDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.APopulateRowStrategy;

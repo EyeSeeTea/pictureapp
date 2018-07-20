@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -40,23 +41,45 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             onErrorCallback(mCallback,
                     new IllegalArgumentException("Credentials could not be null"));
         } else {
-            mAuthenticationManager.login(mCredentials,
-                    new IAuthenticationManager.Callback<UserAccount>() {
-                        @Override
-                        public void onSuccess(UserAccount userAccount) {
-                            if (!mCredentials.isDemoCredentials()) {
-                                logoutAndHardcodedLogin(mCredentials, mCallback);
-                            } else {
-                                mCallback.onLoginSuccess();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            onErrorCallback(mCallback, throwable);
-                        }
-                    });
+            if (Session.getCredentials() != null) {
+                logoutAndLogin();
+            } else {
+                login();
+            }
         }
+    }
+
+    private void logoutAndLogin() {
+        mAuthenticationManager.logout(new IAuthenticationManager.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                login();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                onErrorCallback(mCallback, throwable);
+            }
+        });
+    }
+
+    private void login() {
+        mAuthenticationManager.login(mCredentials,
+                new IAuthenticationManager.Callback<UserAccount>() {
+                    @Override
+                    public void onSuccess(UserAccount userAccount) {
+                        if (mCredentials.isDemoCredentials()) {
+                            logoutAndHardcodedLogin(mCredentials, mCallback);
+                        } else {
+                            mCallback.onLoginSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        onErrorCallback(mCallback, throwable);
+                    }
+                });
     }
 
     private void logoutAndHardcodedLogin(final Credentials credentials,

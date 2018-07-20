@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+
 import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.R;
@@ -34,6 +35,7 @@ public class LocationMemory {
 
     private static final String PREFIX_LATITUDE = "LAT";
     private static final String PREFIX_LONGITUDE = "LNG";
+    private static final String PREFIX_ACCURACY = "ACCURACY";
     /**
      * App context required to recover sharedpreferences
      */
@@ -68,6 +70,7 @@ public class LocationMemory {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(PREFIX_LONGITUDE + idSurvey, (float) location.getLongitude());
         editor.putFloat(PREFIX_LATITUDE + idSurvey, (float) location.getLatitude());
+        editor.putFloat(PREFIX_ACCURACY + idSurvey, location.getAccuracy());
         editor.commit();
     }
 
@@ -83,6 +86,7 @@ public class LocationMemory {
 
         float longitude = sharedPreferences.getFloat(PREFIX_LONGITUDE + idSurvey, 0f);
         float latitude = sharedPreferences.getFloat(PREFIX_LATITUDE + idSurvey, 0f);
+        float accuracy = sharedPreferences.getFloat(PREFIX_ACCURACY + idSurvey, 0f);
 
         //No coordinates were stored for the given survey
         if (longitude == 0 && latitude == 0) {
@@ -96,6 +100,7 @@ public class LocationMemory {
         //Found
         location.setLongitude(longitude);
         location.setLatitude(latitude);
+        location.setAccuracy(accuracy);
         return location;
     }
 

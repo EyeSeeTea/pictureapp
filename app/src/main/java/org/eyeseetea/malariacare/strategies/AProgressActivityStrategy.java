@@ -13,4 +13,8 @@ public abstract class AProgressActivityStrategy {
 
 
     public abstract void finishAndGo();
+
+    public void initAppValuesAfterPull() {
+
+    }
 }

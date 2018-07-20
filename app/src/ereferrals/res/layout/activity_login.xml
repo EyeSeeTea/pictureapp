@@ -40,12 +40,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/two"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/number_text_size"
                 app:font_name="@string/normal_font" />
 
+            <include layout="@layout/progress_logo_item"></include>
+
         </FrameLayout>
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:id="@+id/progress_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_dhis_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/upgrading_metadata"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            app:font_name="@string/normal_font" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/layout_login_views"

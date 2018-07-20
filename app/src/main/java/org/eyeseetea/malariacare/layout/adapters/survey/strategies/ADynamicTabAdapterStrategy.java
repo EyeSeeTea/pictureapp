@@ -49,7 +49,7 @@ public abstract class ADynamicTabAdapterStrategy {
     public abstract void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView);
 
-    public void finishOrNext() {
+    public void finishOrNext(final boolean readOnly) {
         try {
             System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
             if (Session.getStockSurveyDB() != null) {
@@ -77,7 +77,9 @@ public abstract class ADynamicTabAdapterStrategy {
                 ValueDB valueDB = questionDB.getValueBySession();
                 if (mDynamicTabAdapter.isDone(valueDB)) {
                     mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                    if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
+                    if (readOnly) {
+                        DashboardActivity.dashboardActivity.initReview(readOnly);
+                    } else if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                         mDynamicTabAdapter.surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
@@ -107,5 +109,8 @@ public abstract class ADynamicTabAdapterStrategy {
     public void evaluateTreatmentMatch(QuestionDB questionDB, OptionDB selectedOptionDB,
             QuestionRelationDB questionRelationDB) {
 
+    }
+
+    public void showValidationErrors(){
     }
 }

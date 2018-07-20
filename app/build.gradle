@@ -58,7 +58,7 @@ android {
         signingConfig signingConfigs.config
         buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
         buildConfigField "boolean", "downloadLanguagesFromServer", "false"
-
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
 
@@ -117,6 +117,14 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_dev'
@@ -140,6 +148,14 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_dev'
@@ -163,10 +179,18 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
-            versionName "1.1.1"
+            versionName "1.2.0"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -182,16 +206,25 @@ android {
             buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.REFDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
-            buildConfigField "boolean", "customfont", "false"
+            buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "validationInline", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "true"
+            buildConfigField "boolean", "askEula", "true"
         }
         cnm {
             applicationId 'org.eyeseetea.surveillance_cnm_dev'
-            versionName "0.3.0"
+            versionName "0.4.4"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -200,7 +233,7 @@ android {
             buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
-            buildConfigField "boolean", "activeStockFragment", "true"
+            buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
             buildConfigField "boolean", "activeAVFragment", "false"
             buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.CNMDBProvider\""
@@ -213,6 +246,13 @@ android {
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
             buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
             resValue "string", "authority", applicationId + versionName + "_CNM_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "boolean", "activeStockControlFragment", "true"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "boolean", "openReviewCompletedSurveys", "true"
+            buildConfigField "boolean", "pullDataDropdown", "false"
+            buildConfigField "boolean", "showReviewInReadMode", "true"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "false"
         }
 
     }
@@ -263,7 +303,7 @@ dependencies {
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
     compile "com.google.guava:guava:${libs.guavaVersion}"
-    compile "com.squareup.okhttp:okhttp:$rootProject.okhttpVersion"
+    compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
     compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
 
@@ -314,4 +354,8 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
+    compile(project(path: ':bugshaker')) {
+        exclude group: "com.google.android.gms"
+    }
+    compile project(':orbitlite')
 }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IQuestionRepository {
     List<Question> getQuestionsByProgram(String programUID);
+    Question getByUId(String questionUId);
 }

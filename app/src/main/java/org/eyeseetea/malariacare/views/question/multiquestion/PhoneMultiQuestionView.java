@@ -3,16 +3,15 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .APhoneMultiquestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies
-        .PhoneMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies.APhoneMultiquestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies.PhoneMultiquestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -80,6 +79,10 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
         Validation.getInstance().addInput(mCustomEditText);
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addinvalidInput(mCustomEditText, getContext().getString(
+                    R.string.dynamic_error_phone_format));
+        }
         mPhoneMultiquestionViewStrategy.addTextChangeListener(mCustomEditText);
     }
 }

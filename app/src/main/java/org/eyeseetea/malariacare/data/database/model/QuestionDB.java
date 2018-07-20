@@ -56,6 +56,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -350,8 +351,7 @@ public class QuestionDB extends BaseModel {
                 .where(ProgramDB_Table.id_program.withTable(programAlias)
                         .eq(programDB.getId_program()))
                 .orderBy(OrderBy.fromProperty(TabDB_Table.order_pos.withTable(tabAlias)))
-                .orderBy(OrderBy.fromProperty(
-                        QuestionDB_Table.order_pos.withTable(questionAlias))).queryList();
+                .orderBy(QuestionDB_Table.order_pos.withTable(questionAlias), true).queryList();
 
     }
 
@@ -1373,12 +1373,28 @@ public class QuestionDB extends BaseModel {
         }
     }
 
-    public void saveValuesText(String answer) {
+    public void saveValuesText(String answer, boolean isValueLoadedFromOtherApp) {
         ValueDB valueDB = getValueBySession();
+        if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()
+                && !isValueLoadedFromOtherApp) {
+            valueDB.getQuestionDB().deleteThresholdValues(valueDB);
+        }
         SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
         SurveyFragmentStrategy.saveValuesText(valueDB, answer, this, surveyDB);
-
     }
+    public void saveValuesText(String answer) {
+        saveValuesText(answer, false);
+    }
+
+    private void deleteThresholdValues(ValueDB valueDB) {
+        for (QuestionDB question : getPropagationThresholdsQuestionDB()) {
+            ValueDB valueRelated = question.getValueBySurvey(valueDB.getSurveyDB());
+            if (valueRelated != null) {
+                valueRelated.delete();
+            }
+        }
+    }
+
 
     public void deleteValues(ValueDB valueDB) {
         if (valueDB != null) {
@@ -2051,7 +2067,38 @@ public class QuestionDB extends BaseModel {
                         QuestionRelationDB.MATCH_PROPAGATE))
                 .and(QuestionOptionDB_Table.id_question_fk.withTable(questionOptionAlias).is(
                         id_question)).queryList();
+
         return mPropagationQuestionDB;
+    }
+
+    public List<OptionDB> getOptions() {
+        List<OptionDB> optionDBS = new Select().from(OptionDB.class)
+                    .where(OptionDB_Table.id_answer_fk.eq(getAnswerDB().getId_answer()))
+                    .orderBy(OptionDB_Table.name, true)
+                    .queryList();
+        return optionDBS;
+    }
+
+    private List<QuestionDB> getPropagationThresholdsQuestionDB() {
+        return new Select().from(QuestionDB.class).as(questionName)
+                //QuestionDB + QuestioRelation
+                .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                .on(QuestionDB_Table.id_question.withTable(questionAlias)
+                        .eq(QuestionRelationDB_Table.id_question_fk.withTable(
+                                questionRelationAlias)))
+                //+MatchDB
+                .join(MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName)
+                .on(QuestionRelationDB_Table.id_question_relation.withTable(questionRelationAlias)
+                        .eq(MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+                //+QuestionThreshold
+                .join(QuestionThresholdDB.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
+                .on(QuestionThresholdDB_Table.id_match_fk.withTable(questionThresholdAlias)
+                        .eq(MatchDB_Table.id_match.withTable(matchAlias)))
+                //Parent child relationship
+                .where(QuestionRelationDB_Table.operation.withTable(questionRelationAlias).eq(
+                        QuestionRelationDB.PARENT_CHILD))
+                .and(QuestionThresholdDB_Table.id_question_fk.withTable(questionThresholdAlias).is(
+                        id_question)).queryList();
     }
 
     public static boolean isEmpty() {
@@ -2059,6 +2106,10 @@ public class QuestionDB extends BaseModel {
                 .from(QuestionDB.class)
                 .count();
         return count < 1;
+    }
+
+    public ValueDB getValueByQuestion(SurveyDB surveyDB, QuestionDB screenQuestionDB) {
+        return ValueDB.findValue(screenQuestionDB.getId_question(), surveyDB);
     }
 
     public static class QuestionOrderComparator implements Comparator {

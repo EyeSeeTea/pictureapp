@@ -17,9 +17,15 @@ public interface ISurveyRepository {
 
     List<Survey> getAllQuarantineSurveys();
 
+    List<Survey> getAllCompletedSentSurveys();
+
     long save(Survey survey);
 
     List<Survey> getAllCompletedSurveys();
 
     List<Survey> getSurveysByProgram(String idProgram);
+
+    Survey createNewSurvey();
+
+    void removeInProgress();
 }

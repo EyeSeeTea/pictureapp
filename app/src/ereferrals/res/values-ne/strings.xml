@@ -970,4 +970,5 @@
     <string name="elements">"Elements"</string>
     <string name="activate_elements">"तत्वहरू सक्रिय गर्नुहोस्"</string>
     <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
+    <string name="check_metadata_title">"नरम लगिनहरूमा मेटाडाटा अद्यावधिकहरूको जाँच गर्नुहोस्"</string>
 </resources>

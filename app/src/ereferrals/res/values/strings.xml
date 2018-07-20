@@ -1127,5 +1127,6 @@
 <string name="allow_media_download_3g">"Allow media download over 3g"</string>
 <string name="metadata_update">"Last metadata upgrade: %s"</string>
 <string name="element_not_installed">"Element SDK is not installed!"</string>
+<string name="check_metadata_title">"Check metadata updates on soft logins"</string>
 
 </resources>

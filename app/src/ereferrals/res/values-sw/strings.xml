@@ -1024,4 +1024,5 @@ Ameahidi kuhudhuria"</string>
 <string name="elements">"Elements"</string>
 <string name="activate_elements">"Aktivera element"</string>
 <string name="element_not_installed">"Element SDK är inte installerat!"</string>
+<string name="check_metadata_title">"Kontrollera metadatauppdateringar på mjuka inloggningar"</string>
 </resources>

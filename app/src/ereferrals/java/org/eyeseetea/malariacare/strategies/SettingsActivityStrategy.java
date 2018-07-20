@@ -82,6 +82,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 || !BuildConfig.developerOptions) {
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.drive_key)));
+            preferenceCategory.removePreference(preferenceScreen.findPreference(
+                    settingsActivity.getResources().getString(R.string.check_metadata_key)));
         }
     }
 

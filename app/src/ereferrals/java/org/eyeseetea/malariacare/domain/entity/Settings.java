@@ -13,14 +13,17 @@ public class Settings {
     private MediaListMode mediaListMode;
     private boolean canDownloadWith3G;
     private boolean isElementActive;
+    private boolean isMetadataUpdateActive;
 
     public Settings(String systemLanguage, String currentLanguage,
-            MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive) {
+            MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
+                    boolean isMetadataUpdateActive) {
         this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
         this.mediaListMode = mediaListMode;
         this.canDownloadWith3G = canDownloadWith3G;
         this.isElementActive = isElementActive;
+        this.isMetadataUpdateActive = isMetadataUpdateActive;
     }
 
     public String getLanguage() {
@@ -51,4 +54,8 @@ public class Settings {
     }
 
     public boolean isElementActive() {return isElementActive;}
+
+    public boolean isMetadataUpdateActive() {
+        return isMetadataUpdateActive;
+    }
 }

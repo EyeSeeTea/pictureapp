@@ -46,6 +46,7 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             mCustomEditText.setText(valueDB.getValue());
+            validateAnswer(mCustomEditText.getText().toString(), mCustomEditText);
         }
     }
 
@@ -65,6 +66,13 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
             onAnswerChangedListener onAnswerChangedListener) {
         super.setOnAnswerChangedListener(onAnswerChangedListener);
         mPhoneMultiquestionViewStrategy.setOnAnswerChangedListener(onAnswerChangedListener);
+    }
+
+    @Override
+    public void checkLoadedErrors() {
+        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(mCustomEditText);
+        }
     }
 
     @Override

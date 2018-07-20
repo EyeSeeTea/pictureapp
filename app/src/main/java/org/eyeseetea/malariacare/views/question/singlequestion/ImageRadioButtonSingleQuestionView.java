@@ -72,6 +72,11 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @Override
+    public void checkLoadedErrors() {
+
+    }
+
+    @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB == null || valueDB.getValue() == null) {
             return;

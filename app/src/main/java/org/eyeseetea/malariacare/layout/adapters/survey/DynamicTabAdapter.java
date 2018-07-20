@@ -44,7 +44,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -654,6 +653,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 } else {
                     questionView.setValue(valueDB);
                 }
+                if(!screenQuestionDB.isCompulsory()){
+                    desactivateNotCompulsaryError(((CommonQuestionView)questionView));
+                }
 
             }
 
@@ -1001,20 +1003,33 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             QuestionDB parentQuestionDB) {
         if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestionDB);
-
+            CommonQuestionView commonQuestionView = ((CommonQuestionView) row.getChildAt(0));
             if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
-                ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();
+                commonQuestionView.deactivateQuestion();
                 hideDefaultValue(rowQuestionDB);
             } else {
                 row.setVisibility(View.VISIBLE);
-                ((CommonQuestionView) row.getChildAt(0)).activateQuestion();
+                commonQuestionView.activateQuestion();
                 showDefaultValue(row, rowQuestionDB);
+                if(!rowQuestionDB.isCompulsory()){
+                    desactivateNotCompulsaryError(commonQuestionView);
+                }
+
             }
             return true;
         }
         return false;
+    }
+
+    private void desactivateNotCompulsaryError(CommonQuestionView commonQuestionView) {
+        if(commonQuestionView instanceof AKeyboardQuestionView){
+            ((AKeyboardQuestionView) commonQuestionView).checkLoadedErrors();
+        } else if (commonQuestionView instanceof AOptionQuestionView){
+            ((AOptionQuestionView) commonQuestionView).checkLoadedErrors();
+        }
+
     }
 
     /**

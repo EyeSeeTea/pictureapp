@@ -66,6 +66,11 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     }
 
     @Override
+    public void checkLoadedErrors() {
+
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 

@@ -30,6 +30,13 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(numberPicker);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }
@@ -53,6 +60,7 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             numberPicker.setText(valueDB.getValue());
+            validateAnswer(numberPicker.getText().toString(), numberPicker);
         }
     }
 
@@ -97,16 +105,8 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_invalid_positive_number));
                 }
-                if (BuildConfig.validationInline) {
-                    if (!numberPicker.getText().toString().isEmpty()) {
-                        if(validateQuestionRegExp(numberPicker)) {
-                            Validation.getInstance().removeInputError(numberPicker);
-                        }
-                    } else {
-                        Validation.getInstance().addinvalidInput(numberPicker,
-                                getContext().getString(R.string.error_empty_question));
-                    }
-                }
+
+                validateAnswer(numberPicker.getText().toString(), numberPicker);
             }
 
             @Override

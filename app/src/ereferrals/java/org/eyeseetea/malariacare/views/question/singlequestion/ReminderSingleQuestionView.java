@@ -85,4 +85,9 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
 
     public void notifyAnswerChanged(OptionDB optionDB) {
     }
+
+    @Override
+    public void checkLoadedErrors() {
+
+    }
 }

@@ -48,6 +48,7 @@ public class QuestionMapper {
                     .options(options)
                     .regExp(questionDB.getValidationRegExp())
                     .regExpError(questionDB.getValidationMessage())
+                    .compulsory(questionDB.isCompulsory())
                     .build();
         }else{
             return Question.newBuilder()
@@ -59,6 +60,7 @@ public class QuestionMapper {
                     .options(options)
                     .regExp(questionDB.getValidationRegExp())
                     .regExpError(questionDB.getValidationMessage())
+                    .compulsory(questionDB.isCompulsory())
                     .value(value)
                     .build();
         }

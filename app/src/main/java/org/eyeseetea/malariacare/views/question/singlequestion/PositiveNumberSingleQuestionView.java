@@ -34,6 +34,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
     }
 
     @Override
+    public void checkLoadedErrors() {
+
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }

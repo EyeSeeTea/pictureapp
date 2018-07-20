@@ -28,6 +28,13 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(mCustomEditText);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return mCustomEditText;
     }
@@ -46,13 +53,7 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             mCustomEditText.setText(valueDB.getValue());
-            if (BuildConfig.validationInline) {
-                if (!mCustomEditText.getText().toString().isEmpty()) {
-                    if(validateQuestionRegExp(mCustomEditText)) {
-                        Validation.getInstance().removeInputError(mCustomEditText);
-                    }
-                }
-            }
+            validateAnswer(mCustomEditText.getText().toString(), mCustomEditText);
         }
     }
 
@@ -83,16 +84,6 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         mCustomEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (BuildConfig.validationInline) {
-                    if (!mCustomEditText.getText().toString().isEmpty()) {
-                        if(validateQuestionRegExp(mCustomEditText)) {
-                            Validation.getInstance().removeInputError(mCustomEditText);
-                        }
-                    } else {
-                        Validation.getInstance().addinvalidInput(mCustomEditText,
-                                getContext().getString(R.string.error_empty_question));
-                    }
-                }
             }
 
             @Override
@@ -102,6 +93,8 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 notifyAnswerChanged(String.valueOf(s));
+
+                validateAnswer(mCustomEditText.getText().toString(), mCustomEditText);
             }
         });
         if (BuildConfig.validationInline) {

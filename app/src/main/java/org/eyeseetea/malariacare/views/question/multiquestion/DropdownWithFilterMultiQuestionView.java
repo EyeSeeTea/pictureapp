@@ -130,6 +130,12 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
     }
 
     @Override
+    public void checkLoadedErrors() {
+        Validation.getInstance().removeInputError(header);
+        header.setError(null);
+    }
+
+    @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
     }

@@ -30,6 +30,13 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(numberPicker);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }
@@ -53,6 +60,7 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             numberPicker.setText(valueDB.getValue());
+            validateAnswer(numberPicker.getText().toString(), numberPicker);
         }
     }
 
@@ -74,15 +82,11 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
         if (BuildConfig.validationInline) {
-            if (!numberPicker.getText().toString().isEmpty()) {
-                if(validateQuestionRegExp(numberPicker)) {
-                    Validation.getInstance().removeInputError(numberPicker);
-                }
-            } else {
-                Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
-                        R.string.error_empty_question));
-            }
+            Validation.getInstance().addInput(numberPicker);
+            Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
+                    R.string.error_empty_question));
         }
+
         Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
@@ -99,11 +103,7 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_invalid_positive_number));
                 }
-                if (BuildConfig.validationInline) {
-                    Validation.getInstance().addInput(numberPicker);
-                    Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
-                            R.string.error_empty_question));
-                }
+                validateAnswer(numberPicker.getText().toString(), numberPicker);
             }
 
             @Override

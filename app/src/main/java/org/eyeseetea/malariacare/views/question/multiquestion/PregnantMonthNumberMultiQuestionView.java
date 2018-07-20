@@ -31,6 +31,13 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(numberPicker);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }
@@ -88,6 +95,9 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
                 } catch (InvalidPregnantMonthNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_pregnant_month));
+                }
+                if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                    Validation.getInstance().removeInputError(numberPicker);
                 }
             }
 

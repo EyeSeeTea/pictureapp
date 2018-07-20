@@ -37,6 +37,13 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(numberPicker);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }
@@ -109,6 +116,9 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_month_age));
+            }
+            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(numberPicker);
             }
             isClicked = false;
         }

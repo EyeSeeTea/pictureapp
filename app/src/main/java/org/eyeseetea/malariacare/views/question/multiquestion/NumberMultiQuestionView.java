@@ -26,6 +26,13 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(numberPicker);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }
@@ -49,13 +56,7 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             numberPicker.setText(valueDB.getValue());
-            if (BuildConfig.validationInline) {
-                if (!numberPicker.getText().toString().isEmpty()) {
-                    if(validateQuestionRegExp(numberPicker)) {
-                        Validation.getInstance().removeInputError(numberPicker);
-                    }
-                }
-            }
+            validateAnswer(numberPicker.getText().toString(), numberPicker);
         }
     }
 
@@ -96,7 +97,7 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                             context.getString(R.string.dynamic_error_number));
                 }
 
-                notifyAnswerChanged(numberPicker.getText().toString());
+                validateAnswer(numberPicker.getText().toString(), numberPicker);
             }
 
             @Override

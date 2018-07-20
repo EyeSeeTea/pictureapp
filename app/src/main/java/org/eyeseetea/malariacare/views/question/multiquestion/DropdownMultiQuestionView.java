@@ -56,6 +56,13 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(!question.isCompulsory()){
+            Validation.getInstance().removeInputError(header);
+        }
+    }
+
+    @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
     }
@@ -94,8 +101,12 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
             }
         }
 
+        validateAnswer();
+    }
+
+    private void validateAnswer() {
         if (BuildConfig.validationInline) {
-            if (spinnerOptions.getSelectedItemPosition() > 0) {
+            if (!question.isCompulsory() || spinnerOptions.getSelectedItemPosition() > 0) {
                 if(validateQuestionRegExp(header)) {
                     Validation.getInstance().removeInputError(header);
                     header.setError(null);
@@ -137,15 +148,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 } else {
                     optionSetFromSavedValue = false;
                 }
-                if (BuildConfig.validationInline) {
-                    if (position > 0) {
-                        Validation.getInstance().removeInputError(header);
-                        header.setError(null);
-                    } else {
-                        Validation.getInstance().addinvalidInput(header, getContext().getString(
-                                R.string.error_empty_question));
-                    }
-                }
+                validateAnswer();
             }
 
             @Override
@@ -167,10 +170,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
             Validation.getInstance().addinvalidInput(header,
                     getResources().getString(R.string.error_empty_question));
         }
-    }
-
-    public Spinner getSpinnerOptions() {
-        return spinnerOptions;
     }
 
     @Override

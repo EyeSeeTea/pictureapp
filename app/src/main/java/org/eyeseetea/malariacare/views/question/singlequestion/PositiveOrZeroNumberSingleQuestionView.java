@@ -38,6 +38,13 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
     }
 
     @Override
+    public void checkLoadedErrors() {
+        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(numberPicker);
+        }
+    }
+
+    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }
@@ -109,6 +116,9 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            }
+            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(numberPicker);
             }
             isClicked = false;
         }

@@ -4,7 +4,7 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 
-import utils.PhoneMask;
+import utils.PhoneProcessor;
 
 public class Phone {
 
@@ -29,11 +29,11 @@ public class Phone {
     }
 
     private String applyTransformations(String value){
-        return PhoneMask.applyValueTransformations(value, mPhoneFormat);
+        return PhoneProcessor.applyValueTransformations(value, mPhoneFormat);
     }
 
     private boolean isValid(String value) {
-        return PhoneMask.checkPhoneNumberByMask(value, mPhoneFormat);
+        return PhoneProcessor.checkPhoneNumberByMask(value, mPhoneFormat);
     }
 
     public String getValue() {

@@ -21,6 +21,8 @@ public class PhoneMask {
             } else if (value.startsWith(phoneFormat.getTrunkPrefix())) {
                 valueText = phoneFormat.getPrefixtToPut() + valueText.substring(
                         phoneFormat.getTrunkPrefix().length());
+            } else {
+                valueText = phoneFormat.getPrefixtToPut() + valueText;
             }
         }
 

@@ -1,8 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;

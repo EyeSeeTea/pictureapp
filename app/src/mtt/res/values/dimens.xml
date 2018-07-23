@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="smaller_translation">75dp</dimen>
+    <dimen name="bigger_translation">135dp</dimen>
+    <dimen name="biggest_translation">195dp</dimen>
+    <dimen name="image_option_2_size">140dp</dimen>
+    <dimen name="image_option_4_size">120dp</dimen>
+    <dimen name="image_option_6_size">60dp</dimen>
+    <dimen name="dashboard_row_padding">12dp</dimen>
+    <dimen name="padding_right_progress">-5dp</dimen>
+    <dimen name="dropdown_padding">-5dp</dimen>
+    <dimen name="stock_mini_fab_buttons_size">50dp</dimen>
+</resources>

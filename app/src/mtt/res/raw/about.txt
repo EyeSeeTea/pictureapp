@@ -1,0 +1,35 @@
+<p><b>About us</b></p>
+<p><b>CNM’s Malaria Case Based Reporting Application (MCS)</b></p>
+
+<p><b>Build Version %s</b></p>
+
+<p>This Software Application (“App”) was developed by the the University of Oslo (UiO) and Clinton Health Access Initiative (CHAI), and is a derivative of the Malaria Case Surveillance (MCS) app conceptualized and developed by Population Services International (PSI), for improving malaria case surveillance in the public health care sector in Cambodia.</p>
+
+<p><b><u>Contributing organizations</u></b></p>
+
+<p><b>National Center for Parasitology, Entomology and Malaria Control (CNM)</b></p>
+
+<p><i>Lead implementation and conceptualization</i></p>
+
+<p>CNM has led the strategy development and implementation of all malaria activities in Cambodia with the current targets of Pf elimination by 2020 and Pv elimination by 2025. A core strategy of the CNM’s Malaria Elimination Action Framework (MEAF) is the strengthening of Surveillance systems to facilitate the implementation of all elimination activities.</p>
+
+<p><b>Clinton Health Access Initiative (CHAI)</b></p>
+
+<p><i>Lead implementation</i></p>
+
+<p>CHAI has been working with governments since 2007 to deploy information systems that support data collection and management, patient tracking, electronic medical records, health surveillance, laboratory management, and supply chain management in 22 countries and across disease areas, including maternal and newborn health, reproductive health, vaccines, HIV/AIDS, and malaria</p>
+
+<p><b>Department of Informatics at  the University of Oslo (UiO)</b></p>
+
+<p><i>Lead implementation and conceptualization</i></p>
+
+<p>UiO has demonstrated the capacity to develop and implement at scale appropriate technology for low resource settings, allowing DHIS2 to attain a unique position as a cross-cutting health information platform with a large support community, particularly in Africa and Asia.</p>
+
+<p><b><i>EyeSeeTea (EST)</i></b></p>
+
+<p><i>Lead technical development</i></p>
+
+<p>EyeSeeTea LTD is a London based company dedicated to:<br/>
+-NGO software development<br/>
+-ICT development & deployment<br/>
+-Data analysis and representation</p>

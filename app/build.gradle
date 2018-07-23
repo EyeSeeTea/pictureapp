@@ -249,6 +249,37 @@ android {
             buildConfigField "boolean", "showReviewInReadMode", "true"
             buildConfigField "boolean", "askEula", "false"
         }
+        mtt {
+            applicationId 'org.eyeseetea.surveillance_mtt_dev'
+            versionName "0.1.0"
+            buildConfigField "boolean", "activeMonitoringFragment", "false"
+            buildConfigField "boolean", "reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
+            buildConfigField "boolean", "translations", "true"
+            buildConfigField "boolean", "developerOptions", "true"
+            buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
+            buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "boolean", "activeAVFragment", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.MTTDBProvider\""
+            buildConfigField "int", "LimitSurveysCount", "0"
+            buildConfigField "int", "LimitSurveysTimeHours", "0"
+            buildConfigField "boolean", "customfont", "true"
+            buildConfigField "String", "defaultLocale", "\"en\""
+            buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
+            buildConfigField "boolean", "performMaintenanceTasks", "false"
+            buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            resValue "string", "authority", applicationId + versionName + "_CNM_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "boolean", "activeStockControlFragment", "true"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "boolean", "openReviewCompletedSurveys", "true"
+            buildConfigField "boolean", "pullDataDropdown", "false"
+            buildConfigField "boolean", "showReviewInReadMode", "true"
+            buildConfigField "boolean", "askEula", "false"
+        }
 
     }
     lintOptions {

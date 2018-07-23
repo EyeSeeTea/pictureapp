@@ -13,7 +13,7 @@
 
         <provider
             android:name=".data.database.utils.MTTDBProvider"
-            android:authorities="${applicationId}.data.database.utils.CNMDBProvider"
+            android:authorities="${applicationId}.data.database.utils.MTTDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">

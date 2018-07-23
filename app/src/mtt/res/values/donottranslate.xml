@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rdtPositive" translatable="false">Positive</string>
+    <string name="rdtNegative" translatable="false">Negative</string>
+    <string name="rdtNotTested" translatable="false">Not Tested</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://play.dhis2.org/android-previous2/</string>
+    <string name="work_in_progress" translatable="false">Work in progress</string>
+
+
+    <string name="ageQuestionUID" translatable="false"></string>
+    <string name="sexPregnantQuestionUID" translatable="false"></string>
+    <string name="severeSymtomsQuestionUID" translatable="false"></string>
+    <string name="rdtQuestionUID" translatable="false"></string>
+    <string name="referralQuestionUID" translatable="false"></string>
+    <string name="pqQuestionUID" translatable="false"></string>
+    <string name="cqQuestionUID" translatable="false"></string>
+    <string name="act6QuestionUID" translatable="false"></string>
+    <string name="act12QuestionUID" translatable="false"></string>
+    <string name="act18QuestionUID" translatable="false"></string>
+    <string name="act24QuestionUID" translatable="false"></string>
+    <string name="dynamicStockQuestionUID" translatable="false"></string>
+    <string name="outOfStockQuestionUID" translatable="false"></string>
+    <string name="dynamicTreatmentQuestionUID" translatable="false"></string>
+    <string name="stockRDTQuestionUID" translatable="false"></string>
+    <string name="confirmInvalidQuestionUID" translatable="false"></string>
+    <string name="residenceVillageUID" translatable="false"></string>
+    <string name="patientResidenceVillageOtherCode" translatable="false"></string>
+    <string name="control_data_element_phone_metadata" translatable="false">RuNZUhiAmlv</string>
+    <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
+    <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
+
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
+    <string name="google_play_required" translatable="false"></string>
+    <string name="feedback_view_image" translatable="false"></string>
+    <string name="autoconfigure_preference" translatable="false">autoconfigure_preference</string>
+    <string name="metadata_downloaded" translatable="false">metadata_downloaded</string>
+    <string name="metadata_version" translatable="false">metadata_version</string>
+    <string name="imei_preference" translatable="false">imei_prefrence</string>
+    <string name="default_language" translatable="false">en</string>
+    <string name="stock_program_uid" translatable="false">zaRb1RuqGVk</string>
+    <string name="malaria_program_uid" translatable="false">d7iipQZaHad</string>
+    <string name="control_data_element_stock_type" translatable="false">y4khhaHeh4k</string>
+    <string name="control_data_element_stock_type_balance" translatable="false">BALANCE</string>
+    <string name="control_data_element_stock_type_issue" translatable="false">ISSUE</string>
+    <string name="control_data_element_stock_type_receipt" translatable="false">RECEIPT</string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>km</item>
+    </string-array>
+    <string name="lastcommit_unavailable"><![CDATA[
+<p>This option requires some changes in the git repository.</p>
+<p>Steps:</p>
+<p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
+<p>2. If the file does not exist, add the following lines: </p>
+<p>#!/bin/sh </p>
+<p>gitPath=$(git rev-parse --show-toplevel)</p>
+<p>sh ${gitPath}/generate_last_commit.sh </p>
+<p>2. If the file already exists, you only need add the following lines at the end:</p>
+<p>gitPath=$(git rev-parse --show-toplevel)</p>
+<p>sh ${gitPath}/generate_last_commit.sh </p>
+<p>3. Run "git checkout". </p>]]>
+</string>
+</resources>

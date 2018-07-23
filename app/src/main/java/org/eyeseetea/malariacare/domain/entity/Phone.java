@@ -20,7 +20,7 @@ public class Phone {
     }
 
     public Phone(String value, PhoneFormat phoneFormat) throws InvalidPhoneException {
-        mPhoneFormat = required(phoneFormat, "program is required");
+        mPhoneFormat = required(phoneFormat, "phoneFormat is required");
         if (!isValid(value)) {
             throw new InvalidPhoneException();
         }

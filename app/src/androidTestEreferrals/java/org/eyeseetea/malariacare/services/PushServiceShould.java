@@ -97,10 +97,10 @@ public class PushServiceShould {
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
                 new Device("testPhone", "testIMEI", "test_version"),
                 InstrumentationRegistry.getTargetContext());
-        mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
 
         SurveysThresholds surveysThresholds =

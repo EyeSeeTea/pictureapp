@@ -126,6 +126,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     @Column
     String uid_event_fk;
 
+    @Column
+    String voucher_uid;
+
     /**
      * List of values for this survey
      */
@@ -323,6 +326,12 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.uid_event_fk = eventuid;
     }
 
+    public String getVoucherUid() {
+        return uid_event_fk;
+    }
+    public void setVoucherUid(String eventuid) {
+        this.uid_event_fk = eventuid;
+    }
     /**
      * Returns a concrete survey, if it exists
      */

@@ -593,10 +593,11 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                         .eq(id_survey))
                 .querySingle();
     }
+
     /**
      * Finds a survey by its uid
      */
-    public static SurveyDB findByUid(String uid) {
+    public static SurveyDB findByVoucherId(String uid) {
         return new Select()
                 .from(SurveyDB.class)
                 .where(SurveyDB_Table.uid_event_fk

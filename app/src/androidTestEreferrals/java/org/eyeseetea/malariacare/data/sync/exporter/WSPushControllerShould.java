@@ -45,7 +45,6 @@ public class WSPushControllerShould {
     private eReferralsAPIClient apiClient;
     private WSPushController mWSPushController;
     private String[] eventUIDs = {"LRR4ZZidQ6T", "PHp2WANFHE1", "NDqaWw51WJr", "Ian8YUgm7T3"};
-    private String[] voucherIDs = {"1492835796", "1492835797", "1492835798", "1492835799"};
     private List<Long> surveysIDs = new ArrayList<>();
 
     private String serverPreference="";
@@ -188,10 +187,10 @@ public class WSPushControllerShould {
                 boolean hasError = throwable != null;
                 assertThat(hasError, is(true));
                 assertTrue(SurveyDB.getAllQuarantineSurveys().size()==0);
-                assertTrue(SurveyDB.findByVoucherId("1492835796").getStatus()==Constants.SURVEY_COMPLETED);
-                assertTrue(SurveyDB.findByVoucherId("1492835797").getStatus()==Constants.SURVEY_SENT);
-                assertTrue(SurveyDB.findByVoucherId("1492835798").getStatus()==Constants.SURVEY_SENT);
-                assertTrue(SurveyDB.findByVoucherId("1492835799").getStatus()==Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("LRR4ZZidQ6T").getStatus()==Constants.SURVEY_COMPLETED);
+                assertTrue(SurveyDB.findByUid("PHp2WANFHE1").getStatus()==Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("NDqaWw51WJr").getStatus()==Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("Ian8YUgm7T3").getStatus()==Constants.SURVEY_SENT);
             }
         });
     }
@@ -201,7 +200,7 @@ public class WSPushControllerShould {
         programDB.save();
         OrgUnitDB orgUnitDB = new OrgUnitDB("test");
         orgUnitDB.save();
-        for (String eventUID : voucherIDs) {
+        for (String eventUID : eventUIDs) {
             SurveyDB surveyDB = new SurveyDB(orgUnitDB, programDB,
                     new UserDB("test", "test"));
             surveyDB.setStatus(Constants.SURVEY_QUARANTINE);

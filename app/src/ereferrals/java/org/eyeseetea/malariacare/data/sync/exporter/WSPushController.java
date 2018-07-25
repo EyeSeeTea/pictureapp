@@ -190,27 +190,30 @@ public class WSPushController implements IPushController {
                     mCallback.onInformativeError(new PushValueException(message));
                 }
                 SurveyDB surveyDB = null;
+                String eventUid = responseAction.getActionId();
                 String voucherId = responseAction.getResponse().getData().getVoucherCode();
                 if (voucherId != null) {
                     for (SurveyDB survey : mSurveys) {
-                        if (voucherId.contains(survey.getEventUid())) {
+                        if (voucherId.contains(survey.getVoucherUid())) {
                             surveyDB = survey;
                             break;
                         }
                     }
 
-                    if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
+                    if (surveyDB != null && !surveyDB.getVoucherUid().equals(voucherId)) {
                         Log.d(TAG,
-                                "Changing the UID of the survey old:" + surveyDB.getEventUid()
+                                "Changing the UID of the survey old:" + surveyDB.getVoucherUid()
                                         + " new:"
                                         + voucherId);
                         Context context = PreferencesState.getInstance().getContext();
 
                         mCallback.onInformativeMessage(String.format(
                                 context.getResources().getString(R.string.voucher_id_changed),
-                                surveyDB.getEventUid(), voucherId));
+                                surveyDB.getVoucherUid(), voucherId));
 
-                        surveyDB.setEventUid(voucherId);
+                        surveyDB.setVoucherUid(voucherId);
+
+                        surveyDB.setEventUid(eventUid);
 
                         surveyDB.save();
                     }

@@ -15,7 +15,7 @@ public interface SurveyApiClientRetrofit {
     @POST("api")
     Call<SurveyWSResult> pushSurveys(@Body SurveyContainerWSObject surveyContainerWSObject);
 
-    @POST("api")
+    @POST("api/searchActions")
     Call<SurveySimpleWSResponseObject> getQuarantineSurveys(@Body SurveySimpleWSObject surveySimpleWSObject);
 
     @POST("api/forgotpassword")

@@ -80,6 +80,7 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
 import java.io.File;
 import java.util.Date;
@@ -264,7 +265,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         malariaSurvey.updateSurveyStatus();
         if (malariaSurvey.isCompleted() && malariaSurvey.getEventUid() == null) {
             UIDGenerator uidGenerator = new UIDGenerator();
-            malariaSurvey.setEventUid(String.valueOf(uidGenerator.generateUID()));
+            malariaSurvey.setEventUid(CodeGenerator.generateCode());
+            malariaSurvey.setVoucherUid(String.valueOf(uidGenerator.generateUID()));
             malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
             malariaSurvey.save();
             showEndSurveyMessage(malariaSurvey);
@@ -558,7 +560,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
-            final String voucherUId = surveyDB.getEventUid();
+            final String voucherUId = surveyDB.getVoucherUid();
 
             GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
                     new SettingsDataSource(mDashboardActivity.getBaseContext()));

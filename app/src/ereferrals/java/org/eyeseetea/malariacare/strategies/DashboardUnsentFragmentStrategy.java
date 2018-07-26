@@ -15,7 +15,7 @@ public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStr
     }
 
     public void registerSurveyReceiver(Activity activity,
-            DashboardUnsentFragment.SurveyReceiver surveyReceiver) {
+                                       DashboardUnsentFragment.SurveyReceiver surveyReceiver) {
         LocalBroadcastManager.getInstance(activity).registerReceiver(surveyReceiver,
                 new IntentFilter(SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION));
     }

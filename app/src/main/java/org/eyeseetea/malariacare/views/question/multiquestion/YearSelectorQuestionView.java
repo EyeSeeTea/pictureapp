@@ -57,6 +57,9 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             Validation.getInstance().addinvalidInput(yearText, getContext().getString(
                     R.string.error_empty_question));
         }
+        if(yearText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(yearText);
+        }
     }
 
     @Override
@@ -119,6 +122,9 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             } else {
                 Validation.getInstance().addinvalidInput(yearText, getContext().getString(
                         R.string.error_empty_question));
+            }
+            if(yearText.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(yearText);
             }
         }
     }

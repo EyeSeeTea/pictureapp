@@ -110,6 +110,9 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_age));
             }
+            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(numberPicker);
+            }
             isClicked = false;
         }
     }

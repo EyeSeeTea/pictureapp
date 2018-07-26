@@ -44,7 +44,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -81,6 +80,7 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
+import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
@@ -654,6 +654,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 } else {
                     questionView.setValue(valueDB);
                 }
+                if(!screenQuestionDB.isCompulsory()){
+                    checkInitialCompulsoryValidationError(((CommonQuestionView)questionView));
+                }
 
             }
 
@@ -1001,20 +1004,31 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             QuestionDB parentQuestionDB) {
         if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestionDB);
-
+            CommonQuestionView commonQuestionView = ((CommonQuestionView) row.getChildAt(0));
             if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
-                ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();
+                commonQuestionView.deactivateQuestion();
                 hideDefaultValue(rowQuestionDB);
             } else {
                 row.setVisibility(View.VISIBLE);
-                ((CommonQuestionView) row.getChildAt(0)).activateQuestion();
+                commonQuestionView.activateQuestion();
                 showDefaultValue(row, rowQuestionDB);
+                if(!rowQuestionDB.isCompulsory()){
+                    checkInitialCompulsoryValidationError(commonQuestionView);
+                }
+
             }
             return true;
         }
         return false;
+    }
+
+    private void checkInitialCompulsoryValidationError(CommonQuestionView commonQuestionView) {
+        if(commonQuestionView instanceof IExtraValidation){
+            ((IExtraValidation) commonQuestionView).checkLoadedErrors();
+        }
+
     }
 
     /**

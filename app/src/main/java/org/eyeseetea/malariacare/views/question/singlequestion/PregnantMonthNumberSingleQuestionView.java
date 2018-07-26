@@ -108,6 +108,9 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_pregnant_month));
             }
+            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(numberPicker);
+            }
             isClicked = false;
         }
     }

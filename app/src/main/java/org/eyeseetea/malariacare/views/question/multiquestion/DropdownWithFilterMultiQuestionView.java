@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.general.DialogSpinnerAdapter;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.strategies.ADropdownMultiQuestionViewStrategy;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView implements
-        IQuestionView, IMultiQuestionView {
+        IQuestionView, IMultiQuestionView, IExtraValidation {
     private CustomTextView header;
     private Spinner spinnerAsButton;
     private QuestionDB mQuestionDB;
@@ -237,7 +238,7 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
                 optionSetFromSavedValue = false;
             }
             if (BuildConfig.validationInline) {
-                if (position > 0) {
+                if (position > 0 || !question.isCompulsory()) {
                     Validation.getInstance().removeInputError(header);
                     header.setError(null);
                 } else {

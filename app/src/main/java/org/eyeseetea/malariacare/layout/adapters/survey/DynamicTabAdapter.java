@@ -80,6 +80,7 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
+import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
@@ -1024,10 +1025,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void desactivateNotCompulsaryError(CommonQuestionView commonQuestionView) {
-        if(commonQuestionView instanceof AKeyboardQuestionView){
-            ((AKeyboardQuestionView) commonQuestionView).checkLoadedErrors();
-        } else if (commonQuestionView instanceof AOptionQuestionView){
-            ((AOptionQuestionView) commonQuestionView).checkLoadedErrors();
+        if(commonQuestionView instanceof IExtraValidation){
+            ((IExtraValidation) commonQuestionView).checkLoadedErrors();
         }
 
     }

@@ -11,8 +11,9 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 
-public abstract class AKeyboardQuestionView extends CommonQuestionView {
+public abstract class AKeyboardQuestionView extends CommonQuestionView implements IExtraValidation {
     protected onAnswerChangedListener mOnAnswerChangedListener;
+    public EditText answer;
 
     public AKeyboardQuestionView(Context context) {
         super(context);
@@ -29,7 +30,11 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
         }
     }
 
-    public abstract void checkLoadedErrors();
+    public void checkLoadedErrors() {
+        if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(answer);
+        }
+    }
 
     public interface onAnswerChangedListener {
         void onAnswerChanged(View view, String newValue);

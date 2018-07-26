@@ -32,6 +32,4 @@ public abstract class AOptionQuestionView extends CommonQuestionView {
     public interface onAnswerChangedListener {
         void onAnswerChanged(View view, OptionDB optionDB);
     }
-
-    public abstract void checkLoadedErrors();
 }

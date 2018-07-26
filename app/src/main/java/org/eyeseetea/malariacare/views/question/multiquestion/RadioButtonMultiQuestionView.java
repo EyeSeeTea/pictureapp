@@ -50,11 +50,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
     @Override
-    public void checkLoadedErrors() {
-
-    }
-
-    @Override
     public void setOptions(List<OptionDB> optionDBs) {
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);

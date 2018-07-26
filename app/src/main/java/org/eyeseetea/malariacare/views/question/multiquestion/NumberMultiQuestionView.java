@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
@@ -18,7 +19,6 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
     CustomTextView header;
-    CustomEditText numberPicker;
 
     public NumberMultiQuestionView(Context context) {
         super(context);
@@ -26,15 +26,8 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     }
 
     @Override
-    public void checkLoadedErrors() {
-        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(numberPicker);
-        }
-    }
-
-    @Override
     public EditText getAnswerView() {
-        return numberPicker;
+        return answer;
     }
 
     @Override
@@ -44,60 +37,60 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
 
     @Override
     public void setEnabled(boolean enabled) {
-        numberPicker.setEnabled(enabled);
+        answer.setEnabled(enabled);
     }
 
     @Override
     public void setHelpText(String helpText) {
-        numberPicker.setHint(helpText);
+        answer.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            numberPicker.setText(valueDB.getValue());
-            validateAnswer(numberPicker.getText().toString(), numberPicker);
+            answer.setText(valueDB.getValue());
+            validateAnswer(answer.getText().toString(), answer);
         }
     }
 
     @Override
     public boolean hasError() {
-        return numberPicker.getError() != null;
+        return answer.getError() != null;
     }
 
     @Override
     public void requestAnswerFocus() {
-        numberPicker.requestFocus();
-        showKeyboard(getContext(), numberPicker);
+        answer.requestFocus();
+        showKeyboard(getContext(), answer);
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_int_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        numberPicker = (CustomEditText) findViewById(R.id.answer);
+        answer = (CustomEditText) findViewById(R.id.answer);
 
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(answer);
         if (BuildConfig.validationInline) {
-            Validation.getInstance().addinvalidInput(numberPicker,
+            Validation.getInstance().addinvalidInput(answer,
                     getContext().getString(R.string.dynamic_error_number));
         }
-        numberPicker.addTextChangedListener(new TextWatcher() {
+        answer.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
 
                 try {
                     int value = Integer.parseInt(s.toString());
                     notifyAnswerChanged(String.valueOf(value));
-                    if(validateQuestionRegExp(numberPicker)) {
-                        Validation.getInstance().removeInputError(numberPicker);
+                    if(validateQuestionRegExp(answer)) {
+                        Validation.getInstance().removeInputError(answer);
                     }
                 } catch (NumberFormatException e) {
-                    Validation.getInstance().addinvalidInput(numberPicker,
+                    Validation.getInstance().addinvalidInput(answer,
                             context.getString(R.string.dynamic_error_number));
                 }
 
-                validateAnswer(numberPicker.getText().toString(), numberPicker);
+                validateAnswer(answer.getText().toString(), answer);
             }
 
             @Override

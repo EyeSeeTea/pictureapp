@@ -87,13 +87,6 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     }
 
     @Override
-    public void checkLoadedErrors() {
-        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(mCustomEditText);
-        }
-    }
-
-    @Override
     public void validateAnswer(Context context) {
         try {
             Phone phone = new Phone(mCustomEditText.getText().toString());

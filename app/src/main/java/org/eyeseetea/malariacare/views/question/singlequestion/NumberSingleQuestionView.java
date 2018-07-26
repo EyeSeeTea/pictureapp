@@ -33,13 +33,6 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
     }
 
     @Override
-    public void checkLoadedErrors() {
-        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(numberPicker);
-        }
-    }
-
-    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }

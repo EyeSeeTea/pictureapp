@@ -655,7 +655,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     questionView.setValue(valueDB);
                 }
                 if(!screenQuestionDB.isCompulsory()){
-                    desactivateNotCompulsaryError(((CommonQuestionView)questionView));
+                    checkInitialCompulsoryValidationError(((CommonQuestionView)questionView));
                 }
 
             }
@@ -1015,7 +1015,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 commonQuestionView.activateQuestion();
                 showDefaultValue(row, rowQuestionDB);
                 if(!rowQuestionDB.isCompulsory()){
-                    desactivateNotCompulsaryError(commonQuestionView);
+                    checkInitialCompulsoryValidationError(commonQuestionView);
                 }
 
             }
@@ -1024,7 +1024,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return false;
     }
 
-    private void desactivateNotCompulsaryError(CommonQuestionView commonQuestionView) {
+    private void checkInitialCompulsoryValidationError(CommonQuestionView commonQuestionView) {
         if(commonQuestionView instanceof IExtraValidation){
             ((IExtraValidation) commonQuestionView).checkLoadedErrors();
         }

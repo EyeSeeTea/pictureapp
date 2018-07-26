@@ -297,23 +297,24 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
-            if (SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<SurveyDB> surveysUnsentFromService;
-                Session.valuesLock.readLock().lock();
-                try {
-                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
-                            SurveyService.ALL_UNSENT_SURVEYS_ACTION);
-                } finally {
-                    Session.valuesLock.readLock().unlock();
-                }
-                reloadSurveysFromService(surveysUnsentFromService);
-            } else if(SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION.equals(intent.getAction())){
+            //this method is only used by ereferrals, else should check the All Unsent Survey Action
+            if(SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION.equals(intent.getAction())){
 
                 List<SurveyDB> surveysUnsentFromService;
                 Session.valuesLock.readLock().lock();
                 try {
                     surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
                             SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
+                reloadSurveysFromService(surveysUnsentFromService);
+            } else if (SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
+                List<SurveyDB> surveysUnsentFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
+                            SurveyService.ALL_UNSENT_SURVEYS_ACTION);
                 } finally {
                     Session.valuesLock.readLock().unlock();
                 }

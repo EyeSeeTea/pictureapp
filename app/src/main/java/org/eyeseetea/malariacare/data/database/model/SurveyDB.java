@@ -126,6 +126,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     @Column
     String uid_event_fk;
 
+    @Column
+    String voucher_uid;
+
     /**
      * List of values for this survey
      */
@@ -323,6 +326,12 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.uid_event_fk = eventuid;
     }
 
+    public String getVoucherUid() {
+        return voucher_uid;
+    }
+    public void setVoucherUid(String eventuid) {
+        this.voucher_uid = eventuid;
+    }
     /**
      * Returns a concrete survey, if it exists
      */
@@ -339,7 +348,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the malaria surveys with status yet not put to "Sent"
      */
     public static List<SurveyDB> getAllUnsentMalariaSurveys(String malariaProgramUid) {
-        Context context = PreferencesState.getInstance().getContext();
         return new Select().from(SurveyDB.class).as(surveyName)
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
@@ -354,24 +362,42 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
     }
+
+    /**
+     * Returns all the malaria surveys
+     * */
+    public static List<SurveyDB> getAllMalariaSurveys(String malariaProgramUid) {
+            return new Select().from(SurveyDB.class).as(surveyName)
+            .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+            .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+            .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+
+            .where(ConditionGroup.clause()
+            .and(ProgramDB_Table.uid_program.withTable(programAlias)
+            .is(malariaProgramUid))
+            .and(ConditionGroup.clause()
+            .and(SurveyDB_Table.status.withTable(surveyAlias)
+            .isNot(Constants.SURVEY_IN_PROGRESS))))
+            .orderBy(SurveyDB_Table.event_date, false).queryList();
+    }
+
     /**
      * Returns all the malaria surveys with status put to "Sent"
      */
     public static List<SurveyDB> getAllSentMalariaSurveys(String malariaProgramUid) {
-        Context context = PreferencesState.getInstance().getContext();
-        return new Select().from(SurveyDB.class).as(surveyName)
-                .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
-                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
-                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+            return new Select().from(SurveyDB.class).as(surveyName)
+            .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+            .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+            .eq(ProgramDB_Table.id_program.withTable(programAlias)))
 
-                .where(ConditionGroup.clause()
-                        .and(ProgramDB_Table.uid_program.withTable(programAlias)
-                                .is(malariaProgramUid))
-                        .and(ConditionGroup.clause()
-                                .and(SurveyDB_Table.status.withTable(surveyAlias)
-                                        .is(Constants.SURVEY_SENT)))
-                        .or(SurveyDB_Table.status.eq(Constants.SURVEY_CONFLICT)))
-                .orderBy(SurveyDB_Table.event_date, false).queryList();
+            .where(ConditionGroup.clause()
+            .and(ProgramDB_Table.uid_program.withTable(programAlias)
+            .is(malariaProgramUid))
+            .and(ConditionGroup.clause()
+            .and(SurveyDB_Table.status.withTable(surveyAlias)
+            .is(Constants.SURVEY_SENT)))
+            .or(SurveyDB_Table.status.eq(Constants.SURVEY_CONFLICT)))
+            .orderBy(SurveyDB_Table.event_date, false).queryList();
     }
 
     /**
@@ -419,7 +445,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the surveys with status put to "Sent"
      */
     public static List<SurveyDB> getAllMalariaSurveysToBeSent(String malariaProgramUid) {
-        Context context = PreferencesState.getInstance().getContext();
         return new Select().from(SurveyDB.class).as(surveyName)
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
@@ -591,6 +616,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .from(SurveyDB.class)
                 .where(SurveyDB_Table.id_survey
                         .eq(id_survey))
+                .querySingle();
+    }
+
+    /**
+     * Finds a survey by its uid
+     */
+    public static SurveyDB findByUid(String uid) {
+        return new Select()
+                .from(SurveyDB.class)
+                .where(SurveyDB_Table.uid_event_fk
+                        .eq(uid))
                 .querySingle();
     }
 
@@ -1259,5 +1295,4 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
-
 }

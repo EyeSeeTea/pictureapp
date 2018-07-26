@@ -169,9 +169,7 @@ public class SurveyService extends IntentService {
         getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-                List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
-                List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
-                surveyDBs.addAll(sentSurveyDBs);
+                List<SurveyDB> surveyDBs = SurveyDB.getAllMalariaSurveys(uid);
                 //Since intents does NOT admit NON serializable as values we use Session instead
                 Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, surveyDBs);
 
@@ -189,14 +187,12 @@ public class SurveyService extends IntentService {
             public void onSuccess(String uid) {
                 List<SurveyDB> unsentSurveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
                 List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
-                List<SurveyDB> allSurveyDBs = new ArrayList<SurveyDB>();
-                allSurveyDBs.addAll(unsentSurveyDBs);
-                allSurveyDBs.addAll(sentSurveyDBs);
+                List<SurveyDB> ereferralsAllSurveys = SurveyDB.getAllMalariaSurveys(uid);
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
                 Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
                 Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveyDBs);
-                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, allSurveyDBs);
+                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, ereferralsAllSurveys);
 
                 //Returning result to anyone listening
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(

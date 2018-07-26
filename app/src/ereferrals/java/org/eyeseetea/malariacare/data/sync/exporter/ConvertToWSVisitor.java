@@ -121,10 +121,10 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     @Override
     public void visit(SurveyDB survey) throws ConversionException {
         SurveySendAction surveySendAction = new SurveySendAction();
-        surveySendAction.setActionId(CodeGenerator.generateCode());
+        surveySendAction.setActionId(survey.getEventUid());
         surveySendAction.setType(SURVEY_ACTION_ID);
         surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
-        surveySendAction.setVoucher(new Voucher(survey.getEventUid(), getVoucherType(survey)));
+        surveySendAction.setVoucher(new Voucher(survey.getVoucherUid(), getVoucherType(survey)));
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
         surveySendAction.setSourceAddedDateTime(getEventDateTimeString(survey.getEventDate()));

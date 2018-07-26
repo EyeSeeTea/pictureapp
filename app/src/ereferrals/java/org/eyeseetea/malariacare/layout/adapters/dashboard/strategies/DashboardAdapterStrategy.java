@@ -39,7 +39,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
         String uid = mContext.getString(R.string.voucher) +
                 ":" +
-                survey.getEventUid();
+                survey.getVoucherUid();
         if (noIssueVoucher(survey)) {
             uid = mContext.getString(R.string.no_voucher);
         } else if (hasPhone(survey)) {

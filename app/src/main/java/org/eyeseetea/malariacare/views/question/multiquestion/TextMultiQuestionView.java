@@ -19,7 +19,6 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 public class TextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
     CustomTextView header;
-    CustomEditText mCustomEditText;
 
 
     public TextMultiQuestionView(Context context) {
@@ -28,15 +27,8 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     @Override
-    public void checkLoadedErrors() {
-        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(mCustomEditText);
-        }
-    }
-
-    @Override
     public EditText getAnswerView() {
-        return mCustomEditText;
+        return answer;
     }
 
     @Override
@@ -46,20 +38,20 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
 
     @Override
     public void setEnabled(boolean enabled) {
-        mCustomEditText.setEnabled(enabled);
+        answer.setEnabled(enabled);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            mCustomEditText.setText(valueDB.getValue());
-            validateAnswer(mCustomEditText.getText().toString(), mCustomEditText);
+            answer.setText(valueDB.getValue());
+            validateAnswer(answer.getText().toString(), answer);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        mCustomEditText.setHint(helpText);
+        answer.setHint(helpText);
     }
 
 
@@ -70,8 +62,8 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
 
     @Override
     public void requestAnswerFocus() {
-        mCustomEditText.requestFocus();
-        showKeyboard(getContext(), mCustomEditText);
+        answer.requestFocus();
+        showKeyboard(getContext(), answer);
     }
 
 
@@ -79,9 +71,9 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         inflate(context, R.layout.multi_question_tab_text_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
+        answer = (CustomEditText) findViewById(R.id.answer);
 
-        mCustomEditText.addTextChangedListener(new TextWatcher() {
+        answer.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -94,17 +86,17 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 notifyAnswerChanged(String.valueOf(s));
 
-                validateAnswer(mCustomEditText.getText().toString(), mCustomEditText);
+                validateAnswer(answer.getText().toString(), answer);
             }
         });
         if (BuildConfig.validationInline) {
-            Validation.getInstance().addInput(mCustomEditText);
-            Validation.getInstance().addinvalidInput(mCustomEditText, getContext().getString(
+            Validation.getInstance().addInput(answer);
+            Validation.getInstance().addinvalidInput(answer, getContext().getString(
                     R.string.error_empty_question));
         }
     }
 
     public void setInputType(int value) {
-        mCustomEditText.setInputType(value | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        answer.setInputType(value | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 }

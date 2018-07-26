@@ -37,13 +37,6 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
     }
 
     @Override
-    public void checkLoadedErrors() {
-        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(numberPicker);
-        }
-    }
-
-    @Override
     public EditText getAnswerView() {
         return numberPicker;
     }

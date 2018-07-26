@@ -20,7 +20,6 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
         IQuestionView,
         IMultiQuestionView {
     CustomTextView header;
-    CustomEditText numberPicker;
 
     PregnantMonthNumber monthNumber;
 
@@ -31,15 +30,8 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
     }
 
     @Override
-    public void checkLoadedErrors() {
-        if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(numberPicker);
-        }
-    }
-
-    @Override
     public EditText getAnswerView() {
-        return numberPicker;
+        return answer;
     }
 
     @Override
@@ -49,55 +41,55 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
 
     @Override
     public void setEnabled(boolean enabled) {
-        numberPicker.setEnabled(enabled);
+        answer.setEnabled(enabled);
     }
 
     @Override
     public void setHelpText(String helpText) {
-        numberPicker.setHint(helpText);
+        answer.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            numberPicker.setText(valueDB.getValue());
+            answer.setText(valueDB.getValue());
         }
     }
 
     @Override
     public boolean hasError() {
-        return numberPicker.getError() != null || monthNumber == null;
+        return answer.getError() != null || monthNumber == null;
     }
 
     @Override
     public void requestAnswerFocus() {
-        numberPicker.requestFocus();
-        showKeyboard(getContext(), numberPicker);
+        answer.requestFocus();
+        showKeyboard(getContext(), answer);
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_pregnant_month_int_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        numberPicker = (CustomEditText) findViewById(R.id.answer);
-        Validation.getInstance().addInput(numberPicker);
-        numberPicker.addTextChangedListener(new TextWatcher() {
+        answer = (CustomEditText) findViewById(R.id.answer);
+        Validation.getInstance().addInput(answer);
+        answer.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
                     monthNumber = PregnantMonthNumber.parse(
-                            numberPicker.getText().toString());
-                    if(validateQuestionRegExp(numberPicker)) {
+                            answer.getText().toString());
+                    if(validateQuestionRegExp(answer)) {
                         notifyAnswerChanged(String.valueOf(monthNumber.getValue()));
-                        Validation.getInstance().removeInputError(numberPicker);
+                        Validation.getInstance().removeInputError(answer);
                     }
 
                 } catch (InvalidPregnantMonthNumberException e) {
-                    Validation.getInstance().addinvalidInput(numberPicker,
+                    Validation.getInstance().addinvalidInput(answer,
                             context.getString(R.string.dynamic_error_pregnant_month));
                 }
-                if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
-                    Validation.getInstance().removeInputError(numberPicker);
+                if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
+                    Validation.getInstance().removeInputError(answer);
                 }
             }
 

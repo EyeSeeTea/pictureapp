@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,
-        IMultiQuestionView, IImageQuestionView {
+        IMultiQuestionView, IImageQuestionView, IExtraValidation {
     CustomTextView header;
     Spinner spinnerOptions;
     ImageView imageView;

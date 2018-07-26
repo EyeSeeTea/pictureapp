@@ -58,11 +58,6 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     @Override
-    public void checkLoadedErrors() {
-
-    }
-
-    @Override
     public void setHeader(String headerValue) {
         headerView.setText(headerValue);
     }

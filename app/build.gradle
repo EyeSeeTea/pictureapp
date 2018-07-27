@@ -187,7 +187,7 @@ android {
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
-            versionName "1.2.0"
+            versionName "1.2.1"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"

@@ -321,8 +321,8 @@
 <string name="common_option_reported_case_no">"No"</string>
 
 <string-array name="languages_strings">
-    <item>System defined</item>
-    <item>English</item>
-    <item>Khmer</item>
+    <item>Sistema definido</item>
+    <item>Inglês</item>
+    <item>Português</item>
 </string-array>
 </resources>

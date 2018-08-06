@@ -48,7 +48,7 @@
     <string-array name="languages_codes" translatable="false">
         <item>system_defined</item>
         <item>en</item>
-        <item>km</item>
+        <item>pt</item>
     </string-array>
     <string name="lastcommit_unavailable"><![CDATA[
 <p>This option requires some changes in the git repository.</p>

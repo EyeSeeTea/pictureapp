@@ -18,7 +18,7 @@
 <string name="survey_info_exit_delete">"A pesquisa em curso será removida"</string>
 <string name="exception_org_unit_not_valid">"O código de saída não é válido. Entre em conctato com a PSK em 011 771 811"</string>
 <string name="exception_org_unit_banned">"A tomada está fechada ou bloqueada. Entre em contato com a PSI em 011 771 81"</string>
-<string name="dialog_reopen_org_unit">"A saída% s está aberta de novo."</string>
+<string name="dialog_reopen_org_unit">"A saída %s está aberta de novo."</string>
 <string name="dynamic_error_phone_format">"Formato inválido para o número de telefone (0NN NNN NNN {N})"</string>
 <string name="dynamic_error_invalid_positive_number">"Número positivo inválido"</string>
 <string name="dynamic_error_age">"Idade inválida"</string>
@@ -136,7 +136,7 @@
 <string name="network_error">"Existe um problema com a rede, por favor tente novamente mais tarde."</string>
 <string name="login_invalid_credentials">"Credenciais inválidos "</string>
 <string name="login_invalid_server_url">"URL do servidor inválido"</string>
-<string name="error_conflict_message">"O evento com o UID:% 1 $ s. foi enviado com conflito no elemento de dados UID:% 2 $ s com a mensagem:% 3 $ s. Por favor conctate o administrador."</string>
+<string name="error_conflict_message">"O evento com o UID: %1$s. foi enviado com conflito no elemento de dados UID: %2$s com a mensagem: %3$s. Por favor conctate o administrador."</string>
 <string name="error_conflict_title">"Erro"</string>
 <string name="confirmation_really_exit_title">"Sair realmente?"</string>
 <string name="confirmation_really_exit">"Tem certeza de que deseja sair do aplicativo?"</string>
@@ -204,7 +204,7 @@
 <string name="db_migration_error">"Por favor, informe o administrador, o aplicativo pode precisar de ser reinstalado"</string>
 <string name="error_exporting_data">"Erro, os metadados não puderam ser exportados."</string>
 <string name="unsent_survey_filter_option_today">"Hoje"</string>
-<string name="error_message_push">"O evento com o UID:% s. foi enviado sem data. Por favor entre em contato com o administrador."</string>
+<string name="error_message_push">"O evento com o UID: %s. foi enviado sem data. Por favor entre em contato com o administrador."</string>
 <string name="empty_review_value">"Nenhum número de telefone "</string>
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Estoque"</string>
@@ -248,7 +248,7 @@
 <string name="common_option_referred_yes">"Sim"</string>
 <string name="common_option_referred_no">"Não"</string>
 <string name="date_survey_format">"dd mm aa"</string>
-<string name="exists_more_than_one_org_unit_by_phone">"Aviso: mais de uma unidade organizacional foi configurada para este telefone (IMEI:% s)"</string>
+<string name="exists_more_than_one_org_unit_by_phone">"Aviso: mais de uma unidade organizacional foi configurada para este telefone (IMEI: %s)"</string>
 <string name="hour_survey_format">"hh:mm: a"</string>
 <string name="new_cases">"Novos casos"</string>
 <string name="cases_pending">"Casos pendentes para serem enviados"</string>

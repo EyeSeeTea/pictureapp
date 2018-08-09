@@ -312,4 +312,10 @@
 <string name="ipc_issueEntry_q_case_date">"Date of case"</string>
 <string name="common_option_reported_case_yes">"Yes"</string>
 <string name="common_option_reported_case_no">"No"</string>
+
+<string-array name="languages_strings">
+    <item>System defined</item>
+    <item>English</item>
+    <item>Portuguese</item>
+</string-array>
 </resources>

@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="yes">"Sim
-"</string>
-<string name="no">"Não
-"</string>
+<string name="yes">"Sim"</string>
+<string name="no">"Não"</string>
 <string name="provider_redeemEntry_msg_matchingOk">"Ok"</string>
 <string name="cancel">"Cancelar"</string>
 <string name="settings_menu_licence">"Licença"</string>
 <string name="dialog_title_delete_surveys">"Tem certeza de que deseja apagar todas as pesquisas enviadas?"</string>
 <string name="dialog_title_delete_survey">"Apagar a pesquisa"</string>
-<string name="dialog_info_delete_survey">"
-Tem certeza de que deseja apagar completamente esta pesquisa?"</string>
+<string name="dialog_info_delete_survey">"Tem certeza de que deseja apagar completamente esta pesquisa?"</string>
 <string name="dialog_title_error">"Erro"</string>
 <string name="create_info_organization_unit">"Unidade de organização"</string>
 <string name="assessment_sent_date">"Data"</string>
 <string name="assessment_title_header">"Envio pendente"</string>
 <string name="assessment_sent_title_header">"Pesquisas enviadas"</string>
 <string name="assessment_title_info">"Informação"</string>
-<string name="survey_info_exit">"
-Você tem certeza que quer sair?"</string>
+<string name="survey_info_exit">"Você tem certeza que quer sair?"</string>
 <string name="survey_info_exit_delete">"A pesquisa em curso será removida"</string>
 <string name="exception_org_unit_not_valid">"O código de saída não é válido. Entre em conctato com a PSK em 011 771 811"</string>
 <string name="exception_org_unit_banned">"A tomada está fechada ou bloqueada. Entre em contato com a PSI em 011 771 81"</string>
 <string name="dialog_reopen_org_unit">"A saída% s está aberta de novo."</string>
-<string name="dynamic_error_phone_format">"
-Formato inválido para o número de telefone (0NN NNN NNN {N})"</string>
+<string name="dynamic_error_phone_format">"Formato inválido para o número de telefone (0NN NNN NNN {N})"</string>
 <string name="dynamic_error_invalid_positive_number">"Número positivo inválido"</string>
-<string name="dynamic_error_age">"
-Idade inválida"</string>
+<string name="dynamic_error_age">"Idade inválida"</string>
 <string name="pref_header_general">"Geral"</string>
 <string name="dialog_title_push">"Empurrando os dados"</string>
 <string name="dialog_title_push_response">"Empurrar  a resposta"</string>
 <string name="dialog_info_push_ok">"Dados da pesquisa enviados para o servidor. Resultados:"</string>
 <string name="dialog_info_push_bad_credentials">"Credenciais ruins para empurrar"</string>
-<string name="dialog_error_push_no_uid">"
-Nenhum programa encontrado no servidor para o código"</string>
+<string name="dialog_error_push_no_uid">"Nenhum programa encontrado no servidor para o código"</string>
 <string name="dialog_error_push_no_location">"Nenhuma localização disponível"</string>
 <string name="number_0">"número_0"</string>
 <string name="number_1">"1"</string>
@@ -49,28 +42,22 @@ Nenhum programa encontrado no servidor para o código"</string>
 <string name="assessment_title_rdt">"TDR"</string>
 <string name="progress_pull_downloading">"Atualizando metadados (isso pode levar alguns minutos) ␣"</string>
 <string name="progress_pull_preparing_orgs">"Carregando organizações"</string>
-<string name="progress_pull_surveys">"
-Carregando pesquisas ..."</string>
+<string name="progress_pull_surveys">"Carregando pesquisas ..."</string>
 <string name="progress_pull_connecting">"Conectando-se ao servidor DHIS ..."</string>
 <string name="progress_pull_done">"Feito"</string>
 <string name="progress_push_no_survey">"Nenhuma pesquisa encontrada para empurrar"</string>
 <string name="progress_push_posting_survey">"Empurrando dados de pesquisa para o servidor ..."</string>
-<string name="progress_push_preparing_survey">"
-Preparando pesquisa para empurrar ..."</string>
-<string name="progress_push_updating_survey">"
-Actualizando os dados da pesquisa."</string>
+<string name="progress_push_preparing_survey">"Preparando pesquisa para empurrar ..."</string>
+<string name="progress_push_updating_survey">"Actualizando os dados da pesquisa."</string>
 <string name="cancellingPull">"O processo será interrompido em alguns segundos"</string>
 <string name="dialog_title_pull_response">"Estado do puxão"</string>
-<string name="dialog_pull_success">"
-Esses metadados foram extraídos com êxito do servidor"</string>
+<string name="dialog_pull_success">"Esses metadados foram extraídos com êxito do servidor"</string>
 <string name="dialog_push_before_pull_success">"Pesquisas enviadas com êxito para esse servidor, começando a extrair metadados"</string>
 <string name="dialog_push_success">"Pesquisa realizada com sucesso no servidor"</string>
-<string name="dialog_pull_error">"
-Erro ao tentar extrair metadados do servidor"</string>
+<string name="dialog_pull_error">"Erro ao tentar extrair metadados do servidor"</string>
 <string name="create_info_zone">"Zona"</string>
 <string name="dhis_url_error">"Erro de URL do DHIS"</string>
-<string name="dhis_url_error_bad_version">"Este servidor não é compatível (apenas 2.20, 2.21, 2.22 permitido)
-"</string>
+<string name="dhis_url_error_bad_version">"Este servidor não é compatível (apenas 2.20, 2.21, 2.22 permitido)"</string>
 <string name="dhis_url_error_bad_credentials">"Este aplicativo não está autorizado no servidor fornecido"</string>
 <string name="settings_menu_monitoring">"Monitor"</string>
 <string name="monitor_row_title_period">"Período"</string>
@@ -84,15 +71,13 @@ Erro ao tentar extrair metadados do servidor"</string>
 <string name="monitor_row_title_month">"Mês"</string>
 <string name="unrecognized_option">"Não reconhecido"</string>
 <string name="progress_pull_building_survey">"Pesquisa de construção"</string>
-<string name="progress_pull_building_value">"
-Construindo valores"</string>
+<string name="progress_pull_building_value">"Construindo valores"</string>
 <string name="monitor_row_title_dhapip">"DHA-PIP"</string>
 <string name="number_10">"10"</string>
 <string name="number_11">"11"</string>
 <string name="number_12">"12"</string>
 <string name="monitor_button">"Monitorando"</string>
-<string name="toast_push_is_pushing">"
-Envio de pesquisas antes de inserir as configurações."</string>
+<string name="toast_push_is_pushing">"Envio de pesquisas antes de inserir as configurações."</string>
 <string name="option_counter">"Repetições:"</string>
 <string name="option_confirm">"Confirme a opção "</string>
 <string name="dhis_url_error_generic">"Este erro do servidor. O servidor não está respondendo correctamente"</string>
@@ -103,8 +88,7 @@ Envio de pesquisas antes de inserir as configurações."</string>
 <string name="download">"Baixar:"</string>
 <string name="common_about_rowHeader_language">"Língua"</string>
 <string name="system_defined">"Sistema difinido"</string>
-<string name="developer_option_summary">"
-Esse recurso activa as opções de desenvolvedor"</string>
+<string name="developer_option_summary">"Esse recurso activa as opções de desenvolvedor"</string>
 <string name="developer_option_title">"Mostrar as opções do desenvolvedor"</string>
 <string name="export_data_option_title">"Exportar a base de dados "</string>
 <string name="malaria_case_based_reporting">"Malária: Testagem e Tratamento"</string>
@@ -112,20 +96,16 @@ Esse recurso activa as opções de desenvolvedor"</string>
 <string name="survey_send">"Enviar"</string>
 <string name="common_menu_about">"Sobre"</string>
 <string name="survey_completed">"Pesquisa concluída"</string>
-<string name="survey_completed_text">"
-A pesquisa foi concluída com sucesso"</string>
+<string name="survey_completed_text">"A pesquisa foi concluída com sucesso"</string>
 <string name="app_settings">"Configurações"</string>
 <string name="fonts_customise">"Personalizar fontes?"</string>
-<string name="font_size">"
-Tamanho das fontes"</string>
+<string name="font_size">"Tamanho das fontes"</string>
 <string name="server_name">"URL do servidor do DHIS"</string>
 <string name="server">"Servidor"</string>
 <string name="app_visual">"Visual"</string>
-<string name="monitoring_title_dropdown">"
-Por favor, seleccione um período de tempo"</string>
+<string name="monitoring_title_dropdown">"Por favor, seleccione um período de tempo"</string>
 <string name="common_menu_statistics">"Monitoramento"</string>
-<string name="monitoring_label_option_months">"
-Últimos 6 meses"</string>
+<string name="monitoring_label_option_months">"Últimos 6 meses"</string>
 <string name="monitoring_label_option_days">"Últimos 6 dias"</string>
 <string name="monitoring_label_option_weeks">"Últimas 6 semanas"</string>
 <string name="monitoring_case_stats">"Casos suspeitos e positivos "</string>
@@ -151,8 +131,7 @@ Por favor, seleccione um período de tempo"</string>
 <string name="Pv">"Pv"</string>
 <string name="mixed">"Pf/Pv"</string>
 <string name="dynamic_error_number">"Número inválido"</string>
-<string name="settings_menu_logout_message">"
-A alteração do servidor ou da unidade organizacional  precisa ser registada novamente. Todas as pesquisas não enviadas serão excluídas. Você tem certeza que quer continuar?"</string>
+<string name="settings_menu_logout_message">"A alteração do servidor ou da unidade organizacional  precisa ser registada novamente. Todas as pesquisas não enviadas serão excluídas. Você tem certeza que quer continuar?"</string>
 <string name="common_menu_logOff">"Sair"</string>
 <string name="network_error">"Existe um problema com a rede, por favor tente novamente mais tarde."</string>
 <string name="login_invalid_credentials">"Credenciais inválidos "</string>
@@ -162,17 +141,14 @@ A alteração do servidor ou da unidade organizacional  precisa ser registada no
 <string name="confirmation_really_exit_title">"Sair realmente?"</string>
 <string name="confirmation_really_exit">"Tem certeza de que deseja sair do aplicativo?"</string>
 <string name="survey_first_step">"Recuperando perguntas ..."</string>
-<string name="survey_second_step">"
-Construindo perguntas"</string>
+<string name="survey_second_step">"Construindo perguntas"</string>
 <string name="survey_third_step">"Construindo a árvore de perguntas "</string>
 <string name="survey_fourth_step">"Criando telas ..."</string>
 <string name="dynamic_error_pregnant_month">"Mês de gestação inválido "</string>
 <string name="admin_announcement">"Anúncio do administrador"</string>
 <string name="user_close">"Este usuário foi fechado pelo administrador."</string>
-<string name="run_in_demo_mode">"
-Executar no modo de demonstração"</string>
-<string name="login_error_json">"
-Erro ao ler o arquivo de configuração do json. Por favor conctate seu administrador."</string>
+<string name="run_in_demo_mode">"Executar no modo de demonstração"</string>
+<string name="login_error_json">"Erro ao ler o arquivo de configuração do json. Por favor conctate seu administrador."</string>
 <string name="Option_Text_Test_Positive">"Positivo"</string>
 <string name="Option_Text_Test_Negative">"Negativo"</string>
 <string name="Option_Text_Test_Not_Tested">"Não testado"</string>
@@ -233,8 +209,7 @@ Erro ao ler o arquivo de configuração do json. Por favor conctate seu administ
 <string name="tab_av">"AV"</string>
 <string name="tab_stock">"Estoque"</string>
 <string name="av_progress">"Baixando conteúdo ... por favor aguarde"</string>
-<string name="login_userName">"
-Nome de usuário"</string>
+<string name="login_userName">"Nome de usuário"</string>
 <string name="error_auto_configuration">"Nenhuma OU encontrada para este telefone"</string>
 <string name="error_auto_configuration_unexpected">"Ocorreu um erro durante a autoconfiguração ... Por favor, tente novamente mais tarde"</string>
 <string name="auto_configuring">"Auto configuração OU, por favor aguarde ..."</string>
@@ -249,8 +224,7 @@ Nome de usuário"</string>
 <string name="common_option_diagnosis_microscope">"Microscopia"</string>
 <string name="ipc_issueEntry_q_result_rdt">"Resultado do TDR"</string>
 <string name="ipc_issueEntry_q_result_microscope">"Resultado da Microscopia "</string>
-<string name="common_option_rdt_negative">"Negativo
-"</string>
+<string name="common_option_rdt_negative">"Negativo"</string>
 <string name="common_option_rdt_pf">"Pf"</string>
 <string name="common_option_rdt_pv">"Pv"</string>
 <string name="common_option_rdt_mixed">"Mixto"</string>
@@ -320,8 +294,7 @@ Nome de usuário"</string>
 <string name="common_option_mobile">"Móvel"</string>
 <string name="ipc_issueEntry_q_patient_pregnant">"Meses de gestação "</string>
 <string name="error_empty_question">"Campo obrigatório vazio"</string>
-<string name="add_new_receipt">"
-Adicionar novo recibo"</string>
+<string name="add_new_receipt">"Adicionar novo recibo"</string>
 <string name="add_new_expense">"Adicionar nova despesa"</string>
 <string name="ipc_issueEntry_q_mcs_rdt_stock">"Rotura de estoque de TDR"</string>
 <string name="common_option_tested">"Testado"</string>
@@ -339,4 +312,10 @@ Adicionar novo recibo"</string>
 <string name="ipc_issueEntry_q_case_date">"Data do caso"</string>
 <string name="common_option_reported_case_yes">"Sim"</string>
 <string name="common_option_reported_case_no">"Não"</string>
+
+<string-array name="languages_strings">
+    <item>Sistema definido</item>
+    <item>Inglês</item>
+    <item>Português</item>
+</string-array>
 </resources>

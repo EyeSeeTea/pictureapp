@@ -272,7 +272,7 @@
 <string name="ipc_issueEntry_q_stock_asmq_25_50">ASMQ 25/50 mg</string>
 <string name="ipc_issueEntry_q_stock_primaquine">Primaquine</string>
 <string name="ipc_issueEntry_q_stock_rdt">RDTs</string>
-<string name="common_option_diagnosis_not_tested">Not tested</string>
+<string name="common_option_diagnosis_not_tested">"Referred without tested"</string>
 <string name="save">Save</string>
 <string name="ipc_issueEntry_q_referred">Referred</string>
 <string name="common_option_referred_suspected">Suspected treatment failure</string>

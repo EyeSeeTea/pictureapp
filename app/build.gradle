@@ -251,7 +251,7 @@ android {
         }
         mtt {
             applicationId 'org.eyeseetea.surveillance_mtt_dev'
-            versionName "0.1.0"
+            versionName "0.1.1"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"

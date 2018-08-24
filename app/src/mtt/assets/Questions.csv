@@ -35,7 +35,5 @@
 35;'Code: Age Months';'ipc_issueEntry_q_patient_months_age';;'ipc_issueEntry_q_patient_months_age';'M4zmCaobylU';7;0;0;3;7;;33;11;0;;1
 36;'MCS - Age (Months)';'ipc_issueEntry_q_patient_months_age';;'ipc_issueEntry_q_patient_months_age';'M4zmCaobylU';5;0;0;5;23;;33;12;0
 37;'Code: Patient name';'ipc_issueEntry_q_patient_name';;'ipc_issueEntry_q_patient_name';'bMESR8NqSoU';5;0;0;3;22;;4;10;0;;1
-38;'MCS - Reported case';'ipc_issueEntry_q_reported_case';;'ipc_issueEntry_q_reported_case';'UBi5fEWAuS3';13;0;0;5;36;;32;3;0;;1
-39;'MCS - Case date';'ipc_issueEntry_q_case_date';;'ipc_issueEntry_q_case_date';'oZB4p39pBt0';14;0;0;5;37;;5;4;0;;0
-40;'Code: Reported case';'ipc_issueEntry_q_reported_case';;'ipc_issueEntry_q_reported_case';'UBi5fEWAuS3';14;0;0;5;36;;32;3;0;;1
-41;'Code: Case date';'ipc_issueEntry_q_case_date';;'ipc_issueEntry_q_case_date';'oZB4p39pBt0';15;0;0;5;37;;5;4;0;;0
+38;'MCS - Case date';'ipc_issueEntry_q_case_date';;'ipc_issueEntry_q_case_date';'oZB4p39pBt0';14;0;0;5;37;;5;4;0;;0
+39;'Code: Case date';'ipc_issueEntry_q_case_date';;'ipc_issueEntry_q_case_date';'oZB4p39pBt0';15;0;0;5;37;;5;4;0;;0

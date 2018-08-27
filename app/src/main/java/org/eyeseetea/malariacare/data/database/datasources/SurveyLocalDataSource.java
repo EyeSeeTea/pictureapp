@@ -1,21 +1,21 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.datasources.strategies
+        .ASurveyLocalDataSourceStrategy;
+import org.eyeseetea.malariacare.data.database.datasources.strategies.SurveyLocalDataSourceStrategy;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.mappers.QuestionMapper;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
-import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyLocalDataSource implements ISurveyRepository {
+
+    private ASurveyLocalDataSourceStrategy mSurveyLocalDataSourceStrategy;
+
     @Override
     public List<Survey> getLastSentSurveys(int count) {
         List<Survey> surveys = new ArrayList<>();
@@ -133,20 +136,9 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     }
 
     @Override
-    public Survey createNewConnectSurvey() {
-        ProgramDB programDB = ProgramDB.findById(PreferencesEReferral.getUserProgramId());
-        UserDB userDB = UserDB.getLoggedUser();
-        if(programDB == null || userDB == null){
-            return null;
-        }
-        UserAccount userAccount = new UserAccount( userDB.getName(),
-                userDB.getUid(),
-                PreferencesState.getCredentialsFromPreferences().isDemoCredentials());
-        if(programDB == null){
-            return null;
-        }
-        Program program = new Program(programDB.getUid(), programDB.getUid());
-        return Survey.createNewConnectSurvey(program, userAccount);
+    public Survey createNewSurvey() {
+        mSurveyLocalDataSourceStrategy = new SurveyLocalDataSourceStrategy();
+        return mSurveyLocalDataSourceStrategy.createNewSurvey();
     }
 
     @Override

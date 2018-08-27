@@ -5,6 +5,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.DatePickerSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.MonthNumberSingleQuestionView;
@@ -26,6 +27,8 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 return new NumberSingleQuestionView(context);
             case Constants.PHONE:
                 return new PhoneSingleQuestionView(context);
+            case Constants.DATE:
+                return new DatePickerSingleQuestionView(context);
             case Constants.POSITIVE_INT:
                 return new PositiveNumberSingleQuestionView(context);
             case Constants.POSITIVE_OR_ZERO_INT:

@@ -181,7 +181,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     private void moveToLoginActivity() {
-        if (!EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+        if (!EyeSeeTeaApplication.getInstance().isAppInBackground()) {
             Intent loginIntent = new Intent(mPushService, LoginActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mPushService.startActivity(loginIntent);

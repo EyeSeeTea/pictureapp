@@ -45,7 +45,7 @@ public class Survey {
         mType = required(type, "Type is required");
     }
 
-    public static Survey createNewConnectSurvey(Program program,
+    public static Survey createNewSurvey(Program program,
                                                 UserAccount userAccount) {
         Survey survey = new Survey(program, null, userAccount, Constants.SURVEY_NO_TYPE);
         survey.setStatus(Constants.SURVEY_IN_PROGRESS);

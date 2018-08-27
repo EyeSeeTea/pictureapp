@@ -89,8 +89,6 @@ ext {
             dexmakerMockitoVersion       : "2.12.1"
     ]
 
-    // Old App dependencies versions
-    okhttpVersion = '2.7.5'
 }
 
 task clean(type: Delete) {

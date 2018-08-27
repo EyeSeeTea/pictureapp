@@ -14,20 +14,17 @@ import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSourc
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
-import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.domain.usecase.HasToGenerateStockProgramUseCase;
+import org.eyeseetea.malariacare.domain.usecase.strategies.GetUserProgramUseCase;
 import org.eyeseetea.malariacare.fragments.AddBalanceReceiptFragment;
 import org.eyeseetea.malariacare.fragments.StockSummaryFragment;
 import org.eyeseetea.malariacare.fragments.StockSurveysFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -35,6 +32,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by manuel on 28/12/16.
@@ -47,6 +45,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     StockSummaryFragment mStockSummaryFragment;
     private boolean showStock;
     private boolean showStockControl;
+    private ProgramDB mProgramDB;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
@@ -87,22 +86,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-
-        IProgramRepository programRepository = new ProgramLocalDataSource();
-        Program userProgram  = programRepository.getUserProgram();
-        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
-
-        TabDB userProgramTab =  TabDB.findTabByProgram(program.getId_program()).get(0);
-        try {
-            NavigationBuilder.getInstance().buildController(userProgramTab);
-        } catch (LoadingNavigationControllerException e) {
-            e.printStackTrace();
-        }
+        getCurrentProgram();
 
         // Put new survey in session
         String orgUnitUid = OrgUnitDB.findUIDByName(PreferencesState.getInstance().getOrgUnit());
         OrgUnitDB orgUnit = OrgUnitDB.findByUID(orgUnitUid);
-        SurveyDB survey = new SurveyDB(orgUnit, program, Session.getUserDB());
+        SurveyDB survey = new SurveyDB(orgUnit, mProgramDB, Session.getUserDB());
         survey.save();
         Session.setMalariaSurveyDB(survey);
         createStockProgramIfNecessary(activity, survey, orgUnit);
@@ -113,7 +102,14 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
-    private void createStockProgramIfNecessary(final Activity activity, final SurveyDB malariaSurvey,
+    private void getCurrentProgram() {
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram = programRepository.getUserProgram();
+        mProgramDB = ProgramDB.findByName(userProgram.getCode());
+    }
+
+    private void createStockProgramIfNecessary(final Activity activity,
+            final SurveyDB malariaSurvey,
             final OrgUnitDB orgUnit) {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -121,7 +117,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
                 new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
                         programRepository);
-        hasToGenerateStockProgramUseCase.execute(malariaSurvey.getProgramDB().getUid(),
+        hasToGenerateStockProgramUseCase.execute(malariaSurvey.getProgramDB().getName(),
                 new HasToGenerateStockProgramUseCase.Callback() {
                     @Override
                     public void hasToCreateStock(boolean create) {
@@ -133,7 +129,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void generateStockProgram(Date eventDate,
-            OrgUnitDB orgUnit,Activity activity) {
+            OrgUnitDB orgUnit, Activity activity) {
         ProgramDB stockProgram = ProgramDB.findByUID(
                 activity.getString(R.string.stock_program_uid));
         SurveyDB stockSurvey = new SurveyDB(orgUnit, stockProgram, Session.getUserDB(),
@@ -212,6 +208,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public static void onLogoutSuccess() {
         DashboardActivity.dashboardActivity.finishAndGo(SettingsActivity.class);
     }
+
     public void openSentSurvey() {
         mDashboardActivity.getTabHost().setCurrentTabByTag(
                 mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
@@ -223,7 +220,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void initTabWidget(TabHost tabHost, Fragment reviewFragment,
             final Fragment surveyFragment,
             final boolean isReadOnly) {
-         /* set tabs in order */
+        /* set tabs in order */
         LayoutUtils.setTabHosts(mDashboardActivity);
         LayoutUtils.setTabDivider(mDashboardActivity);
 
@@ -279,15 +276,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IProgramRepository programRepository = new ProgramLocalDataSource();
-        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+        GetUserProgramUseCase getUserProgramUIDUseCase = new GetUserProgramUseCase(
                 programRepository, mainExecutor, asyncExecutor);
         final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
                 new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
                         programRepository);
-        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+        getUserProgramUIDUseCase.execute(new GetUserProgramUseCase.Callback() {
             @Override
-            public void onSuccess(String uid) {
-                hasToGenerateStockProgramUseCase.execute(uid,
+            public void onSuccess(Program program) {
+                hasToGenerateStockProgramUseCase.execute(program.getCode(),
                         new HasToGenerateStockProgramUseCase.Callback() {
                             @Override
                             public void hasToCreateStock(boolean create) {
@@ -338,15 +335,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IProgramRepository programRepository = new ProgramLocalDataSource();
-        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+        GetUserProgramUseCase getUserProgramUseCase = new GetUserProgramUseCase(
                 programRepository, mainExecutor, asyncExecutor);
         final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
                 new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
                         programRepository);
-        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+        getUserProgramUseCase.execute(new GetUserProgramUseCase.Callback() {
             @Override
-            public void onSuccess(String uid) {
-                hasToGenerateStockProgramUseCase.execute(uid,
+            public void onSuccess(Program program) {
+                hasToGenerateStockProgramUseCase.execute(program.getCode(),
                         new HasToGenerateStockProgramUseCase.Callback() {
                             @Override
                             public void hasToCreateStock(boolean create) {
@@ -379,10 +376,37 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
-     if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
+        if (isFragmentActive(dashboardActivity, AddBalanceReceiptFragment.class,
                 R.id.dashboard_stock_table_container)) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onStart() {
+        if (Session.hasSurveyToComplete()) {
+            openUncompletedSurvey();
+            Session.setHasSurveyToComplete(false);
+        } else {
+            super.onStart();
+        }
+    }
+
+    private void openUncompletedSurvey() {
+        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+        if (!uncompletedSurveys.isEmpty()) {
+            SurveyDB survey = null;
+            for (SurveyDB surveyToOpen : uncompletedSurveys) {
+                if (!surveyToOpen.isStockSurvey()) {
+                    survey = surveyToOpen;
+                }
+            }
+            if (survey != null) {
+                survey.getValuesFromDB();
+                Session.setMalariaSurveyDB(survey);
+                mDashboardActivity.initSurvey();
+            }
+        }
     }
 }

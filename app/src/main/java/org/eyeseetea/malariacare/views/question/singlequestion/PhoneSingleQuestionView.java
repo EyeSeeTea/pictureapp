@@ -78,6 +78,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    action(context);
                     return true;
                 }
 

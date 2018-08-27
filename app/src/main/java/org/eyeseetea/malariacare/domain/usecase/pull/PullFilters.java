@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PullFilters {
 
@@ -14,6 +16,7 @@ public class PullFilters {
     boolean pullDataAfterMetadata;
     boolean isAutoConfig;
     String activeOrgUnitUid;
+    Set<String> listOfOrgUnitsToPull;
 
     public Date getStartDate() {
         return startDate;
@@ -84,5 +87,16 @@ public class PullFilters {
 
     public void setAutoConfig(boolean autoConfig) {
         isAutoConfig = autoConfig;
+    }
+
+    public Set<String> getListOfOrgUnitsToPull() {
+        return listOfOrgUnitsToPull;
+    }
+
+    public void addOrgUnitUidToPull(String orgUnitUid) {
+        if(listOfOrgUnitsToPull==null){
+            listOfOrgUnitsToPull = new HashSet<>();
+        }
+        listOfOrgUnitsToPull.add(orgUnitUid);
     }
 }

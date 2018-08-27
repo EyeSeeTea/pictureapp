@@ -60,14 +60,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
                 settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
         }
     }
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
         }
     }
 
@@ -116,8 +116,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 new IntentFilter(PushService.class.getName()));
     }
     private void applicationWillEnterForeground() {
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(false);
         }
     }
 

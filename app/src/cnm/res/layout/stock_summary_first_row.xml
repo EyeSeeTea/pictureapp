@@ -7,7 +7,7 @@
     android:layout_marginRight="@dimen/stock_table_row_left_right_margin"
     android:orientation="horizontal">
 
-    <View
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="@integer/stock_table_row_first_column_weight" />

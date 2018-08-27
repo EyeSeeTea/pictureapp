@@ -8,6 +8,7 @@ import org.hisp.dhis.client.sdk.core.event.EventFilters;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.List;
+import java.util.Set;
 
 public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStrategy {
     String mCategoryOptionUID = null;
@@ -26,6 +27,12 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
     @Override
     public void pullMetadata(final IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,
             final IDataSourceCallback<List<OrganisationUnit>> callback) {
+
+    }
+
+    @Override
+    public void pullMetadata(IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,
+            IDataSourceCallback<List<OrganisationUnit>> callback, Set<String> uids) {
 
     }
 

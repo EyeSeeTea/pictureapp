@@ -24,6 +24,7 @@ import static org.eyeseetea.malariacare.BuildConfig.exitFromSurveyToImproveTab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
@@ -354,6 +355,11 @@ public class DashboardActivity extends BaseActivity {
         ft.commit();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
     public void replaceListFragment(int layout, ListFragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);
@@ -403,6 +409,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onResume();
         super.onResume();
         mIsInForegroundMode = true;
+        getSurveysFromService();
     }
 
     @Override
@@ -790,7 +797,7 @@ public class DashboardActivity extends BaseActivity {
         initTabHost(savedInstanceState);
         mDashboardActivityStrategy.initTabWidget(tabHost,reviewFragment,surveyFragment,isReadOnly);
 
-        getSurveysFromService();
+
 
         if (BuildConfig.multiuser) {
             try {

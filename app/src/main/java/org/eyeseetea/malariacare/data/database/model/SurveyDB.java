@@ -348,7 +348,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the malaria surveys with status yet not put to "Sent"
      */
     public static List<SurveyDB> getAllUnsentMalariaSurveys(String malariaProgramUid) {
-        return new Select().from(SurveyDB.class).as(surveyName)
+        List<SurveyDB> surveyDBS = new Select().from(SurveyDB.class).as(surveyName)
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
@@ -361,6 +361,16 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date.withTable(surveyAlias)))
                 .orderBy(OrderBy.fromProperty(
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
+        surveyDBS.addAll(new Select().from(SurveyDB.class).as(surveyName)
+                .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+                .where(ProgramDB_Table.uid_program.withTable(programAlias).is(malariaProgramUid))
+                .and(SurveyDB_Table.status.withTable(surveyAlias).is(Constants.SURVEY_SENDING))
+                .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date.withTable(surveyAlias)))
+                .orderBy(OrderBy.fromProperty(
+                        SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList());
+        return surveyDBS;
     }
 
     /**
@@ -371,7 +381,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
             .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
             .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
             .eq(ProgramDB_Table.id_program.withTable(programAlias)))
-
             .where(ConditionGroup.clause()
             .and(ProgramDB_Table.uid_program.withTable(programAlias)
             .is(malariaProgramUid))
@@ -389,7 +398,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
             .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
             .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
             .eq(ProgramDB_Table.id_program.withTable(programAlias)))
-
             .where(ConditionGroup.clause()
             .and(ProgramDB_Table.uid_program.withTable(programAlias)
             .is(malariaProgramUid))
@@ -1222,6 +1230,10 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 }).build().execute();
     }
 
+    public boolean isStockSurvey() {
+        return type != Constants.SURVEY_NO_TYPE;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1264,6 +1276,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         return type != null ? type.equals(surveyDB.type) : surveyDB.type == null;
 
     }
+
 
     @Override
     public int hashCode() {

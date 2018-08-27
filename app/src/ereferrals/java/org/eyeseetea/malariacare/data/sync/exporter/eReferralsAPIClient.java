@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.model.AuthPayload;
+import org.eyeseetea.malariacare.data.remote.model.AuthResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Id;
@@ -76,6 +78,14 @@ public class eReferralsAPIClient {
                 .build();
 
         mApiClientRetrofit = mRetrofit.create(ApiClientRetrofit.class);
+    }
+
+    public AuthResponse auth(String userCode, String pin) throws IOException {
+        AuthPayload authPayload = new AuthPayload(userCode, pin);
+
+        Response<AuthResponse> authResponse = mApiClientRetrofit.auth(authPayload).execute();
+
+        return authResponse.body();
     }
 
     public void setTimeoutMillis(int timeoutMillis) {

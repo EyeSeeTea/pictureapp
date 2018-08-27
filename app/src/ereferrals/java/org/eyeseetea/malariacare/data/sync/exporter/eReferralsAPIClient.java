@@ -42,7 +42,7 @@ public class eReferralsAPIClient {
 
     private Retrofit mRetrofit;
     private Context mContext;
-    private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
+    private ApiClientRetrofit mApiClientRetrofit;
     private OkHttpClient mOkHttpClient;
     public String mBaseAddress;
     private final int DEFAULT_TIMEOUT = 50000;
@@ -75,7 +75,7 @@ public class eReferralsAPIClient {
                 .client(mOkHttpClient)
                 .build();
 
-        mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
+        mApiClientRetrofit = mRetrofit.create(ApiClientRetrofit.class);
     }
 
     public void setTimeoutMillis(int timeoutMillis) {
@@ -88,7 +88,7 @@ public class eReferralsAPIClient {
         Response<SurveyWSResult> response = null;
 
         try {
-            response = mSurveyApiClientRetrofit.pushSurveys(
+            response = mApiClientRetrofit.pushSurveys(
                     surveyContainerWSObject).execute();
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
@@ -125,7 +125,7 @@ public class eReferralsAPIClient {
             WSClientCallBack<ForgotPasswordResponse> wsClientCallBack) {
         Response<ForgotPasswordResponse> response = null;
         try {
-            response = mSurveyApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();
+            response = mApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();
 
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
@@ -152,7 +152,8 @@ public class eReferralsAPIClient {
             }
             surveySimpleWSObject.setActions(ids);
             try {
-                Response<SurveySimpleWSResponseObject> response = mSurveyApiClientRetrofit.getQuarantineSurveys(
+                Response<SurveySimpleWSResponseObject> response =
+                        mApiClientRetrofit.getQuarantineSurveys(
                                 surveySimpleWSObject).execute();
                 for (SurveySimpleObject surveySimpleObject : response.body().getActions()) {
                     for (Survey survey : surveyList) {

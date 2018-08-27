@@ -3,12 +3,15 @@ package org.eyeseetea.malariacare.data.net;
 import android.content.Context;
 import android.net.NetworkInfo;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 
 public class ConnectivityManager implements IConnectivityManager{
 
+    private Context mContext;
 
+    public ConnectivityManager(Context context) {
+        this.mContext = context;
+    }
     /**
      * Checks whether the device currently has a network connection.
      *
@@ -17,8 +20,9 @@ public class ConnectivityManager implements IConnectivityManager{
     @Override
     public boolean isDeviceOnline() {
         android.net.ConnectivityManager connMgr =
-                (android.net.ConnectivityManager) DashboardActivity.dashboardActivity.getSystemService(
+                (android.net.ConnectivityManager) mContext.getSystemService(
                         Context.CONNECTIVITY_SERVICE);
+
         NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
         return networkInfo.isConnected();
     }
@@ -26,9 +30,9 @@ public class ConnectivityManager implements IConnectivityManager{
     @Override
     public ConnectivityType getConnectivityType() {
         android.net.ConnectivityManager connMgr =
-                (android.net.ConnectivityManager) DashboardActivity.dashboardActivity
-                        .getSystemService(
+                (android.net.ConnectivityManager) mContext.getSystemService(
                                 Context.CONNECTIVITY_SERVICE);
+
         NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
         if (networkInfo.isConnected()) {
             return ConnectivityType.WIFI;

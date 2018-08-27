@@ -30,9 +30,11 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -49,7 +51,6 @@ import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -473,12 +474,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        IConnectivityManager connectivityManager = new ConnectivityManager(loginActivity);
         ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
         IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
         IInvalidLoginAttemptsRepository
                 iInvalidLoginAttemptsRepository =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
-        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+        loginActivity.mLoginUseCase = new LoginUseCase(connectivityManager,
+                authenticationManager, mainExecutor,
                 asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
                 iInvalidLoginAttemptsRepository);
     }

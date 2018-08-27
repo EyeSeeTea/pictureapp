@@ -14,9 +14,11 @@ import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLoc
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -71,6 +73,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
             if (credentials.isDemoCredentials()) {
                 PushServiceStrategy.this.onCorrectCredentials();
             } else {
+                IConnectivityManager connectivityManager = new ConnectivityManager(mPushService);
                 IAuthenticationManager authenticationManager = new AuthenticationManager(
                         PreferencesState.getInstance().getContext());
                 IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -81,7 +84,8 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 IInvalidLoginAttemptsRepository
                         iInvalidLoginAttemptsRepository =
                         new InvalidLoginAttemptsRepositoryLocalDataSource();
-                LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                LoginUseCase loginUseCase = new LoginUseCase(connectivityManager,
+                        authenticationManager, mainExecutor,
                         asyncExecutor, organisationDataSource, credentialsLocalDataSource,
                         iInvalidLoginAttemptsRepository);
                 final Credentials oldCredentials =

@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
@@ -20,19 +21,23 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
 public class LoginUseCase extends ALoginUseCase implements UseCase {
-    private IAuthenticationManager mAuthenticationManager;
+    private final IConnectivityManager mConnectivityManager;
+    private final IAuthenticationManager mAuthenticationManager;
+    private final IMainExecutor mMainExecutor;
+    private final IAsyncExecutor mAsyncExecutor;
+    private final IOrganisationUnitRepository mOrgUnitDataSource;
+    private final ICredentialsRepository mCredentialsLocalDataSource;
+    private final IInvalidLoginAttemptsRepository mInvalidLoginAttemptsLocalDataSource;
+
     private Credentials insertedCredentials;
-    private IMainExecutor mMainExecutor;
-    private IAsyncExecutor mAsyncExecutor;
-    private IOrganisationUnitRepository mOrgUnitDataSource;
-    private ICredentialsRepository mCredentialsLocalDataSource;
-    private IInvalidLoginAttemptsRepository mInvalidLoginAttemptsLocalDataSource;
     private Callback mCallback;
 
-    public LoginUseCase(IAuthenticationManager authenticationManager, IMainExecutor mainExecutor,
+    public LoginUseCase(IConnectivityManager connectivityManager,
+            IAuthenticationManager authenticationManager, IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor, IOrganisationUnitRepository orgUnitDataSource,
             ICredentialsRepository credentialsLocalDataSource,
             IInvalidLoginAttemptsRepository iInvalidLoginAttemptsRepository) {
+        mConnectivityManager = connectivityManager;
         mAuthenticationManager = authenticationManager;
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
@@ -48,41 +53,43 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         mAsyncExecutor.run(this);
     }
 
-
     @Override
     public void run() {
         if (insertedCredentials.isDemoCredentials()) {
             runDemoLogin();
         }else {
             if (isLoginEnable()) {
-                mAuthenticationManager.hardcodedLogin(insertedCredentials.getServerURL(),
-                        new IAuthenticationManager.Callback<UserAccount>() {
-                            @Override
-                            public void onSuccess(UserAccount userAccount) {
-                                mAsyncExecutor.run(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        pullOrganisationCredentials();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                if (throwable instanceof MalformedURLException
-                                        || throwable instanceof UnknownHostException) {
-                                    notifyServerURLNotValid();
-                                } else if (throwable instanceof InvalidCredentialsException) {
-                                    notifyInvalidCredentials();
-                                } else if (throwable instanceof NetworkException) {
-                                    checkUserCredentialsWithOrgUnit(
-                                            mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                            true);
-                                } else {
-                                    throwable.printStackTrace();
+                if (mConnectivityManager.isDeviceOnline()) {
+                    mAuthenticationManager.hardcodedLogin(insertedCredentials.getServerURL(),
+                            new IAuthenticationManager.Callback<UserAccount>() {
+                                @Override
+                                public void onSuccess(UserAccount userAccount) {
+                                    mAsyncExecutor.run(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            pullOrganisationCredentials();
+                                        }
+                                    });
                                 }
-                            }
-                        });
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    if (throwable instanceof MalformedURLException
+                                            || throwable instanceof UnknownHostException) {
+                                        notifyServerURLNotValid();
+                                    } else if (throwable instanceof InvalidCredentialsException) {
+                                        notifyInvalidCredentials();
+                                    } else {
+                                        throwable.printStackTrace();
+                                    }
+                                }
+                            });
+                } else {
+                    checkUserCredentialsWithOrgUnit(
+                            mCredentialsLocalDataSource.getOrganisationCredentials(),
+                            true);
+                }
+
             } else {
                 notifyMaxLoginAttemptsReached();
             }

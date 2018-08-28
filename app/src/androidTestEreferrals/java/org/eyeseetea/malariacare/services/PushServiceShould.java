@@ -121,7 +121,7 @@ public class PushServiceShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
@@ -144,7 +144,7 @@ public class PushServiceShould {
 
         Credentials credentials = new Credentials("test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
@@ -166,7 +166,7 @@ public class PushServiceShould {
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousCredentials);
+        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         if (previousProgram != null) {
             programLocalDataSource.saveUserProgramId(previousProgram);

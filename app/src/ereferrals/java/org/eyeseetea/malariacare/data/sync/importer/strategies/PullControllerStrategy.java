@@ -123,7 +123,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
                 org.eyeseetea.malariacare.domain.entity.OrganisationUnit orgUnit =
                         orgUnitDataSource.getUserOrgUnit(
-                                credentialsLocalDataSource.getOrganisationCredentials());
+                                credentialsLocalDataSource.getLastValidCredentials());
                 org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
 
             if (importer.hasToUpdateMetadata(program)) {

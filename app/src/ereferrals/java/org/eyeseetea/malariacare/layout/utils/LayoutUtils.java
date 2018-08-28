@@ -44,7 +44,7 @@ public class LayoutUtils extends BaseLayoutUtils {
         TextView userName = (TextView) actionBar.getCustomView().findViewById(
                 R.id.action_bar_user);
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        Credentials credentials = credentialsLocalDataSource.getOrganisationCredentials();
+        Credentials credentials = credentialsLocalDataSource.getLastValidCredentials();
         userName.setText(credentials.getUsername());
         TextView connection =
                 (TextView) actionBar.getCustomView().findViewById(

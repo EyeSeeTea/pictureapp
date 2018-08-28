@@ -27,7 +27,7 @@ public class AuthenticationLocalDataSourceStrategy extends AAuthenticationLocalD
 
         mAuthenticationLocalDataSource.clearCredentials();
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.clearOrganisationCredentials();
+        credentialsLocalDataSource.clearLastValidCredentials();
 
         Session.logout();
 

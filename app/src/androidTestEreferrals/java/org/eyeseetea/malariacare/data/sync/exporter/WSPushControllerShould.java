@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
 import static junit.framework.Assert.assertTrue;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -105,7 +106,7 @@ public class WSPushControllerShould {
 
         Credentials credentials = new Credentials("test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();

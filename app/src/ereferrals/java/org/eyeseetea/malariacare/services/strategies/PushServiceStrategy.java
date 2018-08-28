@@ -71,7 +71,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
                         .getLoginUseCase(mPushService);
 
                 final Credentials oldCredentials =
-                        credentialsRepository.getOrganisationCredentials();
+                        credentialsRepository.getLastValidCredentials();
 
                 loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
                     @Override

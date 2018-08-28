@@ -475,7 +475,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void checkCredentials(Credentials credentials, final Callback callback) {
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        Credentials savedCredentials = credentialsLocalDataSource.getLastValidCredentials();
         if (savedCredentials == null || savedCredentials.isEmpty()
                 || savedCredentials.getUsername().equals(
                 credentials.getUsername()) && (!savedCredentials.getPassword().equals(

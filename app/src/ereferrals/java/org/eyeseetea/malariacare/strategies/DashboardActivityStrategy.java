@@ -110,7 +110,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
 
-        Credentials credentials = iCredentialsRepository.getOrganisationCredentials();
+        Credentials credentials = iCredentialsRepository.getLastValidCredentials();
         if (credentials != null && !credentials.isDemoCredentials()) {
             IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
             ILanguageRepository languageRepository = new LanguagesLocalDataSource();

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AuthResponse {
 
-    private String authorized;
+    private boolean authorized;
 
     @JsonProperty("code of OU level: country")
     private String country;
@@ -16,11 +16,11 @@ public class AuthResponse {
     private String orgUnitGroups;
 
 
-    public String getAuthorized() {
+    public boolean getAuthorized() {
         return authorized;
     }
 
-    public void setAuthorized(String authorized) {
+    public void setAuthorized(boolean authorized) {
         this.authorized = authorized;
     }
 

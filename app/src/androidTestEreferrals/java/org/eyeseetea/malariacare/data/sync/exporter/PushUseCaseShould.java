@@ -195,7 +195,7 @@ public class PushUseCaseShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
@@ -216,7 +216,7 @@ public class PushUseCaseShould {
 
         Credentials credentials = new Credentials("test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
@@ -238,7 +238,7 @@ public class PushUseCaseShould {
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousCredentials);
+        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         if (previousProgram != null) {
             programLocalDataSource.saveUserProgramId(previousProgram);

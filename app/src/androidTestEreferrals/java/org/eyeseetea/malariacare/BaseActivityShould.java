@@ -94,7 +94,7 @@ public class BaseActivityShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousOrganisationCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        previousOrganisationCredentials = credentialsLocalDataSource.getLastValidCredentials();
         previousCredentials = credentialsLocalDataSource.getCredentials();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         ProgramDB databaseProgramDB =
@@ -118,7 +118,7 @@ public class BaseActivityShould {
 
         Credentials credentials = new Credentials("http:test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
@@ -141,7 +141,7 @@ public class BaseActivityShould {
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousOrganisationCredentials);
+        credentialsLocalDataSource.saveLastValidCredentials(previousOrganisationCredentials);
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         if (previousProgram != null) {
             programLocalDataSource.saveUserProgramId(previousProgram);

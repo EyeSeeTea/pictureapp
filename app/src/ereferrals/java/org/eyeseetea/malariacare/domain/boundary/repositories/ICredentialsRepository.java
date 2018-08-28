@@ -4,11 +4,11 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 public interface ICredentialsRepository {
 
-    Credentials getOrganisationCredentials();
+    Credentials getLastValidCredentials();
 
-    void saveOrganisationCredentials(Credentials credentials);
+    void saveLastValidCredentials(Credentials credentials);
 
-    void clearOrganisationCredentials();
+    void clearLastValidCredentials();
 
     Credentials getCredentials();
 }

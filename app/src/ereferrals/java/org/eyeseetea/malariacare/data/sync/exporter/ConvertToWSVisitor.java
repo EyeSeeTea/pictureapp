@@ -32,7 +32,6 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,7 +62,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         ISettingsRepository currentLanguageRepository = new SettingsDataSource(PreferencesState.getInstance().getContext());
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource(mContext);
         AppInfo appInfo = appInfoDataSource.getAppInfo();
-        Credentials credentials = credentialsRepository.getOrganisationCredentials();
+        Credentials credentials = credentialsRepository.getLastValidCredentials();
         language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(

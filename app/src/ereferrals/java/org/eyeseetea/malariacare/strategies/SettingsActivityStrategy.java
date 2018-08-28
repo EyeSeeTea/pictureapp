@@ -18,17 +18,15 @@ import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.CustomFontStyles;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
 import java.util.List;
 
@@ -36,7 +34,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     LogoutAndLoginRequiredOnPreferenceClickListener logoutAndloginRequiredOnPreferenceClickListener;
     LogoutUseCase mLogoutUseCase;
-    IAuthenticationManager mAuthenticationManager;
 
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
@@ -146,8 +143,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void onCreate() {
-        mAuthenticationManager = new AuthenticationManager(settingsActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        mLogoutUseCase = new AuthenticationFactoryStrategy().getLogoutUseCase(settingsActivity);
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);

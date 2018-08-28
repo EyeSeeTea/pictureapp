@@ -65,10 +65,10 @@ public class PushController implements IPushController {
     private APushControllerStrategy mPushControllerStrategy;
 
 
-    public PushController(Context context) {
+    public PushController(Context context, IAuthenticationManager authenticationManager) {
         mContext = context;
         mPushDhisSDKDataSource = new PushDhisSDKDataSource();
-        authenticationManager= new AuthenticationManager(mContext);
+        authenticationManager = authenticationManager;
         mConvertToSDKVisitor = new ConvertToSDKVisitor(mContext);
         mPushControllerStrategy = new PushControllerStrategy();
     }

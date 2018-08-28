@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.usecase.DeleteOrgUnitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetDeviceUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -125,7 +126,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     public void executeLogout() {
-        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(settingsActivity);
+        IAuthenticationManager iAuthenticationManager =
+                new AuthenticationFactoryStrategy().getAuthenticationManager(settingsActivity);
         LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
         AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {

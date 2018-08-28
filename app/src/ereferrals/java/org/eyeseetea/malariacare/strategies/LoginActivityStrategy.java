@@ -21,7 +21,6 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
@@ -30,18 +29,13 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.net.ConnectivityManager;
-import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.LoginType;
@@ -53,11 +47,11 @@ import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -366,9 +360,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void onForgotPassword() {
         loginActivity.onStartLoading();
-        IAuthenticationManager authenticationManager = new AuthenticationManager(loginActivity);
-        ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
-                asyncExecutor, authenticationManager);
+        ForgotPasswordUseCase forgotPasswordUseCase =
+                new AuthenticationFactoryStrategy().getForgotPasswordUseCase(loginActivity);
+
         forgotPasswordUseCase.execute(loginActivity.getUsernameEditText().getText().toString(),
                 new ForgotPasswordUseCase.Callback() {
                     @Override
@@ -473,17 +467,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         }
     }
 
-    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
-        IConnectivityManager connectivityManager = new ConnectivityManager(loginActivity);
-        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
-        IInvalidLoginAttemptsRepository
-                iInvalidLoginAttemptsRepository =
-                new InvalidLoginAttemptsRepositoryLocalDataSource();
-        loginActivity.mLoginUseCase = new LoginUseCase(connectivityManager,
-                authenticationManager, mainExecutor,
-                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
-                iInvalidLoginAttemptsRepository);
+    public void initLoginUseCase() {
+        loginActivity.mLoginUseCase = new AuthenticationFactoryStrategy()
+                .getLoginUseCase(loginActivity);
     }
 
     @Override
@@ -703,12 +689,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void logout(final LogoutUseCase.Callback callback) {
-        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
-                loginActivity);
-
         AlarmPushReceiver.cancelPushAlarm(loginActivity);
 
-        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        LogoutUseCase logoutUseCase = new AuthenticationFactoryStrategy()
+                .getLogoutUseCase(loginActivity);
 
         logoutUseCase.execute(callback);
     }

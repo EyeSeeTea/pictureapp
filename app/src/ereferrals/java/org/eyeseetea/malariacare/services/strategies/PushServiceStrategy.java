@@ -8,22 +8,15 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
@@ -36,6 +29,7 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -50,7 +44,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
     public static final String PUSH_IS_START = "PushIsStart";
     public static final String SHOW_LOGIN = "ShowLogin";
 
-    private IPushController mPushController;
     private PushUseCase mPushUseCase;
 
     public PushServiceStrategy(PushService pushService) {
@@ -65,31 +58,21 @@ public class PushServiceStrategy extends APushServiceStrategy {
             return;
         }
 
-        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        ICredentialsRepository credentialsRepository =
+                new AuthenticationFactoryStrategy().getCredentialsRepository();
 
-        Credentials credentials = credentialsLocalDataSource.getCredentials();
+        Credentials credentials = credentialsRepository.getCredentials();
 
         if (credentials != null) {
             if (credentials.isDemoCredentials()) {
                 PushServiceStrategy.this.onCorrectCredentials();
             } else {
-                IConnectivityManager connectivityManager = new ConnectivityManager(mPushService);
-                IAuthenticationManager authenticationManager = new AuthenticationManager(
-                        PreferencesState.getInstance().getContext());
-                IMainExecutor mainExecutor = new UIThreadExecutor();
-                IAsyncExecutor asyncExecutor = new AsyncExecutor();
+                LoginUseCase loginUseCase = new AuthenticationFactoryStrategy()
+                        .getLoginUseCase(mPushService);
 
-                IOrganisationUnitRepository organisationDataSource =
-                        new OrganisationUnitRepository();
-                IInvalidLoginAttemptsRepository
-                        iInvalidLoginAttemptsRepository =
-                        new InvalidLoginAttemptsRepositoryLocalDataSource();
-                LoginUseCase loginUseCase = new LoginUseCase(connectivityManager,
-                        authenticationManager, mainExecutor,
-                        asyncExecutor, organisationDataSource, credentialsLocalDataSource,
-                        iInvalidLoginAttemptsRepository);
                 final Credentials oldCredentials =
-                        credentialsLocalDataSource.getOrganisationCredentials();
+                        credentialsRepository.getOrganisationCredentials();
+
                 loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
                     @Override
                     public void onLoginSuccess() {
@@ -167,10 +150,9 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
 
     public void logout() {
-        IAuthenticationManager authenticationManager;
-        LogoutUseCase logoutUseCase;
-        authenticationManager = new AuthenticationManager(mPushService);
-        logoutUseCase = new LogoutUseCase(authenticationManager);
+        LogoutUseCase logoutUseCase = new AuthenticationFactoryStrategy()
+                .getLogoutUseCase(mPushService);
+
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

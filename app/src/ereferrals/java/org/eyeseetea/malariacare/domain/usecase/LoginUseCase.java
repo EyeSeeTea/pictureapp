@@ -119,10 +119,11 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
     private void checkUserCredentialsWithLastValid(Credentials lastValidCredentials,
             boolean fromNetWorkError) {
-        if (insertedCredentials.getUsername().equals(lastValidCredentials.getUsername())
+        if (lastValidCredentials != null && (insertedCredentials.getUsername().equals(
+                lastValidCredentials.getUsername())
                 && insertedCredentials.getPassword().equals(lastValidCredentials.getPassword())
                 && (fromNetWorkError || insertedCredentials.getServerURL().equals(
-                lastValidCredentials.getServerURL()))) {
+                lastValidCredentials.getServerURL())))) {
             notifyLoginSuccess();
         } else {
             if (fromNetWorkError) {

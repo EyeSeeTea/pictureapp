@@ -13,8 +13,6 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;

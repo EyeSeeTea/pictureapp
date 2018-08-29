@@ -31,7 +31,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -46,6 +45,7 @@ import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.remote.ElementController;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -153,7 +153,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager(mDashboardActivity);
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         String path =
                 PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath() + "/"
                         + Constants.MEDIA_FOLDER;

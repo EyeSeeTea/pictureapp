@@ -8,13 +8,13 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Coordinate;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
@@ -72,8 +72,8 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private int getConfigFileVersion() {
-        IProgramRepository mProgramLocalDataSource = new ProgramLocalDataSource();
-        String uid = mProgramLocalDataSource.getUserProgram().getId();
+        IProgramRepository programRepository = new ProgramRepository();
+        String uid = programRepository.getUserProgram().getId();
         ICountryVersionRepository countryVersionRepository = new CountryVersionLocalDataSource();
         Configuration.CountryVersion countryVersion =
                 countryVersionRepository.getCountryVersionForUID(uid);
@@ -124,8 +124,8 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         surveySendAction.setType(SURVEY_ACTION_ID);
         surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
         surveySendAction.setVoucher(new Voucher(survey.getVoucherUid(), getVoucherType(survey)));
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        surveySendAction.setProgram(programLocalDataSource.getUserProgram().getCode());
+        ProgramRepository programRepository = new ProgramRepository();
+        surveySendAction.setProgram(programRepository.getUserProgram().getCode());
         surveySendAction.setSourceAddedDateTime(getEventDateTimeString(survey.getEventDate()));
         Location location = LocationMemory.get(survey.getId_survey());
         surveySendAction.setCoordinate(

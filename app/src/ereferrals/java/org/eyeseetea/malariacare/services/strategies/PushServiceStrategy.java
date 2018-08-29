@@ -8,10 +8,10 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -127,9 +127,9 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     protected void executeMockedPush() {
-        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase(
-                programLocalDataSource);
+                programRepository);
 
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override

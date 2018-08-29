@@ -15,11 +15,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
@@ -96,12 +96,12 @@ public class BaseActivityShould {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         previousOrganisationCredentials = credentialsLocalDataSource.getLastValidCredentials();
         previousCredentials = credentialsLocalDataSource.getCredentials();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
                         PreferencesEReferral.getUserProgramId());
         if (databaseProgramDB != null) {
-            previousProgram = programLocalDataSource.getUserProgram();
+            previousProgram = programRepository.getUserProgram();
         }
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
@@ -121,8 +121,8 @@ public class BaseActivityShould {
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
@@ -142,9 +142,9 @@ public class BaseActivityShould {
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(previousOrganisationCredentials);
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        ProgramRepository programRepository = new ProgramRepository();
         if (previousProgram != null) {
-            programLocalDataSource.saveUserProgramId(previousProgram);
+            programRepository.saveUserProgramId(previousProgram);
         } else {
             PreferencesEReferral.saveUserProgramId(-1l);
         }

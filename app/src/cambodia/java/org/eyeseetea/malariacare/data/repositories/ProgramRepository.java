@@ -1,10 +1,13 @@
-package org.eyeseetea.malariacare.data.database.datasources;
+package org.eyeseetea.malariacare.data.repositories;
+
 
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 
+import java.util.List;
 
-public class ProgramLocalDataSource implements IProgramRepository {
+
+public class ProgramRepository implements IProgramRepository {
 
 
     @Override
@@ -21,5 +24,15 @@ public class ProgramLocalDataSource implements IProgramRepository {
         }
         Program program = new Program(programDB.getName(), programDB.getUid());
         return program;
+    }
+
+    @Override
+    public Program getProgramWithId(String programId) {
+        return null;
+    }
+
+    @Override
+    public List<Program> getRelatedPrograms(String programId) {
+        return null;
     }
 }

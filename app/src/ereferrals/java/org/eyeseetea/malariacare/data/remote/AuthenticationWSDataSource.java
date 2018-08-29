@@ -41,5 +41,6 @@ public class AuthenticationWSDataSource implements IAuthenticationDataSource {
     @Override
     public void logout(IDataSourceCallback<Void> callback) {
         //not necessary for this moment
+        callback.onSuccess(null);
     }
 }

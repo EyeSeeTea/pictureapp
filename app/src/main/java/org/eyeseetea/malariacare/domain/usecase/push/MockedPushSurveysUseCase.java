@@ -8,16 +8,16 @@ import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import java.util.List;
 
 public class MockedPushSurveysUseCase {
-    private IProgramRepository mProgramLocalDataSource;
+    private IProgramRepository mProgramRepository;
 
     public MockedPushSurveysUseCase(
-            IProgramRepository programLocalDataSource) {
-        mProgramLocalDataSource = programLocalDataSource;
+            IProgramRepository programRepository) {
+        mProgramRepository = programRepository;
     }
 
     public void execute(Callback callback) {
         List<SurveyDB> surveyDBs = SurveyDB.getAllMalariaSurveysToBeSent(
-                mProgramLocalDataSource.getUserProgram().getId());
+                mProgramRepository.getUserProgram().getId());
 
         for (SurveyDB surveyDB : surveyDBs) {
             SurveyFragmentStrategy.setSurveyAsSent(surveyDB);

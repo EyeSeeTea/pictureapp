@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
-import org.eyeseetea.malariacare.data.remote.ForgotPasswordDataSource;
+import org.eyeseetea.malariacare.data.remote.ForgotPasswordWSDataSource;
 import org.eyeseetea.malariacare.data.remote.IForgotPasswordDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
@@ -17,7 +17,7 @@ public class AuthenticationManagerStrategy extends AAuthenticationManagerStrateg
     ISettingsRepository mSettingsRepository;
 
     public AuthenticationManagerStrategy(Context context) {
-        mForgotPasswordDataSource = new ForgotPasswordDataSource(context);
+        mForgotPasswordDataSource = new ForgotPasswordWSDataSource(context);
         mSettingsRepository = new SettingsDataSource(context);
     }
 

@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.QuestionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
@@ -30,7 +29,6 @@ import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.usecase.CreateSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetQuestionsByProgramUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyUseCase;
-import org.eyeseetea.malariacare.domain.usecase.SaveValueUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.AddBalanceReceiptAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;

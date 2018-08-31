@@ -60,7 +60,7 @@ public class PushController implements IPushController {
 
     private Context mContext;
     private PushDhisSDKDataSource mPushDhisSDKDataSource;
-    private IAuthenticationManager authenticationManager;
+    private IAuthenticationManager mAuthenticationManager;
     private ConvertToSDKVisitor mConvertToSDKVisitor;
     private APushControllerStrategy mPushControllerStrategy;
 
@@ -68,7 +68,7 @@ public class PushController implements IPushController {
     public PushController(Context context, IAuthenticationManager authenticationManager) {
         mContext = context;
         mPushDhisSDKDataSource = new PushDhisSDKDataSource();
-        authenticationManager = authenticationManager;
+        mAuthenticationManager = authenticationManager;
         mConvertToSDKVisitor = new ConvertToSDKVisitor(mContext);
         mPushControllerStrategy = new PushControllerStrategy();
     }
@@ -192,7 +192,7 @@ public class PushController implements IPushController {
 
 
     private void hardcodedLogin(String url, final AuthenticationManager.Callback callback) {
-        authenticationManager.hardcodedLogin(url,
+        mAuthenticationManager.hardcodedLogin(url,
                 new IAuthenticationManager.Callback<UserAccount>() {
 
                     @Override

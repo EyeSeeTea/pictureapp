@@ -12,8 +12,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.remote.SdkQueries;
-import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
@@ -22,7 +21,6 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
-import org.hisp.dhis.client.sdk.android.api.D2;
 
 public class SplashScreenActivity extends Activity {
 
@@ -53,8 +51,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void init() {
-        D2.init(this);
-        SdkQueries.createDBIndexes();
         //Added to execute a query in DB, because DBFLow doesn't do any migration until a query
         // is executed
         PopulateDB.initDBQuery();
@@ -62,7 +58,7 @@ public class SplashScreenActivity extends Activity {
             PostMigration.launchPostMigration();
         } catch (PostMigrationException e) {
             new AlertDialog.Builder(this)
-                    .setTitle(getApplicationContext().getString(R.string.error_message))
+                    .setTitle(getApplicationContext().getString(R.string.dialog_title_error))
                     .setCancelable(false)
                     .setMessage(getApplicationContext().getString(R.string.db_migration_error))
                     .setNeutralButton(android.R.string.ok, null).create().show();
@@ -71,7 +67,7 @@ public class SplashScreenActivity extends Activity {
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");
 
-            PullController pullController = new PullController(
+            WSPullController pullController = new WSPullController(
                     getApplication().getApplicationContext());
             IAsyncExecutor asyncExecutor = new AsyncExecutor();
             IMainExecutor mainExecutor = new UIThreadExecutor();

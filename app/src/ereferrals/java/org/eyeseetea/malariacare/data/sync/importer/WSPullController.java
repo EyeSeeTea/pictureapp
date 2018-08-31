@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.sync.importer.strategies;
+package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,19 +11,16 @@ import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
-import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
-import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
-import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDBImporter;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDataSourceFactory;
-import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
@@ -41,28 +38,25 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
-import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PullControllerStrategy extends APullControllerStrategy {
+public class WSPullController implements IPullController {
+    private static String TAG = "WSPullController";
     private MetadataUpdater mMetadataUpdater;
     private MetadataConfigurationDBImporter importer;
     private Context mContext;
     private IAppInfoRepository mAppInfoRepository;
 
-    public PullControllerStrategy(PullController pullController, Context context) {
-        super(pullController);
+    public WSPullController(Context context) {
         mMetadataUpdater = new MetadataUpdater(context);
         mContext = context;
         mAppInfoRepository = new AppInfoDataSource(context);
     }
 
-    @Override
+/*    @Override
     public void convertMetadata(ConvertFromSDKVisitor converter,
             IPullController.Callback callback) {
         for (CategoryOptionGroupFlow categoryOptionGroupFlow : SdkQueries.getCategoryOptionGroups
@@ -72,30 +66,27 @@ public class PullControllerStrategy extends APullControllerStrategy {
             categoryOptionGroupExtended.accept(converter);
         }
         callback.onComplete();
-    }
+    }*/
 
     @Override
-    public void pull(PullFilters pullFilters, IPullController.Callback callback, Context context) {
+    public void pull(PullFilters pullFilters, Callback callback) {
         Log.d(TAG, "Starting PULL process...");
         callback.onStep(PullStep.METADATA);
 
         try {
 
-            if (!pullFilters.isDemo()) {
-                mPullController.pullData(pullFilters, new ArrayList<OrganisationUnit>(), callback);
-            } else {
-                mPullController.populateMetadataFromCsvs(pullFilters.isDemo());
-                mPullController.onPullDataComplete(callback, true);
-                callback.onComplete();
+            if (pullFilters.isDemo()) {
+                populateMetadataFromCsvs(pullFilters.isDemo());
             }
+
+            pullMetadata(callback, pullFilters.isDemo());
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
             callback.onError(ex);
         }
     }
 
-    @Override
-    public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
+    public void pullMetadata(final IPullController.Callback callback, boolean isDemo) {
         try {
 
             if (isDemo) {
@@ -124,7 +115,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
                 }
                 programRepository.saveUserProgramId(program);
 
-                mPullController.convertData(callback);
+                callback.onComplete();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,4 +206,17 @@ public class PullControllerStrategy extends APullControllerStrategy {
         downloader.downloadAsync(asyncExecutor);
     }
 
+
+    @Override
+    public void cancel() {
+        //not implemented
+    }
+
+    public void populateMetadataFromCsvs(boolean isDemo) throws IOException {
+        PopulateDB.initDataIfRequired(mContext);
+        if (isDemo) {
+            new PopulateDBStrategy().createDummyOrgUnitsDataInDB(mContext);
+            new PopulateDBStrategy().createDummyOrganisationInDB();
+        }
+    }
 }

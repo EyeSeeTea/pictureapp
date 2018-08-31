@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -203,7 +204,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void createActionBar() {
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         Program userProgram = programRepository.getUserProgram();
 
         if (userProgram != null && PreferencesState.getInstance().getOrgUnit() != null &&

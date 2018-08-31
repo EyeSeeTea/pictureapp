@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.SplashScreenActivity;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
@@ -12,5 +14,11 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void finishAndGo() {
         super.finishAndGo(LoginActivity.class);
+    }
+
+    @Override
+    public void init(SplashScreenActivity.Callback callback) {
+        SdkQueries.createDBIndexes();
+        super.init(callback);
     }
 }

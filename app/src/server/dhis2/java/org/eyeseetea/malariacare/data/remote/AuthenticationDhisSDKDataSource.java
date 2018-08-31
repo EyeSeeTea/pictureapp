@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.data.remote;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
@@ -30,30 +31,33 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
 
     public AuthenticationDhisSDKDataSource(Context context) {
         mContext = context;
+
+        try{
+            D2.isConfigured();
+        }catch (IllegalArgumentException e){
+            D2.init(context);
+        }
+
         mAuthenticationDhisSDKDataSourceStrategy = new AuthenticationDhisSDKDataSourceStrategy();
     }
 
     @Override
     public void logout(final IDataSourceCallback<Void> callback) {
-        if (D2.isConfigured()) {
-            D2.me().signOut()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Boolean>() {
-                        @Override
-                        public void call(Boolean result) {
-                            callback.onSuccess(null);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            callback.onError(throwable);
-                        }
-                    });
-        } else {
-            //The user is never logged
-            callback.onSuccess(null);
-        }
+        D2.me().signOut()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean result) {
+                        callback.onSuccess(null);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
+
     }
 
     @Override
@@ -73,7 +77,8 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                             new Func1<Void, Observable<org.hisp.dhis.client.sdk.models.user
                                     .UserAccount>>() {
                                 @Override
-                                public Observable<org.hisp.dhis.client.sdk.models.user.UserAccount>
+                                public Observable<org.hisp.dhis.client.sdk.models.user
+                                        .UserAccount>
                                 call(
                                         Void aVoid) {
                                     return D2.me().signIn(credentials.getUsername(),
@@ -85,7 +90,8 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                     .subscribe(new Action1<org.hisp.dhis.client.sdk.models.user.UserAccount>() {
                         @Override
                         public void call(
-                                org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
+                                org.hisp.dhis.client.sdk.models.user.UserAccount
+                                        dhisUserAccount) {
                             callback.onSuccess(
                                     mAuthenticationDhisSDKDataSourceStrategy.createUserAccount(
                                             dhisUserAccount, credentials));

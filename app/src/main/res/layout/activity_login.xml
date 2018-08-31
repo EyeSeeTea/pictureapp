@@ -22,7 +22,7 @@
             android:layout_height="110dp"
             android:layout_centerHorizontal="true">
 
-            <org.hisp.dhis.client.sdk.ui.views.CircleView
+            <org.eyeseetea.sdk.presentation.views.CircleView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:circle_radius="50dp"

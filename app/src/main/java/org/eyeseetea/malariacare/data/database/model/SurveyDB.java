@@ -64,7 +64,6 @@ import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -315,10 +314,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
 
     public String getEventUid() {
         return uid_event_fk;
-    }
-
-    public void setEventUid(EventFlow event) {
-        this.uid_event_fk = event.getUId();
     }
 
     public void setEventUid(String eventuid) {

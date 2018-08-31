@@ -74,7 +74,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void initLoginUseCase() {
         loginActivity.mLoginUseCase =
-                new AuthenticationFactoryStrategy().getLoginUseCase(loginActivity);
+                new AuthenticationFactoryStrategy().getLoginUseCase(loginActivity.getApplication());
     }
 
 

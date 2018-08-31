@@ -290,10 +290,8 @@ configurations {
 
 dependencies {
     // SDK submodules
-    //compile project(":core-rules")
     cambodiaCompile project(":ui-bindings")
     cnmCompile project(":ui-bindings")
-    ereferralsCompile project(":ui-bindings")
     laosCompile project(":ui-bindings")
     myanmarCompile project(":ui-bindings")
 
@@ -327,9 +325,15 @@ dependencies {
     compile "com.google.guava:guava:${libs.guavaVersion}"
     compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
+    compile "com.squareup.retrofit2:retrofit:${libs.retrofitVersion}"
+    compile "com.squareup.retrofit2:converter-jackson:${libs.retrofitVersion}"
     compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
-    compile "com.fasterxml.jackson.core:jackson-annotations:${libs.jacksonVersion}"
     compile "com.github.castorflex.smoothprogressbar:library-circular:${libs.progressBarVersion}"
+    compile "joda-time:joda-time:${libs.jodaTimeVersion}"
+
+    // Fasterxml libraries.
+    compile "com.fasterxml.jackson.core:jackson-annotations:${libs.jacksonVersion}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${libs.jacksonVersion}"
 
 
     //Drive dependencies

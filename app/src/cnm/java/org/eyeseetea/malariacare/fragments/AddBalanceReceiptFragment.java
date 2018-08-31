@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -99,7 +100,7 @@ public class AddBalanceReceiptFragment extends Fragment implements
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         IOrganisationUnitRepository organisationUnitRepository = new OrganisationUnitRepository();
         IUserRepository userRepository = new UserAccountDataSource();
         IQuestionRepository questionRepository = new QuestionLocalDataSource();

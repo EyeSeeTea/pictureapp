@@ -29,7 +29,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -78,7 +78,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
-        pullController = new PullController(loginActivity);
+        pullController = new WSPullController(loginActivity);
         asyncExecutor = new AsyncExecutor();
         mainExecutor = new UIThreadExecutor();
         credentialsRepository = new CredentialsLocalDataSource();
@@ -639,7 +639,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void executePullDemo() {
-        PullController pullController = new PullController(loginActivity);
+        WSPullController pullController = new WSPullController(loginActivity);
         PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
 
         PullFilters pullFilters = new PullFilters();

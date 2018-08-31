@@ -124,7 +124,7 @@
                     android:id="@+id/button_log_in"
                     style="@style/CustomButton"
                     android:background="@drawable/button_selector_accent"
-                    android:text="@string/log_in" />
+                    android:text="@string/login_btn_login" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/demo_login_button"

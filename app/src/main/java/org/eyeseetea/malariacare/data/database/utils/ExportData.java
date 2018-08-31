@@ -12,7 +12,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.domain.exception.ExportDataException;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.hisp.dhis.client.sdk.android.api.persistence.DbDhis;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,9 +25,6 @@ import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-/**
- * Created by idelcano on 26/08/2016.
- */
 public class ExportData {
 
     private final static String TAG = ".ExportData";
@@ -63,7 +59,7 @@ public class ExportData {
         tempFolder.mkdir();
         //copy databases
         dumpDatabase(AppDatabase.NAME + ".db", tempFolder);
-        dumpDatabase(DbDhis.NAME + ".db", tempFolder);
+        //dumpDatabase(DbDhis.NAME + ".db", tempFolder);
         //Copy the sharedPreferences
         dumpSharedPreferences(tempFolder);
 

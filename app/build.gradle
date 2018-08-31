@@ -33,11 +33,24 @@ android {
 
     sourceSets {
         String sharedTestDir = 'src/sharedTest/java'
+        String dhis2Dir = 'src/server/dhis2/java'
         test {
             java.srcDir sharedTestDir
         }
         androidTest {
             java.srcDirs sharedTestDir
+        }
+        cambodia {
+            java.srcDirs dhis2Dir
+        }
+        laos {
+            java.srcDirs dhis2Dir
+        }
+        myanmar {
+            java.srcDirs dhis2Dir
+        }
+        cnm {
+            java.srcDirs dhis2Dir
         }
     }
 
@@ -277,8 +290,13 @@ configurations {
 
 dependencies {
     // SDK submodules
-    compile project(":core-rules")
-    compile project(":ui-bindings")
+    //compile project(":core-rules")
+    cambodiaCompile project(":ui-bindings")
+    cnmCompile project(":ui-bindings")
+    ereferralsCompile project(":ui-bindings")
+    laosCompile project(":ui-bindings")
+    myanmarCompile project(":ui-bindings")
+
     compile project(":EyeSeeTea-sdk")
     compile project(":bugshaker")
 

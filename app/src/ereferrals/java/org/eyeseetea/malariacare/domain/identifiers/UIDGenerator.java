@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.entity;
+package org.eyeseetea.malariacare.domain.identifiers;
 
 import java.util.Date;
 

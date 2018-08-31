@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.entity;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import org.eyeseetea.malariacare.domain.identifiers.UIDGenerator;
 import org.junit.Test;
 
 public class UIDGeneratorTest {

@@ -59,11 +59,12 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepositor
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Settings;
-import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
+import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
+import org.eyeseetea.malariacare.domain.identifiers.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
@@ -265,7 +266,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         malariaSurvey.updateSurveyStatus();
         if (malariaSurvey.isCompleted() && malariaSurvey.getEventUid() == null) {
             UIDGenerator uidGenerator = new UIDGenerator();
-            //malariaSurvey.setEventUid(CodeGenerator.generateCode());
+            malariaSurvey.setEventUid(CodeGenerator.generateCode());
             malariaSurvey.setVoucherUid(String.valueOf(uidGenerator.generateUID()));
             malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
             malariaSurvey.save();

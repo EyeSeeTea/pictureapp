@@ -9,7 +9,6 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
-import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
 
 public abstract class APushServiceStrategy {
@@ -27,8 +26,6 @@ public abstract class APushServiceStrategy {
     protected void executePush() {
         PushUseCase pushUseCase =
                 new SyncFactoryStrategy().getPushUseCase(mPushService.getApplicationContext());
-
-        SurveyChecker.launchQuarantineChecker();
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override

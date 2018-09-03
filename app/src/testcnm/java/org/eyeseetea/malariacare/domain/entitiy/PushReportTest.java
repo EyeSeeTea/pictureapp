@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.entity;
+package org.eyeseetea.malariacare.domain.entitiy;
 
 import static org.eyeseetea.malariacare.common.PushReportCommon.EVENT_UID_KEY;
 import static org.eyeseetea.malariacare.common.PushReportCommon.IMPORT_SUMMARY_CONFLICT_RESPONSE;

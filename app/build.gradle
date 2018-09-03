@@ -267,8 +267,8 @@ android {
             buildConfigField "boolean", "elementSDK", "false"
             buildConfigField "boolean", "askEula", "false"
         }
-
     }
+
     lintOptions {
         disable 'RtlSymmetry', 'RtlHardcoded'
         checkReleaseBuilds false
@@ -277,10 +277,6 @@ android {
         arguments {
             targetModuleName 'EyeSeeTea'
         }
-    }
-
-    sourceSets {
-        androidTest.java.srcDirs += 'src/sharedAndroidTest'
     }
 }
 

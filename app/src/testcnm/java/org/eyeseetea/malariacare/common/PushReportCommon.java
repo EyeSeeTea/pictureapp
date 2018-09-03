@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.eyeseetea.malariacare.common.FileReader;
 import org.hisp.dhis.client.sdk.core.common.network.ApiMessage;
 
 import java.io.IOException;

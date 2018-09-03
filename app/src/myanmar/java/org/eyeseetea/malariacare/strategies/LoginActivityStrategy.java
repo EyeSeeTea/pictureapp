@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.hisp.dhis.client.sdk.ui.views.FontButton;
@@ -137,11 +138,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void executePullDemo() {
-        PullController pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
-        PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        PullUseCase pullUseCase = new SyncFactoryStrategy().getPullUseCase(loginActivity);
 
         PullFilters pullFilters = new PullFilters();
         pullFilters.setDemo(true);

@@ -10,7 +10,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.database.utils.ExportDataStrategy;
 import org.eyeseetea.malariacare.domain.exception.ExportDataException;
 import org.eyeseetea.malariacare.utils.Utils;
 

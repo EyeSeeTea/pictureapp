@@ -12,14 +12,10 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 
 public class SplashScreenActivity extends Activity {
@@ -67,12 +63,8 @@ public class SplashScreenActivity extends Activity {
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");
 
-            WSPullController pullController = new WSPullController(
-                    getApplication().getApplicationContext());
-            IAsyncExecutor asyncExecutor = new AsyncExecutor();
-            IMainExecutor mainExecutor = new UIThreadExecutor();
-
-            PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+            PullUseCase pullUseCase = new SyncFactoryStrategy()
+                    .getPullUseCase(this.getApplicationContext());
 
             PullFilters pullFilters = new PullFilters();
             splashActivityStrategy.initPullFilters(pullFilters);

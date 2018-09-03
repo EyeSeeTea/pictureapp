@@ -32,18 +32,13 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
-import org.eyeseetea.malariacare.domain.boundary.IPullController;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 
@@ -76,12 +71,11 @@ public class ProgressActivity extends Activity {
 
     private void initializeDependencies() {
 
-        IPullController pullController = new WSPullController(this);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
 
-        mLogoutUseCase = new AuthenticationFactoryStrategy().getLogoutUseCase(this);
-        mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        mLogoutUseCase = new AuthenticationFactoryStrategy()
+                .getLogoutUseCase(this.getApplicationContext());
+
+        mPullUseCase = new SyncFactoryStrategy().getPullUseCase(this.getApplicationContext());
     }
 
     private void prepareUI() {

@@ -6,6 +6,10 @@ import android.util.Log;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
 
 public abstract class APushServiceStrategy {
@@ -21,22 +25,8 @@ public abstract class APushServiceStrategy {
     public abstract void push();
 
     protected void executePush() {
-        /*IAuthenticationManager authenticationManager =
-                new AuthenticationFactoryStrategy().getAuthenticationManager(mPushService);
-        PushController pushController = new PushController(mPushService, authenticationManager);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
-
-
-        SurveysThresholds surveysThresholds =
-                new SurveysThresholds(BuildConfig.LimitSurveysCount,
-                        BuildConfig.LimitSurveysTimeHours);
-
         PushUseCase pushUseCase =
-                new PushUseCase(pushController, asyncExecutor, mainExecutor,
-                        surveysThresholds, surveyRepository, orgUnitRepository);
+                new SyncFactoryStrategy().getPushUseCase(mPushService.getApplicationContext());
 
         SurveyChecker.launchQuarantineChecker();
 
@@ -117,7 +107,7 @@ public abstract class APushServiceStrategy {
             public void onApiCallError() {
                 onError("onApiCallError");
             }
-        });*/
+        });
     }
 
     public void onError(String error) {

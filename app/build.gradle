@@ -307,8 +307,6 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
     compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
-    compile "com.fasterxml.jackson.core:jackson-annotations:${libs.jacksonVersion}"
-
 
     //Drive dependencies
     compile "com.google.android.gms:play-services-identity:${libs.gmsPlayVersion}"

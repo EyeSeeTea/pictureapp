@@ -4,41 +4,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyContainerWSObject {
-    private String version;
+    private String connectVersion;
     private String source;
     private String userName;
     private String password;
     private List<SurveySendAction> actions;
-    private String language;
     private String androidInfo;
-    private String csvVersion;
     private int configVersion;
+    private String connectCode;
+    private String configDateTime;
+    private SettingsSummary settingsSummary;
 
 
     public SurveyContainerWSObject() {
         actions = new ArrayList<>();
     }
 
-    public SurveyContainerWSObject(String version, String source, String userName,
-            String password, String language, String androidInfo, String csvVersion,
-            int configVersion) {
-        this.version = version;
+    public SurveyContainerWSObject(String connectVersion, String source, String userName,
+            String password, String androidInfo, int configVersion, String connectCode,
+            String configDateTime, SettingsSummary settingsSummary) {
+        this.connectVersion = connectVersion;
         this.source = source;
         this.userName = userName;
         this.password = password;
         actions = new ArrayList<>();
-        this.language = language;
         this.androidInfo = androidInfo;
-        this.csvVersion = csvVersion;
         this.configVersion = configVersion;
+        this.connectVersion = connectCode;
+        this.configDateTime = configDateTime;
+        this.settingsSummary = settingsSummary;
     }
 
-    public String getVersion() {
-        return version;
+    public String getConnectVersion() {
+        return connectVersion;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setConnectVersion(String connectVersion) {
+        this.connectVersion = connectVersion;
     }
 
     public String getSource() {
@@ -73,14 +75,6 @@ public class SurveyContainerWSObject {
         this.actions = actions;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getAndroidInfo() {
         return androidInfo;
     }
@@ -89,20 +83,37 @@ public class SurveyContainerWSObject {
         this.androidInfo = androidInfo;
     }
 
-    public String getCsvVersion() {
-        return csvVersion;
-    }
-
-    public void setCsvVersion(String csvVersion) {
-        this.csvVersion = csvVersion;
-    }
-
     public int getConfigVersion() {
         return configVersion;
     }
 
     public void setConfigVersion(int configVersion) {
         this.configVersion = configVersion;
+    }
+
+    public String getConnectCode() {
+        return connectCode;
+    }
+
+    public void setConnectCode(String connectCode) {
+        this.connectCode = connectCode;
+    }
+
+    public String getConfigDateTime() {
+        return configDateTime;
+    }
+
+    public void setConfigDateTime(String configDateTime) {
+        this.configDateTime = configDateTime;
+    }
+
+    public SettingsSummary getSettingsSummary() {
+        return settingsSummary;
+    }
+
+    public void setSettingsSummary(
+            SettingsSummary settingsSummary) {
+        this.settingsSummary = settingsSummary;
     }
 }
 

@@ -2,16 +2,16 @@ package org.eyeseetea.malariacare.data.sync.exporter.model;
 
 public class SettingsSummary {
     private String dhisServerUrl;
-    private String webSrviceUrl;
+    private String webServiceUrl;
     private String webUrl;
-    private String downloadOver3g;
+    private boolean downloadOver3g;
     private String fontSize;
-    private String elements;
+    private boolean elements;
 
-    public SettingsSummary(String dhisServerUrl, String webSrviceUrl, String webUrl,
-            String downloadOver3g, String fontSize, String elements) {
+    public SettingsSummary(String dhisServerUrl, String webServiceUrl, String webUrl,
+            boolean downloadOver3g, String fontSize, boolean elements) {
         this.dhisServerUrl = dhisServerUrl;
-        this.webSrviceUrl = webSrviceUrl;
+        this.webServiceUrl = webServiceUrl;
         this.webUrl = webUrl;
         this.downloadOver3g = downloadOver3g;
         this.fontSize = fontSize;
@@ -26,12 +26,12 @@ public class SettingsSummary {
         this.dhisServerUrl = dhisServerUrl;
     }
 
-    public String getWebSrviceUrl() {
-        return webSrviceUrl;
+    public String getWebServiceUrl() {
+        return webServiceUrl;
     }
 
-    public void setWebSrviceUrl(String webSrviceUrl) {
-        this.webSrviceUrl = webSrviceUrl;
+    public void setWebServiceUrl(String webServiceUrl) {
+        this.webServiceUrl = webServiceUrl;
     }
 
     public String getWebUrl() {
@@ -42,11 +42,11 @@ public class SettingsSummary {
         this.webUrl = webUrl;
     }
 
-    public String getDownloadOver3g() {
+    public boolean isDownloadOver3g() {
         return downloadOver3g;
     }
 
-    public void setDownloadOver3g(String downloadOver3g) {
+    public void setDownloadOver3g(boolean downloadOver3g) {
         this.downloadOver3g = downloadOver3g;
     }
 
@@ -58,11 +58,11 @@ public class SettingsSummary {
         this.fontSize = fontSize;
     }
 
-    public String getElements() {
+    public boolean isElements() {
         return elements;
     }
 
-    public void setElements(String elements) {
+    public void setElements(boolean elements) {
         this.elements = elements;
     }
 }

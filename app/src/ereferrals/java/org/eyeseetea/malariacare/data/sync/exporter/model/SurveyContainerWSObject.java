@@ -9,7 +9,8 @@ public class SurveyContainerWSObject {
     private String userName;
     private String password;
     private List<SurveySendAction> actions;
-    private String androidInfo;
+    private String phoneImei;
+    private String phoneNumber;
     private int configVersion;
     private String connectCode;
     private String configDateTime;
@@ -21,16 +22,17 @@ public class SurveyContainerWSObject {
     }
 
     public SurveyContainerWSObject(String connectVersion, String source, String userName,
-            String password, String androidInfo, int configVersion, String connectCode,
-            String configDateTime, SettingsSummary settingsSummary) {
+            String password, String phoneImei, int configVersion, String connectCode,
+            String configDateTime, SettingsSummary settingsSummary, String phoneNumber) {
         this.connectVersion = connectVersion;
         this.source = source;
         this.userName = userName;
         this.password = password;
         actions = new ArrayList<>();
-        this.androidInfo = androidInfo;
+        this.phoneImei = phoneImei;
+        this.phoneNumber = phoneNumber;
         this.configVersion = configVersion;
-        this.connectVersion = connectCode;
+        this.connectCode = connectCode;
         this.configDateTime = configDateTime;
         this.settingsSummary = settingsSummary;
     }
@@ -75,12 +77,12 @@ public class SurveyContainerWSObject {
         this.actions = actions;
     }
 
-    public String getAndroidInfo() {
-        return androidInfo;
+    public String getPhoneImei() {
+        return phoneImei;
     }
 
-    public void setAndroidInfo(String androidInfo) {
-        this.androidInfo = androidInfo;
+    public void setPhoneImei(String phoneImei) {
+        this.phoneImei = phoneImei;
     }
 
     public int getConfigVersion() {
@@ -114,6 +116,14 @@ public class SurveyContainerWSObject {
     public void setSettingsSummary(
             SettingsSummary settingsSummary) {
         this.settingsSummary = settingsSummary;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
 

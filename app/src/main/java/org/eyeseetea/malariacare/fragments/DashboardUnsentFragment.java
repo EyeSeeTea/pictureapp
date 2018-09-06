@@ -110,10 +110,28 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         registerFragmentReceiver();
 
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
+        super.onPause();
     }
 
     /**
@@ -136,7 +154,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop");
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         unregisterFragmentReceiver();
 
         super.onStop();

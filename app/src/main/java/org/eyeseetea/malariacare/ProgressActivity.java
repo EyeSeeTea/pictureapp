@@ -125,6 +125,7 @@ public class ProgressActivity extends Activity {
 
     @Override
     public void onResume() {
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         super.onResume();
         if (Session.getCredentials() != null) {
             launchPull(Session.getCredentials().isDemoCredentials());
@@ -248,5 +249,36 @@ public class ProgressActivity extends Activity {
         Intent targetActivityIntent = new Intent(this, targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
+    }
+
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(TAG, "AndroidLifeCycle: onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
     }
 }

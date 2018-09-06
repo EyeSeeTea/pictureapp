@@ -88,6 +88,7 @@ public class EyeSeeTeaApplication extends Application {
 
     @Override
     public void onTerminate() {
+        Log.d(TAG, "AndroidLifeCycle: onTerminate");
         super.onTerminate();
         FlowManager.destroy();
     }

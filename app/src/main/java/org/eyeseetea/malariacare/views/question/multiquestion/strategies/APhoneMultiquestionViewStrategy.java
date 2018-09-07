@@ -50,7 +50,7 @@ public abstract class APhoneMultiquestionViewStrategy  {
         });
     }
 
-    public void validatePhone(EditText phoneText) throws InvalidPhoneException {
+    private void validatePhone(EditText phoneText) throws InvalidPhoneException {
         Phone phone = new Phone(phoneText.getText().toString());
         validateRegExp(phoneText, phone);
     }

@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare;
 
 import static org.eyeseetea.malariacare.BuildConfig.exitFromSurveyToImproveTab;
+import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy.TAG;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,18 +46,29 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.RemoveSurveysInProgressUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSurveyFromIntentUseCase;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -68,7 +80,7 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
-import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 
@@ -403,6 +415,14 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onResume();
         super.onResume();
         mIsInForegroundMode = true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        //mDashboardActivityStrategy.onNewIntent(this);
+        Log.d(TAG, "AndroidLifeCycle: onNewIntent ");
     }
 
     @Override
@@ -756,7 +776,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "AndroidLifeCycle: onCreate");
         super.onCreate(savedInstanceState);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         if (getIntent().getBooleanExtra(getString(R.string.show_announcement_key), true)

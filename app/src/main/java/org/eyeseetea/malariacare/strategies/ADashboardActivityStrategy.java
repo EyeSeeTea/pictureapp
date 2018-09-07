@@ -386,4 +386,7 @@ public abstract class ADashboardActivityStrategy {
     public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
         return false;
     }
+
+    public void onNewIntent(DashboardActivity dashboardActivity) {
+    }
 }

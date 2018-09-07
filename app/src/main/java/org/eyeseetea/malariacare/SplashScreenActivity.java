@@ -160,4 +160,10 @@ public class SplashScreenActivity extends Activity {
         Log.d(TAG, "AndroidLifeCycle: onDestroy");
         super.onDestroy();
     }
+
+    public static void clearIntentExtras(Activity activity, String bundleKey) {
+        if(activity.getIntent().getExtras()!=null) {
+            activity.getIntent().removeExtra(bundleKey);
+        }
+    }
 }

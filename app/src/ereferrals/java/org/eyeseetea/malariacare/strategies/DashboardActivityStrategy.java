@@ -27,6 +27,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SplashScreenActivity;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
@@ -106,7 +107,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void onCreate() {
-
+        SplashScreenActivity.clearIntentExtras(mDashboardActivity, SplashActivityStrategy.INTENT_JSON_EXTRA_KEY);
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
 
         Credentials credentials = iCredentialsRepository.getOrganisationCredentials();
@@ -573,7 +574,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     }
 
                     mDashboardActivity.showException(mDashboardActivity, "", String.format(
-                            mDashboardActivity.getResources().getString(R.string.give_voucher),
+                            mDashboardActivity.getResources().getString(R.string.give_voucher)+"",
                             voucherUId), onClickListener);
                 }
             });
@@ -686,5 +687,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
         }
+    }
+
+    @Override
+    public void onNewIntent(DashboardActivity dashboardActivity) {
+        String connectVoucherJson = dashboardActivity.getIntent().getStringExtra(
+                SplashActivityStrategy.INTENT_JSON_EXTRA_KEY);
+        if(connectVoucherJson==null){
+            return;
+        }
+        SplashScreenActivity.clearIntentExtras(dashboardActivity, SplashActivityStrategy.INTENT_JSON_EXTRA_KEY);
+        Intent moveToSplash = new Intent(dashboardActivity, SplashScreenActivity.class);
+        Bundle mCredentialsBundle = new Bundle();
+        mCredentialsBundle.putString(SplashActivityStrategy.INTENT_JSON_EXTRA_KEY, connectVoucherJson);
+        moveToSplash.putExtras(mCredentialsBundle);
+        dashboardActivity.startActivity(moveToSplash);
+        dashboardActivity.finish();
     }
 }

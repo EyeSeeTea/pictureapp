@@ -17,7 +17,6 @@ import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
-import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -32,9 +31,6 @@ import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
-import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
@@ -55,7 +51,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public void init(final SplashScreenActivity.Callback callback) {
         String connectVoucherJson = activity.getIntent().getStringExtra(
                 INTENT_JSON_EXTRA_KEY);
-        clearIntentExtras();
+        SplashScreenActivity.clearIntentExtras(activity, INTENT_JSON_EXTRA_KEY);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
@@ -160,12 +156,5 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                         Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-
-    private void clearIntentExtras() {
-        if(activity.getIntent().getExtras()!=null) {
-            activity.getIntent().removeExtra(INTENT_JSON_EXTRA_KEY);
-        }
     }
 }

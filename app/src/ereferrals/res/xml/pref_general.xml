@@ -51,6 +51,28 @@
             android:singleLine="true"
             android:title="@string/server_name" />
 
+        <EditTextPreference
+            android:inputType="textUri"
+            android:key="@string/program_configuration_url"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings_title_program_url_config" />
+        <EditTextPreference
+            android:inputType="text"
+            android:key="@string/program_configuration_user"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings_title_program_username_config" />
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="@string/program_configuration_pass"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/settings_title_program_password_config" />
+
         <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
             android:defaultValue=""
             android:inputType="text"

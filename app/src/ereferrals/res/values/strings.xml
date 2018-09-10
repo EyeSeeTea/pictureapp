@@ -1128,5 +1128,8 @@
 <string name="metadata_update">"Last metadata upgrade: %s"</string>
 <string name="element_not_installed">"Element SDK is not installed!"</string>
 <string name="check_metadata_title">"Check metadata updates on soft logins"</string>
+<string name="settings_title_program_url_config">"Program configuration URL"</string>
+<string name="settings_title_program_username_config">"Program configuration username"</string>
+<string name="settings_title_program_password_config">"Program configuration password"</string>
 
 </resources>

@@ -6,9 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -18,7 +22,9 @@ import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
@@ -27,6 +33,7 @@ import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.CustomFontStyles;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 
 import java.util.List;
 
@@ -82,6 +89,47 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.check_metadata_key)));
         }
+        preferenceCategory.removePreference(preferenceScreen.findPreference(
+                settingsActivity.getResources().getString(R.string.dhis_url)));
+
+
+        initProgramConfigurationSettings(preferenceScreen);
+    }
+
+    private void initProgramConfigurationSettings(PreferenceScreen preferenceScreen) {
+        EditTextPreference programUrl = (EditTextPreference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getString(R.string.program_configuration_url));
+        EditTextPreference programPass = (EditTextPreference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getString(R.string.program_configuration_pass));
+        EditTextPreference programUser = (EditTextPreference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getString(R.string.program_configuration_user));
+
+
+        ISettingsRepository settingsRepository = new SettingsDataSource(preferenceScreen.getContext());
+
+        programUrl.setOnPreferenceChangeListener(new onCredentialsChangeListener());
+        programUrl.setText(settingsRepository.getSettings().getUrl());
+        programUrl.setSummary(settingsRepository.getSettings().getUrl());
+
+        programUser.setOnPreferenceChangeListener(new onCredentialsChangeListener());
+        programUser.setText(settingsRepository.getSettings().getUser());
+        programUrl.setSummary(settingsRepository.getSettings().getUser());
+
+        programPass.setOnPreferenceChangeListener(new onCredentialsChangeListener());
+        programPass.setText(settingsRepository.getSettings().getPass());
+        programUrl.setSummary(settingsRepository.getSettings().getPass());
+    }
+
+
+    private class onCredentialsChangeListener implements Preference.OnPreferenceChangeListener{
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean result = isNotEmpty(newValue);
+                if(result){
+                    preference.setSummary(newValue.toString());
+                }
+                return result;
+            }
     }
 
     @Override
@@ -181,6 +229,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         for (CustomFontStyles fontStyle:CustomFontStyles.values()) {
             entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
             entryValues.add(String.valueOf(fontStyle.getResId()));
+        }
+    }
+
+    private boolean isNotEmpty(Object newValue) {
+        if(newValue.toString().trim().equals("")) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

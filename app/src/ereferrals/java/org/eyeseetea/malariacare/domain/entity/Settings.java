@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository.MediaListMode;
 
 public class Settings {
@@ -21,7 +23,7 @@ public class Settings {
             MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
             boolean isMetadataUpdateActive, String dhisServerUrl, String wsServerUrl,
             String webUrl, String fontSize) {
-        this.systemLanguage = systemLanguage;
+        this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
         this.mediaListMode = mediaListMode;
         this.canDownloadWith3G = canDownloadWith3G;

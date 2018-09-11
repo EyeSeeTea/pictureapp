@@ -8,6 +8,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -25,6 +26,7 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
@@ -98,9 +100,12 @@ public class WSPullController implements IPullController {
                 programRepository.saveUserProgramId(program);
                 callback.onComplete();
             } else {
+                ISettingsRepository settingsRepository = new SettingsDataSource(mContext);
                 IMetadataConfigurationDataSource metadataConfigurationDataSource =
                         MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                                HTTPClientFactory.getAuthenticationInterceptor()
+                                HTTPClientFactory.getAuthenticationInterceptor(),
+                                settingsRepository.getSettings().getUrl()
+
                         );
                 importer = new MetadataConfigurationDBImporter(
                         metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()

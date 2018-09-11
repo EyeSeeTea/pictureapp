@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertTrue;
 
-import com.squareup.okhttp.Credentials;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -18,12 +17,15 @@ import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.junit.Before;
 
+import okhttp3.Credentials;
+
 public class RealMetadataConfigurationDBImporterShould {
 
 
     private MetadataConfigurationDBImporter importer;
 
     private  final Program program = new Program("T_TZ","low6qUS2wc9");
+    private final String url = "";
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +34,8 @@ public class RealMetadataConfigurationDBImporterShould {
 
         IMetadataConfigurationDataSource apiClient =
                 MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                        new BasicAuthInterceptor(credentials)
+                        new BasicAuthInterceptor(credentials),
+                        url
                 );
         importer = new MetadataConfigurationDBImporter(
                 apiClient, ConverterFactory.getQuestionConverter()

@@ -1,9 +1,12 @@
 package org.eyeseetea.malariacare;
 
 
+import android.support.test.InstrumentationRegistry;
+
 import static junit.framework.Assert.assertTrue;
 
 
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
@@ -25,7 +28,6 @@ public class RealMetadataConfigurationDBImporterShould {
     private MetadataConfigurationDBImporter importer;
 
     private  final Program program = new Program("T_TZ","low6qUS2wc9");
-    private final String url = "";
 
     @Before
     public void setUp() throws Exception {
@@ -35,7 +37,7 @@ public class RealMetadataConfigurationDBImporterShould {
         IMetadataConfigurationDataSource apiClient =
                 MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
                         new BasicAuthInterceptor(credentials),
-                        url
+                        new SettingsDataSource(InstrumentationRegistry.getTargetContext()).getSettings().getUrl()
                 );
         importer = new MetadataConfigurationDBImporter(
                 apiClient, ConverterFactory.getQuestionConverter()

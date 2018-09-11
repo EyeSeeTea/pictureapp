@@ -42,8 +42,6 @@ public class MetadataConfigurationDBImporterShould {
 
     private CustomMockServer dhis2MockServer;
 
-    private final String url = "";
-
     private final Program program = new Program("T_TZ", "low6qUS2wc9");
 
     @Before

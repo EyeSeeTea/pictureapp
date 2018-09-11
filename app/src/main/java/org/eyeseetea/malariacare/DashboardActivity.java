@@ -763,11 +763,7 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
-        if (getIntent().getBooleanExtra(getString(R.string.show_announcement_key), true)
-                && Session.getCredentials() != null
-                && !Session.getCredentials().isDemoCredentials()) {
-            new AsyncAnnouncement().execute();
-        }
+
         handler = new Handler(Looper.getMainLooper());
         mDashboardActivityStrategy = new DashboardActivityStrategy(this);
         mDashboardActivityStrategy.onCreate();
@@ -860,40 +856,6 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.onConnectivityStatusChange();
     }
 
-    public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
-        UserDB mLoggedUserDB;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            mLoggedUserDB = UserDB.getLoggedUser();
-            if (mLoggedUserDB != null) {
-                try {
-                    mLoggedUserDB = ServerAPIController.pullUserAttributes(mLoggedUserDB);
-                } catch (ApiCallException e) {
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mLoggedUserDB != null) {
-                if (mLoggedUserDB.getAnnouncement() != null
-                        && !mLoggedUserDB.getAnnouncement().equals("")
-                        && !PreferencesState.getInstance().isUserAccept()) {
-                    Log.d(TAG, "show logged announcement");
-                    AnnouncementMessageDialog.showAnnouncement(R.string.admin_announcement,
-                            mLoggedUserDB.getAnnouncement(),
-                            DashboardActivity.this);
-                } else {
-                    AnnouncementMessageDialog.checkUserClosed(mLoggedUserDB,
-                            DashboardActivity.this);
-                }
-            }
-        }
-    }
 
     public TabHost getTabHost() {
         return tabHost;

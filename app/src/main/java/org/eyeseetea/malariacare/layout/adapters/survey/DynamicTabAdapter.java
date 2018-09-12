@@ -689,7 +689,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     @Nullable
     private ValueDB fillDefaultValue(QuestionDB screenQuestionDB, SurveyDB surveyDB, ValueDB valueDB) {
-        if(!readOnly && valueDB == null && screenQuestionDB.getDefaultValue()!=null && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB)){
+        if (!readOnly && valueDB == null && screenQuestionDB.getDefaultValue() != null) {
             if(screenQuestionDB.hasOutputWithOptions()){
                 OptionDB optionDB = screenQuestionDB.findOptionByValue(screenQuestionDB.getDefaultValue());
                 if(optionDB!=null) {
@@ -1014,7 +1014,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 row.setVisibility(View.VISIBLE);
                 commonQuestionView.activateQuestion();
                 showDefaultValue(row, rowQuestionDB);
-                if(!rowQuestionDB.isCompulsory()){
+
+                if (rowQuestionDB.getValueBySurvey(surveyDB) != null) {
+                    ((IQuestionView) commonQuestionView).setValue(
+                            rowQuestionDB.getValueBySurvey(surveyDB));
+                }
+                if (!rowQuestionDB.isCompulsory()) {
                     checkInitialCompulsoryValidationError(commonQuestionView);
                 }
 

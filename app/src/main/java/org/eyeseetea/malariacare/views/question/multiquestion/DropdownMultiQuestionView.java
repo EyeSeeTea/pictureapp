@@ -92,6 +92,8 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         if (valueDB == null || valueDB.getValue() == null) {
             return;
         }
+
+        spinnerOptions.setSelection(0,true);
         optionSetFromSavedValue = true;
 
         for (int i = 0; i < spinnerOptions.getAdapter().getCount(); i++) {

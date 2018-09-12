@@ -71,7 +71,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
                 credentials.getPassword(), device.getIMEI(),
                 getConfigFileVersion(), appInfo.getAppVersion(),
                 getDateString(appInfo.getUpdateMetadataDate()),
-                getSettingsSummary(settingsRepository), device.getPhone());
+                getSettingsSummary(settingsRepository), device.getPhone(), device.getIMEI());
     }
 
     private String getDateString(Date updateMetadataDate) {
@@ -82,7 +82,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         Settings settings = settingsRepository.getSettings();
         return new SettingsSummary(settings.getDhisServerUrl(), settings.getWsServerUrl(),
                 settings.getWebUrl(), settings.isCanDownloadWith3G(), settings.getFontSize(),
-                settings.isElementActive());
+                settings.isElementActive(), settings.getLanguage());
     }
 
     private int getConfigFileVersion() {

@@ -7,15 +7,17 @@ public class SettingsSummary {
     private boolean downloadOver3g;
     private String fontSize;
     private boolean elements;
+    private String language;
 
     public SettingsSummary(String dhisServerUrl, String webServiceUrl, String webUrl,
-            boolean downloadOver3g, String fontSize, boolean elements) {
+            boolean downloadOver3g, String fontSize, boolean elements, String language) {
         this.dhisServerUrl = dhisServerUrl;
         this.webServiceUrl = webServiceUrl;
         this.webUrl = webUrl;
         this.downloadOver3g = downloadOver3g;
         this.fontSize = fontSize;
         this.elements = elements;
+        this.language = language;
     }
 
     public String getDhisServerUrl() {
@@ -64,5 +66,13 @@ public class SettingsSummary {
 
     public void setElements(boolean elements) {
         this.elements = elements;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

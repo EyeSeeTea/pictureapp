@@ -15,6 +15,7 @@ public class SurveyContainerWSObject {
     private String connectCode;
     private String configDateTime;
     private SettingsSummary settingsSummary;
+    private String androidInfo;
 
 
     public SurveyContainerWSObject() {
@@ -23,7 +24,8 @@ public class SurveyContainerWSObject {
 
     public SurveyContainerWSObject(String connectVersion, String source, String userName,
             String password, String phoneImei, int configVersion, String connectCode,
-            String configDateTime, SettingsSummary settingsSummary, String phoneNumber) {
+            String configDateTime, SettingsSummary settingsSummary, String phoneNumber,
+            String androidInfo) {
         this.connectVersion = connectVersion;
         this.source = source;
         this.userName = userName;
@@ -35,6 +37,7 @@ public class SurveyContainerWSObject {
         this.connectCode = connectCode;
         this.configDateTime = configDateTime;
         this.settingsSummary = settingsSummary;
+        this.androidInfo = androidInfo;
     }
 
     public String getConnectVersion() {
@@ -124,6 +127,14 @@ public class SurveyContainerWSObject {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getAndroidInfo() {
+        return androidInfo;
+    }
+
+    public void setAndroidInfo(String androidInfo) {
+        this.androidInfo = androidInfo;
     }
 }
 

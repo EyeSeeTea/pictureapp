@@ -23,7 +23,7 @@ public class AuthenticationWSDataSource implements IAuthenticationDataSource {
             AuthResponse response = mEReferralsAPIClient.auth(credentials.getUsername(),
                     credentials.getPassword());
 
-            if (response.getAuthorized()) {
+            if (response.isAuthorized()) {
                 UserAccount userAccount = new UserAccount(
                         credentials.getUsername(), credentials.getPassword(),
                         false, true);

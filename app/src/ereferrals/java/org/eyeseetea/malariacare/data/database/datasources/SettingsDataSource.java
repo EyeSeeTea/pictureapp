@@ -133,7 +133,7 @@ public class SettingsDataSource implements ISettingsRepository {
                 context);
 
         //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
-        String loginUrl = sharedPreferences.getString(context.getString(R.string.dhis_url), context.getString(R.string.DHIS_DEFAULT_SERVER));
+        String loginUrl = context.getString(R.string.DHIS_DEFAULT_SERVER);
         return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
     }
 

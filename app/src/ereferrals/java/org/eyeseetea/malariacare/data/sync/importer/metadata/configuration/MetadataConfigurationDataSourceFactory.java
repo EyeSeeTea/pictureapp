@@ -11,7 +11,7 @@ public class MetadataConfigurationDataSourceFactory {
     public static IMetadataConfigurationDataSource getMetadataConfigurationDataSource(
             BasicAuthInterceptor basicAuthInterceptor)
             throws Exception {
-        return new MetadataConfigurationApiClient(PreferencesState.getInstance().getDhisURL(),
+        return new MetadataConfigurationApiClient(PreferencesState.getInstance().getServerURL(),
                 basicAuthInterceptor);
     }
 }

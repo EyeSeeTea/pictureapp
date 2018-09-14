@@ -267,7 +267,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             CnmApiClient.CnmApiClientCallBack<List<OrgUnitTree>> cnmApiClientCallBack) {
         CnmApiClient cnmApiClient = null;
         try {
-            cnmApiClient = new CnmApiClient(PreferencesState.getInstance().getDhisURL() + "/");
+            cnmApiClient = new CnmApiClient(PreferencesState.getInstance().getServerURL() + "/");
         } catch (Exception e) {
             e.printStackTrace();
             cnmApiClientCallBack.onError(e);

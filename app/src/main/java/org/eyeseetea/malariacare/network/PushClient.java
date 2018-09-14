@@ -81,7 +81,7 @@ public class PushClient {
     /**
      * Current server url
      */
-    private static String SERVER_URL = "https://www.psi-mis.org";
+    private static String SERVER_URL;
     SurveyDB mSurveyDB;
     Activity activity;
     Context applicationContext;

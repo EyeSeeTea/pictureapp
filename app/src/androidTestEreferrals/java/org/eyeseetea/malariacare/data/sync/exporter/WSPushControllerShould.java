@@ -50,17 +50,19 @@ public class WSPushControllerShould {
     private String pinPreference ="";
     private long programPreference =-1;
 
+    private Context mContext;
+
     @Before
     public void setUp() throws Exception {
+        mContext = InstrumentationRegistry.getTargetContext();
         this.server = new MockWebServer();
         this.server.start();
         //PreferencesState.getInstance().setContext(InstrumentationRegistry.getInstrumentation().getTargetContext());
         savePreferences();
         saveTestCredentialsAndProgram();
         apiClient = initializeApiClient();
-        Device device = new Device("phoneNumber", "imei", "version");
 
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device);
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(mContext);
         mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
     }
 

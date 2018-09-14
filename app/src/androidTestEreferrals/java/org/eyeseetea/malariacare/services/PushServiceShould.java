@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -66,6 +67,8 @@ public class PushServiceShould {
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
 
+    private Context mContext;
+
 
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
@@ -86,6 +89,7 @@ public class PushServiceShould {
 
     @Before
     public void cleanUp() throws IOException {
+        mContext = InstrumentationRegistry.getTargetContext();
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
@@ -93,8 +97,7 @@ public class PushServiceShould {
         savePreviousPreferences();
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"));
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(mContext);
         mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();

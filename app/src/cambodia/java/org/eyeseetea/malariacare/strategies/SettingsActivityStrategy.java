@@ -45,10 +45,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                     (PreferenceCategory) preferenceScreen.findPreference(
                             settingsActivity.getResources().getString(R.string.pref_cat_server));
             preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.dhis_url)));
+                    settingsActivity.getResources().getString(R.string.server_url_preference_key)));
         }
         Preference  serverUrlPreference = (Preference) preferenceScreen.findPreference(
-                preferenceScreen.getContext().getResources().getString(R.string.dhis_url));
+                preferenceScreen.getContext().getResources().getString(R.string.server_url_preference_key));
         serverUrlPreference.setOnPreferenceClickListener(
                 getOnPreferenceClickListener());
     }
@@ -91,6 +91,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void addExtraPreferences() {
         settingsActivity.bindPreferenceSummaryToValue(
-                settingsActivity.findPreference(settingsActivity.getString(R.string.dhis_url)));
+                settingsActivity.findPreference(settingsActivity.getString(R.string.server_url_preference_key)));
     }
 }

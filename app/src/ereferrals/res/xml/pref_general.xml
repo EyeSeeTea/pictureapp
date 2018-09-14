@@ -42,14 +42,6 @@
     <PreferenceCategory
         android:key="@string/pref_cat_server"
         android:title="@string/server">
-        <EditTextPreference
-            android:defaultValue="@string/default_login_url"
-            android:inputType="textUri"
-            android:key="@string/server_url_preference_key"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/server_name" />
 
         <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
             android:defaultValue=""

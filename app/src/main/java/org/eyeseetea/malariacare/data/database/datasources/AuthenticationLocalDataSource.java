@@ -60,7 +60,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
 
     private void saveCredentials(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
+        PreferencesState.getInstance().saveStringPreference(R.string.server_url_preference_key,
                 credentials.getServerURL());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user,
                 credentials.getUsername());
@@ -71,8 +71,8 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
 
     public void clearCredentials() {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
-                mContext.getString(R.string.DHIS_DEFAULT_SERVER));
+        PreferencesState.getInstance().saveStringPreference(R.string.server_url_preference_key,
+                mContext.getString(R.string.default_login_url));
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
         PreferencesState.getInstance().reloadPreferences();

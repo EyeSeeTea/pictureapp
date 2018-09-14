@@ -45,7 +45,7 @@
         <EditTextPreference
             android:defaultValue="@string/default_login_url"
             android:inputType="textUri"
-            android:key="@string/dhis_url"
+            android:key="@string/server_url_preference_key"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"

@@ -111,7 +111,7 @@ public class PushClient {
      */
     public void getPreferenceValues() {
         PreferencesState.getInstance().reloadPreferences();
-        String url = PreferencesState.getInstance().getDhisURL();
+        String url = PreferencesState.getInstance().getServerURL();
         if (url != null || !("".equals(url))) {
             DHIS_SERVER = url;
         }

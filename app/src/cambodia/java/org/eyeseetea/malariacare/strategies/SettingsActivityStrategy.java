@@ -47,6 +47,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.dhis_url)));
         }
+        Preference  serverUrlPreference = (Preference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference.setOnPreferenceClickListener(
+                getOnPreferenceClickListener());
     }
 
     @Override
@@ -84,4 +88,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     }
 
+    @Override
+    public void addExtraPreferences() {
+        settingsActivity.bindPreferenceSummaryToValue(
+                settingsActivity.findPreference(settingsActivity.getString(R.string.dhis_url)));
+    }
 }

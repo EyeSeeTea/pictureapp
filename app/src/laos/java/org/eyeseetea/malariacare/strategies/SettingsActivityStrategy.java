@@ -40,6 +40,16 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
+        Preference  serverUrlPreference = (Preference) findPreference(
+                getApplicationContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference.setOnPreferenceClickListener(
+                mSettingsActivityStrategy.getOnPreferenceClickListener());
+    }
+
+    @Override
+    public void addExtraPreferences() {
+        settingsActivity.bindPreferenceSummaryToValue(
+                settingsActivity.findPreference(settingsActivity.getString(R.string.dhis_url)));
     }
 
     @Override

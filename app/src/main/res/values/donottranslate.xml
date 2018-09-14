@@ -2,6 +2,7 @@
 <resources>
     <string name="eyeseetea" translatable="false">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
+    <string name="server_url_preference_key" translatable="false">@string/dhis_url</string>
     <string name="details">Details</string>
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet</string>
 

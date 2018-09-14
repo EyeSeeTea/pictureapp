@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -32,6 +33,8 @@ public abstract class ASettingsActivityStrategy {
 
     public abstract Preference.OnPreferenceChangeListener getOnPreferenceChangeListener();
 
+    public abstract void addExtraPreferences();
+
     public abstract void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key);
 
 
@@ -40,9 +43,6 @@ public abstract class ASettingsActivityStrategy {
     public abstract void onBackPressed();
 
     public abstract void onWindowFocusChanged(boolean hasFocus);
-
-    public void addExtraPreferences() {
-    }
 
     public void onDestroy() {
 

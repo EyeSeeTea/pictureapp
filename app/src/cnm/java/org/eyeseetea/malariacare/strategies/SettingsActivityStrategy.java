@@ -71,6 +71,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             preferenceVisual.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.imei_preference)));
         }
+        Preference serverUrlPreference = (Preference) findPreference(
+                getApplicationContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference.setOnPreferenceClickListener(
+                mSettingsActivityStrategy.getOnPreferenceClickListener());
         Preference autoconfigurePreference = preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.autoconfigure_preference));
         autoconfigurePreference.setOnPreferenceClickListener(
@@ -169,6 +173,12 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    public void addExtraPreferences() {
+        settingsActivity.bindPreferenceSummaryToValue(
+                settingsActivity.findPreference(settingsActivity.getString(R.string.dhis_url)));
     }
 
     @Override

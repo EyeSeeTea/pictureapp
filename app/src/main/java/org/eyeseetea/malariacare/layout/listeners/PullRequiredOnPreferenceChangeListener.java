@@ -33,6 +33,6 @@ public class PullRequiredOnPreferenceChangeListener implements
 
     private boolean preferenceIsDhisUrl(Preference preference) {
         return preference.getKey() == preference.getContext().getResources().getString(
-                R.string.dhis_url);
+                R.string.server_url_preference_key);
     }
 }

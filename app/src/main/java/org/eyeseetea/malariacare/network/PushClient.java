@@ -81,7 +81,7 @@ public class PushClient {
     /**
      * Current server url
      */
-    private static String DHIS_SERVER = "https://www.psi-mis.org";
+    private static String SERVER_URL;
     SurveyDB mSurveyDB;
     Activity activity;
     Context applicationContext;
@@ -111,9 +111,9 @@ public class PushClient {
      */
     public void getPreferenceValues() {
         PreferencesState.getInstance().reloadPreferences();
-        String url = PreferencesState.getInstance().getDhisURL();
+        String url = PreferencesState.getInstance().getServerURL();
         if (url != null || !("".equals(url))) {
-            DHIS_SERVER = url;
+            SERVER_URL = url;
         }
     }
 
@@ -163,7 +163,7 @@ public class PushClient {
     private JSONObject pushData(JSONObject data) throws ApiCallException {
         Response response = null;
 
-        final String DHIS_URL = getDhisURL();
+        final String DHIS_URL = getServerURL();
 
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
 
@@ -327,8 +327,8 @@ public class PushClient {
     /**
      * Returns the URL that points to the DHIS server API according to preferences.
      */
-    private String getDhisURL() {
-        String url = DHIS_SERVER + DHIS_PUSH_API;
+    private String getServerURL() {
+        String url = SERVER_URL + DHIS_PUSH_API;
         return ServerApiUtils.encodeBlanks(url);
     }
 

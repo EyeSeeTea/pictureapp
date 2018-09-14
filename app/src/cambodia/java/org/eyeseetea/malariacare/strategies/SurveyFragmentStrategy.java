@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.strategies;
 
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
+import android.content.Context;
+
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;

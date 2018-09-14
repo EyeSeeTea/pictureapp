@@ -3,7 +3,8 @@
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org</string>
+    <string name="server_url_preference_key" translatable="false">@string/web_service_url</string>
+    <string name="default_login_url" translatable="false">https://apps.psi-mis.org</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>

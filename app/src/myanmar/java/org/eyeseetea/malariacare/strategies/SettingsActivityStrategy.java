@@ -38,6 +38,17 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         settingsActivity.getResources().getString(R.string.pref_cat_server));
         preferenceCategory.removePreference(preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.org_unit)));
+
+        Preference serverUrlPreference = (Preference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getResources().getString(R.string.server_url_preference_key));
+        serverUrlPreference.setOnPreferenceClickListener(
+                getOnPreferenceClickListener());
+    }
+
+    @Override
+    public void addExtraPreferences() {
+        settingsActivity.bindPreferenceSummaryToValue(
+                settingsActivity.findPreference(settingsActivity.getString(R.string.server_url_preference_key)));
     }
 
     @Override

@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SettingsSummary;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
@@ -38,7 +39,7 @@ public class eReferralsAPIClientShould {
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
                 mCustomMockServer.getBaseEndpoint());
         eReferralsAPIClient.pushSurveys(new SurveyContainerWSObject("", "",
-                        "", "", "", "", "", 2),
+                        "", "", "", 2, "", "", new SettingsSummary("", "", "", false, "", false), ""),
                 new eReferralsAPIClient.WSClientCallBack() {
                     @Override
                     public void onSuccess(Object result) {
@@ -67,7 +68,7 @@ public class eReferralsAPIClientShould {
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
                 mCustomMockServer.getBaseEndpoint());
         eReferralsAPIClient.pushSurveys(new SurveyContainerWSObject("", "",
-                        "", "", "", "", "", 2),
+                        "", "", "", 2, "", "", new SettingsSummary("", "", "", false, "", false), ""),
                 new eReferralsAPIClient.WSClientCallBack() {
                     @Override
                     public void onSuccess(Object result) {

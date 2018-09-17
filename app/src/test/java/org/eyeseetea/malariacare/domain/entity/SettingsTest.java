@@ -18,7 +18,8 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = null;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false,
+                null, null, null, null);
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -28,7 +29,8 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false,
+                null, null, null, null);
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -38,7 +40,8 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "sw";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false,
+                null, null, null, null);
 
         assertThat(settings.getLanguage(), is(currentLanguage));
     }
@@ -50,7 +53,8 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, null, null, null,
+                null);
     }
 
     @Test
@@ -60,7 +64,8 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, null, null, null,
+                null);
     }
 
     @Test
@@ -69,7 +74,8 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G,
+                false, false, null, null, null, null);
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -80,7 +86,8 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G,
+                false, false, null, null, null, null);
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -91,7 +98,8 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isElementActive = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false,
+                isElementActive, false, null, null, null, null);
 
         assertThat(settings.isElementActive(), is(isElementActive));
     }
@@ -102,7 +110,8 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isElementActive = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false,
+                isElementActive, false, null, null, null, null);
 
         assertThat(settings.isElementActive(), is(isElementActive));
     }
@@ -114,7 +123,8 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isMetadataUpdateActive = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false,
+                isMetadataUpdateActive, null, null, null, null);
 
         assertThat(settings.isMetadataUpdateActive(), is(isMetadataUpdateActive));
     }
@@ -126,22 +136,58 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isMetadataUpdateActive = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false,
+                isMetadataUpdateActive, null, null, null, null);
 
         assertThat(settings.isMetadataUpdateActive(), is(isMetadataUpdateActive));
     }
 
     @Test
     public void should_return_default_media_mode_if_is_not_provided() {
-        Settings settings = new Settings("en", "en", null, false, false, false);
+        Settings settings = new Settings("en", "en", null, false, false, false, null, null, null,
+                null);
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.GRID));
     }
     
     @Test
     public void should_return_media_mode_if_is_provided() {
-        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false, false, false);
+        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false,
+                false, false, null, null, null, null);
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.LIST));
     }
+
+    @Test
+    public void should_return_dhisServerUrl_if_provided() {
+        String dhisServerURl = "dhisServerUrl";
+        Settings settings = new Settings("en", "en", null, false, false, false, dhisServerURl,
+                null, null, null);
+        assertThat(settings.getDhisServerUrl(), is(dhisServerURl));
+    }
+
+    @Test
+    public void should_return_webServiceUrl_if_provided() {
+        String webServiceUrl = "webServiceUrl";
+        Settings settings = new Settings("en", "en", null, false, false, false, null,
+                webServiceUrl, null, null);
+        assertThat(settings.getWsServerUrl(), is(webServiceUrl));
+    }
+
+    @Test
+    public void should_return_webUrl_if_provided() {
+        String webUrl = "webUrl";
+        Settings settings = new Settings("en", "en", null, false, false, false, null,
+                null, webUrl, null);
+        assertThat(settings.getWebUrl(), is(webUrl));
+    }
+
+    @Test
+    public void should_return_font_size() {
+        String fontSize = "fontSize";
+        Settings settings = new Settings("en", "en", null, false, false, false, null,
+                null, null, fontSize);
+        assertThat(settings.getFontSize(), is(fontSize));
+    }
+
 }

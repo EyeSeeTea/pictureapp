@@ -32,6 +32,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
@@ -132,6 +133,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
 
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "AndroidLifeCycle: onCreate");
         super.onCreate(savedInstanceState);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
@@ -145,6 +147,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     public void onStop() {
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         mSettingsActivityStrategy.onStop();
 
         super.onStop();
@@ -252,6 +255,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -259,6 +263,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
         super.onPause();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
@@ -306,6 +311,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
         mSettingsActivityStrategy.onStart();
         super.onStart();
     }
@@ -318,6 +324,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
         mSettingsActivityStrategy.onDestroy();
         super.onDestroy();
     }
@@ -327,5 +334,11 @@ public class SettingsActivity extends PreferenceActivity implements
         String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
         Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
         super.attachBaseContext(context);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
     }
 }

@@ -110,7 +110,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "AndroidLifeCycle: onCreate");
         setContentView(R.layout.activity_login);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         initLoginUseCase();
@@ -440,6 +440,7 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
         super.onStart();
         mLoginActivityStrategy.onStart();
     }
@@ -506,6 +507,7 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
         if (onPostAnimationAction != null) {
             onPostAnimationAction.run();
             onPostAnimationAction = null;
@@ -692,6 +694,30 @@ public class LoginActivity extends Activity {
         String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
         Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
         super.attachBaseContext(context);
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "AndroidLifeCycle: onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "AndroidLifeCycle: onResume");
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
     }
 }
 

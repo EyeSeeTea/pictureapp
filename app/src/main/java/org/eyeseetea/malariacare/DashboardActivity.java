@@ -399,7 +399,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         mDashboardActivityStrategy.onResume();
         super.onResume();
         mIsInForegroundMode = true;
@@ -408,13 +408,13 @@ public class DashboardActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.i(TAG, "onRestart");
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
     }
 
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause");
+        Log.d(TAG, "AndroidLifeCycle: onPause");
         super.onPause();
         mIsInForegroundMode = false;
         mDashboardActivityStrategy.onPause();
@@ -422,7 +422,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop");
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         super.onStop();
     }
 
@@ -807,8 +807,15 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
         super.onStart();
         mDashboardActivityStrategy.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
     }
 
     /**

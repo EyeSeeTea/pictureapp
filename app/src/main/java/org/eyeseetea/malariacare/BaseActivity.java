@@ -72,7 +72,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "AndroidLifeCycle: onCreate");
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
@@ -143,10 +143,21 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onStop() {
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         mBaseActivityStrategy.onStop();
         super.onStop();
     }
 
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
+        super.onRestart();
+    }
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
+        super.onPause();
+    }
     /**
      * Common styling
      */
@@ -265,6 +276,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public void onResume() {
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         super.onResume();
         Intent intent;
         intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName())
@@ -428,12 +440,14 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
         mBaseActivityStrategy.onDestroy();
         super.onDestroy();
     }
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
         mBaseActivityStrategy.onStart();
         super.onStart();
     }

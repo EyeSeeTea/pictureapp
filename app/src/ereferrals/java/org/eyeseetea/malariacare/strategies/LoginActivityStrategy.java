@@ -251,33 +251,36 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     @Override
                     public void onGetUsername(Credentials credentials) {
                         //Determine if it's a Soft or full login
+                        boolean comeFrom209= loginActivity.getIntent() != null && loginActivity.getIntent().getBooleanExtra(
+                                START_PULL, false);
                         if (credentials != null) {
                             loginType = LoginType.SOFT;
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
                             loginActivity.getUsernameEditText().setEnabled(false);
                             loginActivity.getUsernameEditText().setText(credentials.getUsername());
-                            CommonQuestionView.showKeyboard(loginActivity,
-                                    loginActivity.getPasswordEditText());
-                            loginActivity.getPasswordEditText().requestFocus();
+                            if(!comeFrom209){
+                                CommonQuestionView.showKeyboard(loginActivity,
+                                        loginActivity.getPasswordEditText());
+                                loginActivity.getPasswordEditText().requestFocus();
+                            }
                         } else {
                             loginType = LoginType.FULL;
                             loginActivity.getUsernameEditText().setEnabled(true);
                             loginActivity.getUsernameEditText().setText("");
 
                         }
-                        launchUpgradeMetadataIfComeFrom209();
+                        if(comeFrom209) {
+                            launchUpgradeMetadataIfComeFrom209();
+                        }
                     }
                 });
     }
 
 
     private void launchUpgradeMetadataIfComeFrom209() {
-        if (loginActivity.getIntent() != null && loginActivity.getIntent().getBooleanExtra(
-                START_PULL, false)) {
-            loginActivity.showProgressBar();
-            launchPull(false);
-            loginActivity.findViewById(R.id.progress_message).setVisibility(View.VISIBLE);
-        }
+        loginActivity.showProgressBar();
+        launchPull(false);
+        loginActivity.findViewById(R.id.progress_message).setVisibility(View.VISIBLE);
     }
 
     private void initLogoutButton() {

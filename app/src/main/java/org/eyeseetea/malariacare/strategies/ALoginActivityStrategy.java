@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.strategies;
 
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 public abstract class ALoginActivityStrategy {
@@ -48,7 +47,7 @@ public abstract class ALoginActivityStrategy {
                         !(loginActivity.getPasswordEditText().getText().toString().isEmpty()));
     }
 
-    public abstract void initLoginUseCase(IAuthenticationManager authenticationManager);
+    public abstract void initLoginUseCase();
 
     public void checkCredentials(Credentials credentials, Callback callback) {
         callback.onSuccessDoLogin();

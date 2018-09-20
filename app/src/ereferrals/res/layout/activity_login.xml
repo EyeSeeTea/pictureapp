@@ -23,12 +23,12 @@
             android:layout_height="@dimen/logo_img_height"
             android:layout_centerHorizontal="true">
 
-            <org.hisp.dhis.client.sdk.ui.views.CircleView
+            <org.eyeseetea.sdk.presentation.views.CircleView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:circle_radius="@dimen/circle_radius"
                 app:stroke_color="@android:color/white"
-                app:stroke_width="@dimen/circle_stroke_width" />
+                app:stroke_width="6dp" />
 
             <fr.castorflex.android.circularprogressbar.CircularProgressBar
                 android:id="@+id/progress_bar_circular"
@@ -124,7 +124,7 @@
                     android:id="@+id/button_log_in"
                     style="@style/CustomButton"
                     android:background="@drawable/button_selector_accent"
-                    android:text="@string/log_in" />
+                    android:text="@string/login_btn_login" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomButton
                     android:id="@+id/demo_login_button"

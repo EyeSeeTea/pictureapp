@@ -21,37 +21,38 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
-import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.LoginType;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -69,20 +70,22 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
-    IPullController pullController;
     IAsyncExecutor asyncExecutor;
     IMainExecutor mainExecutor;
     ICredentialsRepository credentialsRepository;
     IAuthRepository authRepository;
+    GetSettingsUseCase getSettingsUseCase;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
-        pullController = new PullController(loginActivity);
         asyncExecutor = new AsyncExecutor();
         mainExecutor = new UIThreadExecutor();
         credentialsRepository = new CredentialsLocalDataSource();
         authRepository = new AuthDataSource(loginActivity.getApplicationContext());
-        mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        mPullUseCase = new SyncFactoryStrategy().getPullUseCase(loginActivity.getApplicationContext());
+        ISettingsRepository settingsDataSource = new SettingsDataSource(loginActivity);
+        getSettingsUseCase= new GetSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
+                settingsDataSource);
     }
 
     /**
@@ -174,7 +177,26 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        launchPull(false);
+        if(loginType==LoginType.FULL){
+            launchPull(false);
+            return;
+        }else {
+            getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+                @Override
+                public void onSuccess(Settings setting) {
+                    if (setting.isMetadataUpdateActive()) {
+                        asyncExecutor.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                launchPull(false);
+                            }
+                        });
+                    } else {
+                        goToDashboard();
+                    }
+                }
+            });
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -337,9 +359,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void onForgotPassword() {
         loginActivity.onStartLoading();
-        IAuthenticationManager authenticationManager = new AuthenticationManager(loginActivity);
-        ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
-                asyncExecutor, authenticationManager);
+        ForgotPasswordUseCase forgotPasswordUseCase =
+                new AuthenticationFactoryStrategy().getForgotPasswordUseCase(loginActivity);
+
         forgotPasswordUseCase.execute(loginActivity.getUsernameEditText().getText().toString(),
                 new ForgotPasswordUseCase.Callback() {
                     @Override
@@ -444,21 +466,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         }
     }
 
-    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
-        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
-        IInvalidLoginAttemptsRepository
-                iInvalidLoginAttemptsRepository =
-                new InvalidLoginAttemptsRepositoryLocalDataSource();
-        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
-                iInvalidLoginAttemptsRepository);
+    public void initLoginUseCase() {
+        loginActivity.mLoginUseCase = new AuthenticationFactoryStrategy()
+                .getLoginUseCase(loginActivity);
     }
 
     @Override
     public void checkCredentials(Credentials credentials, final Callback callback) {
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        Credentials savedCredentials = credentialsLocalDataSource.getLastValidCredentials();
         if (savedCredentials == null || savedCredentials.isEmpty()
                 || savedCredentials.getUsername().equals(
                 credentials.getUsername()) && (!savedCredentials.getPassword().equals(
@@ -501,8 +517,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.onFinishLoading(null);
-                finishAndGo(DashboardActivity.class);
+                goToDashboard();
             }
 
             @Override
@@ -541,6 +556,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
         });
 
+    }
+
+    private void goToDashboard() {
+        loginActivity.onFinishLoading(null);
+        finishAndGo(DashboardActivity.class);
     }
 
     private void showMessageDialog(String message, String title) {
@@ -618,8 +638,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void executePullDemo() {
-        PullController pullController = new PullController(loginActivity);
-        PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        PullUseCase pullUseCase =
+                new SyncFactoryStrategy().getPullUseCase(loginActivity.getApplicationContext());
 
         PullFilters pullFilters = new PullFilters();
         pullFilters.setDemo(true);
@@ -668,12 +688,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void logout(final LogoutUseCase.Callback callback) {
-        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
-                loginActivity);
-
         AlarmPushReceiver.cancelPushAlarm(loginActivity);
 
-        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        LogoutUseCase logoutUseCase = new AuthenticationFactoryStrategy()
+                .getLogoutUseCase(loginActivity);
 
         logoutUseCase.execute(callback);
     }

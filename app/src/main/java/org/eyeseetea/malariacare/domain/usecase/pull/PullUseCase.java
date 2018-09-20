@@ -12,6 +12,30 @@ import org.eyeseetea.malariacare.domain.usecase.strategies.PullUseCaseStrategies
 
 public class PullUseCase implements UseCase {
 
+    private IPullController mPullController;
+    private IAsyncExecutor mAsyncExecutor;
+    private IMainExecutor mMainExecutor;
+
+    private PullFilters mPullFilters;
+    private Callback mCallback;
+
+    private APullUseCaseStrategy mPullUseCaseStrategy;
+
+    public PullUseCase(IPullController pullController, IAsyncExecutor asyncExecutor,
+            IMainExecutor mainExecutor) {
+        mPullController = pullController;
+        mAsyncExecutor = asyncExecutor;
+        mMainExecutor = mainExecutor;
+        mPullUseCaseStrategy = new PullUseCaseStrategies(this);
+    }
+
+    public void execute(PullFilters pullFilters, final Callback callback) {
+        mPullFilters = pullFilters;
+        mCallback = callback;
+
+        mAsyncExecutor.run(this);
+    }
+
     @Override
     public void run() {
         mPullController.pull(mPullFilters, new IPullController.Callback() {
@@ -49,30 +73,6 @@ public class PullUseCase implements UseCase {
                 mCallback.onCancel();
             }
         });
-    }
-
-    private IPullController mPullController;
-    private IAsyncExecutor mAsyncExecutor;
-    private IMainExecutor mMainExecutor;
-
-    private PullFilters mPullFilters;
-    private Callback mCallback;
-
-    private APullUseCaseStrategy mPullUseCaseStrategy;
-
-    public PullUseCase(IPullController pullController, IAsyncExecutor asyncExecutor,
-            IMainExecutor mainExecutor) {
-        mPullController = pullController;
-        mAsyncExecutor = asyncExecutor;
-        mMainExecutor = mainExecutor;
-        mPullUseCaseStrategy = new PullUseCaseStrategies(this);
-    }
-
-    public void execute(PullFilters pullFilters, final Callback callback) {
-        mPullFilters = pullFilters;
-        mCallback = callback;
-
-        mAsyncExecutor.run(this);
     }
 
     public void notifyError(final Throwable throwable) {

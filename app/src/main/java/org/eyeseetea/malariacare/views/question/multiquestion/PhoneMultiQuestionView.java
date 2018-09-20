@@ -18,7 +18,6 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
     CustomTextView header;
-    CustomEditText mCustomEditText;
     private APhoneMultiquestionViewStrategy mPhoneMultiquestionViewStrategy;
 
     public PhoneMultiQuestionView(Context context) {
@@ -34,30 +33,31 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
 
     @Override
     public void setEnabled(boolean enabled) {
-        mCustomEditText.setEnabled(enabled);
+        answer.setEnabled(enabled);
     }
 
     @Override
     public void setHelpText(String helpText) {
-        mCustomEditText.setHint(helpText);
+        answer.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            mCustomEditText.setText(valueDB.getValue());
+            answer.setText(valueDB.getValue());
+            validateAnswer(answer.getText().toString(), answer);
         }
     }
 
     @Override
     public boolean hasError() {
-        return mCustomEditText.getError() != null;
+        return answer.getError() != null;
     }
 
     @Override
     public void requestAnswerFocus() {
-        mCustomEditText.requestFocus();
-        showKeyboard(getContext(), mCustomEditText);
+        answer.requestFocus();
+        showKeyboard(getContext(), answer);
     }
 
     @Override
@@ -69,20 +69,20 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
 
     @Override
     public EditText getAnswerView() {
-        return mCustomEditText;
+        return answer;
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_phone_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
-        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
+        answer = (CustomEditText) findViewById(R.id.answer);
 
-        Validation.getInstance().addInput(mCustomEditText);
+        Validation.getInstance().addInput(answer);
         if (BuildConfig.validationInline) {
-            Validation.getInstance().addinvalidInput(mCustomEditText, getContext().getString(
+            Validation.getInstance().addinvalidInput(answer, getContext().getString(
                     R.string.dynamic_error_phone_format));
         }
-        mPhoneMultiquestionViewStrategy.addTextChangeListener(mCustomEditText);
+        mPhoneMultiquestionViewStrategy.addTextChangeListener(answer);
     }
 }

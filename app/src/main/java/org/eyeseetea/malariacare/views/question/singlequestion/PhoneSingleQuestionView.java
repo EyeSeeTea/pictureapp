@@ -52,6 +52,9 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         if (valueDB != null) {
             mCustomEditText.setText(valueDB.getValue());
         }
+        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(mCustomEditText);
+        }
     }
 
     private void init(final Context context) {
@@ -89,13 +92,19 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         try {
             Phone phone = new Phone(mCustomEditText.getText().toString());
             hideKeyboard(mCustomEditText);
-            Validation.getInstance().removeInputError(mCustomEditText);
-            String value = phone.getValue();
-            notifyAnswerChanged(value);
+
+            if(validateQuestionRegExp(mCustomEditText)) {
+                Validation.getInstance().removeInputError(mCustomEditText);
+                String value = phone.getValue();
+                notifyAnswerChanged(value);
+            }
         } catch (InvalidPhoneException e) {
             Validation.getInstance().addinvalidInput(mCustomEditText,
                     context.getString(R.string.dynamic_error_phone_format));
             mCustomEditText.setError(context.getString(R.string.dynamic_error_phone_format));
+        }
+        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(mCustomEditText);
         }
     }
 }

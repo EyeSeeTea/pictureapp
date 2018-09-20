@@ -94,7 +94,9 @@ public class TextSingleQuestionView extends AKeyboardSingleQuestionView implemen
 
     private void saveAnswer() {
         hideKeyboard(mEditText);
-        notifyAnswerChanged(mEditText.getText().toString());
+        if(validateQuestionRegExp(mEditText)) {
+            notifyAnswerChanged(mEditText.getText().toString());
+        }
     }
 
     @Override

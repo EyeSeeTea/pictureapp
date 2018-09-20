@@ -30,7 +30,7 @@ public class GetUrlForWebViewsUseCase implements UseCase {
     }
 
     private void initCredentials() {
-        mCredentials = mCredentialsLocalDataSource.getOrganisationCredentials();
+        mCredentials = mCredentialsLocalDataSource.getLastValidCredentials();
     }
 
     public void execute(int urlType, Callback callback) {

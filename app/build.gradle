@@ -33,11 +33,24 @@ android {
 
     sourceSets {
         String sharedTestDir = 'src/sharedTest/java'
+        String dhis2Dir = 'src/server/dhis2/java'
         test {
             java.srcDir sharedTestDir
         }
         androidTest {
             java.srcDirs sharedTestDir
+        }
+        cambodia {
+            java.srcDirs dhis2Dir
+        }
+        laos {
+            java.srcDirs dhis2Dir
+        }
+        myanmar {
+            java.srcDirs dhis2Dir
+        }
+        cnm {
+            java.srcDirs dhis2Dir
         }
     }
 
@@ -190,7 +203,7 @@ android {
         }
         ereferrals {
             applicationId 'org.eyeseetea.surveillance_ref_dev'
-            versionName "1.2.0"
+            versionName "1.2.1"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -254,8 +267,8 @@ android {
             buildConfigField "boolean", "elementSDK", "false"
             buildConfigField "boolean", "askEula", "false"
         }
-
     }
+
     lintOptions {
         disable 'RtlSymmetry', 'RtlHardcoded'
         checkReleaseBuilds false
@@ -265,10 +278,6 @@ android {
             targetModuleName 'EyeSeeTea'
         }
     }
-
-    sourceSets {
-        androidTest.java.srcDirs += 'src/sharedAndroidTest'
-    }
 }
 
 configurations {
@@ -277,8 +286,11 @@ configurations {
 
 dependencies {
     // SDK submodules
-    compile project(":core-rules")
-    compile project(":ui-bindings")
+    cambodiaCompile project(":ui-bindings")
+    cnmCompile project(":ui-bindings")
+    laosCompile project(":ui-bindings")
+    myanmarCompile project(":ui-bindings")
+
     compile project(":EyeSeeTea-sdk")
     compile project(":bugshaker")
 
@@ -290,7 +302,7 @@ dependencies {
     apply plugin: 'com.github.dcendents.android-maven'
 
     //Support Libraries
-    compile "com.android.support:design:${libs.supportVersion}"
+
 
     //Android support
     compile "com.android.support:support-annotations:${libs.supportVersion}"
@@ -300,13 +312,25 @@ dependencies {
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
     compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
+    compile "com.android.support:design:${libs.supportVersion}"
+    compile "com.android.support:cardview-v7:${libs.supportVersion}"
+
     //3rd party dependencies
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
     compile "com.google.guava:guava:${libs.guavaVersion}"
     compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
+    compile "com.squareup.retrofit2:retrofit:${libs.retrofitVersion}"
+    compile "com.squareup.retrofit2:converter-jackson:${libs.retrofitVersion}"
     compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
+    compile "com.github.castorflex.smoothprogressbar:library-circular:${libs.progressBarVersion}"
+    compile "joda-time:joda-time:${libs.jodaTimeVersion}"
+
+    // Fasterxml libraries.
+    compile "com.fasterxml.jackson.core:jackson-annotations:${libs.jacksonVersion}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${libs.jacksonVersion}"
+
 
     //Drive dependencies
     compile "com.google.android.gms:play-services-identity:${libs.gmsPlayVersion}"

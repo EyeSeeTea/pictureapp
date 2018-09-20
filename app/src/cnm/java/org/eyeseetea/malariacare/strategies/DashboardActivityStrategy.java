@@ -10,12 +10,12 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -103,7 +103,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void getCurrentProgram() {
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         Program userProgram = programRepository.getUserProgram();
         mProgramDB = ProgramDB.findByName(userProgram.getCode());
     }
@@ -113,7 +113,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             final OrgUnitDB orgUnit) {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
                 new HasToGenerateStockProgramUseCase(mainExecutor, asyncExecutor,
                         programRepository);
@@ -275,7 +275,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void setStockTab(final TabHost tabHost) {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         GetUserProgramUseCase getUserProgramUIDUseCase = new GetUserProgramUseCase(
                 programRepository, mainExecutor, asyncExecutor);
         final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =
@@ -334,7 +334,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void setStockControlTab(final TabHost tabHost) {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         GetUserProgramUseCase getUserProgramUseCase = new GetUserProgramUseCase(
                 programRepository, mainExecutor, asyncExecutor);
         final HasToGenerateStockProgramUseCase hasToGenerateStockProgramUseCase =

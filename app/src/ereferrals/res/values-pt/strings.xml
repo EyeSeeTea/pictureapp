@@ -965,4 +965,5 @@
     <string name="elements">"Elements"</string>
     <string name="activate_elements">"Ativar elementos"</string>
     <string name="element_not_installed">"Element SDK não está instalado!"</string>
+    <string name="check_metadata_title">"Verificar atualizações de metadados em logins leves"</string>
 </resources>

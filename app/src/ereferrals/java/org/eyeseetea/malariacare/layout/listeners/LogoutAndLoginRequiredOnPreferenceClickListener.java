@@ -10,8 +10,8 @@ import android.util.Log;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 /**
@@ -52,8 +52,9 @@ public class LogoutAndLoginRequiredOnPreferenceClickListener implements
 
     private void logout() {
         Log.d(TAG, "Logging out...");
-        AuthenticationManager authenticationManager = new AuthenticationManager(settingsActivity);
-        LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);
+
+        LogoutUseCase logoutUseCase =
+                new AuthenticationFactoryStrategy().getLogoutUseCase(settingsActivity);
         AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override

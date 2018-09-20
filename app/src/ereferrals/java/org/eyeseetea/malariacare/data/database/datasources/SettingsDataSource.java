@@ -28,8 +28,9 @@ public class SettingsDataSource implements ISettingsRepository {
         String currentLanguage = PreferencesState.getInstance().getLanguageCode();
         boolean canDownloadMedia = canDownloadMediaWith3G();
         boolean isElementActive = isElementActive();
+        boolean isMetadataUpdateActive = isMetadataUpdateActive();
 
-        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia, isElementActive);
+        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia, isElementActive, isMetadataUpdateActive);
     }
 
     @Override
@@ -85,5 +86,11 @@ public class SettingsDataSource implements ISettingsRepository {
                 context);
         return sharedPreferences.getBoolean(
                 context.getResources().getString(R.string.activate_elements_key), false);
+    }
+
+    public boolean isMetadataUpdateActive() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getBoolean(context.getString(R.string.check_metadata_key), true);
     }
 }

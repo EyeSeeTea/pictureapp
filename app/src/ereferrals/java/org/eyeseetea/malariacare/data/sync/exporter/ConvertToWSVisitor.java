@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Coordinate;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SettingsSummary;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Voucher;
@@ -30,9 +31,9 @@ import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +44,6 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private static final String SURVEY_ACTION_ID = "issueReferral";
 
     private SurveyContainerWSObject mSurveyContainerWSObject;
-    private String language;
     private Context mContext;
 
     public ConvertToWSVisitor(Context context) {
@@ -60,16 +60,29 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private void init(Device device) {
         ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        ISettingsRepository currentLanguageRepository = new SettingsDataSource(PreferencesState.getInstance().getContext());
+        ISettingsRepository settingsRepository = new SettingsDataSource(
+                PreferencesState.getInstance().getContext());
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource(mContext);
         AppInfo appInfo = appInfoDataSource.getAppInfo();
         Credentials credentials = credentialsRepository.getOrganisationCredentials();
-        language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.ws_version), device.getAndroidVersion(), credentials.getUsername(),
-                credentials.getPassword(), language, getAndroidInfo(device, appInfo),
-                appInfo.getMetadataVersion(), getConfigFileVersion());
+                credentials.getPassword(), device.getIMEI(),
+                getConfigFileVersion(), appInfo.getAppVersion(),
+                getDateString(appInfo.getUpdateMetadataDate()),
+                getSettingsSummary(settingsRepository), device.getPhone(), device.getIMEI());
+    }
+
+    private String getDateString(Date updateMetadataDate) {
+        return Utils.parseDateToString(updateMetadataDate, "yyyy-MM-dd hh:mm");
+    }
+
+    private SettingsSummary getSettingsSummary(ISettingsRepository settingsRepository) {
+        Settings settings = settingsRepository.getSettings();
+        return new SettingsSummary(settings.getDhisServerUrl(), settings.getWsServerUrl(),
+                settings.getWebUrl(), settings.isCanDownloadWith3G(), settings.getFontSize(),
+                settings.isElementActive(), settings.getLanguage());
     }
 
     private int getConfigFileVersion() {
@@ -83,21 +96,6 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         } else {
             return 0;
         }
-    }
-
-    private String getAndroidInfo(Device device, AppInfo appInfo) {
-        StringBuilder stringBuilder = new StringBuilder();
-        if(device.getIMEI()!=null) {
-            stringBuilder.append(device.getIMEI());
-            stringBuilder.append(", ");
-        }
-        if(device.getPhone()!=null && !device.getPhone().isEmpty()) {
-            stringBuilder.append(device.getPhone());
-            stringBuilder.append(", ");
-        }
-        stringBuilder.append(appInfo.getAppVersion());
-
-        return stringBuilder.toString();
     }
 
     private static List<AttributeValueWS> getValuesWSFromSurvey(SurveyDB survey) {

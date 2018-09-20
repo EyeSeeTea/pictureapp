@@ -1,22 +1,20 @@
 package org.eyeseetea.malariacare.data.remote.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class AuthResponse {
 
     private boolean authorized;
 
-    @JsonProperty("code of OU level: country")
-    private String country;
+    private AuthCountry country;
 
     private String orgUnitId;
 
     private String orgUnitName;
 
-    private String orgUnitGroups;
+    private List<AuthOrgUnitGroup> orgUnitGroups;
 
-
-    public boolean getAuthorized() {
+    public boolean isAuthorized() {
         return authorized;
     }
 
@@ -24,11 +22,11 @@ public class AuthResponse {
         this.authorized = authorized;
     }
 
-    public String getCountry() {
+    public AuthCountry getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(AuthCountry country) {
         this.country = country;
     }
 
@@ -48,18 +46,12 @@ public class AuthResponse {
         this.orgUnitName = orgUnitName;
     }
 
-    public String getOrgUnitGroups() {
+    public List<AuthOrgUnitGroup> getOrgUnitGroups() {
         return orgUnitGroups;
     }
 
-    public void setOrgUnitGroups(String orgUnitGroups) {
+    public void setOrgUnitGroups(
+            List<AuthOrgUnitGroup> orgUnitGroups) {
         this.orgUnitGroups = orgUnitGroups;
     }
-
-    @Override
-    public String toString() {
-        return "ClassPojo [authorized = " + authorized + ", orgUnitId = " + orgUnitId
-                + ", orgUnitName = " + orgUnitName + ", orgUnitGroups = " + orgUnitGroups + "]";
-    }
-
 }

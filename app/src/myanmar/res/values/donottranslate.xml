@@ -9,6 +9,8 @@
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
     <string name="monitor_table_title_suspected_header" translatable="false">" "</string>
     <string name="monitor_table_title_stock_header" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
+    <string name="server_url_key" translatable="false">@string/dhis_url</string>
+    <item name="dhis_url" translatable="false" type="string">dhis_url</item>
 
 
     <string-array name="stock_table_drugs_strings">

@@ -17,7 +17,7 @@ public class PreferencesEReferral {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), null);
+        String url = sharedPreferences.getString(context.getString(R.string.server_url_key), null);
 
         String username = sharedPreferences.getString(
                 context.getString(R.string.logged_user_username), null);

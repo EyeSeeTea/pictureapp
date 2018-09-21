@@ -43,7 +43,7 @@
         android:key="@string/pref_cat_server"
         android:title="@string/server">
         <EditTextPreference
-            android:defaultValue="@string/DHIS_DEFAULT_SERVER"
+            android:defaultValue="@string/DEFAULT_SERVER_URL"
             android:inputType="textUri"
             android:key="@string/dhis_url"
             android:maxLines="1"

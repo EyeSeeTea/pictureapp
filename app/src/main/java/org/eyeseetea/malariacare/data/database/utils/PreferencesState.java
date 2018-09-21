@@ -184,7 +184,7 @@ public class PreferencesState {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.server_url_key),
-                instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
+                instance.getContext().getString(R.string.DEFAULT_SERVER_URL));
     }
 
     public boolean isCustomizeFontActive() {

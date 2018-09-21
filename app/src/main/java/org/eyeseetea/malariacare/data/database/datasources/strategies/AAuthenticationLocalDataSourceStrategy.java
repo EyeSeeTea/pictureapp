@@ -65,6 +65,6 @@ public abstract class AAuthenticationLocalDataSourceStrategy {
     }
 
     public String getServerDefaultUrl(Context mContext) {
-        return mContext.getString(R.string.DHIS_DEFAULT_SERVER);
+        return mContext.getString(R.string.DEFAULT_SERVER_URL);
     }
 }

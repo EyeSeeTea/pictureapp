@@ -17,7 +17,7 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
+import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.junit.Before;
 
 import okhttp3.Credentials;
@@ -34,10 +34,10 @@ public class RealMetadataConfigurationDBImporterShould {
 
         String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
 
+        MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(new SettingsDataSource(InstrumentationRegistry.getTargetContext()));
         IMetadataConfigurationDataSource apiClient =
-                MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                        new BasicAuthInterceptor(credentials),
-                        new SettingsDataSource(InstrumentationRegistry.getTargetContext()).getSettings().getUrl()
+                metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                        HTTPClientFactory.getAuthenticationInterceptor()
                 );
         importer = new MetadataConfigurationDBImporter(
                 apiClient, ConverterFactory.getQuestionConverter()

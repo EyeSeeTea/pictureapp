@@ -26,7 +26,6 @@ import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
@@ -100,12 +99,10 @@ public class WSPullController implements IPullController {
                 programRepository.saveUserProgramId(program);
                 callback.onComplete();
             } else {
-                ISettingsRepository settingsRepository = new SettingsDataSource(mContext);
+                MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(new SettingsDataSource(mContext));
                 IMetadataConfigurationDataSource metadataConfigurationDataSource =
-                        MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                                HTTPClientFactory.getAuthenticationInterceptor(),
-                                settingsRepository.getSettings().getUrl()
-
+                        metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                                HTTPClientFactory.getAuthenticationInterceptor()
                         );
                 importer = new MetadataConfigurationDBImporter(
                         metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()

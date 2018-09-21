@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
@@ -129,12 +130,7 @@ public class SettingsDataSource implements ISettingsRepository {
     }
 
     private String getProgramUrl() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-
-        //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
-        String loginUrl = context.getString(R.string.DHIS_DEFAULT_SERVER);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
+        return PreferencesEReferral.getProgramUrl(context);
     }
 
     private String getProgramUser() {

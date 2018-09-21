@@ -8,7 +8,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -99,7 +98,7 @@ public class WSPullController implements IPullController {
                 programRepository.saveUserProgramId(program);
                 callback.onComplete();
             } else {
-                MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(new SettingsDataSource(mContext));
+                MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(mContext);
                 IMetadataConfigurationDataSource metadataConfigurationDataSource =
                         metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
                                 HTTPClientFactory.getAuthenticationInterceptor()

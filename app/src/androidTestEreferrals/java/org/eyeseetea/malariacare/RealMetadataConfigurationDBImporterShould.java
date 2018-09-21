@@ -34,7 +34,7 @@ public class RealMetadataConfigurationDBImporterShould {
 
         String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
 
-        MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(new SettingsDataSource(InstrumentationRegistry.getTargetContext()));
+        MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(InstrumentationRegistry.getTargetContext());
         IMetadataConfigurationDataSource apiClient =
                 metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
                         HTTPClientFactory.getAuthenticationInterceptor()

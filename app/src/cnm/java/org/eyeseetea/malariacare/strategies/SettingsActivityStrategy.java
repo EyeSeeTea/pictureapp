@@ -65,12 +65,18 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                     (PreferenceCategory) preferenceScreen.findPreference(
                             settingsActivity.getResources().getString(R.string.pref_cat_server));
             preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.dhis_url)));
+                    settingsActivity.getResources().getString(R.string.server_url_key)));
             PreferenceCategory preferenceVisual =
                     (PreferenceCategory) preferenceScreen.findPreference(
                             settingsActivity.getResources().getString(R.string.pref_visual));
             preferenceVisual.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.imei_preference)));
+        } else {
+            Preference serverUrlPreference = preferenceScreen.findPreference(
+                    preferenceScreen.getContext().getResources().getString(
+                            R.string.server_url_key));
+                serverUrlPreference.setOnPreferenceClickListener(
+                        getOnPreferenceClickListener());
         }
         Preference autoconfigurePreference = preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.autoconfigure_preference));
@@ -126,13 +132,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     public void executeLogout() {
-        LogoutUseCase logoutUseCase =
-                new AuthenticationFactoryStrategy().getLogoutUseCase(settingsActivity.getApplicationContext());
+        IAuthenticationManager iAuthenticationManager = new AuthenticationFactoryStrategy().getAuthenticationManager(settingsActivity.getBaseContext());
+        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
         AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-               launchAutoconfigure();
+                launchAutoconfigure();
             }
 
             @Override
@@ -170,6 +176,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    public void addExtraPreferences() {
+        Preference serverPreference = settingsActivity.findPreference(settingsActivity.getString(R.string.server_url_key));
+        if(serverPreference!=null){
+            settingsActivity.bindPreferenceSummaryToValue(serverPreference);
+        }
     }
 
     @Override

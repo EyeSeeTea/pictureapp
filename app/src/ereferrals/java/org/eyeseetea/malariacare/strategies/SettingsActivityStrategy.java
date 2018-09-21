@@ -113,11 +113,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
         programUser.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUser.setText(settingsRepository.getSettings().getUser());
-        programUrl.setSummary(settingsRepository.getSettings().getUser());
+        programUser.setSummary(settingsRepository.getSettings().getUser());
 
         programPass.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programPass.setText(settingsRepository.getSettings().getPass());
-        programUrl.setSummary(settingsRepository.getSettings().getPass());
+        programPass.setSummary(settingsRepository.getSettings().getPass());
     }
 
 

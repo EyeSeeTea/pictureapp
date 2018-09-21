@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
@@ -115,21 +116,39 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         programUser.setText(settingsRepository.getSettings().getUser());
         programUser.setSummary(settingsRepository.getSettings().getUser());
 
-        programPass.setOnPreferenceChangeListener(new onCredentialsChangeListener());
+        programPass.setOnPreferenceChangeListener(new onPasswordChangeListener(programPass.getEditText()));
         programPass.setText(settingsRepository.getSettings().getPass());
-        programPass.setSummary(settingsRepository.getSettings().getPass());
+        String pass = settingsRepository.getSettings().getPass();
+        String pref = programPass.getEditText().getTransformationMethod().getTransformation(pass.toString(), programPass.getEditText()).toString();
+        programPass.setSummary(pref);
     }
 
-
     private class onCredentialsChangeListener implements Preference.OnPreferenceChangeListener{
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean result = isNotEmpty(newValue);
-                if(result){
-                    preference.setSummary(newValue.toString());
-                }
-                return result;
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            boolean result = isNotEmpty(newValue);
+            if(result){
+                preference.setSummary(newValue.toString());
             }
+            return result;
+        }
+    }
+
+    private class onPasswordChangeListener implements Preference.OnPreferenceChangeListener{
+        EditText mEditText;
+        public onPasswordChangeListener(EditText editText) {
+            mEditText = editText;
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            boolean result = isNotEmpty(newValue);
+            if(result){
+                String pref = mEditText.getTransformationMethod().getTransformation(newValue.toString(), mEditText).toString();
+                preference.setSummary(pref);
+            }
+            return result;
+        }
     }
 
     @Override

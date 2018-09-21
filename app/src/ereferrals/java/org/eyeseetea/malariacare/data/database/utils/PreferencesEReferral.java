@@ -175,7 +175,7 @@ public class PreferencesEReferral {
                 context);
 
         //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
-        String loginUrl = context.getString(R.string.DHIS_DEFAULT_SERVER);
+        String loginUrl = context.getString(R.string.PROGRAM_DEFAULT_SERVER);
         return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
     }
 }

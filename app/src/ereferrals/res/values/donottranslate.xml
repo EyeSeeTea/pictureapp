@@ -5,6 +5,7 @@
     <string name="rdtNotTested" translatable="false">Not Tested</string>
     <string name="server_url_key" translatable="false">@string/web_service_url</string>
     <string name="DHIS_DEFAULT_SERVER" translatable="false">@string/ws_base_url</string>
+    <string name="PROGRAM_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org/</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>

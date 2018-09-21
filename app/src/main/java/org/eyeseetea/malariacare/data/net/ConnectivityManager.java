@@ -19,8 +19,12 @@ public class ConnectivityManager implements IConnectivityManager{
      */
     @Override
     public boolean isDeviceOnline() {
-        NetworkInfo networkInfo = getConnectivityNetwork();
-        return networkInfo!=null && networkInfo.isConnected();
+        android.net.ConnectivityManager connMgr =
+                (android.net.ConnectivityManager) mContext.getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
+        return networkInfo.isConnected();
     }
 
     @Override
@@ -38,22 +42,5 @@ public class ConnectivityManager implements IConnectivityManager{
             return ConnectivityType.MOBILE;
         }
         return ConnectivityType.NONE;
-    }
-
-
-    public NetworkInfo getConnectivityNetwork() {
-        android.net.ConnectivityManager connMgr =
-                (android.net.ConnectivityManager) mContext.getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
-        if (networkInfo.isConnected()) {
-            return networkInfo;
-        }
-        networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_MOBILE);
-        if (networkInfo.isConnected()) {
-            return networkInfo;
-        }
-        return null;
     }
 }

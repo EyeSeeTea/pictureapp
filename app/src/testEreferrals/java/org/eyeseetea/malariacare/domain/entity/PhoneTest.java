@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
@@ -9,159 +8,196 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import utils.PhoneMask;
+
 public class PhoneTest {
+    private PhoneFormat phoneFormat = new PhoneFormat("^(0?7)\\d{8}|^(\\+)\\d*|^(00)\\d*", "0", "+263");
 
-
-    public static final String PHONE_10_DIGITS = "2200060073";
-    public static final String PLAIN_PHONE_NUMBER_MASK =
-            "((^(00)\\d{10,15})|(^(\\+)\\d{10,15}$)|(^(06|07|\\+2556|\\+2557)\\d{9}$))";
-
+    public static final String PHONE_7_DIGITS = "0006007";
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void
-    throw_invalid_phone_exception_if_phone_format_starts_with_plus_and_with_more_than_fifteen()
+    public void do_not_modify_phone_value_if_starts_with_00_value()
+            throws InvalidPhoneException {
+
+        String phoneValue = "00" + PHONE_7_DIGITS;
+        Phone phone = new Phone(phoneValue, phoneFormat);
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
+    @Test
+    public void do_not_modify_phone_value_if_starts_with_plus_symbol_value()
+            throws InvalidPhoneException {
+
+        String phoneValue = "+" + PHONE_7_DIGITS;
+        Phone phone = new Phone(phoneValue, phoneFormat);
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
+    @Test
+    public void add_prefix_when_phone_value_starts_with_7_and_height_digits()
+            throws InvalidPhoneException {
+
+        String phoneValue = "70" + PHONE_7_DIGITS;
+        Phone phone = new Phone(phoneValue, phoneFormat);
+        phoneValue = phoneFormat.getPrefixtToPut()+phoneValue;
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
+    @Test
+    public void add_prefix_when_phone_value_starts_with_07_and_height_digits()
+            throws InvalidPhoneException {
+
+        String phoneValue = "070" + PHONE_7_DIGITS;
+        Phone phone = new Phone(phoneValue, phoneFormat);
+        phoneValue = phoneFormat.getPrefixtToPut()+"70" + PHONE_7_DIGITS;
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
+    @Test
+    public void throw_invalid_phone_exception_if_phone_format_starts_with_7_and_has_more_than_expected_length()
             throws InvalidPhoneException {
         thrown.expect(InvalidPhoneException.class);
+        String phoneValue = "701" + PHONE_7_DIGITS;
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        Phone phone = new Phone("+000000" + PHONE_10_DIGITS,
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-    }
-
-
-    @Test
-    public void valid_phone_value_if_phone_format_starts_with_00_with_min_valid_value()
-            throws InvalidPhoneException {
-        Phone phone = new Phone("00" + PHONE_10_DIGITS,
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("00" + PHONE_10_DIGITS));
+        assertFalse(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
     }
 
     @Test
-    public void throw_invalid_phone_exception_if_phone_format_starts_with_0000_with_max_not_valid_value()
+    public void throw_invalid_phone_exception_phone_if_format_starts_with_7_and_has_less_than_expected_length()
             throws InvalidPhoneException {
         thrown.expect(InvalidPhoneException.class);
+        String phoneValue = "7" + PHONE_7_DIGITS;
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        Phone phone = new Phone("0000" + PHONE_10_DIGITS + "1234567",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        assertFalse(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
     }
 
     @Test
-    public void valid_phone_value_if_phone_format_starts_with_00_with_max_valid_value()
+    public void return_true_phone_if_format_starts_with_plus_symbol()
             throws InvalidPhoneException {
-        Phone phone = new Phone("00" + PHONE_10_DIGITS + "12345",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        String phoneValue = "+";
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("00" + PHONE_10_DIGITS + "12345"));
-    }
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
 
-    @Test
-    public void throw_invalid_phone_exception_if_phone_format_starts_with_plus_symbol_with_min_not_valid_value()
-            throws InvalidPhoneException {
-        thrown.expect(InvalidPhoneException.class);
-
-        Phone phone = new Phone("+" + PHONE_10_DIGITS.replace("3", ""),
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-    }
-
-    @Test
-    public void valid_phone_value_if_phone_format_starts_with_plus_symbol_with_min_valid_value()
-            throws InvalidPhoneException {
-        Phone phone = new Phone("+" + PHONE_10_DIGITS + "123",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("+" + PHONE_10_DIGITS + "123"));
-    }
-
-    @Test
-    public void throw_invalid_phone_exception_if_phone_format_starts_with_plus_symbol_with_max_not_valid_value()
-            throws InvalidPhoneException {
-        thrown.expect(InvalidPhoneException.class);
-
-        Phone phone = new Phone("+" + PHONE_10_DIGITS + "123456789",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-    }
-
-    @Test
-    public void valid_phone_value_if_phone_format_starts_with_plus_symbol_with_max_valid_value()
-            throws InvalidPhoneException {
-        Phone phone = new Phone("+" + PHONE_10_DIGITS + "12345",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("+" + PHONE_10_DIGITS + "12345"));
-    }
-
-    @Test
-    public void throw_invalid_phone_exception_if_phone_format_starts_with_06_with_min_not_valid_value()
-            throws InvalidPhoneException {
-        thrown.expect(InvalidPhoneException.class);
-
-        Phone phone = new Phone("06" + PHONE_10_DIGITS + "1",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-    }
-
-    @Test
-    public void valid_phone_value_if_phone_format_starts_with_006_valid_value()
-            throws InvalidPhoneException {
-        Phone phone = new Phone("006" + PHONE_10_DIGITS + "12",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
-
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("006" + PHONE_10_DIGITS + "12"));
+        assertTrue(phoneValue.equals(phone.getValue()));
     }
 
 
     @Test
-    public void
-    throw_invalid_phone_exception_if_phone_format_starts_with_06_with_max_not_valid_value()
+    public void return_true_phone_if_format_starts_with_plus_symbol_and_has_more_than_12_length()
             throws InvalidPhoneException {
-        thrown.expect(InvalidPhoneException.class);
+        String phoneValue = "+1"+"0123456789112";
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        Phone phone = new Phone("06" + PHONE_10_DIGITS + "123",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
     }
 
     @Test
-    public void valid_phone_value_if_phone_format_starts_with_006_with_max_valid_value()
+    public void return_true_phone_if_format_starts_with_00()
             throws InvalidPhoneException {
-        Phone phone = new Phone("006" + PHONE_10_DIGITS + "12",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        String phoneValue = "00";
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("006" + PHONE_10_DIGITS + "12"));
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
+
+    @Test
+    public void return_true_phone_if_format_starts_with_00_and_has_more_than_12_length()
+            throws InvalidPhoneException {
+        String phoneValue = "001"+"0123456789112";
+        Phone phone = new Phone(phoneValue, phoneFormat);
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
     }
 
     @Test
-    public void throw_invalid_phone_exception_if_phone_format_starts_with_07_with_min_not_valid_value()
+    public void do_not_add_prefix_phone_if_format_starts_with_plus_symbol_and_has_0_length()
             throws InvalidPhoneException {
-        thrown.expect(InvalidPhoneException.class);
+        String phoneValue = "+";
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        Phone phone = new Phone("07" + PHONE_10_DIGITS + "1",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
     }
 
     @Test
-    public void throw_invalid_phone_exception_if_phone_format_starts_with_07_with_max_not_valid_value()
+    public void do_not_add_prefix_phone_if_format_starts_with_plus_symbol_and_has_at_least_1_length()
             throws InvalidPhoneException {
-        thrown.expect(InvalidPhoneException.class);
+        String phoneValue = "+1";
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        Phone phone = new Phone("07" + PHONE_10_DIGITS + "123",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
+
+    @Test
+    public void do_not_add_prefix_phone_if_format_starts_with_plus_symbol_and_has_more_than_12_length()
+            throws InvalidPhoneException {
+        String phoneValue = "+1"+"0123456789112";
+        Phone phone = new Phone(phoneValue, phoneFormat);
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+    @Test
+    public void do_not_add_prefix_phone_if_format_starts_with_00_and_has_0_length()
+            throws InvalidPhoneException {
+        String phoneValue = "00";
+        Phone phone = new Phone(phoneValue, phoneFormat);
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
     }
 
     @Test
-    public void valid_phone_value_if_phone_format_starts_with_007_valid_value()
+    public void do_not_add_prefix_phone_if_format_starts_with_00_and_has_at_least_1_length()
             throws InvalidPhoneException {
-        Phone phone = new Phone("007" + PHONE_10_DIGITS + "12",
-                new PhoneFormat(PLAIN_PHONE_NUMBER_MASK, "", ""));
+        String phoneValue = "001";
+        Phone phone = new Phone(phoneValue, phoneFormat);
 
-        assertThat(phone, notNullValue());
-        assertTrue(phone.getValue().equals("007" + PHONE_10_DIGITS + "12"));
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
     }
+
+
+    @Test
+    public void do_not_add_prefix_phone_if_format_starts_with_00_and_has_more_than_12_length()
+            throws InvalidPhoneException {
+        String phoneValue = "001"+"0123456789112";
+        Phone phone = new Phone(phoneValue, phoneFormat);
+
+        assertTrue(PhoneMask.checkPhoneNumberByMask(phone.getValue(), phoneFormat));
+
+        assertTrue(phoneValue.equals(phone.getValue()));
+    }
+
 }

@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -68,6 +69,7 @@ public class PushUseCaseShould {
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
+        surveyDB.setVoucherUid("1323544116");
         surveyDB.setEventUid("testEventUID");
         surveyDB.setStatus(Constants.SURVEY_COMPLETED);
         surveyDB.save();
@@ -170,12 +172,15 @@ public class PushUseCaseShould {
         mCustomMockServer = new CustomMockServer(new AssetsFileReader());
         savePreviousPreferences();
         saveTestCredentialsAndProgram();
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
+                new Device("testPhone", "testIMEI", "test_version"),
+                mContext);
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(mContext);
-        mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
+                convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
 
         SurveysThresholds surveysThresholds =
@@ -195,13 +200,14 @@ public class PushUseCaseShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousCredentials = credentialsLocalDataSource.getOrganisationCredentials();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        credentialsLocalDataSource.getCredentials();
+        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
+        ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
                         PreferencesEReferral.getUserProgramId());
         if (databaseProgramDB != null) {
-            previousProgram = programLocalDataSource.getUserProgram();
+            previousProgram = programRepository.getUserProgram();
         }
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
     }
@@ -216,11 +222,11 @@ public class PushUseCaseShould {
 
         Credentials credentials = new Credentials("test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
@@ -238,7 +244,7 @@ public class PushUseCaseShould {
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousCredentials);
+        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
         ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         if (previousProgram != null) {
             programLocalDataSource.saveUserProgramId(previousProgram);

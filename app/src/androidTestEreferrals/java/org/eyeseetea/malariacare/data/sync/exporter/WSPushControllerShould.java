@@ -75,7 +75,7 @@ public class WSPushControllerShould {
     private void savePreferences() {
         Context context = PreferencesState.getInstance().getContext();
         serverPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.ws_base_url), "");
+                context)).getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
         userPreference = (PreferenceManager.getDefaultSharedPreferences(
                 context)).getString(context.getString(R.string.logged_user_username),"");
         pinPreference = (PreferenceManager.getDefaultSharedPreferences(
@@ -90,7 +90,7 @@ public class WSPushControllerShould {
                 context);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.server_url_key), serverPreference);
+        editor.putString(context.getString(R.string.web_service_url), serverPreference);
         editor.putString(context.getString(R.string.logged_user_username), userPreference);
         editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
         editor.putLong(context.getString(R.string.logged_user_program), programPreference);
@@ -104,10 +104,12 @@ public class WSPushControllerShould {
                 context);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.ws_base_url), "test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials("test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test",
+                "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");

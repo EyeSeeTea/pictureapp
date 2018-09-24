@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.eyeseetea.sdk.BuildConfig;
 
+import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -44,8 +44,8 @@ public class HTTPClientFactory {
     }
 
     @NonNull
-    public static BasicAuthInterceptor getAuthenticationInterceptor() throws Exception {
-        return new BasicAuthInterceptor(AuthenticationApiStrategy.getApiCredentials());
+    public static BasicAuthInterceptor getAuthenticationInterceptor(String username,
+            String password) throws Exception {
+        return new BasicAuthInterceptor(Credentials.basic(username, password));
     }
-
 }

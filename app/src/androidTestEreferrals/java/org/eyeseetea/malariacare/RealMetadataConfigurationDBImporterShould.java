@@ -1,12 +1,10 @@
 package org.eyeseetea.malariacare;
 
 
-import android.support.test.InstrumentationRegistry;
-
 import static junit.framework.Assert.assertTrue;
 
+import android.support.test.InstrumentationRegistry;
 
-import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
@@ -17,10 +15,7 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.junit.Before;
-
-import okhttp3.Credentials;
 
 public class RealMetadataConfigurationDBImporterShould {
 
@@ -32,13 +27,11 @@ public class RealMetadataConfigurationDBImporterShould {
     @Before
     public void setUp() throws Exception {
 
-        String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
-
-        MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory = new MetadataConfigurationDataSourceFactory(InstrumentationRegistry.getTargetContext());
+        MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory =
+                new MetadataConfigurationDataSourceFactory(
+                        InstrumentationRegistry.getTargetContext());
         IMetadataConfigurationDataSource apiClient =
-                metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                        HTTPClientFactory.getAuthenticationInterceptor()
-                );
+                metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource();
         importer = new MetadataConfigurationDBImporter(
                 apiClient, ConverterFactory.getQuestionConverter()
         );

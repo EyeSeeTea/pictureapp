@@ -75,7 +75,7 @@ public class WSPushControllerShould {
     private void savePreferences() {
         Context context = PreferencesState.getInstance().getContext();
         serverPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.server_url_key), "");
+                context)).getString(context.getString(R.string.ws_base_url), "");
         userPreference = (PreferenceManager.getDefaultSharedPreferences(
                 context)).getString(context.getString(R.string.logged_user_username),"");
         pinPreference = (PreferenceManager.getDefaultSharedPreferences(
@@ -104,7 +104,7 @@ public class WSPushControllerShould {
                 context);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.server_url_key), "test");
+        editor.putString(context.getString(R.string.ws_base_url), "test");
         editor.commit();
 
         Credentials credentials = new Credentials("test", "test", "test");

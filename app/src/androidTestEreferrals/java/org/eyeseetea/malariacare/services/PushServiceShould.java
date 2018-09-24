@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.services;
 
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,6 +40,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
@@ -68,7 +72,6 @@ public class PushServiceShould {
 
     private Context mContext;
 
-
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
         showLogiIntentReceived = false;
@@ -89,6 +92,7 @@ public class PushServiceShould {
     @Before
     public void cleanUp() throws IOException {
         mContext = InstrumentationRegistry.getTargetContext();
+        grantPhonePermission();
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
@@ -97,7 +101,8 @@ public class PushServiceShould {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(mContext);
+        Device device = new Device("test", "test", "test");
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, mContext);
         mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
                 convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
@@ -117,6 +122,16 @@ public class PushServiceShould {
     public void tearDown() throws IOException {
         mCustomMockServer.shutdown();
         restorePreferences();
+    }
+
+    public void grantPhonePermission() {
+        // In M+, trying to call a number will trigger a runtime dialog. Make sure
+        // the permission is granted before running this test.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + mContext.getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+        }
     }
 
 
@@ -140,7 +155,8 @@ public class PushServiceShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.server_url_key), "test");
+        editor.putString(context.getString(R.string.server_url_key),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
         Credentials credentials = new Credentials("test", "test", "test");

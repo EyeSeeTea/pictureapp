@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,6 +11,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -74,12 +76,25 @@ public class BaseActivityShould {
         Intent intent = new Intent(PreferencesState.getInstance().getContext(),
                 DashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         EyeSeeTeaApplication.getInstance().startActivity(intent);
     }
 
     @After
     public void tearDown() {
         restorePreferences();
+        grantPermission();
+    }
+
+    public void grantPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
+                            + " android.permission.ACCESS_FINE_LOCATION");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+        }
     }
 
 

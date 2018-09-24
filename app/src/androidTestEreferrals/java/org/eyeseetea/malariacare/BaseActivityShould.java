@@ -113,7 +113,7 @@ public class BaseActivityShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "http:test");
+        editor.putString(context.getString(R.string.server_url_key), "http:test");
         editor.commit();
 
         Credentials credentials = new Credentials("http:test", "test", "test");
@@ -136,7 +136,7 @@ public class BaseActivityShould {
                 context);
         if (previousOrganisationCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.server_url_key),
                     previousOrganisationCredentials.getServerURL());
             editor.commit();
         }
@@ -159,7 +159,7 @@ public class BaseActivityShould {
     }
 
     private void saveCredentials(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
+        PreferencesState.getInstance().saveStringPreference(R.string.server_url_key,
                 credentials.getServerURL());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user,
                 credentials.getUsername());

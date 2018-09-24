@@ -140,7 +140,7 @@ public class PushServiceShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "test");
+        editor.putString(context.getString(R.string.server_url_key), "test");
         editor.commit();
 
         Credentials credentials = new Credentials("test", "test", "test");
@@ -162,7 +162,7 @@ public class PushServiceShould {
                 context);
         if (previousCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.server_url_key),
                     previousCredentials.getServerURL());
             editor.commit();
         }

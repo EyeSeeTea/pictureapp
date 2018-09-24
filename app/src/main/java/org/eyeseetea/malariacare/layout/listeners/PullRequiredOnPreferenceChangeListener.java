@@ -23,7 +23,7 @@ public class PullRequiredOnPreferenceChangeListener implements
         //Reload preference in memory
         PreferencesState.getInstance().reloadPreferences();
 
-        if (preferenceIsDhisUrl(preference)) {
+        if (preferenceIsServerUrl(preference)) {
             PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
         }
 
@@ -31,8 +31,8 @@ public class PullRequiredOnPreferenceChangeListener implements
 
     }
 
-    private boolean preferenceIsDhisUrl(Preference preference) {
+    private boolean preferenceIsServerUrl(Preference preference) {
         return preference.getKey() == preference.getContext().getResources().getString(
-                R.string.dhis_url);
+                R.string.server_url_key);
     }
 }

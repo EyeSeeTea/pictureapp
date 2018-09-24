@@ -17,7 +17,7 @@ public class PreferencesEReferral {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), null);
+        String url = sharedPreferences.getString(context.getString(R.string.server_url_key), null);
 
         String username = sharedPreferences.getString(
                 context.getString(R.string.logged_user_username), null);
@@ -168,5 +168,14 @@ public class PreferencesEReferral {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(context.getString(R.string.web_view_url), url);
         editor.commit();
+    }
+
+    public static String getProgramUrl(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
+        String loginUrl = context.getString(R.string.PROGRAM_DEFAULT_SERVER);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
     }
 }

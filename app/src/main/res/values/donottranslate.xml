@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="server_url">Server URL</string>
+    <string name="clear_and_logout">Clear and log out</string>
     <string name="eyeseetea" translatable="false">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
     <string name="details">Details</string>
@@ -9,7 +11,6 @@
     <item name="pref_visual" translatable="false" type="string">pref_visual</item>
     <item name="customize_fonts" translatable="false" type="string">customize_fonts</item>
     <item name="font_sizes" translatable="false" type="string">font_sizes</item>
-    <item name="dhis_url" translatable="false" type="string">dhis_url</item>
     <item name="dhis_user" translatable="false" type="string">dhis_user</item>
     <item name="dhis_password" translatable="false" type="string">dhis_password</item>
     <item name="org_unit" translatable="false" type="string">org_unit</item>

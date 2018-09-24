@@ -42,14 +42,26 @@
     <PreferenceCategory
         android:key="@string/pref_cat_server"
         android:title="@string/server">
+
         <EditTextPreference
-            android:defaultValue="@string/DHIS_DEFAULT_SERVER"
-            android:inputType="textUri"
-            android:key="@string/dhis_url"
-            android:maxLines="1"
+            android:inputType="text"
+            android:key="@string/program_configuration_url"
+            android:maxLines="2"
             android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/server_name" />
+            android:title="@string/settings_title_program_url_config" />
+
+        <EditTextPreference
+            android:inputType="text"
+            android:key="@string/program_configuration_user"
+            android:maxLines="2"
+            android:selectAllOnFocus="true"
+            android:title="@string/settings_title_program_username_config" />
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="@string/program_configuration_pass"
+            android:maxLines="2"
+            android:selectAllOnFocus="true"
+            android:title="@string/settings_title_program_password_config" />
 
         <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
             android:defaultValue=""

@@ -28,7 +28,7 @@ public class LoginRequiredOnPreferenceClickListener implements
     @Override
     public boolean onPreferenceClick(final Preference preference) {
         if (!settingsActivity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)
-                || preference.getKey().equals(PreferencesState.getInstance().getContext().getString(R.string.dhis_url))) {
+                || preference.getKey().equals(PreferencesState.getInstance().getContext().getString(R.string.server_url_key))) {
             //if is not logged the pull of data is required.
             PreferencesState.getInstance().setMetaDataDownload(true);
             //only in laos y cambodiates

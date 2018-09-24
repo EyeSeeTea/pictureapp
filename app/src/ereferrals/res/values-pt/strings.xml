@@ -966,4 +966,7 @@
     <string name="activate_elements">"Ativar elementos"</string>
     <string name="element_not_installed">"Element SDK não está instalado!"</string>
     <string name="check_metadata_title">"Verificar atualizações de metadados em logins leves"</string>
+    <string name="settings_title_program_url_config">"URL de configuração do programa"</string>
+    <string name="settings_title_program_username_config">"Nome de usuário da configuração do programa"</string>
+    <string name="settings_title_program_password_config">"Senha de configuração do programa"</string>
 </resources>

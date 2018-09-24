@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.database.datasources.strategies;
 
+import android.content.Context;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
@@ -60,5 +62,9 @@ public abstract class AAuthenticationLocalDataSourceStrategy {
                 }
             }
         }
+    }
+
+    public String getServerDefaultUrl(Context mContext) {
+        return mContext.getString(R.string.DEFAULT_SERVER_URL);
     }
 }

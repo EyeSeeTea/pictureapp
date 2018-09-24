@@ -1025,4 +1025,7 @@ Ameahidi kuhudhuria"</string>
 <string name="activate_elements">"Aktivera element"</string>
 <string name="element_not_installed">"Element SDK är inte installerat!"</string>
 <string name="check_metadata_title">"Kontrollera metadatauppdateringar på mjuka inloggningar"</string>
+<string name="settings_title_program_url_config">"Programkonfigurationsadress"</string>
+<string name="settings_title_program_username_config">"Programkonfigurations användarnamn"</string>
+<string name="settings_title_program_password_config">"Programkonfigurationslösenord"</string>
 </resources>

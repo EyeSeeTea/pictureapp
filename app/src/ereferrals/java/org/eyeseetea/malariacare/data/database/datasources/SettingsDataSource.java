@@ -8,9 +8,12 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 
 import java.util.Date;
 import java.util.Locale;
@@ -29,8 +32,40 @@ public class SettingsDataSource implements ISettingsRepository {
         boolean canDownloadMedia = canDownloadMediaWith3G();
         boolean isElementActive = isElementActive();
         boolean isMetadataUpdateActive = isMetadataUpdateActive();
+        String url = loadUrl();
+        String user = loadUser();
+        String pass = loadPass();
 
-        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia, isElementActive, isMetadataUpdateActive);
+        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia, isElementActive, isMetadataUpdateActive, url, user, pass);
+    }
+
+    private String loadUrl() {
+        return getProgramUrl();
+    }
+
+    private String loadPass() {
+        String pass = getProgramPassword();
+        if(pass==null){
+            try {
+                pass = new AuthenticationApi().getHardcodedApiPass();
+            } catch (ConfigJsonIOException e) {
+                e.printStackTrace();
+            }
+        }
+        return pass;
+    }
+
+
+    private String loadUser() {
+        String user = getProgramUser();
+        if(user==null){
+            try {
+                user = new AuthenticationApi().getHardcodedApiUser();
+            } catch (ConfigJsonIOException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
     }
 
     @Override
@@ -92,5 +127,21 @@ public class SettingsDataSource implements ISettingsRepository {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         return sharedPreferences.getBoolean(context.getString(R.string.check_metadata_key), true);
+    }
+
+    private String getProgramUrl() {
+        return PreferencesEReferral.getProgramUrl(context);
+    }
+
+    private String getProgramUser() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_user), null);
+    }
+
+    private String getProgramPassword() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_pass), null);
     }
 }

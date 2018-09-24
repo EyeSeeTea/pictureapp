@@ -12,13 +12,46 @@ public class SettingsTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    String programUrl = "https://url.es";
+    String programUser = "user";
+    String programPass = "password";
+
+    @Test
+    public void should_return_user_program() {
+        String systemLanguage = "es";
+        String currentLanguage = null;
+
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
+
+        assertThat(settings.getUser(), is(programUser));
+    }
+
+    @Test
+    public void should_return_password_program() {
+        String systemLanguage = "es";
+        String currentLanguage = null;
+
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
+
+        assertThat(settings.getPass(), is(programPass));
+    }
+
+    @Test
+    public void should_return_url_program() {
+        String systemLanguage = "es";
+        String currentLanguage = null;
+
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
+
+        assertThat(settings.getUrl(), is(programUrl));
+    }
 
     @Test
     public void should_return_es_if_system_language_es_and_current_language_is_null() {
         String systemLanguage = "es";
         String currentLanguage = null;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -28,7 +61,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -38,7 +71,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "sw";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.getLanguage(), is(currentLanguage));
     }
@@ -50,7 +83,7 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
     }
 
     @Test
@@ -60,7 +93,37 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false, false, false);
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, programPass);
+    }
+
+    @Test
+    public void should_throw_exception_if_user_is_empty() {
+        String systemLanguage = "";
+        String currentLanguage = "sw";
+
+        thrown.expect(IllegalArgumentException.class);
+
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, null, programPass);
+    }
+
+    @Test
+    public void should_throw_exception_if_pass_is_empty() {
+        String systemLanguage = "";
+        String currentLanguage = "sw";
+
+        thrown.expect(IllegalArgumentException.class);
+
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, programUrl, programUser, null);
+    }
+
+    @Test
+    public void should_throw_exception_if_url_is_empty() {
+        String systemLanguage = "";
+        String currentLanguage = "sw";
+
+        thrown.expect(IllegalArgumentException.class);
+
+        new Settings(systemLanguage, currentLanguage, null, false, false, false, null, programUser, programPass);
     }
 
     @Test
@@ -69,7 +132,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -80,7 +143,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -91,7 +154,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isElementActive = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false, programUrl, programUser, programPass);
 
         assertThat(settings.isElementActive(), is(isElementActive));
     }
@@ -102,7 +165,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isElementActive = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false, programUrl, programUser, programPass);
 
         assertThat(settings.isElementActive(), is(isElementActive));
     }
@@ -114,7 +177,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isMetadataUpdateActive = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive, programUrl, programUser, programPass);
 
         assertThat(settings.isMetadataUpdateActive(), is(isMetadataUpdateActive));
     }
@@ -126,21 +189,21 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isMetadataUpdateActive = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive, programUrl, programUser, programPass);
 
         assertThat(settings.isMetadataUpdateActive(), is(isMetadataUpdateActive));
     }
 
     @Test
     public void should_return_default_media_mode_if_is_not_provided() {
-        Settings settings = new Settings("en", "en", null, false, false, false);
+        Settings settings = new Settings("en", "en", null, false, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.GRID));
     }
     
     @Test
     public void should_return_media_mode_if_is_provided() {
-        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false, false, false);
+        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false, false, false, programUrl, programUser, programPass);
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.LIST));
     }

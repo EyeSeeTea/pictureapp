@@ -25,7 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.SpannableString;
@@ -59,7 +59,7 @@ import java.io.InputStream;
 import java.util.List;
 
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Extra param to annotate the activity to return after settings

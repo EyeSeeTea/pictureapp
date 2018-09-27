@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import org.hisp.dhis.client.sdk.models.common.UnsupportedServerVersionException;
 
 
 public class LoginUseCase extends ALoginUseCase implements UseCase {
@@ -125,6 +126,8 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             onNetworkError();
         } else if (throwable instanceof ConfigJsonIOException) {
             onConfigJsonInvalid();
+        } else if (throwable instanceof UnsupportedServerVersionException){
+            callback.onUnsupportedServerVersion();
         } else {
             onUnexpectedError();
         }

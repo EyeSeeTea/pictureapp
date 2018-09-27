@@ -361,6 +361,12 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "onMaxLoginAttemptsReachedError");
                 mLoginActivityStrategy.disableLogin();
             }
+
+            @Override
+            public void onUnsupportedServerVersion() {
+                Log.d(TAG, "Unsupported Server Version");
+                showError(PreferencesState.getInstance().getContext().getString(R.string.login_error_unsupported_server_version));
+            }
         });
     }
 

@@ -970,4 +970,5 @@
     <string name="elements">"Elements"</string>
     <string name="activate_elements">"तत्वहरू सक्रिय गर्नुहोस्"</string>
     <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
+    <string name="login_error_unsupported_server_version">सर्भर संस्करण समर्थित छैन</string>
 </resources>

@@ -22,6 +22,8 @@ public abstract class ALoginUseCase {
         void onUnexpectedError();
 
         void onMaxLoginAttemptsReachedError();
+
+        void onUnsupportedServerVersion();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

@@ -211,5 +211,6 @@
 <string name="tab_av">"AV"</string>
 <string name="av_progress">កំពុងទាញយកមាតិកា ... សូមរង់ចាំ</string>
 
-    <string name="login_userName">Username</string>
+<string name="login_userName">Username</string>
+<string name="login_error_unsupported_server_version">កំណែម៉ាស៊ីនមេមិនត្រូវបានគាំទ្រទេ</string>
 </resources>

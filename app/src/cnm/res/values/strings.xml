@@ -325,4 +325,5 @@
     <item>English</item>
     <item>Khmer</item>
 </string-array>
+<string name="login_error_unsupported_server_version">The server version is not supported</string>
 </resources>

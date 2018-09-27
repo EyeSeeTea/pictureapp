@@ -209,5 +209,6 @@
 <string name="tab_stock">"Stock"</string>
 <string name="av_progress">Downloading content... please wait</string>
 
-    <string name="login_userName">Username</string>
+<string name="login_userName">Username</string>
+<string name="login_error_unsupported_server_version">The server version is not supported</string>
 </resources>

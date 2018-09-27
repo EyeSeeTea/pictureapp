@@ -1128,4 +1128,5 @@
 <string name="metadata_update">"Last metadata upgrade: %s"</string>
 <string name="element_not_installed">"Element SDK is not installed!"</string>
 
+<string name="login_error_unsupported_server_version">The server version is not supported</string>
 </resources>

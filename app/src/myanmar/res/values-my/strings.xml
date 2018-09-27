@@ -336,5 +336,6 @@
 <string name="tab_stock">"Stock"</string>
 <string name="av_progress">အကြောင်းအရာကိုဒေါင်းလုဒ် ... စောင့်ဆိုင်းကျေးဇူးပြုပြီး</string>
 
-    <string name="login_userName">Username</string>
+<string name="login_userName">Username</string>
+<string name="login_error_unsupported_server_version">"ဆာဗာဗားရှင်းကိုမပံ့ပိုးပါ"</string>
 </resources>

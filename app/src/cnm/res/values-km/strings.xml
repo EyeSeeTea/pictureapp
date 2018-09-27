@@ -320,4 +320,5 @@
     <item>អង់គ្លេស</item>
     <item>ភាសាខ្មែរ</item>
 </string-array>
+<string name="login_error_unsupported_server_version">កំណែម៉ាស៊ីនមេមិនត្រូវបានគាំទ្រទេ</string>
 </resources>

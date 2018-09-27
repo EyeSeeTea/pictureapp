@@ -188,6 +188,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         Log.e(this.getClass().getSimpleName(),
                                 "Max Login Attempts Reached Error");
                     }
+
+                    @Override
+                    public void onUnsupportedServerVersion() {
+                        Log.e(this.getClass().getSimpleName(),
+                                "Unsupported Server Version");
+                    }
                 }
         );
     }

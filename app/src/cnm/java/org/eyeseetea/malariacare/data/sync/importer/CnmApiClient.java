@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -27,15 +28,18 @@ public class CnmApiClient {
     public String mBaseAddress;
     private Retrofit mRetrofit;
     private OrganisationUnitTreeApiClient mOrganisationUnitTreeApiClient;
+    private final int DEFAULT_TIMEOUT = 50000;
 
 
     public CnmApiClient(String baseAddress)
             throws ApiCallException, ConfigJsonIOException, LanguagesDownloadException {
         mBaseAddress = baseAddress;
 
-
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(
-                new BasicAuthInterceptor(AuthenticationApiStrategy.getApiCredentials())).build();
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new BasicAuthInterceptor(AuthenticationApiStrategy.getApiCredentials()))
+                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .build();
 
         mRetrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())

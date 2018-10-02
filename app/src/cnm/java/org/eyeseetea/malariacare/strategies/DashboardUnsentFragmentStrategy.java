@@ -15,19 +15,9 @@ import org.eyeseetea.malariacare.services.SurveyService;
 import java.util.Date;
 
 public class DashboardUnsentFragmentStrategy extends ADashboardUnsentFragmentStrategy {
-    public DashboardUnsentFragmentStrategy(
-            DashboardUnsentFragment dashboardUnsentFragment) {
-        super(dashboardUnsentFragment);
-    }
-
-    public void registerSurveyReceiver(Activity activity,
-            DashboardUnsentFragment.SurveyReceiver surveyReceiver) {
-        LocalBroadcastManager.getInstance(activity).registerReceiver(surveyReceiver,
-                new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
-    }
 
     @Override
-    public void deleteSurvey(SurveyDB surveyDB) {
+    public static void deleteSurvey(SurveyDB surveyDB) {
         Context context = PreferencesState.getInstance().getContext();
         Date date = surveyDB.getEventDate();
         surveyDB.delete();

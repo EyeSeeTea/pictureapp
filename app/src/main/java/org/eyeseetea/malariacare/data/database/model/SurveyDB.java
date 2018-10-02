@@ -350,6 +350,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
     }
+
+    public static List<SurveyDB> getAllSurveysByProgram(String malariaProgramUid) {
+        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
+                .where(ProgramDB_Table.uid_program.withTable(programAlias)
+                        .is(malariaProgramUid))
+                .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date.withTable(surveyAlias)))
+                .orderBy(OrderBy.fromProperty(
+                        SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
+    }
     /**
      * Returns all the malaria surveys with status put to "Sent"
      */

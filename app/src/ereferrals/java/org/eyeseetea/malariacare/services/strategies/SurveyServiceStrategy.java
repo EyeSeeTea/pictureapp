@@ -7,9 +7,7 @@ import java.util.List;
 public class SurveyServiceStrategy extends ASurveyServiceStrategy {
 
     public static List<SurveyDB> getUnsentSurveys(String programUId){
-        List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(programUId);
-        List<SurveyDB> sentSurveys = SurveyDB.getAllSentMalariaSurveys(programUId);
-        surveyDBs.addAll(sentSurveys);
+        List<SurveyDB> surveyDBs = SurveyDB.getAllSurveysByProgram(programUId);
         return surveyDBs;
     }
 }

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateFilterTest {
     DateFilter mSurveyFilter;
@@ -45,6 +46,8 @@ public class DateFilterTest {
 
     @Before
     public void setup() {
+        //Set european locale date to force the start date of week in monday.
+        Locale.setDefault(new Locale("es", "ES"));
         mSurveyFilter = new DateFilter();
     }
 

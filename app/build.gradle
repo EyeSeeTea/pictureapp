@@ -27,6 +27,21 @@ repositories {
 }
 
 android {
+
+    testOptions {
+        unitTests.all {
+            // All the usual Gradle options.
+            testLogging {
+                events "skipped", "failed", "standardOut", "standardError"
+                exceptionFormat "full"
+                showCauses true
+                showExceptions true
+                showStackTraces true
+                showStandardStreams true
+            }
+        }
+    }
+
     signingConfigs {
         config {}
     }
@@ -282,7 +297,6 @@ dependencies {
     compile project(":EyeSeeTea-sdk")
     compile project(":bugshaker")
 
-
     // App dependencies
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -297,7 +311,6 @@ dependencies {
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
 
-    compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
     compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
     //3rd party dependencies
@@ -341,10 +354,9 @@ dependencies {
     androidTestCompile "org.mockito:mockito-core:${libs.mockitoVersion}"
     androidTestCompile "com.linkedin.dexmaker:dexmaker-mockito:${libs.dexmakerMockitoVersion}"
 
-
     //Tracking crashes
     compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {
-        transitive = true;
+        transitive = true
     }
 
     // JavaPoet (sucessor to JavaWriter)

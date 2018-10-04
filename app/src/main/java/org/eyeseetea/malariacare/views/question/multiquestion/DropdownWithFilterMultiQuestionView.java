@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,8 +25,10 @@ import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies.ADropdownMultiQuestionViewStrategy;
-import org.eyeseetea.malariacare.views.question.multiquestion.strategies.DropdownMultiQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .ADropdownMultiQuestionViewStrategy;
+import org.eyeseetea.malariacare.views.question.multiquestion.strategies
+        .DropdownMultiQuestionViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -185,35 +189,42 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
         public boolean onTouch(View v, MotionEvent event) {
 
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                dialog = inflate(context, R.layout.dialog_spinner_with_filter, null);
-                builder = new AlertDialog.Builder(context);
-                builder.setView(dialog);
-                final AlertDialog alertDialog = builder.show();
-                listView = (ListView) dialog.findViewById(R.id.listView);
-                EditText editText = (EditText) dialog.findViewById(R.id.filter);
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        filter(listView, s.toString());
-                    }
-                });
-                setOptionsOnList(mOptionDBS, listView);
-                listView.setOnItemClickListener(new OnItemClickListener(alertDialog));
-                editText.requestFocus();
+                showDialog(context);
                 return true;
             }
             return false;
         }
+    }
+
+    private void showDialog(Context context) {
+        dialog = inflate(context, R.layout.dialog_spinner_with_filter, null);
+        builder = new AlertDialog.Builder(context);
+        builder.setView(dialog);
+        final AlertDialog alertDialog = builder.show();
+        Window window = alertDialog.getWindow();
+        window.setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.TOP);
+        listView = (ListView) dialog.findViewById(R.id.listView);
+        EditText editText = (EditText) dialog.findViewById(R.id.filter);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(listView, s.toString());
+            }
+        });
+        setOptionsOnList(mOptionDBS, listView);
+        listView.setOnItemClickListener(new OnItemClickListener(alertDialog));
+        editText.requestFocus();
     }
 
     private class OnItemClickListener implements AdapterView.OnItemClickListener {

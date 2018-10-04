@@ -14,8 +14,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
-import java.util.Date;
 import java.util.Locale;
 
 public class SettingsDataSource implements ISettingsRepository {
@@ -32,20 +32,20 @@ public class SettingsDataSource implements ISettingsRepository {
         boolean canDownloadMedia = canDownloadMediaWith3G();
         boolean isElementActive = isElementActive();
         boolean isMetadataUpdateActive = isMetadataUpdateActive();
-        String url = loadUrl();
         String user = loadUser();
         String pass = loadPass();
-
-        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia, isElementActive, isMetadataUpdateActive, url, user, pass);
-    }
-
-    private String loadUrl() {
-        return getProgramUrl();
+        String dhisServerUrl = getDhisServerUrl();
+        String wsServerUrl = getWSServerUrl();
+        String webUrl = getWebUrl();
+        String fontSize = getFontSize();
+        return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
+                isElementActive, isMetadataUpdateActive, user, pass, dhisServerUrl, wsServerUrl,
+                webUrl, fontSize);
     }
 
     private String loadPass() {
         String pass = getProgramPassword();
-        if(pass==null){
+        if (pass == null) {
             try {
                 pass = new AuthenticationApi().getHardcodedApiPass();
             } catch (ConfigJsonIOException e) {
@@ -58,7 +58,7 @@ public class SettingsDataSource implements ISettingsRepository {
 
     private String loadUser() {
         String user = getProgramUser();
-        if(user==null){
+        if (user == null) {
             try {
                 user = new AuthenticationApi().getHardcodedApiUser();
             } catch (ConfigJsonIOException e) {
@@ -129,6 +129,45 @@ public class SettingsDataSource implements ISettingsRepository {
         return sharedPreferences.getBoolean(context.getString(R.string.check_metadata_key), true);
     }
 
+    private String getFontSize() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        String fontStyleId = sharedPreferences.getString(context.getString(R.string.font_sizes),
+                String.valueOf(FontStyle.Medium.getResId()));
+
+        for (FontStyle fontStyle : FontStyle.values()) {
+            if (fontStyle.getResId() == Integer.valueOf(fontStyleId)) {
+                return fontStyle.getTitle();
+            }
+        }
+        return FontStyle.Medium.getTitle();
+    }
+
+    private String getWebUrl() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(
+                context.getResources().getString(R.string.web_view_name),
+                context.getString(R.string.base_web_view_url));
+    }
+
+    private String getWSServerUrl() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(
+                context.getResources().getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
+    }
+
+    private String getDhisServerUrl() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(
+                context.getResources().getString(R.string.dhis_url),
+                "");
+    }
+
     private String getProgramUrl() {
         return PreferencesEReferral.getProgramUrl(context);
     }
@@ -136,12 +175,14 @@ public class SettingsDataSource implements ISettingsRepository {
     private String getProgramUser() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_user), null);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_user),
+                null);
     }
 
     private String getProgramPassword() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_pass), null);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_pass),
+                null);
     }
 }

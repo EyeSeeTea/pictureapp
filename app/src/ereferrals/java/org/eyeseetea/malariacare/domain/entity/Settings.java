@@ -15,14 +15,16 @@ public class Settings {
     private boolean isElementActive;
     private boolean isMetadataUpdateActive;
     private String wsServerUrl;
-    private String webUrl;    private String fontSize;
+    private String webUrl;
+    private String fontSize;
     private String user;
     private String pass;
+    private String programUrl;
 
     public Settings(String systemLanguage, String currentLanguage,
             MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
                     boolean isMetadataUpdateActive, String user, String pass, String wsServerUrl,
-            String webUrl, String fontSize) {
+            String webUrl, String fontSize, String programUrl) {
         this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
         this.mediaListMode = mediaListMode;
@@ -34,6 +36,7 @@ public class Settings {
         this.wsServerUrl = wsServerUrl;
         this.webUrl = webUrl;
         this.fontSize = fontSize;
+        this.programUrl = programUrl;
     }
 
     public String getLanguage() {
@@ -96,5 +99,9 @@ public class Settings {
 
     public String getFontSize() {
         return fontSize;
+    }
+
+    public String getProgramUrl() {
+        return programUrl;
     }
 }

@@ -37,9 +37,10 @@ public class SettingsDataSource implements ISettingsRepository {
         String wsServerUrl = getWSServerUrl();
         String webUrl = getWebUrl();
         String fontSize = getFontSize();
+        String programUrl = getProgramUrl();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize);
+                webUrl, fontSize, getProgramUrl());
     }
 
     private String loadPass() {

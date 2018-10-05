@@ -704,6 +704,24 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return valueDB;
     }
 
+    private ValueDB fillDefaultValueForHiddenQuestion(QuestionDB questionDB, SurveyDB surveyDB,
+            ValueDB valueDB) {
+        if (!readOnly && valueDB == null && questionDB.getDefaultValue() != null) {
+            if (questionDB.hasOutputWithOptions()) {
+                OptionDB optionDB = questionDB.findOptionByValue(questionDB.getDefaultValue());
+                if (optionDB != null) {
+                    valueDB = new ValueDB(optionDB, questionDB, surveyDB);
+                    valueDB.save();
+                }
+            } else {
+                valueDB = new ValueDB(questionDB.getDefaultValue(), questionDB, surveyDB);
+                valueDB.save();
+            }
+        }
+        return valueDB;
+    }
+
+
     private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
         if(!BuildConfig.validationInline){
             return false;
@@ -1018,6 +1036,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     checkInitialCompulsoryValidationError(commonQuestionView);
                 }
 
+                ((IQuestionView) commonQuestionView).setValue(
+                        fillDefaultValueForHiddenQuestion(childQuestionDB, surveyDB,
+                                childQuestionDB.getValueBySurvey(surveyDB)));
             }
             return true;
         }

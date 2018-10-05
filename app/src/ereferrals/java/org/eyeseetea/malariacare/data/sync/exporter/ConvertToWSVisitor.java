@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
@@ -25,6 +26,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICountryVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
@@ -65,7 +67,6 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource(mContext);
         AppInfo appInfo = appInfoDataSource.getAppInfo();
         Credentials credentials = credentialsRepository.getLastValidCredentials();
-        language = currentLanguageRepository.getSettings().getLanguage();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.ws_version), device.getAndroidVersion(), credentials.getUsername(),
@@ -81,7 +82,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
 
     private SettingsSummary getSettingsSummary(ISettingsRepository settingsRepository) {
         Settings settings = settingsRepository.getSettings();
-        return new SettingsSummary(settings.getDhisServerUrl(), settings.getWsServerUrl(),
+        return new SettingsSummary(settings.getWsServerUrl(),
                 settings.getWebUrl(), settings.isCanDownloadWith3G(), settings.getFontSize(),
                 settings.isElementActive(), settings.getLanguage());
     }

@@ -14,16 +14,14 @@ public class Settings {
     private boolean canDownloadWith3G;
     private boolean isElementActive;
     private boolean isMetadataUpdateActive;
-    private String dhisServerUrl;
     private String wsServerUrl;
-    private String webUrl;
-    private String fontSize;
+    private String webUrl;    private String fontSize;
     private String user;
     private String pass;
 
     public Settings(String systemLanguage, String currentLanguage,
             MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
-                    boolean isMetadataUpdateActive, String user, String pass, String dhisServerUrl, String wsServerUrl,
+                    boolean isMetadataUpdateActive, String user, String pass, String wsServerUrl,
             String webUrl, String fontSize) {
         this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
@@ -33,7 +31,6 @@ public class Settings {
         this.isMetadataUpdateActive = isMetadataUpdateActive;
         this.user = required(user, "user is required");
         this.pass = required(pass, "pass is required");
-        this.dhisServerUrl = dhisServerUrl;
         this.wsServerUrl = wsServerUrl;
         this.webUrl = webUrl;
         this.fontSize = fontSize;
@@ -87,10 +84,6 @@ public class Settings {
 
     public boolean isCanDownloadWith3G() {
         return canDownloadWith3G;
-    }
-
-    public String getDhisServerUrl() {
-        return dhisServerUrl;
     }
 
     public String getWsServerUrl() {

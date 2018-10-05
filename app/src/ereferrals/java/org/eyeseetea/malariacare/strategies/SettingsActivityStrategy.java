@@ -107,8 +107,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         ISettingsRepository settingsRepository = new SettingsDataSource(preferenceScreen.getContext());
 
         programUrl.setOnPreferenceChangeListener(new onCredentialsChangeListener());
-        programUrl.setText(settingsRepository.getSettings().getUrl());
-        programUrl.setSummary(settingsRepository.getSettings().getUrl());
+        programUrl.setText(settingsRepository.getSettings().getWsServerUrl());
+        programUrl.setSummary(settingsRepository.getSettings().getWsServerUrl());
 
         programUser.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUser.setText(settingsRepository.getSettings().getUser());

@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
 public class SettingsSummary {
-    private String dhisServerUrl;
     private String webServiceUrl;
     private String webUrl;
     private boolean downloadOver3g;
@@ -9,23 +8,14 @@ public class SettingsSummary {
     private boolean elements;
     private String language;
 
-    public SettingsSummary(String dhisServerUrl, String webServiceUrl, String webUrl,
+    public SettingsSummary(String webServiceUrl, String webUrl,
             boolean downloadOver3g, String fontSize, boolean elements, String language) {
-        this.dhisServerUrl = dhisServerUrl;
         this.webServiceUrl = webServiceUrl;
         this.webUrl = webUrl;
         this.downloadOver3g = downloadOver3g;
         this.fontSize = fontSize;
         this.elements = elements;
         this.language = language;
-    }
-
-    public String getDhisServerUrl() {
-        return dhisServerUrl;
-    }
-
-    public void setDhisServerUrl(String dhisServerUrl) {
-        this.dhisServerUrl = dhisServerUrl;
     }
 
     public String getWebServiceUrl() {

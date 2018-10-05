@@ -34,12 +34,11 @@ public class SettingsDataSource implements ISettingsRepository {
         boolean isMetadataUpdateActive = isMetadataUpdateActive();
         String user = loadUser();
         String pass = loadPass();
-        String dhisServerUrl = getDhisServerUrl();
         String wsServerUrl = getWSServerUrl();
         String webUrl = getWebUrl();
         String fontSize = getFontSize();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
-                isElementActive, isMetadataUpdateActive, user, pass, dhisServerUrl, wsServerUrl,
+                isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
                 webUrl, fontSize);
     }
 
@@ -158,14 +157,6 @@ public class SettingsDataSource implements ISettingsRepository {
         return sharedPreferences.getString(
                 context.getResources().getString(R.string.web_service_url),
                 context.getString(R.string.ws_base_url));
-    }
-
-    private String getDhisServerUrl() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getString(
-                context.getResources().getString(R.string.dhis_url),
-                "");
     }
 
     private String getProgramUrl() {

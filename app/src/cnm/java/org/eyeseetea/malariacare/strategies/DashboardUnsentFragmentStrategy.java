@@ -1,16 +1,11 @@
 package org.eyeseetea.malariacare.strategies;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
-import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.util.Date;
 

@@ -704,8 +704,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return valueDB;
     }
 
-    private ValueDB fillDefaultValueForHiddenQuestion(QuestionDB questionDB, SurveyDB surveyDB,
-            ValueDB valueDB) {
+    private void fillDefaultValueForHiddenQuestion(QuestionDB questionDB, SurveyDB surveyDB,
+            ValueDB valueDB, IQuestionView questionView) {
         if (!readOnly && valueDB == null && questionDB.getDefaultValue() != null) {
             if (questionDB.hasOutputWithOptions()) {
                 OptionDB optionDB = questionDB.findOptionByValue(questionDB.getDefaultValue());
@@ -717,8 +717,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 valueDB = new ValueDB(questionDB.getDefaultValue(), questionDB, surveyDB);
                 valueDB.save();
             }
+            questionView.setValue(valueDB);
         }
-        return valueDB;
+
     }
 
 
@@ -1036,9 +1037,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     checkInitialCompulsoryValidationError(commonQuestionView);
                 }
 
-                ((IQuestionView) commonQuestionView).setValue(
-                        fillDefaultValueForHiddenQuestion(childQuestionDB, surveyDB,
-                                childQuestionDB.getValueBySurvey(surveyDB)));
+                fillDefaultValueForHiddenQuestion(childQuestionDB, surveyDB,
+                        childQuestionDB.getValueBySurvey(surveyDB),
+                        (IQuestionView) commonQuestionView);
             }
             return true;
         }

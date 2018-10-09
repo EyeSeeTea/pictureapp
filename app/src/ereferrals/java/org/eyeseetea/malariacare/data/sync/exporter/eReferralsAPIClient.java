@@ -3,14 +3,21 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import android.content.Context;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
+import org.eyeseetea.malariacare.data.sync.exporter.model.Id;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleWSObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleWSResponseObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -20,6 +27,8 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -57,9 +66,12 @@ public class eReferralsAPIClient {
                 .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
                 .build();
 
+        ObjectMapper objectMapper = new ObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(mBaseAddress)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .client(mOkHttpClient)
                 .build();
 
@@ -129,10 +141,44 @@ public class eReferralsAPIClient {
         }
     }
 
+
+    public void getExistOnServer(List<Survey> surveyList, WSClientCallBack wsClientCallBack){
+        SurveySimpleWSObject surveySimpleWSObject = new SurveySimpleWSObject();
+        ArrayList<Id> ids = new ArrayList<>();
+        ArrayList<String> existOnServer = new ArrayList<>();
+        if(surveyList.size()>0) {
+            for (Survey survey : surveyList) {
+                ids.add(new Id(survey.getUId()));
+            }
+            surveySimpleWSObject.setActions(ids);
+            try {
+                Response<SurveySimpleWSResponseObject> response = mSurveyApiClientRetrofit.getQuarantineSurveys(
+                                surveySimpleWSObject).execute();
+                for (SurveySimpleObject surveySimpleObject : response.body().getActions()) {
+                    for (Survey survey : surveyList) {
+                        if (surveySimpleObject.getId().equals(survey.getUId())) {
+                            if (surveySimpleObject.isExistOnServer()) {
+                                existOnServer.add(survey.getUId());
+                            }
+                        }
+                    }
+                }
+            } catch (UnrecognizedPropertyException e) {
+                ConversionException conversionException = new ConversionException(e);
+                wsClientCallBack.onError(conversionException);
+            } catch (SocketTimeoutException | UnknownHostException e) {
+                wsClientCallBack.onError(new NetworkException());
+                return;
+            } catch (IOException e) {
+                wsClientCallBack.onError(e);
+            }
+        }
+        wsClientCallBack.onSuccess(existOnServer);
+    }
+
     public interface WSClientCallBack<T> {
         void onSuccess(T result);
 
         void onError(Exception e);
     }
-
 }

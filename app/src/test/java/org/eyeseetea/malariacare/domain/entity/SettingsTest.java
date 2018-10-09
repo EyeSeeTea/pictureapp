@@ -18,7 +18,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = null;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -28,7 +28,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
 
         assertThat(settings.getLanguage(), is(systemLanguage));
     }
@@ -38,7 +38,7 @@ public class SettingsTest {
         String systemLanguage = "es";
         String currentLanguage = "sw";
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, false);
 
         assertThat(settings.getLanguage(), is(currentLanguage));
     }
@@ -50,7 +50,7 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false, false);
+        new Settings(systemLanguage, currentLanguage, null, false, false, false);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SettingsTest {
 
         thrown.expect(IllegalArgumentException.class);
 
-        new Settings(systemLanguage, currentLanguage, null, false, false);
+        new Settings(systemLanguage, currentLanguage, null, false, false, false);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false);
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -80,7 +80,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean canDownloadWith3G = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, canDownloadWith3G, false, false);
 
         assertThat(settings.canDownloadWith3G(), is(canDownloadWith3G));
     }
@@ -91,7 +91,7 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isElementActive = true;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false);
 
         assertThat(settings.isElementActive(), is(isElementActive));
     }
@@ -102,22 +102,45 @@ public class SettingsTest {
         String currentLanguage = null;
         boolean isElementActive = false;
 
-        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive);
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, isElementActive, false);
 
         assertThat(settings.isElementActive(), is(isElementActive));
     }
 
 
     @Test
+    public void should_return_isMetadataUpdateActive_false_if_isMetadataUpdateActive_is_false() {
+        String systemLanguage = "es";
+        String currentLanguage = null;
+        boolean isMetadataUpdateActive = false;
+
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive);
+
+        assertThat(settings.isMetadataUpdateActive(), is(isMetadataUpdateActive));
+    }
+
+
+    @Test
+    public void should_return_isMetadataUpdateActive_true_if_isMetadataUpdateActive_is_true() {
+        String systemLanguage = "es";
+        String currentLanguage = null;
+        boolean isMetadataUpdateActive = true;
+
+        Settings settings = new Settings(systemLanguage, currentLanguage, null, false, false, isMetadataUpdateActive);
+
+        assertThat(settings.isMetadataUpdateActive(), is(isMetadataUpdateActive));
+    }
+
+    @Test
     public void should_return_default_media_mode_if_is_not_provided() {
-        Settings settings = new Settings("en", "en", null, false, false);
+        Settings settings = new Settings("en", "en", null, false, false, false);
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.GRID));
     }
     
     @Test
     public void should_return_media_mode_if_is_provided() {
-        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false, false);
+        Settings settings = new Settings("en", "en", ISettingsRepository.MediaListMode.LIST, false, false, false);
 
         assertThat(settings.getMediaListMode(), is(ISettingsRepository.MediaListMode.LIST));
     }

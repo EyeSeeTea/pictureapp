@@ -272,6 +272,8 @@ public class MetadataConfigurationApiClientShould {
                 .type(Question.Type.INT)
                 .compulsory(true)
                 .options(null)
+                .regExp("^(\\d{2})$")
+                .regExpError("some_error_msg_ref")
                 .build();
     }
 

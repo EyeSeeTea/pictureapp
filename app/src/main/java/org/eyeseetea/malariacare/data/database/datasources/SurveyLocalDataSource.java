@@ -73,7 +73,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         List<SurveyDB> surveyDBs = SurveyDB.getAllQuarantineSurveys();
         List<Survey> surveys = new ArrayList<>();
         for(SurveyDB surveyDB : surveyDBs){
-            surveys.add(new Survey(surveyDB.getId_survey(), surveyDB.getStatus(), null));
+            surveys.add(buildSurvey(surveyDB));
         }
         return surveys;
     }
@@ -165,6 +165,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
         Survey survey = new Survey.Builder()
                 .id(surveyDB.getId_survey())
+                .uid(surveyDB.getEventUid())
                 .program(program)
                 .type(surveyDB.getType())
                 .questions(questions)

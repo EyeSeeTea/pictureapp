@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -94,11 +95,12 @@ public class PushServiceShould {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"));
-        mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
+                new Device("testPhone", "testIMEI", "test_version"),
+                InstrumentationRegistry.getTargetContext());
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
 
         SurveysThresholds surveysThresholds =

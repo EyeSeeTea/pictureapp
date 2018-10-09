@@ -1,9 +1,9 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -12,13 +12,14 @@ import android.support.test.InstrumentationRegistry;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
@@ -38,6 +39,7 @@ import okhttp3.mockwebserver.MockWebServer;
 public class WSPushControllerShould {
 
     private static final String PUSH_RESPONSE_CONFLICT = "push_response_conflict.json";
+    private static final String QUARANTINE_RESPONSE_CONFLICT = "quarantine_response_conflict.json";
 
     private MockWebServer server;
     private eReferralsAPIClient apiClient;
@@ -60,8 +62,10 @@ public class WSPushControllerShould {
         apiClient = initializeApiClient();
         Device device = new Device("phoneNumber", "imei", "version");
 
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device);
-        mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device,
+                InstrumentationRegistry.getTargetContext());
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        mWSPushController = new WSPushController(apiClient, surveyRepository, convertToWSVisitor);
     }
 
     private void savePreferences() {
@@ -153,6 +157,61 @@ public class WSPushControllerShould {
         });
     }
 
+    @Test
+    public void update_quarantine_with_correct_status_when_do_push_with_some_quarantine_surveys() throws IOException {
+        givenSomeQuarantineTestSurveys();
+        whenAQuarantineResponseWithSomeQuarantineSurveysIsReceived();
+        assertTrue(SurveyDB.getAllQuarantineSurveys().size()==4);
+        mWSPushController.push(new IPushController.IPushControllerCallback() {
+            @Override
+            public void onStartPushing() {
+
+            }
+
+            @Override
+            public void onComplete() {
+            }
+
+            @Override
+            public void onInformativeError(Throwable throwable) {
+                boolean hasError = throwable != null;
+                assertThat(hasError, is(true));
+            }
+
+            @Override
+            public void onInformativeMessage(String message) {
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                boolean hasError = throwable != null;
+                assertThat(hasError, is(true));
+                assertTrue(SurveyDB.getAllQuarantineSurveys().size()==0);
+                assertTrue(SurveyDB.findByUid("LRR4ZZidQ6T").getStatus()==Constants.SURVEY_COMPLETED);
+                assertTrue(SurveyDB.findByUid("PHp2WANFHE1").getStatus()==Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("NDqaWw51WJr").getStatus()==Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("Ian8YUgm7T3").getStatus()==Constants.SURVEY_SENT);
+            }
+        });
+    }
+
+    private void givenSomeQuarantineTestSurveys() {
+        ProgramDB programDB = new ProgramDB("test", "uid");
+        programDB.save();
+        OrgUnitDB orgUnitDB = new OrgUnitDB("test");
+        orgUnitDB.save();
+        for (String eventUID : eventUIDs) {
+            SurveyDB surveyDB = new SurveyDB(orgUnitDB, programDB,
+                    new UserDB("test", "test"));
+            surveyDB.setStatus(Constants.SURVEY_QUARANTINE);
+            surveyDB.setEventUid(eventUID);
+            surveyDB.save();
+        }
+    }
+
+    private void whenAQuarantineResponseWithSomeQuarantineSurveysIsReceived() throws IOException{
+        enqueueResponse(QUARANTINE_RESPONSE_CONFLICT);
+    }
     private void givenSomeTestSurveys() {
         for (String eventUID : eventUIDs) {
             SurveyDB surveyDB = new SurveyDB(new OrgUnitDB("test"), new ProgramDB("test"),

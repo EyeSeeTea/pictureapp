@@ -1,0 +1,24 @@
+{
+  "actions": [
+    {
+      "id": "LRR4ZZidQ6T",
+      "existOnServer": false,
+      "resultType": ""
+    },
+    {
+      "id": "PHp2WANFHE1",
+      "existOnServer": true,
+      "resultType": "success"
+    },
+    {
+      "id": "NDqaWw51WJr",
+      "existOnServer": true,
+      "resultType": "success"
+    },
+    {
+      "id": "Ian8YUgm7T3",
+      "existOnServer": true,
+      "resultType": "success"
+    }
+  ]
+}

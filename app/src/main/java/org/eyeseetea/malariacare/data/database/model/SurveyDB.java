@@ -126,6 +126,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     @Column
     String uid_event_fk;
 
+    @Column
+    String voucher_uid;
+
     /**
      * List of values for this survey
      */
@@ -323,6 +326,12 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.uid_event_fk = eventuid;
     }
 
+    public String getVoucherUid() {
+        return voucher_uid;
+    }
+    public void setVoucherUid(String eventuid) {
+        this.voucher_uid = eventuid;
+    }
     /**
      * Returns a concrete survey, if it exists
      */
@@ -339,7 +348,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the malaria surveys with status yet not put to "Sent"
      */
     public static List<SurveyDB> getAllUnsentMalariaSurveys(String malariaProgramUid) {
-        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class,
+                Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
                 .where(SurveyDB_Table.status.withTable(surveyAlias)
@@ -352,7 +362,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     }
 
     public static List<SurveyDB> getAllSurveysByProgram(String malariaProgramUid) {
-        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class,
+                Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
                 .where(ProgramDB_Table.uid_program.withTable(programAlias)
@@ -426,7 +437,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the surveys with status put to "Sent"
      */
     public static List<SurveyDB> getAllMalariaSurveysToBeSent(String malariaProgramUid) {
-        Context context = PreferencesState.getInstance().getContext();
         return new Select().from(SurveyDB.class).as(surveyName)
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
@@ -598,6 +608,17 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .from(SurveyDB.class)
                 .where(SurveyDB_Table.id_survey
                         .eq(id_survey))
+                .querySingle();
+    }
+
+    /**
+     * Finds a survey by its uid
+     */
+    public static SurveyDB findByUid(String uid) {
+        return new Select()
+                .from(SurveyDB.class)
+                .where(SurveyDB_Table.uid_event_fk
+                        .eq(uid))
                 .querySingle();
     }
 
@@ -1271,5 +1292,4 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
-
 }

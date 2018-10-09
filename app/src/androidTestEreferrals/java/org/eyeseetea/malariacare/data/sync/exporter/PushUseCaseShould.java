@@ -8,14 +8,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
-import com.raizlabs.android.dbflow.config.FlowManager;
+import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
@@ -172,11 +169,13 @@ public class PushUseCaseShould {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"));
-        mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
+                new Device("testPhone", "testIMEI", "test_version"),
+                InstrumentationRegistry.getTargetContext());
+
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
 
         SurveysThresholds surveysThresholds =

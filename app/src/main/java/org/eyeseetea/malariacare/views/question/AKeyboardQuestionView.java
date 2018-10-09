@@ -7,8 +7,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public abstract class AKeyboardQuestionView extends CommonQuestionView {
+import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.entity.Validation;
+
+public abstract class AKeyboardQuestionView extends CommonQuestionView implements IExtraValidation {
     protected onAnswerChangedListener mOnAnswerChangedListener;
+    public EditText answer;
 
     public AKeyboardQuestionView(Context context) {
         super(context);
@@ -22,6 +27,12 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
     protected void notifyAnswerChanged(String newValue) {
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
+        }
+    }
+
+    public void checkLoadedErrors() {
+        if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(answer);
         }
     }
 
@@ -51,5 +62,20 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
                 return true;
             }
         });
+    }
+    protected void validateAnswer(String value, TextView textView) {
+        if (BuildConfig.validationInline) {
+            if (!value.isEmpty()) {
+                if(validateQuestionRegExp(textView)) {
+                    Validation.getInstance().removeInputError(textView);
+                }
+            }
+            else if(!question.isCompulsory()){
+                Validation.getInstance().removeInputError(textView);
+            } else {
+                Validation.getInstance().addinvalidInput(textView, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        }
     }
 }

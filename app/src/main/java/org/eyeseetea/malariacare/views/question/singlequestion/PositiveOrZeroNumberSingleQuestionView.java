@@ -100,13 +100,18 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
             try {
                 PositiveOrZeroNumber positiveNumber = PositiveOrZeroNumber.parse(
                         numberPicker.getText().toString());
-                Validation.getInstance().removeInputError(numberPicker);
-                hideKeyboard(numberPicker);
-                notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                if(validateQuestionRegExp(numberPicker)) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                    hideKeyboard(numberPicker);
+                    notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                }
             } catch (InvalidPositiveOrZeroNumberException e) {
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            }
+            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(numberPicker);
             }
             isClicked = false;
         }

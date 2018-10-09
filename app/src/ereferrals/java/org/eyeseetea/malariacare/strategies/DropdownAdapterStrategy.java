@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.R;
 public class DropdownAdapterStrategy {
 
     public static void drawDropDown(int position, View convertView, View parent, Context context) {
-        int transparent = ContextCompat.getColor(context, R.color.transparent);
+        int notSelected =  R.drawable.spinner_divider;
         int selected = ContextCompat.getColor(context, android.R.color.secondary_text_dark);
 
         if((parent!=null && parent instanceof ListView && ((ListView)parent).getAdapter()!=null)) {
@@ -19,11 +19,11 @@ public class DropdownAdapterStrategy {
                 if(listView.getCheckedItemPosition()==position){
                     convertView.setBackgroundColor(selected);
                 }else{
-                    convertView.setBackgroundColor(transparent);
+                    convertView.setBackgroundResource(notSelected);
                 }
             }
             }else{
-                convertView.setBackgroundColor(transparent);
+                convertView.setBackgroundResource(notSelected);
         }
     }
 }

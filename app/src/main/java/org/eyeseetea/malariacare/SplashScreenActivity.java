@@ -30,7 +30,7 @@ public class SplashScreenActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "AndroidLifeCycle: onCreate");
         super.onCreate(savedInstanceState);
         final Activity activity = this;
         splashActivityStrategy = new SplashActivityStrategy(this);
@@ -114,5 +114,39 @@ public class SplashScreenActivity extends Activity {
 
     private void performMaintenanceTasks() {
         SurveyDB.deleteOlderSentSurveys(maxDaysForDeletingSentSurveys);
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "AndroidLifeCycle: onStop");
+        super.onStop();
+    }
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
+        super.onPause();
+    }
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "AndroidLifeCycle: onResume");
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
     }
 }

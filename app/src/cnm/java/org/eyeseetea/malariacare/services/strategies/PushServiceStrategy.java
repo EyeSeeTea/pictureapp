@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;

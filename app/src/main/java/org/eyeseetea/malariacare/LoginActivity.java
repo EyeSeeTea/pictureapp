@@ -53,10 +53,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -86,7 +84,6 @@ public class LoginActivity extends Activity {
     public static final String DEFAULT_PASSWORD = "";
     private static final String TAG = ".LoginActivity";
     private static final String IS_LOADING = "state:isLoading";
-    public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
     public LoginUseCase mLoginUseCase;
     public LoginActivityStrategy mLoginActivityStrategy;
     EditText serverText;
@@ -123,7 +120,7 @@ public class LoginActivity extends Activity {
 
     private void initLoginUseCase() {
         mLoginActivityStrategy = new LoginActivityStrategy(this);
-        mLoginActivityStrategy.initLoginUseCase(mAuthenticationManager);
+        mLoginActivityStrategy.initLoginUseCase();
     }
 
     private void initDataDownloadPeriodDropdown() {

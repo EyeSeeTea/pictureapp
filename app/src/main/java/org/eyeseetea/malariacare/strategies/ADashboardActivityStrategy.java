@@ -21,11 +21,11 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
@@ -206,7 +206,7 @@ public abstract class ADashboardActivityStrategy {
 
 
     public void initNavigationController() throws LoadingNavigationControllerException {
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         Program userProgram = programRepository.getUserProgram();
         ProgramDB program = ProgramDB.findByName(userProgram.getCode());
 

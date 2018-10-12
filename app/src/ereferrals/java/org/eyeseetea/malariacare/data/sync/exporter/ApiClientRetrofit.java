@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+import org.eyeseetea.malariacare.data.remote.model.AuthPayload;
+import org.eyeseetea.malariacare.data.remote.model.AuthResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
@@ -11,7 +13,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface SurveyApiClientRetrofit {
+public interface ApiClientRetrofit {
+
+    @POST("api/auth")
+    Call<AuthResponse> auth(@Body AuthPayload authPayload);
+
     @POST("api")
     Call<SurveyWSResult> pushSurveys(@Body SurveyContainerWSObject surveyContainerWSObject);
 

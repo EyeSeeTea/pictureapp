@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
@@ -17,6 +18,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -35,8 +37,9 @@ public abstract class APushServiceStrategy {
     public abstract void push();
 
     protected void executePush() {
-
-        PushController pushController = new PushController(mPushService);
+        IAuthenticationManager authenticationManager =
+                new AuthenticationFactoryStrategy().getAuthenticationManager(mPushService);
+        PushController pushController = new PushController(mPushService, authenticationManager);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();

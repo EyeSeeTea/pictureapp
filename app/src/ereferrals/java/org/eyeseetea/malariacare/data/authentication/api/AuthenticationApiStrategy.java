@@ -6,6 +6,6 @@ import org.eyeseetea.malariacare.domain.exception.LanguagesDownloadException;
 public class AuthenticationApiStrategy extends AuthenticationApi {
     //Authentication
     public static String getApiCredentials() throws ConfigJsonIOException ,LanguagesDownloadException {
-        return getApiCredentialsFromLogin();
+        return getHardcodedApiCredentials();
     }
 }

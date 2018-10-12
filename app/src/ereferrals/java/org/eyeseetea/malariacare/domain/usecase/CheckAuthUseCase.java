@@ -51,7 +51,7 @@ public class CheckAuthUseCase implements UseCase {
                     return;
                 }
 
-                Credentials credentials = mCredentialsRepository.getOrganisationCredentials();
+                Credentials credentials = mCredentialsRepository.getLastValidCredentials();
                 if(!hasCredentials(credentials)){
                     mCallback.onEmptyCredentials();
                     return;

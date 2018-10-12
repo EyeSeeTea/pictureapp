@@ -7,16 +7,14 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
-import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.sync.factory.ConverterFactory;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.MetadataUpdater;
@@ -29,8 +27,6 @@ import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupEx
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
@@ -102,37 +98,34 @@ public class PullControllerStrategy extends APullControllerStrategy {
     public void onPullDataComplete(final IPullController.Callback callback, boolean isDemo) {
         try {
 
-        if (isDemo) {
-            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-            ProgramDB programDB = ProgramDB.findByUID(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.demo_program_uid));
-            Program program = new Program(programDB.getName(), programDB.getUid());
-            programLocalDataSource.saveUserProgramId(program);
-            callback.onComplete();
-        } else {
-            IMetadataConfigurationDataSource metadataConfigurationDataSource =
-                    MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                            HTTPClientFactory.getAuthenticationInterceptor()
-                    );
-            importer = new MetadataConfigurationDBImporter(
-                    metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()
-            );
-            ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-            IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
-            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-                org.eyeseetea.malariacare.domain.entity.OrganisationUnit orgUnit =
-                        orgUnitDataSource.getUserOrgUnit(
-                                credentialsLocalDataSource.getOrganisationCredentials());
-                org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
+            if (isDemo) {
+                IProgramRepository programRepository = new ProgramRepository();
+                ProgramDB programDB = ProgramDB.findByUID(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.demo_program_uid));
+                Program program = new Program(programDB.getName(), programDB.getUid());
+                programRepository.saveUserProgramId(program);
+                callback.onComplete();
+            } else {
+                IMetadataConfigurationDataSource metadataConfigurationDataSource =
+                        MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
+                                HTTPClientFactory.getAuthenticationInterceptor()
+                        );
+                importer = new MetadataConfigurationDBImporter(
+                        metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()
+                );
 
-            if (importer.hasToUpdateMetadata(program)) {
-                checkCompletedSurveys(callback, program);
+                IProgramRepository programRepository = new ProgramRepository();
+
+                Program program = programRepository.getUserProgram();
+
+                if (importer.hasToUpdateMetadata(program)) {
+                    checkCompletedSurveys(callback, program);
+                }
+                programRepository.saveUserProgramId(program);
+
+                mPullController.convertData(callback);
             }
-                programLocalDataSource.saveUserProgramId(program);
-
-            mPullController.convertData(callback);
-        }
         } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);
@@ -169,12 +162,12 @@ public class PullControllerStrategy extends APullControllerStrategy {
             throws IOException, WarningException {
         currentUser.setCanAddSurveys(true);
         userDataSource.saveLoggedUser(currentUser);
-        try{
-        if (isNetworkAvailable()) {
-            downloadMetadataFromConfigurationFiles(userProgram);
-            updateDownloadMetadataDate();
-        }
-        }catch (WarningException e){
+        try {
+            if (isNetworkAvailable()) {
+                downloadMetadataFromConfigurationFiles(userProgram);
+                updateDownloadMetadataDate();
+            }
+        } catch (WarningException e) {
             currentUser.setCanAddSurveys(false);
             userDataSource.saveLoggedUser(currentUser);
             throw e;
@@ -202,7 +195,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
         try {
             downloadAsyncLanguagesFromServer();
             importer.importMetadata(actualProgram);
-        }catch (WarningException e1){
+        } catch (WarningException e1) {
             throw e1;
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,15 +204,15 @@ public class PullControllerStrategy extends APullControllerStrategy {
     }
 
     public void downloadAsyncLanguagesFromServer() throws Exception {
-            Log.i(TAG, "Starting to download Languages From Server");
-            AsyncExecutor asyncExecutor = new AsyncExecutor();
-            CredentialsReader credentialsReader = CredentialsReader.getInstance();
-            IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
-                    PreferencesState.getInstance().getContext());
-            DownloadLanguageTranslationUseCase downloader =
-                    new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
+        Log.i(TAG, "Starting to download Languages From Server");
+        AsyncExecutor asyncExecutor = new AsyncExecutor();
+        CredentialsReader credentialsReader = CredentialsReader.getInstance();
+        IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
+                PreferencesState.getInstance().getContext());
+        DownloadLanguageTranslationUseCase downloader =
+                new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-            downloader.downloadAsync(asyncExecutor);
+        downloader.downloadAsync(asyncExecutor);
     }
 
 }

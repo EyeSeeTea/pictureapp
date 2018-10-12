@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
 import static junit.framework.Assert.assertTrue;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -11,13 +12,13 @@ import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -105,11 +106,11 @@ public class WSPushControllerShould {
 
         Credentials credentials = new Credentials("test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
     }
 
     @Test

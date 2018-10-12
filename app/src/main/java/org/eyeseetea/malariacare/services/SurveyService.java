@@ -26,11 +26,11 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -287,11 +287,11 @@ public class SurveyService extends IntentService {
         if (mProgramUID != null) {
             callback.onSuccess(mProgramUID);
         } else {
-            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+            IProgramRepository programRepository = new ProgramRepository();
             IMainExecutor mainExecutor = new UIThreadExecutor();
             IAsyncExecutor asyncExecutor = new AsyncExecutor();
             GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
-                    programLocalDataSource, mainExecutor, asyncExecutor);
+                    programRepository, mainExecutor, asyncExecutor);
             getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
                 @Override
                 public void onSuccess(String uid) {

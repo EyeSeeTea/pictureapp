@@ -7,16 +7,16 @@ import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 
 public class GetUserProgramUseCase implements UseCase {
-    private IProgramRepository mProgramLocalDataSource;
+    private IProgramRepository mProgramRepository;
     private Callback mCallback;
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
 
     public GetUserProgramUseCase(
-            IProgramRepository programLocalDataSource,
+            IProgramRepository programRepository,
             IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor) {
-        mProgramLocalDataSource = programLocalDataSource;
+        mProgramRepository = programRepository;
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
     }
@@ -29,7 +29,7 @@ public class GetUserProgramUseCase implements UseCase {
 
     @Override
     public void run() {
-        final Program program = mProgramLocalDataSource.getUserProgram();
+        final Program program = mProgramRepository.getUserProgram();
         if (program != null) {
             mMainExecutor.run(new Runnable() {
                 @Override

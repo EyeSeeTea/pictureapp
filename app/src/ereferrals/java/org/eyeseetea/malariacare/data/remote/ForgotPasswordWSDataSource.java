@@ -14,10 +14,10 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
-public class ForgotPasswordDataSource implements IForgotPasswordDataSource {
+public class ForgotPasswordWSDataSource implements IForgotPasswordDataSource {
     Context mContext;
 
-    public ForgotPasswordDataSource(Context context) {
+    public ForgotPasswordWSDataSource(Context context) {
         mContext = context;
     }
 

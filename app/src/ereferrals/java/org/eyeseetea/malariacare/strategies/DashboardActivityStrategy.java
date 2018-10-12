@@ -20,7 +20,8 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth
+        .GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -30,7 +31,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -44,9 +44,10 @@ import org.eyeseetea.malariacare.data.io.FileDownloader;
 import org.eyeseetea.malariacare.data.io.GooglePlayAppNotAvailableException;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.remote.ElementController;
-import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
@@ -63,13 +64,13 @@ import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
-import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
-import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
+import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
+import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
-import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -109,7 +110,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
 
-        Credentials credentials = iCredentialsRepository.getOrganisationCredentials();
+        Credentials credentials = iCredentialsRepository.getLastValidCredentials();
         if (credentials != null && !credentials.isDemoCredentials()) {
             IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
             ILanguageRepository languageRepository = new LanguagesLocalDataSource();
@@ -151,8 +152,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        IConnectivityManager mConnectivity = new ConnectivityManager();
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IConnectivityManager mConnectivity = new ConnectivityManager(mDashboardActivity);
+        IProgramRepository programRepository = new ProgramRepository();
         String path =
                 PreferencesState.getInstance().getContext().getFilesDir().getAbsolutePath() + "/"
                         + Constants.MEDIA_FOLDER;

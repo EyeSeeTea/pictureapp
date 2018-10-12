@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.datasources;
+package org.eyeseetea.malariacare.data.repositories;
 
 
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProgramLocalDataSource implements IProgramRepository {
+public class ProgramRepository implements IProgramRepository {
 
 
     @Override

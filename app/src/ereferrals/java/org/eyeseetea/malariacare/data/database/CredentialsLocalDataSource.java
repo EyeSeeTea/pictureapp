@@ -8,20 +8,20 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 public class CredentialsLocalDataSource implements ICredentialsRepository {
     @Override
-    public Credentials getOrganisationCredentials() {
+    public Credentials getLastValidCredentials() {
         return PreferencesEReferral.getUserCredentialsFromPreferences();
     }
 
     @Override
-    public void saveOrganisationCredentials(Credentials credentials) {
+    public void saveLastValidCredentials(Credentials credentials) {
         PreferencesEReferral.saveLoggedUserCredentials(credentials);
     }
 
     @Override
-    public void clearOrganisationCredentials() {
-        Credentials credentials = getOrganisationCredentials();
+    public void clearLastValidCredentials() {
+        Credentials credentials = getLastValidCredentials();
         credentials.clear();
-        saveOrganisationCredentials(credentials);
+        saveLastValidCredentials(credentials);
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.Auth;
+
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
@@ -13,6 +15,7 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 
@@ -39,10 +42,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreate() {
-
-        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
-        mLoginUseCase = new LoginUseCase(mAuthenticationManager);
+        mLogoutUseCase = new AuthenticationFactoryStrategy().getLogoutUseCase(mBaseActivity);
+        mLoginUseCase = new AuthenticationFactoryStrategy().getLoginUseCase(mBaseActivity);
     }
 
     @Override

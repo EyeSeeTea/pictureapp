@@ -31,7 +31,7 @@ public class GetUrlForWebViewsUseCaseShould {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getTargetContext();
-        when(mockCredentialRepository.getOrganisationCredentials()).thenReturn(
+        when(mockCredentialRepository.getLastValidCredentials()).thenReturn(
                 new Credentials("serverURL", "username", "password"));
         userCase = new GetUrlForWebViewsUseCase(context, mockCredentialRepository);
     }

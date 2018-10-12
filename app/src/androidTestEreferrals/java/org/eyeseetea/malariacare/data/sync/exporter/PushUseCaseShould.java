@@ -14,7 +14,6 @@ import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
@@ -24,6 +23,7 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -195,13 +195,13 @@ public class PushUseCaseShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousCredentials = credentialsLocalDataSource.getOrganisationCredentials();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
+        ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
                         PreferencesEReferral.getUserProgramId());
         if (databaseProgramDB != null) {
-            previousProgram = programLocalDataSource.getUserProgram();
+            previousProgram = programRepository.getUserProgram();
         }
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
     }
@@ -216,11 +216,11 @@ public class PushUseCaseShould {
 
         Credentials credentials = new Credentials("test", "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
@@ -238,10 +238,10 @@ public class PushUseCaseShould {
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousCredentials);
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
+        ProgramRepository programRepository = new ProgramRepository();
         if (previousProgram != null) {
-            programLocalDataSource.saveUserProgramId(previousProgram);
+            programRepository.saveUserProgramId(previousProgram);
         } else {
             PreferencesEReferral.saveUserProgramId(-1l);
         }

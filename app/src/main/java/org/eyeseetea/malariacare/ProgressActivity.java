@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -42,6 +41,7 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -75,13 +75,12 @@ public class ProgressActivity extends Activity {
     }
 
     private void initializeDependencies() {
-        AuthenticationManager authenticationManager = new AuthenticationManager(this);
 
         IPullController pullController = new PullController(this);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
 
-        mLogoutUseCase = new LogoutUseCase(authenticationManager);
+        mLogoutUseCase = new AuthenticationFactoryStrategy().getLogoutUseCase(this);
         mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 

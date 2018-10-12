@@ -12,6 +12,8 @@ import static org.eyeseetea.malariacare.configurationimporter
 import static org.junit.Assert.assertTrue;
 
 
+import android.content.Context;
+
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -19,6 +21,7 @@ import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
@@ -48,8 +51,9 @@ public class MetadataConfigurationDBImporterShould {
     public void setUp() throws Exception {
         PopulateDB.wipeDataBase();
         CredentialsReader credentialsReader = CredentialsReader.getInstance();
+        Context context = PreferencesState.getInstance().getContext();
         Session.setCredentials(
-                new Credentials("/", credentialsReader.getUser(),
+                new Credentials(context.getString(R.string.web_service_url), credentialsReader.getUser(),
                         credentialsReader.getPassword()));
 
         dhis2MockServer = new CustomMockServer(new AssetsFileReader());

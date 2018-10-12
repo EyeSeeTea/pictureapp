@@ -56,14 +56,14 @@ public class DialogSpinnerAdapter extends OptionArrayAdapter  {
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
 
-        int transparent = ContextCompat.getColor(context, R.color.transparent);
+        int notSelected = R.drawable.spinner_divider;
         int selected = ContextCompat.getColor(context, android.R.color.secondary_text_dark);
         OptionDB optionDB = getItem(position);
         if(optionDB!=null && optionDB.equals(selectedOption)){
             convertView.setBackgroundColor(selected);
         }
         else {
-            convertView.setBackgroundColor(transparent);
+            convertView.setBackgroundResource(notSelected);
         }
         // Return the completed view to render on screen
         return convertView;

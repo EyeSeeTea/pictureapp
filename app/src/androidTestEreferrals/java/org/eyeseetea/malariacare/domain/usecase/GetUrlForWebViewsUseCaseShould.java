@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.junit.After;
@@ -32,13 +33,12 @@ public class GetUrlForWebViewsUseCaseShould {
         MockitoAnnotations.initMocks(this);
         Context context = InstrumentationRegistry.getTargetContext();
         when(mockCredentialRepository.getLastValidCredentials()).thenReturn(
-                new Credentials("serverURL", "username", "password"));
+                new Credentials(context.getString(R.string.ws_base_url), "username", "password"));
         userCase = new GetUrlForWebViewsUseCase(context, mockCredentialRepository);
     }
 
     @After
     public void tearDown() throws Exception {
-        url = "";
     }
 
     @Test

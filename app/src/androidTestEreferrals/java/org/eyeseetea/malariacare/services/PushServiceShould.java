@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.services;
 
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
@@ -67,6 +70,7 @@ public class PushServiceShould {
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
 
+    private Context mContext;
 
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
@@ -87,6 +91,8 @@ public class PushServiceShould {
 
     @Before
     public void cleanUp() throws IOException {
+        mContext = InstrumentationRegistry.getTargetContext();
+        grantPhonePermission();
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
@@ -94,11 +100,11 @@ public class PushServiceShould {
         savePreviousPreferences();
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"),
-                InstrumentationRegistry.getTargetContext());
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository, convertToWSVisitor);
+        Device device = new Device("test", "test", "test");
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, mContext);
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
+                convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
@@ -116,6 +122,16 @@ public class PushServiceShould {
     public void tearDown() throws IOException {
         mCustomMockServer.shutdown();
         restorePreferences();
+    }
+
+    public void grantPhonePermission() {
+        // In M+, trying to call a number will trigger a runtime dialog. Make sure
+        // the permission is granted before running this test.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + mContext.getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+        }
     }
 
 
@@ -139,10 +155,11 @@ public class PushServiceShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials("test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
@@ -161,7 +178,7 @@ public class PushServiceShould {
                 context);
         if (previousCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.web_service_url),
                     previousCredentials.getServerURL());
             editor.commit();
         }

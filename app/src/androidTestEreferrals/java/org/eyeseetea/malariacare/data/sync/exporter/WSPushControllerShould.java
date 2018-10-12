@@ -53,8 +53,11 @@ public class WSPushControllerShould {
     private String pinPreference ="";
     private long programPreference =-1;
 
+    private Context mContext;
+
     @Before
     public void setUp() throws Exception {
+        mContext = InstrumentationRegistry.getTargetContext();
         this.server = new MockWebServer();
         this.server.start();
         //PreferencesState.getInstance().setContext(InstrumentationRegistry.getInstrumentation().getTargetContext());
@@ -63,16 +66,16 @@ public class WSPushControllerShould {
         apiClient = initializeApiClient();
         Device device = new Device("phoneNumber", "imei", "version");
 
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device,
-                InstrumentationRegistry.getTargetContext());
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        mWSPushController = new WSPushController(apiClient, surveyRepository, convertToWSVisitor);
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, mContext);
+        mWSPushController = new WSPushController(apiClient, surveyRepository,
+                convertToWSVisitor);
     }
 
     private void savePreferences() {
         Context context = PreferencesState.getInstance().getContext();
         serverPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.dhis_url),"");
+                context)).getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
         userPreference = (PreferenceManager.getDefaultSharedPreferences(
                 context)).getString(context.getString(R.string.logged_user_username),"");
         pinPreference = (PreferenceManager.getDefaultSharedPreferences(
@@ -87,7 +90,7 @@ public class WSPushControllerShould {
                 context);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), serverPreference);
+        editor.putString(context.getString(R.string.web_service_url), serverPreference);
         editor.putString(context.getString(R.string.logged_user_username), userPreference);
         editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
         editor.putLong(context.getString(R.string.logged_user_program), programPreference);
@@ -101,10 +104,12 @@ public class WSPushControllerShould {
                 context);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials("test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test",
+                "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
@@ -159,10 +164,11 @@ public class WSPushControllerShould {
     }
 
     @Test
-    public void update_quarantine_with_correct_status_when_do_push_with_some_quarantine_surveys() throws IOException {
+    public void update_quarantine_with_correct_status_when_do_push_with_some_quarantine_surveys()
+            throws IOException {
         givenSomeQuarantineTestSurveys();
         whenAQuarantineResponseWithSomeQuarantineSurveysIsReceived();
-        assertTrue(SurveyDB.getAllQuarantineSurveys().size()==4);
+        assertTrue(SurveyDB.getAllQuarantineSurveys().size() == 4);
         mWSPushController.push(new IPushController.IPushControllerCallback() {
             @Override
             public void onStartPushing() {
@@ -187,11 +193,12 @@ public class WSPushControllerShould {
             public void onError(Throwable throwable) {
                 boolean hasError = throwable != null;
                 assertThat(hasError, is(true));
-                assertTrue(SurveyDB.getAllQuarantineSurveys().size()==0);
-                assertTrue(SurveyDB.findByUid("LRR4ZZidQ6T").getStatus()==Constants.SURVEY_COMPLETED);
-                assertTrue(SurveyDB.findByUid("PHp2WANFHE1").getStatus()==Constants.SURVEY_SENT);
-                assertTrue(SurveyDB.findByUid("NDqaWw51WJr").getStatus()==Constants.SURVEY_SENT);
-                assertTrue(SurveyDB.findByUid("Ian8YUgm7T3").getStatus()==Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.getAllQuarantineSurveys().size() == 0);
+                assertTrue(SurveyDB.findByUid("LRR4ZZidQ6T").getStatus()
+                        == Constants.SURVEY_COMPLETED);
+                assertTrue(SurveyDB.findByUid("PHp2WANFHE1").getStatus() == Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("NDqaWw51WJr").getStatus() == Constants.SURVEY_SENT);
+                assertTrue(SurveyDB.findByUid("Ian8YUgm7T3").getStatus() == Constants.SURVEY_SENT);
             }
         });
     }
@@ -210,9 +217,10 @@ public class WSPushControllerShould {
         }
     }
 
-    private void whenAQuarantineResponseWithSomeQuarantineSurveysIsReceived() throws IOException{
+    private void whenAQuarantineResponseWithSomeQuarantineSurveysIsReceived() throws IOException {
         enqueueResponse(QUARANTINE_RESPONSE_CONFLICT);
     }
+
     private void givenSomeTestSurveys() {
         for (String eventUID : eventUIDs) {
             SurveyDB surveyDB = new SurveyDB(new OrgUnitDB("test"), new ProgramDB("test"),

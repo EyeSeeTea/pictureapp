@@ -35,7 +35,6 @@ import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
-import org.eyeseetea.malariacare.network.factory.HTTPClientFactory;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 
@@ -98,10 +97,10 @@ public class WSPullController implements IPullController {
                 programRepository.saveUserProgramId(program);
                 callback.onComplete();
             } else {
+                MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory =
+                        new MetadataConfigurationDataSourceFactory(mContext);
                 IMetadataConfigurationDataSource metadataConfigurationDataSource =
-                        MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                                HTTPClientFactory.getAuthenticationInterceptor()
-                        );
+                        metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource();
                 importer = new MetadataConfigurationDBImporter(
                         metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()
                 );

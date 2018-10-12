@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertTrue;
 
-import com.squareup.okhttp.Credentials;
+import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -15,7 +15,6 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
 import org.junit.Before;
 
 public class RealMetadataConfigurationDBImporterShould {
@@ -28,12 +27,11 @@ public class RealMetadataConfigurationDBImporterShould {
     @Before
     public void setUp() throws Exception {
 
-        String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
-
+        MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory =
+                new MetadataConfigurationDataSourceFactory(
+                        InstrumentationRegistry.getTargetContext());
         IMetadataConfigurationDataSource apiClient =
-                MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(
-                        new BasicAuthInterceptor(credentials)
-                );
+                metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource();
         importer = new MetadataConfigurationDBImporter(
                 apiClient, ConverterFactory.getQuestionConverter()
         );

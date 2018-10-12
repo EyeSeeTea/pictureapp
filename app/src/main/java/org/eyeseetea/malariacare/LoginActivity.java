@@ -64,8 +64,8 @@ import org.eyeseetea.malariacare.strategies.ALoginActivityStrategy;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.AbsTextWatcher;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
-import org.hisp.dhis.client.sdk.ui.views.AbsTextWatcher;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -380,14 +380,12 @@ public class LoginActivity extends Activity {
             layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
             layoutTransition.addTransitionListener(onPostAnimationListener);
 
-            RelativeLayout loginLayoutContent = (RelativeLayout) findViewById(
-                    org.hisp.dhis.client.sdk.ui.R.id.layout_content);
+            RelativeLayout loginLayoutContent = (RelativeLayout) findViewById(R.id.layout_content);
+
             loginLayoutContent.setLayoutTransition(layoutTransition);
         } else {
-            layoutTransitionSlideIn = AnimationUtils.loadAnimation(this,
-                    org.hisp.dhis.client.sdk.ui.R.anim.in_up);
-            layoutTransitionSlideOut = AnimationUtils.loadAnimation(this,
-                    org.hisp.dhis.client.sdk.ui.R.anim.out_down);
+            layoutTransitionSlideIn = AnimationUtils.loadAnimation(this, R.anim.in_up);
+            layoutTransitionSlideOut = AnimationUtils.loadAnimation(this, R.anim.out_down);
 
             layoutTransitionSlideIn.setAnimationListener(onPostAnimationListener);
             layoutTransitionSlideOut.setAnimationListener(onPostAnimationListener);

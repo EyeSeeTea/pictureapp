@@ -126,9 +126,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     public void executeLogout() {
-        IAuthenticationManager iAuthenticationManager =
-                new AuthenticationFactoryStrategy().getAuthenticationManager(settingsActivity);
-        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        LogoutUseCase logoutUseCase =
+                new AuthenticationFactoryStrategy().getLogoutUseCase(settingsActivity.getApplicationContext());
         AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override

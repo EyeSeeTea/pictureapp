@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -180,10 +181,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     protected void executePush() {
-        IPushController pushController = null;
-        if (mPushUseCase == null) {
+        PushUseCase pushUseCase = mPushUseCase;
+        if (pushUseCase == null) {
             try {
-                pushController = new WSPushController(mPushService, new SurveyLocalDataSource());
+                pushUseCase = new SyncFactoryStrategy()
+                        .getPushUseCase(mPushService.getApplicationContext());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 showInDialog(PreferencesState.getInstance().getContext().getString(
@@ -193,21 +195,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 return;
             }
         }
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
-
-        SurveysThresholds surveysThresholds =
-                new SurveysThresholds(BuildConfig.LimitSurveysCount,
-                        BuildConfig.LimitSurveysTimeHours);
-
-        PushUseCase pushUseCase = mPushUseCase;
-        if (pushUseCase == null) {
-            pushUseCase = new PushUseCase(pushController, asyncExecutor, mainExecutor,
-                    surveysThresholds, surveyRepository, orgUnitRepository);
-        }
-
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override

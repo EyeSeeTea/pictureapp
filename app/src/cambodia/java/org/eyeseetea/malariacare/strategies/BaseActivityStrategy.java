@@ -42,8 +42,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreate() {
-        mLogoutUseCase = new AuthenticationFactoryStrategy().getLogoutUseCase(mBaseActivity);
-        mLoginUseCase = new AuthenticationFactoryStrategy().getLoginUseCase(mBaseActivity);
+        mLogoutUseCase = new AuthenticationFactoryStrategy()
+                .getLogoutUseCase(mBaseActivity.getApplicationContext());
+
+        mLoginUseCase = new AuthenticationFactoryStrategy()
+                .getLoginUseCase(mBaseActivity.getApplicationContext());
     }
 
     @Override

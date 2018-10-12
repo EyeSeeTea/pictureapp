@@ -59,11 +59,12 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepositor
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Settings;
-import org.eyeseetea.malariacare.domain.entity.UIDGenerator;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
+import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
+import org.eyeseetea.malariacare.domain.identifiers.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
@@ -81,7 +82,6 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
 import java.io.File;
 import java.util.Date;

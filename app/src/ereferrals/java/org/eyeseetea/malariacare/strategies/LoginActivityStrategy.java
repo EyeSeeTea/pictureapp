@@ -29,7 +29,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -52,6 +52,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -69,7 +70,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
-    IPullController pullController;
     IAsyncExecutor asyncExecutor;
     IMainExecutor mainExecutor;
     ICredentialsRepository credentialsRepository;
@@ -78,12 +78,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
-        pullController = new PullController(loginActivity);
         asyncExecutor = new AsyncExecutor();
         mainExecutor = new UIThreadExecutor();
         credentialsRepository = new CredentialsLocalDataSource();
         authRepository = new AuthDataSource(loginActivity.getApplicationContext());
-        mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        mPullUseCase = new SyncFactoryStrategy().getPullUseCase(loginActivity.getApplicationContext());
         ISettingsRepository settingsDataSource = new SettingsDataSource(loginActivity);
         getSettingsUseCase= new GetSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
                 settingsDataSource);
@@ -639,8 +638,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void executePullDemo() {
-        PullController pullController = new PullController(loginActivity);
-        PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        PullUseCase pullUseCase =
+                new SyncFactoryStrategy().getPullUseCase(loginActivity.getApplicationContext());
 
         PullFilters pullFilters = new PullFilters();
         pullFilters.setDemo(true);

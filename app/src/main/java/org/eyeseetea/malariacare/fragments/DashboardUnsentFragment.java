@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -44,8 +43,6 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.network.PushClient;
-import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
@@ -312,57 +309,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 }
                 reloadSurveysFromService(surveysUnsentFromService);
             }
-        }
-    }
-
-    public class AsyncPush extends AsyncTask<Void, Integer, PushResult> {
-
-        private SurveyDB mSurveyDB;
-
-
-        public AsyncPush(SurveyDB surveyDB) {
-            this.mSurveyDB = surveyDB;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //spinner
-        }
-
-        @Override
-        protected PushResult doInBackground(Void... params) {
-            PushClient pushClient = new PushClient(mSurveyDB, getActivity());
-            return pushClient.push();
-        }
-
-        @Override
-        protected void onPostExecute(PushResult pushResult) {
-            super.onPostExecute(pushResult);
-            showResponse(pushResult);
-        }
-
-        /**
-         * Shows the proper response message
-         */
-        private void showResponse(PushResult pushResult) {
-            String msg;
-            if (pushResult.isSuccessful()) {
-                msg = getActivity().getResources().getString(R.string.dialog_info_push_ok) + " \n"
-                        + String.format("Imported: %s | Updated: %s | Ignored: %s",
-                        pushResult.getImported(), pushResult.getUpdated(), pushResult.getIgnored());
-            } else if (pushResult.getImported().equals("0")) {
-                msg = getActivity().getResources().getString(
-                        R.string.dialog_info_push_bad_credentials);
-            } else {
-                msg = pushResult.getException().getMessage();
-            }
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(getActivity().getString(R.string.dialog_title_push_response))
-                    .setMessage(msg)
-                    .setNeutralButton(android.R.string.yes, null).create().show();
-
         }
     }
 }

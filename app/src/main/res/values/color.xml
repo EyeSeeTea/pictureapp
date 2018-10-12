@@ -48,4 +48,15 @@
     <color name="grey_tab_unselected_ereferrals">#B5B5B5</color>
     <color name="default_background_survey">#e2ffb2</color>
 
+    <color name="color_primary_dark">#FF194261</color>
+    <color name="color_primary_default">#FF276696</color>
+    <color name="color_primary_light">#FF3284C3</color>
+
+    <color name="color_accent_dark">#FFF57C00</color>
+    <color name="color_accent_default">#FFFF9800</color>
+    <color name="color_accent_light">#FFFFE0B2</color>
+
+    <color name="color_material_red_dark">#FFD32F2F</color>
+    <color name="color_material_red_default">#FFF44336</color>
+    <color name="color_material_red_light">#FFFFCDD2</color>
 </resources>

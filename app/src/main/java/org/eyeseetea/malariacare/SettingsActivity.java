@@ -98,7 +98,7 @@ public class SettingsActivity extends PreferenceActivity implements
             };
     public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
     public AutoCompleteEditTextPreference autoCompleteEditTextPreference;
-    public Preference serverUrlPreference;
+
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -204,9 +204,6 @@ public class SettingsActivity extends PreferenceActivity implements
                     this.getResources().getString(R.string.customize_fonts)));
         }
         if (mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
-            serverUrlPreference.setOnPreferenceChangeListener(
-                    mSettingsActivityStrategy.getOnPreferenceChangeListener());
-
             autoCompleteEditTextPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }

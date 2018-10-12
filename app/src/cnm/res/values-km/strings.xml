@@ -268,7 +268,7 @@
 <string name="ipc_issueEntry_q_stock_asmq_25_50">"គ្រាប់ 25/50 ម"</string>
 <string name="ipc_issueEntry_q_stock_primaquine">"Primaquine"</string>
 <string name="ipc_issueEntry_q_stock_rdt">"RDT"</string>
-<string name="common_option_diagnosis_not_tested">"មិនបានធ្វើតេស្ដឈាម"</string>
+    <string name="common_option_diagnosis_not_tested">"បានបញ្ជាក់ដោយមិនបានសាកល្បង"</string>
 <string name="save">"រក្សាទុក"</string>
 <string name="ipc_issueEntry_q_referred">"ធ្វើការបញ្ជូន"</string>
 <string name="common_option_referred_suspected">"ការបរាជ័យនៃការព្យាបាល"</string>

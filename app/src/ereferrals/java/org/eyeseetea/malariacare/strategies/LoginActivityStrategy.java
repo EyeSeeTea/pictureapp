@@ -390,8 +390,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        loginActivity.checkAnnouncement();
         PreferencesEReferral.setLastLoginType(loginType);
+        finishAndGo();
     }
 
     @Override

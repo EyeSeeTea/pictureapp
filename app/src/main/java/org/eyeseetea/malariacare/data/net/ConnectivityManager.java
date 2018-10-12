@@ -19,12 +19,10 @@ public class ConnectivityManager implements IConnectivityManager{
      */
     @Override
     public boolean isDeviceOnline() {
-        android.net.ConnectivityManager connMgr =
-                (android.net.ConnectivityManager) mContext.getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
+        ConnectivityType connectivityType = getConnectivityType();
 
-        NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
-        return networkInfo.isConnected();
+        return connectivityType == ConnectivityType.MOBILE ||
+                connectivityType == ConnectivityType.WIFI;
     }
 
     @Override

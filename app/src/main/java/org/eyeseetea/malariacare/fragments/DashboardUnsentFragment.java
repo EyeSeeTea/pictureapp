@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -45,7 +44,6 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.malariacare.strategies.ADashboardUnsentFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
 
@@ -107,10 +105,28 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         registerFragmentReceiver();
 
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
+        super.onPause();
     }
 
     /**
@@ -133,7 +149,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop");
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         unregisterFragmentReceiver();
 
         super.onStop();

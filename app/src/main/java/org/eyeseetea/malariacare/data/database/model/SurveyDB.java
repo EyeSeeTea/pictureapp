@@ -343,7 +343,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the malaria surveys with status yet not put to "Sent"
      */
     public static List<SurveyDB> getAllUnsentMalariaSurveys(String malariaProgramUid) {
-        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class,
+                Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
                 .where(SurveyDB_Table.status.withTable(surveyAlias)
@@ -356,7 +357,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     }
 
     public static List<SurveyDB> getAllSurveysByProgram(String malariaProgramUid) {
-        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
+        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class,
+                Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
                 .where(ProgramDB_Table.uid_program.withTable(programAlias)
@@ -369,7 +371,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
      * Returns all the malaria surveys with status put to "Sent"
      */
     public static List<SurveyDB> getAllSentMalariaSurveys(String malariaProgramUid) {
-        Context context = PreferencesState.getInstance().getContext();
         return new Select().from(SurveyDB.class).as(surveyName)
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)

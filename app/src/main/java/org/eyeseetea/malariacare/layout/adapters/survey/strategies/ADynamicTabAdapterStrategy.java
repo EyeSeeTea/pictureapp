@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 
-import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import org.eyeseetea.malariacare.BuildConfig;
@@ -31,18 +31,21 @@ public abstract class ADynamicTabAdapterStrategy {
         this.mDynamicTabAdapter = dynamicTabAdapter;
     }
 
-   public abstract boolean HasQuestionImageVisibleInHeader(Integer output);
+    public abstract boolean HasQuestionImageVisibleInHeader(Integer output);
 
     public abstract void initSurveys(boolean readOnly);
 
     public abstract List<QuestionDB> addAdditionalQuestions(int tabType, List<QuestionDB>
             screenQuestionDBs);
 
-    public abstract void instanceOfSingleQuestion(IQuestionView questionView, QuestionDB screenQuestionDB);
+    public abstract void instanceOfSingleQuestion(IQuestionView questionView,
+            QuestionDB screenQuestionDB);
 
-    public abstract void instanceOfMultiQuestion(IQuestionView questionView, QuestionDB screenQuestionDB);
+    public abstract void instanceOfMultiQuestion(IQuestionView questionView,
+            QuestionDB screenQuestionDB);
 
-    public abstract void renderParticularSurvey(QuestionDB screenQuestionDB, SurveyDB surveyDB, IQuestionView questionView);
+    public abstract void renderParticularSurvey(QuestionDB screenQuestionDB, SurveyDB surveyDB,
+            IQuestionView questionView);
 
     public abstract boolean isMultiQuestionByVariant(int tabType);
 
@@ -69,31 +72,29 @@ public abstract class ADynamicTabAdapterStrategy {
             DynamicTabAdapter.setIsClicked(false);
             return;
         }
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                QuestionDB questionDB = mDynamicTabAdapter.navigationController.getCurrentQuestion();
-                ValueDB valueDB = questionDB.getValueBySession();
-                if (mDynamicTabAdapter.isDone(valueDB)) {
-                    mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                    if (readOnly) {
-                        DashboardActivity.dashboardActivity.initReview(readOnly);
-                    } else if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
-                        mDynamicTabAdapter.surveyShowDone();
-                    } else {
-                        DashboardActivity.dashboardActivity.showReviewFragment();
-                        CommonQuestionView.hideKeyboard(
-                                PreferencesState.getInstance().getContext(),
-                                mDynamicTabAdapter.getKeyboardView());
-                        DynamicTabAdapter.setIsClicked(false);
-                    }
-                    return;
-                }
-                mDynamicTabAdapter.next();
+
+        QuestionDB questionDB = mDynamicTabAdapter.navigationController.getCurrentQuestion();
+        ValueDB valueDB = questionDB.getValueBySession();
+        if (mDynamicTabAdapter.isDone(valueDB)) {
+            mDynamicTabAdapter.navigationController.isMovingToForward = false;
+            if (readOnly) {
+                DashboardActivity.dashboardActivity.initReview(readOnly);
+            } else if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
+                mDynamicTabAdapter.surveyShowDone();
+            } else {
+                DashboardActivity.dashboardActivity.showReviewFragment();
+                CommonQuestionView.hideKeyboard(
+                        PreferencesState.getInstance().getContext(),
+                        mDynamicTabAdapter.getKeyboardView());
+                DynamicTabAdapter.setIsClicked(false);
             }
-        }, 750);
+            return;
+        }
+        mDynamicTabAdapter.next();
+        Log.d("NextText", "End next");
+
     }
+
     public abstract void addScrollToSwipeTouchListener(View rowView);
 
     protected boolean shouldShowReviewScreen() {
@@ -103,7 +104,7 @@ public abstract class ADynamicTabAdapterStrategy {
     public void initNavigationButtons(boolean readOnly, View nextButton) {
     }
 
-    public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB){
+    public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB) {
     }
 
     public void evaluateTreatmentMatch(QuestionDB questionDB, OptionDB selectedOptionDB,
@@ -111,6 +112,6 @@ public abstract class ADynamicTabAdapterStrategy {
 
     }
 
-    public void showValidationErrors(){
+    public void showValidationErrors() {
     }
 }

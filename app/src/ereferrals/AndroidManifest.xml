@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.eyeseetea.malariacare">
 
+    <uses-sdk tools:overrideLibrary="com.element.utils"/>
+
     <application
         android:name=".EyeSeeTeaApplication"
         android:allowBackup="false"
@@ -29,7 +31,7 @@
             android:windowSoftInputMode="adjustResize"></activity>
 
         <meta-data
-            android:name="com.element.ApiKey"
-            android:value="fRN4C0M6mnFHo0dcJxeIfEG0IUCQDtYrIYiJbECcy4Le8gSZ0EwTM2cycXMfq4u1"/>
+            android:name="com.element.EAK"
+            android:value="EREREUNF8DIzJuwHZ0hXF3dSd2BCh77yqY8RxJyRPPagMmANHKZGgkBhBGq+0KmzH6Ipq/t9QOHZkbOxHE17IRwRhDUO5MX53inZ6Aa/ZhU/FZ/tv/1xTMsmjn2qnWY3l3ce2ytkYt/eV2xqkK1DsbfBuRmJuDvVhYweCmVK0dLL9lfILCIOP70hajtW3zQ+Jxm+wbfKDDFPYQWxwew6jCXXzga67P5HUXHyRvC4BeEQOyKlCcSJc3Zo55DIHE+jfds0ZXTCO8nCb47OVMCEh3cvCkmxpQHeLu/Ey7hLB8Fcei6QsHsLqMj16T5DXDiyPPiYOOB3uiqJ/pgdquk6tweV/vEyPerAgYNhQjL23LF0mlrAsGpOLvM0tXCFowVUgZYl2vc03cGIK2fqYXfdouY4wRm86HAQzNTzWetqVK5SX2dPWq9z7Pt8d4L8A1sqShN2itosmaQ24u5kmRbErXpO+oypCwv1OY9RQEtFuiTZJiDe8VTc6ozqCc81IqQV4KAz2luu+Hnw8sKrqsra5KwkS7BeWE+5/KvbIDpUCM7evu2WG02FeeSdyClpGV71cFid36hSaFeMWPbT+0NUhasBROtmvPtiF4HzpoiLecxH4EESdb2DlLWbMMGzks98d5acZAJSD6qQxSSedleNGdn3bY604y0Ra9E+vG10s5BP7NV8oEMzzMfXBnO8R5ENbeXpPIKnpN5KxqMQY6aWzxDa6i1EPyJs/K+n4wckrY12wgBda3cn7sGVqFbVqtBRAa9y24Z68rFUg/cDO1DiXSfDpZGCXtuAOqMtWKzrjQdccT960ZD/5Fd/sVC/ImiSmlpp3NptyyD04oT5tLceT6faPVOuNN10uT2B38lpn6Dz6ob1Ci5ZAgGVrMA/1auu3tpGhnqAPfwsHH+louu6cPPT6Dk5P78Tx3rlum7TwXyzz/t1gpn6ZZ6NNrRlAMygBIYdDsC23HUY/B24MYnEIqUhJyXN2li12h+i8866a6aSkx6KLsL5iw8xex4ciU6XpVb2ebsXAOYoia/FoGknY1wXc0VB9llBWs57F1qogl3GydhFlSyKmxc5SiuXjZqSpDwD7aWxX6EjcD8ltVRyH5Zofw=="/>
     </application>
 </manifest>

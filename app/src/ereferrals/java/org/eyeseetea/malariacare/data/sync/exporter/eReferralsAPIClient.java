@@ -19,6 +19,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleWSResponseObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
@@ -50,6 +51,9 @@ public class eReferralsAPIClient {
     private final int DEFAULT_TIMEOUT = 50000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
+        if(baseAddress.equals(Credentials.createDemoCredentials().getServerURL())){
+            return;
+        }
         mBaseAddress = baseAddress;
         mContext = PreferencesState.getInstance().getContext();
 

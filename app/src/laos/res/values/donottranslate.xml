@@ -7,7 +7,9 @@
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org</string>
+    <string name="DEFAULT_SERVER_URL" translatable="false">https://data.psi-mis.org</string>
+    <string name="server_url_key" translatable="false">@string/dhis_url</string>
+    <item name="dhis_url" translatable="false" type="string">dhis_url</item>
     <string name="work_in_progress" translatable="false">Work in progress</string>
 
 

@@ -76,7 +76,7 @@ public class PreferencesState {
     /**
      * Specified DHIS2 Server
      */
-    private String dhisURL;
+    private String serverURL;
 
     private boolean userAccept;
 
@@ -97,7 +97,7 @@ public class PreferencesState {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), "");
+        String url = sharedPreferences.getString(context.getString(R.string.server_url_key), "");
 
         String username = sharedPreferences.getString(context.getString(R.string.dhis_user), "");
         String password = sharedPreferences.getString(context.getString(R.string.dhis_password),
@@ -139,11 +139,11 @@ public class PreferencesState {
         fontStyle = initFontStyle();
         showNumDen = initShowNumDen();
         orgUnit = initOrgUnit();
-        dhisURL = initDhisURL();
+        serverURL = initServerURL();
         languageCode = initLanguageCode();
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
-                + " |dhisURL:" + dhisURL
+                + " |serverURL:" + serverURL
                 + " |fontStyle:" + fontStyle.getTitle()
                 + " | showNumDen:" + showNumDen);
     }
@@ -180,11 +180,11 @@ public class PreferencesState {
     /**
      * Returns 'DhisURL' from sharedPreferences
      */
-    private String initDhisURL() {
+    private String initServerURL() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
-        return sharedPreferences.getString(instance.getContext().getString(R.string.dhis_url),
-                instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
+        return sharedPreferences.getString(instance.getContext().getString(R.string.server_url_key),
+                instance.getContext().getString(R.string.DEFAULT_SERVER_URL));
     }
 
     public boolean isCustomizeFontActive() {
@@ -272,12 +272,12 @@ public class PreferencesState {
 
         return new Program(code,id);
     }
-    public String getDhisURL() {
-        return dhisURL;
+    public String getServerURL() {
+        return serverURL;
     }
 
-    public void setDhisURL(String dhisURL) {
-        this.dhisURL = dhisURL;
+    public void setServerURL(String serverURL) {
+        this.serverURL = serverURL;
     }
 
     public String getLanguageCode() {

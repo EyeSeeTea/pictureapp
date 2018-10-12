@@ -18,7 +18,7 @@ public class AppInfoRemoteDataSource implements IAppInfoRepository {
     public void getAppInfo(final IDataSourceCallback<AppInfo> callback) {
         CnmApiClient cnmApiClient = null;
         try {
-            cnmApiClient = new CnmApiClient(PreferencesState.getInstance().getDhisURL() + "/");
+            cnmApiClient = new CnmApiClient(PreferencesState.getInstance().getServerURL() + "/");
         } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);

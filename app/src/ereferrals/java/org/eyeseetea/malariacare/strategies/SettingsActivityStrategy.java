@@ -90,8 +90,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.check_metadata_key)));
         }
-        preferenceCategory.removePreference(preferenceScreen.findPreference(
-                settingsActivity.getResources().getString(R.string.dhis_url)));
 
 
         initProgramConfigurationSettings(preferenceScreen);

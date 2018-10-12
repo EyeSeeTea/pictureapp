@@ -40,6 +40,16 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
+        Preference serverUrlPreference = (Preference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getResources().getString(R.string.server_url_key));
+        serverUrlPreference.setOnPreferenceClickListener(
+                getOnPreferenceClickListener());
+    }
+
+    @Override
+    public void addExtraPreferences() {
+        settingsActivity.bindPreferenceSummaryToValue(
+                settingsActivity.findPreference(settingsActivity.getString(R.string.server_url_key)));
     }
 
     @Override
@@ -75,4 +85,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public static boolean showAnnouncementOnBackPressed() {
         return  true;
     }
+
+    @Override
+    public void addExtraPreferences() {
+        Preference serverPreference = settingsActivity.findPreference(settingsActivity.getString(R.string.server_url_key));
+        if(serverPreference!=null){
+            settingsActivity.bindPreferenceSummaryToValue(serverPreference);
+        }
+    }
+
 }

@@ -168,7 +168,7 @@ public class ServerAPIController {
      * Returns current serverUrl
      */
     public static String getServerUrl() {
-        return PreferencesState.getInstance().getDhisURL();
+        return PreferencesState.getInstance().getServerURL();
     }
 
     /**
@@ -453,7 +453,7 @@ public class ServerAPIController {
      */
      public static Program getOrganisationUnitGroupByOrganisationUnit(@NotNull String orgUnitCode) throws ApiCallException {
         //Version is required to choose which field to match
-        String url = PreferencesState.getInstance().getDhisURL();
+        String url = PreferencesState.getInstance().getServerURL();
 
         String urlOrgUnitData = getOrgUnitGroupDataUrl(url, orgUnitCode);
         Response response = ServerApiCallExecution.executeCall(null, urlOrgUnitData, "GET");
@@ -505,7 +505,7 @@ public class ServerAPIController {
         String lastMessage = loggedUserDB.getAnnouncement();
         String uid = loggedUserDB.getUid();
         String url =
-                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                PreferencesState.getInstance().getServerURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, uid);
         url = ServerApiUtils.encodeBlanks(url);
         Response response = ServerApiCallExecution.executeCall(null, url, "GET");
@@ -546,7 +546,7 @@ public class ServerAPIController {
 
         //Lets for a last event with that orgunit/program
         String url =
-                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                PreferencesState.getInstance().getServerURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, userUid);
 
         url = ServerApiUtils.encodeBlanks(url);
@@ -577,7 +577,7 @@ public class ServerAPIController {
             String code)
             throws ApiCallException {
         //Version is required to choose which field to match
-        String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
+        String serverVersion = getServerVersion(PreferencesState.getInstance().getServerURL());
 
         //No version -> No data
         if (serverVersion == null) {
@@ -770,7 +770,7 @@ public class ServerAPIController {
     }
 
     static String getOrganisationUnitsCredentialsUrl(String code) {
-        String url = PreferencesState.getInstance().getDhisURL()
+        String url = PreferencesState.getInstance().getServerURL()
                 + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,name,description,code,"
                 + "ancestors[id,"
                 + "code,level],attributeValues[value,attribute[code]";
@@ -798,7 +798,7 @@ public class ServerAPIController {
 
     public static OrganisationUnit getOrgUnitByPhone(String imei)
             throws ApiCallException, ExistsMoreThanOneOrgUnitByPhoneException {
-        String url = PreferencesState.getInstance().getDhisURL()
+        String url = PreferencesState.getInstance().getServerURL()
                 + "/api/organisationUnits.json?filter=phoneNumber:like:%s&fields=id,name,"
                 + "description,"
                 + "code,"

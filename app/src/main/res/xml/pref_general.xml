@@ -40,28 +40,6 @@
 
     <!--</PreferenceCategory>-->
     <PreferenceCategory
-        android:key="@string/pref_cat_server"
-        android:title="@string/server">
-        <EditTextPreference
-            android:defaultValue="@string/DHIS_DEFAULT_SERVER"
-            android:inputType="textUri"
-            android:key="@string/dhis_url"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/server_name" />
-
-        <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
-            android:defaultValue=""
-            android:inputType="text"
-            android:key="@string/org_unit"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/create_info_organization_unit" />
-
-    </PreferenceCategory>
-    <PreferenceCategory
         android:key="@string/pref_visual"
         android:title="@string/app_visual">
         <!--<CheckBoxPreference-->

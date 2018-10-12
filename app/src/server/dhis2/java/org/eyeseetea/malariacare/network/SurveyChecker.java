@@ -65,7 +65,7 @@ public class SurveyChecker {
             Date maxDate) throws ApiCallException {
             Response response;
 
-            String DHIS_URL = PreferencesState.getInstance().getDhisURL();
+            String DHIS_URL = PreferencesState.getInstance().getServerURL();
             String startDate = EventExtended.format(minDate, EventExtended.AMERICAN_DATE_FORMAT);
             String endDate = EventExtended.format(
                     new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),

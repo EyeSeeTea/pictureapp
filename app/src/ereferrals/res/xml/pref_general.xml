@@ -42,13 +42,6 @@
     <PreferenceCategory
         android:key="@string/pref_cat_server"
         android:title="@string/server">
-        <EditTextPreference
-            android:defaultValue="@string/DHIS_DEFAULT_SERVER"
-            android:inputType="text"
-            android:key="@string/dhis_url"
-            android:maxLines="2"
-            android:selectAllOnFocus="true"
-            android:title="@string/server_name"/>
 
         <EditTextPreference
             android:inputType="text"

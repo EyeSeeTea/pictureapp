@@ -4,7 +4,6 @@
     <string name="system_defined">"mfumo defined"</string>
     <string name="common_option_method_none">"Hatumii"</string>
     <string name="common_option_method_other">"nyingine"</string>
-    <string name="login_pin">"siri"</string>
     <string name="advanced_options">"Chaguzi za Juu"</string>
     <string name="simple_options">"Chaguzi Rahisi"</string>
     <string name="error_web">errorpage_sw.html</string>
@@ -18,7 +17,6 @@
     <string name="unsent_data">"Fungua"</string>
     <string name="open_tab_title">"FUNGUA"</string>
     <string name="closed_tab_title">"KUFUNGWA"</string>
-    <string name="status_tab_title">"HALI"</string>
     <string name="malaria_case_based_reporting">"eReferrals"</string>
     <string name="volunteer_label">"IPC:"</string>
     <string name="fonts_customise">"Customize fonti"</string>

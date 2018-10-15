@@ -505,6 +505,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         }
     }
 
+    @Override
+    public void onLoginNetworkError(Credentials credentials) {
+        loginActivity.hideProgressBar();
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        Credentials savedCredentials = credentialsLocalDataSource.getLastValidCredentials();
+        if(savedCredentials!=null && savedCredentials.getPassword()!=null &&
+                !savedCredentials.getPassword().equals(credentials.getPassword())
+                && savedCredentials.getUsername().equals(credentials.getUsername())
+                && savedCredentials.getServerURL().equals(credentials.getServerURL())){
+            loginActivity.showError(loginActivity.getString(R.string.login_invalid_credentials_and_network));
+        }else {
+            loginActivity.showError(loginActivity.getString(R.string.network_error));
+        }
+    }
+
     private void launchPull(boolean isDemo) {
         PullFilters pullFilters = new PullFilters();
         pullFilters.setStartDate(PreferencesState.getInstance().getDateStarDateLimitFilter());

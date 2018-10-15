@@ -974,4 +974,5 @@
     <string name="settings_title_program_url_config">"प्रोग्राम विन्यास URL"</string>
     <string name="settings_title_program_username_config">"प्रोग्राम कन्फिगरेसन प्रयोगकर्ता नाम"</string>
     <string name="settings_title_program_password_config">"प्रोग्राम कन्फिगरेसन पासवर्ड"</string>
+    <string name="login_invalid_credentials_and_network">"प्रमाणपत्रहरू अमान्य छन् वा प्रमाणपत्रहरू अमान्य छन् र जडान उपलब्ध छैन"</string>
 </resources>

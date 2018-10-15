@@ -356,7 +356,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
     }
 
-    public static List<SurveyDB> getAllSurveysByProgram(String malariaProgramUid) {
+    public static List<SurveyDB> getAllNotInProgressSurveysByProgram(String malariaProgramUid) {
         return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class,
                 Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)

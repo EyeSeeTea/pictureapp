@@ -20,12 +20,19 @@ import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
+import org.eyeseetea.malariacare.domain.usecase.ClearCredentialasUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.CustomFontStyles;
@@ -165,6 +172,25 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 PreferencesState.getInstance().getContext().getString(R.string.developer_option))) {
             settingsActivity.restartActivity();
         }
+        if (key.equals(settingsActivity.getString(R.string.web_service_url))) {
+            clearCredentialsAndShowLogin();
+        }
+    }
+
+    private void clearCredentialsAndShowLogin() {
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+
+        ClearCredentialasUseCase clearCredentialasUseCase = new ClearCredentialasUseCase(
+                mainExecutor, asyncExecutor, credentialsRepository);
+
+        clearCredentialasUseCase.execute(new ClearCredentialasUseCase.Callback() {
+            @Override
+            public void onSuccess() {
+                showLogin();
+            }
+        });
     }
 
     @Override

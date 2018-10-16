@@ -87,6 +87,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                     settingsActivity.getResources().getString(R.string.check_metadata_key)));
         }
 
+        Preference serverUrlPreference = (Preference) settingsActivity.findPreference(
+                settingsActivity.getResources().getString(R.string.web_service_url));
+        serverUrlPreference.setOnPreferenceClickListener(
+                getOnPreferenceClickListener());
+
 
         initProgramConfigurationSettings(preferenceScreen);
     }
@@ -166,6 +171,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             settingsActivity.restartActivity();
         }
     }
+
 
     @Override
     public void onStart() {

@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepositor
 import org.eyeseetea.malariacare.domain.entity.Settings;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +37,10 @@ public class LanguageDownloader {
 
     public void start() throws Exception {
         if (connectivity.isDeviceOnline()) {
+            Date downloadedDate = new Date();
             List<Language> languagesFromServer = client.getLanguages();
 
-            List<Language> languagesToDownload = getLanguagesToDownload(languagesFromServer);
+            List<Language> languagesToDownload = getLanguagesToDownload(languagesFromServer, downloadedDate);
             updateLocalTranslations(languagesToDownload, client);
         }
     }
@@ -75,7 +77,7 @@ public class LanguageDownloader {
     }
 
     @NonNull
-    private List<Language> getLanguagesToDownload(List<Language> languagesFromServer) {
+    private List<Language> getLanguagesToDownload(List<Language> languagesFromServer, Date downloadDateTime) {
 
         List<Language> languagesToDownload = new ArrayList<>();
         List<TranslationLanguageDB> languagesFromDB = SQLite.select().
@@ -85,7 +87,9 @@ public class LanguageDownloader {
                 languagesFromDB);
 
         for (Language languageServer : languagesFromServer) {
-
+            if(languageServer.updated == null){
+                languageServer.updated = downloadDateTime;
+            }
             if (requiresToBeDownloaded(languageServer, mapLanguagesByCodesInDB)) {
                 languagesToDownload.add(languageServer);
             }

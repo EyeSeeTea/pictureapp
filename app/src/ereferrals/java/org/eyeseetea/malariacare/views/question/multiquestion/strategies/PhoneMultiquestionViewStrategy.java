@@ -41,8 +41,7 @@ public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrat
                         try {
                             Phone phone = new Phone(phoneText.getText().toString(), phoneFormat);
                             notifyAnswerChanged(phone.getValue());
-                            Validation.getInstance().removeInputError(phoneText);
-
+                            validateRegExp(phoneText, phone);
                         } catch (InvalidPhoneException e) {
                             Validation.getInstance().addinvalidInput(phoneText,
                                     mPhoneMultiQuestionView.getContext().getString(

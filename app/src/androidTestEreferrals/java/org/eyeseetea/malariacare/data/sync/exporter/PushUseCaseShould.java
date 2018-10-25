@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
@@ -59,6 +60,8 @@ public class PushUseCaseShould {
     private Program previousProgram;
     private boolean previousPushInProgress;
 
+    private Context mContext;
+
     @Test
     public void setUserCanAddSurveysToFalseOn209Response() throws IOException, InterruptedException {
         final Object syncObject = new Object();
@@ -66,6 +69,7 @@ public class PushUseCaseShould {
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
+        surveyDB.setVoucherUid("1323544116");
         surveyDB.setEventUid("testEventUID");
         surveyDB.setStatus(Constants.SURVEY_COMPLETED);
         surveyDB.save();
@@ -164,16 +168,17 @@ public class PushUseCaseShould {
 
     @Before
     public void cleanUp() throws IOException {
+        mContext = InstrumentationRegistry.getTargetContext();
         mCustomMockServer = new CustomMockServer(new AssetsFileReader());
         savePreviousPreferences();
         saveTestCredentialsAndProgram();
-        mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
                 new Device("testPhone", "testIMEI", "test_version"),
-                InstrumentationRegistry.getTargetContext());
-
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository, convertToWSVisitor);
+                mContext);
+        mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
+                convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
@@ -195,6 +200,7 @@ public class PushUseCaseShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+        credentialsLocalDataSource.getCredentials();
         previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
         ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
@@ -211,10 +217,11 @@ public class PushUseCaseShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
-
-        Credentials credentials = new Credentials("test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url),
+                "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
@@ -233,15 +240,15 @@ public class PushUseCaseShould {
                 context);
         if (previousCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.web_service_url),
                     previousCredentials.getServerURL());
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
-        ProgramRepository programRepository = new ProgramRepository();
+        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
         if (previousProgram != null) {
-            programRepository.saveUserProgramId(previousProgram);
+            programLocalDataSource.saveUserProgramId(previousProgram);
         } else {
             PreferencesEReferral.saveUserProgramId(-1l);
         }

@@ -7,12 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -34,7 +31,6 @@ import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.CustomFontStyles;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 
 import java.util.List;
 
@@ -91,6 +87,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                     settingsActivity.getResources().getString(R.string.check_metadata_key)));
         }
 
+        Preference serverUrlPreference = (Preference) settingsActivity.findPreference(
+                settingsActivity.getResources().getString(R.string.web_service_url));
+        serverUrlPreference.setOnPreferenceClickListener(
+                getOnPreferenceClickListener());
+
 
         initProgramConfigurationSettings(preferenceScreen);
     }
@@ -107,8 +108,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         ISettingsRepository settingsRepository = new SettingsDataSource(preferenceScreen.getContext());
 
         programUrl.setOnPreferenceChangeListener(new onCredentialsChangeListener());
-        programUrl.setText(settingsRepository.getSettings().getUrl());
-        programUrl.setSummary(settingsRepository.getSettings().getUrl());
+        programUrl.setText(settingsRepository.getSettings().getProgramUrl());
+        programUrl.setSummary(settingsRepository.getSettings().getProgramUrl());
 
         programUser.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUser.setText(settingsRepository.getSettings().getUser());
@@ -170,6 +171,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             settingsActivity.restartActivity();
         }
     }
+
 
     @Override
     public void onStart() {

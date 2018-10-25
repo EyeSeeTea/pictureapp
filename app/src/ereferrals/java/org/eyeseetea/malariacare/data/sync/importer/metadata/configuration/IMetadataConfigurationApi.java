@@ -12,9 +12,9 @@ import retrofit2.http.Path;
 
 public interface IMetadataConfigurationApi {
 
-    @GET("/api/dataStore/Connect_config/dcSettings")
+    @GET("dcSettings")
     Call<MetadataCountryVersionApi> getCountriesVersions();
 
-    @GET("/api/dataStore/Connect_config/{countryCode}")
+    @GET("{countryCode}")
     Call<MetadataConfigurationsApi> getConfiguration(@Path("countryCode") String countryCode);
 }

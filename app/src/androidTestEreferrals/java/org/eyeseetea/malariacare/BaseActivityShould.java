@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,6 +11,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -69,17 +71,45 @@ public class BaseActivityShould {
 
     @Before
     public void cleanUp() {
-        savePreviousPreferences();
-        saveTestCredentialsAndProgram();
-        Intent intent = new Intent(PreferencesState.getInstance().getContext(),
-                DashboardActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        EyeSeeTeaApplication.getInstance().startActivity(intent);
+            grantPermission();
+            savePreviousPreferences();
+            saveTestCredentialsAndProgram();
+            Intent intent = new Intent(PreferencesState.getInstance().getContext(),
+                    DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            EyeSeeTeaApplication.getInstance().startActivity(intent);
+        try {
+            synchronized (syncObject) {
+                syncObject.wait(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @After
     public void tearDown() {
         restorePreferences();
+
+    }
+
+    public void grantPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+            synchronized (syncObject) {
+                try {
+                    syncObject.wait(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
+                            + " android.permission.ACCESS_FINE_LOCATION");
+        }
     }
 
 
@@ -113,10 +143,12 @@ public class BaseActivityShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "http:test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials("http:test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url),
+                "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
@@ -127,7 +159,7 @@ public class BaseActivityShould {
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
                 new UserAccount("testUsername", "testUserUID", false, true));
-        saveCredentials(new Credentials("http:test","test","test"));
+        saveCredentials(credentials);
     }
 
     private void restorePreferences() {
@@ -136,7 +168,7 @@ public class BaseActivityShould {
                 context);
         if (previousOrganisationCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.web_service_url),
                     previousOrganisationCredentials.getServerURL());
             editor.commit();
         }
@@ -159,7 +191,7 @@ public class BaseActivityShould {
     }
 
     private void saveCredentials(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
+        PreferencesState.getInstance().saveStringPreference(R.string.server_url_key,
                 credentials.getServerURL());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user,
                 credentials.getUsername());

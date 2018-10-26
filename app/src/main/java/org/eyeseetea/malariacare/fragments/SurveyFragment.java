@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.LoadingSurveyException;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -204,16 +205,29 @@ public class SurveyFragment extends Fragment {
         showProgress();
 
         if (!Session.isIsLoadingNavigationController()) {
-            showSurvey();
+            if (Session.getNavigationController()!=null) {
+                showSurvey();
+            }else{
+                addNavigationBuilderListener();
+                try {
+                    NavigationBuilder.getInstance().buildControllerByProgram();
+                } catch (LoadingNavigationControllerException e) {
+                    e.printStackTrace();
+                }
+            }
         } else {
-            NavigationBuilder.getInstance().setLoadBuildControllerListener(
-                    new NavigationBuilder.LoadBuildControllerListener() {
-                        @Override
-                        public void onLoadFinished() {
-                            showSurvey();
-                        }
-                    });
+            addNavigationBuilderListener();
         }
+    }
+
+    private void addNavigationBuilderListener() {
+        NavigationBuilder.getInstance().setLoadBuildControllerListener(
+                new NavigationBuilder.LoadBuildControllerListener() {
+                    @Override
+                    public void onLoadFinished() {
+                        showSurvey();
+                    }
+                });
     }
 
     public void reloadHeader(Activity activity) {
@@ -235,11 +249,11 @@ public class SurveyFragment extends Fragment {
                     content.removeAllViews();
                     content.addView(viewContent);
 
-            listView = (ListView) llLayout.findViewById(R.id.listView);
+                    listView = (ListView) llLayout.findViewById(R.id.listView);
 
-            dynamicTabAdapter.addOnSwipeListener(listView);
+                    dynamicTabAdapter.addOnSwipeListener(listView);
 
-            listView.setAdapter(dynamicTabAdapter);
+                    listView.setAdapter(dynamicTabAdapter);
 
                     hideProgress();
                 }

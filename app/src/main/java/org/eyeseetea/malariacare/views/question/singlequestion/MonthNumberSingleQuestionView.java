@@ -25,7 +25,6 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
-    CustomEditText numberPicker;
     CustomButton sendButton;
     Boolean isClicked = false;
     AMonthNumberSingleQuestionViewStrategy mMonthNumberSingleQuestionViewStrategy;
@@ -38,39 +37,39 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
 
     @Override
     public EditText getAnswerView() {
-        return numberPicker;
+        return answer;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        numberPicker.setEnabled(enabled);
+        answer.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(numberPicker);
+            showKeyboard(answer);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        numberPicker.setHint(helpText);
+        answer.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            numberPicker.setText(valueDB.getValue());
+            answer.setText(valueDB.getValue());
         }
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_age_month_number, this);
 
-        numberPicker = (CustomEditText) findViewById(R.id.answer);
-        numberPicker.setFocusable(true);
-        numberPicker.setFocusableInTouchMode(true);
+        answer = (CustomEditText) findViewById(R.id.answer);
+        answer.setFocusable(true);
+        answer.setFocusableInTouchMode(true);
 
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(answer);
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
@@ -80,7 +79,7 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
             }
         });
 
-        numberPicker.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        answer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -97,21 +96,21 @@ public class MonthNumberSingleQuestionView extends AKeyboardSingleQuestionView i
         if (!isClicked) {
             isClicked = true;
             try {
-                String value = numberPicker.getText().toString();
+                String value = answer.getText().toString();
                 AgeMonthNumber ageMonthNumber = AgeMonthNumber.parse(
                         value);
-                if(validateQuestionRegExp(numberPicker)) {
-                    Validation.getInstance().removeInputError(numberPicker);
-                    hideKeyboard(numberPicker);
+                if(validateQuestionRegExp(answer)) {
+                    Validation.getInstance().removeInputError(answer);
+                    hideKeyboard(answer);
                     notifyAnswerChanged(String.valueOf(ageMonthNumber.getValue()));
                 }
             } catch (InvalidAgeMonthNumberException e) {
-                Validation.getInstance().addinvalidInput(numberPicker,
+                Validation.getInstance().addinvalidInput(answer,
                         context.getString(R.string.dynamic_error_age));
-                numberPicker.setError(context.getString(R.string.dynamic_error_month_age));
+                answer.setError(context.getString(R.string.dynamic_error_month_age));
             }
-            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
-                Validation.getInstance().removeInputError(numberPicker);
+            if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(answer);
             }
             isClicked = false;
         }

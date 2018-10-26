@@ -21,7 +21,6 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 
 public class TextSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
-    CustomEditText mEditText;
     CustomButton sendButton;
     ATextSingleQuestionViewStrategy mTextSingleQuestionViewStrategy;
 
@@ -38,37 +37,37 @@ public class TextSingleQuestionView extends AKeyboardSingleQuestionView implemen
 
     @Override
     public EditText getAnswerView() {
-        return mEditText;
+        return answer;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        mEditText.setEnabled(enabled);
+        answer.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(mEditText);
+            showKeyboard(answer);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        mEditText.setHint(helpText);
+        answer.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            mEditText.setText(valueDB.getValue());
+            answer.setText(valueDB.getValue());
         }
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_single_question_text, this);
 
-        mEditText = (CustomEditText) findViewById(R.id.answer);
-        mEditText.setFocusable(true);
-        mEditText.setFocusableInTouchMode(true);
+        answer = (CustomEditText) findViewById(R.id.answer);
+        answer.setFocusable(true);
+        answer.setFocusableInTouchMode(true);
 
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
@@ -79,7 +78,7 @@ public class TextSingleQuestionView extends AKeyboardSingleQuestionView implemen
             }
         });
 
-        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        answer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -93,9 +92,9 @@ public class TextSingleQuestionView extends AKeyboardSingleQuestionView implemen
     }
 
     private void saveAnswer() {
-        hideKeyboard(mEditText);
-        if(validateQuestionRegExp(mEditText)) {
-            notifyAnswerChanged(mEditText.getText().toString());
+        hideKeyboard(answer);
+        if(validateQuestionRegExp(answer)) {
+            notifyAnswerChanged(answer.getText().toString());
         }
     }
 

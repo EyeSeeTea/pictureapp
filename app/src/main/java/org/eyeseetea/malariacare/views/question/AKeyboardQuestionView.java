@@ -31,7 +31,7 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView implement
     }
 
     public void checkLoadedErrors() {
-        if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
+        if (answer != null && answer.getText().toString().isEmpty() && !question.isCompulsory()) {
             Validation.getInstance().removeInputError(answer);
         }
     }

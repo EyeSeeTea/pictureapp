@@ -20,7 +20,6 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
-    CustomEditText numberPicker;
     CustomButton sendButton;
     private ANumberSingleQuestionViewStrategy mQuestionViewStrategy;
 
@@ -34,39 +33,39 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
 
     @Override
     public EditText getAnswerView() {
-        return numberPicker;
+        return answer;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        numberPicker.setEnabled(enabled);
+        answer.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(numberPicker);
+            showKeyboard(answer);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        numberPicker.setHint(helpText);
+        answer.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            numberPicker.setText(valueDB.getValue());
+            answer.setText(valueDB.getValue());
         }
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_int_row, this);
 
-        numberPicker = (CustomEditText) findViewById(R.id.answer);
-        numberPicker.setFocusable(true);
-        numberPicker.setFocusableInTouchMode(true);
+        answer = (CustomEditText) findViewById(R.id.answer);
+        answer.setFocusable(true);
+        answer.setFocusableInTouchMode(true);
 
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(answer);
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
@@ -76,7 +75,7 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
             }
         });
 
-        numberPicker.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        answer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -96,17 +95,17 @@ public class NumberSingleQuestionView extends AKeyboardSingleQuestionView implem
     @Override
     public void validateAnswer(Context context) {
         try {
-            int value = Integer.parseInt(numberPicker.getText().toString());
-            if(validateQuestionRegExp(numberPicker)) {
-                Validation.getInstance().removeInputError(numberPicker);
-                validateQuestionRegExp(numberPicker);
-                hideKeyboard(numberPicker);
+            int value = Integer.parseInt(answer.getText().toString());
+            if(validateQuestionRegExp(answer)) {
+                Validation.getInstance().removeInputError(answer);
+                validateQuestionRegExp(answer);
+                hideKeyboard(answer);
                 notifyAnswerChanged(String.valueOf(value));
             }
         } catch (NumberFormatException e) {
-            Validation.getInstance().addinvalidInput(numberPicker,
+            Validation.getInstance().addinvalidInput(answer,
                     context.getString(R.string.dynamic_error_number));
-            numberPicker.setError(context.getString(R.string.dynamic_error_number));
+            answer.setError(context.getString(R.string.dynamic_error_number));
         }
     }
 }

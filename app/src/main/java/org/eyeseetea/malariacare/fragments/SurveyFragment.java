@@ -149,9 +149,9 @@ public class SurveyFragment extends Fragment {
         DashboardActivity.dashboardActivity.beforeExit();
     }
 
-    public static void  closeKeyboard(){
+    public static void closeKeyboard() {
         Log.d(TAG, "close keyboard");
-        if(listView!=null) {
+        if (listView != null) {
             CommonQuestionView.hideKeyboard(listView.getContext(), listView);
         }
     }
@@ -204,20 +204,36 @@ public class SurveyFragment extends Fragment {
     public void initializeSurvey() {
         showProgress();
 
-        if (!Session.isIsLoadingNavigationController()) {
-            if (Session.getNavigationController()!=null) {
-                showSurvey();
-            }else{
-                addNavigationBuilderListener();
-                try {
-                    NavigationBuilder.getInstance().buildControllerByProgram();
-                } catch (LoadingNavigationControllerException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (!ifNecessaryBuildNavigationController() && !Session.isIsLoadingNavigationController()) {
+            Log.d(TAG, "showing Survey");
+            showSurvey();
         } else {
+            Log.d(TAG, "adding Navigation Builder Listener");
             addNavigationBuilderListener();
+
         }
+    }
+
+    private boolean ifNecessaryBuildNavigationController() {
+        boolean ifNecessaryBuildNavigationController = false;
+
+        //In normal scenario, buildControllerByProgram is executed from splash screen
+        //On this method navigationController in session can be null after crash
+        //and app initialization restart without navigate to splash screen
+        if (Session.getNavigationController() == null) {
+            ifNecessaryBuildNavigationController = true;
+            Log.d(TAG, "navigation controller is null to open survey, restarting app without "
+                    + "navigate to splash");
+            try {
+                NavigationBuilder.getInstance().buildControllerByProgram();
+            } catch (LoadingNavigationControllerException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        return ifNecessaryBuildNavigationController;
     }
 
     private void addNavigationBuilderListener() {
@@ -236,29 +252,34 @@ public class SurveyFragment extends Fragment {
 
     private void showSurvey() {
         try {
-            SurveyFragmentStrategy.isSurveyCreatedFromOtherApp(new ASurveyFragmentStrategy.Callback() {
+            SurveyFragmentStrategy.isSurveyCreatedFromOtherApp(
+                    new ASurveyFragmentStrategy.Callback() {
 
-                @Override
-                public void loadIsSurveyCreatedInOtherApp(boolean isSurveyCreatedInOtherApp) {
-                    LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+                        @Override
+                        public void loadIsSurveyCreatedInOtherApp(
+                                boolean isSurveyCreatedInOtherApp) {
+                            LayoutInflater inflater = LayoutInflater.from(
+                                    getActivity().getApplicationContext());
 
-                    dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode, isSurveyCreatedInOtherApp);
+                            dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode,
+                                    isSurveyCreatedInOtherApp);
 
-                    View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
+                            View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(),
+                                    content, false);
 
-                    content.removeAllViews();
-                    content.addView(viewContent);
+                            content.removeAllViews();
+                            content.addView(viewContent);
 
-                    listView = (ListView) llLayout.findViewById(R.id.listView);
+                            listView = (ListView) llLayout.findViewById(R.id.listView);
 
-                    dynamicTabAdapter.addOnSwipeListener(listView);
+                            dynamicTabAdapter.addOnSwipeListener(listView);
 
-                    listView.setAdapter(dynamicTabAdapter);
+                            listView.setAdapter(dynamicTabAdapter);
 
-                    hideProgress();
-                }
-            }, getActivity().getApplicationContext());
-        }catch (NullPointerException e){
+                            hideProgress();
+                        }
+                    }, getActivity().getApplicationContext());
+        } catch (NullPointerException e) {
             new LoadingSurveyException(e);
         }
     }

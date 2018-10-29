@@ -1026,4 +1026,5 @@ Ameahidi kuhudhuria"</string>
 <string name="settings_title_program_url_config">"Programkonfigurationsadress"</string>
 <string name="settings_title_program_username_config">"Programkonfigurations användarnamn"</string>
 <string name="settings_title_program_password_config">"Programkonfigurationslösenord"</string>
+<string name="login_invalid_credentials_and_network">"Inloggningsuppgifterna är ogiltiga eller referensuppgifterna är ogiltiga och connexion är inte tillgängligt"</string>
 </resources>

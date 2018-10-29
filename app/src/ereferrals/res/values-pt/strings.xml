@@ -968,4 +968,5 @@
     <string name="settings_title_program_url_config">"URL de configuração do programa"</string>
     <string name="settings_title_program_username_config">"Nome de usuário da configuração do programa"</string>
     <string name="settings_title_program_password_config">"Senha de configuração do programa"</string>
+    <string name="login_invalid_credentials_and_network">"As credenciais são inválidas ou as credenciais são inválidas e a conexão não está disponível"</string>
 </resources>

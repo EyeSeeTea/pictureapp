@@ -328,7 +328,6 @@ public class QuestionConvertFromDomainVisitorShould {
                 .name("ipc_issueEntry_q_program")
                 .type(Question.Type.DROPDOWN_LIST)
                 .visibility(Question.Visibility.VISIBLE)
-                .options(options)
                 .compulsory(true).build();
 
         return question;

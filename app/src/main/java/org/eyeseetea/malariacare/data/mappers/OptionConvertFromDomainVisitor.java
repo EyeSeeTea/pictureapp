@@ -16,11 +16,8 @@ public class OptionConvertFromDomainVisitor implements
         OptionDB dbModel = new OptionDB();
         dbModel.setCode(domainModel.getCode());
         dbModel.setName(domainModel.getName());
-        dbModel.setId_option_attribute_fk(getAttributeIdFrom(domainModel));
+        dbModel.setOptionAttributeDB(AttributeMapper.getOptionAttributeDBFrom(domainModel.getAttribute()));
         return dbModel;
     }
 
-    private long getAttributeIdFrom(Option domainOption) {
-        return (domainOption.getAttribute() != null) ? domainOption.getAttribute().getId() : 0;
-    }
 }

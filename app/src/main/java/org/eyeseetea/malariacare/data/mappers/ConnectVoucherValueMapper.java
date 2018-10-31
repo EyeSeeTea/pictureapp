@@ -41,8 +41,9 @@ public class ConnectVoucherValueMapper {
         if(question==null){
             return null;
         }
-        if(question.hasOptions()){
-            OptionLocalDataSource optionLocalDataSource = new OptionLocalDataSource();
+        OptionLocalDataSource optionLocalDataSource = new OptionLocalDataSource();
+        List<Option> options = optionLocalDataSource.getOptionsByQuestion(questionUId);
+        if(options != null && options.size()>0){
             Option option = optionLocalDataSource.recoveryOptionsByQuestionAndValue(questionUId, value);
             if(option!=null) {
                 return new Value(value, questionUId, option.getCode());

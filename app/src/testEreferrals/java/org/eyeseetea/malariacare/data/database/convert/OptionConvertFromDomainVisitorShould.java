@@ -1,9 +1,13 @@
 package org.eyeseetea.malariacare.data.database.convert;
 
+import android.support.annotation.NonNull;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.mappers.AttributeMapper;
 import org.eyeseetea.malariacare.data.mappers.OptionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.junit.Before;
@@ -36,6 +40,7 @@ public class OptionConvertFromDomainVisitorShould {
                 .newBuilder()
                 .code("FPL")
                 .name("common_option_program_familyPlanning")
+                .attribute(getDefaultAttribute())
                 .build();
     }
 
@@ -43,7 +48,7 @@ public class OptionConvertFromDomainVisitorShould {
         OptionDB optionDB = new OptionDB();
         optionDB.setCode("FPL");
         optionDB.setName("common_option_program_familyPlanning");
-
+        optionDB.setOptionAttributeDB(AttributeMapper.getOptionAttributeDBFrom(getDefaultAttribute()));
         return optionDB;
     }
 
@@ -52,5 +57,14 @@ public class OptionConvertFromDomainVisitorShould {
 
         assertThat(optionDBToEvaluate.getCode(), is(expectedOptionDB.getCode()));
         assertThat(optionDBToEvaluate.getName(), is(expectedOptionDB.getName()));
+    }
+
+    private Option.Attribute getDefaultAttribute() {
+        return Option.Attribute.newBuilder()
+                .id(1)
+                .backgroundColour("FFFFFF")
+                .horizontalAlignment(Option.Attribute.HorizontalAlignment.NONE)
+                .verticalAlignment(Option.Attribute.VerticalAlignment.NONE)
+                .textSize(20).build();
     }
 }

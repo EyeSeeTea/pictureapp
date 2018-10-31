@@ -16,6 +16,7 @@ import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.Metadata;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
@@ -39,7 +40,7 @@ public class MetadataConfigurationApiClientShould {
 
     private CustomMockServer CustomMockServer;
 
-    private List<Question> questions;
+    private Metadata metadata;
 
     private List<Configuration.CountryVersion> countryVersions;
 
@@ -115,19 +116,30 @@ public class MetadataConfigurationApiClientShould {
 
 
     private void thenAssertThatResponseParseSuccessfullyForMZCountry() {
-        validateQuestion(questions.get(0), givenAValidQuestionForMZ());
+        Question question = metadata.getQuestions().get(0);
+        validateQuestion(question, givenAValidQuestionForMZ());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), givenAValidOptionsForMZ());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForNPCountry() {
-        validateQuestion(questions.get(0), givenAValidQuestionForNP());
+        Question question = metadata.getQuestions().get(0);
+        validateQuestion(question, givenAValidQuestionForNP());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), givenAValidOptionForNP());
+        validateQuestion(metadata.getQuestions().get(0), givenAValidQuestionForNP());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForTZCountry() {
-        validateQuestion(questions.get(1), givenAValidQuestionForTZ());
+        Question question = metadata.getQuestions().get(1);
+        validateQuestion(question, givenAValidQuestionForTZ());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), null);
+        validateQuestion(metadata.getQuestions().get(1), givenAValidQuestionForTZ());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForZWCountry() {
-        validateQuestion(questions.get(3), givenAValidQuestionForZW());
+        Question question = metadata.getQuestions().get(3);
+        validateQuestion(question, givenAValidQuestionForZW());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), null);
+        validateQuestion(metadata.getQuestions().get(3), givenAValidQuestionForZW());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForCountryVersions() {
@@ -173,7 +185,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer.enqueueMockResponse(countryFile);
 
-        questions = apiClient.getQuestionsByCountryCode(countryCode);
+        metadata = apiClient.getQuestionsByCountryCode(countryCode);
 
     }
 
@@ -187,14 +199,16 @@ public class MetadataConfigurationApiClientShould {
         assertThat(questionToValidate.getType(), is(expectedQuestion.getType()));
 
         assertThat(questionToValidate.isCompulsory(), is(expectedQuestion.isCompulsory()));
+    }
 
-        if (expectedQuestion.getOptions() != null) {
-            assertThat(questionToValidate.getOptions(), is(notNullValue()));
+    private void validateOptions(List<Option> optionsToValidate, List<Option> expectedOptions){
+        if (expectedOptions != null) {
+            assertThat(optionsToValidate, is(notNullValue()));
 
-            for (int i = 0; i < expectedQuestion.getOptions().size(); i++) {
+            for (int i = 0; i < expectedOptions.size(); i++) {
 
-                Option validOption = expectedQuestion.getOptions().get(i);
-                Option toValidateOption = questionToValidate.getOptions().get(i);
+                Option validOption = expectedOptions.get(i);
+                Option toValidateOption = optionsToValidate.get(i);
 
                 assertThat(toValidateOption.getCode(), is(validOption.getCode()));
                 assertThat(toValidateOption.getName(), is(validOption.getName()));
@@ -211,18 +225,19 @@ public class MetadataConfigurationApiClientShould {
                 .name("ipc_issueEntry_q_program")
                 .type(Question.Type.DROPDOWN_LIST)
                 .compulsory(true)
-                .options(new ArrayList<Option>(1))
                 .build();
 
+        return mzQuestion;
+    }
+
+    private List<Option> givenAValidOptionsForMZ() {
         Option firstOption = Option
                 .newBuilder()
                 .code("FPL")
                 .name("common_option_program_familyPlanning")
                 .build();
 
-        mzQuestion.getOptions().add(firstOption);
-
-        return mzQuestion;
+        return createListOption(firstOption);
     }
 
     private Question givenAValidQuestionForNP() {
@@ -235,18 +250,19 @@ public class MetadataConfigurationApiClientShould {
                 .type(Question.Type.DROPDOWN_LIST)
                 .compulsory(true)
                 .visibility(Question.Visibility.VISIBLE)
-                .options(new ArrayList<Option>(1))
                 .build();
 
+        return mzQuestion;
+    }
+
+    private List<Option> givenAValidOptionForNP() {
         Option firstOption = Option
                 .newBuilder()
                 .code("FPL")
                 .name("common_option_program_familyPlanning")
                 .build();
 
-        mzQuestion.getOptions().add(firstOption);
-
-        return mzQuestion;
+        return createListOption(firstOption);
     }
 
     private Question givenAValidQuestionForTZ() {
@@ -258,7 +274,6 @@ public class MetadataConfigurationApiClientShould {
                 .name("ipc_issueEntry_q_firstName")
                 .type(Question.Type.SHORT_TEXT)
                 .compulsory(true)
-                .options(null)
                 .build();
     }
 
@@ -271,7 +286,6 @@ public class MetadataConfigurationApiClientShould {
                 .name("ipc_issueEntry_q_age")
                 .type(Question.Type.INT)
                 .compulsory(true)
-                .options(null)
                 .regExp("^(\\d{2})$")
                 .regExpError("some_error_msg_ref")
                 .build();
@@ -286,5 +300,12 @@ public class MetadataConfigurationApiClientShould {
         enqueueMalformedJson();
 
         apiClient.getQuestionsByCountryCode("dc@MZ@v1");
+    }
+
+    private List<Option> createListOption(Option option)
+    {
+        List<Option> options = new ArrayList<>();
+        options.add(option);
+        return options;
     }
 }

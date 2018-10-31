@@ -1,11 +1,9 @@
 package org.eyeseetea.malariacare.data.mappers;
 
 
-import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
-import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -14,9 +12,6 @@ import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.utils.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class QuestionConvertFromDomainVisitor implements
         IConvertDomainDBVisitor<Question, QuestionDB> {
@@ -44,7 +39,6 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setForm_name(domainModel.getName());
         dbModel.setOutput(getOutFrom(domainModel.getType()));
         dbModel.setCompulsory(getCompulsoryFrom(domainModel.isCompulsory()));
-        dbModel.setAnswer(getAnswerDBFromDomain(domainModel));
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));
@@ -53,12 +47,6 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
         dbModel.setDefaultValue(domainModel.getDefaultValue());
         return dbModel;
-    }
-
-    private AnswerDB getAnswerDBFromDomain(@NotNull Question domainModel) {
-        AnswerDB answerDB = new AnswerDB();
-        answerDB.setOptionDBs(getOptionDBsFrom(domainModel));
-        return answerDB;
     }
 
     private PhoneFormatDB getPhoneFormat(PhoneFormat domainPhoneFormat) {
@@ -148,41 +136,4 @@ public class QuestionConvertFromDomainVisitor implements
     private int getCompulsoryFrom(boolean mandatory) {
         return (mandatory) ? 1 : 0;
     }
-
-    @NotNull
-    private List<OptionDB> getOptionDBsFrom(@NotNull Question questionDomain) {
-        List<OptionDB> optionDBS = new ArrayList<>();
-
-        if (questionDomain.hasOptions()) {
-            for (Option domainOption : questionDomain.getOptions()) {
-
-                OptionDB newOptionDB = optionConverter.visit(domainOption);
-
-                optionDBS.add(newOptionDB);
-
-
-                if (domainOption.hasRules()) {
-
-                    List<Option.Rule> domainRules = domainOption.getRules();
-                    List<String> dbRules = convertTODBRulesFrom(domainRules);
-
-                    newOptionDB.setMatchQuestionsCode(dbRules);
-
-                }
-
-            }
-        }
-        return optionDBS;
-    }
-
-    @NonNull
-    private List<String> convertTODBRulesFrom(@NonNull List<Option.Rule> domainRules) {
-        List<String> dbRules = new ArrayList<>();
-
-        for (Option.Rule domainRule : domainRules) {
-            dbRules.add(domainRule.getActionSubject().getCode());
-        }
-        return dbRules;
-    }
-
 }

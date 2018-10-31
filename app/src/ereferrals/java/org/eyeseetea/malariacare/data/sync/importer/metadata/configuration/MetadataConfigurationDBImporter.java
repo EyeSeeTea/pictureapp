@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 import android.support.annotation.NonNull;
 
+import com.raizlabs.android.dbflow.annotation.NotNull;
+
 import org.eyeseetea.malariacare.data.database.converts.CountryVersionConvertFromDomainVisitor;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
@@ -18,9 +20,9 @@ import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
-import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
+import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
@@ -34,6 +36,7 @@ import java.util.Map;
 public class MetadataConfigurationDBImporter {
 
     private IConvertDomainDBVisitor<Question, QuestionDB> converter;
+    private IConvertDomainDBVisitor<Option, OptionDB> converterOptions;
 
     private List<QuestionOptionDB> pendingOptionsWithRules = new ArrayList<>();
     private List<QuestionThresholdDB> pendingThresholdWithRules = new ArrayList<>();
@@ -49,9 +52,11 @@ public class MetadataConfigurationDBImporter {
 
     public MetadataConfigurationDBImporter(
             @NonNull IMetadataConfigurationDataSource remoteDataSource,
-            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter) throws Exception {
+            @NonNull IConvertDomainDBVisitor<Question, QuestionDB> converter,
+            @NonNull IConvertDomainDBVisitor<Option, OptionDB> converterOptions) throws Exception {
         this.remoteDataSource = remoteDataSource;
         this.converter = converter;
+        this.converterOptions = converterOptions;
         countryVersions = new ArrayList<>();
         needToDownloadMetadata = false;
     }
@@ -166,14 +171,14 @@ public class MetadataConfigurationDBImporter {
 
         String countryUID = country.getUid();
         int version = country.getVersion();
-        List<Question> questions = remoteDataSource.getQuestionsByCountryCode(country.getReference());
+        Metadata metadataByCountries = remoteDataSource.getQuestionsByCountryCode(country.getReference());
 
         if (isCountryNotAlreadyAdded(countryUID)) {
-            updateMetadataFor(questions,country);
+            updateMetadataFor(metadataByCountries, country);
 
         } else if (hasMetadataBeenUpdatedFor(countryUID, version)) {
             deletePreviousMetadata();
-            updateMetadataFor(questions,country);
+            updateMetadataFor(metadataByCountries, country);
         }
     }
 
@@ -185,9 +190,55 @@ public class MetadataConfigurationDBImporter {
         return !CountryVersionDB.isCountryAlreadyAdded(countryCode);
     }
 
-    private void updateMetadataFor(List<Question> questions ,Configuration.CountryVersion country) throws Exception {
+    private void updateMetadataFor(Metadata metadataByCountries, Configuration.CountryVersion country) throws Exception {
         saveInDB(country);
-        saveQuestionsInDB(questions, country);
+
+        saveQuestionsInDB(metadataByCountries, country);
+    }
+
+    private List<OptionDB> saveOptions(Metadata metadata, Question question) {
+            List<OptionDB> optionDBS = new ArrayList<>();
+            List<OptionDB> options = getOptionDBsFrom(metadata, question.getCode());
+            for (OptionDB optionDB : options) {
+                optionDB.getOptionAttributeDB().save();
+                optionDB.save();
+                optionDBS.add(optionDB);
+            }
+            return optionDBS;
+    }
+
+
+    @NotNull
+    private List<OptionDB> getOptionDBsFrom(@NotNull Metadata metadata, String questionUId) {
+        List<OptionDB> optionDBS = new ArrayList<>();
+            List<Option> options = metadata.getOptions().get(questionUId);
+            if (options != null && options.size() > 0) {
+                for (Option domainOption : options) {
+                    OptionDB newOptionDB = converterOptions.visit(domainOption);
+                    optionDBS.add(newOptionDB);
+
+                    if (domainOption.hasRules()) {
+
+                        List<Option.Rule> domainRules = domainOption.getRules();
+                        List<String> dbRules = convertTODBRulesFrom(domainRules);
+
+                        newOptionDB.setMatchQuestionsCode(dbRules);
+
+                    }
+
+                }
+            }
+        return optionDBS;
+    }
+
+    @NonNull
+    private List<String> convertTODBRulesFrom(@NonNull List<Option.Rule> domainRules) {
+        List<String> dbRules = new ArrayList<>();
+
+        for (Option.Rule domainRule : domainRules) {
+            dbRules.add(domainRule.getActionSubject().getCode());
+        }
+        return dbRules;
     }
 
     private void saveInDB(Configuration.CountryVersion domainCountry) {
@@ -196,12 +247,14 @@ public class MetadataConfigurationDBImporter {
         addProgramMetadata(domainCountry);
     }
 
-    private void saveQuestionsInDB(List<Question> questions, Configuration.CountryVersion country) {
-
-        for (Question question : questions) {
+    private void saveQuestionsInDB(Metadata metadata, Configuration.CountryVersion country) {
+        for(Question question : metadata.getQuestions()) {
+            List<OptionDB> optionDBs = saveOptions(metadata, question);
             QuestionDB questionDB = converter.visit(question);
             setQuestionRelations(questionDB, country);
-            save(questionDB);
+
+            saveQuestion(question, optionDBs, questionDB);
+            save(optionDBs, questionDB);
 
             mapQuestionsDBByCode.put(questionDB.getCode(), questionDB);
 
@@ -214,8 +267,21 @@ public class MetadataConfigurationDBImporter {
                 }
             }
         }
-
         addingRulesToQuestion();
+    }
+
+    private void saveQuestion(Question question, List<OptionDB> optionDBs, QuestionDB questionDB) {
+        AnswerDB answerDB = createAnswer(question.getCode(), optionDBs);
+        questionDB.setAnswer(answerDB);
+        questionDB.save();
+    }
+
+    private AnswerDB createAnswer(String name, List<OptionDB> optionDbs) {
+        AnswerDB answerDB = new AnswerDB();
+        answerDB.setName(name);
+        answerDB.setOptionDBs(optionDbs);
+        answerDB.save();
+        return answerDB;
     }
 
     private void addThreshold(QuestionDB questionDB, Question.Rule rule,
@@ -348,26 +414,11 @@ public class MetadataConfigurationDBImporter {
         return questionRelationDB;
     }
 
-    private void save(QuestionDB questionDB) {
-        AnswerDB answerDB = questionDB.getAnswerDB();
-        List<OptionDB> questionOptionDBS = answerDB.getOptionDBs();
-        answerDB.setName(questionDB.getCode());
-        answerDB.save();
-        questionDB.setAnswer(answerDB);
-        questionDB.save();
-
-        save(questionOptionDBS, questionDB);
-
-    }
-
     private void save(List<OptionDB> questionOptionDBS, QuestionDB questionDB) {
 
-        AnswerDB answerDB = questionDB.getAnswerDB();
-
         for (OptionDB optionDB : questionOptionDBS) {
-            optionDB.setAnswerDB(answerDB);
+            optionDB.setAnswerDB(questionDB.getAnswerDB());
             optionDB.save();
-
             if (optionDB.hasMatches()) {
 
                 QuestionOptionDB questionOptionDB = new QuestionOptionDB();

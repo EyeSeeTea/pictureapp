@@ -56,7 +56,6 @@ import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.VISIBL
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
         .PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model

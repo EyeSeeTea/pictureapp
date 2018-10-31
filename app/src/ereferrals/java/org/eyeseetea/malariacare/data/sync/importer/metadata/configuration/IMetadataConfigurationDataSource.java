@@ -1,7 +1,5 @@
-package org.eyeseetea.malariacare.data.remote;
+package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
-
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.Metadata;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 
 import java.util.List;

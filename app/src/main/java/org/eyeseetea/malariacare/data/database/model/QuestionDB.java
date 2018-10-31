@@ -841,7 +841,7 @@ public class QuestionDB extends BaseModel {
         return mAnswerDB;
     }
 
-    public void setAnswerDB(Long id_answer) {
+    public void setAnswer(Long id_answer) {
         this.id_answer_fk = id_answer;
         this.mAnswerDB = null;
     }

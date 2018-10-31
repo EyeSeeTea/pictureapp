@@ -747,7 +747,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         private Option.Attribute getDefaultAttribute() {
             return Option.Attribute.newBuilder()
                     .id(1)
-                    .backgroundColour("#FFFFFF")
+                    .backgroundColour("FFFFFF")
                     .horizontalAlignment(Option.Attribute.HorizontalAlignment.NONE)
                     .verticalAlignment(Option.Attribute.VerticalAlignment.NONE)
                     .textSize(20).build();

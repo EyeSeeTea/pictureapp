@@ -102,7 +102,8 @@ public class WSPullController implements IPullController {
                 IMetadataConfigurationDataSource metadataConfigurationDataSource =
                         metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource();
                 importer = new MetadataConfigurationDBImporter(
-                        metadataConfigurationDataSource, ConverterFactory.getQuestionConverter()
+                        metadataConfigurationDataSource, ConverterFactory.getQuestionConverter(),
+                        ConverterFactory.getOptionConverter()
                 );
 
                 IProgramRepository programRepository = new ProgramRepository();

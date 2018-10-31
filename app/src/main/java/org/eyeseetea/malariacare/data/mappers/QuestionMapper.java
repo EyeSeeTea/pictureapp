@@ -29,7 +29,6 @@ public class QuestionMapper {
                     .regExp(questionDB.getValidationRegExp())
                     .regExpError(questionDB.getValidationMessage())
                     .compulsory(questionDB.isCompulsory())
-                    .answerId(questionDB.getId_answer_fk())
                     .build();
         }else{
             return Question.newBuilder()
@@ -42,7 +41,6 @@ public class QuestionMapper {
                     .regExpError(questionDB.getValidationMessage())
                     .compulsory(questionDB.isCompulsory())
                     .value(value)
-                    .answerId(questionDB.getId_answer_fk())
                     .build();
         }
     }

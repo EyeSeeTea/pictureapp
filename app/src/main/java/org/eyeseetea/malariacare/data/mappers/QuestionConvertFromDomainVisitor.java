@@ -39,7 +39,6 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setForm_name(domainModel.getName());
         dbModel.setOutput(getOutFrom(domainModel.getType()));
         dbModel.setCompulsory(getCompulsoryFrom(domainModel.isCompulsory()));
-        dbModel.setAnswer(domainModel.getAnswerId());
         dbModel.setHeaderDB(getHeaderID(domainModel));
         dbModel.setTotalQuestions(1);
         dbModel.setVisible(getVisibilityFrom(domainModel));

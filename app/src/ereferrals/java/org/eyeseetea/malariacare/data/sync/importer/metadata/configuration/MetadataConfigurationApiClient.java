@@ -102,7 +102,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @Override
-    public List<Question> getQuestionsByCountryCode(String countryCode) throws Exception {
+    public Metadata getQuestionsByCountryCode(String countryCode) throws Exception {
 
         MetadataConfigurationConverterApiModelToDomain
                 converter = new MetadataConfigurationConverterApiModelToDomain();
@@ -345,31 +345,34 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
 
         @NonNull
-        private List<Question> convertToDomainQuestionsFrom(
+        private Metadata convertToDomainQuestionsFrom(
                 @NonNull List<MetadataConfigurationsApi.Question> apiQuestions) {
 
             List<Question> domainQuestions = new ArrayList<>();
+            Metadata metadata = new Metadata();
 
             boolean isImportantQuestionSelected = false;
             for (int questionIndex = 0; questionIndex < apiQuestions.size(); questionIndex++) {
-
                 MetadataConfigurationsApi.Question apiQuestion = apiQuestions.get(questionIndex);
 
                 Question domainQuestion = convertToDomainQuestionFrom(apiQuestion, questionIndex);
 
                 domainQuestions.add(domainQuestion);
+
                 mapDomainQuestionsByCode.put(domainQuestion.getCode(), domainQuestion);
 
                 if(!isImportantQuestionSelected) {
                     isImportantQuestionSelected = isImportantQuestion(domainQuestion);
                 }
+
+                metadata.addQuestion(domainQuestion, convertToDomainOptionsFrom(apiQuestion.options, apiQuestion));
             }
 
             setImportantDomainQuestion(domainQuestions, isImportantQuestionSelected);
 
             assignRulesToQuestions();
 
-            return domainQuestions;
+            return metadata;
         }
 
         private void setImportantDomainQuestion(List<Question> domainQuestions,
@@ -554,7 +557,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             domainOption.setRules(domainRules);
         }
 
-
         @NonNull
         private Question convertToDomainQuestionFrom(
                 @NonNull MetadataConfigurationsApi.Question apiQuestion, int index) {
@@ -567,7 +569,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .index(index)
                     .type(convertToDomainQuestionTypeFrom(apiQuestion.output))
                     .visibility(getVisibilityFrom(apiQuestion))
-                    .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
                     .rules(convertToDomainRules(apiQuestion.rules))
                     .regExp(apiQuestion.validationRegex)

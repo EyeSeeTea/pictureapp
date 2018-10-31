@@ -16,7 +16,7 @@ import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.MetadataByCountry;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.Metadata;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
@@ -40,7 +40,7 @@ public class MetadataConfigurationApiClientShould {
 
     private CustomMockServer CustomMockServer;
 
-    private MetadataByCountry metadataByCountry;
+    private Metadata metadata;
 
     private List<Configuration.CountryVersion> countryVersions;
 
@@ -116,30 +116,30 @@ public class MetadataConfigurationApiClientShould {
 
 
     private void thenAssertThatResponseParseSuccessfullyForMZCountry() {
-        Question question = metadataByCountry.getQuestions().get(0);
+        Question question = metadata.getQuestions().get(0);
         validateQuestion(question, givenAValidQuestionForMZ());
-        validateOptions(metadataByCountry.getOptionsByQuestion(question.getCode()), givenAValidOptionsForMZ());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), givenAValidOptionsForMZ());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForNPCountry() {
-        Question question = metadataByCountry.getQuestions().get(0);
+        Question question = metadata.getQuestions().get(0);
         validateQuestion(question, givenAValidQuestionForNP());
-        validateOptions(metadataByCountry.getOptionsByQuestion(question.getCode()), givenAValidOptionForNP());
-        validateQuestion(metadataByCountry.getQuestions().get(0), givenAValidQuestionForNP());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), givenAValidOptionForNP());
+        validateQuestion(metadata.getQuestions().get(0), givenAValidQuestionForNP());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForTZCountry() {
-        Question question = metadataByCountry.getQuestions().get(1);
+        Question question = metadata.getQuestions().get(1);
         validateQuestion(question, givenAValidQuestionForTZ());
-        validateOptions(metadataByCountry.getOptionsByQuestion(question.getCode()), null);
-        validateQuestion(metadataByCountry.getQuestions().get(1), givenAValidQuestionForTZ());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), null);
+        validateQuestion(metadata.getQuestions().get(1), givenAValidQuestionForTZ());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForZWCountry() {
-        Question question = metadataByCountry.getQuestions().get(3);
+        Question question = metadata.getQuestions().get(3);
         validateQuestion(question, givenAValidQuestionForZW());
-        validateOptions(metadataByCountry.getOptionsByQuestion(question.getCode()), null);
-        validateQuestion(metadataByCountry.getQuestions().get(3), givenAValidQuestionForZW());
+        validateOptions(metadata.getOptionsByQuestion(question.getCode()), null);
+        validateQuestion(metadata.getQuestions().get(3), givenAValidQuestionForZW());
     }
 
     private void thenAssertThatResponseParseSuccessfullyForCountryVersions() {
@@ -185,7 +185,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer.enqueueMockResponse(countryFile);
 
-        metadataByCountry = apiClient.getQuestionsByCountryCode(countryCode);
+        metadata = apiClient.getQuestionsByCountryCode(countryCode);
 
     }
 

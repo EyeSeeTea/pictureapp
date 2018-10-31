@@ -15,8 +15,8 @@ public class Question {
     private PhoneFormat phoneFormat;
     private Type type;
     private boolean compulsory;
-    private List<Option> options;
     private Header header;
+    private long answerId;
     private int index;
     private Visibility visibility;
     private List<Rule> rules;
@@ -26,11 +26,10 @@ public class Question {
     private String defaultValue;
 
     public Question(long id, String code, String name, String uid,
-            PhoneFormat phoneFormat, Type type, boolean compulsory,
-            List<Option> options, Header header, int index,
-            Visibility visibility,
-            List<Rule> rules, Value value, String regExp,
-            String regExpError, String defaultValue) {
+                    PhoneFormat phoneFormat, Type type, boolean compulsory,
+                    Header header, int index, Visibility visibility,
+                    List<Rule> rules, Value value, String regExp,
+                    String regExpError, String defaultValue, long answerId) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -39,7 +38,6 @@ public class Question {
         this.phoneFormat = phoneFormat;
         this.type = required(type, "type is required");
         this.compulsory = compulsory;
-        this.options = options;
         this.header = header;
         this.index = index;
         this.visibility = visibility;
@@ -48,6 +46,7 @@ public class Question {
         this.regExp = regExp;
         this.regExpError = regExpError;
         this.defaultValue = defaultValue;
+        this.answerId = answerId;
     }
 
     public static Builder newBuilder() {
@@ -68,14 +67,6 @@ public class Question {
 
     public boolean isCompulsory() {
         return compulsory;
-    }
-
-    public List<Option> getOptions() {
-        return options;
-    }
-
-    public boolean hasOptions() {
-        return options != null && options.size()>0;
     }
 
     public Header getHeader() {
@@ -124,6 +115,10 @@ public class Question {
 
     public String getDefaultValue(){ return defaultValue;}
 
+    public long getAnswerId() {
+        return answerId;
+    }
+
     public void match(String value) throws RegExpValidationException {
         if (!value.matches(regExp)){
             throw new RegExpValidationException(value);
@@ -138,6 +133,7 @@ public class Question {
         Question question = (Question) o;
 
         if (id != question.id) return false;
+        if (answerId != question.answerId) return false;
         if (compulsory != question.compulsory) return false;
         if (index != question.index) return false;
         if (code != null ? !code.equals(question.code) : question.code != null) return false;
@@ -151,9 +147,6 @@ public class Question {
             return false;
         }
         if (type != question.type) return false;
-        if (options != null ? !options.equals(question.options) : question.options != null) {
-            return false;
-        }
         if (header != null ? !header.equals(question.header) : question.header != null) {
             return false;
         }
@@ -173,9 +166,9 @@ public class Question {
         result = 31 * result + (phoneFormat != null ? phoneFormat.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (compulsory ? 1 : 0);
-        result = 31 * result + (options != null ? options.hashCode() : 0);
         result = 31 * result + (header != null ? header.hashCode() : 0);
         result = 31 * result + index;
+        result = result + (int) (answerId ^ (answerId >>> 32));
         result = 31 * result + (visibility != null ? visibility.hashCode() : 0);
         result = 31 * result + (rules != null ? rules.hashCode() : 0);
         return result;
@@ -191,12 +184,12 @@ public class Question {
                 ", phoneFormat=" + phoneFormat +
                 ", type=" + type +
                 ", compulsory=" + compulsory +
-                ", options=" + options +
                 ", header=" + header +
                 ", index=" + index +
                 ", visibility=" + visibility +
                 ", rules=" + rules +
                 ", regExp=" + regExp +
+                ", answerId=" + answerId +
                 ", regExpError=" + regExpError +
                 ", defaultValue=" + defaultValue +
                 '}';
@@ -219,12 +212,12 @@ public class Question {
         private PhoneFormat phoneFormat;
         private Type type;
         private boolean compulsory;
-        private List<Option> options;
         private Header header;
         private int index;
         private Visibility visibility;
         private List<Rule> rules;
         private long id;
+        private long answerId;
         private Value mValue;
         private String regExp;
         private String regExpError;
@@ -235,6 +228,11 @@ public class Question {
 
         public Builder code(String val) {
             code = val;
+            return this;
+        }
+
+        public Builder answerId(long id) {
+            answerId = id;
             return this;
         }
 
@@ -260,11 +258,6 @@ public class Question {
 
         public Builder compulsory(boolean val) {
             compulsory = val;
-            return this;
-        }
-
-        public Builder options(List<Option> val) {
-            options = val;
             return this;
         }
 
@@ -316,7 +309,6 @@ public class Question {
                     this.phoneFormat,
                     this.type,
                     this.compulsory,
-                    this.options,
                     this.header,
                     this.index,
                     this.visibility,
@@ -324,7 +316,8 @@ public class Question {
                     mValue,
                     this.regExp,
                     this.regExpError,
-                    this.defaultValue
+                    this.defaultValue,
+                    this.answerId
             );
         }
 

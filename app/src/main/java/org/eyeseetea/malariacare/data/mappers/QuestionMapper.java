@@ -19,25 +19,6 @@ public class QuestionMapper {
     }
 
     public static Question mapFromDbToDomainWithValue(QuestionDB questionDB, Value value) {
-        List<Option> options = new ArrayList<>();
-        List<OptionDB> optionDBS = questionDB.getOptions();
-        for(OptionDB optionDB : optionDBS) {
-            OptionAttributeDB optionAttributeDB = optionDB.getOptionAttributeDB();
-            Option.Attribute attribute = null;
-            if(optionAttributeDB!=null) {
-                attribute = Option.Attribute.newBuilder()
-                        .id(optionAttributeDB.getId_option_attribute())
-                        .backgroundColour(optionAttributeDB.getBackground_colour())
-                        .verticalAlignment(mapOptionVerticalAttribute(optionAttributeDB.getVertical_alignment()))
-                        .horizontalAlignment(mapOptionHorizontalAttribute(optionAttributeDB.getHorizontal_alignment()))
-                        .textSize(optionDB.getOptionAttributeDB().getText_size()).build();
-            }
-            options.add( Option.newBuilder()
-                    .id(optionDB.getId_option())
-                    .code(optionDB.getCode())
-                    .name(optionDB.getName())
-                    .attribute(attribute).build());
-        }
         if(value==null) {
             return Question.newBuilder()
                     .id(questionDB.getId_question())
@@ -45,10 +26,10 @@ public class QuestionMapper {
                     .name(questionDB.getForm_name())
                     .uid(questionDB.getUid())
                     .type(mapOutputToQuestionType(questionDB.getOutput()))
-                    .options(options)
                     .regExp(questionDB.getValidationRegExp())
                     .regExpError(questionDB.getValidationMessage())
                     .compulsory(questionDB.isCompulsory())
+                    .answerId(questionDB.getId_answer_fk())
                     .build();
         }else{
             return Question.newBuilder()
@@ -57,52 +38,13 @@ public class QuestionMapper {
                     .name(questionDB.getForm_name())
                     .uid(questionDB.getUid())
                     .type(mapOutputToQuestionType(questionDB.getOutput()))
-                    .options(options)
                     .regExp(questionDB.getValidationRegExp())
                     .regExpError(questionDB.getValidationMessage())
                     .compulsory(questionDB.isCompulsory())
                     .value(value)
+                    .answerId(questionDB.getId_answer_fk())
                     .build();
         }
-    }
-
-    private static Option.Attribute.VerticalAlignment mapOptionVerticalAttribute(int verticalAlignment) {
-        Option.Attribute.VerticalAlignment verticalAlignmentEnum = Option.Attribute.VerticalAlignment.NONE;
-
-        switch (verticalAlignment) {
-            case OptionAttributeDB.VERTICAL_ALIGNMENT_BOTTOM:
-                verticalAlignmentEnum = Option.Attribute.VerticalAlignment.BOTTOM;
-                break;
-            case OptionAttributeDB.VERTICAL_ALIGNMENT_MIDDLE:
-                verticalAlignmentEnum = Option.Attribute.VerticalAlignment.MIDDLE;
-                break;
-            case OptionAttributeDB.VERTICAL_ALIGNMENT_NONE:
-                verticalAlignmentEnum = Option.Attribute.VerticalAlignment.NONE;
-                break;
-            case OptionAttributeDB.VERTICAL_ALIGNMENT_TOP:
-                verticalAlignmentEnum = Option.Attribute.VerticalAlignment.TOP;
-                break;
-        }
-        return verticalAlignmentEnum;
-    }
-
-    private static Option.Attribute.HorizontalAlignment mapOptionHorizontalAttribute(int horizontalAlignment) {
-        Option.Attribute.HorizontalAlignment horizontalAlignmentEnum = Option.Attribute.HorizontalAlignment.NONE;
-        switch (horizontalAlignment) {
-            case OptionAttributeDB.HORIZONTAL_ALIGNMENT_LEFT:
-                horizontalAlignmentEnum = Option.Attribute.HorizontalAlignment.LEFT;
-                break;
-            case OptionAttributeDB.HORIZONTAL_ALIGNMENT_RIGHT:
-                horizontalAlignmentEnum = Option.Attribute.HorizontalAlignment.RIGHT;
-                break;
-            case OptionAttributeDB.HORIZONTAL_ALIGNMENT_CENTER:
-                horizontalAlignmentEnum = Option.Attribute.HorizontalAlignment.CENTER;
-                break;
-            case OptionAttributeDB.HORIZONTAL_ALIGNMENT_NONE:
-                horizontalAlignmentEnum = Option.Attribute.HorizontalAlignment.NONE;
-                break;
-        }
-        return horizontalAlignmentEnum;
     }
 
     private static Question.Type mapOutputToQuestionType(int output) {

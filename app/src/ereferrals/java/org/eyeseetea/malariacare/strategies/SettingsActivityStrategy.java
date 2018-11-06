@@ -299,5 +299,20 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
         listPreference.setEntries(languagesStrings);
         listPreference.setEntryValues(languagesCodes);
+        listPreference.setSummary(
+                getPositionOfCode(listPreference.getValue(), languagesCodes, languagesStrings));
+    }
+
+    private CharSequence getPositionOfCode(String value, CharSequence[] languagesCodes,
+            CharSequence[] languagesNames) {
+        if (languagesCodes != null && value != null) {
+            for (int i = 0; i < languagesCodes.length; i++) {
+                if (languagesCodes[i].equals(value)) {
+                    return languagesNames[i];
+                }
+            }
+        }
+        return settingsActivity.getResources().getStringArray(
+                R.array.languages_strings)[0];
     }
 }

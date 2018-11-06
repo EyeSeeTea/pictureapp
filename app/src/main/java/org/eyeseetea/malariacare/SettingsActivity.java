@@ -22,8 +22,6 @@ package org.eyeseetea.malariacare;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -31,19 +29,16 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.database.model.TranslationLanguageDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
-import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -124,11 +119,8 @@ public class SettingsActivity extends PreferenceActivity implements
     /**
      * Sets the application languages and populate the language in the preference
      */
-    private static void setLanguageOptions(Preference preference) {
-        ListPreference listPreference = (ListPreference) preference;
-
-        listPreference.setEntries(R.array.languages_strings);
-        listPreference.setEntryValues(R.array.languages_codes);
+    private void setLanguageOptions(Preference preference) {
+        mSettingsActivityStrategy.setLanguageOptions(preference);
     }
 
 

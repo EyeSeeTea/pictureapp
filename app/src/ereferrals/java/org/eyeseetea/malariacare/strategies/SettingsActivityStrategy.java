@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
@@ -23,8 +24,11 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
+import org.eyeseetea.malariacare.domain.entity.Language;
+import org.eyeseetea.malariacare.domain.usecase.GetAllLanguagesUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.LanguagesFactory;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
@@ -257,5 +261,58 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void setLanguageOptions(final Preference preference) {
+        LanguagesFactory languagesFactory =
+                new LanguagesFactory();
+        GetAllLanguagesUseCase getAllLanguagesUseCase =
+                languagesFactory.getGetLanguagesUseCase();
+        getAllLanguagesUseCase.execute(new GetAllLanguagesUseCase.Callback() {
+            @Override
+            public void onSuccess(List<Language> languages) {
+                ListPreference listPreference = (ListPreference) preference;
+                if (languages.isEmpty()) {
+                    listPreference.setEntries(R.array.languages_strings);
+                    listPreference.setEntryValues(R.array.languages_codes);
+                } else {
+                    setLanguagesFromDB(listPreference, languages);
+                }
+            }
+        });
+    }
+
+    private void setLanguagesFromDB(ListPreference listPreference, List<Language> languages) {
+        CharSequence systemDefinedString =
+                settingsActivity.getResources().getStringArray(
+                        R.array.languages_strings)[0];
+        CharSequence systemDefinedCode = settingsActivity.getResources().getStringArray(
+                R.array.languages_codes)[0];
+        CharSequence[] languagesStrings = new CharSequence[languages.size()];
+        CharSequence[] languagesCodes = new CharSequence[languages.size()];
+        languagesStrings[0] = systemDefinedString;
+        languagesCodes[0] = systemDefinedCode;
+        for (int i = 1; i < languages.size(); i++) {
+            languagesStrings[i] = languages.get(i).getName();
+            languagesCodes[i] = languages.get(i).getCode();
+        }
+        listPreference.setEntries(languagesStrings);
+        listPreference.setEntryValues(languagesCodes);
+        listPreference.setSummary(
+                getPositionOfCode(listPreference.getValue(), languagesCodes, languagesStrings));
+    }
+
+    private CharSequence getPositionOfCode(String value, CharSequence[] languagesCodes,
+            CharSequence[] languagesNames) {
+        if (languagesCodes != null && value != null) {
+            for (int i = 0; i < languagesCodes.length; i++) {
+                if (languagesCodes[i].equals(value)) {
+                    return languagesNames[i];
+                }
+            }
+        }
+        return settingsActivity.getResources().getStringArray(
+                R.array.languages_strings)[0];
     }
 }

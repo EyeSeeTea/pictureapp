@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetAllLanguagesUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
-public class GetAllLanguagesUseCaseFactory {
+public class LanguagesFactory {
     IAsyncExecutor mAsyncExecutor = new AsyncExecutor();
     IMainExecutor mMainExecutor = new UIThreadExecutor();
     ILanguageRepository mLanguageRepository = new LanguagesLocalDataSource();

@@ -28,7 +28,7 @@ import org.eyeseetea.malariacare.domain.entity.Language;
 import org.eyeseetea.malariacare.domain.usecase.GetAllLanguagesUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
-import org.eyeseetea.malariacare.factories.GetAllLanguagesUseCaseFactory;
+import org.eyeseetea.malariacare.factories.LanguagesFactory;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
@@ -265,10 +265,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void setLanguageOptions(final Preference preference) {
-        GetAllLanguagesUseCaseFactory getAllLanguagesUseCaseFactory =
-                new GetAllLanguagesUseCaseFactory();
+        LanguagesFactory languagesFactory =
+                new LanguagesFactory();
         GetAllLanguagesUseCase getAllLanguagesUseCase =
-                getAllLanguagesUseCaseFactory.getGetLanguagesUseCase();
+                languagesFactory.getGetLanguagesUseCase();
         getAllLanguagesUseCase.execute(new GetAllLanguagesUseCase.Callback() {
             @Override
             public void onSuccess(List<Language> languages) {

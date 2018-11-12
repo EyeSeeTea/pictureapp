@@ -697,8 +697,8 @@
 <string name="monitor_row_title_positive">"सकारात्मक मुद्दाहरू"</string>
 <string name="monitor_row_title_negative">"नकारात्मक"</string>
 <string name="monitor_row_title_referral">"रेफरल"</string>
-<string name="monitor_row_title_act_stockout">"उपचार नगरिएको संख्या (ACT स्टकआउट)"</string>
 <string name="monitor_row_title_denied">"अस्वीकार गरिएका बिरामीहरू"</string>
+<string name="monitor_row_title_rdt_stockout">"संख्या परीक्षण नगरिएको (RDT स्टकआउट)"</string>
 <string name="monitor_row_title_positivity_rate">"सकारात्मकता दर"</string>
 <string name="review_title">"कृपया पहिले जाँच्नुहोस्"</string>
 <string name="review_subtitle">"प्रसारण"</string>

@@ -692,8 +692,8 @@
 <string name="monitor_row_title_positive">"Casos positivos"</string>
 <string name="monitor_row_title_negative">"Negativo"</string>
 <string name="monitor_row_title_referral">"Referências"</string>
-<string name="monitor_row_title_act_stockout">"Número não tratado (ACT stockout)"</string>
 <string name="monitor_row_title_denied">"Pacientes recusados"</string>
+<string name="monitor_row_title_rdt_stockout">"Número não testado (RDT stockout)"</string>
 <string name="monitor_row_title_positivity_rate">"Taxa de positividade"</string>
 <string name="review_title">"Por favor verifique antes"</string>
 <string name="review_subtitle">"Transmissão"</string>

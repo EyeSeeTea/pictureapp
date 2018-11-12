@@ -144,8 +144,8 @@
     <string name="monitor_row_title_positive">"Positive cases"</string>
     <string name="monitor_row_title_negative">Negative</string>
     <string name="monitor_row_title_referral">"Referral"</string>
-    <string name="monitor_row_title_act_stockout">"Number not treated (ACT stockout)"</string>
     <string name="monitor_row_title_denied">"Denied patients"</string>
+    <string name="monitor_row_title_rdt_stockout">"Number not tested (RDT stockout)"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
     <string name="not_tested">"Not tested"</string>
     <string name="no_data">"Hakuna data"</string>

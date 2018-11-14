@@ -32,9 +32,9 @@ public class ViewUtils {
         String actualText = textView.getText().toString();
 
         if (actualText.equals(firstText)) {
-            textView.setText(idSecondText);
+            textView.setText(Utils.getInternationalizedString(idSecondText,context));
         } else {
-            textView.setText(idFirstText);
+            textView.setText(Utils.getInternationalizedString(idFirstText,context));
         }
     }
 

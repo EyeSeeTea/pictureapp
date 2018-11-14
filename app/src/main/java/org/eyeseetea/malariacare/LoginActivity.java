@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
@@ -103,6 +104,8 @@ public class LoginActivity extends Activity {
     // Callback which will be triggered when animations are finished
     private OnPostAnimationListener onPostAnimationListener;
 
+    private Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,7 @@ public class LoginActivity extends Activity {
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+        mContext = this;
     }
 
     private void initLoginUseCase() {
@@ -244,7 +248,8 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     public void showError(int message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, Utils.getInternationalizedString(message, this),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -263,6 +268,9 @@ public class LoginActivity extends Activity {
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
+        TextInputLayout userHint = (TextInputLayout) findViewById(R.id.username_hint);
+        userHint.setHint(
+                Utils.getInternationalizedString(R.string.login_userName, mContext));
         usernameEditText.addTextChangedListener(watcher);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
@@ -277,6 +285,7 @@ public class LoginActivity extends Activity {
                         passwordEditText.getText());
             }
         });
+        loginButton.setText(Utils.getInternationalizedString(R.string.login_btn_login, mContext));
 
         mLoginActivityStrategy.initViews();
     }
@@ -298,7 +307,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onError() {
                 hideProgressBar();
-                showError(getString(R.string.login_unexpected_error));
+                showError(Utils.getInternationalizedString(R.string.login_unexpected_error,
+                        mContext));
             }
         });
 
@@ -317,8 +327,11 @@ public class LoginActivity extends Activity {
             public void onServerURLNotValid() {
                 Log.d(TAG, "onServerURLNotValid");
                 onFinishLoading(null);
-                serverText.setError(getString(R.string.login_invalid_server_url));
-                showError(getString(R.string.login_invalid_server_url));
+                serverText.setError(
+                        Utils.getInternationalizedString(R.string.login_invalid_server_url,
+                                mContext));
+                showError(Utils.getInternationalizedString(R.string.login_invalid_server_url,
+                        mContext));
             }
 
             @Override
@@ -343,14 +356,15 @@ public class LoginActivity extends Activity {
             public void onConfigJsonInvalid() {
                 Log.d(TAG, "onConfigJsonInvalid");
                 onFinishLoading(null);
-                showError(getString(R.string.login_error_json));
+                showError(Utils.getInternationalizedString(R.string.login_error_json, mContext));
             }
 
             @Override
             public void onUnexpectedError() {
                 Log.d(TAG, "onUnexpectedError");
                 hideProgressBar();
-                showError(getString(R.string.login_unexpected_error));
+                showError(Utils.getInternationalizedString(R.string.login_unexpected_error,
+                        mContext));
             }
 
             @Override

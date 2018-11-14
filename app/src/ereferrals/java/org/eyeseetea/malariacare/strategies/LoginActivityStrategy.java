@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -29,8 +30,6 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
-import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
@@ -56,6 +55,7 @@ import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
@@ -159,7 +159,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void showToastAndClose(int error) {
-        Toast.makeText(loginActivity, error, Toast.LENGTH_LONG).show();
+        Toast.makeText(loginActivity, Utils.getInternationalizedString(error, loginActivity),
+                Toast.LENGTH_LONG).show();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -210,7 +211,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         final TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
+        passwordHint.setHint(
+                Utils.getInternationalizedString(R.string.login_password, loginActivity));
 
         initTextFields();
 
@@ -325,6 +327,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void initAdvancedOptionsButton() {
         advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
+        advancedOptions.setText(
+                Utils.getInternationalizedString(R.string.advanced_options, loginActivity));
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -348,6 +352,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void initServerURLField() {
         serverURLContainer = loginActivity.findViewById(R.id.text_layout_server_url);
+        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_server_url)).setHint(
+                Utils.getInternationalizedString(R.string.server_url, loginActivity));
     }
 
     private void initPasswordField() {
@@ -357,7 +363,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_password));
+        passwordHint.setHint(
+                Utils.getInternationalizedString(R.string.login_password, loginActivity));
     }
 
     private void onForgotPassword() {
@@ -376,15 +383,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     @Override
                     public void onNetworkError() {
                         loginActivity.onFinishLoading(null);
-                        showMessageDialog(loginActivity.getString(R.string.network_error),
-                                loginActivity.getString(R.string.error_conflict_title));
+                        showMessageDialog(Utils.getInternationalizedString(R.string.network_error,
+                                loginActivity),
+                                Utils.getInternationalizedString(R.string.error_conflict_title,
+                                        loginActivity));
                     }
 
                     @Override
                     public void onError(String messages) {
                         loginActivity.onFinishLoading(null);
                         showMessageDialog(messages,
-                                loginActivity.getString(R.string.error_conflict_title));
+                                Utils.getInternationalizedString(R.string.error_conflict_title,
+                                        loginActivity));
                     }
                 });
 
@@ -550,7 +560,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onWarning(WarningException warning) {
                 Log.w(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
                 loginActivity.showError(
-                        loginActivity.getString(R.string.warning_message) + warning.getMessage());
+                        Utils.getInternationalizedString(R.string.warning_message, loginActivity)
+                                + warning.getMessage());
             }
 
             @Override
@@ -570,7 +581,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         AlertDialog.Builder builder = new AlertDialog.Builder(loginActivity);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.provider_redeemEntry_msg_matchingOk,
+        builder.setPositiveButton(
+                Utils.getInternationalizedString(R.string.provider_redeemEntry_msg_matchingOk,
+                        loginActivity),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -582,6 +595,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void initDemoButton() {
         demoButton = (Button) loginActivity.findViewById(R.id.demo_login_button);
+        demoButton.setText(Utils.getInternationalizedString(R.string.demo_login, loginActivity));
 
         demoButton.setOnClickListener(new View.OnClickListener() {
             @Override

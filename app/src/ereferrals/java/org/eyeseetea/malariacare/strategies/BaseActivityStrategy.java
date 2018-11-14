@@ -75,8 +75,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             TextView connection =
                     (TextView) actionBar.getCustomView().findViewById(
                             R.id.action_bar_connection_status);
-            connection.setText(notConnected
-                    ? R.string.action_bar_offline : R.string.action_bar_online);
+            connection.setText(Utils.getInternationalizedString(notConnected
+                    ? R.string.action_bar_offline : R.string.action_bar_online, context));
             if (notConnected) {
                 comesFromNotConected = true;
                 Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
@@ -85,7 +85,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     showLoginIfUserReadOnlyMode();
                 }
                 comesFromNotConected = false;
-                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mBaseActivity,
+                        Utils.getInternationalizedString(R.string.online_status, context),
+                        Toast.LENGTH_SHORT).show();
             }
             DashboardActivity.dashboardActivity.refreshStatus();
         }

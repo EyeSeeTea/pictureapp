@@ -34,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
@@ -54,6 +55,7 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.MediaPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.io.File;
@@ -79,6 +81,9 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         mTextProgressView = (CustomTextView)rootView.findViewById(R.id.progress_text);
         mErrorMessage = (CustomTextView) rootView.findViewById(R.id.error_message);
+        TextView titleMessage= (TextView) rootView.findViewById(R.id.answer_subtitle);
+        mTextProgressView.setText(Utils.getInternationalizedString(R.string.av_progress,getActivity()));
+        titleMessage.setText(Utils.getInternationalizedString(R.string.av_library,getActivity()));
 
         initializeRecyclerView();
         initializeChangeModeButtons();
@@ -160,8 +165,8 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         if (isThereAnAppThatCanHandleThis(implicitIntent, getActivity())) {
             getActivity().startActivity(Intent.createChooser(implicitIntent,
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.feedback_view_image)));
+                    Utils.getInternationalizedString(
+                            R.string.feedback_view_image,getActivity())));
         } else {
             showToast(R.string.error_unable_to_find_app_than_can_open_file, getActivity());
         }
@@ -204,7 +209,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         if (mPresenter.canShowErrorMessage()) {
             mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
             if (hasError) {
-                mErrorMessage.setText(message);
+                mErrorMessage.setText(Utils.getInternationalizedString(message, getActivity()));
             }
         }else {
             mErrorMessage.setVisibility(View.GONE);

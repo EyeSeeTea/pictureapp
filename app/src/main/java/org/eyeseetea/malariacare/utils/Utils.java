@@ -78,6 +78,10 @@ public class Utils {
     }
 
 
+    public static String getInternationalizedString(int id, Context context) {
+        return getInternationalizedString(context.getResources().getResourceEntryName(id), context);
+    }
+
     @NonNull
     public static String getInternationalizedString(@NonNull String key) {
         Context context = PreferencesState.getInstance().getContext();

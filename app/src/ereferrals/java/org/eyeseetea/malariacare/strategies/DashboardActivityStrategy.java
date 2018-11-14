@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -82,6 +83,7 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.File;
 import java.util.Date;
@@ -169,7 +171,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void showToast(@StringRes int text) {
-        Toast.makeText(mDashboardActivity.getApplicationContext(), text,
+        Toast.makeText(mDashboardActivity.getApplicationContext(),
+                Utils.getInternationalizedString(text, mDashboardActivity),
                 Toast.LENGTH_LONG).show();
     }
 
@@ -230,7 +233,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 if (userAccount.canAddSurveys()) {
                     openNewSurvey(activity);
                 } else {
-                    showToast(activity.getResources().getString(R.string.new_survey_disable));
+                    showToast(Utils.getInternationalizedString(R.string.new_survey_disable,
+                            activity));
                 }
             }
         });
@@ -523,8 +527,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     downloadMedia();
                 } else {
                     Toast.makeText(mDashboardActivity.getApplicationContext(),
-                            mDashboardActivity.getApplicationContext().getString(
-                                    R.string.google_play_required),
+                            Utils.getInternationalizedString(
+                                    R.string.google_play_required, mDashboardActivity),
                             Toast.LENGTH_LONG);
                 }
                 break;
@@ -574,7 +578,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     }
 
                     mDashboardActivity.showException(mDashboardActivity, "", String.format(
-                            mDashboardActivity.getResources().getString(R.string.give_voucher),
+                            Utils.getInternationalizedString(R.string.give_voucher,
+                                    mDashboardActivity),
                             voucherUId), onClickListener);
                 }
             });
@@ -593,7 +598,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         elementController, new IExternalVoucherRegistry.SenderCallback() {
                     @Override
                     public void onNotInstalledApp() {
-                        Toast.makeText(context, context.getString(R.string.element_not_installed), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,
+                                Utils.getInternationalizedString(R.string.element_not_installed,
+                                        context), Toast.LENGTH_LONG).show();
                     }
                 });
                 elementSentVoucherUseCase.execute(voucherUId);
@@ -603,12 +610,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private boolean noIssueVoucher(SurveyDB survey) {
         OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
-                mDashboardActivity.getString(R.string.issue_voucher_qc));
+                Utils.getInternationalizedString(R.string.issue_voucher_qc, mDashboardActivity));
         if (noIssueOption == null) {
             return false;
         }
         return noIssueOption.getName().equals(
-                mDashboardActivity.getString(R.string.no_voucher_on));
+                Utils.getInternationalizedString(R.string.no_voucher_on, mDashboardActivity));
     }
 
     private boolean hasPhone(SurveyDB survey) {

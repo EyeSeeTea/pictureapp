@@ -332,7 +332,6 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     public void translatePreferenceString(Preference preference) {
-        preference.setTitle(Utils.getInternationalizedString(
-                getResources().getResourceEntryName(preference.getTitleRes())));
+        preference.setTitle(Utils.getInternationalizedString(preference.getTitleRes(),this));
     }
 }

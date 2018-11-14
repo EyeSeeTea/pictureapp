@@ -83,12 +83,18 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         settingsActivity.getResources().getString(R.string.pref_cat_server));
         preferenceCategory.removePreference(preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.org_unit)));
+
+        Preference drivePreference = preferenceScreen.findPreference(
+                settingsActivity.getResources().getString(R.string.drive_key));
+        Preference metadataPreference = preferenceScreen.findPreference(
+                settingsActivity.getResources().getString(R.string.check_metadata_key));
+        settingsActivity.translatePreferenceString(drivePreference);
+        settingsActivity.translatePreferenceString(metadataPreference);
         if (!PreferencesState.getInstance().isDevelopOptionActive()
                 || !BuildConfig.developerOptions) {
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.drive_key)));
-            preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.check_metadata_key)));
+            preferenceCategory.removePreference(metadataPreference);
         }
 
         Preference serverUrlPreference = (Preference) settingsActivity.findPreference(
@@ -206,10 +212,26 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void addExtraPreferences() {
-        settingsActivity.bindPreferenceSummaryToValue(settingsActivity.findPreference(
-                settingsActivity.getString(R.string.web_service_url)));
-        settingsActivity.bindPreferenceSummaryToValue(
-                settingsActivity.findPreference(settingsActivity.getString(R.string.web_view_url)));
+        Preference webServiceUrlPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.web_service_url));
+        settingsActivity.bindPreferenceSummaryToValue(webServiceUrlPreference);
+        settingsActivity.translatePreferenceString(webServiceUrlPreference);
+        Preference webViewPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.web_view_url));
+        settingsActivity.bindPreferenceSummaryToValue(webViewPreference);
+        settingsActivity.translatePreferenceString(webViewPreference);
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_url)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_user)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_pass)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.allow_media_download_3g_key)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.developer_option)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.activate_elements_key)));
     }
 
     @Override

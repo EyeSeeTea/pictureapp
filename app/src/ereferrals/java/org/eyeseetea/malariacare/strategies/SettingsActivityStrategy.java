@@ -228,10 +228,17 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 settingsActivity.getString(R.string.program_configuration_pass)));
         settingsActivity.translatePreferenceString(settingsActivity.findPreference(
                 settingsActivity.getString(R.string.allow_media_download_3g_key)));
-        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
-                settingsActivity.getString(R.string.developer_option)));
-        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
-                settingsActivity.getString(R.string.activate_elements_key)));
+        Preference developerPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.developer_option));
+        settingsActivity.translatePreferenceString(developerPreference);
+        developerPreference.setSummary(
+                Utils.getInternationalizedString(R.string.developer_option_summary,
+                        settingsActivity));
+        Preference elementsPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.activate_elements_key));
+        settingsActivity.translatePreferenceString(elementsPreference);
+        elementsPreference.setSummary(
+                Utils.getInternationalizedString(R.string.activate_elements, settingsActivity));
     }
 
     @Override

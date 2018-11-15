@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
@@ -55,8 +56,9 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         boolean notConnected = !ConnectivityStatus.isConnected(
                 PreferencesState.getInstance().getContext());
         headerText = (TextView) headerView.findViewById(R.id.header_text);
-        headerText.setText(
-                notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status);
+        headerText.setText(Utils.getInternationalizedString(
+                notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status,
+                headerText.getContext()));
         return headerView;
     }
 

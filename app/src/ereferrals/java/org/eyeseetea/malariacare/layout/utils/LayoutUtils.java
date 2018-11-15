@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.layout.utils;
 
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -13,6 +14,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
+import org.eyeseetea.malariacare.utils.Utils;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -43,15 +45,16 @@ public class LayoutUtils extends BaseLayoutUtils {
         actionBar.setBackgroundDrawable(myColor);
         TextView userName = (TextView) actionBar.getCustomView().findViewById(
                 R.id.action_bar_user);
+        Context context = userName.getContext();
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials credentials = credentialsLocalDataSource.getLastValidCredentials();
         userName.setText(credentials.getUsername());
         TextView connection =
                 (TextView) actionBar.getCustomView().findViewById(
                         R.id.action_bar_connection_status);
-        connection.setText(
-                !ConnectivityStatus.isConnected(PreferencesState.getInstance().getContext())
-                        ? R.string.action_bar_offline : R.string.action_bar_online);
+        connection.setText(Utils.getInternationalizedString(
+                !ConnectivityStatus.isConnected(context)
+                        ? R.string.action_bar_offline : R.string.action_bar_online, context));
     }
 
 

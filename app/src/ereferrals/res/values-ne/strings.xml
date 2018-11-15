@@ -697,7 +697,6 @@
 <string name="monitor_row_title_positive">"सकारात्मक मुद्दाहरू"</string>
 <string name="monitor_row_title_negative">"नकारात्मक"</string>
 <string name="monitor_row_title_referral">"रेफरल"</string>
-<string name="monitor_row_title_act_stockout">"उपचार नगरिएको संख्या (ACT स्टकआउट)"</string>
 <string name="monitor_row_title_denied">"अस्वीकार गरिएका बिरामीहरू"</string>
 <string name="monitor_row_title_rdt_stockout">"संख्या परीक्षण नगरिएको (RDT स्टकआउट)"</string>
 <string name="monitor_row_title_positivity_rate">"सकारात्मकता दर"</string>
@@ -734,8 +733,6 @@
 <string name="ws_conversion_error">"PUSHUSECASE एरर धकेलेर परिवर्तन गर्ने प्रक्रियामा त्रुटि देखा परेको छ । "</string>
 <string name="webservice_url_error_title">"वेबसेवा त्रुटि"</string>
 <string name="webservice_url_error">"वेबसेवा निर्माण गर्दा त्रुटि:% s"</string>
-<string name="error_web">"errorpage.html"</string>
-<string name="demo_web">"demopage.html"</string>
 <string name="error_message_push">"UID :% s को साथ घटना मिति बिना अपलोड गरियो । सञ्चालक/प्रशासकलाई सम्पर्क गर्नुहोस्।"</string>
 <string name="dialog_pull_success">"यो मेटाडाटा सफलतापूर्वक सर्भरबाट निकालियो"</string>
 <string name="db_migration_error">"कृपया व्यवस्थापकलाई सूचित गर्नुहोस्, एप्लिकेसनलाई पुन: स्थापना गर्न आवश्यक पर्दछ"</string>
@@ -973,4 +970,6 @@
     <string name="settings_title_program_url_config">"प्रोग्राम विन्यास URL"</string>
     <string name="settings_title_program_username_config">"प्रोग्राम कन्फिगरेसन प्रयोगकर्ता नाम"</string>
     <string name="settings_title_program_password_config">"प्रोग्राम कन्फिगरेसन पासवर्ड"</string>
+<string name="demo_page_text">"तपाईं डेमो मोडमा हुनुहुन्छ र यो एक अनलाइन मोड्युल हो। यो जानकारी हेर्न लगआउट गर्नुहोस् र मान्य प्रयोगकर्ताको साथ लगइन गर्नुहोस्।"</string>
+<string name="erro_page_text">"तपाईं अफलाइन हुनुहुन्छ र यो एक अनलाइन मोड्युल हो। यो जानकारी हेर्न कृपया नेटवर्कमा जडान गर्नुहोस्।"</string>
 </resources>

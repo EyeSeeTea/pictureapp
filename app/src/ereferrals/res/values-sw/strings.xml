@@ -6,8 +6,6 @@
     <string name="common_option_method_other">"nyingine"</string>
     <string name="advanced_options">"Chaguzi za Juu"</string>
     <string name="simple_options">"Chaguzi Rahisi"</string>
-    <string name="error_web">errorpage_sw.html</string>
-    <string name="demo_web">demopage_sw.html</string>
     <string name="clear_and_logout">Futa na uingie</string>
     <string name="app_settings">"Vipimo vya"</string>
     <string name="server">"Seva:"</string>
@@ -146,7 +144,6 @@
     <string name="monitor_row_title_positive">"Positive cases"</string>
     <string name="monitor_row_title_negative">Negative</string>
     <string name="monitor_row_title_referral">"Referral"</string>
-    <string name="monitor_row_title_act_stockout">"Number not treated (ACT stockout)"</string>
     <string name="monitor_row_title_denied">"Denied patients"</string>
     <string name="monitor_row_title_rdt_stockout">"Number not tested (RDT stockout)"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
@@ -1026,4 +1023,6 @@ Ameahidi kuhudhuria"</string>
 <string name="settings_title_program_url_config">"Programkonfigurationsadress"</string>
 <string name="settings_title_program_username_config">"Programkonfigurations användarnamn"</string>
 <string name="settings_title_program_password_config">"Programkonfigurationslösenord"</string>
+<string name="demo_page_text">"Ukiwa nje ya mtandao na hii ni online moduli. Tafadhali unganisha kwenye mtandao ili kuona habari hii."</string>
+<string name="erro_page_text">"Uko katika hali ya demo na hii ni moduli ya mtandaoni. Tafadhali ingia na usajili na mtumiaji halali ili kuona habari hii."</string>
 </resources>

@@ -854,7 +854,6 @@
 <string name="monitor_row_title_positive">"Positive cases"</string>
 <string name="monitor_row_title_negative">"Negative"</string>
 <string name="monitor_row_title_referral">"Referral"</string>
-<string name="monitor_row_title_act_stockout">"Number not treated (ACT stockout)"</string>
 <string name="monitor_row_title_denied">"Denied patients"</string>
 <string name="monitor_row_title_rdt_stockout">"Number not tested (RDT stockout)"</string>
 <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
@@ -891,8 +890,6 @@
 <string name="ws_conversion_error">"PUSHUSECASE ERROR An error has occurred to the conversion in push process"</string>
 <string name="webservice_url_error_title">"Webservice error"</string>
 <string name="webservice_url_error">"Error building webservice: %s"</string>
-<string name="error_web">"errorpage.html"</string>
-<string name="demo_web">"demopage.html"</string>
 <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>
 <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
 <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
@@ -1136,4 +1133,6 @@
 <string name="nepal_program_eref">Nepal</string>
 <string name="mozambique_program_eref">Mozambique</string>
 <string name="zimbabwe_program_eref">Zimbabwe</string>
+<string name="demo_page_text">"You're in demo mode and this is an online module. Please logout and login with a valid user to see this information."</string>
+<string name="erro_page_text">"You're offline and this is an online module. Please connect to a network in order to see this information."</string>
 </resources>

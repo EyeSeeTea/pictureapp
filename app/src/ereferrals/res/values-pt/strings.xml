@@ -692,7 +692,6 @@
 <string name="monitor_row_title_positive">"Casos positivos"</string>
 <string name="monitor_row_title_negative">"Negativo"</string>
 <string name="monitor_row_title_referral">"Referências"</string>
-<string name="monitor_row_title_act_stockout">"Número não tratado (ACT stockout)"</string>
 <string name="monitor_row_title_denied">"Pacientes recusados"</string>
 <string name="monitor_row_title_rdt_stockout">"Número não testado (RDT stockout)"</string>
 <string name="monitor_row_title_positivity_rate">"Taxa de positividade"</string>
@@ -729,8 +728,6 @@
 <string name="ws_conversion_error">"Ocorreu um erro de conversão no processo de nvio"</string>
 <string name="webservice_url_error_title">"Erro dos serviços web"</string>
 <string name="webservice_url_error">"Erro na construção do serviço web:%s"</string>
-<string name="error_web">"página de erro.html"</string>
-<string name="demo_web">"Página de demonstração.html"</string>
 <string name="error_message_push">"O evento com único ID:%s. foi carregado sem data. Por favor contacte o administrador."</string>
 <string name="dialog_pull_success">"Dhis metadata carregado do servidor com sucesso"</string>
 <string name="db_migration_error">"Por favor informe ao administrador, a aplicação pode necessitar de reinstalação"</string>
@@ -968,4 +965,6 @@
     <string name="settings_title_program_url_config">"URL de configuração do programa"</string>
     <string name="settings_title_program_username_config">"Nome de usuário da configuração do programa"</string>
     <string name="settings_title_program_password_config">"Senha de configuração do programa"</string>
+<string name="demo_page_text">"Você está no modo de demonstração e este é um módulo on-line. Por favor, faça logout e login com um usuário válido para ver esta informação."</string>
+<string name="erro_page_text">"Você está offline e este é um módulo on-line. Por favor, conecte-se a uma rede para ver esta informação."</string>
 </resources>

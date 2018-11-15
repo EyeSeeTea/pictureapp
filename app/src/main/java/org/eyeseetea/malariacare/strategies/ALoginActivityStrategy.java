@@ -30,7 +30,7 @@ public abstract class ALoginActivityStrategy {
 
     public void onBadCredentials() {
         loginActivity.hideProgressBar();
-        loginActivity.showError(loginActivity.getString(R.string.login_invalid_credentials));
+        loginActivity.showError(R.string.login_invalid_credentials);
     }
 
     public void onStart() {

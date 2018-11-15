@@ -2,9 +2,11 @@ package org.eyeseetea.malariacare.strategies;
 
 
 import android.content.SharedPreferences;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -58,5 +60,11 @@ public abstract class ASettingsActivityStrategy {
             entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
             entryValues.add(String.valueOf(fontStyle.getResId()));
         }
+    }
+
+    public void setLanguageOptions(Preference preference){
+        ListPreference listPreference = (ListPreference) preference;
+        listPreference.setEntries(R.array.languages_strings);
+        listPreference.setEntryValues(R.array.languages_codes);
     }
 }

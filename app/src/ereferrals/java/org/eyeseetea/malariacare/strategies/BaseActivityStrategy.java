@@ -75,17 +75,21 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             TextView connection =
                     (TextView) actionBar.getCustomView().findViewById(
                             R.id.action_bar_connection_status);
-            connection.setText(notConnected
-                    ? R.string.action_bar_offline : R.string.action_bar_online);
+            connection.setText(Utils.getInternationalizedString(notConnected
+                    ? R.string.action_bar_offline : R.string.action_bar_online, context));
             if (notConnected) {
                 comesFromNotConected = true;
-                Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mBaseActivity,
+                        Utils.getInternationalizedString(notConnectedText, context),
+                        Toast.LENGTH_SHORT).show();
             } else {
                 if(comesFromNotConected){
                     showLoginIfUserReadOnlyMode();
                 }
                 comesFromNotConected = false;
-                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mBaseActivity,
+                        Utils.getInternationalizedString(R.string.online_status, context),
+                        Toast.LENGTH_SHORT).show();
             }
             DashboardActivity.dashboardActivity.refreshStatus();
         }
@@ -130,7 +134,21 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_ITEM_LOGOUT, MENU_ITEM_LOGOUT_ORDER,
-                mBaseActivity.getResources().getString(R.string.common_menu_logOff));
+                Utils.getInternationalizedString(R.string.common_menu_logOff, mBaseActivity));
+        menu.findItem(R.id.action_settings).setTitle(
+                Utils.getInternationalizedString(R.string.app_settings, mBaseActivity));
+        menu.findItem(R.id.action_about).setTitle(
+                Utils.getInternationalizedString(R.string.common_menu_about, mBaseActivity));
+        menu.findItem(R.id.action_copyright).setTitle(
+                Utils.getInternationalizedString(R.string.app_copyright, mBaseActivity));
+        menu.findItem(R.id.action_licenses).setTitle(
+                Utils.getInternationalizedString(R.string.app_software_licenses, mBaseActivity));
+        menu.findItem(R.id.action_eula).setTitle(
+                Utils.getInternationalizedString(R.string.app_EULA, mBaseActivity));
+        menu.findItem(R.id.export_db).setTitle(
+                Utils.getInternationalizedString(R.string.export_data_option_title, mBaseActivity));
+        menu.findItem(R.id.demo_mode).setTitle(
+                Utils.getInternationalizedString(R.string.run_in_demo_mode, mBaseActivity));
     }
 
     @Override
@@ -140,9 +158,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         switch (id) {
             case MENU_ITEM_LOGOUT:
                 new AlertDialog.Builder(mBaseActivity)
-                        .setTitle(mBaseActivity.getString(R.string.common_menu_logOff))
-                        .setMessage(mBaseActivity.getString(R.string.dashboard_menu_logout_message))
-                        .setPositiveButton(android.R.string.yes,
+                        .setTitle(Utils.getInternationalizedString(R.string.common_menu_logOff,
+                                mBaseActivity))
+                        .setMessage(Utils.getInternationalizedString(
+                                R.string.dashboard_menu_logout_message, mBaseActivity))
+                        .setPositiveButton(Utils.getInternationalizedString(android.R.string.yes,
+                                mBaseActivity),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
                                         if (mBaseActivity instanceof DashboardActivity) {
@@ -152,7 +173,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                                         }
                                     }
                                 })
-                        .setNegativeButton(android.R.string.no,
+                        .setNegativeButton(Utils.getInternationalizedString(android.R.string.no,
+                                mBaseActivity),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
@@ -293,11 +315,13 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             public void onAppInfoLoaded(AppInfo appInfo) {
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
-                        String.format(context.getResources().getString(R.string.config_version),
+                        String.format(
+                                Utils.getInternationalizedString(R.string.config_version, context),
                                 appInfo.getConfigFileVersion()));
                 aboutBuilder.append("<br/>");
                 aboutBuilder.append(
-                        String.format(context.getResources().getString(R.string.metadata_update),
+                        String.format(
+                                Utils.getInternationalizedString(R.string.metadata_update, context),
                                 getUpdateDateFromAppInfo(appInfo)));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(

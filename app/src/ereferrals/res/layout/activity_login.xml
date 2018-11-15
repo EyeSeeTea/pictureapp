@@ -99,7 +99,9 @@
                         android:inputType="textUri" />
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout style="@style/TextInputLayout">
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/username_hint"
+                    style="@style/TextInputLayout">
 
                     <org.eyeseetea.sdk.presentation.views.CustomEditText
                         android:id="@+id/edittext_username"

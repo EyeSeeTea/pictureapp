@@ -44,6 +44,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -496,6 +497,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //QuestionDB
         CustomTextView headerView = (CustomTextView) rowView.findViewById(question);
+        ((TextView) rowView.findViewById(R.id.question_title)).setText(
+                Utils.getInternationalizedString(R.string.new_survey_title, context));
 
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
@@ -865,6 +868,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void initializeNavigationButtons(View navigationButtonsHolder) {
         View nextButton = (View) navigationButtonsHolder.findViewById(R.id.next_btn);
+        ((TextView) nextButton).setText(
+                Utils.getInternationalizedString(R.string.survey_submit, context));
 
         ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1147,10 +1152,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
-                .setTitle(R.string.survey_completed)
-                .setMessage(R.string.survey_completed_text)
+                .setTitle(Utils.getInternationalizedString(R.string.survey_completed, context))
+                .setMessage(
+                        Utils.getInternationalizedString(R.string.survey_completed_text, context))
                 .setCancelable(false)
-                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(Utils.getInternationalizedString(R.string.survey_send, context),
+                        new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
                                 keyboardView);
@@ -1158,7 +1165,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.survey_review,
+        msgConfirmation.setNegativeButton(
+                Utils.getInternationalizedString(R.string.survey_review, context),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),

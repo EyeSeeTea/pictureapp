@@ -24,6 +24,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
 
 
 public class WebViewFragment extends Fragment implements IDashboardFragment {
@@ -135,7 +136,9 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                     loadValidUrl();
             } else {
                 showHideWebView(false);
-                mErrorDemoText.setText(R.string.erro_page_text);
+
+                mErrorDemoText.setText(
+                        Utils.getInternationalizedString(R.string.erro_page_text, getActivity()));
             }
         }
     }
@@ -144,7 +147,9 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         if (mWebView != null) {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 showHideWebView(false);
-                mErrorDemoText.setText(R.string.demo_page_text);
+                mErrorDemoText.setText(
+                        Utils.getInternationalizedString(R.string.demo_page_text, getActivity()));
+                ;
             } else {
                 showHideWebView(true);
                 mWebView.getSettings().setJavaScriptEnabled(true);

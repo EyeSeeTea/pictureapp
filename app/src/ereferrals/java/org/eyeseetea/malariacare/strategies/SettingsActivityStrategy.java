@@ -318,13 +318,15 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         R.array.languages_strings)[0];
         CharSequence systemDefinedCode = settingsActivity.getResources().getStringArray(
                 R.array.languages_codes)[0];
-        CharSequence[] languagesStrings = new CharSequence[languages.size()];
-        CharSequence[] languagesCodes = new CharSequence[languages.size()];
+        CharSequence[] languagesStrings = new CharSequence[languages.size()+1];
+        CharSequence[] languagesCodes = new CharSequence[languages.size()+1];
         languagesStrings[0] = systemDefinedString;
         languagesCodes[0] = systemDefinedCode;
-        for (int i = 1; i < languages.size(); i++) {
-            languagesStrings[i] = languages.get(i).getName();
-            languagesCodes[i] = languages.get(i).getCode();
+        int languagesPosition = 1;
+        for (int i = 0; i < languages.size(); i++) {
+            languagesStrings[languagesPosition] = languages.get(i).getName();
+            languagesCodes[languagesPosition] = languages.get(i).getCode();
+            languagesPosition++;
         }
         listPreference.setEntries(languagesStrings);
         listPreference.setEntryValues(languagesCodes);

@@ -13,6 +13,8 @@
     <item name="dhis_user" translatable="false" type="string">dhis_user</item>
     <item name="dhis_password" translatable="false" type="string">dhis_password</item>
     <item name="org_unit" translatable="false" type="string">org_unit</item>
+    <item name="program_id" translatable="false" type="string">org_unit_group_id</item>
+    <item name="program_code" translatable="false" type="string">org_unit_group_code</item>
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
     <item name="language_code" translatable="false" type="string">language_code</item>
 
@@ -43,19 +45,6 @@
 
     <string name="lastcommit" translatable="false">Version %s</string>
     <string name="unavailable" translatable="false">Unavailable</string>
-    <string name="lastcommit_unavailable" translatable="false"><![CDATA[
-    <p>This option requires some changes in the git repository.</p>
-    <p>Steps:</p>
-    <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
-    <p>2. If the file does not exist, add the following lines: </p>
-    <p>#!/bin/sh </p>
-    <p>gitPath=$(git rev-parse --show-toplevel)</p>
-    <p>sh ${gitPath}/generate_last_commit.sh </p>
-    <p>2. If the file already exists, you only need add the following lines at the end:</p>
-    <p>gitPath=$(git rev-parse --show-toplevel)</p>
-    <p>sh ${gitPath}/generate_last_commit.sh </p>
-    <p>3. Run "git checkout". </p>]]>
-    </string>
 
     <string name="fullOfUnsent" translatable="false">fullOfUnsent</string>
 
@@ -68,6 +57,7 @@
     <string name="fragment_new_reset" translatable="false">fragment_new_balance</string>
     <string name="fragment_historic_receipt_balance" translatable="false">fragment_historic_receipt_balance</string>
     <string name="fragment_historic_reset" translatable="false">fragment_historic_reset</string>
+    <string name="tab_tag_stock_control" translatable="false">tab_tag_stock_control</string>
 
     <item name="developer_option" translatable="false" type="string">show_dev_options</item>
     <item name="export_data_option" translatable="false" type="string">export_data_option</item>
@@ -105,4 +95,12 @@
     <string name="default_drive_folder" translatable="false">0B7TXlu17DcAbNHNvRUxnSDd4LUk</string>
     <string name="drive_key" translatable="false">drive_key</string>
     <string name="default_language" translatable="false">en</string>
+    <string name="media_list_style_preference" translatable="false">media_list_style_preference</string>
+
+    <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
+    <string name="fragment_new_expense" translatable="false">fragment_new_expense</string>
+    <string name="fragment_stock_table" translatable="false">stock_table_fragment</string>
+    <string name="intent_credentials_user" translatable="false">intent_credentials_user</string>
+    <string name="intent_credentials_password" translatable="false">intent_credentials_password</string>
+
 </resources>

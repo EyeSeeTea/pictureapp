@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="0.5"
-    android:background="@color/orange"
+    android:background="@color/tab_unpressed_background"
     android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="vertical"
@@ -50,8 +50,8 @@
                     android:paddingLeft="@dimen/input_edit_text_left_padding"
                     android:paddingRight="@dimen/input_edit_text_right_padding"
                     android:textColor="@color/white"
-                    android:textSize="?attr/font_medium"
-                    app:font_name="@string/normal_font" />
+                    android:textSize="?attr/font_xsmall"
+                    app:font_name="@string/bold_font"/>
 
                 <ImageView
                     android:id="@+id/row_header_compulsory"
@@ -71,14 +71,15 @@
                 android:id="@+id/answer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/spinner_background"
+                android:background="@drawable/white_spinner_background"
                 android:gravity="left"
                 android:paddingBottom="2dip"
-                android:paddingLeft="@dimen/input_edit_text_left_padding"
-                android:paddingRight="@dimen/input_edit_text_right_padding"
+                android:paddingLeft="@dimen/dropdown_padding"
+                android:paddingRight="@dimen/dropdown_padding"
                 android:paddingTop="2dip"
                 android:spinnerMode="dropdown"
-                android:textColor="@color/text_first_color" />
+                android:popupBackground="@color/tab_unpressed_background"
+                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
 

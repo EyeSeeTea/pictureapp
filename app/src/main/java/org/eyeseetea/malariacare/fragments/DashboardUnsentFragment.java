@@ -38,7 +38,6 @@ import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
@@ -46,6 +45,7 @@ import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.strategies.ADashboardUnsentFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
 
@@ -63,17 +63,24 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
     private boolean viewCreated = false;
-    private DashboardUnsentFragmentStrategy mDashboardUnsentFragmentStrategy;
+    private ADashboardUnsentFragmentStrategy mDashboardUnsentFragmentStrategy;
+    ListView listView;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
-        mDashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy();
+        mDashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy(this);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mDashboardUnsentFragmentStrategy.saveBundle(outState);
     }
 
     @Override
@@ -85,7 +92,8 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         }
         viewCreated = true;
 
-        View view= inflater.inflate(R.layout.unsent_list_fragment, container, false);
+        View view = mDashboardUnsentFragmentStrategy.inflateView(inflater, container,
+                savedInstanceState);
         return view;
     }
 
@@ -96,7 +104,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         initAdapter();
         initListView();
-        registerForContextMenu(getListView());
+        registerForContextMenu(listView);
     }
 
 
@@ -123,7 +131,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
-        adapter.onClick(l, position, mSurveyDBs);
+        mDashboardUnsentFragmentStrategy.manageOnItemClick(adapter, l, position, mSurveyDBs);
     }
 
     @Override
@@ -149,7 +157,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 inflater);
         final View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
-        ListView listView = getListView();
+        listView = getListView();
         if (header != null) {
             listView.addHeaderView(header);
         }
@@ -181,8 +189,11 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface arg0,
                                                                 int arg1) {
-                                                            ((SurveyDB) adapter.getItem(
-                                                                    position - 1)).delete();
+                                                            mDashboardUnsentFragmentStrategy
+                                                                    .deleteSurvey(
+                                                                    ((SurveyDB) adapter.getItem(
+                                                                            position - 1)));
+
                                                             //Reload data using service
                                                             Intent surveysIntent = new Intent(
                                                                     getActivity(),
@@ -234,7 +245,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     }
 
     public void reloadHeader(Activity activity) {
-        reloadHeader(activity, R.string.tab_tag_assess);
+        mDashboardUnsentFragmentStrategy.reloadHeader(activity);
     }
 
     public void reloadHeader(Activity activity, int id) {
@@ -243,13 +254,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
 
     public void reloadData() {
-        //Reload data using service
-        Intent surveysIntent = new Intent(
-                PreferencesState.getInstance().getContext().getApplicationContext(),
-                SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        PreferencesState.getInstance().getContext().getApplicationContext().startService(
-                surveysIntent);
+        mDashboardUnsentFragmentStrategy.reloadData();
     }
 
     public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
@@ -260,10 +265,26 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
-            LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
+            LayoutUtils.measureListViewHeightBasedOnChildren(listView);
         }
     }
 
+    public void reloadSurveysFromService(List<SurveyDB> surveysUnsentFromService) {
+        reloadSurveys(surveysUnsentFromService);
+        LayoutUtils.setRowDivider(listView);
+        // Measure the screen height
+        int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
+
+        // Get the unsent list height, measured when reloading the surveys
+        int unsentHeight = LayoutUtils.getUnsentListHeight();
+
+        // Set the variable that establish the unsent list is shown or not
+        if (unsentHeight >= screenHeight) {
+            Session.setFullOfUnsent(getActivity());
+        } else {
+            Session.setNotFullOfUnsent(getActivity());
+        }
+    }
 
     /**
      * Inner private class that receives the result from the service
@@ -297,24 +318,9 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveysFromService(surveysUnsentFromService);
+            } else {
+                mDashboardUnsentFragmentStrategy.onReceiveSurveys(intent);
             }
-        }
-    }
-
-    private void reloadSurveysFromService(List<SurveyDB> surveysUnsentFromService) {
-        reloadSurveys(surveysUnsentFromService);
-        LayoutUtils.setRowDivider(getListView());
-        // Measure the screen height
-        int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
-
-        // Get the unsent list height, measured when reloading the surveys
-        int unsentHeight = LayoutUtils.getUnsentListHeight();
-
-        // Set the variable that establish the unsent list is shown or not
-        if (unsentHeight >= screenHeight) {
-            Session.setFullOfUnsent(getActivity());
-        } else {
-            Session.setNotFullOfUnsent(getActivity());
         }
     }
 
@@ -368,6 +374,4 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         }
     }
-
-
 }

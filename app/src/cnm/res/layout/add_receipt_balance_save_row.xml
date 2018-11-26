@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.eyeseetea.sdk.presentation.views.CustomButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/save"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_margin="20dp"
+    android:background="@color/yellow"
+    android:orientation="vertical"
+    android:text="@string/save"
+    android:textColor="@color/black"
+    android:textSize="?attr/font_medium"
+    app:font_name="@string/normal_font" />

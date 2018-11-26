@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
@@ -21,12 +22,10 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText numberPicker;
-
     PositiveOrZeroNumber positiveOrZeroNumber;
 
     public PositiveOrZeroNumberMultiQuestionView(Context context) {
         super(context);
-
         init(context);
     }
 
@@ -74,6 +73,14 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
+        if (BuildConfig.validationInline) {
+            if (!numberPicker.getText().toString().isEmpty()) {
+                Validation.getInstance().removeInputError(numberPicker);
+            } else {
+                Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        }
         Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
@@ -86,7 +93,12 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
 
                 } catch (InvalidPositiveOrZeroNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
-                            context.getString(R.string.dynamic_error_age));
+                            context.getString(R.string.dynamic_error_invalid_positive_number));
+                }
+                if (BuildConfig.validationInline) {
+                    Validation.getInstance().addInput(numberPicker);
+                    Validation.getInstance().addinvalidInput(numberPicker, getContext().getString(
+                            R.string.error_empty_question));
                 }
             }
 

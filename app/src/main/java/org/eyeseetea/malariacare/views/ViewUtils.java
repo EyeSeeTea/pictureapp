@@ -36,12 +36,13 @@ public class ViewUtils {
         }
     }
 
-    public static void showToast(@StringRes int titleResource,@NotNull Context context) {
+    public static void showToast(@StringRes int titleResource, @NotNull Context context) {
         final String title = context.getResources().getString(titleResource);
         Toast.makeText(context, title, Toast.LENGTH_LONG).show();
     }
 
-    public static boolean isThereAnAppThatCanHandleThis(@NotNull Intent intent,@NotNull Context context) {
+    public static boolean isThereAnAppThatCanHandleThis(@NotNull Intent intent,
+            @NotNull Context context) {
         PackageManager packageManager = context.getPackageManager();
         return intent.resolveActivity(packageManager) != null;
     }

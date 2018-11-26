@@ -8,6 +8,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
@@ -27,14 +28,17 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -46,15 +50,20 @@ import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PullControllerStrategy extends APullControllerStrategy {
     private MetadataUpdater mMetadataUpdater;
     private MetadataConfigurationDBImporter importer;
+    private Context mContext;
+    private IAppInfoRepository mAppInfoRepository;
 
-    public PullControllerStrategy(PullController pullController) {
+    public PullControllerStrategy(PullController pullController, Context context) {
         super(pullController);
-        mMetadataUpdater = new MetadataUpdater(PreferencesState.getInstance().getContext());
+        mMetadataUpdater = new MetadataUpdater(context);
+        mContext = context;
+        mAppInfoRepository = new AppInfoDataSource(context);
     }
 
     @Override
@@ -133,7 +142,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     private void checkCompletedSurveys(final IPullController.Callback callback,
             Program userProgram) {
         ISurveyRepository surveyLocalDataSource = new SurveyLocalDataSource();
-        List<Survey> surveys = surveyLocalDataSource.getAllCompletedSurveys();
+        List<Survey> surveys = surveyLocalDataSource.getUnsentSurveys();
 
         IUserRepository userDataSource = new UserAccountDataSource();
         UserAccount currentUser = userDataSource.getLoggedUser();
@@ -148,19 +157,36 @@ public class PullControllerStrategy extends APullControllerStrategy {
             } catch (IOException e) {
                 e.printStackTrace();
                 callback.onError(e);
+            } catch (WarningException e) {
+                e.printStackTrace();
+                callback.onWarning(e);
             }
         }
     }
 
     private void downloadMetadataAndRepopulateDB(IUserRepository userDataSource,
             UserAccount currentUser, Program userProgram)
-            throws IOException {
+            throws IOException, WarningException {
         currentUser.setCanAddSurveys(true);
         userDataSource.saveLoggedUser(currentUser);
-
+        try{
         if (isNetworkAvailable()) {
             downloadMetadataFromConfigurationFiles(userProgram);
+            updateDownloadMetadataDate();
         }
+        }catch (WarningException e){
+            currentUser.setCanAddSurveys(false);
+            userDataSource.saveLoggedUser(currentUser);
+            throw e;
+        }
+    }
+
+    private void updateDownloadMetadataDate() {
+        Date date = new Date();
+        AppInfo appInfo = mAppInfoRepository.getAppInfo();
+        appInfo = new AppInfo(appInfo.getMetadataVersion(), appInfo.getConfigFileVersion(),
+                appInfo.getAppVersion(), date);
+        mAppInfoRepository.saveAppInfo(appInfo);
     }
 
     private boolean isNetworkAvailable() {
@@ -172,13 +198,16 @@ public class PullControllerStrategy extends APullControllerStrategy {
     }
 
     private void downloadMetadataFromConfigurationFiles(
-            Program actualProgram) {
+            Program actualProgram) throws WarningException {
         try {
             downloadAsyncLanguagesFromServer();
             importer.importMetadata(actualProgram);
+        }catch (WarningException e1){
+            throw e1;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public void downloadAsyncLanguagesFromServer() throws Exception {
@@ -187,7 +216,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
             CredentialsReader credentialsReader = CredentialsReader.getInstance();
             IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                     PreferencesState.getInstance().getContext());
-
             DownloadLanguageTranslationUseCase downloader =
                     new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 

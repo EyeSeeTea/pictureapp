@@ -3,11 +3,15 @@ package org.eyeseetea.malariacare.strategies;
 
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
+import android.content.Context;
+
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -29,6 +33,13 @@ public class SurveyFragmentStrategy {
         return ProgramDB.getFirstProgram().getUid();
     }
     public static SurveyDB getSessionSurveyByQuestion(QuestionDB question) {
+        Context context = PreferencesState.getInstance().getContext();
+        if (question.getQuestionProgram().getUid().equals(
+                context.getString(R.string.stock_program_uid))) {
+
+            return Session.getStockSurveyDB() != null ? Session.getStockSurveyDB()
+                    : Session.getMalariaSurveyDB();
+        }
         return Session.getMalariaSurveyDB();
     }
 
@@ -88,5 +99,10 @@ public class SurveyFragmentStrategy {
 
     public void removeSurveysInSession() {
         Session.setMalariaSurveyDB(null);
+    }
+
+    public static boolean isSurveyCreatedFromOtherApp(final ASurveyFragmentStrategy.Callback callback, Context context) {
+        callback.loadIsSurveyCreatedInOtherApp(false);
+        return false;
     }
 }

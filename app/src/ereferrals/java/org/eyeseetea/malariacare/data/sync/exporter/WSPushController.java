@@ -12,11 +12,12 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
-import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.network.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
@@ -31,9 +32,9 @@ public class WSPushController implements IPushController {
     private IPushControllerCallback mCallback;
 
 
-    public WSPushController() throws IllegalArgumentException {
+    public WSPushController(Context context) throws IllegalArgumentException {
         mEReferralsAPIClient = new eReferralsAPIClient(PreferencesEReferral.getWSURL());
-        mConvertToWSVisitor = new ConvertToWSVisitor();
+        mConvertToWSVisitor = new ConvertToWSVisitor(context);
     }
 
     public WSPushController(eReferralsAPIClient eReferralsAPIClient, ConvertToWSVisitor convertToWSVisitor) {
@@ -117,6 +118,8 @@ public class WSPushController implements IPushController {
                         int status = Constants.SURVEY_CONFLICT;
                         if (e instanceof NetworkException) {
                             status = Constants.SURVEY_COMPLETED;
+                        } else if (e instanceof ConfigFileObsoleteException) {
+                            status = Constants.SURVEY_SENT;
                         }
                         changeSurveysStatusTo(status);
                         mCallback.onError(e);

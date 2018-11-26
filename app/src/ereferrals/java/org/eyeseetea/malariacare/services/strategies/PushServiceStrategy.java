@@ -181,7 +181,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     private void moveToLoginActivity() {
-        if (!EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+        if (!EyeSeeTeaApplication.getInstance().isAppInBackground()) {
             Intent loginIntent = new Intent(mPushService, LoginActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mPushService.startActivity(loginIntent);
@@ -197,7 +197,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
         IPushController pushController = null;
         if (mPushUseCase == null) {
             try {
-                pushController = new WSPushController();
+                pushController = new WSPushController(mPushService);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 showInDialog(PreferencesState.getInstance().getContext().getString(
@@ -298,6 +298,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onApiCallError(ApiCallException e) {
+                handleAPIException(e);
                 onError("PUSHUSECASE ERROR " + e.getMessage());
                 e.printStackTrace();
             }
@@ -329,6 +330,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
         surveysIntent.putExtra(PUSH_IS_START, start);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
+    }
+
+    private void handleAPIException(Exception e) {
+        if (e instanceof ConfigFileObsoleteException) {
+            sendIntentShowLogin();
+        }
     }
 
     private void sendIntentShowLogin() {

@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.util.List;
 
 public class Option {
@@ -10,35 +12,20 @@ public class Option {
     private Attribute attribute;
     private List<Rule> rules;
 
-
-    public Option(String code, String name) {
-        this.code = code;
-        this.name = name;
-    }
-
-    public Option() {
-    }
-
-    public Option(long id, String code, String name) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-    }
-
-    private Option(Builder builder) {
-        setId(builder.id);
-        setCode(builder.code);
-        setName(builder.name);
-        setAttribute(builder.attribute);
-        setRules(builder.rules);
-    }
-
     public Option(long id, String code, String name,
-            Attribute attribute) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
+            Attribute attribute,
+            List<Rule> rules) {
+        this.id = required(id, "id is required");
+        this.code = required(code, "code is required");
+        this.name = required(name, "name is required");
         this.attribute = attribute;
+        this.rules = rules;
+    }
+
+    public Option(Long id, String code, String name) {
+        this.id = required(id, "id is required");
+        this.code = required(code, "code is required");
+        this.name = required(name, "name is required");
     }
 
     public static Builder newBuilder() {
@@ -49,32 +36,16 @@ public class Option {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCode() {
         return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Attribute getAttribute() {
         return attribute;
-    }
-
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
     }
 
     @Override
@@ -103,8 +74,8 @@ public class Option {
         return rules;
     }
 
-    public boolean hasRules(){
-        return rules !=null;
+    public boolean hasRules() {
+        return rules != null;
     }
 
     public void setRules(List<Rule> rules) {
@@ -132,6 +103,7 @@ public class Option {
         public Attribute(long id, String backgroundColour,
                 HorizontalAlignment horizontalAlignment,
                 VerticalAlignment verticalAlignment, int textSize) {
+
             this.id = id;
             this.backgroundColour = backgroundColour;
             this.horizontalAlignment = horizontalAlignment;
@@ -139,16 +111,6 @@ public class Option {
             this.textSize = textSize;
         }
 
-        public Attribute() {
-        }
-
-        private Attribute(Builder builder) {
-            setId(builder.id);
-            setBackgroundColour(builder.backgroundColour);
-            setHorizontalAlignment(builder.horizontalAlignment);
-            setVerticalAlignment(builder.verticalAlignment);
-            setTextSize(builder.textSize);
-        }
 
         public static Builder newBuilder() {
             return new Builder();
@@ -158,46 +120,60 @@ public class Option {
             return id;
         }
 
-        public void setId(long id) {
-            this.id = id;
-        }
-
         public String getBackgroundColour() {
             return backgroundColour;
-        }
-
-        public void setBackgroundColour(String backgroundColour) {
-            this.backgroundColour = backgroundColour;
         }
 
         public HorizontalAlignment getHorizontalAlignment() {
             return horizontalAlignment;
         }
 
-        public void setHorizontalAlignment(
-                HorizontalAlignment horizontalAlignment) {
-            this.horizontalAlignment = horizontalAlignment;
-        }
-
         public VerticalAlignment getVerticalAlignment() {
             return verticalAlignment;
-        }
-
-        public void setVerticalAlignment(
-                VerticalAlignment verticalAlignment) {
-            this.verticalAlignment = verticalAlignment;
         }
 
         public int getTextSize() {
             return textSize;
         }
 
-        public void setTextSize(int textSize) {
-            this.textSize = textSize;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Attribute attribute = (Attribute) o;
+
+            if (id != attribute.id) return false;
+            if (textSize != attribute.textSize) return false;
+            if (backgroundColour != null ? !backgroundColour.equals(attribute.backgroundColour)
+                    : attribute.backgroundColour != null) {
+                return false;
+            }
+            if (horizontalAlignment != attribute.horizontalAlignment) return false;
+            return verticalAlignment == attribute.verticalAlignment;
         }
 
+        @Override
+        public int hashCode() {
+            int result = (int) (id ^ (id >>> 32));
+            result = 31 * result + (backgroundColour != null ? backgroundColour.hashCode() : 0);
+            result = 31 * result + (horizontalAlignment != null ? horizontalAlignment.hashCode()
+                    : 0);
+            result = 31 * result + (verticalAlignment != null ? verticalAlignment.hashCode() : 0);
+            result = 31 * result + textSize;
+            return result;
+        }
 
-
+        @Override
+        public String toString() {
+            return "Attribute{" +
+                    "id=" + id +
+                    ", backgroundColour='" + backgroundColour + '\'' +
+                    ", horizontalAlignment=" + horizontalAlignment +
+                    ", verticalAlignment=" + verticalAlignment +
+                    ", textSize=" + textSize +
+                    '}';
+        }
 
         public enum HorizontalAlignment {
             LEFT, CENTER, RIGHT, NONE;
@@ -243,114 +219,97 @@ public class Option {
             }
 
             public Attribute build() {
-                return new Attribute(this);
+                return new Attribute(
+                        this.id,
+                        this.backgroundColour,
+                        this.horizontalAlignment,
+                        this.verticalAlignment,
+                        this.textSize
+                );
             }
         }
     }
 
-    public static class Rule{
+    public static class Rule {
 
-        private Option rightOperand;
         private Operator operator;
-        private Option leftOperand;
-
         private Action action;
         private Question actionSubject;
 
-        public Rule(Option rightOperand,
-                Operator operator, Option leftOperand,
-                Action action, Question actionSubject) {
-            this.rightOperand = rightOperand;
-            this.operator = operator;
-            this.leftOperand = leftOperand;
-            this.action = action;
-            this.actionSubject = actionSubject;
-        }
-
-        private Rule(Builder builder) {
-            setRightOperand(builder.rightOperand);
-            setOperator(builder.operator);
-            setLeftOperand(builder.leftOperand);
-            setAction(builder.action);
-            setActionSubject(builder.actionSubject);
+        public Rule(Action action, Operator operator, Question actionSubject) {
+            this.action = required(action, "action is required");
+            this.operator = required(operator, "operator is required");
+            this.actionSubject = required(actionSubject, "actionSubject is required");
         }
 
         public static Builder newBuilder() {
             return new Builder();
         }
 
-        public Option getRightOperand() {
-            return rightOperand;
-        }
-
-        public void setRightOperand(Option rightOperand) {
-            this.rightOperand = rightOperand;
-        }
-
         public Operator getOperator() {
             return operator;
-        }
-
-        public void setOperator(Operator operator) {
-            this.operator = operator;
-        }
-
-        public Option getLeftOperand() {
-            return leftOperand;
-        }
-
-        public void setLeftOperand(Option leftOperand) {
-            this.leftOperand = leftOperand;
         }
 
         public Action getAction() {
             return action;
         }
 
-        public void setAction(Action action) {
-            this.action = action;
-        }
-
         public Question getActionSubject() {
             return actionSubject;
         }
 
-        public void setActionSubject(Question actionSubject) {
-            this.actionSubject = actionSubject;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Rule rule = (Rule) o;
+
+            if (operator != rule.operator) return false;
+            if (action != rule.action) return false;
+            return actionSubject != null ? actionSubject.equals(rule.actionSubject)
+                    : rule.actionSubject == null;
         }
 
+        @Override
+        public int hashCode() {
+            int result = operator != null ? operator.hashCode() : 0;
+            result = 31 * result + (action != null ? action.hashCode() : 0);
+            result = 31 * result + (actionSubject != null ? actionSubject.hashCode() : 0);
+            return result;
+        }
 
-        public enum Operator{
+        @Override
+        public String toString() {
+            return "Rule{" +
+                    "operator=" + operator +
+                    ", action=" + action +
+                    ", actionSubject=" + actionSubject +
+                    '}';
+        }
+
+        public enum Operator {
             EQUAL
         }
-        public enum Action{
+
+        public enum Action {
             SHOW
         }
 
         public static final class Builder {
-            private Option rightOperand;
             private Operator operator;
-            private Option leftOperand;
             private Action action;
             private Question actionSubject;
 
             private Builder() {
             }
 
-            public Builder rightOperand(Option val) {
-                rightOperand = val;
-                return this;
-            }
 
             public Builder operator(Operator val) {
                 operator = val;
                 return this;
             }
 
-            public Builder leftOperand(Option val) {
-                leftOperand = val;
-                return this;
-            }
 
             public Builder action(Action val) {
                 action = val;
@@ -363,7 +322,11 @@ public class Option {
             }
 
             public Rule build() {
-                return new Rule(this);
+                return new Rule(
+                        this.action,
+                        this.operator,
+                        this.actionSubject
+                );
             }
         }
     }
@@ -404,7 +367,13 @@ public class Option {
         }
 
         public Option build() {
-            return new Option(this);
+            return new Option(
+                    this.id,
+                    this.code,
+                    this.name,
+                    this.attribute,
+                    this.rules
+            );
         }
     }
 }

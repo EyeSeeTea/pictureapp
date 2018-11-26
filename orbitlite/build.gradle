@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('orbitlite-release-52418.aar'))

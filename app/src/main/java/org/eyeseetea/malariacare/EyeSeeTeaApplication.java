@@ -26,12 +26,18 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.stkent.bugshaker.BugShaker;
+import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
+import com.github.stkent.bugshaker.github.GitHubConfiguration;
+import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.DatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.strategies.AEyeSeeTeaApplicationStrategy;
+import org.eyeseetea.malariacare.strategies.EyeSeeTeaApplicationStrategy;
 import org.eyeseetea.malariacare.utils.Permissions;
 
 import io.fabric.sdk.android.Fabric;
@@ -44,7 +50,7 @@ public class EyeSeeTeaApplication extends Application {
     private static final String TAG = ".EyeSeeTeaApplication";
     public static Permissions permissions;
 
-    private static boolean isAppWentToBg = false;
+    private static boolean isAppInBackground = false;
 
     private static boolean isWindowFocused = false;
 
@@ -52,10 +58,14 @@ public class EyeSeeTeaApplication extends Application {
 
     private static EyeSeeTeaApplication mInstance;
 
+    private AEyeSeeTeaApplicationStrategy mEyeSeeTeaApplicationStrategy;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        mEyeSeeTeaApplicationStrategy = new EyeSeeTeaApplicationStrategy(this);
+        mEyeSeeTeaApplicationStrategy.onCreate();
         mInstance = this;
 
         //Apply for Release build
@@ -74,6 +84,7 @@ public class EyeSeeTeaApplication extends Application {
                 .addDatabaseHolder(databaseStrategy.provide())
                 .build();
         FlowManager.init(flowConfig);
+        initBugShaker();
     }
 
     @Override
@@ -98,12 +109,12 @@ public class EyeSeeTeaApplication extends Application {
         return mInstance;
     }
 
-    public boolean isAppWentToBg() {
-        return isAppWentToBg;
+    public boolean isAppInBackground() {
+        return isAppInBackground;
     }
 
-    public void setIsAppWentToBg(boolean isAppWentToBg) {
-        EyeSeeTeaApplication.isAppWentToBg = isAppWentToBg;
+    public void setAppInBackground(boolean isAppInBackground) {
+        EyeSeeTeaApplication.isAppInBackground = isAppInBackground;
     }
 
     public boolean isWindowFocused() {
@@ -120,6 +131,20 @@ public class EyeSeeTeaApplication extends Application {
 
     public void setIsBackPressed(boolean isBackPressed) {
         EyeSeeTeaApplication.isBackPressed = isBackPressed;
+    }
+
+    private void initBugShaker() {
+        BugShaker.get(this)
+                .setEmailAddresses("someone@example.com")
+                .setLoggingEnabled(BuildConfig.DEBUG)
+                .setAlertDialogType(AlertDialogType.APP_COMPAT)
+                .setGitHubInfo(new GitHubConfiguration(
+                        "eyeseetea/pictureapp",
+                        BuildConfig.GIT_HUB_BOT_TOKEN,
+                        "eyeseeteabottest/snapshots",
+                        "master"))
+                .assemble()
+                .start();
     }
 
     public static interface IDatabaseHolderProviderStrategy {

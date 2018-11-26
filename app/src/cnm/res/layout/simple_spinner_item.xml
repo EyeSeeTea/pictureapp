@@ -10,4 +10,5 @@
     android:singleLine="true"
     android:textAlignment="gravity"
     android:textSize="?attr/font_small"
+    android:textColor="@color/white"
     app:font_name="@string/normal_font" />

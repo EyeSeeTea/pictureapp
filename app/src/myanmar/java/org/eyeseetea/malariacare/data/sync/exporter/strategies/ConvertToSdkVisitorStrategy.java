@@ -24,4 +24,8 @@ public class ConvertToSdkVisitorStrategy {
         event.getEvent().setAttributeCategoryOptions(
                 ConvertToSdkVisitorStrategy.getAttributeCategoryOptions());
     }
+
+    public boolean putAlternativeControlDataElements(SurveyDB surveyDB, EventExtended event) {
+        return false;
+    }
 }

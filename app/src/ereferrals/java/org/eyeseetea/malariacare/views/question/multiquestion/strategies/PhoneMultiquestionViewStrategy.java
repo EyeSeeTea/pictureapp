@@ -60,6 +60,10 @@ public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrat
 
                     }
                 });
+                //the validation need be forced after add the listener with async onSuccess method.
+                if(phoneText.getText()!=null) {
+                    phoneText.setText(phoneText.getText());
+                }
             }
 
             @Override

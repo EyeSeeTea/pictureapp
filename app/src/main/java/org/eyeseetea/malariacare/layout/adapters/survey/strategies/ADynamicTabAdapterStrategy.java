@@ -9,8 +9,8 @@ import android.view.View;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -49,10 +49,12 @@ public abstract class ADynamicTabAdapterStrategy {
     public abstract void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView);
 
-    public void finishOrNext() {
+    public void finishOrNext(final boolean readOnly) {
         try {
             System.out.println(Session.getMalariaSurveyDB().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());
+            if (Session.getStockSurveyDB() != null) {
+                System.out.println(Session.getStockSurveyDB().getValuesFromDB().toString());
+            }
         } catch (Exception e) {
         }
         if (Validation.hasErrors()) {
@@ -75,12 +77,15 @@ public abstract class ADynamicTabAdapterStrategy {
                 ValueDB valueDB = questionDB.getValueBySession();
                 if (mDynamicTabAdapter.isDone(valueDB)) {
                     mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                    if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
+                    if (readOnly) {
+                        DashboardActivity.dashboardActivity.initReview(readOnly);
+                    } else if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                         mDynamicTabAdapter.surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
                         CommonQuestionView.hideKeyboard(
-                                PreferencesState.getInstance().getContext(), mDynamicTabAdapter.getKeyboardView());
+                                PreferencesState.getInstance().getContext(),
+                                mDynamicTabAdapter.getKeyboardView());
                         DynamicTabAdapter.setIsClicked(false);
                     }
                     return;
@@ -99,5 +104,13 @@ public abstract class ADynamicTabAdapterStrategy {
     }
 
     public void onOrgUnitDropdownAnswered(OptionDB selectedOptionDB){
+    }
+
+    public void evaluateTreatmentMatch(QuestionDB questionDB, OptionDB selectedOptionDB,
+            QuestionRelationDB questionRelationDB) {
+
+    }
+
+    public void showValidationErrors(){
     }
 }

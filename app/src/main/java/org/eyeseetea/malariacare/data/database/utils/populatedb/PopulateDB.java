@@ -94,6 +94,7 @@ public class PopulateDB {
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
     public static final String VERSIONS_CSV = "Versions.csv";
     public static final String PHONE_FORMAT_CSV = "PhoneFormat.csv";
+    public static final String PROGRAM_PROGRAM_RELATION = "ProgramProgramRelations.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
@@ -148,7 +149,8 @@ public class PopulateDB {
             TREATMENT_CSV,
             DRUG_COMBINATIONS_CSV,
             TREATMENT_MATCHES_CSV,
-            PHONE_FORMAT_CSV);
+            PHONE_FORMAT_CSV,
+            PROGRAM_PROGRAM_RELATION);
     private static final List<String> tables2updateQuestions = Arrays.asList(
             OPTION_ATTRIBUTES_CSV,
             OPTIONS_CSV,
@@ -398,6 +400,9 @@ public class PopulateDB {
                         break;
                     case PHONE_FORMAT_CSV:
                         PopulateRow.populatePhoneFormat(line, programList, null).insert();
+                        break;
+                    case PROGRAM_PROGRAM_RELATION:
+                        PopulateRow.populateProgramProgramRelation(line, programList).insert();
                         break;
                 }
             }

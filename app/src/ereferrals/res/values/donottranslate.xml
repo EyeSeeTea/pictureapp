@@ -51,4 +51,28 @@
     <string name="no_voucher_on" translatable="false">common_btn_no</string>
     <string name="demo_program_uid" translatable="false">demoProgram</string>
     <string name="default_language" translatable="false">en</string>
+
+    <string name="lastcommit_unavailable" translatable="false"><![CDATA[
+    <p>This option requires some changes in the git repository.</p>
+    <p>Steps:</p>
+    <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
+    <p>2. If the file does not exist, add the following lines: </p>
+    <p>#!/bin/sh </p>
+    <p>gitPath=$(git rev-parse --show-toplevel)</p>
+    <p>sh ${gitPath}/generate_last_commit.sh </p>
+    <p>2. If the file already exists, you only need add the following lines at the end:</p>
+    <p>gitPath=$(git rev-parse --show-toplevel)</p>
+    <p>sh ${gitPath}/generate_last_commit.sh </p>
+    <p>3. Run "git checkout". </p>]]>
+    </string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>pt</item>
+        <item>ne</item>
+        <item>sw</item>
+    </string-array>
+    <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
+    <string name="metadata_update_date" translatable="false">update_metadata_date</string>
+    <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
 </resources>

@@ -87,6 +87,11 @@
             android:singleLine="true"
             android:title="@string/drive_title" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/allow_media_download_3g_key"
+            android:title="@string/allow_media_download_3g" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/pref_visual"
@@ -124,6 +129,11 @@
             android:key="@string/developer_option"
             android:summary="@string/developer_option_summary"
             android:title="@string/developer_option_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/activate_elements_key"
+            android:summary="@string/activate_elements"
+            android:title="@string/elements" />
     </PreferenceCategory>
 
 </PreferenceScreen>

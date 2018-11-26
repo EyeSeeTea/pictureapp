@@ -1,1074 +1,1452 @@
 {
   "version": "0.6.2",
-  "languages": ["en", "np"],
+  "languages": [
+    "en",
+    "np"
+  ],
   "issuing_capture": {
-    "validSamples": [0, 1, 2],
-    "payloadSpecs": [{
-      "dataPointRef": "url",
-      "samples": [{
-        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
-      }, {
-        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
-      }, {
-        "value": "https://apps.psi-mis.org/eRefWSTrain/api"
-      }]
-    }, {
-      "dataPointRef": "version",
-      "samples": [{
-        "value": "1.0"
-      }, {
-        "value": "1.0"
-      }, {
-        "value": "1.0"
-      }]
-    }, {
-      "dataPointRef": "csvVersion",
-      "samples": [{
-        "value": "0.6.2"
-      }, {
-        "value": "0.6.2"
-      }, {
-        "value": "0.6.2"
-      }],
-      "mandatory": "false"
-    }, {
-      "dataPointRef": "source",
-      "samples": [{
-        "value": "?"
-      }, {
-        "value": "?"
-      }, {
-        "value": "?"
-      }]
-    }, {
-      "dataPointRef": "androidInfo",
-      "samples": [{
-        "value": "?"
-      }, {
-        "value": "?"
-      }, {
-        "value": "?"
-      }],
-      "mandatory": "false"
-    }, {
-      "dataPointRef": "language",
-      "samples": [{
-        "value": "en"
-      }, {
-        "value": "en"
-      }, {
-        "value": "np"
-      }]
-    }, {
-      "dataPointRef": "userName",
-      "samples": [{
-        "value": "8003"
-      }, {
-        "value": "8003"
-      }, {
-        "value": "8003"
-      }]
-    }, {
-      "dataPointRef": "password",
-      "samples": [{
-        "value": "1234"
-      }, {
-        "value": "1234"
-      }, {
-        "value": "1234"
-      }]
-    }, {
-      "dataPointRef": "settings",
-      "samples": [{
-        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
-      }, {
-        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
-      }, {
-        "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
-      }],
-      "mandatory": "false"
-    }],
-    "actionsSpecs": [{
-      "dataPointRef": "type",
-      "samples": [{
-        "value": "issueReferral"
-      }, {
-        "value": "issueReferral"
-      }, {
-        "value": "issueReferral"
-      }]
-    }, {
-      "dataPointRef": "actionId",
-      "samples": [{
-        "value": "some_actionId-0"
-      }, {
-        "value": "some_actionId-1"
-      }, {
-        "value": "some_actionId-2"
-      }]
-    }, {
-      "dataPointRef": "sourceAddedDateTime",
-      "samples": [{
-        "value": "2017-10-27T10:00:00"
-      }, {
-        "value": "2017-10-28T11:00:00"
-      }, {
-        "value": "2017-10-29T12:00:00"
-      }]
-    }, {
-      "dataPointRef": "voucher",
-      "samples": [{
-        "value": "{\"type\": \"paper\", \"id\": \"1100000000\"}"
-      }, {
-        "value": "{\"type\": \"electronic\", \"id\": \"1100000001\"}"
-      }, {
-        "value": "{\"type\": \"novoucher\", \"id\": \"1100000002\"}"
-      }]
-    }, {
-      "dataPointRef": "coordinates",
-      "samples": [{
-        "value": "{\"latitude\": 10, \"longitude\": 10 }"
-      }, {
-        "value": "{\"latitude\": 20, \"longitude\": 20 }"
-      }, {
-        "value": "{\"latitude\": 30, \"longitude\": 30 }"
-      }]
-    }],
-    "dataValuesSpecs": [{
-      "dataPointRef": "program",
-      "poTerm": "ipc_issueEntry_q_program",
-      "defaultName": "Program",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "FPL"
-      }, {
-        "value": "FPL"
-      }, {
-        "value": "FPL"
-      }],
-      "options": [{
-        "value": "FPL",
-        "poTerm": "common_option_program_familyPlanning",
-        "defaultName": "Family Planning"
-      }]
-    }, {
-      "dataPointRef": "firstName",
-      "poTerm": "ipc_issueEntry_q_firstName",
-      "defaultName": "First name",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "Sara"
-      }, {
-        "value": "Sam"
-      }, {
-        "value": "Bruno"
-      }]
-    }, {
-      "dataPointRef": "motherName",
-      "poTerm": "ipc_issueEntry_q_motherName",
-      "defaultName": "First name of mother",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "Somename 0"
-      }, {
-        "value": "Somename 1"
-      }, {
-        "value": "Somename 2"
-      }]
-    }, {
-      "dataPointRef": "birthDistrict",
-      "poTerm": "ipc_issueEntry_q_birthDistrict",
-      "defaultName": "District of birth",
-      "controlType": "SHORT_TEXT",
-      "samples": [{
-        "value": "District 9"
-      }, {
-        "value": "District 10"
-      }, {
-        "value": "District 11"
-      }]
-    }, {
-      "dataPointRef": "age",
-      "poTerm": "ipc_issueEntry_q_age",
-      "defaultName": "Age",
-      "controlType": "INT",
-      "samples": [{
-        "value": "40"
-      }, {
-        "value": "30"
-      }, {
-        "value": "20"
-      }]
-    }, {
-      "dataPointRef": "addressDistrict",
-      "poTerm": "ipc_issueEntry_q_addressDistrict",
-      "defaultName": "Address - District",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "NP-DIS-10"
-      }, {
-        "value": "NP-DIS-20"
-      }, {
-        "value": "NP-DIS-32"
-      }],
-      "options": [{
-        "value": "NP-DIS-10",
-        "poTerm": "MISSING",
-        "defaultName": "Morang (DIS-10)"
-      }, {
-        "value": "NP-DIS-20",
-        "poTerm": "MISSING",
-        "defaultName": "Sarlahi (DIS-20)"
-      }, {
-        "value": "NP-DIS-32",
-        "poTerm": "MISSING",
-        "defaultName": "Makwanpur (DIS-32)"
-      }, {
-        "value": "NP-DIS-48",
-        "poTerm": "MISSING",
-        "defaultName": "Nawalparasi (DIS-48)"
-      }, {
-        "value": "NP-DIS-71",
-        "poTerm": "MISSING",
-        "defaultName": "Kailali (DIS-71)"
-      }]
-    }, {
-      "dataPointRef": "addressMunVDC-10",
-      "poTerm": "ipc_issueEntry_q_addressMunVDC",
-      "defaultName": "Address - Municipality/VDC",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "NP-MUN-1008"
-      }, {
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }],
-      "options": [{
-        "value": "NP-MUN-1008",
-        "poTerm": "MISSING",
-        "defautName": "Belbari Municipality (MUN-1008)"
-      }, {
-        "value": "NP-MUN-1011",
-        "poTerm": "MISSING",
-        "defautName": "Biratnagar Municipality (MUN-1011)"
-      }, {
-        "value": "NP-MUN-1032",
-        "poTerm": "MISSING",
-        "defautName": "Koshi Haraicha Municipality (MUN-1032)"
-      }, {
-        "value": "NP-MUN-1046",
-        "poTerm": "MISSING",
-        "defautName": "Rangeli Municipality (MUN-1046)"
-      }, {
-        "value": "NP-MUN-1047",
-        "poTerm": "MISSING",
-        "defautName": "Pathari-Sanischare Municipality (MUN-1047)"
-      }, {
-        "value": "NP-MUN-1054",
-        "poTerm": "MISSING",
-        "defautName": "Sundar Dulari Municipality (MUN-1054)"
-      }, {
-        "value": "NP-MUN-1059",
-        "poTerm": "MISSING",
-        "defautName": "Urlabari Municipality (MUN-1059)"
-      }, {
-        "value": "NP-MUN-1069",
-        "poTerm": "MISSING",
-        "defautName": "Letang Municipality (MUN-1069)"
-      }, {
-        "value": "NP-MUN-1071",
-        "poTerm": "MISSING",
-        "defautName": "Ratuwamai Municipality (MUN-1071)"
-      }, {
-        "value": "NP-MUN-1072",
-        "poTerm": "MISSING",
-        "defautName": "Sundarharaicha Municipality (MUN-1072)"
-      }, {
-        "value": "NP-MUN-1073",
-        "poTerm": "MISSING",
-        "defautName": "Sunwarshi Municipality (MUN-1073)"
-      }, {
-        "value": "NP-RUR-1062",
-        "poTerm": "MISSING",
-        "defautName": "Budhiganga Rural Municipality (RUR-1062)"
-      }, {
-        "value": "NP-RUR-1063",
-        "poTerm": "MISSING",
-        "defautName": "Dhanpalthan Rural Municipality (RUR-1063)"
-      }, {
-        "value": "NP-RUR-1064",
-        "poTerm": "MISSING",
-        "defautName": "Gramthan Rural Municipality (RUR-1064)"
-      }, {
-        "value": "NP-RUR-1065",
-        "poTerm": "MISSING",
-        "defautName": "Jahada Rural Municipality (RUR-1065)"
-      }, {
-        "value": "NP-RUR-1066",
-        "poTerm": "MISSING",
-        "defautName": "Kanepokhari Rural Municipality (RUR-1066)"
-      }, {
-        "value": "NP-RUR-1067",
-        "poTerm": "MISSING",
-        "defautName": "Katahari Rural Municipality (RUR-1067)"
-      }, {
-        "value": "NP-RUR-1068",
-        "poTerm": "MISSING",
-        "defautName": "Kerabari Rural Municipality (RUR-1068)"
-      }, {
-        "value": "NP-RUR-1070",
-        "poTerm": "MISSING",
-        "defautName": "Miklajung Rural Municipality (RUR-1070)"
-      }]
-    }, {
-      "dataPointRef": "addressMunVDC-20",
-      "poTerm": "ipc_issueEntry_q_addressMunVDC",
-      "defaultName": "Address - Municipality/VDC",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "undefined"
-      }, {
-        "value": "NP-MUN-20105"
-      }, {
-        "value": "undefined"
-      }],
-      "options": [{
-        "value": "NP-MUN-20105",
-        "poTerm": "MISSING",
-        "defaultName": "Godaita Municipality (MUN-20105)"
-      }, {
-        "value": "NP-MUN-20106",
-        "poTerm": "MISSING",
-        "defaultName": "Haripur Municipality (MUN-20106)"
-      }, {
-        "value": "NP-MUN-20107",
-        "poTerm": "MISSING",
-        "defaultName": "Haripurwa Municipality (MUN-20107)"
-      }, {
-        "value": "NP-MUN-2035",
-        "poTerm": "MISSING",
-        "defaultName": "Hariwan Municipality (MUN-2035)"
-      }, {
-        "value": "NP-MUN-2038",
-        "poTerm": "MISSING",
-        "defaultName": "Ishwarpur Municipality (MUN-2038)"
-      }, {
-        "value": "NP-MUN-2049",
-        "poTerm": "MISSING",
-        "defaultName": "Lalbandi Municipality (MUN-2049)"
-      }, {
-        "value": "NP-MUN-2057",
-        "poTerm": "MISSING",
-        "defaultName": "Malangwa Municipality (MUN-2057)"
-      }, {
-        "value": "NP-MUN-2097",
-        "poTerm": "MISSING",
-        "defaultName": "Bagmati Municipality (MUN-2097)"
-      }, {
-        "value": "NP-MUN-2098",
-        "poTerm": "MISSING",
-        "defaultName": "Balara Municipality (MUN-2098)"
-      }, {
-        "value": "NP-MUN-2099",
-        "poTerm": "MISSING",
-        "defaultName": "Barahathawa Municipality (MUN-2099)"
-      }, {
-        "value": "NP-RUR-20100",
-        "poTerm": "MISSING",
-        "defaultName": "Bishnu Rural Municipality (RUR-20100)"
-      }, {
-        "value": "NP-RUR-20101",
-        "poTerm": "MISSING",
-        "defaultName": "Brahmapuri Rural Municipality (RUR-20101)"
-      }, {
-        "value": "NP-RUR-20102",
-        "poTerm": "MISSING",
-        "defaultName": "Chakraghatta Rural Municipality (RUR-20102)"
-      }, {
-        "value": "NP-RUR-20103",
-        "poTerm": "MISSING",
-        "defaultName": "Chandranagar Rural Municipality (RUR-20103)"
-      }, {
-        "value": "NP-RUR-20104",
-        "poTerm": "MISSING",
-        "defaultName": "Dhankaul Rural Municipality (RUR-20104)"
-      }, {
-        "value": "NP-RUR-20108",
-        "poTerm": "MISSING",
-        "defaultName": "Kabilasi Rural Municipality (RUR-20108)"
-      }, {
-        "value": "NP-RUR-20109",
-        "poTerm": "MISSING",
-        "defaultName": "Ramnagar Rural Municipality (RUR-20109)"
-      }]
-    }, {
-      "dataPointRef": "addressMunVDC-32",
-      "poTerm": "ipc_issueEntry_q_addressMunVDC",
-      "defaultName": "Address - Municipality/VDC",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }, {
-        "value": "NP-MUN-3218"
-      }],
-      "options": [{
-        "value": "NP-MUN-3218",
-        "poTerm": "MISSING",
-        "defaultName": "Hetauda Municipality (MUN-3218)"
-      }, {
-        "value": "NP-MUN-3242",
-        "poTerm": "MISSING",
-        "defaultName": "Thaha Municipality (MUN-3242)"
-      }, {
-        "value": "NP-RUR-3245",
-        "poTerm": "MISSING",
-        "defaultName": "Bagmati Rural Municipality (RUR-3245)"
-      }, {
-        "value": "NP-RUR-3246",
-        "poTerm": "MISSING",
-        "defaultName": "Bakaiya Rural Municipality (RUR-3246)"
-      }, {
-        "value": "NP-RUR-3247",
-        "poTerm": "MISSING",
-        "defaultName": "Bhimphedi Rural Municipality (RUR-3247)"
-      }, {
-        "value": "NP-RUR-3248",
-        "poTerm": "MISSING",
-        "defaultName": "Indrasarowar Rural Municipality (RUR-3248)"
-      }, {
-        "value": "NP-RUR-3249",
-        "poTerm": "MISSING",
-        "defaultName": "Kailash Rural Municipality (RUR-3249)"
-      }, {
-        "value": "NP-RUR-3250",
-        "poTerm": "MISSING",
-        "defaultName": "Makawanpurgadhi Rural Municipality (RUR-3250)"
-      }, {
-        "value": "NP-RUR-3251",
-        "poTerm": "MISSING",
-        "defaultName": "Manahari Rural Municipality (RUR-3251)"
-      }, {
-        "value": "NP-RUR-3252",
-        "poTerm": "MISSING",
-        "defaultName": "Raksirang Rural Municipality (RUR-3252)"
-      }]
-    }, {
-      "dataPointRef": "addressMunVDC-48",
-      "poTerm": "ipc_issueEntry_q_addressMunVDC",
-      "defaultName": "Address - Municipality/VDC",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }],
-      "options": [{
-        "value": "NP-MUN-4806",
-        "poTerm": "MISSING",
-        "defaultName": "Bardaghat Municipality (MUN-4806)"
-      }, {
-        "value": "NP-MUN-4815",
-        "poTerm": "MISSING",
-        "defaultName": "Devchuli Municipality (MUN-4815)"
-      }, {
-        "value": "NP-MUN-4820",
-        "poTerm": "MISSING",
-        "defaultName": "Gaidakot Municipality (MUN-4820)"
-      }, {
-        "value": "NP-MUN-4831",
-        "poTerm": "MISSING",
-        "defaultName": "Kawasoti Municipality (MUN-4831)"
-      }, {
-        "value": "NP-MUN-4853",
-        "poTerm": "MISSING",
-        "defaultName": "Ramgram Municipality (MUN-4853)"
-      }, {
-        "value": "NP-MUN-4861",
-        "poTerm": "MISSING",
-        "defaultName": "Madhyabindu Municipality (MUN-4861)"
-      }, {
-        "value": "NP-MUN-4865",
-        "poTerm": "MISSING",
-        "defaultName": "Sunwal Municipality (MUN-4865)"
-      }, {
-        "value": "NP-MUN-4875",
-        "poTerm": "MISSING",
-        "defaultName": "Bulingtar Municipality (MUN-4875)"
-      }, {
-        "value": "NP-RUR-4874",
-        "poTerm": "MISSING",
-        "defaultName": "Binayee Triveni Rural Municipality (RUR-4874)"
-      }, {
-        "value": "NP-RUR-4876",
-        "poTerm": "MISSING",
-        "defaultName": "Bungdikali Rural Municipality (RUR-4876)"
-      }, {
-        "value": "NP-RUR-4877",
-        "poTerm": "MISSING",
-        "defaultName": "Hupsekot Rural Municipality (RUR-4877)"
-      }, {
-        "value": "NP-RUR-4878",
-        "poTerm": "MISSING",
-        "defaultName": "Palhi Nandan Rural Municipality (RUR-4878)"
-      }, {
-        "value": "NP-RUR-4879",
-        "poTerm": "MISSING",
-        "defaultName": "Pratappur Rural Municipality (RUR-4879)"
-      }, {
-        "value": "NP-RUR-4880",
-        "poTerm": "MISSING",
-        "defaultName": "Sarawal Rural Municipality (RUR-4880)"
-      }, {
-        "value": "NP-RUR-4881",
-        "poTerm": "MISSING",
-        "defaultName": "Susta Rural Municipality (RUR-4881)"
-      }]
-    }, {
-      "dataPointRef": "addressMunVDC-71",
-      "poTerm": "ipc_issueEntry_q_addressMunVDC",
-      "defaultName": "Address - Municipality/VDC",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }, {
-        "value": "undefined"
-      }],
-      "options": [{
-        "value": "NP-MUN-7101",
-        "poTerm": "MISSING",
-        "defaultName": "Attariya Municipality (MUN-7101)"
-      }, {
-        "value": "NP-MUN-7108",
-        "poTerm": "MISSING",
-        "defaultName": "Dhangadhi Municipality (MUN-7108)"
-      }, {
-        "value": "NP-MUN-7120",
-        "poTerm": "MISSING",
-        "defaultName": "Lamki Chuha Municipality (MUN-7120)"
-      }, {
-        "value": "NP-MUN-7137",
-        "poTerm": "MISSING",
-        "defaultName": "Tikapur Municipality (MUN-7137)"
-      }, {
-        "value": "NP-MUN-7141",
-        "poTerm": "MISSING",
-        "defaultName": "Bhajani Municipality (MUN-7141)"
-      }, {
-        "value": "NP-MUN-7143",
-        "poTerm": "MISSING",
-        "defaultName": "Gauriganga Municipality (MUN-7143)"
-      }, {
-        "value": "NP-MUN-7144",
-        "poTerm": "MISSING",
-        "defaultName": "Ghodaghodi Municipality (MUN-7144)"
-      }, {
-        "value": "NP-MUN-7145",
-        "poTerm": "MISSING",
-        "defaultName": "Godawari Municipality (MUN-7145)"
-      }, {
-        "value": "NP-RUR-7140",
-        "poTerm": "MISSING",
-        "defaultName": "Bardagoriya Rural Municipality (RUR-7140)"
-      }, {
-        "value": "NP-RUR-7142",
-        "poTerm": "MISSING",
-        "defaultName": "Chure Rural Municipality (RUR-7142)"
-      }, {
-        "value": "NP-RUR-7146",
-        "poTerm": "MISSING",
-        "defaultName": "Janaki Rural Municipality (RUR-7146)"
-      }, {
-        "value": "NP-RUR-7147",
-        "poTerm": "MISSING",
-        "defaultName": "Joshipur Rural Municipality (RUR-7147)"
-      }, {
-        "value": "NP-RUR-7148",
-        "poTerm": "MISSING",
-        "defaultName": "Kailari Rural Municipality (RUR-7148)"
-      }, {
-        "value": "NP-RUR-7149",
-        "poTerm": "MISSING",
-        "defaultName": "Mohanyal Rural Municipality (RUR-7149)"
-      }]
-    }, {
-      "dataPointRef": "currentMethod",
-      "poTerm": "ipc_issueEntry_q_currentMethod",
-      "defaultName": "Current method",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "PIL"
-      }, {
-        "value": "INJ"
-      }, {
-        "value": "CON"
-      }],
-      "options": [{
-        "value": "NON",
-        "poTerm": "common_option_method_none",
-        "defaultName": "None"
-      }, {
-        "value": "PIL",
-        "poTerm": "common_option_method_pills",
-        "defaultName": "Pills"
-      }, {
-        "value": "INJ",
-        "poTerm": "common_option_method_injection",
-        "defaultName": "Injection"
-      }, {
-        "value": "IUD",
-        "poTerm": "common_option_method_iud",
-        "defaultName": "IUD"
-      }, {
-        "value": "IMP",
-        "poTerm": "common_option_method_implant",
-        "defaultName": "Implant"
-      }, {
-        "value": "CON",
-        "poTerm": "common_option_method_condom",
-        "defaultName": "Condom"
-      }, {
-        "value": "OTH",
-        "poTerm": "common_option_method_other",
-        "defaultName": "Other"
-      }]
-    }, {
-      "dataPointRef": "eventType",
-      "poTerm": "ipc_issueEntry_q_eventType",
-      "defaultName": "Filled during",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "HHV"
-      }, {
-        "value": "BHA"
-      }, {
-        "value": "MME"
-      }],
-      "options": [{
-        "value": "HHV",
-        "poTerm": "common_option_eventType_HHV",
-        "defaultName": "Household Visit"
-      }, {
-        "value": "BHA",
-        "poTerm": "common_option_eventType_BHA",
-        "defaultName": "Bhalakusari"
-      }, {
-        "value": "MME",
-        "poTerm": "common_option_eventType_MME",
-        "defaultName": "Mid Media Events"
-      }]
-    }, {
-      "dataPointRef": "phoneOwnership",
-      "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
-      "defaultName": "Phone ownership",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "NO"
-      }, {
-        "value": "HER"
-      }, {
-        "value": "PAR"
-      }],
-      "options": [{
-        "value": "NO",
-        "poTerm": "common_option_ownershipOfPhone_noMobile",
-        "defaultName": "No Number"
-      }, {
-        "value": "HER",
-        "poTerm": "common_option_ownershipOfPhone_herNumber",
-        "defaultName": "Her Number"
-      }, {
-        "value": "PAR",
-        "poTerm": "common_option_ownershipOfPhone_husbandPartner",
-        "defaultName": "Husband/Partner"
-      }, {
-        "value": "SHA",
-        "poTerm": "common_option_ownershipOfPhone_shared",
-        "defaultName": "Shared"
-      }]
-    }, {
-      "dataPointRef": "phoneNumber",
-      "poTerm": "ipc_issueEntry_q_phoneNumber",
-      "defaultName": "Phone number",
-      "controlType": "PHONE_NUMBER",
-      "samples": [{
-        "value": "undefined",
-        "provider": "undefined"
-      }, {
-        "value": "+33611901852",
-        "provider": "FR-SFR"
-      }, {
-        "value": "+33611901852",
-        "provider": "FR-SFR"
-      }, {
-        "value": "+9779851172314",
-        "provider": "NP-NTC(GSM)"
-      }, {
-        "value": "+9779744093093",
-        "provider": "NP-NTC(CDMA)"
-      }, {
-        "value": "+9779803190692",
-        "provider": "NP-NCELL"
-      }],
-      "format": {
-        "accepted": [{
-          "starts": "9",
-          "length": "10",
-          "comment": "national"
-        }, {
-          "starts": "+",
-          "comment": "international"
-        }, {
-          "starts": "00",
-          "comment": "international"
-        }],
-        "details": {
-          "trunkPrefix": "",
-          "dialingCode": "+977"
-        }
+    "validSamples": [
+      0,
+      1,
+      2
+    ],
+    "payloadSpecs": [
+      {
+        "dataPointRef": "url",
+        "samples": [
+          {
+            "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+          },
+          {
+            "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+          },
+          {
+            "value": "https://apps.psi-mis.org/eRefWSTrain/api"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "version",
+        "samples": [
+          {
+            "value": "1.0"
+          },
+          {
+            "value": "1.0"
+          },
+          {
+            "value": "1.0"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "csvVersion",
+        "samples": [
+          {
+            "value": "0.6.2"
+          },
+          {
+            "value": "0.6.2"
+          },
+          {
+            "value": "0.6.2"
+          }
+        ],
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "source",
+        "samples": [
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "androidInfo",
+        "samples": [
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          },
+          {
+            "value": "?"
+          }
+        ],
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "language",
+        "samples": [
+          {
+            "value": "en"
+          },
+          {
+            "value": "en"
+          },
+          {
+            "value": "np"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "userName",
+        "samples": [
+          {
+            "value": "8003"
+          },
+          {
+            "value": "8003"
+          },
+          {
+            "value": "8003"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "password",
+        "samples": [
+          {
+            "value": "1234"
+          },
+          {
+            "value": "1234"
+          },
+          {
+            "value": "1234"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "settings",
+        "samples": [
+          {
+            "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+          },
+          {
+            "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+          },
+          {
+            "value": "{\"rollback\": \"off\",\"translation\": \"off\",\"block_SameOrgUnit_SameVoucherCodeEntry\": \"off\"}"
+          }
+        ],
+        "mandatory": "false"
       }
-    }, {
-      "dataPointRef": "phoneContactConsent",
-      "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
-      "defaultName": "Further phone contact consent",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "undefined"
-      }, {
-        "value": "YESP"
-      }, {
-        "value": "YESPP"
-      }],
-      "options": [{
-        "value": "NO",
-        "poTerm": "common_option_furtherInformationConsent_no",
-        "defaultName": "No"
-      }, {
-        "value": "YESP",
-        "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
-        "defaultName": "Yes - PSI"
-      }, {
-        "value": "YESPP",
-        "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
-        "defaultName": "Yes - PSI and Partner"
-      }]
-    }, {
-      "dataPointRef": "generateVoucher",
-      "poTerm": "ipc_issueEntry_q_isClientReferred",
-      "defaultName": "Would you like to issue a voucher?",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "YES"
-      }, {
-        "value": "YES"
-      }, {
-        "value": "NO"
-      }],
-      "options": [{
-        "value": "YES",
-        "poTerm": "common_btn_yes",
-        "defaultName": "Yes"
-      }, {
-        "value": "NO",
-        "poTerm": "common_btn_no",
-        "defaultName": "No"
-      }]
-    }, {
-      "dataPointRef": "serviceDate",
-      "poTerm": "ipc_issueEntry_q_serviceDate",
-      "defaultName": "Service date",
-      "controlType": "DATE",
-      "samples": [{
-        "value": "2018-01-01"
-      }, {
-        "value": "2018-02-01"
-      }, {
-        "value": "2018-03-01"
-      }]
-    }, {
-      "dataPointRef": "serviceDesired",
-      "poTerm": "ipc_issueEntry_q_serviceDesired",
-      "defaultName": "Service desired",
-      "controlType": "DROPDOWN_LIST",
-      "samples": [{
-        "value": "INJ"
-      }, {
-        "value": "IUD"
-      }, {
-        "value": "PIL"
-      }],
-      "options": [{
-        "value": "NON",
-        "poTerm": "common_option_method_none",
-        "defaultName": "None"
-      }, {
-        "value": "PIL",
-        "poTerm": "common_option_method_pills",
-        "defaultName": "Pills"
-      }, {
-        "value": "INJ",
-        "poTerm": "common_option_method_injection",
-        "defaultName": "Injection"
-      }, {
-        "value": "IUD",
-        "poTerm": "common_option_method_iud",
-        "defaultName": "IUD"
-      }, {
-        "value": "IMP",
-        "poTerm": "common_option_method_implant",
-        "defaultName": "Implant"
-      }, {
-        "value": "CON",
-        "poTerm": "common_option_method_condom",
-        "defaultName": "Condom"
-      }, {
-        "value": "OTH",
-        "poTerm": "common_option_method_other",
-        "defaultName": "Other"
-      }]
-    }, {
-      "dataPointRef": "healthFacility",
-      "poTerm": "ipc_issueEntry_q_healthFacility",
-      "defaultName": "Health facility code",
-      "controlType": "DATE",
-      "samples": [{
-        "value": "NP01234"
-      }, {
-        "value": "NP12345"
-      }, {
-        "value": "NP23456"
-      }]
-    }],
-    "rulesSpecs": [{
-      "conditions": [{
-        "left": {
-          "value": "addressDistrict",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "NP-DIS-10",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+    ],
+    "actionsSpecs": [
+      {
+        "dataPointRef": "type",
+        "samples": [
+          {
+            "value": "issueReferral"
+          },
+          {
+            "value": "issueReferral"
+          },
+          {
+            "value": "issueReferral"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "actionId",
+        "samples": [
+          {
+            "value": "some_actionId-0"
+          },
+          {
+            "value": "some_actionId-1"
+          },
+          {
+            "value": "some_actionId-2"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "sourceAddedDateTime",
+        "samples": [
+          {
+            "value": "2017-10-27T10:00:00"
+          },
+          {
+            "value": "2017-10-28T11:00:00"
+          },
+          {
+            "value": "2017-10-29T12:00:00"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "voucher",
+        "samples": [
+          {
+            "value": "{\"type\": \"paper\", \"id\": \"1100000000\"}"
+          },
+          {
+            "value": "{\"type\": \"electronic\", \"id\": \"1100000001\"}"
+          },
+          {
+            "value": "{\"type\": \"novoucher\", \"id\": \"1100000002\"}"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "coordinates",
+        "samples": [
+          {
+            "value": "{\"latitude\": 10, \"longitude\": 10 }"
+          },
+          {
+            "value": "{\"latitude\": 20, \"longitude\": 20 }"
+          },
+          {
+            "value": "{\"latitude\": 30, \"longitude\": 30 }"
+          }
+        ]
+      }
+    ],
+    "dataValuesSpecs": [
+      {
+        "dataPointRef": "program",
+        "poTerm": "ipc_issueEntry_q_program",
+        "defaultName": "Program",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "FPL"
+          },
+          {
+            "value": "FPL"
+          },
+          {
+            "value": "FPL"
+          }
+        ],
+        "options": [
+          {
+            "value": "FPL",
+            "poTerm": "common_option_program_familyPlanning",
+            "defaultName": "Family Planning"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "firstName",
+        "poTerm": "ipc_issueEntry_q_firstName",
+        "defaultName": "First name",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "Sara"
+          },
+          {
+            "value": "Sam"
+          },
+          {
+            "value": "Bruno"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "motherName",
+        "poTerm": "ipc_issueEntry_q_motherName",
+        "defaultName": "First name of mother",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "Somename 0"
+          },
+          {
+            "value": "Somename 1"
+          },
+          {
+            "value": "Somename 2"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "birthDistrict",
+        "poTerm": "ipc_issueEntry_q_birthDistrict",
+        "defaultName": "District of birth",
+        "controlType": "SHORT_TEXT",
+        "samples": [
+          {
+            "value": "District 9"
+          },
+          {
+            "value": "District 10"
+          },
+          {
+            "value": "District 11"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "age",
+        "poTerm": "ipc_issueEntry_q_age",
+        "defaultName": "Age",
+        "controlType": "INT",
+        "samples": [
+          {
+            "value": "40"
+          },
+          {
+            "value": "30"
+          },
+          {
+            "value": "20"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "addressDistrict",
+        "poTerm": "ipc_issueEntry_q_addressDistrict",
+        "defaultName": "Address - District",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "NP-DIS-10"
+          },
+          {
+            "value": "NP-DIS-20"
+          },
+          {
+            "value": "NP-DIS-32"
+          }
+        ],
+        "options": [
+          {
+            "value": "NP-DIS-10",
+            "poTerm": "MISSING",
+            "defaultName": "Morang (DIS-10)"
+          },
+          {
+            "value": "NP-DIS-20",
+            "poTerm": "MISSING",
+            "defaultName": "Sarlahi (DIS-20)"
+          },
+          {
+            "value": "NP-DIS-32",
+            "poTerm": "MISSING",
+            "defaultName": "Makwanpur (DIS-32)"
+          },
+          {
+            "value": "NP-DIS-48",
+            "poTerm": "MISSING",
+            "defaultName": "Nawalparasi (DIS-48)"
+          },
+          {
+            "value": "NP-DIS-71",
+            "poTerm": "MISSING",
+            "defaultName": "Kailali (DIS-71)"
+          }
+        ]
+      },
+      {
         "dataPointRef": "addressMunVDC-10",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "addressDistrict",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "NP-DIS-20",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_addressMunVDC",
+        "defaultName": "Address - Municipality/VDC",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "NP-MUN-1008"
+          },
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          }
+        ],
+        "options": [
+          {
+            "value": "NP-MUN-1008",
+            "poTerm": "MISSING",
+            "defautName": "Belbari Municipality (MUN-1008)"
+          },
+          {
+            "value": "NP-MUN-1011",
+            "poTerm": "MISSING",
+            "defautName": "Biratnagar Municipality (MUN-1011)"
+          },
+          {
+            "value": "NP-MUN-1032",
+            "poTerm": "MISSING",
+            "defautName": "Koshi Haraicha Municipality (MUN-1032)"
+          },
+          {
+            "value": "NP-MUN-1046",
+            "poTerm": "MISSING",
+            "defautName": "Rangeli Municipality (MUN-1046)"
+          },
+          {
+            "value": "NP-MUN-1047",
+            "poTerm": "MISSING",
+            "defautName": "Pathari-Sanischare Municipality (MUN-1047)"
+          },
+          {
+            "value": "NP-MUN-1054",
+            "poTerm": "MISSING",
+            "defautName": "Sundar Dulari Municipality (MUN-1054)"
+          },
+          {
+            "value": "NP-MUN-1059",
+            "poTerm": "MISSING",
+            "defautName": "Urlabari Municipality (MUN-1059)"
+          },
+          {
+            "value": "NP-MUN-1069",
+            "poTerm": "MISSING",
+            "defautName": "Letang Municipality (MUN-1069)"
+          },
+          {
+            "value": "NP-MUN-1071",
+            "poTerm": "MISSING",
+            "defautName": "Ratuwamai Municipality (MUN-1071)"
+          },
+          {
+            "value": "NP-MUN-1072",
+            "poTerm": "MISSING",
+            "defautName": "Sundarharaicha Municipality (MUN-1072)"
+          },
+          {
+            "value": "NP-MUN-1073",
+            "poTerm": "MISSING",
+            "defautName": "Sunwarshi Municipality (MUN-1073)"
+          },
+          {
+            "value": "NP-RUR-1062",
+            "poTerm": "MISSING",
+            "defautName": "Budhiganga Rural Municipality (RUR-1062)"
+          },
+          {
+            "value": "NP-RUR-1063",
+            "poTerm": "MISSING",
+            "defautName": "Dhanpalthan Rural Municipality (RUR-1063)"
+          },
+          {
+            "value": "NP-RUR-1064",
+            "poTerm": "MISSING",
+            "defautName": "Gramthan Rural Municipality (RUR-1064)"
+          },
+          {
+            "value": "NP-RUR-1065",
+            "poTerm": "MISSING",
+            "defautName": "Jahada Rural Municipality (RUR-1065)"
+          },
+          {
+            "value": "NP-RUR-1066",
+            "poTerm": "MISSING",
+            "defautName": "Kanepokhari Rural Municipality (RUR-1066)"
+          },
+          {
+            "value": "NP-RUR-1067",
+            "poTerm": "MISSING",
+            "defautName": "Katahari Rural Municipality (RUR-1067)"
+          },
+          {
+            "value": "NP-RUR-1068",
+            "poTerm": "MISSING",
+            "defautName": "Kerabari Rural Municipality (RUR-1068)"
+          },
+          {
+            "value": "NP-RUR-1070",
+            "poTerm": "MISSING",
+            "defautName": "Miklajung Rural Municipality (RUR-1070)"
+          }
+        ]
+      },
+      {
         "dataPointRef": "addressMunVDC-20",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "addressDistrict",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "NP-DIS-32",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_addressMunVDC",
+        "defaultName": "Address - Municipality/VDC",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "NP-MUN-20105"
+          },
+          {
+            "value": "undefined"
+          }
+        ],
+        "options": [
+          {
+            "value": "NP-MUN-20105",
+            "poTerm": "MISSING",
+            "defaultName": "Godaita Municipality (MUN-20105)"
+          },
+          {
+            "value": "NP-MUN-20106",
+            "poTerm": "MISSING",
+            "defaultName": "Haripur Municipality (MUN-20106)"
+          },
+          {
+            "value": "NP-MUN-20107",
+            "poTerm": "MISSING",
+            "defaultName": "Haripurwa Municipality (MUN-20107)"
+          },
+          {
+            "value": "NP-MUN-2035",
+            "poTerm": "MISSING",
+            "defaultName": "Hariwan Municipality (MUN-2035)"
+          },
+          {
+            "value": "NP-MUN-2038",
+            "poTerm": "MISSING",
+            "defaultName": "Ishwarpur Municipality (MUN-2038)"
+          },
+          {
+            "value": "NP-MUN-2049",
+            "poTerm": "MISSING",
+            "defaultName": "Lalbandi Municipality (MUN-2049)"
+          },
+          {
+            "value": "NP-MUN-2057",
+            "poTerm": "MISSING",
+            "defaultName": "Malangwa Municipality (MUN-2057)"
+          },
+          {
+            "value": "NP-MUN-2097",
+            "poTerm": "MISSING",
+            "defaultName": "Bagmati Municipality (MUN-2097)"
+          },
+          {
+            "value": "NP-MUN-2098",
+            "poTerm": "MISSING",
+            "defaultName": "Balara Municipality (MUN-2098)"
+          },
+          {
+            "value": "NP-MUN-2099",
+            "poTerm": "MISSING",
+            "defaultName": "Barahathawa Municipality (MUN-2099)"
+          },
+          {
+            "value": "NP-RUR-20100",
+            "poTerm": "MISSING",
+            "defaultName": "Bishnu Rural Municipality (RUR-20100)"
+          },
+          {
+            "value": "NP-RUR-20101",
+            "poTerm": "MISSING",
+            "defaultName": "Brahmapuri Rural Municipality (RUR-20101)"
+          },
+          {
+            "value": "NP-RUR-20102",
+            "poTerm": "MISSING",
+            "defaultName": "Chakraghatta Rural Municipality (RUR-20102)"
+          },
+          {
+            "value": "NP-RUR-20103",
+            "poTerm": "MISSING",
+            "defaultName": "Chandranagar Rural Municipality (RUR-20103)"
+          },
+          {
+            "value": "NP-RUR-20104",
+            "poTerm": "MISSING",
+            "defaultName": "Dhankaul Rural Municipality (RUR-20104)"
+          },
+          {
+            "value": "NP-RUR-20108",
+            "poTerm": "MISSING",
+            "defaultName": "Kabilasi Rural Municipality (RUR-20108)"
+          },
+          {
+            "value": "NP-RUR-20109",
+            "poTerm": "MISSING",
+            "defaultName": "Ramnagar Rural Municipality (RUR-20109)"
+          }
+        ]
+      },
+      {
         "dataPointRef": "addressMunVDC-32",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "addressDistrict",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "NP-DIS-48",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_addressMunVDC",
+        "defaultName": "Address - Municipality/VDC",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "NP-MUN-3218"
+          }
+        ],
+        "options": [
+          {
+            "value": "NP-MUN-3218",
+            "poTerm": "MISSING",
+            "defaultName": "Hetauda Municipality (MUN-3218)"
+          },
+          {
+            "value": "NP-MUN-3242",
+            "poTerm": "MISSING",
+            "defaultName": "Thaha Municipality (MUN-3242)"
+          },
+          {
+            "value": "NP-RUR-3245",
+            "poTerm": "MISSING",
+            "defaultName": "Bagmati Rural Municipality (RUR-3245)"
+          },
+          {
+            "value": "NP-RUR-3246",
+            "poTerm": "MISSING",
+            "defaultName": "Bakaiya Rural Municipality (RUR-3246)"
+          },
+          {
+            "value": "NP-RUR-3247",
+            "poTerm": "MISSING",
+            "defaultName": "Bhimphedi Rural Municipality (RUR-3247)"
+          },
+          {
+            "value": "NP-RUR-3248",
+            "poTerm": "MISSING",
+            "defaultName": "Indrasarowar Rural Municipality (RUR-3248)"
+          },
+          {
+            "value": "NP-RUR-3249",
+            "poTerm": "MISSING",
+            "defaultName": "Kailash Rural Municipality (RUR-3249)"
+          },
+          {
+            "value": "NP-RUR-3250",
+            "poTerm": "MISSING",
+            "defaultName": "Makawanpurgadhi Rural Municipality (RUR-3250)"
+          },
+          {
+            "value": "NP-RUR-3251",
+            "poTerm": "MISSING",
+            "defaultName": "Manahari Rural Municipality (RUR-3251)"
+          },
+          {
+            "value": "NP-RUR-3252",
+            "poTerm": "MISSING",
+            "defaultName": "Raksirang Rural Municipality (RUR-3252)"
+          }
+        ]
+      },
+      {
         "dataPointRef": "addressMunVDC-48",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "addressDistrict",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "NP-DIS-71",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_addressMunVDC",
+        "defaultName": "Address - Municipality/VDC",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          }
+        ],
+        "options": [
+          {
+            "value": "NP-MUN-4806",
+            "poTerm": "MISSING",
+            "defaultName": "Bardaghat Municipality (MUN-4806)"
+          },
+          {
+            "value": "NP-MUN-4815",
+            "poTerm": "MISSING",
+            "defaultName": "Devchuli Municipality (MUN-4815)"
+          },
+          {
+            "value": "NP-MUN-4820",
+            "poTerm": "MISSING",
+            "defaultName": "Gaidakot Municipality (MUN-4820)"
+          },
+          {
+            "value": "NP-MUN-4831",
+            "poTerm": "MISSING",
+            "defaultName": "Kawasoti Municipality (MUN-4831)"
+          },
+          {
+            "value": "NP-MUN-4853",
+            "poTerm": "MISSING",
+            "defaultName": "Ramgram Municipality (MUN-4853)"
+          },
+          {
+            "value": "NP-MUN-4861",
+            "poTerm": "MISSING",
+            "defaultName": "Madhyabindu Municipality (MUN-4861)"
+          },
+          {
+            "value": "NP-MUN-4865",
+            "poTerm": "MISSING",
+            "defaultName": "Sunwal Municipality (MUN-4865)"
+          },
+          {
+            "value": "NP-MUN-4875",
+            "poTerm": "MISSING",
+            "defaultName": "Bulingtar Municipality (MUN-4875)"
+          },
+          {
+            "value": "NP-RUR-4874",
+            "poTerm": "MISSING",
+            "defaultName": "Binayee Triveni Rural Municipality (RUR-4874)"
+          },
+          {
+            "value": "NP-RUR-4876",
+            "poTerm": "MISSING",
+            "defaultName": "Bungdikali Rural Municipality (RUR-4876)"
+          },
+          {
+            "value": "NP-RUR-4877",
+            "poTerm": "MISSING",
+            "defaultName": "Hupsekot Rural Municipality (RUR-4877)"
+          },
+          {
+            "value": "NP-RUR-4878",
+            "poTerm": "MISSING",
+            "defaultName": "Palhi Nandan Rural Municipality (RUR-4878)"
+          },
+          {
+            "value": "NP-RUR-4879",
+            "poTerm": "MISSING",
+            "defaultName": "Pratappur Rural Municipality (RUR-4879)"
+          },
+          {
+            "value": "NP-RUR-4880",
+            "poTerm": "MISSING",
+            "defaultName": "Sarawal Rural Municipality (RUR-4880)"
+          },
+          {
+            "value": "NP-RUR-4881",
+            "poTerm": "MISSING",
+            "defaultName": "Susta Rural Municipality (RUR-4881)"
+          }
+        ]
+      },
+      {
         "dataPointRef": "addressMunVDC-71",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "phoneOwnership",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "HER",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_addressMunVDC",
+        "defaultName": "Address - Municipality/VDC",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "undefined"
+          }
+        ],
+        "options": [
+          {
+            "value": "NP-MUN-7101",
+            "poTerm": "MISSING",
+            "defaultName": "Attariya Municipality (MUN-7101)"
+          },
+          {
+            "value": "NP-MUN-7108",
+            "poTerm": "MISSING",
+            "defaultName": "Dhangadhi Municipality (MUN-7108)"
+          },
+          {
+            "value": "NP-MUN-7120",
+            "poTerm": "MISSING",
+            "defaultName": "Lamki Chuha Municipality (MUN-7120)"
+          },
+          {
+            "value": "NP-MUN-7137",
+            "poTerm": "MISSING",
+            "defaultName": "Tikapur Municipality (MUN-7137)"
+          },
+          {
+            "value": "NP-MUN-7141",
+            "poTerm": "MISSING",
+            "defaultName": "Bhajani Municipality (MUN-7141)"
+          },
+          {
+            "value": "NP-MUN-7143",
+            "poTerm": "MISSING",
+            "defaultName": "Gauriganga Municipality (MUN-7143)"
+          },
+          {
+            "value": "NP-MUN-7144",
+            "poTerm": "MISSING",
+            "defaultName": "Ghodaghodi Municipality (MUN-7144)"
+          },
+          {
+            "value": "NP-MUN-7145",
+            "poTerm": "MISSING",
+            "defaultName": "Godawari Municipality (MUN-7145)"
+          },
+          {
+            "value": "NP-RUR-7140",
+            "poTerm": "MISSING",
+            "defaultName": "Bardagoriya Rural Municipality (RUR-7140)"
+          },
+          {
+            "value": "NP-RUR-7142",
+            "poTerm": "MISSING",
+            "defaultName": "Chure Rural Municipality (RUR-7142)"
+          },
+          {
+            "value": "NP-RUR-7146",
+            "poTerm": "MISSING",
+            "defaultName": "Janaki Rural Municipality (RUR-7146)"
+          },
+          {
+            "value": "NP-RUR-7147",
+            "poTerm": "MISSING",
+            "defaultName": "Joshipur Rural Municipality (RUR-7147)"
+          },
+          {
+            "value": "NP-RUR-7148",
+            "poTerm": "MISSING",
+            "defaultName": "Kailari Rural Municipality (RUR-7148)"
+          },
+          {
+            "value": "NP-RUR-7149",
+            "poTerm": "MISSING",
+            "defaultName": "Mohanyal Rural Municipality (RUR-7149)"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "currentMethod",
+        "poTerm": "ipc_issueEntry_q_currentMethod",
+        "defaultName": "Current method",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "PIL"
+          },
+          {
+            "value": "INJ"
+          },
+          {
+            "value": "CON"
+          }
+        ],
+        "options": [
+          {
+            "value": "NON",
+            "poTerm": "common_option_method_none",
+            "defaultName": "None"
+          },
+          {
+            "value": "PIL",
+            "poTerm": "common_option_method_pills",
+            "defaultName": "Pills"
+          },
+          {
+            "value": "INJ",
+            "poTerm": "common_option_method_injection",
+            "defaultName": "Injection"
+          },
+          {
+            "value": "IUD",
+            "poTerm": "common_option_method_iud",
+            "defaultName": "IUD"
+          },
+          {
+            "value": "IMP",
+            "poTerm": "common_option_method_implant",
+            "defaultName": "Implant"
+          },
+          {
+            "value": "CON",
+            "poTerm": "common_option_method_condom",
+            "defaultName": "Condom"
+          },
+          {
+            "value": "OTH",
+            "poTerm": "common_option_method_other",
+            "defaultName": "Other"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "eventType",
+        "poTerm": "ipc_issueEntry_q_eventType",
+        "defaultName": "Filled during",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "HHV"
+          },
+          {
+            "value": "BHA"
+          },
+          {
+            "value": "MME"
+          }
+        ],
+        "options": [
+          {
+            "value": "HHV",
+            "poTerm": "common_option_eventType_HHV",
+            "defaultName": "Household Visit"
+          },
+          {
+            "value": "BHA",
+            "poTerm": "common_option_eventType_BHA",
+            "defaultName": "Bhalakusari"
+          },
+          {
+            "value": "MME",
+            "poTerm": "common_option_eventType_MME",
+            "defaultName": "Mid Media Events"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "phoneOwnership",
+        "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
+        "defaultName": "Phone ownership",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "NO"
+          },
+          {
+            "value": "HER"
+          },
+          {
+            "value": "PAR"
+          }
+        ],
+        "options": [
+          {
+            "value": "NO",
+            "poTerm": "common_option_ownershipOfPhone_noMobile",
+            "defaultName": "No Number"
+          },
+          {
+            "value": "HER",
+            "poTerm": "common_option_ownershipOfPhone_herNumber",
+            "defaultName": "Her Number"
+          },
+          {
+            "value": "PAR",
+            "poTerm": "common_option_ownershipOfPhone_husbandPartner",
+            "defaultName": "Husband/Partner"
+          },
+          {
+            "value": "SHA",
+            "poTerm": "common_option_ownershipOfPhone_shared",
+            "defaultName": "Shared"
+          }
+        ]
+      },
+      {
         "dataPointRef": "phoneNumber",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "phoneOwnership",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "PAR",
-          "type": "value"
+        "poTerm": "ipc_issueEntry_q_phoneNumber",
+        "defaultName": "Phone number",
+        "controlType": "PHONE_NUMBER",
+        "samples": [
+          {
+            "value": "undefined",
+            "provider": "undefined"
+          },
+          {
+            "value": "+33611901852",
+            "provider": "FR-SFR"
+          },
+          {
+            "value": "+33611901852",
+            "provider": "FR-SFR"
+          },
+          {
+            "value": "+9779851172314",
+            "provider": "NP-NTC(GSM)"
+          },
+          {
+            "value": "+9779744093093",
+            "provider": "NP-NTC(CDMA)"
+          },
+          {
+            "value": "+9779803190692",
+            "provider": "NP-NCELL"
+          }
+        ],
+        "format": {
+          "accepted": [
+            {
+              "starts": "9",
+              "length": "10",
+              "comment": "national"
+            },
+            {
+              "starts": "+",
+              "comment": "international"
+            },
+            {
+              "starts": "00",
+              "comment": "international"
+            }
+          ],
+          "details": {
+            "trunkPrefix": "",
+            "dialingCode": "+977"
+          }
         }
-      }],
-      "actions": [{
-        "dataPointRef": "phoneNumber",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "phoneOwnership",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "SHA",
-          "type": "value"
-        }
-      }],
-      "actions": [{
-        "dataPointRef": "phoneNumber",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "phoneOwnership",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "HER",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+      },
+      {
         "dataPointRef": "phoneContactConsent",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "phoneOwnership",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "PAR",
-          "type": "value"
-        }
-      }],
-      "actions": [{
-        "dataPointRef": "phoneContactConsent",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "phoneOwnership",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "SHA",
-          "type": "value"
-        }
-      }],
-      "actions": [{
-        "dataPointRef": "phoneContactConsent",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "generateVoucher",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "YES",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_furtherInformationConsent",
+        "defaultName": "Further phone contact consent",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "undefined"
+          },
+          {
+            "value": "YESP"
+          },
+          {
+            "value": "YESPP"
+          }
+        ],
+        "options": [
+          {
+            "value": "NO",
+            "poTerm": "common_option_furtherInformationConsent_no",
+            "defaultName": "No"
+          },
+          {
+            "value": "YESP",
+            "poTerm": "common_option_furtherInformationConsent_yesFromPSI",
+            "defaultName": "Yes - PSI"
+          },
+          {
+            "value": "YESPP",
+            "poTerm": "common_option_furtherInformationConsent_yesFromPSIAndPartners",
+            "defaultName": "Yes - PSI and Partner"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "generateVoucher",
+        "poTerm": "ipc_issueEntry_q_isClientReferred",
+        "defaultName": "Would you like to issue a voucher?",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "YES"
+          },
+          {
+            "value": "YES"
+          },
+          {
+            "value": "NO"
+          }
+        ],
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "common_btn_yes",
+            "defaultName": "Yes"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_btn_no",
+            "defaultName": "No"
+          }
+        ]
+      },
+      {
         "dataPointRef": "serviceDate",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "generateVoucher",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "YES",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_serviceDate",
+        "defaultName": "Service date",
+        "controlType": "DATE",
+        "samples": [
+          {
+            "value": "2018-01-01"
+          },
+          {
+            "value": "2018-02-01"
+          },
+          {
+            "value": "2018-03-01"
+          }
+        ]
+      },
+      {
         "dataPointRef": "serviceDesired",
-        "do": "SHOW"
-      }]
-    }, {
-      "conditions": [{
-        "left": {
-          "value": "generateVoucher",
-          "type": "dataPointRef"
-        },
-        "operator": "==",
-        "right": {
-          "value": "YES",
-          "type": "value"
-        }
-      }],
-      "actions": [{
+        "poTerm": "ipc_issueEntry_q_serviceDesired",
+        "defaultName": "Service desired",
+        "controlType": "DROPDOWN_LIST",
+        "samples": [
+          {
+            "value": "INJ"
+          },
+          {
+            "value": "IUD"
+          },
+          {
+            "value": "PIL"
+          }
+        ],
+        "options": [
+          {
+            "value": "NON",
+            "poTerm": "common_option_method_none",
+            "defaultName": "None"
+          },
+          {
+            "value": "PIL",
+            "poTerm": "common_option_method_pills",
+            "defaultName": "Pills"
+          },
+          {
+            "value": "INJ",
+            "poTerm": "common_option_method_injection",
+            "defaultName": "Injection"
+          },
+          {
+            "value": "IUD",
+            "poTerm": "common_option_method_iud",
+            "defaultName": "IUD"
+          },
+          {
+            "value": "IMP",
+            "poTerm": "common_option_method_implant",
+            "defaultName": "Implant"
+          },
+          {
+            "value": "CON",
+            "poTerm": "common_option_method_condom",
+            "defaultName": "Condom"
+          },
+          {
+            "value": "OTH",
+            "poTerm": "common_option_method_other",
+            "defaultName": "Other"
+          }
+        ]
+      },
+      {
         "dataPointRef": "healthFacility",
-        "do": "SHOW"
-      }]
-    }]
+        "poTerm": "ipc_issueEntry_q_healthFacility",
+        "defaultName": "Health facility code",
+        "controlType": "DATE",
+        "samples": [
+          {
+            "value": "NP01234"
+          },
+          {
+            "value": "NP12345"
+          },
+          {
+            "value": "NP23456"
+          }
+        ]
+      }
+    ],
+    "rulesSpecs": [
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "addressDistrict",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "NP-DIS-10",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressMunVDC-10",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "addressDistrict",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "NP-DIS-20",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressMunVDC-20",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "addressDistrict",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "NP-DIS-32",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressMunVDC-32",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "addressDistrict",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "NP-DIS-48",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressMunVDC-48",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "addressDistrict",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "NP-DIS-71",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "addressMunVDC-71",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "HER",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "PAR",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "SHA",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "HER",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "PAR",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "SHA",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "generateVoucher",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "serviceDate",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "generateVoucher",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "serviceDesired",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "conditions": [
+          {
+            "left": {
+              "value": "generateVoucher",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "healthFacility",
+            "do": "SHOW"
+          }
+        ]
+      }
+    ]
   }
 }

@@ -97,12 +97,30 @@ public class Utils {
         }
     }
 
-    public static String getUserLanguageOrDefault(Context context ){
+    @NonNull
+    public static String getInternationalizedString(@NonNull String key,Context context) {
+        String defaultLanguage = context.getString(R.string.default_language);
+        String language = getUserLanguage(context);
+        String translation = getLocalizedStringFromDB(key, language, defaultLanguage);
+
+        if (key == null) {
+            return "";
+        }
+
+        if (BuildConfig.downloadLanguagesFromServer &&
+                wasTranslationFound(translation)) {
+            return translation;
+        } else {
+            return findStringFromAndroidResource(context, key, language);
+        }
+    }
+
+    public static String getUserLanguageOrDefault(Context context) {
         String language = getUserLanguage(context);
 
-        if(language !=null && !language.isEmpty()){
+        if (language != null && !language.isEmpty()) {
             return language;
-        }else {
+        } else {
             return context.getString(R.string.default_language);
         }
     }
@@ -288,6 +306,17 @@ public class Utils {
         cal.setTime(date);
         return cal;
     }
+
+    public static Date removeTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
 
     /**
      * Method to get if the endDate is grater or equal than the startDate

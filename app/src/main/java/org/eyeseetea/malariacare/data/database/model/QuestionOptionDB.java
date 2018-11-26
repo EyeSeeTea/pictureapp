@@ -104,7 +104,7 @@ public class QuestionOptionDB extends BaseModel {
     }
 
     public static void deleteQuestionOptionsById(long question_id) {
-         new Delete()
+        new Delete()
                 .from(QuestionOptionDB.class)
                 .where(QuestionOptionDB_Table.id_question_fk.eq(question_id));
     }
@@ -132,7 +132,6 @@ public class QuestionOptionDB extends BaseModel {
         return matchDBs;
 //FIXME doing in two query because there is a bug in DBFlow
     }
-
 
 
     /**

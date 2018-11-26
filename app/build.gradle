@@ -3,12 +3,16 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
         mavenLocal()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -54,7 +58,7 @@ android {
         signingConfig signingConfigs.config
         buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
         buildConfigField "boolean", "downloadLanguagesFromServer", "false"
-
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
 
@@ -84,7 +88,7 @@ android {
     }
     productFlavors {
         cambodia {
-            applicationId 'org.eyeseetea.surveillance_kh_bb'
+            applicationId 'org.eyeseetea.surveillance_kh_dev'
             versionName "1.3.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -105,9 +109,17 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         laos {
-            applicationId 'org.eyeseetea.surveillance_la_bb'
+            applicationId 'org.eyeseetea.surveillance_la_dev'
             versionName "1.2.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -128,9 +140,17 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         myanmar {
-            applicationId 'org.eyeseetea.surveillance_mm_bb'
+            applicationId 'org.eyeseetea.surveillance_mm_dev'
             versionName "1.0.3"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -151,10 +171,18 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "true"
         }
         ereferrals {
-            applicationId 'org.eyeseetea.surveillance_ref_bb'
-            versionName "1.1.1"
+            applicationId 'org.eyeseetea.surveillance_ref_dev'
+            versionName "1.2.0"
             buildConfigField "boolean", "downloadLanguagesFromServer", "true"
             buildConfigField "boolean", "activeMonitoringFragment", "true"
             buildConfigField "boolean", "reviewScreen", "true"
@@ -170,16 +198,25 @@ android {
             buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.REFDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
-            buildConfigField "boolean", "customfont", "false"
+            buildConfigField "boolean", "customfont", "true"
             buildConfigField "String", "defaultLocale", "\"en\""
             resValue "string", "authority", applicationId + versionName + "_EREFERRALS_DHIS2_DEFAULT_AUTHORITY"
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "true"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "false"
+            buildConfigField "boolean", "activeStockControlFragment", "false"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "validationInline", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            buildConfigField "boolean", "openReviewCompletedSurveys", "false"
+            buildConfigField "boolean", "pullDataDropdown", "true"
+            buildConfigField "boolean", "showReviewInReadMode", "false"
+            buildConfigField "boolean", "elementSDK", "true"
+            buildConfigField "boolean", "askEula", "true"
         }
         cnm {
-            applicationId 'org.eyeseetea.surveillance_cnm_bb'
-            versionName "0.2.0"
+            applicationId 'org.eyeseetea.surveillance_cnm_dev'
+            versionName "0.4.4"
             buildConfigField "boolean", "activeMonitoringFragment", "false"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
@@ -191,7 +228,7 @@ android {
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
             buildConfigField "boolean", "activeAVFragment", "false"
-            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.CNMDBProvider\""
+            buildConfigField "String", "AuthoritiesProvider", "\"" + applicationId + ".data.database.utils.CNMDBProvider\""
             buildConfigField "int", "LimitSurveysCount", "0"
             buildConfigField "int", "LimitSurveysTimeHours", "0"
             buildConfigField "boolean", "customfont", "true"
@@ -199,6 +236,15 @@ android {
             buildConfigField "int", "maxDaysForDeletingSentSurveys", "14"
             buildConfigField "boolean", "performMaintenanceTasks", "false"
             buildConfigField "boolean", "exitFromSurveyToImproveTab", "true"
+            buildConfigField "String", "GIT_HUB_BOT_TOKEN", "\"$gitHubBotToken\""
+            resValue "string", "authority", applicationId + versionName + "_CNM_DHIS2_DEFAULT_AUTHORITY"
+            buildConfigField "boolean", "activeStockControlFragment", "true"
+            buildConfigField "boolean", "validationInline", "false"
+            buildConfigField "boolean", "openReviewCompletedSurveys", "true"
+            buildConfigField "boolean", "pullDataDropdown", "false"
+            buildConfigField "boolean", "showReviewInReadMode", "true"
+            buildConfigField "boolean", "elementSDK", "false"
+            buildConfigField "boolean", "askEula", "false"
         }
 
     }
@@ -226,6 +272,8 @@ dependencies {
     compile project(":core-rules")
     compile project(":ui-bindings")
     compile project(":EyeSeeTea-sdk")
+    compile project(":bugshaker")
+
 
     // App dependencies
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -233,10 +281,14 @@ dependencies {
     apply plugin: 'android-apt'
     apply plugin: 'com.github.dcendents.android-maven'
 
+    //Support Libraries
+    compile "com.android.support:design:${libs.supportVersion}"
+
     //Android support
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
+
     compile "com.android.support:support-annotations:${libs.supportVersion}"
     compile "com.android.support:multidex:${libs.multidex}"
     compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
@@ -244,7 +296,7 @@ dependencies {
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
     compile "com.google.guava:guava:${libs.guavaVersion}"
-    compile "com.squareup.okhttp:okhttp:$rootProject.okhttpVersion"
+    compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
     compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
 
@@ -296,4 +348,8 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
+    compile(project(path: ':bugshaker')) {
+        exclude group: "com.google.android.gms"
+    }
+    compile project(':orbitlite')
 }

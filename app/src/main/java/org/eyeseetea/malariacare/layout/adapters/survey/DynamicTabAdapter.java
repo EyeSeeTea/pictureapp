@@ -44,6 +44,7 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionAttributeDB;
@@ -74,6 +75,7 @@ import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
@@ -83,7 +85,9 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -133,8 +137,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
     private boolean isBackward = true;
+    private boolean isASurveyCreatedInOtherApp;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode) throws NullPointerException {
+    public DynamicTabAdapter(Context context, boolean reviewMode, boolean isASurveyCreatedInOtherApp) throws NullPointerException {
+        this.isASurveyCreatedInOtherApp = isASurveyCreatedInOtherApp;
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -208,8 +214,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 Log.d(TAG, "onSwipeRight(previous)");
                 //Hide keypad
-                if (!readOnly)
+                if (!readOnly) {
                     CommonQuestionView.hideKeyboard(listView.getContext(), listView);
+                }
                 previous();
             }
 
@@ -221,7 +228,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 Log.d(TAG, "onSwipeLeft(next)");
-                if (readOnly)
+                if (readOnly && !BuildConfig.showReviewInReadMode)
                     next();
                 else if (navigationController.isNextAllowed()) {
                     CommonQuestionView.hideKeyboard(listView.getContext(), listView);
@@ -298,7 +305,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
-        questionDB.saveValuesText(newValue);
+        questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
         executeTabLogic(questionDB, null);
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -327,7 +334,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         //TODO DynamicTab not working well when there are to many relations doing this in tab
         // behaviour.
-//        evaluateQuestionRelations(questionDB, selectedOptionDB);
+        TabDB tabDB = questionDB.getHeaderDB().getTabDB();
+        if (tabDB.getType() != Constants.TAB_MULTI_QUESTION_EXCLUSIVE) {
+            evaluateQuestionRelations(questionDB, selectedOptionDB);
+        }
 
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -345,6 +355,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             switch (type) {
                 case QuestionRelationDB.MATCH_WITH_OPTION_ATTRIBUTE:
                     saveInQuestionRelatedValueInAttribute(selectedOptionDB,
+                            questionRelation);
+                    break;
+                case QuestionRelationDB.TREATMENT_MATCH:
+                case QuestionRelationDB.TREATMENT_NO_MATCH:
+                    mDynamicTabAdapterStrategy.evaluateTreatmentMatch(questionDB, selectedOptionDB,
                             questionRelation);
                     break;
             }
@@ -551,7 +566,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
-
         return rowView;
     }
 
@@ -611,6 +625,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((AOptionQuestionView) questionView).setOptions(
                         optionsToShow);
             }
+            if (questionView instanceof AKeyboardSingleQuestionView) {
+                ((AKeyboardSingleQuestionView) questionView).setQuestionDB(screenQuestionDB);
+            }
+            if (questionView instanceof NumberSingleQuestionView) {
+                ((NumberSingleQuestionView) questionView).setQuestionDB(screenQuestionDB);
+            }
             mDynamicTabAdapterStrategy.instanceOfSingleQuestion(questionView, screenQuestionDB);
 
             if (!readOnly) {
@@ -621,7 +641,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
-                questionView.setValue(valueDB);
+                if(shouldDisableNotVisibleChildQuestion(screenQuestionDB, surveyDB)) {
+                    ((CommonQuestionView)questionView).deactivateQuestion();
+                } else {
+                    questionView.setValue(valueDB);
+                }
+
             }
 
             setupNavigationByQuestionView(rowView.getRootView(), questionView);
@@ -648,6 +673,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (questionView instanceof CommonQuestionView) {
                 ((CommonQuestionView) questionView).initContainers(tableRow, tableLayout);
             }
+        }
+    }
+
+    private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
+        if(!BuildConfig.validationInline || !isASurveyCreatedInOtherApp){
+            //if the survey is not coming from a other app intent this is not necessary
+            return false;
+        }else {
+            //if the question is not visible and the value is null the question value should be empty and the validation ignored
+            return (screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB));
         }
     }
 
@@ -805,7 +840,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 }
 
-                Log.d(TAG, "Questions with failed validation " + failedValidations);
+                Log.d(TAG, "Questions with failed validation " + failedValidations + " ; errors: "+questionsWithError);
                 if (failedValidations == 0 && !questionsWithError) {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
@@ -851,6 +886,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         navigationController.getCurrentTab().getType())) {
                     UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
                     isClicked = false;
+                    mDynamicTabAdapterStrategy.showValidationErrors();
                     return;
                 } else {
                     isClicked = false;
@@ -922,9 +958,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         for (QuestionDB childQuestionDB : questionDBChildren) {
                             //if the table row questionDB is child of the modified questionDB...
                             toggleChild(row, rowQuestionDB, childQuestionDB, parentQuestionDB);
-                            showOrHideChildren(childQuestionDB);
                         }
                     }
+                    toggleChild(row, rowQuestionDB, rowQuestionDB, parentQuestionDB);
                 }
             }
         }
@@ -1028,7 +1064,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    public View getKeyboardView(){
+    public View getKeyboardView() {
         return keyboardView;
     }
 
@@ -1037,7 +1073,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
-        mDynamicTabAdapterStrategy.finishOrNext();
+        mDynamicTabAdapterStrategy.finishOrNext(readOnly);
     }
 
     /**
@@ -1173,7 +1209,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             navigationController.isMovingToForward = false;
             return;
         }
-        navigationController.next(valueDB != null ? valueDB.getOptionDB() : null);
+        QuestionDB question = null;
+        if (questionDB.hasQuestionThresholds()) {
+            question = navigationController.next(Integer.parseInt(valueDB.getValue()));
+        }
+        if (question == null) {
+            navigationController.next(valueDB != null ? valueDB.getOptionDB() : null);
+        }
 
         notifyDataSetChanged();
         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(), keyboardView);

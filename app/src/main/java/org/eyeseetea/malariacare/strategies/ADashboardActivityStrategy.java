@@ -1,22 +1,33 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -25,6 +36,8 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 public abstract class ADashboardActivityStrategy {
     private final static String TAG = ".DashActivityStrategy";
@@ -34,7 +47,6 @@ public abstract class ADashboardActivityStrategy {
     protected MonitorFragment monitorFragment;
 
     public void onCreate() {
-
     }
 
     public abstract void reloadStockFragment(Activity activity);
@@ -194,7 +206,12 @@ public abstract class ADashboardActivityStrategy {
 
 
     public void initNavigationController() throws LoadingNavigationControllerException {
-        NavigationBuilder.getInstance().buildController(TabDB.getFirstTab());
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram = programRepository.getUserProgram();
+        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
+
+        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
+        NavigationBuilder.getInstance().buildController(userProgramTab);
     }
 
     public void onUnsentTabSelected(DashboardActivity dashboardActivity) {
@@ -224,17 +241,158 @@ public abstract class ADashboardActivityStrategy {
 
     }
 
-    public void exitReview(){
-        if (!DynamicTabAdapter.isClicked) {
+    public void exitReview(boolean fromSurveysList) {
+        if (!DynamicTabAdapter.isClicked || fromSurveysList) {
             DynamicTabAdapter.isClicked = true;
-            mDashboardActivity.reviewShowDone();
+            mDashboardActivity.reviewShowDone(fromSurveysList);
         }
     }
 
-    public void onPause(){
+    public void onPause() {
 
     }
+
     public void onConnectivityStatusChange() {
 
+    }
+
+    /**
+     * Checks if a survey fragment is active
+     */
+    protected boolean isReviewFragmentActive(Fragment reviewFragment) {
+        return isFragmentActive(reviewFragment, getSurveyContainer());
+    }
+
+    /**
+     * Checks if a survey fragment is active
+     */
+    protected boolean isSurveyFragmentActive(Fragment surveyFragment) {
+        return isFragmentActive(surveyFragment, getSurveyContainer());
+    }
+
+    protected boolean isNewHistoricReceiptBalanceFragmentActive() {
+        return isHistoricNewReceiptBalanceFragment(mDashboardActivity);
+    }
+
+    /**
+     * Checks if a dashboardUnsentFragment is active
+     */
+    public boolean isFragmentActive(Fragment fragment, int layout) {
+        Fragment currentFragment = mDashboardActivity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment != null && currentFragment.equals(fragment)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void initTabWidget(final TabHost tabHost, final Fragment reviewFragment,
+            final Fragment surveyFragment,
+            final boolean isReadOnly) {
+          /* set tabs in order */
+        LayoutUtils.setTabHosts(mDashboardActivity);
+        LayoutUtils.setTabDivider(mDashboardActivity);
+        //set the tabs background as transparent
+        setTabsBackgroundColor(R.color.tab_unpressed_background, tabHost);
+
+        //set first tab as selected:
+        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(
+                mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                /** If current tab is android */
+
+                //set the tabs background as transparent
+                setTabsBackgroundColor(R.color.tab_unpressed_background, tabHost);
+
+                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
+                if (isSurveyFragmentActive(surveyFragment)) {
+                    mDashboardActivity.onSurveyBackPressed();
+                }
+                if (isReviewFragmentActive(reviewFragment)) {
+                    mDashboardActivity.exitReviewOnChangeTab(null);
+                }
+                if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_assess))) {
+                    if (!isReadOnly) {
+                        reloadFirstFragment();
+                    }
+                    reloadFirstFragmentHeader();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_improve))) {
+                    reloadSecondFragment();
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_stock))) {
+                    reloadStockFragment(mDashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_monitor))) {
+                    if (GradleVariantConfig.isMonitoringFragmentActive()) {
+                        reloadFourthFragment();
+                    }
+                } else if (tabId.equalsIgnoreCase(
+                        mDashboardActivity.getResources().getString(R.string.tab_tag_av))) {
+                    reloadAVFragment();
+                }
+                tabHost.getCurrentTabView().setBackgroundColor(
+                        mDashboardActivity.getResources().getColor(R.color.tab_pressed_background));
+            }
+        });
+
+        // init tabHost
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+        }
+    }
+
+    protected void setTabsBackgroundColor(int color, TabHost tabHost) {
+        //set the tabs background as transparent
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setBackgroundColor(
+                    mDashboardActivity.getResources().getColor(color));
+        }
+    }
+
+    public void setStockTab(TabHost tabHost) {
+        setTab(tabHost, mDashboardActivity.getResources().getString(R.string.tab_tag_stock),
+                R.id.tab_stock_layout,
+                mDashboardActivity.getResources().getDrawable(R.drawable.tab_stock));
+    }
+
+    protected void setTab(TabHost tabHost, String tabName, int layout, Drawable image) {
+        TabHost.TabSpec tab = tabHost.newTabSpec(tabName);
+        tab.setContent(layout);
+        tab.setIndicator("", image);
+        tabHost.addTab(tab);
+        addTagToLastTab(tabHost, tabName);
+    }
+
+    private void addTagToLastTab(TabHost tabHost, String tabName) {
+        TabWidget tabWidget = tabHost.getTabWidget();
+        int numTabs = tabWidget.getTabCount();
+        ViewGroup tabIndicator = (ViewGroup) tabWidget.getChildTabViewAt(numTabs - 1);
+
+        ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
+        imageView.setTag(tabName);
+        TextView textView = (TextView) tabIndicator.getChildAt(1);
+        textView.setGravity(Gravity.CENTER);
+        textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+    }
+
+    public void onStart(){
+    }
+
+    public void initStockControlFragment() {
+
+    }
+    public void setStockControlTab(TabHost tabHost) {
+
+    }
+
+    public boolean isStockTableFragmentActive(DashboardActivity dashboardActivity) {
+        return false;
     }
 }

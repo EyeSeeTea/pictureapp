@@ -39,8 +39,9 @@ public class Constants {
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON = 28,
             PREGNANT_MONTH_INT = 29,
             YEAR = 30,
-            DROPDOWN_LIST_OU_TREE = 31;
-
+            DROPDOWN_LIST_OU_TREE = 31,
+            IMAGES_VERTICAL = 32,
+            AGE_MONTH_NUMBER = 33;
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
             DROPDOWN_LIST,
@@ -57,8 +58,11 @@ public class Constants {
             IMAGE_RADIO_GROUP_NO_DATAELEMENT,
             IMAGE_RADIO_GROUP,
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON,
-            DROPDOWN_LIST_OU_TREE
+            DROPDOWN_LIST_OU_TREE,
+            IMAGES_VERTICAL
     );
+
+    public static final String SYSTEM_DEFINED_LANGUAGE = "system_defined";
 
     public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT =
             ConstantsStrategy.QUESTION_TYPES_NO_DATA_ELEMENT;

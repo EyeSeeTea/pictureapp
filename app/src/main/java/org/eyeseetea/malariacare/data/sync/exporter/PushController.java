@@ -23,17 +23,24 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
+import org.eyeseetea.malariacare.data.sync.exporter.strategies.APushControllerStrategy;
+import org.eyeseetea.malariacare.data.sync.exporter.strategies.PushControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.ForceHardcodedLoginOnPushException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushDhisException;
@@ -53,13 +60,17 @@ public class PushController implements IPushController {
 
     private Context mContext;
     private PushDhisSDKDataSource mPushDhisSDKDataSource;
+    private IAuthenticationManager authenticationManager;
     private ConvertToSDKVisitor mConvertToSDKVisitor;
+    private APushControllerStrategy mPushControllerStrategy;
 
 
     public PushController(Context context) {
         mContext = context;
         mPushDhisSDKDataSource = new PushDhisSDKDataSource();
+        authenticationManager= new AuthenticationManager(mContext);
         mConvertToSDKVisitor = new ConvertToSDKVisitor(mContext);
+        mPushControllerStrategy = new PushControllerStrategy();
     }
 
     public void push(final IPushControllerCallback callback) {
@@ -70,7 +81,7 @@ public class PushController implements IPushController {
         } else {
             Log.d(TAG, "Network connected");
 
-            List<SurveyDB> surveyDBs = SurveyDB.getAllCompletedSurveysNoReceiptReset();
+            final List<SurveyDB> surveyDBs = mPushControllerStrategy.getSurveysToPush();
             Boolean isUserClosed = false;
 
             UserDB loggedUserDB = UserDB.getLoggedUser();
@@ -95,23 +106,33 @@ public class PushController implements IPushController {
                     return;
                 }
 
-                Log.d(TAG, "wipe events");
-                mPushDhisSDKDataSource.wipeEvents();
-                try {
-                    Log.d(TAG, "convert surveys to sdk");
-                    convertToSDK(surveyDBs);
-                } catch (Exception ex) {
-                    callback.onError(new ConversionException(ex));
-                    return;
-                }
+                hardcodedLogin(Session.getCredentials().getServerURL(), new IAuthenticationManager.Callback() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                Log.d(TAG, "wipe events");
+                                mPushDhisSDKDataSource.wipeEvents();
+                                try {
+                                    Log.d(TAG, "convert surveys to sdk");
+                                    convertToSDK(surveyDBs);
+                                } catch (Exception ex) {
+                                    callback.onError(new ConversionException(ex));
+                                    return;
+                                }
 
-                if (EventExtended.getAllEvents().size() == 0) {
-                    callback.onError(new ConvertedEventsToPushNotFoundException());
-                    return;
-                } else {
-                    Log.d(TAG, "push data");
-                    pushData(callback);
-                }
+                                if (EventExtended.getAllEvents().size() == 0) {
+                                    callback.onError(new ConvertedEventsToPushNotFoundException());
+                                    return;
+                                } else {
+                                    Log.d(TAG, "push data");
+                                    pushData(callback);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                callback.onError(new ForceHardcodedLoginOnPushException(throwable.getMessage()));
+                            }
+                        });
             }
         }
     }
@@ -166,5 +187,23 @@ public class PushController implements IPushController {
             Log.d(TAG, "Status of survey to be push is = " + surveyDB.getStatus());
             surveyDB.accept(mConvertToSDKVisitor);
         }
+    }
+
+
+
+    private void hardcodedLogin(String url, final AuthenticationManager.Callback callback) {
+        authenticationManager.hardcodedLogin(url,
+                new IAuthenticationManager.Callback<UserAccount>() {
+
+                    @Override
+                    public void onSuccess(UserAccount userAccount) {
+                        callback.onSuccess(userAccount);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="questionHeaderColor">#FF1D5288</color>
+    <color name="questionHeaderColor">#008b17</color>
     <color name="questionHeaderTextColor">#FFFFFF</color>
     <color name="questionLayoutBackground">#e5e5e5</color>
     <color name="dynamicProgressBarColor">#00000000</color>
@@ -12,4 +12,18 @@
     <color name="orange">#f18903</color>
     <color name="green">#779a0b</color>
     <color name="dark_green">#13a083</color>
+    <color name="gray_text_survey">#666666</color>
+    <color name="tab_unpressed_background">#56b861</color>
+    <color name="tab_pressed_background">#008b17</color>
+    <color name="headerColor">#008b17</color>
+    <color name="selected_tab_below_row">#00ff2e</color>
+    <color name="actionbar_background">#005913</color>
+    <color name="dark_navy_blue">#005913</color>
+    <color name="main_window_background">#f7f7f7</color>
+    <color name="default_background_survey">#e2ffb2</color>
+    <color name="green_option">#a5e183</color>
+    <color name="green_option_2">#c9ff6e</color>
+    <color name="dark_blue">#FF1D5288</color>
+    <color name="dark_cream">#ffee78</color>
+    <color name="clear_cream">#fff7b9</color>
 </resources>

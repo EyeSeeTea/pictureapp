@@ -33,6 +33,10 @@ public class OptionArrayAdapter extends AddlArrayAdapter<OptionDB> {
         super(context, optionDBs);
     }
 
+    public OptionArrayAdapter(Context context, List<OptionDB> optionDBs, int layout) {
+        super(context, layout, optionDBs);
+    }
+
     @Override
     public void drawText(CustomTextView customTextView, OptionDB optionDB) {
         customTextView.setText(Utils.getInternationalizedString(optionDB.getName()));

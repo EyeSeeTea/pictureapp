@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
+import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -56,9 +57,8 @@ public class MetadataConfigurationDBImporter {
     }
 
     public void importMetadata(Program program) throws Exception {
-        if (!needToDownloadMetadata) {
-            throw new IllegalStateException("Has to call hasToUpdateMetadata before this method.");
-        }
+        fetchContriesVersionsIfRequired();
+
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
                 if (domainCountry.getUid().equals(program.getId())) {
@@ -67,17 +67,19 @@ public class MetadataConfigurationDBImporter {
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
+                throw new WarningException(exception.getMessage());
             }
         }
     }
 
     public boolean hasToUpdateMetadata(Program program) throws Exception {
-        countryVersions = remoteDataSource.getCountriesVersions();
+
+        fetchContriesVersionsIfRequired();
 
         for (Configuration.CountryVersion domainCountry : countryVersions) {
             try {
                 if (domainCountry.getUid().equals(program.getId())) {
-                    String countryCode = domainCountry.getCountry();
+                    String countryCode = domainCountry.getUid();
                     int version = domainCountry.getVersion();
 
                     if (isCountryNotAlreadyAdded(countryCode)) {
@@ -92,6 +94,12 @@ public class MetadataConfigurationDBImporter {
             }
         }
         return needToDownloadMetadata;
+    }
+
+    private void fetchContriesVersionsIfRequired() throws Exception {
+        if(countryVersions == null || countryVersions.isEmpty()){
+            countryVersions = remoteDataSource.getCountriesVersions();
+        }
     }
 
 

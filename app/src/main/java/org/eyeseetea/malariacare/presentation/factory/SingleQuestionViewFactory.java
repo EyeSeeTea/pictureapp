@@ -5,8 +5,11 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.DatePickerSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.MonthNumberSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion
@@ -20,8 +23,12 @@ import org.eyeseetea.malariacare.views.question.singlequestion.TextSingleQuestio
 public class SingleQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {
         switch (typeQuestion) {
+            case Constants.INT:
+                return new NumberSingleQuestionView(context);
             case Constants.PHONE:
                 return new PhoneSingleQuestionView(context);
+            case Constants.DATE:
+                return new DatePickerSingleQuestionView(context);
             case Constants.POSITIVE_INT:
                 return new PositiveNumberSingleQuestionView(context);
             case Constants.POSITIVE_OR_ZERO_INT:
@@ -45,6 +52,7 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 return twoColumnsImageOptionSingleQuestionView;
             case Constants.IMAGES_3:
             case Constants.IMAGE_3_NO_DATAELEMENT:
+            case Constants.IMAGES_VERTICAL:
                 ImageOptionSingleQuestionView imageOptionSingleQuestionView =
                         new ImageOptionSingleQuestionView(context);
                 imageOptionSingleQuestionView.setColumnsCount(1);
@@ -52,6 +60,8 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
                 return new TextSingleQuestionView(context);
+            case Constants.AGE_MONTH_NUMBER:
+                return new MonthNumberSingleQuestionView(context);
             default:
                 return SingleQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
         }

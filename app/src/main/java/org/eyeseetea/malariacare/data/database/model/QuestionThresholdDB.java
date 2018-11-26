@@ -21,6 +21,8 @@ package org.eyeseetea.malariacare.data.database.model;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdAlias;
@@ -139,6 +141,30 @@ public class QuestionThresholdDB extends BaseModel {
                 .and(QuestionThresholdDB_Table.maxValue.withTable(questionThresholdAlias)
                         .greaterThanOrEq(value))
                 .queryList();
+    }
+
+    public static QuestionDB getQuestionChildWithThreshold(Long id_question, int value) {
+        return new Select().from(QuestionDB.class).as(questionName)
+                .join(QuestionRelationDB.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                .on(QuestionDB_Table.id_question.withTable(questionAlias).eq(
+                        QuestionRelationDB_Table.id_question_fk.withTable(questionRelationAlias)))
+                .join(MatchDB.class, Join.JoinType.LEFT_OUTER).as(matchName)
+                .on(QuestionRelationDB_Table.id_question_relation.withTable(
+                        questionRelationAlias).eq(
+                        MatchDB_Table.id_question_relation_fk.withTable(matchAlias)))
+                .join(QuestionThresholdDB.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
+                .on(MatchDB_Table.id_match.withTable(matchAlias).eq(
+                        QuestionThresholdDB_Table.id_match_fk.withTable(
+                                questionThresholdAlias)))
+                .where(QuestionThresholdDB_Table.id_question_fk.withTable(questionThresholdAlias)
+                        .is(id_question))
+                .and(QuestionThresholdDB_Table.minValue.withTable(questionThresholdAlias)
+                        .lessThanOrEq(value))
+                .and(QuestionThresholdDB_Table.maxValue.withTable(questionThresholdAlias)
+                        .greaterThanOrEq(value))
+                .and(QuestionRelationDB_Table.operation.withTable(questionRelationAlias)
+                        .is(QuestionRelationDB.PARENT_CHILD))
+                .querySingle();
     }
 
     /**
@@ -290,8 +316,8 @@ public class QuestionThresholdDB extends BaseModel {
     private static IProperty[] getAllPropertiesWithAlias() {
         IProperty[] properties = QuestionThresholdDB_Table.getAllColumnProperties();
 
-        for (int i =0; i< properties.length; i++) {
-            IProperty property =  properties[i];
+        for (int i = 0; i < properties.length; i++) {
+            IProperty property = properties[i];
             properties[i] = property.withTable(questionThresholdAlias);
         }
         return properties;

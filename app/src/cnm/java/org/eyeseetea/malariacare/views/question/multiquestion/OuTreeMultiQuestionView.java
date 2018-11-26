@@ -82,6 +82,11 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     @Override
+    public void requestAnswerFocus() {
+        spinnerProvince.requestFocus();
+    }
+
+    @Override
     public void setHelpText(String helpText) {
 
     }
@@ -170,7 +175,8 @@ public class OuTreeMultiQuestionView extends AOptionQuestionView implements IQue
         List<OptionDB> optionsWithParent = getOptionsWithParent(parent, mOptionDBs);
         optionsWithParent.add(0, new OptionDB(hintText, null, 0f, null));
         spinner.setAdapter(
-                new OptionArrayAdapter(getContext(), optionsWithParent));
+                new OptionArrayAdapter(getContext(), optionsWithParent,
+                        R.layout.simple_spinner_text_gray));
     }
 
     private void setSpinnerOnItemSelectedListener(Spinner parent,

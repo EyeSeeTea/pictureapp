@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.PartnerDB;
 import org.eyeseetea.malariacare.data.database.model.PhoneFormatDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramProgramRelationDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionOptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelationDB;
@@ -19,6 +20,8 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThresholdDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentDB;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatchDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.APopulateRowStrategy;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.strategies.PopulateRowStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,8 +88,7 @@ public class PopulateRow {
         return programDB;
     }
 
-    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK,
-            @Nullable TabDB tabDB) {
+    static TabDB populateTab(String[] line, HashMap<Long, ProgramDB> programFK, @Nullable TabDB tabDB) {
         if (tabDB == null) {
             tabDB = new TabDB();
         }
@@ -124,8 +126,7 @@ public class PopulateRow {
         return questionThresholdDB;
     }
 
-    static QuestionOptionDB populateQuestionOption(String[] line,
-            HashMap<Long, QuestionDB> questionFK,
+    static QuestionOptionDB populateQuestionOption(String[] line, HashMap<Long, QuestionDB> questionFK,
             HashMap<Long, OptionDB> optionFK, HashMap<Long, MatchDB> matchFK,
             @Nullable QuestionOptionDB questionOptionDB) {
         if (questionOptionDB == null) {
@@ -190,15 +191,10 @@ public class PopulateRow {
      * @param line The row of the csv to populate.
      */
     static TreatmentDB populateTreatments(String[] line, HashMap<Long, PartnerDB> organisationFK,
-            @Nullable TreatmentDB treatmentDB) {
-        if (treatmentDB == null) {
-            treatmentDB = new TreatmentDB();
-        }
-        treatmentDB.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
-        treatmentDB.setDiagnosis(line[2]); // string_key
-        treatmentDB.setMessage(line[3]); // string_key
-        treatmentDB.setType(Integer.parseInt(line[4]));
-        return treatmentDB;
+ @Nullable TreatmentDB treatmentDB) {
+        APopulateRowStrategy populateRowStrategy = new PopulateRowStrategy();
+        return populateRowStrategy.populateTreatments(line, organisationFK,
+                treatmentDB);
     }
 
     /**
@@ -245,6 +241,7 @@ public class PopulateRow {
         return optionDB;
     }
 
+
     public static PhoneFormatDB populatePhoneFormat(String[] line,
             Map<Integer, ProgramDB> programFK, @Nullable PhoneFormatDB phoneFormatDB) {
         if (phoneFormatDB == null) {
@@ -255,5 +252,12 @@ public class PopulateRow {
             phoneFormatDB.setPrefixToPut(line[4]);
         }
         return phoneFormatDB;
+    }
+
+    public static ProgramProgramRelationDB populateProgramProgramRelation(String[] line,
+            Map<Integer, ProgramDB> programFK) {
+        return new ProgramProgramRelationDB(
+                programFK.get(Integer.valueOf(line[1])).getId_program(),
+                programFK.get(Integer.valueOf(line[2])).getId_program());
     }
 }

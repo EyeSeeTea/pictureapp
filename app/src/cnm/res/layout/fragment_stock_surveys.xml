@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/stock_surveys_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="20dp">
+
+        <LinearLayout
+            android:id="@+id/add_receipt_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <org.eyeseetea.sdk.presentation.views.CustomTextView
+                android:id="@+id/add_receipt_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="@string/add_new_receipt"
+                android:visibility="gone"
+                app:font_name="@string/font_name_light" />
+
+            <ImageButton
+                android:id="@+id/add_receipt_survey"
+                android:layout_width="@dimen/stock_mini_fab_buttons_size"
+                android:layout_height="@dimen/stock_mini_fab_buttons_size"
+                android:background="@drawable/ic_menu_add_receipt" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_expense_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <org.eyeseetea.sdk.presentation.views.CustomTextView
+                android:id="@+id/add_expense_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="@string/add_new_expense"
+                android:visibility="gone"
+                app:font_name="@string/font_name_light" />
+
+            <ImageButton
+                android:id="@+id/add_expense_survey"
+                android:layout_width="@dimen/stock_mini_fab_buttons_size"
+                android:layout_height="@dimen/stock_mini_fab_buttons_size"
+                android:background="@drawable/ic_menu_add_expense" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/add_stock_survey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_add_survey" />
+    </RelativeLayout>
+</RelativeLayout>

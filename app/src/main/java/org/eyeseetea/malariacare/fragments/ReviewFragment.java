@@ -29,7 +29,6 @@ import org.eyeseetea.malariacare.strategies.AReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -143,23 +142,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
 
     private List<String> createBackgroundColorList(
             List<Value> values) {
-        List<java.lang.String> colorsList = new ArrayList<>();
-        for (Value value : values) {
-            if (value.getBackgroundColor() != null) {
-                java.lang.String color = value.getBackgroundColor();
-                if (!colorsList.contains(color)) {
-                    colorsList.add(color);
-                }
-            }
-        }
-        //Hardcoded colors for a colorList without colors.
-        if (colorsList.size() == 0) {
-            colorsList.add("#4d3a4b");
-        }
-        if (colorsList.size() == 1 && values.size() > 1) {
-            colorsList.add("#9c7f9b");
-        }
-        return colorsList;
+        return mReviewFragmentStrategy.createBackgroundColorList(values, getActivity());
     }
 
 

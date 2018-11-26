@@ -5,13 +5,14 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import okhttp3.Response;
 
 public class ServerApiUtils {
     public static final String TAG = ".ServerApiUtils";

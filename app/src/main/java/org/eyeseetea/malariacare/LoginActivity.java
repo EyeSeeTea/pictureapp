@@ -88,7 +88,7 @@ public class LoginActivity extends Activity {
     private static final String IS_LOADING = "state:isLoading";
     public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
     public LoginUseCase mLoginUseCase;
-    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
+    public LoginActivityStrategy mLoginActivityStrategy;
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
@@ -122,6 +122,7 @@ public class LoginActivity extends Activity {
     }
 
     private void initLoginUseCase() {
+        mLoginActivityStrategy = new LoginActivityStrategy(this);
         mLoginActivityStrategy.initLoginUseCase(mAuthenticationManager);
     }
 
@@ -154,7 +155,6 @@ public class LoginActivity extends Activity {
 
         //add spinner
         Spinner spinner = (Spinner) findViewById(R.id.data_spinner);
-        spinner.setVisibility(View.VISIBLE);
         spinner.setAdapter(spinnerArrayAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -173,14 +173,20 @@ public class LoginActivity extends Activity {
         } else {
             spinner.setSelection(spinnerArrayAdapter.getPosition(dateLimit));
         }
+        if(BuildConfig.pullDataDropdown) {
+            spinner.setVisibility(View.VISIBLE);
+        }else{
+            (findViewById(R.id.date_spinner_container)).setVisibility(View.GONE);
+            PreferencesState.getInstance().setDataLimitedByDate(getString(R.string.no_data));
+        }
     }
 
     protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
-            askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
-        } else {
+        if (sharedPreferences.getBoolean(getString(R.string.eula_accepted), false) || !BuildConfig.askEula) {
             login(server.toString(), username.toString(), password.toString());
+        } else {
+            askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
         }
     }
 

@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,21 +27,29 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.fragments.ReviewFragment;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
-import org.eyeseetea.malariacare.utils.ConnectivityStatus;
+import org.eyeseetea.malariacare.network.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
+import org.eyeseetea.malariacare.utils.Utils;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -52,6 +61,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     LogoutUseCase mLogoutUseCase;
     private IAuthenticationManager mAuthenticationManager;
     private int notConnectedText = R.string.offline_status;
+    private boolean comesFromNotConected = false;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
@@ -69,17 +79,35 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             connection.setText(notConnected
                     ? R.string.action_bar_offline : R.string.action_bar_online);
             if (notConnected) {
+                comesFromNotConected = true;
                 Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
             } else {
+                if(comesFromNotConected){
+                    showLoginIfUserReadOnlyMode();
+                }
+                comesFromNotConected = false;
                 Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
             }
             DashboardActivity.dashboardActivity.refreshStatus();
         }
     };
 
+    private void showLoginIfUserReadOnlyMode() {
+        IUserRepository userRepository=new UserAccountDataSource();
+        GetUserUserAccountUseCase getUserUserAccountUseCase =new GetUserUserAccountUseCase(userRepository);
+        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
+            @Override
+            public void onGetUserAccount(UserAccount userAccount) {
+                if(!userAccount.canAddSurveys()){
+                    showLogin(true);
+                }
+            }
+        });
+    }
+
     private void applicationWillEnterForeground() {
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
+            EyeSeeTeaApplication.getInstance().setAppInBackground(false);
         }
     }
 
@@ -94,7 +122,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
-            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
+            checkHastSurveyToComplete();
         }
     }
 
@@ -160,11 +189,25 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
                 if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
-                    showLogin();
+                    checkIfSurveyIsOpenAndShowLogin();
                 }
             }
         }
     };
+
+    private void checkIfSurveyIsOpenAndShowLogin() {
+      checkHastSurveyToComplete();
+        showLogin(false);
+    }
+    private void checkHastSurveyToComplete(){
+        Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
+                R.id.dashboard_details_container);
+        if (f instanceof SurveyFragment || f instanceof ReviewFragment) {
+            Session.setHasSurveyToComplete(true);
+        }else {
+            Session.setHasSurveyToComplete(false);
+        }
+    }
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);
@@ -182,9 +225,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStop() {
-        applicationdidenterbackground();
         LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg() && !LockScreenStatus.isPatternSet(
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
         }
@@ -210,7 +252,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                showLogin();
+                showLogin(false);
             }
 
             @Override
@@ -220,8 +262,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         });
     }
 
-    private void showLogin() {
+    private void showLogin(boolean pull) {
         Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
+        loginIntent.putExtra(LoginActivityStrategy.START_PULL, pull);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mBaseActivity.startActivity(loginIntent);
     }
@@ -242,7 +285,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void showAbout(final int titleId, int rawId, final Context context) {
         final String stringMessage = mBaseActivity.getMessageWithCommit(rawId, context);
-        IAppInfoRepository appInfoDataSource = new AppInfoDataSource();
+        IAppInfoRepository appInfoDataSource = new AppInfoDataSource(context);
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         GetAppInfoUseCase getAppInfoUseCase = new GetAppInfoUseCase(mainExecutor, asyncExecutor,
@@ -252,8 +295,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             public void onAppInfoLoaded(AppInfo appInfo) {
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
-                        String.format(context.getResources().getString(R.string.csv_version),
-                                appInfo.getMetadataVersion()));
+                        String.format(context.getResources().getString(R.string.config_version),
+                                appInfo.getConfigFileVersion()));
+                aboutBuilder.append("<br/>");
+                aboutBuilder.append(
+                        String.format(context.getResources().getString(R.string.metadata_update),
+                                getUpdateDateFromAppInfo(appInfo)));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(
                         Html.fromHtml(aboutBuilder.toString()));
@@ -265,17 +312,26 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     }
 
+    private String getUpdateDateFromAppInfo(AppInfo appInfo) {
+        if (appInfo.getUpdateMetadataDate() == null) {
+            return " - ";
+        }
+        return Utils.parseDateToString(appInfo.getUpdateMetadataDate(),
+                "MM/dd/yyyy HH:mm:ss");
+    }
+
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             showLoginIfConfigFileObsolete(intent);
         }
-
-        private void showLoginIfConfigFileObsolete(Intent intent) {
-            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
-                showLogin();
-            }
-        }
     };
+
+    private void showLoginIfConfigFileObsolete(Intent intent) {
+        if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+            SurveyFragment.closeKeyboard();
+            showLogin(true);
+        }
+    }
 
 }

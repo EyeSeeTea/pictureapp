@@ -4,23 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/question_padding"
-    android:paddingRight="@dimen/question_padding">
+    android:orientation="vertical"
+              android:paddingLeft="20dp"
+              android:paddingRight="20dp"
+              android:paddingTop="40dp"
+    android:background="@color/default_background_survey"
+              xmlns:tools="http://schemas.android.com/tools">
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:gravity="left"
+        android:layout_gravity="center"
+        android:textColor="@color/gray_text_survey"
+        android:textSize="?attr/font_xsmall"
+        app:font_name="@string/font_name_bold"
+        tools:text="Question Text"/>
 
     <org.eyeseetea.sdk.presentation.views.CustomEditText
         android:id="@+id/answer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:layout_weight="0.5"
-        android:background="@drawable/edit_text_bottom_border"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
         android:gravity="center"
         android:inputType="number"
+        android:paddingLeft="16dp"
         android:maxLength="1"
+        android:paddingRight="16dp"
+        android:textColor="@color/gray_text_survey"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/gray_text_survey" />
 
     <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/dynamic_positiveInt_btn"
@@ -29,6 +57,7 @@
         android:layout_margin="10dp"
         android:layout_weight="0.5"
         android:text="@string/provider_redeemEntry_msg_matchingOk"
+        android:visibility="gone"
         android:textSize="?attr/font_medium"
         app:font_name="@string/normal_font" />
 

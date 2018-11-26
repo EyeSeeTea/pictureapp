@@ -26,7 +26,7 @@ public class AppInfoRemoteDataSource implements IAppInfoRepository {
         cnmApiClient.getMetadataVersion(new CnmApiClient.CnmApiClientCallBack<Version>() {
             @Override
             public void onSuccess(Version result) {
-                callback.onSuccess(new AppInfo(false, result.getVersion()));
+                callback.onSuccess(new AppInfo(false, result.getVersion(),result.getVersion()));
             }
 
             @Override
@@ -39,5 +39,10 @@ public class AppInfoRemoteDataSource implements IAppInfoRepository {
     @Override
     public void saveAppInfo(AppInfo appInfo) {
 
+    }
+
+    @Override
+    public String getConfigFileVersion() {
+        return null;
     }
 }

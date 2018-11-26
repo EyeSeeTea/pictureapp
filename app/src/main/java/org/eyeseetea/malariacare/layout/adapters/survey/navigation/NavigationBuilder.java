@@ -2,13 +2,17 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
+import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
@@ -94,6 +98,15 @@ public class NavigationBuilder {
             }
         });
 
+    }
+
+    public void buildControllerByProgram() throws LoadingNavigationControllerException{
+        IProgramRepository programRepository = new ProgramLocalDataSource();
+        Program userProgram = programRepository.getUserProgram();
+        ProgramDB program = ProgramDB.findByName(userProgram.getCode());
+
+        TabDB userProgramTab = TabDB.findTabByProgram(program.getId_program()).get(0);
+        buildController(userProgramTab);
     }
 
     private void buildNavigationController(QuestionDB rootQuestionDB){

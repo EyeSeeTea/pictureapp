@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -35,7 +36,6 @@ import android.util.DisplayMetrics;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.utils.LanguageContextWrapper;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
@@ -126,62 +126,10 @@ public class SettingsActivity extends PreferenceActivity implements
     private static void setLanguageOptions(Preference preference) {
         ListPreference listPreference = (ListPreference) preference;
 
-        HashMap<String, String> languages = getAppLanguages(R.string.system_defined);
-
-        CharSequence[] newEntries = new CharSequence[languages.size() + 1];
-        CharSequence[] newValues = new CharSequence[languages.size() + 1];
-        int i = 0;
-        newEntries[i] = PreferencesState.getInstance().getContext().getString(
-                R.string.system_defined);
-        newValues[i] = "";
-        for (String language : languages.keySet()) {
-            i++;
-            String languageCode = languages.get(language);
-            String firstLetter = language.substring(0, 1).toUpperCase();
-            language = firstLetter + language.substring(1, language.length());
-            newEntries[i] = language;
-            newValues[i] = languageCode;
-        }
-
-        listPreference.setEntries(newEntries);
-        listPreference.setEntryValues(newValues);
+        listPreference.setEntries(R.array.languages_strings);
+        listPreference.setEntryValues(R.array.languages_codes);
     }
 
-    /**
-     * This method finds the existing app translations
-     * * @param stringId this string id should be different in all value-xx/string.xml files. Else
-     * the language can be ignored
-     */
-    public static HashMap<String, String> getAppLanguages(int stringId) {
-        HashMap<String, String> languages = new HashMap<>();
-        Context context = PreferencesState.getInstance().getContext();
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        Resources r = context.getResources();
-        Configuration c = r.getConfiguration();
-        Locale currentLocale = c.locale;
-        if (currentLocale.getLanguage().isEmpty()) {
-            currentLocale = new Locale(PreferencesState.getInstance().getPhoneLanguage());
-        }
-        String[] loc = r.getAssets().getLocales();
-        for (int i = 0; i < loc.length; i++) {
-            c.locale = new Locale(loc[i]);
-            Resources res = new Resources(context.getAssets(), metrics, c);
-            String s1 = res.getString(stringId);
-            String language = new Locale(loc[i]).getDisplayLanguage(currentLocale);
-            c.locale = new Locale("");
-            Resources res2 = new Resources(context.getAssets(), metrics, c);
-            String s2 = res2.getString(stringId);
-
-            //Compare with the default language
-            if (!s1.equals(s2)) {
-                languages.put(language, loc[i]);
-            }
-            Locale defaultLocale = new Locale(BuildConfig.defaultLocale);
-            languages.put(defaultLocale.getDisplayLanguage(currentLocale),
-                    defaultLocale.getLanguage());
-        }
-        return languages;
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -235,8 +183,6 @@ public class SettingsActivity extends PreferenceActivity implements
         bindPreferenceSummaryToValue(
                 findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        loadFontStyleListPreference();
-
         autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(
                 getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(
@@ -268,6 +214,8 @@ public class SettingsActivity extends PreferenceActivity implements
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
 
+        loadFontStyleListPreference();
+
         mSettingsActivityStrategy.addExtraPreferences();
     }
 
@@ -278,14 +226,20 @@ public class SettingsActivity extends PreferenceActivity implements
         List<String> entries = new ArrayList<>();
         List<String> entryValues = new ArrayList<>();
 
-        for (FontStyle fontStyle:FontStyle.values()) {
-            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
-            entryValues.add(String.valueOf(fontStyle.getResId()));
-        }
+        mSettingsActivityStrategy.addFontStyleEntries(entries, entryValues);
 
         listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
         listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
-        listPreference.setDefaultValue(String.valueOf(FontStyle.Medium.getResId()));
+        CheckBoxPreference customizeFont = ((CheckBoxPreference)getPreferenceScreen().findPreference(
+                this.getResources().getString(R.string.customize_fonts)));
+        if(customizeFont.isChecked()) {
+            for(int i=0; listPreference.getEntryValues().length>i;i++){
+                if(listPreference.getEntryValues()[i].equals(listPreference.getValue())){
+                    listPreference.setValueIndex(i);
+                    listPreference.setSummary(listPreference.getEntry());
+                }
+            }
+        }
     }
 
     @Override

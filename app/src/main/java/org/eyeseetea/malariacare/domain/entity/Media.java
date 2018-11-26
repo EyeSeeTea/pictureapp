@@ -13,7 +13,9 @@ import java.io.File;
 
 public class Media {
 
-    public enum MediaType{ PICTURE, VIDEO, UNKNOWN};
+    public enum MediaType {PICTURE, VIDEO, UNKNOWN}
+
+    ;
     long id;
     String name;
     String resourcePath;
@@ -43,10 +45,6 @@ public class Media {
         return program;
     }
 
-    public void setProgram(String program) {
-        this.program = program;
-    }
-
     public long getId() {
         return id;
     }
@@ -55,16 +53,8 @@ public class Media {
         return name;
     }
 
-    public void setName(String name) {
-        this.name=name;
-    }
-
     public String getResourceUrl() {
         return resourceUrl;
-    }
-
-    public void setResourceUrl(String resourceUrl) {
-        this.resourceUrl = resourceUrl;
     }
 
     public String getSize() {
@@ -108,5 +98,52 @@ public class Media {
 
     public boolean isVideo() {
         return type == MediaType.VIDEO;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Media media = (Media) o;
+
+        if (id != media.id) return false;
+        if (name != null ? !name.equals(media.name) : media.name != null) return false;
+        if (resourcePath != null ? !resourcePath.equals(media.resourcePath)
+                : media.resourcePath != null) {
+            return false;
+        }
+        if (resourceUrl != null ? !resourceUrl.equals(media.resourceUrl)
+                : media.resourceUrl != null) {
+            return false;
+        }
+        if (program != null ? !program.equals(media.program) : media.program != null) return false;
+        if (type != media.type) return false;
+        return size != null ? size.equals(media.size) : media.size == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (resourcePath != null ? resourcePath.hashCode() : 0);
+        result = 31 * result + (resourceUrl != null ? resourceUrl.hashCode() : 0);
+        result = 31 * result + (program != null ? program.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (size != null ? size.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Media{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", resourcePath='" + resourcePath + '\'' +
+                ", resourceUrl='" + resourceUrl + '\'' +
+                ", program='" + program + '\'' +
+                ", type=" + type +
+                ", size='" + size + '\'' +
+                '}';
     }
 }

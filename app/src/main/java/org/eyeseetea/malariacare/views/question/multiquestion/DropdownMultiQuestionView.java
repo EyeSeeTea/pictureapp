@@ -7,10 +7,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -91,6 +93,16 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 break;
             }
         }
+
+        if (BuildConfig.validationInline) {
+            if (spinnerOptions.getSelectedItemPosition() > 0) {
+                Validation.getInstance().removeInputError(header);
+                header.setError(null);
+            } else {
+                Validation.getInstance().addinvalidInput(header, getContext().getString(
+                        R.string.error_empty_question));
+            }
+        }
     }
 
     @Override
@@ -117,10 +129,20 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 OptionDB optionDB = (OptionDB) parent.getItemAtPosition(position);
                 if (!optionSetFromSavedValue) {
-                    if (position > 0)
-                    notifyAnswerChanged(optionDB);
+                    if (position > 0) {
+                        notifyAnswerChanged(optionDB);
+                    }
                 } else {
                     optionSetFromSavedValue = false;
+                }
+                if (BuildConfig.validationInline) {
+                    if (position > 0) {
+                        Validation.getInstance().removeInputError(header);
+                        header.setError(null);
+                    } else {
+                        Validation.getInstance().addinvalidInput(header, getContext().getString(
+                                R.string.error_empty_question));
+                    }
                 }
             }
 
@@ -138,9 +160,32 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 return false;
             }
         });
+        if (BuildConfig.validationInline) {
+            Validation.getInstance().addInput(header);
+            Validation.getInstance().addinvalidInput(header,
+                    getResources().getString(R.string.error_empty_question));
+        }
     }
 
     public Spinner getSpinnerOptions() {
         return spinnerOptions;
+    }
+
+    @Override
+    public void activateQuestion() {
+        setActive(true);
+        Object inputView = this.findViewById(R.id.row_header_text);
+        if (inputView != null) {
+            Validation.getInstance().addInput(inputView);
+        }
+    }
+
+    @Override
+    public void deactivateQuestion() {
+        setActive(false);
+        Object inputView = this.findViewById(R.id.row_header_text);
+        if (inputView != null) {
+            Validation.getInstance().removeInputError(inputView);
+        }
     }
 }

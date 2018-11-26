@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!-- Fuzzy -->
-<string name="login_userName">"User Code"</string>
+    <string name="login_userName">"User Code"</string>
 
 <!-- Fuzzy -->
-<string name="login_password">"PIN"</string>
+    <string name="login_password">"PIN"</string>
 
 <!-- Open Referrals -->
 <!-- Fuzzy -->
@@ -393,8 +393,8 @@
 <!-- Login -->
 <!-- Fuzzy -->
 <string name="login_btn_login">"Login"</string>
-<string name="advanced_options">"Advanced Options"</string>
-<string name="simple_options">"Simple Options"</string>
+    <string name="advanced_options">"Advanced Options"</string>
+    <string name="simple_options">"Simple Options"</string>
 
     <!-- Voucher event create responseCode not 200, but -->
 <!-- Fuzzy -->
@@ -756,7 +756,7 @@
 <string name="app_visual">"Visual:"</string>
 <string name="fonts_customise">"Customise fonts"</string>
 <string name="font_size">"Font size"</string>
-<string name="font_extra_sipc_menu_issueReferralmall">"Extra small"</string>
+<string name="font_extra_small">"Extra small"</string>
 <string name="font_small">"Small"</string>
 <string name="font_medium">"Medium"</string>
 <string name="font_large">"Large"</string>
@@ -899,14 +899,14 @@
 <string name="error_exporting_data">"Error metadata could not be exported."</string>
 <string name="google_play_required">"This app requires Google Play Services. Please install Google Play Services on your device and relaunch this app."</string>
 <string name="voucher">"Voucher"</string>
-<string name="forgot_password">"I forgot my PIN"</string>
+    <string name="forgot_password">"I forgot my PIN"</string>
 <string name="forgot_password_sms_sent">"SMS sent to stored phone for the given username"</string>
 <string name="forgot_password_wrong_username">"Username do not match any register in the server"</string>
 <string name="ws_unknown_exception">"Unknown exception."</string>
 <string name="feedback_view_image">"Open image with..."</string>
 <string name="drive_title">"Drive root folder"</string>
-<string name="new_survey_disable">"The new version of metadata could not be installed because there are pending surveys to send. The new survey button temporarily disable"</string>
-<string name="csv_version">"CVS Version: %s 
+<string name="new_survey_disable">"The new survey button is temporarily disabled because the new version of the metadata could not be installed correctly."</string>
+<string name="config_version">"Config Version: %s
 "</string>
 <string name="av_progress">"Downloading content... please wait"</string>
 <string name="ipc_issueEntry_q_eventType">"Filled during"</string>
@@ -1033,79 +1033,99 @@
 <string name="common_option_ZW_targetGroup_Assisted">"Assisted"</string>
 <string name="common_option_ZW_targetGroup_Administered">"Administered"</string>
 <string name="common_option_ZW_targetGroup_Absent">"Absent"</string>
-<string name="ipc_issueEntry_q_birthDate">"Date of birth"</string>
-<string name="ipc_issueEntry_q_ZW_birthOrder">"Order of birth (for twins only)"</string>
-<string name="common_option_ZW_district_beitbridge">"Beitbridge"</string>
-<string name="common_option_ZW_district_bikita">"Bikita"</string>
-<string name="common_option_ZW_district_bindura">"Bindura"</string>
-<string name="common_option_ZW_district_binga">"Binga"</string>
-<string name="common_option_ZW_district_bubi">"Bubi"</string>
-<string name="common_option_ZW_district_buhera">"Buhera"</string>
-<string name="common_option_ZW_district_bulawayo">"Bulawayo"</string>
-<string name="common_option_ZW_district_bulilima">"Bulilima"</string>
-<string name="common_option_ZW_district_centenary">"Centenary"</string>
-<string name="common_option_ZW_district_chegutu">"Chegutu"</string>
-<string name="common_option_ZW_district_chikomba">"Chikomba"</string>
-<string name="common_option_ZW_district_chimanimani">Chimanimani"</string>
-<string name="common_option_ZW_district_chipinge">"Chipinge"</string>
-<string name="common_option_ZW_district_chiredzi">"Chiredzi"</string>
-<string name="common_option_ZW_district_chirumanzi">"Chirumanzi"</string>
-<string name="common_option_ZW_district_chivi">"Chivi"</string>
-<string name="common_option_ZW_district_gokweNorth">"Gokwe North"</string>
-<string name="common_option_ZW_district_gokweSouth">"Gokwe South"</string>
-<string name="common_option_ZW_district_goromonzi">"Goromonzi"</string>
-<string name="common_option_ZW_district_guruve">"Guruve"</string>
-<string name="common_option_ZW_district_gutu">"Gutu"</string>
-<string name="common_option_ZW_district_gwanda">"Gwanda"</string>
-<string name="common_option_ZW_district_gweru">"Gweru"</string>
-<string name="common_option_ZW_district_harare">"Harare"</string>
-<string name="common_option_ZW_district_hurungwe">"Hurungwe"</string>
-<string name="common_option_ZW_district_hwange">"Hwange"</string>
-<string name="common_option_ZW_district_hwedza">"Hwedza"</string>
-<string name="common_option_ZW_district_insiza">"Insiza"</string>
-<string name="common_option_ZW_district_kadoma">"Kadoma"</string>
-<string name="common_option_ZW_district_kariba">"Kariba"</string>
-<string name="common_option_ZW_district_kwekwe">"Kwekwe"</string>
-<string name="common_option_ZW_district_lupane">"Lupane"</string>
-<string name="common_option_ZW_district_makonde">"Makonde"</string>
-<string name="common_option_ZW_district_makoni">"Makoni"</string>
-<string name="common_option_ZW_district_mangwe">"Mangwe"</string>
-<string name="common_option_ZW_district_marondera">"Marondera"</string>
-<string name="common_option_ZW_district_masvingo">"Masvingo"</string>
-<string name="common_option_ZW_district_matobo">"Matobo"</string>
-<string name="common_option_ZW_district_mazowe">"Mazowe"</string>
-<string name="common_option_ZW_district_mberengwa">"Mberengwa"</string>
-<string name="common_option_ZW_district_mtDarwin">"Mt Darwin"</string>
-<string name="common_option_ZW_district_mudzi">"Mudzi"</string>
-<string name="common_option_ZW_district_murehwa">"Murehwa"</string>
-<string name="common_option_ZW_district_mutare">"Mutare"</string>
-<string name="common_option_ZW_district_mutasa">"Mutasa"</string>
-<string name="common_option_ZW_district_mutoko">"Mutoko"</string>
-<string name="common_option_ZW_district_mwenezi">"Mwenezi"</string>
-<string name="common_option_ZW_district_nkayi">"Nkayi"</string>
-<string name="common_option_ZW_district_nyanga">"Nyanga"</string>
-<string name="common_option_ZW_district_rusape">"Rusape"</string>
-<string name="common_option_ZW_district_rushinga">"Rushinga"</string>
-<string name="common_option_ZW_district_seke">"Seke"</string>
-<string name="common_option_ZW_district_shamva">"Shamva"</string>
-<string name="common_option_ZW_district_shurugwi">"Shurugwi"</string>
-<string name="common_option_ZW_district_tsholotsho">"Tsholotsho"</string>
-<string name="common_option_ZW_district_umguza">"Umguza"</string>
-<string name="common_option_ZW_district_umzingwane">"Umzingwane"</string>
-<string name="common_option_ZW_district_umpWe">"UMP WE"</string>
-<string name="common_option_ZW_district_zaka">"Zaka"</string>
-<string name="common_option_ZW_district_zvimba">"Zvimba"</string>
-<string name="common_option_ZW_district_zvishavane">"Zvishavane"</string>
-<string name="common_option_ZW_district_outsideZW">"Outside Zimbabwe"</string>
-<string name="dynamic_error_invalid_positive_number">"Invalid positive number"</string>
-<string name="error_files_download_no_files">"No media for this country"</string>
-<string name="error_files_download_no_wifi">"Please connect to a WiFi network to download the media for this country"</string>
-<string name="error_android_version_not_supported">"Apologizes but Connect is not compatible with your device Android version. You must have Android 5.0+ to get Connect working."</string>
-<string name="error_downloading_languages">"Error during languages download: "</string>
-<string name="error_unable_to_find_app_than_can_open_file">Unable to find an app that open this file</string>
-<string name="warning_strings_download_failed">Warning, strings download failed</string>
-<string name="error_unable_to_download_translations">Unable to download translations</string>
-<string name="error_unable_to_download_configuration_files">Unable to download configuration files</string>
-<string name="error_unable_to_download_translations_and_configuration_files">Unable to download translations and configuration files</string>
+    <string name="ipc_issueEntry_q_birthDate">"Date of birth"</string>
+    <string name="ipc_issueEntry_q_ZW_birthOrder">"Order of birth (for twins only)"</string>
+    <string name="common_option_ZW_district_beitbridge">"Beitbridge"</string>
+    <string name="common_option_ZW_district_bikita">"Bikita"</string>
+    <string name="common_option_ZW_district_bindura">"Bindura"</string>
+    <string name="common_option_ZW_district_binga">"Binga"</string>
+    <string name="common_option_ZW_district_bubi">"Bubi"</string>
+    <string name="common_option_ZW_district_buhera">"Buhera"</string>
+    <string name="common_option_ZW_district_bulawayo">"Bulawayo"</string>
+    <string name="common_option_ZW_district_bulilima">"Bulilima"</string>
+    <string name="common_option_ZW_district_centenary">"Centenary"</string>
+    <string name="common_option_ZW_district_chegutu">"Chegutu"</string>
+    <string name="common_option_ZW_district_chikomba">"Chikomba"</string>
+    <string name="common_option_ZW_district_chimanimani">Chimanimani"</string>
+    <string name="common_option_ZW_district_chipinge">"Chipinge"</string>
+    <string name="common_option_ZW_district_chiredzi">"Chiredzi"</string>
+    <string name="common_option_ZW_district_chirumanzi">"Chirumanzi"</string>
+    <string name="common_option_ZW_district_chivi">"Chivi"</string>
+    <string name="common_option_ZW_district_gokweNorth">"Gokwe North"</string>
+    <string name="common_option_ZW_district_gokweSouth">"Gokwe South"</string>
+    <string name="common_option_ZW_district_goromonzi">"Goromonzi"</string>
+    <string name="common_option_ZW_district_guruve">"Guruve"</string>
+    <string name="common_option_ZW_district_gutu">"Gutu"</string>
+    <string name="common_option_ZW_district_gwanda">"Gwanda"</string>
+    <string name="common_option_ZW_district_gweru">"Gweru"</string>
+    <string name="common_option_ZW_district_harare">"Harare"</string>
+    <string name="common_option_ZW_district_hurungwe">"Hurungwe"</string>
+    <string name="common_option_ZW_district_hwange">"Hwange"</string>
+    <string name="common_option_ZW_district_hwedza">"Hwedza"</string>
+    <string name="common_option_ZW_district_insiza">"Insiza"</string>
+    <string name="common_option_ZW_district_kadoma">"Kadoma"</string>
+    <string name="common_option_ZW_district_kariba">"Kariba"</string>
+    <string name="common_option_ZW_district_kwekwe">"Kwekwe"</string>
+    <string name="common_option_ZW_district_lupane">"Lupane"</string>
+    <string name="common_option_ZW_district_makonde">"Makonde"</string>
+    <string name="common_option_ZW_district_makoni">"Makoni"</string>
+    <string name="common_option_ZW_district_mangwe">"Mangwe"</string>
+    <string name="common_option_ZW_district_marondera">"Marondera"</string>
+    <string name="common_option_ZW_district_masvingo">"Masvingo"</string>
+    <string name="common_option_ZW_district_matobo">"Matobo"</string>
+    <string name="common_option_ZW_district_mazowe">"Mazowe"</string>
+    <string name="common_option_ZW_district_mberengwa">"Mberengwa"</string>
+    <string name="common_option_ZW_district_mtDarwin">"Mt Darwin"</string>
+    <string name="common_option_ZW_district_mudzi">"Mudzi"</string>
+    <string name="common_option_ZW_district_murehwa">"Murehwa"</string>
+    <string name="common_option_ZW_district_mutare">"Mutare"</string>
+    <string name="common_option_ZW_district_mutasa">"Mutasa"</string>
+    <string name="common_option_ZW_district_mutoko">"Mutoko"</string>
+    <string name="common_option_ZW_district_mwenezi">"Mwenezi"</string>
+    <string name="common_option_ZW_district_nkayi">"Nkayi"</string>
+    <string name="common_option_ZW_district_nyanga">"Nyanga"</string>
+    <string name="common_option_ZW_district_rusape">"Rusape"</string>
+    <string name="common_option_ZW_district_rushinga">"Rushinga"</string>
+    <string name="common_option_ZW_district_seke">"Seke"</string>
+    <string name="common_option_ZW_district_shamva">"Shamva"</string>
+    <string name="common_option_ZW_district_shurugwi">"Shurugwi"</string>
+    <string name="common_option_ZW_district_tsholotsho">"Tsholotsho"</string>
+    <string name="common_option_ZW_district_umguza">"Umguza"</string>
+    <string name="common_option_ZW_district_umzingwane">"Umzingwane"</string>
+    <string name="common_option_ZW_district_umpWe">"UMP WE"</string>
+    <string name="common_option_ZW_district_zaka">"Zaka"</string>
+    <string name="common_option_ZW_district_zvimba">"Zvimba"</string>
+    <string name="common_option_ZW_district_zvishavane">"Zvishavane"</string>
+    <string name="common_option_ZW_district_outsideZW">"Outside Zimbabwe"</string>
+    <string name="dynamic_error_invalid_positive_number">"Invalid positive number"</string>
+    <string name="error_files_download_no_files">"No media for this country"</string>
+    <string name="error_files_download_no_wifi">"Please connect to a WiFi network to download the media for this country"</string>
+    <string name="error_android_version_not_supported">"Apologizes but Connect is not compatible with your device Android version. You must have Android 5.0+ to get Connect working."</string>
+    <string name="error_downloading_languages">"Error during languages download: "</string>
+    <string name="error_unable_to_find_app_than_can_open_file">Unable to find an app that open this file</string>
+    <string name="warning_strings_download_failed">Warning, strings download failed</string>
+    <string name="error_unable_to_download_translations">Unable to download translations</string>
+    <string name="error_unable_to_download_configuration_files">Unable to download configuration files</string>
+    <string name="error_unable_to_download_translations_and_configuration_files">Unable to download translations and configuration files</string>
+<string name="upgrading_metadata">Upgrading metadata</string>
+<string name="warning_message">"WARNING: "</string>
+
+<string name="error_empty_question">"Empty mandatory field"</string>
+    <string-array name="languages_strings">
+        <item>System defined</item>
+        <item>English</item>
+        <item>Portuguese</item>
+        <item>Nepali</item>
+        <item>Swahili</item>
+    </string-array>
+<string name="format_error">Json format error</string>
+<string name="no_user_error">No user logged in.</string>
+<string name="different_user_error">User logged in is different.</string>
+<string name="dynamic_error_month_age">"Invalid age in months"</string>
+<string name="elements">"Elements"</string>
+<string name="activate_elements">"Activate elements"</string>
+<string name="allow_media_download_3g">"Allow media download over 3g"</string>
+<string name="metadata_update">"Last metadata upgrade: %s"</string>
+<string name="element_not_installed">"Element SDK is not installed!"</string>
 
 </resources>

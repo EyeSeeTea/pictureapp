@@ -3,7 +3,7 @@
     <string name="rdtPositive" translatable="false">Positive</string>
     <string name="rdtNegative" translatable="false">Negative</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dhis2.asia/cnm_android</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://sandbox.cnm-mis.org/</string>
     <string name="work_in_progress" translatable="false">Work in progress</string>
 
 
@@ -32,7 +32,6 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-    <string name="authority" translatable="false">CNM_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="google_play_required" translatable="false"></string>
     <string name="feedback_view_image" translatable="false"></string>
     <string name="autoconfigure_preference" translatable="false">autoconfigure_preference</string>
@@ -40,4 +39,28 @@
     <string name="metadata_version" translatable="false">metadata_version</string>
     <string name="imei_preference" translatable="false">imei_prefrence</string>
     <string name="default_language" translatable="false">en</string>
+    <string name="stock_program_uid" translatable="false">zaRb1RuqGVk</string>
+    <string name="malaria_program_uid" translatable="false">d7iipQZaHad</string>
+    <string name="control_data_element_stock_type" translatable="false">y4khhaHeh4k</string>
+    <string name="control_data_element_stock_type_balance" translatable="false">BALANCE</string>
+    <string name="control_data_element_stock_type_issue" translatable="false">ISSUE</string>
+    <string name="control_data_element_stock_type_receipt" translatable="false">RECEIPT</string>
+    <string-array name="languages_codes" translatable="false">
+        <item>system_defined</item>
+        <item>en</item>
+        <item>km</item>
+    </string-array>
+    <string name="lastcommit_unavailable"><![CDATA[
+<p>This option requires some changes in the git repository.</p>
+<p>Steps:</p>
+<p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
+<p>2. If the file does not exist, add the following lines: </p>
+<p>#!/bin/sh </p>
+<p>gitPath=$(git rev-parse --show-toplevel)</p>
+<p>sh ${gitPath}/generate_last_commit.sh </p>
+<p>2. If the file already exists, you only need add the following lines at the end:</p>
+<p>gitPath=$(git rev-parse --show-toplevel)</p>
+<p>sh ${gitPath}/generate_last_commit.sh </p>
+<p>3. Run "git checkout". </p>]]>
+</string>
 </resources>

@@ -80,6 +80,7 @@ public class HeaderDB extends BaseModel {
             headerDB.delete();
         }
     }
+
     public static List<HeaderDB> findHeadersByTab(Long id_tab) {
         return new Select()
                 .from(HeaderDB.class)

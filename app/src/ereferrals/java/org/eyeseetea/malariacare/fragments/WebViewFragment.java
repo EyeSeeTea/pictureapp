@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -138,7 +139,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                 showHideWebView(false);
 
                 mErrorDemoText.setText(
-                        Utils.getInternationalizedString(R.string.erro_page_text, getActivity()));
+                        translate(R.string.erro_page_text));
             }
         }
     }
@@ -148,7 +149,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 showHideWebView(false);
                 mErrorDemoText.setText(
-                        Utils.getInternationalizedString(R.string.demo_page_text, getActivity()));
+                        translate(R.string.demo_page_text));
                 ;
             } else {
                 showHideWebView(true);
@@ -196,5 +197,8 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             return true;
         }
         return false;
+    }
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, getActivity());
     }
 }

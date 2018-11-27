@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -159,7 +160,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void showToastAndClose(int error) {
-        Toast.makeText(loginActivity, Utils.getInternationalizedString(error, loginActivity),
+        Toast.makeText(loginActivity, translate(error),
                 Toast.LENGTH_LONG).show();
         Runnable runnable = new Runnable() {
             @Override
@@ -212,7 +213,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         final TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
         passwordHint.setHint(
-                Utils.getInternationalizedString(R.string.login_password, loginActivity));
+                translate(R.string.login_password));
 
         initTextFields();
 
@@ -328,7 +329,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void initAdvancedOptionsButton() {
         advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
         advancedOptions.setText(
-                Utils.getInternationalizedString(R.string.advanced_options, loginActivity));
+                translate(R.string.advanced_options));
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -353,7 +354,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void initServerURLField() {
         serverURLContainer = loginActivity.findViewById(R.id.text_layout_server_url);
         ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_server_url)).setHint(
-                Utils.getInternationalizedString(R.string.server_url, loginActivity));
+                translate(R.string.server_url));
     }
 
     private void initPasswordField() {
@@ -364,7 +365,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
         passwordHint.setHint(
-                Utils.getInternationalizedString(R.string.login_password, loginActivity));
+                translate(R.string.login_password));
     }
 
     private void onForgotPassword() {
@@ -383,18 +384,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     @Override
                     public void onNetworkError() {
                         loginActivity.onFinishLoading(null);
-                        showMessageDialog(Utils.getInternationalizedString(R.string.network_error,
-                                loginActivity),
-                                Utils.getInternationalizedString(R.string.error_conflict_title,
-                                        loginActivity));
+                        showMessageDialog(translate(R.string.network_error),
+                                translate(R.string.error_conflict_title));
                     }
 
                     @Override
                     public void onError(String messages) {
                         loginActivity.onFinishLoading(null);
                         showMessageDialog(messages,
-                                Utils.getInternationalizedString(R.string.error_conflict_title,
-                                        loginActivity));
+                                translate(R.string.error_conflict_title));
                     }
                 });
 
@@ -560,7 +558,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onWarning(WarningException warning) {
                 Log.w(this.getClass().getSimpleName(), "onWarning " + warning.getMessage());
                 loginActivity.showError(
-                        Utils.getInternationalizedString(R.string.warning_message, loginActivity)
+                        translate(R.string.warning_message)
                                 + warning.getMessage());
             }
 
@@ -582,8 +580,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(
-                Utils.getInternationalizedString(R.string.provider_redeemEntry_msg_matchingOk,
-                        loginActivity),
+                translate(R.string.provider_redeemEntry_msg_matchingOk),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -595,7 +592,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void initDemoButton() {
         demoButton = (Button) loginActivity.findViewById(R.id.demo_login_button);
-        demoButton.setText(Utils.getInternationalizedString(R.string.demo_login, loginActivity));
+        demoButton.setText(translate(R.string.demo_login));
 
         demoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -711,5 +708,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 .getLogoutUseCase(loginActivity);
 
         logoutUseCase.execute(callback);
+    }
+    
+    private String translate(@StringRes int resourceId){
+        return loginActivity.translate(resourceId);
     }
 }

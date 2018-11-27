@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -172,7 +171,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private void showToast(@StringRes int text) {
         Toast.makeText(mDashboardActivity.getApplicationContext(),
-                Utils.getInternationalizedString(text, mDashboardActivity),
+                translate(text),
                 Toast.LENGTH_LONG).show();
     }
 
@@ -233,8 +232,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 if (userAccount.canAddSurveys()) {
                     openNewSurvey(activity);
                 } else {
-                    showToast(Utils.getInternationalizedString(R.string.new_survey_disable,
-                            activity));
+                    showToast(translate(R.string.new_survey_disable));
                 }
             }
         });
@@ -527,8 +525,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     downloadMedia();
                 } else {
                     Toast.makeText(mDashboardActivity.getApplicationContext(),
-                            Utils.getInternationalizedString(
-                                    R.string.google_play_required, mDashboardActivity),
+                            translate(
+                                    R.string.google_play_required),
                             Toast.LENGTH_LONG);
                 }
                 break;
@@ -578,8 +576,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     }
 
                     mDashboardActivity.showException(mDashboardActivity, "", String.format(
-                            Utils.getInternationalizedString(R.string.give_voucher,
-                                    mDashboardActivity),
+                            translate(R.string.give_voucher),
                             voucherUId), onClickListener);
                 }
             });
@@ -599,8 +596,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                     @Override
                     public void onNotInstalledApp() {
                         Toast.makeText(context,
-                                Utils.getInternationalizedString(R.string.element_not_installed,
-                                        context), Toast.LENGTH_LONG).show();
+                                translate(R.string.element_not_installed), Toast.LENGTH_LONG).show();
                     }
                 });
                 elementSentVoucherUseCase.execute(voucherUId);
@@ -610,12 +606,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private boolean noIssueVoucher(SurveyDB survey) {
         OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
-                Utils.getInternationalizedString(R.string.issue_voucher_qc, mDashboardActivity));
+                translate(R.string.issue_voucher_qc));
         if (noIssueOption == null) {
             return false;
         }
         return noIssueOption.getName().equals(
-                Utils.getInternationalizedString(R.string.no_voucher_on, mDashboardActivity));
+                translate(R.string.no_voucher_on));
     }
 
     private boolean hasPhone(SurveyDB survey) {
@@ -694,5 +690,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
         }
+    }
+
+    private String translate(@StringRes int resourceId) {
+        return mDashboardActivity.translate(resourceId);
     }
 }

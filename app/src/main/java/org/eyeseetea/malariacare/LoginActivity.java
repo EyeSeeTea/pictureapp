@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -248,7 +249,7 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     public void showError(int message) {
-        Toast.makeText(this, Utils.getInternationalizedString(message, this),
+        Toast.makeText(this, translate(message),
                 Toast.LENGTH_LONG).show();
     }
 
@@ -269,8 +270,7 @@ public class LoginActivity extends Activity {
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
         TextInputLayout userHint = (TextInputLayout) findViewById(R.id.username_hint);
-        userHint.setHint(
-                Utils.getInternationalizedString(R.string.login_userName, mContext));
+        userHint.setHint(translate(R.string.login_userName));
         usernameEditText.addTextChangedListener(watcher);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
@@ -285,7 +285,7 @@ public class LoginActivity extends Activity {
                         passwordEditText.getText());
             }
         });
-        loginButton.setText(Utils.getInternationalizedString(R.string.login_btn_login, mContext));
+        loginButton.setText(translate(R.string.login_btn_login));
 
         mLoginActivityStrategy.initViews();
     }
@@ -307,8 +307,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onError() {
                 hideProgressBar();
-                showError(Utils.getInternationalizedString(R.string.login_unexpected_error,
-                        mContext));
+                showError(translate(R.string.login_unexpected_error));
             }
         });
 
@@ -328,10 +327,8 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "onServerURLNotValid");
                 onFinishLoading(null);
                 serverText.setError(
-                        Utils.getInternationalizedString(R.string.login_invalid_server_url,
-                                mContext));
-                showError(Utils.getInternationalizedString(R.string.login_invalid_server_url,
-                        mContext));
+                        translate(R.string.login_invalid_server_url));
+                showError(translate(R.string.login_invalid_server_url));
             }
 
             @Override
@@ -356,15 +353,14 @@ public class LoginActivity extends Activity {
             public void onConfigJsonInvalid() {
                 Log.d(TAG, "onConfigJsonInvalid");
                 onFinishLoading(null);
-                showError(Utils.getInternationalizedString(R.string.login_error_json, mContext));
+                showError(translate(R.string.login_error_json));
             }
 
             @Override
             public void onUnexpectedError() {
                 Log.d(TAG, "onUnexpectedError");
                 hideProgressBar();
-                showError(Utils.getInternationalizedString(R.string.login_unexpected_error,
-                        mContext));
+                showError(translate(R.string.login_unexpected_error));
             }
 
             @Override
@@ -727,6 +723,10 @@ public class LoginActivity extends Activity {
     protected void onDestroy() {
         Log.d(TAG, "AndroidLifeCycle: onDestroy");
         super.onDestroy();
+    }
+
+    public String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, this);
     }
 }
 

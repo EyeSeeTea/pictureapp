@@ -285,7 +285,7 @@ public class LoginActivity extends Activity {
                         passwordEditText.getText());
             }
         });
-        loginButton.setText(translate(R.string.login_btn_login));
+//        loginButton.setText(translate(R.string.login_btn_login));
 
         mLoginActivityStrategy.initViews();
     }

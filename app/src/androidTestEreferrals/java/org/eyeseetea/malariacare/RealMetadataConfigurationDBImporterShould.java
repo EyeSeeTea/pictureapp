@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare;
 
 import static junit.framework.Assert.assertTrue;
 
-import com.squareup.okhttp.Credentials;
 
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -28,7 +27,7 @@ public class RealMetadataConfigurationDBImporterShould {
     @Before
     public void setUp() throws Exception {
 
-        String credentials = Credentials.basic("eref.webapp", "8frhKmMe");
+        String credentials = "";
 
         IMetadataConfigurationDataSource apiClient =
                 MetadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource(

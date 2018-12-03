@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -64,7 +65,11 @@ public class BaseActivityShould {
 
         ComponentName componentInfo = taskInfo.get(0).topActivity;
         String activityName = componentInfo.getClassName();
-        assertThat(activityName, is(LoginActivity.class.getName()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            assertThat(activityName, is("com.android.packageinstaller.permission.ui.GrantPermissionsActivity"));
+        } else {
+            assertThat(activityName, is(LoginActivity.class.getName()));
+        }
     }
 
     @Before

@@ -8,6 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -172,7 +173,8 @@ public class PushUseCaseShould {
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"));
+                new Device("testPhone", "testIMEI", "test_version"),
+                InstrumentationRegistry.getContext());
         mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();

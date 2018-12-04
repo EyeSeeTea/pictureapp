@@ -70,17 +70,9 @@ public class SettingsDataSource implements ISettingsRepository {
 
     @Override
     public void saveSettings(Settings settings) {
-        setMediaPreference(settings.getMediaListMode().toString());
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private Locale getCurrentLocale() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Resources.getSystem().getConfiguration().getLocales().get(0);
-        } else {
-            //noinspection deprecation
-            return Resources.getSystem().getConfiguration().locale;
-        }
+        saveMediaPreference(settings.getMediaListMode().toString());
+        saveProgramUrl(settings.getProgramUrl());
+        saveWebUrl(settings.getWebUrl());
     }
 
     private MediaListMode getMediaListMode() {
@@ -93,7 +85,7 @@ public class SettingsDataSource implements ISettingsRepository {
         return mediaListMode;
     }
 
-    private void setMediaPreference(String listType) {
+    private void saveMediaPreference(String listType) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -107,6 +99,32 @@ public class SettingsDataSource implements ISettingsRepository {
         return sharedPreferences.getString(
                 context.getResources().getString(R.string.media_list_style_preference),
                 "");
+    }
+
+    private void saveProgramUrl(String programUrl) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getResources().getString(R.string.program_configuration_url), programUrl);
+        editor.commit();
+    }
+
+    private void saveWebUrl(String webUrl) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getResources().getString(R.string.web_view_url), webUrl);
+        editor.commit();
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private Locale getCurrentLocale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Resources.getSystem().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return Resources.getSystem().getConfiguration().locale;
+        }
     }
 
     private boolean canDownloadMediaWith3G() {

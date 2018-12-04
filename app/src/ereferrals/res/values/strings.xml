@@ -1135,4 +1135,7 @@
 <string name="zimbabwe_program_eref">Zimbabwe</string>
 <string name="demo_page_text">"You're in demo mode and this is an online module. Please logout and login with a valid user to see this information."</string>
 <string name="erro_page_text">"You're offline and this is an online module. Please connect to a network in order to see this information."</string>
+<string name="production">Production</string>
+<string name="training">Training</string>
+<string name="custom">Custom</string>
 </resources>

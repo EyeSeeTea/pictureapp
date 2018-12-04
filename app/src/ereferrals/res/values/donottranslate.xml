@@ -79,4 +79,9 @@
     <string name="program_configuration_url" translatable="false">"program_configuration_url"</string>
     <string name="program_configuration_user" translatable="false">"program_configuration_user"</string>
     <string name="program_configuration_pass" translatable="false">"program_configuration_pass"</string>
+    <string-array name="server_list">
+        <item>@string/production</item>
+        <item>@string/training</item>
+        <item>@string/custom</item>
+    </string-array>
 </resources>

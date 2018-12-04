@@ -969,4 +969,7 @@
     <string name="settings_title_program_password_config">"Senha de configuração do programa"</string>
 <string name="demo_page_text">"Você está no modo de demonstração e este é um módulo on-line. Por favor, faça logout e login com um usuário válido para ver esta informação."</string>
 <string name="erro_page_text">"Você está offline e este é um módulo on-line. Por favor, conecte-se a uma rede para ver esta informação."</string>
+<string name="production">Produção</string>
+<string name="training">Treinamento</string>
+<string name="custom">Personalizado</string>
 </resources>

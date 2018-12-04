@@ -84,4 +84,11 @@
         <item>@string/training</item>
         <item>@string/custom</item>
     </string-array>
+
+    <string name="program_url_production" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/</string>
+    <string name="webservice_url_production" translatable="false">https://apps.psi-mis.org/eRefWSProd/</string>
+    <string name="web_url_production" translatable="false">https://apps.psi-mis.org/connect/</string>
+    <string name="program_url_training" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings-train/</string>
+    <string name="webservice_url_training" translatable="false">https://apps.psi-mis.org/eRefWSTrain/</string>
+    <string name="web_url_training" translatable="false">https://apps.psi-mis.org/connect-train/</string>
 </resources>

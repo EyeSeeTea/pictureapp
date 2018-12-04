@@ -14,8 +14,11 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -70,6 +73,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private View webviewURLContainer;
     private EditText programURLEditText;
     private EditText webviewURLEditText;
+    private Spinner serverSpinner;
     private LoginType loginType;
     private Button logoutButton;
     private Button demoButton;
@@ -234,7 +238,52 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
         initButtons();
 
+        initSpinner();
+
         setUpSoftOrFullLoginOptions();
+    }
+
+    private void initSpinner() {
+        serverSpinner = (Spinner) loginActivity.findViewById(R.id.server_spinner);
+        String[] serverList = loginActivity.getResources().getStringArray(R.array.server_list);
+        if(serverList.length<1) {
+            return;
+        }
+        ArrayAdapter serversListAdapter = new ArrayAdapter<>(loginActivity.getBaseContext(),android.R.layout.simple_spinner_item, serverList);
+        serverSpinner.setAdapter(serversListAdapter);
+        serverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String value = parent.getItemAtPosition(position).toString();
+                if(value.equals(parent.getContext().getResources().getString(R.string.production))){
+                    showServerEditUrls(false);
+                    programURLEditText.setText(R.string.program_url_production);
+                    webviewURLEditText.setText(R.string.web_url_production);
+                    loginActivity.getServerText().setText(R.string.webservice_url_production);
+                } else if(value.equals(parent.getContext().getResources().getString(R.string.training))){
+                    showServerEditUrls(false);
+                    programURLEditText.setText(R.string.program_url_training);
+                    webviewURLEditText.setText(R.string.web_url_training);
+                    loginActivity.getServerText().setText(R.string.webservice_url_training);
+                } else if (value.equals(parent.getContext().getResources().getString(R.string.custom))){
+                    showServerEditUrls(true);
+                    programURLEditText.setText(R.string.program_url_production);
+                    webviewURLEditText.setText(R.string.web_url_production);
+                    loginActivity.getServerText().setText(R.string.webservice_url_production);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                parent.setSelection(0);
+            }
+        });
+    }
+
+    private void showServerEditUrls(boolean value) {
+        changeVisibility(webserviceURLContainer, value);
+        changeVisibility(programURLContainer, value);
+        changeVisibility(webviewURLContainer, value);
     }
 
     private void initButtons() {
@@ -308,7 +357,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     public void onLogoutSuccess() {
                         //Re-setting the state of all components
                         // for a full-login
-                        toggleServerUrlVisibility();
+                        toggleSpinnerVisibility();
                         loginActivity.getUsernameEditText().setText("");
                         loginActivity.getPasswordEditText().setText("");
                         loginType = LoginType.FULL;
@@ -331,12 +380,20 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     }
 
-    private void toggleServerUrlVisibility() {
-        toggleVisibility(webserviceURLContainer);
-        toggleVisibility(programURLContainer);
-        toggleVisibility(webviewURLContainer);
+    private void toggleSpinnerVisibility() {
+        toggleVisibility(serverSpinner);
+        if(serverSpinner.getVisibility() == View.GONE){
+            showServerEditUrls(false);
+        }
     }
 
+    private void changeVisibility(View view, boolean value) {
+        if(value){
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.GONE);
+        }
+    }
     private void initForgotPasswordButton() {
         Button forgotPassword = (Button) loginActivity.findViewById(R.id.forgot_password);
 
@@ -366,7 +423,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         toggleVisibility(demoButton);
                         break;
                 }
-                toggleServerUrlVisibility();
+                toggleSpinnerVisibility();
                 toggleText(advancedOptions, R.string.advanced_options, R.string.simple_options);
             }
         });

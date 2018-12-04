@@ -104,4 +104,11 @@ public class Settings {
     public String getProgramUrl() {
         return programUrl;
     }
+
+    public void setProgramUrl(String value) {
+        programUrl = value;
+    }
+    public void setWebUrl(String value) {
+        webUrl = value;
+    }
 }

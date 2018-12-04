@@ -81,6 +81,22 @@
                 android:padding="@dimen/login_container_padding">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomSpinner
+                        android:id="@+id/server_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:spinnerMode="dropdown"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/login_dynamic_views_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -2,14 +2,15 @@
 <resources>
 
 <!-- TERMS FROM POEDITOR -->
-    <string name="login_userName">"प्रयोगकर्ता कोड"</string>
-    <string name="login_password">"पिन"</string>
-    <string name="advanced_options">"उन्नत विकल्पहरू"</string>
-    <string name="simple_options">"सरल विकल्पहरू"</string>
-    <string name="server_url">"सर्भर URL"</string>
+<string name="login_userName">"प्रयोगकर्ता कोड"</string>
+<string name="login_password">"पिन"</string>
+<string name="advanced_options">"उन्नत विकल्पहरू"</string>
+<string name="simple_options">"सरल विकल्पहरू"</string>
+<string name="server_url">वेब सेवा URL</string>
+<string name="program_url">कार्यक्रम कन्फिगुरेसन URL</string>
+<string name="webviews_url">वेब URL</string>
 
-
-    <!-- Open Referrals -->
+<!-- Open Referrals -->
 <string name="ipc_menu_openReferrals">"रेफरलहरू खोल्नुहोस्"</string>
 
 <!-- Add + -->

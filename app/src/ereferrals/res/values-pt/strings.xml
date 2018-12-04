@@ -734,10 +734,12 @@
 <string name="error_exporting_data">"Erro metadata não pôde ser exportado"</string>
 <string name="google_play_required">"Esta aplicação requer serviços do Google play. Por favor instale os serviços Google play e volte a abrir a aplicação"</string>
 <string name="voucher">"Senha"</string>
-    <string name="log_in">Entrar</string>
-    <string name="clear_and_logout">Limpar e sair</string>
-    <string name="server_url">URL do Servidor</string>
-    <string name="forgot_password">"Esqueci meu PIN"</string>
+<string name="log_in">Entrar</string>
+<string name="clear_and_logout">Limpar e sair</string>
+<string name="server_url">URL do serviço da Web</string>
+<string name="program_url">URL de configuração do programa</string>
+<string name="webviews_url">URL da Web</string>
+<string name="forgot_password">"Esqueci meu PIN"</string>
 <string name="forgot_password_sms_sent">"SMS enviada ao telefone para o usuário em causa"</string>
 <string name="forgot_password_wrong_username">"Usuário não combina com nenhum registo no servidor"</string>
 <string name="ws_unknown_exception">"Excepção desconhecida"</string>

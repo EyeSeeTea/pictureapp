@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -47,6 +46,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetLastInsertedCredentialsUseCas
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -65,16 +65,23 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public static final String START_PULL = "StartPull";
     private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
-    private View serverURLContainer;
+    private View webserviceURLContainer;
+    private View programURLContainer;
+    private View webviewURLContainer;
+    private EditText programURLEditText;
+    private EditText webviewURLEditText;
     private LoginType loginType;
     private Button logoutButton;
     private Button demoButton;
     private Button advancedOptions;
+    private Settings settings;
     IAsyncExecutor asyncExecutor;
     IMainExecutor mainExecutor;
     ICredentialsRepository credentialsRepository;
     IAuthRepository authRepository;
     GetSettingsUseCase getSettingsUseCase;
+    SaveSettingsUseCase saveSettingsUseCase;
+
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -86,6 +93,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         ISettingsRepository settingsDataSource = new SettingsDataSource(loginActivity);
         getSettingsUseCase= new GetSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
                 settingsDataSource);
+        saveSettingsUseCase= new SaveSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
+                settingsDataSource);
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                settings = setting;
+            }
+        });
+
     }
 
     /**
@@ -232,8 +248,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void initTextFields() {
-        initServerURLField();
-
+        initWebServiceURLField();
+        initProgramURLField();
+        initWebURLField();
         initPasswordField();
     }
 
@@ -291,7 +308,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     public void onLogoutSuccess() {
                         //Re-setting the state of all components
                         // for a full-login
-                        toggleVisibility(serverURLContainer);
+                        toggleServerUrlVisibility();
                         loginActivity.getUsernameEditText().setText("");
                         loginActivity.getPasswordEditText().setText("");
                         loginType = LoginType.FULL;
@@ -312,6 +329,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
         });
 
+    }
+
+    private void toggleServerUrlVisibility() {
+        toggleVisibility(webserviceURLContainer);
+        toggleVisibility(programURLContainer);
+        toggleVisibility(webviewURLContainer);
     }
 
     private void initForgotPasswordButton() {
@@ -343,17 +366,65 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                         toggleVisibility(demoButton);
                         break;
                 }
-                toggleVisibility(serverURLContainer);
+                toggleServerUrlVisibility();
                 toggleText(advancedOptions, R.string.advanced_options, R.string.simple_options);
             }
         });
     }
 
 
-    private void initServerURLField() {
-        serverURLContainer = loginActivity.findViewById(R.id.text_layout_server_url);
-        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_server_url)).setHint(
+    private void initWebServiceURLField() {
+        webserviceURLContainer = loginActivity.findViewById(R.id.text_layout_webservice_server_url);
+        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_webservice_server_url)).setHint(
                 Utils.getInternationalizedString(R.string.server_url, loginActivity));
+    }
+
+    private void initProgramURLField() {
+        programURLContainer = loginActivity.findViewById(R.id.text_layout_program_server_url);
+        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_program_server_url)).setHint(
+                Utils.getInternationalizedString(R.string.program_url, loginActivity));
+    }
+
+    private void initWebURLField() {
+        webviewURLContainer = loginActivity.findViewById(R.id.text_layout_web_server_url);
+        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_web_server_url)).setHint(
+                Utils.getInternationalizedString(R.string.webviews_url, loginActivity));
+    }
+
+    @Override
+    public EditText initProgramServer(){
+        programURLEditText = loginActivity.findViewById(R.id.edittext_program_server_url);
+        if(programURLEditText!=null) {
+            programURLEditText.setText(settings.getProgramUrl());
+        }
+        return programURLEditText;
+    }
+
+    @Override
+    public EditText initWebviewServer(){
+        webviewURLEditText = loginActivity.findViewById(R.id.edittext_web_server_url);
+        if(webviewURLEditText!=null) {
+            webviewURLEditText.setText(settings.getWebUrl());
+        }
+        return webviewURLEditText;
+    }
+
+    @Override
+    public void saveOtherValues(final ALoginActivityStrategy.SettingsCallback callback) {
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                settings = setting;
+                settings.setProgramUrl(programURLEditText.getText().toString());
+                settings.setWebUrl(webviewURLEditText.getText().toString());
+                saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        callback.onSuccess();
+                    }
+                }, settings);
+            }
+        });
     }
 
     private void initPasswordField() {
@@ -480,8 +551,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     public void initLoginUseCase() {
-        loginActivity.mLoginUseCase = new AuthenticationFactoryStrategy()
-                .getLoginUseCase(loginActivity);
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                settings = setting;
+                loginActivity.mLoginUseCase = new AuthenticationFactoryStrategy()
+                        .getLoginUseCase(loginActivity);
+            }
+        });
     }
 
     @Override

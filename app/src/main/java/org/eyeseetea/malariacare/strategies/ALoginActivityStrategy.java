@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.strategies;
 
 
+import android.widget.EditText;
+
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -53,12 +55,22 @@ public abstract class ALoginActivityStrategy {
         callback.onSuccessDoLogin();
     }
 
+    public abstract EditText initProgramServer();
+
+    public abstract EditText initWebviewServer();
+
+    public abstract void saveOtherValues(final ALoginActivityStrategy.SettingsCallback callback);
+
     public interface Callback {
         void onSuccess();
 
         void onSuccessDoLogin();
 
         void onError();
+    }
+
+    public interface SettingsCallback {
+        void onSuccess();
     }
 
 

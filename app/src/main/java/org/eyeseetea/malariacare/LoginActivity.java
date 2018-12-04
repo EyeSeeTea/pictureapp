@@ -261,10 +261,7 @@ public class LoginActivity extends Activity {
         FieldTextWatcher watcher = new FieldTextWatcher();
         initDataDownloadPeriodDropdown();
         //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.edittext_server_url);
-        serverText.setText(ServerAPIController.getServerUrl());
-        serverText.addTextChangedListener(watcher);
-
+        initServerUrls(watcher);
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
@@ -281,13 +278,36 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
-                        passwordEditText.getText());
+                mLoginActivityStrategy.saveOtherValues(new ALoginActivityStrategy.SettingsCallback() {
+                    @Override
+                    public void onSuccess() {
+                        onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
+                                passwordEditText.getText());
+                    }
+                });
             }
         });
         loginButton.setText(Utils.getInternationalizedString(R.string.login_btn_login, mContext));
 
         mLoginActivityStrategy.initViews();
+    }
+
+    private void initServerUrls(FieldTextWatcher watcher) {
+        serverText = (EditText) findViewById(R.id.edittext_loginweb_server_url);
+        serverText.setText(ServerAPIController.getServerUrl());
+        serverText.addTextChangedListener(watcher);
+
+        mLoginActivityStrategy.initProgramServer();
+        mLoginActivityStrategy.initWebviewServer();
+
+        EditText webviewServer = mLoginActivityStrategy.initProgramServer();
+        if(webviewServer!=null) {
+            webviewServer.addTextChangedListener(watcher);
+        }
+        EditText programServer = mLoginActivityStrategy.initWebviewServer();
+        if(programServer!=null) {
+            programServer.addTextChangedListener(watcher);
+        }
     }
 
     public void login(String serverUrl, String username, String password) {

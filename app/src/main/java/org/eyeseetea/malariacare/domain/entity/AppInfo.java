@@ -10,13 +10,15 @@ public class AppInfo {
     private String appVersion;
     private boolean metadataDownloaded;
     private Date updateMetadataDate;
+    private Date lastPushDate;
 
     public AppInfo(String metadataVersion, String configFileVersion, String appVersion,
-            Date updateMetadataDate) {
+            Date updateMetadataDate, Date lastPushDate) {
         this.metadataVersion = required(metadataVersion, "metadataVersion is required");
         this.configFileVersion = required(configFileVersion, "configFileVersion is required");
         this.appVersion = required(appVersion, "appVersion is required");
         this.updateMetadataDate = updateMetadataDate;
+        this.lastPushDate = lastPushDate;
     }
 
     public AppInfo(boolean metadataDownloaded, String configFileVersion, String metadataVersion) {
@@ -53,12 +55,19 @@ public class AppInfo {
         return updateMetadataDate;
     }
 
+    public Date getLastPushDate() {
+        return lastPushDate;
+    }
+
     @Override
     public String toString() {
         return "AppInfo{" +
                 "metadataVersion='" + metadataVersion + '\'' +
+                ", configFileVersion='" + configFileVersion + '\'' +
                 ", appVersion='" + appVersion + '\'' +
                 ", metadataDownloaded=" + metadataDownloaded +
+                ", updateMetadataDate=" + updateMetadataDate +
+                ", lastPushDate=" + lastPushDate +
                 '}';
     }
 }

@@ -384,6 +384,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         toggleVisibility(serverSpinner);
         if(serverSpinner.getVisibility() == View.GONE){
             showServerEditUrls(false);
+        }else if(serverSpinner.getSelectedItem().equals(loginActivity.getString(R.string.custom))){
+            showServerEditUrls(true);
         }
     }
 

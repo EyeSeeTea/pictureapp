@@ -43,12 +43,16 @@ public class MetadataConfigurationApiClientShould {
 
     private List<Configuration.CountryVersion> countryVersions;
 
+    private String expectedBaseUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/";
+    private String productionUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/";
+    private String expectedProductionToken = "dcSettings";
+
     @Before
     public void setUp() throws Exception {
 
         CustomMockServer = new CustomMockServer(new FileReader());
 
-        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(),
+        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint()+"/dcSettings/",
                 new BasicAuthInterceptor(""));
     }
 
@@ -96,6 +100,40 @@ public class MetadataConfigurationApiClientShould {
         whenRequestCountryVersions();
 
         thenAssertThatResponseParseSuccessfullyForCountryVersions();
+    }
+
+    @Test
+    public void separate_base_url_and_country_token_with_training_url() throws Exception {
+        String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings-train/";
+        String expectedTrainingToken = "dcSettings-train";
+
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl, new BasicAuthInterceptor(""));
+
+        assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
+        assertThat(apiClient.getCountryExtension(), is(expectedTrainingToken));
+    }
+
+    @Test
+    public void separate_base_url_and_country_token_with_production_url() throws Exception {
+        String productionUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/";
+        String expectedProductionToken = "dcSettings";
+
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(productionUrl, new BasicAuthInterceptor(""));
+
+        assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
+        assertThat(apiClient.getCountryExtension(), is(expectedProductionToken));
+    }
+
+
+    @Test
+    public void separate_base_url_and_country_token_with_production_url_without_last_slash() throws Exception {
+        String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings";
+        String expectedTrainingToken = "dcSettings";
+
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl, new BasicAuthInterceptor(""));
+
+        assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
+        assertThat(apiClient.getCountryExtension(), is(expectedTrainingToken));
     }
 
     @Test(expected = ApiCallException.class)

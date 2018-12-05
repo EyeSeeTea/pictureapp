@@ -12,8 +12,8 @@ import retrofit2.http.Path;
 
 public interface IMetadataConfigurationApi {
 
-    @GET("dcSettings")
-    Call<MetadataCountryVersionApi> getCountriesVersions();
+    @GET("{countryFolder}")
+    Call<MetadataCountryVersionApi> getCountriesVersions(@Path("countryFolder") String countryFolder);
 
     @GET("{countryCode}")
     Call<MetadataConfigurationsApi> getConfiguration(@Path("countryCode") String countryCode);

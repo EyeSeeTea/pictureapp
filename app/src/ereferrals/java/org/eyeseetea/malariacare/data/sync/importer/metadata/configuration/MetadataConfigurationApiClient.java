@@ -86,19 +86,41 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class MetadataConfigurationApiClient implements IMetadataConfigurationDataSource {
 
     private IMetadataConfigurationApi configurationApi;
+    private String baseUrl;
+    private String countryExtension;
 
     public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
             throws Exception {
+
+        separateBaseUrlAndCountryExtension(url);
 
         OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(client)
-                .baseUrl(url)
+                .baseUrl(baseUrl)
                 .build();
 
         configurationApi = retrofit.create(IMetadataConfigurationApi.class);
+    }
+
+    public String getBaseUrl(){
+        return baseUrl;
+    }
+
+    public String getCountryExtension(){
+        return countryExtension;
+    }
+
+    private void separateBaseUrlAndCountryExtension(String url) {
+        if(url.lastIndexOf("/") != url.length()-1){
+            url += "/";
+        }
+        String tempurl = url.substring(0, url.lastIndexOf("/"));
+        tempurl = tempurl.substring(0, tempurl.lastIndexOf("/"));
+        countryExtension = url.replace(tempurl, "").replaceAll("/", "");
+        baseUrl = tempurl + "/";
     }
 
     @Override
@@ -147,7 +169,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     public List<Configuration.CountryVersion> getCountriesVersions() throws Exception {
 
         Response<MetadataCountryVersionApi> response =
-                configurationApi.getCountriesVersions().execute();
+                configurationApi.getCountriesVersions(countryExtension).execute();
 
         MetadataCountryVersionApi metadata = getResultsOrThrowException(response);
 

@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.sync.importer.WSPullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.usecase.UpdateLastPushDateUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetCanMakeManualPushUseCase;
 
 public class SyncFactoryStrategy extends ASyncFactory {
 
@@ -25,6 +26,11 @@ public class SyncFactoryStrategy extends ASyncFactory {
 
     public UpdateLastPushDateUseCase getUpdateLastPushDateUseCase(Context context) {
         return new UpdateLastPushDateUseCase(mainExecutor, asyncExecutor,
+                new AppInfoDataSource(context));
+    }
+
+    public GetCanMakeManualPushUseCase getGetCanMakeManualPushUseCase(Context context) {
+        return new GetCanMakeManualPushUseCase(mainExecutor, asyncExecutor,
                 new AppInfoDataSource(context));
     }
 }

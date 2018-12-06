@@ -99,9 +99,6 @@ public class AppInfoDataSource implements IAppInfoRepository {
                 context);
         long timeMillis = sharedPreferences.getLong(
                 context.getResources().getString(R.string.last_push_date), 0);
-        if (timeMillis == 0) {
-            return null;
-        }
         return new Date(timeMillis);
     }
 

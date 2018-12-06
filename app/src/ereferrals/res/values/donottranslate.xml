@@ -80,4 +80,5 @@
     <string name="program_configuration_user" translatable="false">"program_configuration_user"</string>
     <string name="program_configuration_pass" translatable="false">"program_configuration_pass"</string>
     <string name="last_push_date" translatable="false">last_push_date</string>
+    <string name="ENABLE_MANUAL_PUSH_PERIOD" translatable="false">30</string>
 </resources>

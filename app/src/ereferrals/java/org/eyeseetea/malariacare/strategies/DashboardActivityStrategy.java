@@ -197,6 +197,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             @Override
             public void onSuccess(boolean canMakePush) {
                 mRefreshButton.setEnabled(canMakePush);
+                if (!canMakePush) {
+                    waitToEnableRefreshButton(mDashboardActivity);
+                }
             }
         });
     }

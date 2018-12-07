@@ -498,8 +498,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //QuestionDB
         CustomTextView headerView = (CustomTextView) rowView.findViewById(question);
-        ((TextView) rowView.findViewById(R.id.question_title)).setText(
-                translate(R.string.new_survey_title));
 
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
@@ -869,8 +867,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void initializeNavigationButtons(View navigationButtonsHolder) {
         View nextButton = (View) navigationButtonsHolder.findViewById(R.id.next_btn);
-        ((TextView) nextButton).setText(
-                translate(R.string.survey_submit));
 
         ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override

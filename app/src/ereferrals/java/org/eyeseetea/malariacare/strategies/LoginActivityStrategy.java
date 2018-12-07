@@ -210,10 +210,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
         passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        final TextInputLayout passwordHint =
-                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(
-                translate(R.string.login_password));
 
         initTextFields();
 
@@ -328,8 +324,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void initAdvancedOptionsButton() {
         advancedOptions = (Button) loginActivity.findViewById(R.id.advanced_options);
-        advancedOptions.setText(
-                translate(R.string.advanced_options));
 
         advancedOptions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -361,11 +355,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         EditText passwordEditText = loginActivity.getPasswordEditText();
         passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-
-        TextInputLayout passwordHint =
-                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint(
-                translate(R.string.login_password));
     }
 
     private void onForgotPassword() {
@@ -592,7 +581,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void initDemoButton() {
         demoButton = (Button) loginActivity.findViewById(R.id.demo_login_button);
-        demoButton.setText(translate(R.string.demo_login));
 
         demoButton.setOnClickListener(new View.OnClickListener() {
             @Override

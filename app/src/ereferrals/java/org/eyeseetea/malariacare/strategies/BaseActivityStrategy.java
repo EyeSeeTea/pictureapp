@@ -50,6 +50,7 @@ import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -76,8 +77,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             TextView connection =
                     (TextView) actionBar.getCustomView().findViewById(
                             R.id.action_bar_connection_status);
-            connection.setText(translate(notConnected
-                    ? R.string.action_bar_offline : R.string.action_bar_online));
+            ((CustomTextView) connection).translateText(notConnected
+                    ? R.string.action_bar_offline : R.string.action_bar_online);
             if (notConnected) {
                 comesFromNotConected = true;
                 Toast.makeText(mBaseActivity,

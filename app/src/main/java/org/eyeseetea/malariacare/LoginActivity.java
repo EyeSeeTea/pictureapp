@@ -269,8 +269,6 @@ public class LoginActivity extends Activity {
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
-        TextInputLayout userHint = (TextInputLayout) findViewById(R.id.username_hint);
-        userHint.setHint(translate(R.string.login_userName));
         usernameEditText.addTextChangedListener(watcher);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
@@ -285,7 +283,6 @@ public class LoginActivity extends Activity {
                         passwordEditText.getText());
             }
         });
-//        loginButton.setText(translate(R.string.login_btn_login));
 
         mLoginActivityStrategy.initViews();
     }

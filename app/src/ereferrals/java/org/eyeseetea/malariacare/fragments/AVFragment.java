@@ -82,9 +82,6 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         mTextProgressView = (CustomTextView)rootView.findViewById(R.id.progress_text);
         mErrorMessage = (CustomTextView) rootView.findViewById(R.id.error_message);
-        TextView titleMessage= (TextView) rootView.findViewById(R.id.answer_subtitle);
-        mTextProgressView.setText(translate(R.string.av_progress));
-        titleMessage.setText(translate(R.string.av_library));
 
         initializeRecyclerView();
         initializeChangeModeButtons();
@@ -210,7 +207,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         if (mPresenter.canShowErrorMessage()) {
             mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
             if (hasError) {
-                mErrorMessage.setText(translate(message));
+                mErrorMessage.translateText(message);
             }
         }else {
             mErrorMessage.setVisibility(View.GONE);

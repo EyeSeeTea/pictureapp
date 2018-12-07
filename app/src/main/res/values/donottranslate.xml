@@ -19,7 +19,7 @@
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
     <item name="language_code" translatable="false" type="string">language_code</item>
 
-    <string name="PUSH_PERIOD" translatable="false">10</string>
+    <string name="PUSH_PERIOD" translatable="false">60</string>
 
     <string name="font_size_system" translatable="false">system</string>
 

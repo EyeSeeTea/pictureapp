@@ -38,9 +38,10 @@ public class SettingsDataSource implements ISettingsRepository {
         String webUrl = getWebUrl();
         String fontSize = getFontSize();
         String programUrl = getProgramUrl();
+        String programEndPoint = getProgramEndPoint();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize, getProgramUrl());
+                webUrl, fontSize, programUrl, programEndPoint);
     }
 
     private String loadPass() {
@@ -73,6 +74,7 @@ public class SettingsDataSource implements ISettingsRepository {
         saveMediaPreference(settings.getMediaListMode().toString());
         saveProgramUrl(settings.getProgramUrl());
         saveWebUrl(settings.getWebUrl());
+        saveProgramEndPoint(settings.getProgramEndPoint());
     }
 
     private MediaListMode getMediaListMode() {
@@ -106,6 +108,14 @@ public class SettingsDataSource implements ISettingsRepository {
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(context.getResources().getString(R.string.program_configuration_url), programUrl);
+        editor.commit();
+    }
+
+    private void saveProgramEndPoint(String programUrl) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getResources().getString(R.string.program_configuration_endpoint), programUrl);
         editor.commit();
     }
 
@@ -179,7 +189,19 @@ public class SettingsDataSource implements ISettingsRepository {
     }
 
     private String getProgramUrl() {
-        return PreferencesEReferral.getProgramUrl(context);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
+        String loginUrl = context.getString(R.string.PROGRAM_DEFAULT_SERVER);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
+    }
+
+
+    private String getProgramEndPoint() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_endpoint), "");
     }
 
     private String getProgramUser() {

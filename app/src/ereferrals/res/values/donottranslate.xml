@@ -74,6 +74,7 @@
     <string name="metadata_update_date" translatable="false">update_metadata_date</string>
     <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
     <string name="program_configuration_url" translatable="false">"program_configuration_url"</string>
+    <string name="program_configuration_endpoint" translatable="false">"program_configuration_endpoint"</string>
     <string name="program_configuration_user" translatable="false">"program_configuration_user"</string>
     <string name="program_configuration_pass" translatable="false">"program_configuration_pass"</string>
     <string-array name="server_list">

@@ -1,14 +1,23 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import static org.eyeseetea.malariacare.utils.Utils.convertFromInputStreamToString;
 import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
 
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.MediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IMediaRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Settings;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 public class GetUrlForWebViewsUseCase implements UseCase {
 
@@ -45,12 +54,21 @@ public class GetUrlForWebViewsUseCase implements UseCase {
 
     @Override
     public void run() {
-        String language = getUserLanguageOrDefault(mContext);
-        String typeUrl = getTypeUrlText();
-        String url = String.format(PreferencesEReferral.getWebViewURL() + mContext.getString(
-                R.string.composed_web_view_url), typeUrl, mCredentials.getUsername(),
-                mCredentials.getPassword(), language);
-        mCallback.onGetUrl(url);
+        final String language = getUserLanguageOrDefault(mContext);
+        final String typeUrl = getTypeUrlText();
+        UIThreadExecutor mainExecutor= new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ISettingsRepository settingsDataSource = new SettingsDataSource(mContext);
+        GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(mainExecutor, asyncExecutor, settingsDataSource);
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                String url = String.format(setting.getWebUrl() + mContext.getString(
+                        R.string.composed_web_view_url), typeUrl, mCredentials.getUsername(),
+                        mCredentials.getPassword(), language);
+                mCallback.onGetUrl(url);
+            }
+        });
     }
 
     private String getTypeUrlText() {

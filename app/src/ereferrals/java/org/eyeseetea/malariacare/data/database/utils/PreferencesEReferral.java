@@ -145,37 +145,4 @@ public class PreferencesEReferral {
 
         return LoginType.fromInt(intLoginType);
     }
-
-    public static void setWSURL(String url){
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url), url);
-        editor.commit();
-    }
-
-    public static String getWebViewURL(){
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getString(context.getString(R.string.web_view_url), context.getString(R.string.base_web_view_url));
-    }
-    public static void setWebViewURL(String url){
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_view_url), url);
-        editor.commit();
-    }
-
-    public static String getProgramUrl(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-
-        //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
-        String loginUrl = context.getString(R.string.PROGRAM_DEFAULT_SERVER);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
-    }
 }

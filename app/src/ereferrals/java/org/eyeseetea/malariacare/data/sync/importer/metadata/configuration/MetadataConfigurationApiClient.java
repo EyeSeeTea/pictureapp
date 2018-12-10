@@ -89,10 +89,10 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     private String baseUrl;
     private String countryExtension;
 
-    public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
-            throws Exception {
+    public MetadataConfigurationApiClient(String url, String endpoint, BasicAuthInterceptor basicAuthInterceptor) {
 
-        separateBaseUrlAndCountryExtension(url);
+        baseUrl = url;
+        countryExtension = endpoint;
 
         OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
@@ -111,16 +111,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
     public String getCountryExtension(){
         return countryExtension;
-    }
-
-    private void separateBaseUrlAndCountryExtension(String url) {
-        if(url.lastIndexOf("/") != url.length()-1){
-            url += "/";
-        }
-        String tempurl = url.substring(0, url.lastIndexOf("/"));
-        tempurl = tempurl.substring(0, tempurl.lastIndexOf("/"));
-        countryExtension = url.replace(tempurl, "").replaceAll("/", "");
-        baseUrl = tempurl + "/";
     }
 
     @Override
@@ -350,7 +340,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         if (response.isSuccessful()) {
             return response.body();
         } else {
-            String error = response.errorBody().string() + "Http Code: " + response.code();
+            String error = response.errorBody().string() + "Http Code: " + response.code() + " url: " + response.raw().request().url();
 
             throw new ApiCallException(error);
         }

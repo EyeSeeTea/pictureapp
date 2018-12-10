@@ -52,7 +52,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer = new CustomMockServer(new FileReader());
 
-        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint()+"/dcSettings/",
+        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(), expectedProductionToken,
                 new BasicAuthInterceptor(""));
     }
 
@@ -104,10 +104,10 @@ public class MetadataConfigurationApiClientShould {
 
     @Test
     public void separate_base_url_and_country_token_with_training_url() throws Exception {
-        String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings-train/";
+        String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/";
         String expectedTrainingToken = "dcSettings-train";
 
-        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl, new BasicAuthInterceptor(""));
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl,"dcSettings-train", new BasicAuthInterceptor(""));
 
         assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
         assertThat(apiClient.getCountryExtension(), is(expectedTrainingToken));
@@ -118,7 +118,7 @@ public class MetadataConfigurationApiClientShould {
         String productionUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/";
         String expectedProductionToken = "dcSettings";
 
-        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(productionUrl, new BasicAuthInterceptor(""));
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(productionUrl, "dcSettings/", new BasicAuthInterceptor(""));
 
         assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
         assertThat(apiClient.getCountryExtension(), is(expectedProductionToken));
@@ -130,7 +130,7 @@ public class MetadataConfigurationApiClientShould {
         String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings";
         String expectedTrainingToken = "dcSettings";
 
-        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl, new BasicAuthInterceptor(""));
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl, "dcSettings", new BasicAuthInterceptor(""));
 
         assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
         assertThat(apiClient.getCountryExtension(), is(expectedTrainingToken));

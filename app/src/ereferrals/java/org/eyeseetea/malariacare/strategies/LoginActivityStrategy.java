@@ -70,8 +70,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
     private View webserviceURLContainer;
     private View programURLContainer;
+    private View programEndpointContainer;
     private View webviewURLContainer;
     private EditText programURLEditText;
+    private EditText programEndPointEditText;
     private EditText webviewURLEditText;
     private Spinner serverSpinner;
     private LoginType loginType;
@@ -99,13 +101,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 settingsDataSource);
         saveSettingsUseCase= new SaveSettingsUseCase(new UIThreadExecutor(), new AsyncExecutor(),
                 settingsDataSource);
-        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
-            @Override
-            public void onSuccess(Settings setting) {
-                settings = setting;
-            }
-        });
-
     }
 
     /**
@@ -258,16 +253,19 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 if(value.equals(parent.getContext().getResources().getString(R.string.production))){
                     showServerEditUrls(false);
                     programURLEditText.setText(R.string.program_url_production);
+                    programEndPointEditText.setText(R.string.program_endpoint_production);
                     webviewURLEditText.setText(R.string.web_url_production);
                     loginActivity.getServerText().setText(R.string.webservice_url_production);
                 } else if(value.equals(parent.getContext().getResources().getString(R.string.training))){
                     showServerEditUrls(false);
                     programURLEditText.setText(R.string.program_url_training);
+                    programEndPointEditText.setText(R.string.program_endpoint_training);
                     webviewURLEditText.setText(R.string.web_url_training);
                     loginActivity.getServerText().setText(R.string.webservice_url_training);
                 } else if (value.equals(parent.getContext().getResources().getString(R.string.custom))){
                     showServerEditUrls(true);
                     programURLEditText.setText(R.string.program_url_production);
+                    programEndPointEditText.setText(R.string.program_endpoint_production);
                     webviewURLEditText.setText(R.string.web_url_production);
                     loginActivity.getServerText().setText(R.string.webservice_url_production);
                 }
@@ -282,6 +280,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void showServerEditUrls(boolean value) {
         changeVisibility(webserviceURLContainer, value);
+        changeVisibility(programEndpointContainer, value);
         changeVisibility(programURLContainer, value);
         changeVisibility(webviewURLContainer, value);
     }
@@ -299,6 +298,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void initTextFields() {
         initWebServiceURLField();
         initProgramURLField();
+        initProgramEndpointField();
         initWebURLField();
         initPasswordField();
     }
@@ -444,6 +444,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 Utils.getInternationalizedString(R.string.program_url, loginActivity));
     }
 
+    private void initProgramEndpointField() {
+        programEndpointContainer = loginActivity.findViewById(R.id.text_layout_program_server_endpoint);
+        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_program_server_endpoint)).setHint(
+                Utils.getInternationalizedString(R.string.program_endpoint, loginActivity));
+    }
+
     private void initWebURLField() {
         webviewURLContainer = loginActivity.findViewById(R.id.text_layout_web_server_url);
         ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_web_server_url)).setHint(
@@ -469,12 +475,22 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     @Override
+    public EditText initProgramEndpoint(){
+        programEndPointEditText = loginActivity.findViewById(R.id.edittext_program_server_endpoint);
+        if(programEndPointEditText!=null) {
+            programEndPointEditText.setText(settings.getProgramEndPoint());
+        }
+        return programEndPointEditText;
+    }
+
+    @Override
     public void saveOtherValues(final ALoginActivityStrategy.SettingsCallback callback) {
         getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
             @Override
             public void onSuccess(Settings setting) {
                 settings = setting;
                 settings.setProgramUrl(programURLEditText.getText().toString());
+                settings.setProgramEndPoint(programEndPointEditText.getText().toString());
                 settings.setWebUrl(webviewURLEditText.getText().toString());
                 saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
                     @Override
@@ -610,12 +626,17 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     public void initLoginUseCase() {
+        loginActivity.mLoginUseCase = new AuthenticationFactoryStrategy()
+                .getLoginUseCase(loginActivity);
+    }
+
+    @Override
+    public void loadSettings(final SettingsCallback settingsCallback){
         getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
             @Override
             public void onSuccess(Settings setting) {
                 settings = setting;
-                loginActivity.mLoginUseCase = new AuthenticationFactoryStrategy()
-                        .getLoginUseCase(loginActivity);
+                settingsCallback.onSuccess();
             }
         });
     }

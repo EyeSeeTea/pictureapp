@@ -299,6 +299,7 @@ public class LoginActivity extends Activity {
 
         mLoginActivityStrategy.initProgramServer();
         mLoginActivityStrategy.initWebviewServer();
+        mLoginActivityStrategy.initProgramEndpoint();
 
         EditText webviewServer = mLoginActivityStrategy.initProgramServer();
         if(webviewServer!=null) {
@@ -620,8 +621,13 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(final Exception exception) {
             //Error
-            onFinishLoading(null);
-            init();
+            mLoginActivityStrategy.loadSettings(new ALoginActivityStrategy.SettingsCallback() {
+                @Override
+                public void onSuccess() {
+                    onFinishLoading(null);
+                    init();
+                }
+            });
         }
     }
 

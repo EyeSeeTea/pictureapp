@@ -6,6 +6,7 @@ import android.widget.EditText;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 
 public abstract class ALoginActivityStrategy {
     protected LoginActivity loginActivity;
@@ -59,7 +60,13 @@ public abstract class ALoginActivityStrategy {
 
     public abstract EditText initWebviewServer();
 
+    public abstract EditText initProgramEndpoint();
+
     public abstract void saveOtherValues(final ALoginActivityStrategy.SettingsCallback callback);
+
+    public void loadSettings(SettingsCallback settingsCallback){
+        settingsCallback.onSuccess();
+    }
 
     public interface Callback {
         void onSuccess();

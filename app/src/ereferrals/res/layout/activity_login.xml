@@ -130,6 +130,19 @@
                         android:inputType="textUri" />
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_layout_program_server_endpoint"
+                    style="@style/TextInputLayout"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
+                        android:id="@+id/edittext_program_server_endpoint"
+                        style="@style/CustomEditText"
+                        android:hint="@string/program_endpoint"
+                        android:inputType="textUri" />
+                </android.support.design.widget.TextInputLayout>
+
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/text_layout_web_server_url"

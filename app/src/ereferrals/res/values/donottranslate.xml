@@ -87,14 +87,17 @@
     <string name="base_web_view_url" translatable="false">@string/web_url_production</string>
     <string name="ws_base_url" translatable="false">@string/webservice_url_production</string>
     <string name="PROGRAM_DEFAULT_SERVER" translatable="false">@string/program_url_production</string>
+    <string name="PROGRAM_DEFAULT_ENDPOINT" translatable="false">@string/program_endpoint_production</string>
 
     <!-- production urls -->
-    <string name="program_url_production" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/</string>
+    <string name="program_url_production" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
+    <string name="program_endpoint_production" translatable="false">dcSettings</string>
     <string name="webservice_url_production" translatable="false">https://apps.psi-mis.org/eRefWSProd/</string>
     <string name="web_url_production" translatable="false">https://apps.psi-mis.org/connect/</string>
 
     <!-- training urls -->
-    <string name="program_url_training" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings-train/</string>
+    <string name="program_url_training" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
+    <string name="program_endpoint_training" translatable="false">dcSettings-train</string>
     <string name="webservice_url_training" translatable="false">https://apps.psi-mis.org/eRefWSTrain/</string>
     <string name="web_url_training" translatable="false">https://apps.psi-mis.org/connect-train/</string>
 </resources>

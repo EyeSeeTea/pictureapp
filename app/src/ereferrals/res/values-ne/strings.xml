@@ -969,6 +969,7 @@
     <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
     <string name="check_metadata_title">"नरम लगिनहरूमा मेटाडाटा अद्यावधिकहरूको जाँच गर्नुहोस्"</string>
     <string name="settings_title_program_url_config">"प्रोग्राम विन्यास URL"</string>
+    <string name="settings_title_program_endpoint_config">"प्रोग्राम कन्फिगरेसन अन्तबिन्दु"</string>
     <string name="settings_title_program_username_config">"प्रोग्राम कन्फिगरेसन प्रयोगकर्ता नाम"</string>
     <string name="settings_title_program_password_config">"प्रोग्राम कन्फिगरेसन पासवर्ड"</string>
 <string name="demo_page_text">"तपाईं डेमो मोडमा हुनुहुन्छ र यो एक अनलाइन मोड्युल हो। यो जानकारी हेर्न लगआउट गर्नुहोस् र मान्य प्रयोगकर्ताको साथ लगइन गर्नुहोस्।"</string>

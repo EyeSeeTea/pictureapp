@@ -193,15 +193,16 @@ public class SettingsDataSource implements ISettingsRepository {
                 context);
 
         //// TODO: 10/09/2018 change the default url from dhis server to new endpoint
-        String loginUrl = context.getString(R.string.PROGRAM_DEFAULT_SERVER);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_url), loginUrl);
+        String defaultServer = context.getString(R.string.PROGRAM_DEFAULT_SERVER);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_url), defaultServer);
     }
 
 
     private String getProgramEndPoint() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_endpoint), "");
+        String defaultEndpoint = context.getString(R.string.PROGRAM_DEFAULT_ENDPOINT);
+        return sharedPreferences.getString(context.getString(R.string.program_configuration_endpoint), defaultEndpoint);
     }
 
     private String getProgramUser() {

@@ -52,6 +52,13 @@
 
         <EditTextPreference
             android:inputType="text"
+            android:key="@string/program_configuration_endpoint"
+            android:maxLines="2"
+            android:selectAllOnFocus="true"
+            android:title="@string/settings_title_program_url_config" />
+
+        <EditTextPreference
+            android:inputType="text"
             android:key="@string/program_configuration_user"
             android:maxLines="2"
             android:selectAllOnFocus="true"

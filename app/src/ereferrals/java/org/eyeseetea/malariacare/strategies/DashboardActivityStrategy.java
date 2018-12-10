@@ -59,6 +59,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepositor
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
@@ -68,14 +69,14 @@ import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
 import org.eyeseetea.malariacare.domain.identifiers.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetCanMakeManualPushUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
-import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
+import org.eyeseetea.malariacare.factories.AppInfoFactory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -191,13 +192,14 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private void enableDisableRefreshButton() {
         mRefreshButton.setEnabled(false);
-        GetCanMakeManualPushUseCase getCanMakeManualPushUseCase =
-                new SyncFactoryStrategy().getGetCanMakeManualPushUseCase(mDashboardActivity);
-        getCanMakeManualPushUseCase.execute(new GetCanMakeManualPushUseCase.Callback() {
+        GetAppInfoUseCase getAppInfoUseCase =
+                new AppInfoFactory().getGetAppInfoUseCase(mDashboardActivity);
+        getAppInfoUseCase.execute(new GetAppInfoUseCase.Callback() {
             @Override
-            public void onSuccess(boolean canMakePush) {
-                mRefreshButton.setEnabled(canMakePush);
-                if (!canMakePush) {
+            public void onAppInfoLoaded(AppInfo appInfo) {
+                boolean canMakeManualPush = appInfo.canMakeManualPush();
+                mRefreshButton.setEnabled(canMakeManualPush);
+                if (!canMakeManualPush) {
                     waitToEnableRefreshButton(mDashboardActivity);
                 }
             }
@@ -205,11 +207,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     private void launchPush() {
-        mRefreshButton.setEnabled(false);
-        mRefreshButton.startAnimation(
-                AnimationUtils.loadAnimation(mRefreshButton.getContext(),
-                        R.anim.rotate_center));
-        waitToEnableRefreshButton(mDashboardActivity);
         Intent pushIntent = new Intent(mDashboardActivity, PushService.class);
         pushIntent.putExtra(SurveyService.SERVICE_METHOD, PushService.PENDING_SURVEYS_ACTION);
         mDashboardActivity.startService(pushIntent);
@@ -713,9 +710,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private void showHideProgressPush(Intent intent) {
         if (intent.getBooleanExtra(PushServiceStrategy.PUSH_IS_START, false)) {
+            mRefreshButton.setEnabled(false);
             mRefreshButton.startAnimation(
                     AnimationUtils.loadAnimation(mRefreshButton.getContext(),
                             R.anim.rotate_center));
+            waitToEnableRefreshButton(mDashboardActivity);
         } else {
             mRefreshButton.clearAnimation();
         }

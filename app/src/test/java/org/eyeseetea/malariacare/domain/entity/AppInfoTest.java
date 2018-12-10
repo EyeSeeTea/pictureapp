@@ -67,4 +67,22 @@ public class AppInfoTest {
         AppInfo appInfo=new AppInfo("v1", "v1.3", "1.0", null,date);
         assertThat(appInfo.getLastPushDate(), is(date));
     }
+
+    @Test
+    public void
+    should_return_canMakeManualPush_true_if_previous_push_was_made_in_time_previous_than_minimum_push_time() {
+        Date now = new Date();
+        Date pushDate = new Date(now.getTime() - 30000);
+        AppInfo appInfo = new AppInfo("v1", "v1.3", "1.0", null, pushDate);
+        assertThat(appInfo.canMakeManualPush(), is(true));
+    }
+
+    @Test
+    public void
+    should_return_canMakeManualPush_false_if_previous_push_was_made_in_time_not_previous_than_minimum_push_time() {
+        Date now = new Date();
+        Date pushDate = new Date(now.getTime() - 15000);
+        AppInfo appInfo = new AppInfo("v1", "v1.3", "1.0", null, pushDate);
+        assertThat(appInfo.canMakeManualPush(), is(false));
+    }
 }

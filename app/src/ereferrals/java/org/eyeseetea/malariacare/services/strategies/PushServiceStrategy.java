@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.services.strategies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -11,20 +12,25 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.eyeseetea.malariacare.domain.usecase.UpdateLastPushDateUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
+import org.eyeseetea.malariacare.factories.AppInfoFactory;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.utils.Permissions;
+
+import java.util.Date;
 
 public class PushServiceStrategy extends APushServiceStrategy {
 
@@ -120,11 +126,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
         IProgramRepository programRepository = new ProgramRepository();
         MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase(
                 programRepository);
-
+        sendIntentStartEndPush(true);
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
                 Log.d(TAG, "onPushMockFinished");
+                sendIntentStartEndPush(false);
                 mPushService.onPushFinished();
             }
         });
@@ -136,9 +143,24 @@ public class PushServiceStrategy extends APushServiceStrategy {
         } else {
             executePush();
         }
-        UpdateLastPushDateUseCase updateLastPushDateUseCase =
-                new SyncFactoryStrategy().getUpdateLastPushDateUseCase(mPushService);
-        updateLastPushDateUseCase.execute();
+        updateAppInfo(mPushService);
+    }
+
+    private void updateAppInfo(final Context context) {
+        final AppInfoFactory appInfoFactory = new AppInfoFactory();
+        appInfoFactory.getGetAppInfoUseCase(context).execute(new GetAppInfoUseCase.Callback() {
+            @Override
+            public void onAppInfoLoaded(AppInfo appInfo) {
+                SaveAppInfoUseCase saveAppInfoUseCase = appInfoFactory.getSaveAppInfoUseCase(
+                        context);
+                saveAppInfoUseCase.excute(new SaveAppInfoUseCase.Callback() {
+                    @Override
+                    public void onAppInfoSaved() {
+                    }
+                }, new AppInfo(appInfo.getMetadataVersion(), appInfo.getConfigFileVersion(),
+                        appInfo.getAppVersion(), appInfo.getUpdateMetadataDate(), new Date()));
+            }
+        });
     }
 
 

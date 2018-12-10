@@ -5,6 +5,8 @@ import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 import java.util.Date;
 
 public class AppInfo {
+    private static final long MIN_TIME_CAN_PUSH = 30000;
+
     private String metadataVersion;
     private String configFileVersion;
     private String appVersion;
@@ -57,6 +59,11 @@ public class AppInfo {
 
     public Date getLastPushDate() {
         return lastPushDate;
+    }
+
+    public boolean canMakeManualPush() {
+        Date now = new Date();
+        return now.getTime() - getLastPushDate().getTime() >= MIN_TIME_CAN_PUSH;
     }
 
     @Override

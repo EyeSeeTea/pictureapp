@@ -44,7 +44,7 @@ public class MetadataConfigurationApiClientShould {
     private List<Configuration.CountryVersion> countryVersions;
 
     private String expectedBaseUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/";
-    private String productionUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/";
+    private String baseUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/";
     private String expectedProductionToken = "dcSettings";
 
     @Before
@@ -104,33 +104,20 @@ public class MetadataConfigurationApiClientShould {
 
     @Test
     public void separate_base_url_and_country_token_with_training_url() throws Exception {
-        String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/";
         String expectedTrainingToken = "dcSettings-train";
 
-        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl,"dcSettings-train", new BasicAuthInterceptor(""));
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(baseUrl,"dcSettings-train", new BasicAuthInterceptor(""));
 
         assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
         assertThat(apiClient.getCountryExtension(), is(expectedTrainingToken));
     }
 
+
     @Test
     public void separate_base_url_and_country_token_with_production_url() throws Exception {
-        String productionUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings/";
-        String expectedProductionToken = "dcSettings";
-
-        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(productionUrl, "dcSettings/", new BasicAuthInterceptor(""));
-
-        assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
-        assertThat(apiClient.getCountryExtension(), is(expectedProductionToken));
-    }
-
-
-    @Test
-    public void separate_base_url_and_country_token_with_production_url_without_last_slash() throws Exception {
-        String trainingUrl = "https://data.psi-mis.org/api/dataStore/Connect_config/dcSettings";
         String expectedTrainingToken = "dcSettings";
 
-        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(trainingUrl, "dcSettings", new BasicAuthInterceptor(""));
+        MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(baseUrl, "dcSettings", new BasicAuthInterceptor(""));
 
         assertThat(apiClient.getBaseUrl(), is(expectedBaseUrl));
         assertThat(apiClient.getCountryExtension(), is(expectedTrainingToken));

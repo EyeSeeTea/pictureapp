@@ -43,9 +43,10 @@ public class PhoneMultiquestionViewStrategy extends APhoneMultiquestionViewStrat
                             notifyAnswerChanged(phone.getValue());
                             validateRegExp(phoneText, phone);
                         } catch (InvalidPhoneException e) {
-                            Validation.getInstance().addinvalidInput(phoneText,
-                                    mPhoneMultiQuestionView.getContext().getString(
-                                            R.string.dynamic_error_phone_format));
+                            String errorMessage = mPhoneMultiQuestionView.getContext().getString(
+                                    R.string.dynamic_error_phone_format);
+                            Validation.getInstance().addinvalidInput(phoneText, errorMessage);
+                            phoneText.setError(errorMessage);
                         }
                     }
 

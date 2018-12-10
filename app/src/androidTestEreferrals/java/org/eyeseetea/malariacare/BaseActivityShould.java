@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -41,6 +43,23 @@ public class BaseActivityShould {
     private UserAccount previousUserAccount;
 
     private final Object syncObject = new Object();
+    @Before
+    public void grantPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.ACCESS_FINE_LOCATION");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.INTERNET");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.ACCESS_NETWORK_STATE");
+        }
+    }
 
     @Test
     public void onLoginIntentShowLoginActivity() throws InterruptedException {
@@ -66,7 +85,7 @@ public class BaseActivityShould {
         ComponentName componentInfo = taskInfo.get(0).topActivity;
         String activityName = componentInfo.getClassName();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            assertThat(activityName, is("com.android.packageinstaller.permission.ui.GrantPermissionsActivity"));
+            assertThat(activityName, is(LoginActivity.class.getName()));
         } else {
             assertThat(activityName, is(LoginActivity.class.getName()));
         }

@@ -3,12 +3,12 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 
+import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
@@ -16,13 +16,11 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.test.utils.AssetsFileReader;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
 import org.junit.Before;
@@ -190,8 +188,7 @@ public class WSPushControllerShould {
 
     private void enqueueResponse(String fileName) throws IOException {
         MockResponse mockResponse = new MockResponse();
-        Context testContext = InstrumentationRegistry.getInstrumentation().getContext();
-        String fileContent = new AssetsFileReader().getStringFromFile(fileName,testContext);
+        String fileContent = new AssetsFileReader().getStringFromFile(fileName);
         mockResponse.setBody(fileContent);
         server.enqueue(mockResponse);
     }

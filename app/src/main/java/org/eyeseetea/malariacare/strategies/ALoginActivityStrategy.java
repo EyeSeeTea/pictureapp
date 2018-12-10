@@ -56,13 +56,21 @@ public abstract class ALoginActivityStrategy {
         callback.onSuccessDoLogin();
     }
 
-    public abstract EditText initProgramServer();
+    public EditText initProgramServer(){
+        return null;
+    }
 
-    public abstract EditText initWebviewServer();
+    public EditText initWebviewServer(){
+        return null;
+    }
 
-    public abstract EditText initProgramEndpoint();
+    public EditText initProgramEndpoint(){
+        return null;
+    }
 
-    public abstract void saveOtherValues(final ALoginActivityStrategy.SettingsCallback callback);
+    public void saveOtherValues(final ALoginActivityStrategy.SettingsCallback callback){
+        callback.onSuccess();
+    }
 
     public void loadSettings(SettingsCallback settingsCallback){
         settingsCallback.onSuccess();

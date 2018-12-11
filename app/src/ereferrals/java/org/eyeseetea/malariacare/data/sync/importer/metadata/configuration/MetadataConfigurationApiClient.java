@@ -105,14 +105,6 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         configurationApi = retrofit.create(IMetadataConfigurationApi.class);
     }
 
-    public String getBaseUrl(){
-        return baseUrl;
-    }
-
-    public String getCountryExtension(){
-        return countryExtension;
-    }
-
     @Override
     public List<Question> getQuestionsByCountryCode(String countryCode) throws Exception {
 

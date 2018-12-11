@@ -88,7 +88,7 @@ public class EyeSeeTeaApplication extends Application {
     }
 
     private void initEyeSeeTeaSDK() {
-        EyeSeeTeaSdkInstance.getInstance().setTransaltor(new DBTranslator());
+        EyeSeeTeaSdkInstance.getInstance().initTranslator(new DBTranslator());
     }
 
     @Override

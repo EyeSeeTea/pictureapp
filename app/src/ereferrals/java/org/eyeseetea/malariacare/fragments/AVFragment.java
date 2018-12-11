@@ -35,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
@@ -207,7 +206,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         if (mPresenter.canShowErrorMessage()) {
             mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
             if (hasError) {
-                mErrorMessage.translateText(message);
+                mErrorMessage.setTextTranslation(message);
             }
         }else {
             mErrorMessage.setVisibility(View.GONE);

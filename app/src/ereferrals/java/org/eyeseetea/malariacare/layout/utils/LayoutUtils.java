@@ -52,7 +52,7 @@ public class LayoutUtils extends BaseLayoutUtils {
         CustomTextView connection =
                 (CustomTextView) actionBar.getCustomView().findViewById(
                         R.id.action_bar_connection_status);
-         connection.translateText(
+         connection.setTextTranslation(
                 !ConnectivityStatus.isConnected(context)
                         ? R.string.action_bar_offline : R.string.action_bar_online);
     }

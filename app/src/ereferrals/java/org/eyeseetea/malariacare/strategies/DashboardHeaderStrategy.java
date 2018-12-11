@@ -54,7 +54,7 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         boolean notConnected = !ConnectivityStatus.isConnected(
                 PreferencesState.getInstance().getContext());
         headerText = (CustomTextView) headerView.findViewById(R.id.header_text);
-        headerText.translateText(
+        headerText.setTextTranslation(
                 notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status);
         return headerView;
     }

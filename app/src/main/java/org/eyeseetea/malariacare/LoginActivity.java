@@ -300,15 +300,6 @@ public class LoginActivity extends Activity {
         mLoginActivityStrategy.initProgramServer();
         mLoginActivityStrategy.initWebviewServer();
         mLoginActivityStrategy.initProgramEndpoint();
-
-        EditText webviewServer = mLoginActivityStrategy.initProgramServer();
-        if(webviewServer!=null) {
-            webviewServer.addTextChangedListener(watcher);
-        }
-        EditText programServer = mLoginActivityStrategy.initWebviewServer();
-        if(programServer!=null) {
-            programServer.addTextChangedListener(watcher);
-        }
     }
 
     public void login(String serverUrl, String username, String password) {

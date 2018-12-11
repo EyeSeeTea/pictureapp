@@ -433,54 +433,50 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
 
     private void initWebServiceURLField() {
-        webserviceURLContainer = loginActivity.findViewById(R.id.text_layout_webservice_server_url);
-        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_webservice_server_url)).setHint(
-                Utils.getInternationalizedString(R.string.server_url, loginActivity));
+        webserviceURLContainer = initTextInputLayout(R.id.text_layout_webservice_server_url, R.string.server_url, loginActivity);
     }
 
     private void initProgramURLField() {
-        programURLContainer = loginActivity.findViewById(R.id.text_layout_program_server_url);
-        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_program_server_url)).setHint(
-                Utils.getInternationalizedString(R.string.program_url, loginActivity));
+        programURLEditText = initTextInputLayout(R.id.text_layout_program_server_url, R.string.program_url, loginActivity);
     }
 
     private void initProgramEndpointField() {
-        programEndpointContainer = loginActivity.findViewById(R.id.text_layout_program_server_endpoint);
-        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_program_server_endpoint)).setHint(
-                Utils.getInternationalizedString(R.string.program_endpoint, loginActivity));
+        programEndpointContainer = initTextInputLayout(R.id.text_layout_program_server_endpoint, R.string.program_endpoint, loginActivity);
     }
 
     private void initWebURLField() {
-        webviewURLContainer = loginActivity.findViewById(R.id.text_layout_web_server_url);
-        ((TextInputLayout) loginActivity.findViewById(R.id.text_layout_web_server_url)).setHint(
-                Utils.getInternationalizedString(R.string.webviews_url, loginActivity));
+        webviewURLContainer = initTextInputLayout(R.id.text_layout_web_server_url, R.string.webviews_url, loginActivity);
+    }
+
+    private EditText initTextInputLayout(int layoutId, int hintId, Activity activity) {
+        EditText editText = loginActivity.findViewById(layoutId);
+        ((TextInputLayout) editText.getParent()).setHint(
+                Utils.getInternationalizedString(hintId, activity));
+        return editText;
     }
 
     @Override
-    public EditText initProgramServer(){
+    public void initProgramServer(){
         programURLEditText = loginActivity.findViewById(R.id.edittext_program_server_url);
         if(programURLEditText!=null) {
             programURLEditText.setText(settings.getProgramUrl());
         }
-        return programURLEditText;
     }
 
     @Override
-    public EditText initWebviewServer(){
+    public void initWebviewServer(){
         webviewURLEditText = loginActivity.findViewById(R.id.edittext_web_server_url);
         if(webviewURLEditText!=null) {
             webviewURLEditText.setText(settings.getWebUrl());
         }
-        return webviewURLEditText;
     }
 
     @Override
-    public EditText initProgramEndpoint(){
+    public void initProgramEndpoint(){
         programEndPointEditText = loginActivity.findViewById(R.id.edittext_program_server_endpoint);
         if(programEndPointEditText!=null) {
             programEndPointEditText.setText(settings.getProgramEndPoint());
         }
-        return programEndPointEditText;
     }
 
     @Override

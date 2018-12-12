@@ -39,8 +39,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/action_bar_connection_status"
-        android:src="@drawable/ic_push_progress"
-        android:visibility="gone" />
+        android:src="@drawable/push_progress_icon" />
 
     <TextView
         android:id="@+id/action_bar_connection_status"

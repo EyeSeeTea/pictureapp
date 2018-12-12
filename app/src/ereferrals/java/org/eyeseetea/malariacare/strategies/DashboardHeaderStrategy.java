@@ -4,21 +4,19 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
-    private TextView headerText;
+    private CustomTextView headerText;
 
     private static void setTitle(View view, int keyId, int titleString) {
         CustomTextView title = (CustomTextView) view.findViewById(keyId);
@@ -55,10 +53,9 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         }
         boolean notConnected = !ConnectivityStatus.isConnected(
                 PreferencesState.getInstance().getContext());
-        headerText = (TextView) headerView.findViewById(R.id.header_text);
-        headerText.setText(Utils.getInternationalizedString(
-                notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status,
-                headerText.getContext()));
+        headerText = (CustomTextView) headerView.findViewById(R.id.header_text);
+        headerText.setTextTranslation(
+                notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status);
         return headerView;
     }
 

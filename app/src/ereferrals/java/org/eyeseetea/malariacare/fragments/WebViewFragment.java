@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,13 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 
 public class WebViewFragment extends Fragment implements IDashboardFragment {
@@ -35,7 +36,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private String url;
     private int title;
     private WebView mWebView;
-    private TextView mErrorDemoText;
+    private CustomTextView mErrorDemoText;
     private boolean loadedFirstTime;
 
     @Nullable
@@ -65,7 +66,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
-        mErrorDemoText = (TextView) view.findViewById(R.id.error_demo_text);
+        mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
         mWebView.setWebViewClient(new WebViewClient());
         loadUrlInWebView();
         view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
@@ -137,8 +138,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             } else {
                 showHideWebView(false);
 
-                mErrorDemoText.setText(
-                        Utils.getInternationalizedString(R.string.erro_page_text, getActivity()));
+                mErrorDemoText.setTextTranslation(R.string.erro_page_text);
             }
         }
     }
@@ -147,8 +147,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         if (mWebView != null) {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 showHideWebView(false);
-                mErrorDemoText.setText(
-                        Utils.getInternationalizedString(R.string.demo_page_text, getActivity()));
+                mErrorDemoText.setTextTranslation(R.string.demo_page_text);
                 ;
             } else {
                 showHideWebView(true);
@@ -196,5 +195,8 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             return true;
         }
         return false;
+    }
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, getActivity());
     }
 }

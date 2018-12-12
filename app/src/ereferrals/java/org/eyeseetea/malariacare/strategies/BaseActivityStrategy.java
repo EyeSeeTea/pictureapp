@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -49,6 +50,7 @@ import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -75,12 +77,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             TextView connection =
                     (TextView) actionBar.getCustomView().findViewById(
                             R.id.action_bar_connection_status);
-            connection.setText(Utils.getInternationalizedString(notConnected
-                    ? R.string.action_bar_offline : R.string.action_bar_online, context));
+            ((CustomTextView) connection).setTextTranslation(notConnected
+                    ? R.string.action_bar_offline : R.string.action_bar_online);
             if (notConnected) {
                 comesFromNotConected = true;
                 Toast.makeText(mBaseActivity,
-                        Utils.getInternationalizedString(notConnectedText, context),
+                        translate(notConnectedText),
                         Toast.LENGTH_SHORT).show();
             } else {
                 if(comesFromNotConected){
@@ -88,7 +90,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 }
                 comesFromNotConected = false;
                 Toast.makeText(mBaseActivity,
-                        Utils.getInternationalizedString(R.string.online_status, context),
+                        translate(R.string.online_status),
                         Toast.LENGTH_SHORT).show();
             }
             DashboardActivity.dashboardActivity.refreshStatus();
@@ -134,21 +136,21 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_ITEM_LOGOUT, MENU_ITEM_LOGOUT_ORDER,
-                Utils.getInternationalizedString(R.string.common_menu_logOff, mBaseActivity));
+                translate(R.string.common_menu_logOff));
         menu.findItem(R.id.action_settings).setTitle(
-                Utils.getInternationalizedString(R.string.app_settings, mBaseActivity));
+                translate(R.string.app_settings));
         menu.findItem(R.id.action_about).setTitle(
-                Utils.getInternationalizedString(R.string.common_menu_about, mBaseActivity));
+                translate(R.string.common_menu_about));
         menu.findItem(R.id.action_copyright).setTitle(
-                Utils.getInternationalizedString(R.string.app_copyright, mBaseActivity));
+                translate(R.string.app_copyright));
         menu.findItem(R.id.action_licenses).setTitle(
-                Utils.getInternationalizedString(R.string.app_software_licenses, mBaseActivity));
+                translate(R.string.app_software_licenses));
         menu.findItem(R.id.action_eula).setTitle(
-                Utils.getInternationalizedString(R.string.app_EULA, mBaseActivity));
+                translate(R.string.app_EULA));
         menu.findItem(R.id.export_db).setTitle(
-                Utils.getInternationalizedString(R.string.export_data_option_title, mBaseActivity));
+                translate(R.string.export_data_option_title));
         menu.findItem(R.id.demo_mode).setTitle(
-                Utils.getInternationalizedString(R.string.run_in_demo_mode, mBaseActivity));
+                translate(R.string.run_in_demo_mode));
     }
 
     @Override
@@ -158,12 +160,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         switch (id) {
             case MENU_ITEM_LOGOUT:
                 new AlertDialog.Builder(mBaseActivity)
-                        .setTitle(Utils.getInternationalizedString(R.string.common_menu_logOff,
-                                mBaseActivity))
-                        .setMessage(Utils.getInternationalizedString(
-                                R.string.dashboard_menu_logout_message, mBaseActivity))
-                        .setPositiveButton(Utils.getInternationalizedString(android.R.string.yes,
-                                mBaseActivity),
+                        .setTitle(translate(R.string.common_menu_logOff))
+                        .setMessage(translate(
+                                R.string.dashboard_menu_logout_message))
+                        .setPositiveButton(translate(android.R.string.yes),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
                                         if (mBaseActivity instanceof DashboardActivity) {
@@ -173,8 +173,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                                         }
                                     }
                                 })
-                        .setNegativeButton(Utils.getInternationalizedString(android.R.string.no,
-                                mBaseActivity),
+                        .setNegativeButton(translate(android.R.string.no),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
@@ -316,12 +315,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 StringBuilder aboutBuilder = new StringBuilder();
                 aboutBuilder.append(
                         String.format(
-                                Utils.getInternationalizedString(R.string.config_version, context),
+                                translate(R.string.config_version),
                                 appInfo.getConfigFileVersion()));
                 aboutBuilder.append("<br/>");
                 aboutBuilder.append(
                         String.format(
-                                Utils.getInternationalizedString(R.string.metadata_update, context),
+                                translate(R.string.metadata_update),
                                 getUpdateDateFromAppInfo(appInfo)));
                 aboutBuilder.append(stringMessage);
                 final SpannableString linkedMessage = new SpannableString(
@@ -354,6 +353,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             SurveyFragment.closeKeyboard();
             showLogin(true);
         }
+    }
+
+    public String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, mBaseActivity);
     }
 
 }

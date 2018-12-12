@@ -358,10 +358,6 @@ public abstract class ADashboardActivityStrategy {
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
-
-
-        ((TextView) mDashboardActivity.findViewById(R.id.header_extra_info)).setText(
-                Utils.getInternationalizedString(R.string.unsent_vouchers, mDashboardActivity));
     }
 
     protected void setTabsBackgroundColor(int color, TabHost tabHost) {

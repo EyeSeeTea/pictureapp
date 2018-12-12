@@ -26,6 +26,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
@@ -81,9 +81,6 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         mTextProgressView = (CustomTextView)rootView.findViewById(R.id.progress_text);
         mErrorMessage = (CustomTextView) rootView.findViewById(R.id.error_message);
-        TextView titleMessage= (TextView) rootView.findViewById(R.id.answer_subtitle);
-        mTextProgressView.setText(Utils.getInternationalizedString(R.string.av_progress,getActivity()));
-        titleMessage.setText(Utils.getInternationalizedString(R.string.av_library,getActivity()));
 
         initializeRecyclerView();
         initializeChangeModeButtons();
@@ -165,8 +162,8 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         if (isThereAnAppThatCanHandleThis(implicitIntent, getActivity())) {
             getActivity().startActivity(Intent.createChooser(implicitIntent,
-                    Utils.getInternationalizedString(
-                            R.string.feedback_view_image,getActivity())));
+                    translate(
+                            R.string.feedback_view_image)));
         } else {
             showToast(R.string.error_unable_to_find_app_than_can_open_file, getActivity());
         }
@@ -209,7 +206,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         if (mPresenter.canShowErrorMessage()) {
             mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
             if (hasError) {
-                mErrorMessage.setText(Utils.getInternationalizedString(message, getActivity()));
+                mErrorMessage.setTextTranslation(message);
             }
         }else {
             mErrorMessage.setVisibility(View.GONE);
@@ -219,5 +216,9 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
     public void hideHeader() {
         DashboardHeaderStrategy.getInstance().hideHeader(getActivity());
+    }
+
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, getActivity());
     }
 }

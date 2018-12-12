@@ -168,7 +168,7 @@ public class WSPullController implements IPullController {
         Date date = new Date();
         AppInfo appInfo = mAppInfoRepository.getAppInfo();
         appInfo = new AppInfo(appInfo.getMetadataVersion(), appInfo.getConfigFileVersion(),
-                appInfo.getAppVersion(), date);
+                appInfo.getAppVersion(), date, appInfo.getLastPushDate());
         mAppInfoRepository.saveAppInfo(appInfo);
     }
 

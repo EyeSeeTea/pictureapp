@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
-import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -49,12 +49,12 @@ public class LayoutUtils extends BaseLayoutUtils {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials credentials = credentialsLocalDataSource.getLastValidCredentials();
         userName.setText(credentials.getUsername());
-        TextView connection =
-                (TextView) actionBar.getCustomView().findViewById(
+        CustomTextView connection =
+                (CustomTextView) actionBar.getCustomView().findViewById(
                         R.id.action_bar_connection_status);
-        connection.setText(Utils.getInternationalizedString(
+         connection.setTextTranslation(
                 !ConnectivityStatus.isConnected(context)
-                        ? R.string.action_bar_offline : R.string.action_bar_online, context));
+                        ? R.string.action_bar_offline : R.string.action_bar_online);
     }
 
 

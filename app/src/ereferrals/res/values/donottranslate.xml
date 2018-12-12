@@ -100,4 +100,6 @@
     <string name="program_endpoint_training" translatable="false">dcSettings-train</string>
     <string name="webservice_url_training" translatable="false">https://apps.psi-mis.org/eRefWSTrain/</string>
     <string name="web_url_training" translatable="false">https://apps.psi-mis.org/connect-train/</string>
+    <string name="last_push_date" translatable="false">last_push_date</string>
+    <string name="ENABLE_MANUAL_PUSH_PERIOD" translatable="false">30</string>
 </resources>

@@ -30,14 +30,15 @@ public class AppInfoDataSource implements IAppInfoRepository {
     @Override
     public AppInfo getAppInfo() {
         return new AppInfo(getMetadataVersion(), getConfigFileVersion(), getAppVersion(),
-                getUpdateMetadataDate());
+                getUpdateMetadataDate(), getLastPushDate());
     }
+
 
     @Override
     public void getAppInfo(IDataSourceCallback<AppInfo> callback) {
         callback.onSuccess(
                 new AppInfo(getMetadataVersion(), getConfigFileVersion(), getAppVersion(),
-                        getUpdateMetadataDate()));
+                        getUpdateMetadataDate(), getLastPushDate()));
     }
 
     @Override
@@ -90,5 +91,23 @@ public class AppInfoDataSource implements IAppInfoRepository {
             return null;
         }
         return new Date(timeMillis);
+    }
+
+
+    private Date getLastPushDate() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        long timeMillis = sharedPreferences.getLong(
+                context.getResources().getString(R.string.last_push_date), 0);
+        return new Date(timeMillis);
+    }
+
+    private void saveLastPushDate(Date lastPushDate){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(context.getResources().getString(R.string.last_push_date),
+                lastPushDate.getTime());
+        editor.commit();
     }
 }

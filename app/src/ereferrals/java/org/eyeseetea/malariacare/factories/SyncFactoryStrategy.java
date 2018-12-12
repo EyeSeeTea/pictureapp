@@ -20,4 +20,5 @@ public class SyncFactoryStrategy extends ASyncFactory {
     protected IPushController getPushController(Context context) {
         return new WSPushController(context, new SurveyLocalDataSource());
     }
+
 }

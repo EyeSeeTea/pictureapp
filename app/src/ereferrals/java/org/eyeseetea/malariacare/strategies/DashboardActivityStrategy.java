@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -68,7 +67,6 @@ import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
 import org.eyeseetea.malariacare.domain.identifiers.UIDGenerator;
 import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
-import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
@@ -89,6 +87,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
+
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     final private String TAG = "DashboardActivityS";
@@ -99,8 +99,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
-    private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
+    private GetSettingsUseCase mSettingUseCase;
     private DownloadMediaUseCase mDownloadMediaUseCase;
+    private Credentials credentials;
     public AVFragment avFragment;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
@@ -109,10 +110,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void onCreate() {
-
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
-
-        Credentials credentials = iCredentialsRepository.getLastValidCredentials();
+        credentials = iCredentialsRepository.getLastValidCredentials();
         if (credentials != null && !credentials.isDemoCredentials()) {
             IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
             ILanguageRepository languageRepository = new LanguagesLocalDataSource();
@@ -148,10 +147,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
             downloadedUseCase.run();
         }
-
-        mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
-                iCredentialsRepository);
-
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager(mDashboardActivity);
@@ -168,6 +163,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mainExecutor,
                 fileDownloader,
                 mConnectivity, programRepository, mediaRepository,settingsRepository);
+
+        mSettingUseCase = new GetSettingsUseCase(mainExecutor, asyncExecutor, settingsRepository);
     }
 
     private void showToast(@StringRes int text) {
@@ -202,22 +199,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
-        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.CLOSED_TYPE,
-                new GetUrlForWebViewsUseCase.Callback() {
-                    @Override
-                    public void onGetUrl(String url) {
-                        closeFragment = new WebViewFragment();
-                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
-                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
-                        closeFragment.setArguments(bundle);
-                        closeFragment.reloadData();
-                        closeFragment.hideHeader();
-                        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
-                                closeFragment);
-                    }
-                });
+        closeFragment = new WebViewFragment();
+        mSettingUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                String webViewFragmentUrl = getWebviewUrl(R.string.url_closed_fragment);
+                String url = getFormattedUrl(setting.getWebUrl(), webViewFragmentUrl);
+                loadFragment(url, closeFragment, R.id.dashboard_stock_container, R.string.tab_tag_improve);
+            }
+        });
         return isMoveToLeft;
     }
 
@@ -348,22 +338,23 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showSecondFragment() {
-        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.OPEN_TYPE,
-                new GetUrlForWebViewsUseCase.Callback() {
-                    @Override
-                    public void onGetUrl(String url) {
-                        openFragment = new WebViewFragment();
-                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
-                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
-                        openFragment.setArguments(bundle);
-                        openFragment.reloadData();
-                        openFragment.hideHeader();
-                        mDashboardActivity.replaceFragment(R.id.dashboard_completed_container,
-                                openFragment);
-                    }
-                });
+        openFragment = new WebViewFragment();
+        mSettingUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                String webViewFragmentUrl = getWebviewUrl(R.string.url_open_fragment);
+                String url = getFormattedUrl(setting.getWebUrl(), webViewFragmentUrl);
+                loadFragment(url, openFragment, R.id.dashboard_completed_container, R.string.tab_tag_assess);
+            }
+        });
+    }
+
+    private String getWebviewUrl(int valueId) {
+        if(credentials!=null && credentials.isDemoCredentials()){
+            return null;
+        } else{
+            return mDashboardActivity.getString(valueId);
+        }
     }
 
     @Override
@@ -378,22 +369,33 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showAVFragment() {
-        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.STATUS_TYPE,
-                new GetUrlForWebViewsUseCase.Callback() {
-                    @Override
-                    public void onGetUrl(String url) {
-                        statusFragment = new WebViewFragment();
-                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
-                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_monitor);
-                        statusFragment.setArguments(bundle);
-                        statusFragment.reloadData();
-                        mDashboardActivity.replaceFragment(R.id.dashboard_av_container,
-                                statusFragment);
-                        statusFragment.hideHeader();
-                    }
-                });
+        statusFragment = new WebViewFragment();
+        mSettingUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                String webViewFragmentUrl = getWebviewUrl(R.string.url_status_fragment);
+                String url = getFormattedUrl(setting.getWebUrl(), webViewFragmentUrl);
+                loadFragment(url, statusFragment, R.id.dashboard_av_container, R.string.tab_tag_monitor);
+            }
+        });
+    }
+
+    private void loadFragment(String url, WebViewFragment fragment, int container, int tabTag) {
+        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
+                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
+        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
+        bundle.putInt(WebViewFragment.TITLE, tabTag);
+        fragment.setArguments(bundle);
+        fragment.reloadData();
+        mDashboardActivity.replaceFragment(container,
+                fragment);
+        fragment.hideHeader();
+    }
+
+    private String getFormattedUrl(String settingsWebUrl, String webViewUrl) {
+        return String.format(settingsWebUrl + mDashboardActivity.getString(
+                R.string.composed_web_view_url), webViewUrl, credentials.getUsername(),
+                credentials.getPassword(), getUserLanguageOrDefault(mDashboardActivity));
     }
 
     @Override

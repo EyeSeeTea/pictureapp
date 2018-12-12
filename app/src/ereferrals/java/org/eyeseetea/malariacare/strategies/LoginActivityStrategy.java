@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -437,7 +438,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void initProgramURLField() {
-        programURLEditText = initTextInputLayout(R.id.text_layout_program_server_url, R.string.program_url, loginActivity);
+        programURLContainer = initTextInputLayout(R.id.text_layout_program_server_url, R.string.program_url, loginActivity);
     }
 
     private void initProgramEndpointField() {
@@ -448,11 +449,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         webviewURLContainer = initTextInputLayout(R.id.text_layout_web_server_url, R.string.webviews_url, loginActivity);
     }
 
-    private EditText initTextInputLayout(int layoutId, int hintId, Activity activity) {
-        EditText editText = loginActivity.findViewById(layoutId);
-        ((TextInputLayout) editText.getParent()).setHint(
-                Utils.getInternationalizedString(hintId, activity));
-        return editText;
+    private View initTextInputLayout(int layoutId, int hintId, Activity activity) {
+        View view = loginActivity.findViewById(layoutId);
+        ((TextInputLayout)view).setHint(Utils.getInternationalizedString(hintId, activity));
+        return view;
     }
 
     @Override

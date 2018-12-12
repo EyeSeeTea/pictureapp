@@ -252,23 +252,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String value = parent.getItemAtPosition(position).toString();
                 if(value.equals(parent.getContext().getResources().getString(R.string.production))){
-                    showServerEditUrls(false);
-                    programURLEditText.setText(R.string.program_url_production);
-                    programEndPointEditText.setText(R.string.program_endpoint_production);
-                    webviewURLEditText.setText(R.string.web_url_production);
-                    loginActivity.getServerText().setText(R.string.webservice_url_production);
+                    setConfiguration(R.string.program_url_production, R.string.program_endpoint_production, R.string.web_url_production, R.string.webservice_url_production, false);
                 } else if(value.equals(parent.getContext().getResources().getString(R.string.training))){
-                    showServerEditUrls(false);
-                    programURLEditText.setText(R.string.program_url_training);
-                    programEndPointEditText.setText(R.string.program_endpoint_training);
-                    webviewURLEditText.setText(R.string.web_url_training);
-                    loginActivity.getServerText().setText(R.string.webservice_url_training);
+                    setConfiguration(R.string.program_url_training, R.string.program_endpoint_training, R.string.web_url_training, R.string.webservice_url_training, false);
                 } else if (value.equals(parent.getContext().getResources().getString(R.string.custom))){
-                    showServerEditUrls(true);
-                    programURLEditText.setText(R.string.program_url_production);
-                    programEndPointEditText.setText(R.string.program_endpoint_production);
-                    webviewURLEditText.setText(R.string.web_url_production);
-                    loginActivity.getServerText().setText(R.string.webservice_url_production);
+                    setConfiguration(R.string.program_url_production, R.string.program_endpoint_production, R.string.web_url_production, R.string.webservice_url_production, true);
                 }
             }
 
@@ -277,6 +265,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 parent.setSelection(0);
             }
         });
+    }
+
+    private void setConfiguration(int programUrlStringId, int programEndpointStringId, int webUrlStringId, int webserviceUrlStringId, boolean visibility) {
+        showServerEditUrls(visibility);
+        programURLEditText.setText(programUrlStringId);
+        programEndPointEditText.setText(programEndpointStringId);
+        webviewURLEditText.setText(webUrlStringId);
+        loginActivity.getServerText().setText(webserviceUrlStringId);
     }
 
     private void showServerEditUrls(boolean value) {

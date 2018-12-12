@@ -88,6 +88,7 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.OuTreeMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
@@ -620,7 +621,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         screenQuestionDB.getInternationalizedPath());
             }
             mDynamicTabAdapterStrategy.renderParticularSurvey(screenQuestionDB, surveyDB, questionView);
-            if(questionView instanceof CommonQuestionView){
+            if(questionView instanceof CommonQuestionView && requireQuestionOptionValidations(questionView)){
                 ((CommonQuestionView) questionView).setQuestion(QuestionMapper.mapFromDbToDomain(screenQuestionDB));
             }
             if (questionView instanceof AOptionQuestionView) {
@@ -687,6 +688,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((CommonQuestionView) questionView).initContainers(tableRow, tableLayout);
             }
         }
+    }
+
+    //The OuTreeMultiQuestionView question don't required extra validations.
+    private boolean requireQuestionOptionValidations(IQuestionView questionView) {
+        return !(questionView instanceof OuTreeMultiQuestionView);
     }
 
     @Nullable

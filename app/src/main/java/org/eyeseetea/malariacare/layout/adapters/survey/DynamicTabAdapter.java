@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -497,8 +498,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //QuestionDB
         CustomTextView headerView = (CustomTextView) rowView.findViewById(question);
-        ((TextView) rowView.findViewById(R.id.question_title)).setText(
-                Utils.getInternationalizedString(R.string.new_survey_title, context));
 
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
@@ -604,7 +603,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (questionView instanceof IMultiQuestionView) {
                 mMultiQuestionViews.add((IMultiQuestionView) questionView);
                 ((IMultiQuestionView) questionView).setHeader(
-                        Utils.getInternationalizedString(screenQuestionDB.getForm_name()));
+                        translate(screenQuestionDB.getForm_name()));
             }
 
             addTagQuestion(screenQuestionDB, (View) questionView);
@@ -612,7 +611,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
 
             questionView.setHelpText(
-                    Utils.getInternationalizedString(screenQuestionDB.getHelp_text()));
+                    translate(screenQuestionDB.getHelp_text()));
 
             questionView.setEnabled(!readOnly);
 
@@ -868,8 +867,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void initializeNavigationButtons(View navigationButtonsHolder) {
         View nextButton = (View) navigationButtonsHolder.findViewById(R.id.next_btn);
-        ((TextView) nextButton).setText(
-                Utils.getInternationalizedString(R.string.survey_submit, context));
 
         ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1152,11 +1149,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
-                .setTitle(Utils.getInternationalizedString(R.string.survey_completed, context))
+                .setTitle(translate(R.string.survey_completed))
                 .setMessage(
-                        Utils.getInternationalizedString(R.string.survey_completed_text, context))
+                        translate(R.string.survey_completed_text))
                 .setCancelable(false)
-                .setPositiveButton(Utils.getInternationalizedString(R.string.survey_send, context),
+                .setPositiveButton(translate(R.string.survey_send),
                         new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
@@ -1166,7 +1163,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 });
         msgConfirmation.setNegativeButton(
-                Utils.getInternationalizedString(R.string.survey_review, context),
+                translate(R.string.survey_review),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
@@ -1312,4 +1309,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         questionDB.saveValuesDDL(selectedOptionDB, questionDB.getValueBySession());
         showOrHideChildren(questionDB);
     }
+
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, context);
+    }
+
+    private String translate(String stringKey){
+        return Utils.getInternationalizedString(stringKey,context);
+    }
+
 }

@@ -11,6 +11,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -232,13 +233,12 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 settingsActivity.getString(R.string.developer_option));
         settingsActivity.translatePreferenceString(developerPreference);
         developerPreference.setSummary(
-                Utils.getInternationalizedString(R.string.developer_option_summary,
-                        settingsActivity));
+                translate(R.string.developer_option_summary));
         Preference elementsPreference = settingsActivity.findPreference(
                 settingsActivity.getString(R.string.activate_elements_key));
         settingsActivity.translatePreferenceString(elementsPreference);
         elementsPreference.setSummary(
-                Utils.getInternationalizedString(R.string.activate_elements, settingsActivity));
+                translate(R.string.activate_elements));
     }
 
     @Override
@@ -279,7 +279,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void addFontStyleEntries(List<String> entries, List<String> entryValues) {
         for (CustomFontStyles fontStyle:CustomFontStyles.values()) {
-            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle(),settingsActivity));
             entryValues.add(String.valueOf(fontStyle.getResId()));
         }
     }
@@ -345,5 +345,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
         return settingsActivity.getResources().getStringArray(
                 R.array.languages_strings)[0];
+    }
+
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, settingsActivity);
     }
 }

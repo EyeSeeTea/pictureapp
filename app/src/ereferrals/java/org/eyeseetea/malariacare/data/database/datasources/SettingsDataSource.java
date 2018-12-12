@@ -130,7 +130,11 @@ public class SettingsDataSource implements ISettingsRepository {
     }
 
     private String getFontSize() {
-        String fontStyleId = getPreference(context, R.string.font_sizes, FontStyle.Medium.getResId());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        String fontStyleId = sharedPreferences.getString(context.getString(R.string.font_sizes),
+                String.valueOf(FontStyle.Medium.getResId()));
 
         for (FontStyle fontStyle : FontStyle.values()) {
             if (fontStyle.getResId() == Integer.valueOf(fontStyleId)) {
@@ -175,9 +179,13 @@ public class SettingsDataSource implements ISettingsRepository {
     private String getPreference(Context context, int stringId, Integer defaultStringId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
+        String value = null;
+        if(defaultStringId!=null){
+            value = context.getString(defaultStringId);
+        }
         return sharedPreferences.getString(
                 context.getResources().getString(stringId),
-                context.getString(defaultStringId));
+                value);
     }
 
     private void savePreference(Context context, int stringId, String value) {

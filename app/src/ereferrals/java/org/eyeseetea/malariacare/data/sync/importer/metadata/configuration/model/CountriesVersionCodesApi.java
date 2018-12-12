@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MetadataCountryVersionApi {
+public class CountriesVersionCodesApi {
 
-    public List<CountryVersionApi> countriesVersions;
+    public List<CountryVersionCodesApi> countriesVersions;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class CountryVersionApi {
+    public static class CountryVersionCodesApi {
         @JsonProperty("cfg_ref")
         public String reference;
         @JsonProperty("ou_code")

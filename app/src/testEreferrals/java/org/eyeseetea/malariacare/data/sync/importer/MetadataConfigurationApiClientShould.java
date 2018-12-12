@@ -165,7 +165,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer.enqueueMockResponse(COUNTRIES_VERSION);
 
-        countryVersions = apiClient.getCountriesVersions();
+        countryVersions = apiClient.getCountriesCodesAndVersions();
 
     }
 

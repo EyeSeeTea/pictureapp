@@ -39,7 +39,7 @@ import org.eyeseetea.malariacare.strategies.AEyeSeeTeaApplicationStrategy;
 import org.eyeseetea.malariacare.strategies.EyeSeeTeaApplicationStrategy;
 import org.eyeseetea.malariacare.utils.DBTranslator;
 import org.eyeseetea.malariacare.utils.Permissions;
-import org.eyeseetea.sdk.common.EyeSeeTeaSdk;
+import org.eyeseetea.sdk.common.EyeSeeTeaSdkInstance;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -88,7 +88,7 @@ public class EyeSeeTeaApplication extends Application {
     }
 
     private void initEyeSeeTeaSDK() {
-        EyeSeeTeaSdk.getInstance().init(new DBTranslator());
+        EyeSeeTeaSdkInstance.getInstance().initTranslator(new DBTranslator());
     }
 
     @Override

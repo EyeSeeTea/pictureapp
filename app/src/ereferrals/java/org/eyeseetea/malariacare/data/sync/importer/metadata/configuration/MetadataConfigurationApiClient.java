@@ -1,30 +1,54 @@
 package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.ACTION_SHOW;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_INT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_LONG_TEXT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_POSITIVE_INT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_PREGNANT_MONTH_INT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_QUESTION_LABEL;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_RADIO_GROUP_HORIZONTAL;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_SWITCH_BUTTON;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_TYPE_AUTOCOMPLETE_TEXT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_TYPE_DATE;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_TYPE_DROPDOWN_LIST;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_TYPE_PHONE;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_TYPE_SHORT_TEXT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.CONTROL_TYPE_YEAR;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.DISPLAY_PRIORITY_IMPORTANT;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.DISPLAY_PRIORITY_INVISIBLE;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.DISPLAY_PRIORITY_VISIBLE;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.OPERATOR_EQUAL;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.OPERATOR_GREATER_OR_EQUAL_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.OPERATOR_GREATER_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.OPERATOR_LESS_OR_EQUAL_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.OPERATOR_LESS_THAN;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.TYPE_DATA_POINT_REF;
-import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi.Question.TYPE_VALUE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.ACTION_SHOW;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_INT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_LONG_TEXT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_POSITIVE_INT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_PREGNANT_MONTH_INT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_QUESTION_LABEL;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_RADIO_GROUP_HORIZONTAL;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_SWITCH_BUTTON;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_TYPE_AUTOCOMPLETE_TEXT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_TYPE_DATE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_TYPE_DROPDOWN_LIST;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_TYPE_PHONE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_TYPE_SHORT_TEXT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.CONTROL_TYPE_YEAR;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.DISPLAY_PRIORITY_IMPORTANT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.DISPLAY_PRIORITY_INVISIBLE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.DISPLAY_PRIORITY_VISIBLE;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.OPERATOR_EQUAL;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.OPERATOR_GREATER_OR_EQUAL_THAN;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.OPERATOR_GREATER_THAN;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.OPERATOR_LESS_OR_EQUAL_THAN;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.OPERATOR_LESS_THAN;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.TYPE_DATA_POINT_REF;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountryMetadataApi.Question.TYPE_VALUE;
 import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.IMPORTANT;
 import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.INVISIBLE;
 import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.VISIBLE;
@@ -35,8 +59,9 @@ import android.support.annotation.Nullable;
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
         .PhoneFormatConvertToDomainVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .CountriesMetadataVersionsApi;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountriesVersionCodesApi;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
@@ -124,29 +149,30 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     @Override
     public List<Configuration.CountryVersion> getCountriesCodesAndVersions() throws Exception {
 
-        Response<CountriesVersionCodesApi> response =
-                configurationApi.getCountriesCodes(countryExtension).execute();
+        Response<CountriesMetadataVersionsApi> response =
+                configurationApi.getCountriesMetadataVersions(countryExtension).execute();
 
-        CountriesVersionCodesApi metadata = getResultsOrThrowException(response);
+        CountriesMetadataVersionsApi metadata = getResultsOrThrowException(response);
 
         return convertToDomainCountryVersion(metadata.countriesVersions);
     }
 
     @NonNull
     private List<Configuration.CountryVersion> convertToDomainCountryVersion(
-            @NonNull List<CountriesVersionCodesApi.CountryVersionCodesApi> countriesVersionsApi) {
+            @NonNull List<CountriesMetadataVersionsApi.CountriesMetadataVersion>
+                    countriesVersionsApi) {
 
         List<Configuration.CountryVersion> domainCountriesVersions = new ArrayList<>();
 
-        for (CountriesVersionCodesApi.CountryVersionCodesApi countryVersionCodesApi : countriesVersionsApi) {
+        for (CountriesMetadataVersionsApi.CountriesMetadataVersion countriesMetadataVersion : countriesVersionsApi) {
 
             Configuration.CountryVersion domain =
                     Configuration.CountryVersion.newBuilder()
-                            .country(countryVersionCodesApi.country)
-                            .name(countryVersionCodesApi.name)
-                            .version(countryVersionCodesApi.version)
-                            .reference(countryVersionCodesApi.reference)
-                            .uid(countryVersionCodesApi.uid)
+                            .country(countriesMetadataVersion.country)
+                            .name(countriesMetadataVersion.name)
+                            .version(countriesMetadataVersion.version)
+                            .reference(countriesMetadataVersion.reference)
+                            .uid(countriesMetadataVersion.uid)
                             .lastUpdate(new Date())
                             .build();
 

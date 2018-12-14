@@ -2,12 +2,16 @@ package org.eyeseetea.malariacare;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
+import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -22,6 +26,24 @@ import java.util.List;
 public class SettingsActivityShould {
 
     private final Object syncObject = new Object();
+
+    @Before
+    public void grantPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.ACCESS_FINE_LOCATION");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.INTERNET");
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.ACCESS_NETWORK_STATE");
+        }
+    }
 
     @Test
     public void onLoginIntentShowLoginActivity() throws InterruptedException {
@@ -42,7 +64,7 @@ public class SettingsActivityShould {
         // get the info from the currently running task
         List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
 
-        Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+        Log.d("topActivity", BuildConfig.FLAVOR+ " " + BuildConfig.APPLICATION_ID +"CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
 
         ComponentName componentInfo = taskInfo.get(0).topActivity;
         String activityName = componentInfo.getClassName();
@@ -64,7 +86,7 @@ public class SettingsActivityShould {
                 PushServiceStrategy.PUSH_MESSAGE);
         surveysIntent.putExtra(PushServiceStrategy.SHOW_LOGIN, true);
         LocalBroadcastManager.getInstance(
-                PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
+                InstrumentationRegistry.getTargetContext()).sendBroadcast(surveysIntent);
     }
 
 

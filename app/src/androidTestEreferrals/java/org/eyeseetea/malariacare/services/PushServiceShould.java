@@ -96,7 +96,7 @@ public class PushServiceShould {
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
                 new Device("testPhone", "testIMEI", "test_version"),
-                InstrumentationRegistry.getContext());
+                InstrumentationRegistry.getTargetContext());
         mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();

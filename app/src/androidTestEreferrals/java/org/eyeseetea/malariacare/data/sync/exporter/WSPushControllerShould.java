@@ -59,7 +59,7 @@ public class WSPushControllerShould {
         Device device = new Device("phoneNumber", "imei", "version");
 
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device,
-                InstrumentationRegistry.getContext());
+                InstrumentationRegistry.getTargetContext());
         mWSPushController = new WSPushController(apiClient, convertToWSVisitor);
     }
 

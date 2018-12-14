@@ -2,8 +2,8 @@ package org.eyeseetea.malariacare;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -47,16 +47,16 @@ public class BaseActivityShould {
     public void grantPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getTargetContext().getPackageName()
+                    "pm grant " + getContext().getPackageName()
                             + " android.permission.READ_PHONE_STATE");
             getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getTargetContext().getPackageName()
+                    "pm grant " + getContext().getPackageName()
                             + " android.permission.ACCESS_FINE_LOCATION");
             getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getTargetContext().getPackageName()
+                    "pm grant " + getContext().getPackageName()
                             + " android.permission.INTERNET");
             getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getTargetContext().getPackageName()
+                    "pm grant " + getContext().getPackageName()
                             + " android.permission.ACCESS_NETWORK_STATE");
         }
     }

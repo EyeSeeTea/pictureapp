@@ -56,6 +56,32 @@ public class QuestionConvertFromDomainVisitorShould {
     }
 
     @Test
+    public void convert_a_domain_question_to_questiondb_with_empty_default_value()
+            throws Exception {
+
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
+                ""));
+
+        QuestionDB expectedQuestion = givenADBQuestionWithDefaultValue("");
+
+        assertEqual(questionToEvaluate, expectedQuestion);
+
+    }
+
+    @Test
+    public void convert_a_domain_question_to_questiondb_with_default_value()
+            throws Exception {
+
+        String defaultValue = "defaultValue";
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
+                defaultValue));
+
+        QuestionDB expectedQuestion = givenADBQuestionWithDefaultValue(defaultValue);
+
+        assertEqual(questionToEvaluate, expectedQuestion);
+
+    }
+    @Test
     public void convert_a_domain_question_to_questiondb_with_dropdown_list_output()
             throws Exception {
 
@@ -66,6 +92,18 @@ public class QuestionConvertFromDomainVisitorShould {
 
         assertEqual(questionToEvaluate, expectedQuestion);
 
+    }
+
+    @Test
+    public void convert_a_domain_question_to_questiondb_with_regexp_and_regexp_error()
+            throws Exception {
+
+        QuestionDB questionToEvaluate = converter.visit(givenADomainQuestionWith(
+                "^(\\d{2})$", "some_error_msg_ref\""));
+
+        QuestionDB expectedQuestion =  givenADBQuestionWithValidation( "^(\\d{2})$", "some_error_msg_ref\"");
+
+        assertEqual(questionToEvaluate, expectedQuestion);
     }
 
     @Test
@@ -242,6 +280,36 @@ public class QuestionConvertFromDomainVisitorShould {
 
         return question;
     }
+    private Question givenADomainQuestionWith(String defaultValue) {
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .defaultValue(defaultValue)
+                .compulsory(true).build();
+
+
+        return question;
+    }
+
+    private Question givenADomainQuestionWith(String regexp, String regExpError) {
+        Question question = Question
+                .newBuilder()
+                .uid("uid")
+                .code("program")
+                .name("ipc_issueEntry_q_program")
+                .type(Question.Type.DROPDOWN_LIST)
+                .visibility(Question.Visibility.VISIBLE)
+                .regExp(regexp)
+                .regExpError(regExpError)
+                .compulsory(true).build();
+
+
+        return question;
+    }
 
     private Question givenADomainQuestionOneOption() {
         List<Option> options = new ArrayList<>(1);
@@ -299,6 +367,18 @@ public class QuestionConvertFromDomainVisitorShould {
     private QuestionDB givenADBQuestionWithOutput(int output) {
         QuestionDB question = givenAQuestionDB();
         question.setOutput(output);
+        return question;
+    }
+    private QuestionDB givenADBQuestionWithDefaultValue(String defaultValue) {
+        QuestionDB question = givenAQuestionDB();
+        question.setDefaultValue(defaultValue);
+        return question;
+    }
+
+    private QuestionDB givenADBQuestionWithValidation(String validation, String validationMessage) {
+        QuestionDB question = givenAQuestionDB();
+        question.setValidationRegExp(validation);
+        question.setValidationMessage(validationMessage);
         return question;
     }
 

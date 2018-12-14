@@ -12,6 +12,8 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -29,16 +31,20 @@ public class WSPushController implements IPushController {
     private ConvertToWSVisitor mConvertToWSVisitor;
     private List<SurveyDB> mSurveys;
     private eReferralsAPIClient mEReferralsAPIClient;
+    private ISurveyRepository surveyRepository;
     private IPushControllerCallback mCallback;
 
 
-    public WSPushController(Context context) throws IllegalArgumentException {
+    public WSPushController(Context context, ISurveyRepository surveyRepository) throws IllegalArgumentException {
         mEReferralsAPIClient = new eReferralsAPIClient(PreferencesEReferral.getWSURL());
+        this.surveyRepository = surveyRepository;
         mConvertToWSVisitor = new ConvertToWSVisitor(context);
     }
 
-    public WSPushController(eReferralsAPIClient eReferralsAPIClient, ConvertToWSVisitor convertToWSVisitor) {
+    public WSPushController(eReferralsAPIClient eReferralsAPIClient, ISurveyRepository surveyRepository,
+                            ConvertToWSVisitor convertToWSVisitor) {
         mEReferralsAPIClient = eReferralsAPIClient;
+        this.surveyRepository = surveyRepository;
         mConvertToWSVisitor = convertToWSVisitor;
     }
 
@@ -51,6 +57,7 @@ public class WSPushController implements IPushController {
             callback.onError(new NetworkException());
         } else {
             mSurveys = SurveyDB.getAllCompletedSurveys();
+            checkQuarantine();
             if (mSurveys == null || mSurveys.size() == 0) {
                 callback.onError(new SurveysToPushNotFoundException("Null surveys"));
                 return;
@@ -82,6 +89,30 @@ public class WSPushController implements IPushController {
     @Override
     public void changePushInProgress(boolean inProgress) {
         PreferencesState.getInstance().setPushInProgress(inProgress);
+    }
+
+
+    private void checkQuarantine() {
+        final List<Survey> surveys = surveyRepository.getAllQuarantineSurveys();
+        mEReferralsAPIClient.getExistOnServer(surveys, new eReferralsAPIClient.WSClientCallBack() {
+            @Override
+            public void onSuccess(Object result) {
+                List<String> sentUidList = (List<String>)result;
+                for(Survey survey:surveys){
+                    if(sentUidList.contains(survey.getUId())) {
+                        survey.setStatus(Constants.SURVEY_SENT);
+                    }else{
+                        survey.setStatus(Constants.SURVEY_COMPLETED);
+                    }
+                    surveyRepository.save(survey);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void convertToWSSurveys() throws Exception {
@@ -117,7 +148,7 @@ public class WSPushController implements IPushController {
                         Log.e(TAG, "Error pushing surveys: " + e.getMessage());
                         int status = Constants.SURVEY_CONFLICT;
                         if (e instanceof NetworkException) {
-                            status = Constants.SURVEY_COMPLETED;
+                            status = Constants.SURVEY_QUARANTINE;
                         } else if (e instanceof ConfigFileObsoleteException) {
                             status = Constants.SURVEY_SENT;
                         }
@@ -159,27 +190,30 @@ public class WSPushController implements IPushController {
                     mCallback.onInformativeError(new PushValueException(message));
                 }
                 SurveyDB surveyDB = null;
+                String eventUid = responseAction.getActionId();
                 String voucherId = responseAction.getResponse().getData().getVoucherCode();
                 if (voucherId != null) {
                     for (SurveyDB survey : mSurveys) {
-                        if (voucherId.contains(survey.getEventUid())) {
+                        if (voucherId.contains(survey.getVoucherUid())) {
                             surveyDB = survey;
                             break;
                         }
                     }
 
-                    if (surveyDB != null && !surveyDB.getEventUid().equals(voucherId)) {
+                    if (surveyDB != null && !surveyDB.getVoucherUid().equals(voucherId)) {
                         Log.d(TAG,
-                                "Changing the UID of the survey old:" + surveyDB.getEventUid()
+                                "Changing the UID of the survey old:" + surveyDB.getVoucherUid()
                                         + " new:"
                                         + voucherId);
                         Context context = PreferencesState.getInstance().getContext();
 
                         mCallback.onInformativeMessage(String.format(
                                 context.getResources().getString(R.string.voucher_id_changed),
-                                surveyDB.getEventUid(), voucherId));
+                                surveyDB.getVoucherUid(), voucherId));
 
-                        surveyDB.setEventUid(voucherId);
+                        surveyDB.setVoucherUid(voucherId);
+
+                        surveyDB.setEventUid(eventUid);
 
                         surveyDB.save();
                     }

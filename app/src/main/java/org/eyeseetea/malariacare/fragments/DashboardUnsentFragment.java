@@ -26,7 +26,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -38,14 +38,12 @@ import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.network.PushClient;
-import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.malariacare.strategies.ADashboardUnsentFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
 
@@ -62,13 +60,13 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
+    private DashboardUnsentFragment dashboardUnsentFragment;
     private boolean viewCreated = false;
-    private ADashboardUnsentFragmentStrategy mDashboardUnsentFragmentStrategy;
     ListView listView;
 
     public DashboardUnsentFragment() {
         this.mSurveyDBs = new ArrayList();
-        mDashboardUnsentFragmentStrategy = new DashboardUnsentFragmentStrategy(this);
+        dashboardUnsentFragment = this;
     }
 
     @Override
@@ -80,7 +78,6 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mDashboardUnsentFragmentStrategy.saveBundle(outState);
     }
 
     @Override
@@ -92,9 +89,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         }
         viewCreated = true;
 
-        View view = mDashboardUnsentFragmentStrategy.inflateView(inflater, container,
-                savedInstanceState);
-        return view;
+        return inflater.inflate(R.layout.unsent_list_fragment, container, false);
     }
 
     @Override
@@ -110,10 +105,28 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         registerFragmentReceiver();
 
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
+        super.onPause();
     }
 
     /**
@@ -131,12 +144,12 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
-        mDashboardUnsentFragmentStrategy.manageOnItemClick(adapter, l, position, mSurveyDBs);
+        adapter.onClick(l, position, mSurveyDBs);
     }
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop");
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         unregisterFragmentReceiver();
 
         super.onStop();
@@ -189,7 +202,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                                                     new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface arg0,
                                                                 int arg1) {
-                                                            mDashboardUnsentFragmentStrategy
+                                                            DashboardUnsentFragmentStrategy
                                                                     .deleteSurvey(
                                                                     ((SurveyDB) adapter.getItem(
                                                                             position - 1)));
@@ -227,7 +240,8 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
-            mDashboardUnsentFragmentStrategy.registerSurveyReceiver(getActivity(), surveyReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
+                    new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
         }
     }
 
@@ -245,7 +259,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     }
 
     public void reloadHeader(Activity activity) {
-        mDashboardUnsentFragmentStrategy.reloadHeader(activity);
+        dashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_assess);
     }
 
     public void reloadHeader(Activity activity, int id) {
@@ -254,7 +268,12 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
 
     public void reloadData() {
-        mDashboardUnsentFragmentStrategy.reloadData();
+        Intent surveysIntent = new Intent(
+                PreferencesState.getInstance().getContext().getApplicationContext(),
+                SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+        PreferencesState.getInstance().getContext().getApplicationContext().startService(
+                surveysIntent);
     }
 
     public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
@@ -307,71 +326,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveysFromService(surveysUnsentFromService);
-            } else if(SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION.equals(intent.getAction())){
-
-                List<SurveyDB> surveysUnsentFromService;
-                Session.valuesLock.readLock().lock();
-                try {
-                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
-                            SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
-                } finally {
-                    Session.valuesLock.readLock().unlock();
-                }
-                reloadSurveysFromService(surveysUnsentFromService);
-            } else {
-                mDashboardUnsentFragmentStrategy.onReceiveSurveys(intent);
             }
-        }
-    }
-
-    public class AsyncPush extends AsyncTask<Void, Integer, PushResult> {
-
-        private SurveyDB mSurveyDB;
-
-
-        public AsyncPush(SurveyDB surveyDB) {
-            this.mSurveyDB = surveyDB;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //spinner
-        }
-
-        @Override
-        protected PushResult doInBackground(Void... params) {
-            PushClient pushClient = new PushClient(mSurveyDB, getActivity());
-            return pushClient.push();
-        }
-
-        @Override
-        protected void onPostExecute(PushResult pushResult) {
-            super.onPostExecute(pushResult);
-            showResponse(pushResult);
-        }
-
-        /**
-         * Shows the proper response message
-         */
-        private void showResponse(PushResult pushResult) {
-            String msg;
-            if (pushResult.isSuccessful()) {
-                msg = getActivity().getResources().getString(R.string.dialog_info_push_ok) + " \n"
-                        + String.format("Imported: %s | Updated: %s | Ignored: %s",
-                        pushResult.getImported(), pushResult.getUpdated(), pushResult.getIgnored());
-            } else if (pushResult.getImported().equals("0")) {
-                msg = getActivity().getResources().getString(
-                        R.string.dialog_info_push_bad_credentials);
-            } else {
-                msg = pushResult.getException().getMessage();
-            }
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(getActivity().getString(R.string.dialog_title_push_response))
-                    .setMessage(msg)
-                    .setNeutralButton(android.R.string.yes, null).create().show();
-
         }
     }
 }

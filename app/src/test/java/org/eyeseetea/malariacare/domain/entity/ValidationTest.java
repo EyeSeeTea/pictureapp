@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 public class ValidationTest {
 
@@ -37,7 +37,7 @@ public class ValidationTest {
     @Test
     public void addAndRecoveryFirstError() {
         Validation.getInstance().addinvalidInput(mockObject1, ERROR_ZERO);
-        List<Object> activeInputs = Validation.getInstance().getActiveInputs();
+        LinkedHashSet<Object> activeInputs = Validation.getInstance().getActiveInputs();
         HashMap<Object, String> invalidInputs = Validation.getInstance().getInvalidInputs();
         for (Object activeInput : activeInputs) {
             if (invalidInputs.containsKey(activeInput)) {
@@ -52,7 +52,7 @@ public class ValidationTest {
     @Test
     public void addAndRecoverySecondError() {
         Validation.getInstance().addinvalidInput(mockObject2, ERROR_ONE);
-        List<Object> activeInputs = Validation.getInstance().getActiveInputs();
+        LinkedHashSet<Object> activeInputs = Validation.getInstance().getActiveInputs();
         HashMap<Object, String> invalidInputs = Validation.getInstance().getInvalidInputs();
         for (Object activeInput : activeInputs) {
             if (invalidInputs.containsKey(activeInput)) {
@@ -67,7 +67,7 @@ public class ValidationTest {
     @Test
     public void addAndRecoveryThirdError() {
         Validation.getInstance().addinvalidInput(mockObject3, ERROR_TWO);
-        List<Object> activeInputs = Validation.getInstance().getActiveInputs();
+        LinkedHashSet<Object> activeInputs = Validation.getInstance().getActiveInputs();
         HashMap<Object, String> invalidInputs = Validation.getInstance().getInvalidInputs();
         for (Object activeInput : activeInputs) {
             if (invalidInputs.containsKey(activeInput)) {
@@ -84,7 +84,7 @@ public class ValidationTest {
         Validation.getInstance().addinvalidInput(mockObject1, ERROR_ZERO);
         Validation.getInstance().addinvalidInput(mockObject2, ERROR_ONE);
         Validation.getInstance().addinvalidInput(mockObject3, ERROR_TWO);
-        List<Object> activeInputs = Validation.getInstance().getActiveInputs();
+        LinkedHashSet<Object> activeInputs = Validation.getInstance().getActiveInputs();
         HashMap<Object, String> invalidInputs = Validation.getInstance().getInvalidInputs();
         int numberOfErrors = 0;
 

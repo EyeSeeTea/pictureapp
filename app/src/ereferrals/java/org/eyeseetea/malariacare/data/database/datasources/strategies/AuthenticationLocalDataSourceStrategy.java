@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.data.database.datasources.strategies;
 
+import android.content.Context;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
@@ -27,7 +29,7 @@ public class AuthenticationLocalDataSourceStrategy extends AAuthenticationLocalD
 
         mAuthenticationLocalDataSource.clearCredentials();
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.clearOrganisationCredentials();
+        credentialsLocalDataSource.clearLastValidCredentials();
 
         Session.logout();
 
@@ -38,5 +40,10 @@ public class AuthenticationLocalDataSourceStrategy extends AAuthenticationLocalD
         new PopulateDBStrategy().logoutWipe();
 
         callback.onSuccess(null);
+    }
+
+    @Override
+    public String getServerDefaultUrl(Context mContext) {
+        return mContext.getString(R.string.ws_base_url);
     }
 }

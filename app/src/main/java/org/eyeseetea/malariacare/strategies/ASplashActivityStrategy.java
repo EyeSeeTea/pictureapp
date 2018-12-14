@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.SplashScreenActivity;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
@@ -43,7 +43,7 @@ public abstract class ASplashActivityStrategy {
             public void onComplete() {
                 Log.d(this.getClass().getSimpleName(), "pull complete");
                 try {
-                    IProgramRepository programRepository = new ProgramLocalDataSource();
+                    IProgramRepository programRepository = new ProgramRepository();
                     Program userProgram = programRepository.getUserProgram();
                     ProgramDB program = ProgramDB.findByName(userProgram.getCode());
 

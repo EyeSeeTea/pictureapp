@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -18,11 +19,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
@@ -93,16 +94,45 @@ public class BaseActivityShould {
 
     @Before
     public void cleanUp() {
-        savePreviousPreferences();
-        saveTestCredentialsAndProgram();
-        Intent intent = new Intent(PreferencesState.getInstance().getContext(),
-                DashboardActivity.class);
-        EyeSeeTeaApplication.getInstance().startActivity(intent);
+            grantPermission();
+            savePreviousPreferences();
+            saveTestCredentialsAndProgram();
+            Intent intent = new Intent(PreferencesState.getInstance().getContext(),
+                    DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            EyeSeeTeaApplication.getInstance().startActivity(intent);
+        try {
+            synchronized (syncObject) {
+                syncObject.wait(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @After
     public void tearDown() {
         restorePreferences();
+
+    }
+
+    public void grantPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+            synchronized (syncObject) {
+                try {
+                    syncObject.wait(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
+                            + " android.permission.ACCESS_FINE_LOCATION");
+        }
     }
 
 
@@ -117,14 +147,14 @@ public class BaseActivityShould {
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousOrganisationCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        previousOrganisationCredentials = credentialsLocalDataSource.getLastValidCredentials();
         previousCredentials = credentialsLocalDataSource.getCredentials();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
                         PreferencesEReferral.getUserProgramId());
         if (databaseProgramDB != null) {
-            previousProgram = programLocalDataSource.getUserProgram();
+            previousProgram = programRepository.getUserProgram();
         }
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
@@ -136,21 +166,23 @@ public class BaseActivityShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "http:test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials("http:test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url),
+                "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
                 new UserAccount("testUsername", "testUserUID", false, true));
-        saveCredentials(new Credentials("http:test","test","test"));
+        saveCredentials(credentials);
     }
 
     private void restorePreferences() {
@@ -159,15 +191,15 @@ public class BaseActivityShould {
                 context);
         if (previousOrganisationCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.web_service_url),
                     previousOrganisationCredentials.getServerURL());
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousOrganisationCredentials);
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        credentialsLocalDataSource.saveLastValidCredentials(previousOrganisationCredentials);
+        ProgramRepository programRepository = new ProgramRepository();
         if (previousProgram != null) {
-            programLocalDataSource.saveUserProgramId(previousProgram);
+            programRepository.saveUserProgramId(previousProgram);
         } else {
             PreferencesEReferral.saveUserProgramId(-1l);
         }
@@ -182,7 +214,7 @@ public class BaseActivityShould {
     }
 
     private void saveCredentials(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
+        PreferencesState.getInstance().saveStringPreference(R.string.server_url_key,
                 credentials.getServerURL());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user,
                 credentials.getUsername());

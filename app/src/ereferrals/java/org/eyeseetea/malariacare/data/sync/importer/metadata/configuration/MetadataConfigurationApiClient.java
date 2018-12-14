@@ -18,6 +18,8 @@ import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuratio
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.CONTROL_SWITCH_BUTTON;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
+        .MetadataConfigurationsApi.Question.CONTROL_TYPE_AUTOCOMPLETE_TEXT;
+import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.CONTROL_TYPE_DATE;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi.Question.CONTROL_TYPE_DROPDOWN_LIST;
@@ -55,7 +57,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
+        .PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
@@ -216,7 +219,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             MetadataConfigurationsApi.Question questionWithRule = questionsByCode.get(
                     questionCodeWithRule);
 
-            if (questionWithRule.output.equals(CONTROL_TYPE_DROPDOWN_LIST)) {
+            if (questionWithRule.output.equals(CONTROL_TYPE_DROPDOWN_LIST)
+                    || questionWithRule.output.equals(CONTROL_TYPE_AUTOCOMPLETE_TEXT)) {
 
                 assignRulesToQuestionOptions(apiRule, questionsByCode, condition, questionWithRule);
 
@@ -566,6 +570,9 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
                     .rules(convertToDomainRules(apiQuestion.rules))
+                    .regExp(apiQuestion.validationRegex)
+                    .regExpError(apiQuestion.validationPoTerm)
+                    .defaultValue(apiQuestion.defaultValue)
                     .build();
         }
 
@@ -665,6 +672,9 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
                 case CONTROL_SWITCH_BUTTON:
                     questionType = Question.Type.SWITCH_BUTTON;
+                    break;
+                case CONTROL_TYPE_AUTOCOMPLETE_TEXT:
+                    questionType = Question.Type.AUTOCOMPLETE_TEXT;
                     break;
 
             }

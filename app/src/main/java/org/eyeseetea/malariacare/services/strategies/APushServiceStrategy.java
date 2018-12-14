@@ -3,23 +3,12 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
-import org.eyeseetea.malariacare.data.sync.exporter.PushController;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
-import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
-import org.eyeseetea.malariacare.network.SurveyChecker;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
 import org.eyeseetea.malariacare.services.PushService;
 
 public abstract class APushServiceStrategy {
@@ -35,22 +24,8 @@ public abstract class APushServiceStrategy {
     public abstract void push();
 
     protected void executePush() {
-
-        PushController pushController = new PushController(mPushService);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
-
-        SurveysThresholds surveysThresholds =
-                new SurveysThresholds(BuildConfig.LimitSurveysCount,
-                        BuildConfig.LimitSurveysTimeHours);
-
         PushUseCase pushUseCase =
-                new PushUseCase(pushController, asyncExecutor, mainExecutor,
-                        surveysThresholds, surveyRepository, orgUnitRepository);
-
-        SurveyChecker.launchQuarantineChecker();
+                new SyncFactoryStrategy().getPushUseCase(mPushService.getApplicationContext());
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override

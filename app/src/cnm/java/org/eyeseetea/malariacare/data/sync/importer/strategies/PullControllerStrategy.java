@@ -42,6 +42,7 @@ import org.eyeseetea.malariacare.domain.exception.organisationunit
         .ExistsMoreThanOneOrgUnitByPhoneException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.D2;
@@ -104,7 +105,9 @@ public class PullControllerStrategy extends APullControllerStrategy {
             throws NetworkException, ApiCallException, AutoconfigureException {
 
         deviceRepository = new DeviceDataSource();
-        authenticationManager = new AuthenticationManager(context);
+        authenticationManager =
+                (AuthenticationManager)
+                        new AuthenticationFactoryStrategy().getAuthenticationManager(context);
 
         if (isOrgUnitConfigured()) {
             downloadMetadata(pullFilters, callback);
@@ -267,7 +270,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
             CnmApiClient.CnmApiClientCallBack<List<OrgUnitTree>> cnmApiClientCallBack) {
         CnmApiClient cnmApiClient = null;
         try {
-            cnmApiClient = new CnmApiClient(PreferencesState.getInstance().getDhisURL() + "/");
+            cnmApiClient = new CnmApiClient(PreferencesState.getInstance().getServerURL() + "/");
         } catch (Exception e) {
             e.printStackTrace();
             cnmApiClientCallBack.onError(e);

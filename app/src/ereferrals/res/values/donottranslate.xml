@@ -3,7 +3,9 @@
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org</string>
+    <string name="server_url_key" translatable="false">@string/web_service_url</string>
+    <string name="DEFAULT_SERVER_URL" translatable="false">@string/ws_base_url</string>
+    <string name="PROGRAM_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
@@ -75,4 +77,7 @@
     <string name="allow_media_download_3g_key" translatable="false">allow_media_download_3g</string>
     <string name="metadata_update_date" translatable="false">update_metadata_date</string>
     <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
+    <string name="program_configuration_url" translatable="false">"program_configuration_url"</string>
+    <string name="program_configuration_user" translatable="false">"program_configuration_user"</string>
+    <string name="program_configuration_pass" translatable="false">"program_configuration_pass"</string>
 </resources>

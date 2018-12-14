@@ -24,12 +24,12 @@ public class AuthenticationApi {
     }
 
     @NonNull
-    static String getHardcodedApiUser() throws ConfigJsonIOException {
+    public static String getHardcodedApiUser() throws ConfigJsonIOException {
         return CredentialsReader.getInstance().getUser();
     }
 
     @NonNull
-    static String getHardcodedApiPass() throws ConfigJsonIOException {
+    public static String getHardcodedApiPass() throws ConfigJsonIOException {
         return CredentialsReader.getInstance().getPassword();
     }
 }

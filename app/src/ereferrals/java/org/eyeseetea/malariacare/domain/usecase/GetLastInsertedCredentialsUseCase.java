@@ -30,7 +30,7 @@ public class GetLastInsertedCredentialsUseCase implements UseCase {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onGetUsername(mCredentialsRepository.getOrganisationCredentials());
+                mCallback.onGetUsername(mCredentialsRepository.getLastValidCredentials());
             }
         });
     }

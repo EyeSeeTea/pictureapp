@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
@@ -71,11 +72,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     @Override
-    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
-        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, asyncExecutor, mainExecutor);
+    public void initLoginUseCase() {
+        loginActivity.mLoginUseCase =
+                new AuthenticationFactoryStrategy().getLoginUseCase(loginActivity.getApplication());
     }
 
 

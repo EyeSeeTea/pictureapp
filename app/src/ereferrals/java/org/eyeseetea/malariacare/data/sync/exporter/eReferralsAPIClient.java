@@ -3,14 +3,24 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 import android.content.Context;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.model.AuthPayload;
+import org.eyeseetea.malariacare.data.remote.model.AuthResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
+import org.eyeseetea.malariacare.data.sync.exporter.model.Id;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleWSObject;
+import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySimpleWSResponseObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -20,6 +30,8 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -33,12 +45,15 @@ public class eReferralsAPIClient {
 
     private Retrofit mRetrofit;
     private Context mContext;
-    private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
+    private ApiClientRetrofit mApiClientRetrofit;
     private OkHttpClient mOkHttpClient;
     public String mBaseAddress;
     private final int DEFAULT_TIMEOUT = 50000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
+        if(baseAddress.equals(Credentials.createDemoCredentials().getServerURL())){
+            return;
+        }
         mBaseAddress = baseAddress;
         mContext = PreferencesState.getInstance().getContext();
 
@@ -57,13 +72,24 @@ public class eReferralsAPIClient {
                 .writeTimeout(timeoutMillis, TimeUnit.MILLISECONDS)
                 .build();
 
+        ObjectMapper objectMapper = new ObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(mBaseAddress)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .client(mOkHttpClient)
                 .build();
 
-        mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);
+        mApiClientRetrofit = mRetrofit.create(ApiClientRetrofit.class);
+    }
+
+    public AuthResponse auth(String userCode, String pin) throws IOException {
+        AuthPayload authPayload = new AuthPayload(userCode, pin);
+
+        Response<AuthResponse> authResponse = mApiClientRetrofit.auth(authPayload).execute();
+
+        return authResponse.body();
     }
 
     public void setTimeoutMillis(int timeoutMillis) {
@@ -76,7 +102,7 @@ public class eReferralsAPIClient {
         Response<SurveyWSResult> response = null;
 
         try {
-            response = mSurveyApiClientRetrofit.pushSurveys(
+            response = mApiClientRetrofit.pushSurveys(
                     surveyContainerWSObject).execute();
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
@@ -113,7 +139,7 @@ public class eReferralsAPIClient {
             WSClientCallBack<ForgotPasswordResponse> wsClientCallBack) {
         Response<ForgotPasswordResponse> response = null;
         try {
-            response = mSurveyApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();
+            response = mApiClientRetrofit.forgotPassword(forgotPasswordPayload).execute();
 
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
@@ -129,10 +155,45 @@ public class eReferralsAPIClient {
         }
     }
 
+
+    public void getExistOnServer(List<Survey> surveyList, WSClientCallBack wsClientCallBack){
+        SurveySimpleWSObject surveySimpleWSObject = new SurveySimpleWSObject();
+        ArrayList<Id> ids = new ArrayList<>();
+        ArrayList<String> existOnServer = new ArrayList<>();
+        if(surveyList.size()>0) {
+            for (Survey survey : surveyList) {
+                ids.add(new Id(survey.getUId()));
+            }
+            surveySimpleWSObject.setActions(ids);
+            try {
+                Response<SurveySimpleWSResponseObject> response =
+                        mApiClientRetrofit.getQuarantineSurveys(
+                                surveySimpleWSObject).execute();
+                for (SurveySimpleObject surveySimpleObject : response.body().getActions()) {
+                    for (Survey survey : surveyList) {
+                        if (surveySimpleObject.getId().equals(survey.getUId())) {
+                            if (surveySimpleObject.isExistOnServer()) {
+                                existOnServer.add(survey.getUId());
+                            }
+                        }
+                    }
+                }
+            } catch (UnrecognizedPropertyException e) {
+                ConversionException conversionException = new ConversionException(e);
+                wsClientCallBack.onError(conversionException);
+            } catch (SocketTimeoutException | UnknownHostException e) {
+                wsClientCallBack.onError(new NetworkException());
+                return;
+            } catch (IOException e) {
+                wsClientCallBack.onError(e);
+            }
+        }
+        wsClientCallBack.onSuccess(existOnServer);
+    }
+
     public interface WSClientCallBack<T> {
         void onSuccess(T result);
 
         void onError(Exception e);
     }
-
 }

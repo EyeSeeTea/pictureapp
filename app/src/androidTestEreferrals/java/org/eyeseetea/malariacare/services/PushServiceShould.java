@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.services;
 
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,7 +21,6 @@ import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
@@ -28,6 +30,7 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.exporter.ConvertToWSVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
@@ -67,6 +70,7 @@ public class PushServiceShould {
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
 
+    private Context mContext;
 
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
@@ -87,6 +91,8 @@ public class PushServiceShould {
 
     @Before
     public void cleanUp() throws IOException {
+        mContext = InstrumentationRegistry.getTargetContext();
+        grantPhonePermission();
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
@@ -94,13 +100,13 @@ public class PushServiceShould {
         savePreviousPreferences();
         saveTestCredentialsAndProgram();
         mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"),
-                InstrumentationRegistry.getTargetContext());
-        mWSPushController = new WSPushController(mEReferralsAPIClient, convertToWSVisitor);
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        Device device = new Device("test", "test", "test");
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, mContext);
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
+                convertToWSVisitor);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
 
         SurveysThresholds surveysThresholds =
@@ -118,16 +124,26 @@ public class PushServiceShould {
         restorePreferences();
     }
 
+    public void grantPhonePermission() {
+        // In M+, trying to call a number will trigger a runtime dialog. Make sure
+        // the permission is granted before running this test.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + mContext.getPackageName()
+                            + " android.permission.READ_PHONE_STATE");
+        }
+    }
+
 
     private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousCredentials = credentialsLocalDataSource.getOrganisationCredentials();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
+        ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
                         PreferencesEReferral.getUserProgramId());
         if (databaseProgramDB != null) {
-            previousProgram = programLocalDataSource.getUserProgram();
+            previousProgram = programRepository.getUserProgram();
         }
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
@@ -139,16 +155,17 @@ public class PushServiceShould {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.dhis_url), "test");
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials("test", "test", "test");
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(credentials);
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
         ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        programLocalDataSource.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
@@ -161,15 +178,15 @@ public class PushServiceShould {
                 context);
         if (previousCredentials != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.dhis_url),
+            editor.putString(context.getString(R.string.web_service_url),
                     previousCredentials.getServerURL());
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(previousCredentials);
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
+        ProgramRepository programRepository = new ProgramRepository();
         if (previousProgram != null) {
-            programLocalDataSource.saveUserProgramId(previousProgram);
+            programRepository.saveUserProgramId(previousProgram);
         } else {
             PreferencesEReferral.saveUserProgramId(-1l);
         }

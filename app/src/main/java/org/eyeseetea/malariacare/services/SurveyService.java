@@ -26,11 +26,11 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.CompositeScoreDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -38,6 +38,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.services.strategies.SurveyServiceStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +56,6 @@ public class SurveyService extends IntentService {
 
     /**
      * Name of 'list unsent' action in ereferrals
-     */
-    public static final String ALL_UNSENT_AND_SENT_SURVEYS_ACTION =
-            "org.eyeseetea.malariacare.services.SurveyService.ALL_UNSENT_AND_SENT_SURVEYS_ACTION";
-    /**
-     * Name of 'list unsent' action
      */
     public static final String ALL_UNSENT_SURVEYS_ACTION =
             "org.eyeseetea.malariacare.services.SurveyService.ALL_UNSENT_SURVEYS_ACTION";
@@ -145,9 +141,6 @@ public class SurveyService extends IntentService {
             case ALL_UNSENT_SURVEYS_ACTION:
                 getAllUnsentSurveys();
                 break;
-            case ALL_UNSENT_AND_SENT_SURVEYS_ACTION:
-                getAllUnsentAndSentSurveys();
-                break;
             case ALL_UNCOMPLETED_SURVEYS_ACTION:
                 getAllUncompletedSurveys();
                 break;
@@ -163,48 +156,23 @@ public class SurveyService extends IntentService {
         }
     }
 
-    private void getAllUnsentAndSentSurveys() {
-        Log.d(TAG, "getAllUnsentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
-//Select surveys from sql
-        getProgramUID(new Callback() {
-            @Override
-            public void onSuccess(String uid) {
-                List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
-                List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
-                surveyDBs.addAll(sentSurveyDBs);
-                //Since intents does NOT admit NON serializable as values we use Session instead
-                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, surveyDBs);
-
-                //Returning result to anyone listening
-                Intent resultIntent = new Intent(ALL_UNSENT_AND_SENT_SURVEYS_ACTION);
-                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
-            }
-        });
-    }
-
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
         getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-                List<SurveyDB> unsentSurveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
+                List<SurveyDB> unsentSurveyDBs = SurveyServiceStrategy.getUnsentSurveys(uid);
                 List<SurveyDB> sentSurveyDBs = SurveyDB.getAllSentMalariaSurveys(uid);
-                List<SurveyDB> allSurveyDBs = new ArrayList<SurveyDB>();
-                allSurveyDBs.addAll(unsentSurveyDBs);
-                allSurveyDBs.addAll(sentSurveyDBs);
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
                 Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
                 Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveyDBs);
-                Session.putServiceValue(ALL_UNSENT_AND_SENT_SURVEYS_ACTION, allSurveyDBs);
 
                 //Returning result to anyone listening
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_UNSENT_SURVEYS_ACTION));
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_SENT_SURVEYS_ACTION));
-                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
-                        new Intent(ALL_UNSENT_AND_SENT_SURVEYS_ACTION));
             }
         });
     }
@@ -218,17 +186,8 @@ public class SurveyService extends IntentService {
         getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-                List<SurveyDB> surveyDBs = SurveyDB.getAllUnsentMalariaSurveys(uid);
+                List<SurveyDB> surveyDBs = SurveyServiceStrategy.getUnsentSurveys(uid);
                 List<SurveyDB> unsentSurveyDBs = new ArrayList<SurveyDB>();
-
-                //Load %completion in every survey (it takes a while so it can NOT be done in UI
-                // Thread)
-                for (SurveyDB surveyDB : surveyDBs) {
-                    if (!surveyDB.isSent() && !surveyDB.isConflict()) {
-                        surveyDB.getAnsweredQuestionRatio();
-                        unsentSurveyDBs.add(surveyDB);
-                    }
-                }
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
                 Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
@@ -328,11 +287,11 @@ public class SurveyService extends IntentService {
         if (mProgramUID != null) {
             callback.onSuccess(mProgramUID);
         } else {
-            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+            IProgramRepository programRepository = new ProgramRepository();
             IMainExecutor mainExecutor = new UIThreadExecutor();
             IAsyncExecutor asyncExecutor = new AsyncExecutor();
             GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
-                    programLocalDataSource, mainExecutor, asyncExecutor);
+                    programRepository, mainExecutor, asyncExecutor);
             getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
                 @Override
                 public void onSuccess(String uid) {

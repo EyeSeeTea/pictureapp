@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,7 @@ import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.mappers.QuestionMapper;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ADynamicTabAdapterStrategy;
@@ -78,11 +80,13 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.CommonQuestionView;
+import org.eyeseetea.malariacare.views.question.IExtraValidation;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.OuTreeMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
@@ -615,7 +619,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         screenQuestionDB.getInternationalizedPath());
             }
             mDynamicTabAdapterStrategy.renderParticularSurvey(screenQuestionDB, surveyDB, questionView);
-
+            if(questionView instanceof CommonQuestionView && requireQuestionOptionValidations(questionView)){
+                ((CommonQuestionView) questionView).setQuestion(QuestionMapper.mapFromDbToDomain(screenQuestionDB));
+            }
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestionDB(screenQuestionDB);
 
@@ -641,10 +647,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (reloadingQuestionFromInvalidOption) {
                 reloadingQuestionFromInvalidOption = false;
             } else {
+
+                valueDB = fillDefaultValue(screenQuestionDB, surveyDB, valueDB);
+
                 if(shouldDisableNotVisibleChildQuestion(screenQuestionDB, surveyDB)) {
                     ((CommonQuestionView)questionView).deactivateQuestion();
                 } else {
                     questionView.setValue(valueDB);
+                }
+                if(!screenQuestionDB.isCompulsory()){
+                    checkInitialCompulsoryValidationError(((CommonQuestionView)questionView));
                 }
 
             }
@@ -676,9 +688,49 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
+    //The OuTreeMultiQuestionView question don't required extra validations.
+    private boolean requireQuestionOptionValidations(IQuestionView questionView) {
+        return !(questionView instanceof OuTreeMultiQuestionView);
+    }
+
+    @Nullable
+    private ValueDB fillDefaultValue(QuestionDB screenQuestionDB, SurveyDB surveyDB, ValueDB valueDB) {
+        if(!readOnly && valueDB == null && screenQuestionDB.getDefaultValue()!=null && !screenQuestionDB.isHiddenBySurveyAndHeader(surveyDB)){
+            if(screenQuestionDB.hasOutputWithOptions()){
+                OptionDB optionDB = screenQuestionDB.findOptionByValue(screenQuestionDB.getDefaultValue());
+                if(optionDB!=null) {
+                    valueDB = new ValueDB(optionDB, screenQuestionDB, surveyDB);
+                    valueDB.save();
+                }
+            }else {
+                valueDB = new ValueDB(screenQuestionDB.getDefaultValue(), screenQuestionDB, surveyDB);
+                valueDB.save();
+            }
+        }
+        return valueDB;
+    }
+
+    private void fillDefaultValueForHiddenQuestion(QuestionDB questionDB, SurveyDB surveyDB,
+            ValueDB valueDB, IQuestionView questionView) {
+        if (!readOnly && valueDB == null && questionDB.getDefaultValue() != null) {
+            if (questionDB.hasOutputWithOptions()) {
+                OptionDB optionDB = questionDB.findOptionByValue(questionDB.getDefaultValue());
+                if (optionDB != null) {
+                    valueDB = new ValueDB(optionDB, questionDB, surveyDB);
+                    valueDB.save();
+                }
+            } else {
+                valueDB = new ValueDB(questionDB.getDefaultValue(), questionDB, surveyDB);
+                valueDB.save();
+            }
+            questionView.setValue(valueDB);
+        }
+
+    }
+
+
     private boolean shouldDisableNotVisibleChildQuestion(QuestionDB screenQuestionDB, SurveyDB surveyDB) {
-        if(!BuildConfig.validationInline || !isASurveyCreatedInOtherApp){
-            //if the survey is not coming from a other app intent this is not necessary
+        if(!BuildConfig.validationInline){
             return false;
         }else {
             //if the question is not visible and the value is null the question value should be empty and the validation ignored
@@ -977,20 +1029,34 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             QuestionDB parentQuestionDB) {
         if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
             SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestionDB);
-
+            CommonQuestionView commonQuestionView = ((CommonQuestionView) row.getChildAt(0));
             if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
-                ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();
+                commonQuestionView.deactivateQuestion();
                 hideDefaultValue(rowQuestionDB);
             } else {
                 row.setVisibility(View.VISIBLE);
-                ((CommonQuestionView) row.getChildAt(0)).activateQuestion();
+                commonQuestionView.activateQuestion();
                 showDefaultValue(row, rowQuestionDB);
+                if(!rowQuestionDB.isCompulsory()){
+                    checkInitialCompulsoryValidationError(commonQuestionView);
+                }
+
+                fillDefaultValueForHiddenQuestion(childQuestionDB, surveyDB,
+                        childQuestionDB.getValueBySurvey(surveyDB),
+                        (IQuestionView) commonQuestionView);
             }
             return true;
         }
         return false;
+    }
+
+    private void checkInitialCompulsoryValidationError(CommonQuestionView commonQuestionView) {
+        if(commonQuestionView instanceof IExtraValidation){
+            ((IExtraValidation) commonQuestionView).checkLoadedErrors();
+        }
+
     }
 
     /**
@@ -1043,6 +1109,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.DROPDOWN_OU_LIST:
                 Spinner dropdown = (Spinner) tableRow.findViewById(R.id.answer);
                 dropdown.setSelection(0);
+                break;
+            case Constants.DATE:
+                ((DatePickerQuestionView) tableRow.getChildAt(0)).setValue(null);
+                break;
+            case Constants.YEAR:
+                ((YearSelectorQuestionView) tableRow.getChildAt(0)).setValue(null);
                 break;
             case Constants.SWITCH_BUTTON:
                 Switch switchView = (Switch) tableRow.findViewById(R.id.answer);

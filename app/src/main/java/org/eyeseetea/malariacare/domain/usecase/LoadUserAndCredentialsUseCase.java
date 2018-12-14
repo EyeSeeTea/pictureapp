@@ -30,7 +30,7 @@ public class LoadUserAndCredentialsUseCase {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 mContext);
 
-        String serverURL = sharedPreferences.getString(mContext.getString(R.string.dhis_url), "");
+        String serverURL = sharedPreferences.getString(mContext.getString(R.string.server_url_key), "");
         String username = sharedPreferences.getString(mContext.getString(R.string.dhis_user), "");
         String password = sharedPreferences.getString(mContext.getString(R.string.dhis_password),
                 "");

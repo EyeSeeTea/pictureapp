@@ -41,7 +41,8 @@ public class Constants {
             YEAR = 30,
             DROPDOWN_LIST_OU_TREE = 31,
             IMAGES_VERTICAL = 32,
-            AGE_MONTH_NUMBER = 33;
+            AGE_MONTH_NUMBER = 33,
+            AUTOCOMPLETE_TEXT = 34;
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
             DROPDOWN_LIST,
@@ -59,7 +60,8 @@ public class Constants {
             IMAGE_RADIO_GROUP,
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON,
             DROPDOWN_LIST_OU_TREE,
-            IMAGES_VERTICAL
+            IMAGES_VERTICAL,
+            AUTOCOMPLETE_TEXT
     );
 
     public static final String SYSTEM_DEFINED_LANGUAGE = "system_defined";

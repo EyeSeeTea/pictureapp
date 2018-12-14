@@ -2,13 +2,13 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.AnswerDB;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.TabDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -101,7 +101,7 @@ public class NavigationBuilder {
     }
 
     public void buildControllerByProgram() throws LoadingNavigationControllerException{
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         Program userProgram = programRepository.getUserProgram();
         ProgramDB program = ProgramDB.findByName(userProgram.getCode());
 

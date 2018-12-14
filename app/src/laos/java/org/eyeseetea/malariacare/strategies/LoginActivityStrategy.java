@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
     public LoginActivityStrategy(LoginActivity loginActivity) {
@@ -70,8 +71,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     @Override
-    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
-        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager);
+    public void initLoginUseCase() {
+        loginActivity.mLoginUseCase =
+                new AuthenticationFactoryStrategy().getLoginUseCase(loginActivity);
     }
 
 }

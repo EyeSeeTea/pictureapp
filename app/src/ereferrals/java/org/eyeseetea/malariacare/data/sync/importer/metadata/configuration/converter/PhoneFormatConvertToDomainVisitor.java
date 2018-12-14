@@ -33,6 +33,12 @@ public class PhoneFormatConvertToDomainVisitor implements
             String regExTemplate = "^(#starts)\\d#length";
 
             String starts = scapeSpecialCharacters(acceptedFormat.starts);
+            if(acceptedFormat.comment.equals("national")){
+                if(apiPhoneFormat.details.trunkPrefix!=null &&
+                        !apiPhoneFormat.details.trunkPrefix.isEmpty()){
+                    starts = apiPhoneFormat.details.trunkPrefix+"?"+starts;
+                }
+            }
             regExTemplate = regExTemplate.replace("#starts", starts);
 
             if (acceptedFormat.length != null) {

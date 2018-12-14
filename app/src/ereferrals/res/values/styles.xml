@@ -20,7 +20,6 @@
     </style>
 
     <style name="SpinnerStyle" parent="android:Widget.TextView.SpinnerItem">
-        <item name="android:background">@drawable/spinner_divider</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingLeft">10dp</item>

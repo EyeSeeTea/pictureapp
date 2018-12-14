@@ -5,8 +5,9 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 
 public class PushServiceStrategy extends APushServiceStrategy {
     public static final String TAG = ".PushServiceStrategy";
@@ -22,14 +23,15 @@ public class PushServiceStrategy extends APushServiceStrategy {
             executeMockedPush();
         } else if (isLogged()) {
             Log.d(TAG, "execute push");
+            SurveyChecker.launchQuarantineChecker();
             executePush();
         }
     }
 
     protected void executeMockedPush() {
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
+        ProgramRepository programRepository = new ProgramRepository();
         MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase(
-                programLocalDataSource);
+                programRepository);
 
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override

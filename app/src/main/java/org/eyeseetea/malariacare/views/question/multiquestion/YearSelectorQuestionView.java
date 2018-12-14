@@ -48,9 +48,17 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             yearText.setText(valueDB.getValue());
             if (BuildConfig.validationInline) {
                 if (!yearText.getText().toString().isEmpty()) {
-                    Validation.getInstance().removeInputError(yearText);
+                    if(validateQuestionRegExp(yearText)) {
+                        Validation.getInstance().removeInputError(yearText);
+                    }
                 }
             }
+        }else{
+            Validation.getInstance().addinvalidInput(yearText, getContext().getString(
+                    R.string.error_empty_question));
+        }
+        if(yearText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(yearText);
         }
     }
 
@@ -61,7 +69,7 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
 
     @Override
     public boolean hasError() {
-        return false;
+        return yearText.getError() != null;
     }
 
     @Override
@@ -107,11 +115,16 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
         }
         if (BuildConfig.validationInline) {
             if (!yearText.getText().toString().isEmpty()) {
-                Validation.getInstance().removeInputError(yearText);
-                yearText.setError(null);
+                if(validateQuestionRegExp(yearText)) {
+                    Validation.getInstance().removeInputError(yearText);
+                    yearText.setError(null);
+                }
             } else {
                 Validation.getInstance().addinvalidInput(yearText, getContext().getString(
                         R.string.error_empty_question));
+            }
+            if(yearText.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(yearText);
             }
         }
     }

@@ -3,7 +3,8 @@ package org.eyeseetea.malariacare.data.sync.importer.converter;
 
 import static junit.framework.TestCase.assertTrue;
 
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter.PhoneFormatConvertToDomainVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
+        .PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
         .MetadataConfigurationsApi;
 import org.eyeseetea.malariacare.domain.entity.Phone;
@@ -51,10 +52,10 @@ public class PhoneFormatConvertToDomainVisitorShould {
                 .PhoneFormat();
 
         phoneFormat.accepted = new ArrayList<>();
-        phoneFormat.accepted.add(buildAccept("6", "9"));
-        phoneFormat.accepted.add(buildAccept("7", "9"));
-        phoneFormat.accepted.add(buildAccept("+", null));
-        phoneFormat.accepted.add(buildAccept("00", null));
+        phoneFormat.accepted.add(buildAccept("6", "9", ""));
+        phoneFormat.accepted.add(buildAccept("7", "9", "national"));
+        phoneFormat.accepted.add(buildAccept("+", null, ""));
+        phoneFormat.accepted.add(buildAccept("00", null, "national"));
 
         phoneFormat.details = new MetadataConfigurationsApi.PhoneFormat.FormatDetails();
 
@@ -66,11 +67,12 @@ public class PhoneFormatConvertToDomainVisitorShould {
     }
 
     private MetadataConfigurationsApi.PhoneFormat.AcceptedFormat buildAccept(String starts,
-            String length) {
+            String length, String comment) {
         MetadataConfigurationsApi.PhoneFormat.AcceptedFormat
                 acceptedFormat = new MetadataConfigurationsApi.PhoneFormat.AcceptedFormat();
         acceptedFormat.starts = starts;
         acceptedFormat.length = length;
+        acceptedFormat.comment = comment;
         return acceptedFormat;
 
     }

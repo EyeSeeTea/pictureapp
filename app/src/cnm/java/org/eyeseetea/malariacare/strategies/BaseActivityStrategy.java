@@ -13,10 +13,9 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -25,6 +24,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -75,8 +75,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onCreate() {
 
-        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        mLogoutUseCase = new AuthenticationFactoryStrategy().getLogoutUseCase(mBaseActivity);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
 
@@ -205,7 +204,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void createActionBar() {
-        IProgramRepository programRepository = new ProgramLocalDataSource();
+        IProgramRepository programRepository = new ProgramRepository();
         Program userProgram = programRepository.getUserProgram();
 
         if (userProgram != null && PreferencesState.getInstance().getOrgUnit() != null &&

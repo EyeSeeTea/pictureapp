@@ -597,7 +597,6 @@
 <string name="app_visual">"दृश्य"</string>
 <string name="fonts_customise">"फन्टहरू परिवर्तन गर्नुहोस्"</string>
 <string name="font_size">"फन्ट आकार"</string>
-<string name="font_extra_sipc_menu_issueReferralmall">"अलि सानो"</string>
 <string name="font_small">"सानो"</string>
 <string name="font_medium">"मध्यम"</string>
 <string name="font_large">"ठूलो"</string>
@@ -970,4 +969,8 @@
     <string name="elements">"Elements"</string>
     <string name="activate_elements">"तत्वहरू सक्रिय गर्नुहोस्"</string>
     <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
+    <string name="check_metadata_title">"नरम लगिनहरूमा मेटाडाटा अद्यावधिकहरूको जाँच गर्नुहोस्"</string>
+    <string name="settings_title_program_url_config">"प्रोग्राम विन्यास URL"</string>
+    <string name="settings_title_program_username_config">"प्रोग्राम कन्फिगरेसन प्रयोगकर्ता नाम"</string>
+    <string name="settings_title_program_password_config">"प्रोग्राम कन्फिगरेसन पासवर्ड"</string>
 </resources>

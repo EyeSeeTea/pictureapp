@@ -32,6 +32,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
@@ -97,7 +98,7 @@ public class SettingsActivity extends PreferenceActivity implements
             };
     public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
     public AutoCompleteEditTextPreference autoCompleteEditTextPreference;
-    public Preference serverUrlPreference;
+
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -132,6 +133,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
 
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "AndroidLifeCycle: onCreate");
         super.onCreate(savedInstanceState);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
@@ -145,6 +147,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     public void onStop() {
+        Log.d(TAG, "AndroidLifeCycle: onStop");
         mSettingsActivityStrategy.onStop();
 
         super.onStop();
@@ -179,8 +182,6 @@ public class SettingsActivity extends PreferenceActivity implements
         bindPreferenceSummaryToValue(
                 findPreference(getApplicationContext().getString(R.string.font_sizes)));
         bindPreferenceSummaryToValue(
-                findPreference(getApplicationContext().getString(R.string.dhis_url)));
-        bindPreferenceSummaryToValue(
                 findPreference(getApplicationContext().getString(R.string.org_unit)));
 
         autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(
@@ -190,10 +191,6 @@ public class SettingsActivity extends PreferenceActivity implements
         autoCompleteEditTextPreference.pullOrgUnits();
 
         autoCompleteEditTextPreference.setContext(this);
-        serverUrlPreference = (Preference) findPreference(
-                getApplicationContext().getResources().getString(R.string.dhis_url));
-        serverUrlPreference.setOnPreferenceClickListener(
-                mSettingsActivityStrategy.getOnPreferenceClickListener());
 
         mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
 
@@ -207,9 +204,6 @@ public class SettingsActivity extends PreferenceActivity implements
                     this.getResources().getString(R.string.customize_fonts)));
         }
         if (mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
-            serverUrlPreference.setOnPreferenceChangeListener(
-                    mSettingsActivityStrategy.getOnPreferenceChangeListener());
-
             autoCompleteEditTextPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
@@ -252,6 +246,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "AndroidLifeCycle: onResume");
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -259,6 +254,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "AndroidLifeCycle: onPause");
         super.onPause();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
@@ -306,6 +302,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "AndroidLifeCycle: onStart");
         mSettingsActivityStrategy.onStart();
         super.onStart();
     }
@@ -318,6 +315,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "AndroidLifeCycle: onDestroy");
         mSettingsActivityStrategy.onDestroy();
         super.onDestroy();
     }
@@ -327,5 +325,11 @@ public class SettingsActivity extends PreferenceActivity implements
         String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
         Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
         super.attachBaseContext(context);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "AndroidLifeCycle: onRestart");
     }
 }

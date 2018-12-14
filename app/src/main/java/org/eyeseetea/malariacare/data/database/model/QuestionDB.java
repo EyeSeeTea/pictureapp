@@ -56,7 +56,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -154,6 +153,14 @@ public class QuestionDB extends BaseModel {
      * Reference to the associated mAnswerDB (loaded lazily)
      */
     AnswerDB mAnswerDB;
+
+    @Column
+    String validationRegExp;
+    @Column
+    String validationMessage;
+    @Column
+    String defaultValue;
+
     @Column
     Integer output;
 
@@ -576,7 +583,6 @@ public class QuestionDB extends BaseModel {
                 .where(QuestionDB_Table.uid_question.withTable(questionAlias)
                         .eq(questionUID)).querySingle();
     }
-
     /**
      * Method to get all mQuestionOptionDBs related by id
      */
@@ -798,6 +804,30 @@ public class QuestionDB extends BaseModel {
 
     public void setVisible(Integer visible) {
         this.visible = visible;
+    }
+
+    public String getValidationRegExp() {
+        return validationRegExp;
+    }
+
+    public void setValidationRegExp(String validationRegExp) {
+        this.validationRegExp = validationRegExp;
+    }
+
+    public String getValidationMessage() {
+        return validationMessage;
+    }
+
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     public AnswerDB getAnswerDB() {
@@ -1999,6 +2029,9 @@ public class QuestionDB extends BaseModel {
         result = 31 * result + (numerator_w != null ? numerator_w.hashCode() : 0);
         result = 31 * result + (denominator_w != null ? denominator_w.hashCode() : 0);
         result = 31 * result + (feedback != null ? feedback.hashCode() : 0);
+        result = 31 * result + (validationRegExp != null ? validationRegExp.hashCode() : 0);
+        result = 31 * result + (validationMessage != null ? validationMessage.hashCode() : 0);
+        result = 31 * result + (defaultValue != null ? defaultValue.hashCode() : 0);
         result = 31 * result + (id_header_fk != null ? id_header_fk.hashCode() : 0);
         result = 31 * result + (id_answer_fk != null ? id_answer_fk.hashCode() : 0);
         result = 31 * result + (output != null ? output.hashCode() : 0);
@@ -2031,9 +2064,12 @@ public class QuestionDB extends BaseModel {
                 ", output=" + output +
                 ", id_question_parent=" + id_question_parent +
                 ", id_composite_score=" + id_composite_score_fk +
+                ", validationRegExp=" + validationRegExp +
+                ", validationMessage=" + validationMessage +
                 ", total_questions=" + total_questions +
                 ", visible=" + visible +
                 ", path=" + path +
+                ", defaultValue=" + defaultValue +
                 '}';
     }
 

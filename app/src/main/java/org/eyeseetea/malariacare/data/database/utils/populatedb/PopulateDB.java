@@ -101,6 +101,7 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
+    // The TranslationLanguageDB, TranslationDB, ProgramProgramRelationDB tables are excluded from this list to avoid their deletion from the login / logoff / hardcoded login logic
     public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScoreDB.class,
             OrgUnitProgramRelationDB.class,
@@ -129,7 +130,8 @@ public class PopulateDB {
             OrgUnitLevelDB.class,
             OrgUnitDB.class,
             CountryVersionDB.class,
-            PhoneFormatDB.class
+            PhoneFormatDB.class,
+            TabDB.class
     );
 
     private static final List<String> tables2populate = Arrays.asList(

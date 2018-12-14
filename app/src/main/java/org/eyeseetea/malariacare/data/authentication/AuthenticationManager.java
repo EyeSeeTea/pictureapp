@@ -6,10 +6,8 @@ import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationManagerStrategy;
 import org.eyeseetea.malariacare.data.authentication.strategies.AuthenticationManagerStrategy;
-import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -19,14 +17,16 @@ import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 public class AuthenticationManager implements IAuthenticationManager {
-    IAuthenticationDataSource userAccountLocalDataSource;
-    IAuthenticationDataSource userAccountRemoteDataSource;
+    private final IAuthenticationDataSource mUserAccountLocalDataSource;
+    private final IAuthenticationDataSource mUserAccountRemoteDataSource;
     IUserRepository mUserRepository;
     AAuthenticationManagerStrategy mAuthenticationManagerStrategy;
 
-    public AuthenticationManager(Context context) {
-        userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
-        userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
+    public AuthenticationManager(Context context,
+            IAuthenticationDataSource userAccountLocalDataSource,
+            IAuthenticationDataSource userAccountRemoteDataSource) {
+        mUserAccountLocalDataSource = userAccountLocalDataSource;
+        mUserAccountRemoteDataSource = userAccountRemoteDataSource;
         mUserRepository = new UserAccountDataSource();
         mAuthenticationManagerStrategy = new AuthenticationManagerStrategy(context);
     }
@@ -71,7 +71,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     private void remoteLogout(final IAuthenticationManager.Callback<Void> callback) {
-        userAccountRemoteDataSource.logout(new IDataSourceCallback<Void>() {
+        mUserAccountRemoteDataSource.logout(new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 localLogout(callback);
@@ -86,7 +86,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private void remoteLogin(final Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
+        mUserAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
                 mUserRepository.saveLoggedUser(result);
@@ -101,7 +101,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     private void localLogout(final IAuthenticationManager.Callback<Void> callback) {
-        userAccountLocalDataSource.logout(new IDataSourceCallback<Void>() {
+        mUserAccountLocalDataSource.logout(new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 callback.onSuccess(null);
@@ -116,7 +116,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private void localLogin(Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        userAccountLocalDataSource.login(credentials,
+        mUserAccountLocalDataSource.login(credentials,
                 new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount userAccount) {

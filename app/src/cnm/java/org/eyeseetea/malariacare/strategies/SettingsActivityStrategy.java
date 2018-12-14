@@ -10,12 +10,10 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.SplashScreenActivity;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesCNM;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
@@ -24,6 +22,7 @@ import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.usecase.DeleteOrgUnitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetDeviceUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -60,17 +59,17 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
         if (!PreferencesState.getInstance().isDevelopOptionActive()) {
-            PreferenceCategory preferenceCategory =
-                    (PreferenceCategory) preferenceScreen.findPreference(
-                            settingsActivity.getResources().getString(R.string.pref_cat_server));
-            preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.dhis_url)));
             PreferenceCategory preferenceVisual =
                     (PreferenceCategory) preferenceScreen.findPreference(
                             settingsActivity.getResources().getString(R.string.pref_visual));
             preferenceVisual.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.imei_preference)));
         }
+        Preference serverUrlPreference = preferenceScreen.findPreference(
+                    preferenceScreen.getContext().getResources().getString(
+                            R.string.server_url_key));
+                serverUrlPreference.setOnPreferenceClickListener(
+                        getOnPreferenceClickListener());
         Preference autoconfigurePreference = preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.autoconfigure_preference));
         autoconfigurePreference.setOnPreferenceClickListener(
@@ -125,13 +124,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     public void executeLogout() {
-        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(settingsActivity);
-        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        LogoutUseCase logoutUseCase = new AuthenticationFactoryStrategy()
+                .getLogoutUseCase(settingsActivity.getApplicationContext());
+
         AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-               launchAutoconfigure();
+                launchAutoconfigure();
             }
 
             @Override
@@ -169,6 +169,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    public void addExtraPreferences() {
+        Preference serverPreference = settingsActivity.findPreference(settingsActivity.getString(R.string.server_url_key));
+        if(serverPreference!=null){
+            settingsActivity.bindPreferenceSummaryToValue(serverPreference);
+        }
     }
 
     @Override

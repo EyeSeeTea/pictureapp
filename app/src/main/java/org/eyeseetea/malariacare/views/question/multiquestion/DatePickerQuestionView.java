@@ -47,7 +47,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
 
     @Override
     public boolean hasError() {
-        return false;
+        return dateText.getError() != null;
     }
 
     @Override
@@ -65,6 +65,19 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
             dateText.setText(valueDB.getValue());
+            if (BuildConfig.validationInline) {
+                if (!dateText.getText().toString().isEmpty()) {
+                    if(validateQuestionRegExp(dateText)) {
+                        Validation.getInstance().removeInputError(dateText);
+                    }
+                }
+            }
+        }else{
+            Validation.getInstance().addinvalidInput(dateText, getContext().getString(
+                    R.string.error_empty_question));
+        }
+        if(dateText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(dateText);
         }
     }
 
@@ -72,14 +85,18 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
-        if(BuildConfig.validationInline) {
-            if (dateText.getText().toString().isEmpty()) {
-                Validation.getInstance().addinvalidInput(dateText,
-                        getResources().getString(
-                                R.string.error_empty_question));
+        if (BuildConfig.validationInline) {
+            if (!dateText.getText().toString().isEmpty()) {
+                if(validateQuestionRegExp(dateText)) {
+                    Validation.getInstance().removeInputError(dateText);
+                    dateText.setError(null);
+                }
             } else {
+                Validation.getInstance().addinvalidInput(dateText, getContext().getString(
+                        R.string.error_empty_question));
+            }
+            if(dateText.getText().toString().isEmpty() && !question.isCompulsory()){
                 Validation.getInstance().removeInputError(dateText);
-                dateText.setError(null);
             }
         }
     }
@@ -118,9 +135,11 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         });
         dateText.setFocusable(true);
         if (BuildConfig.validationInline) {
-            Validation.getInstance().addInput(dateText);
-            Validation.getInstance().addinvalidInput(dateText, getResources().getString(
-                    R.string.error_empty_question));
+            if(dateText.getText()==null || dateText.getText().toString().isEmpty()) {
+                Validation.getInstance().addInput(dateText);
+                Validation.getInstance().addinvalidInput(dateText, getResources().getString(
+                        R.string.error_empty_question));
+            }
         }
     }
 

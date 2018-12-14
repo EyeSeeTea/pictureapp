@@ -2,53 +2,53 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration;
 
 
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.ACTION_SHOW;
+        .CountryMetadataApi.Question.ACTION_SHOW;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_INT;
+        .CountryMetadataApi.Question.CONTROL_INT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_LONG_TEXT;
+        .CountryMetadataApi.Question.CONTROL_LONG_TEXT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_POSITIVE_INT;
+        .CountryMetadataApi.Question.CONTROL_POSITIVE_INT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_PREGNANT_MONTH_INT;
+        .CountryMetadataApi.Question.CONTROL_PREGNANT_MONTH_INT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_QUESTION_LABEL;
+        .CountryMetadataApi.Question.CONTROL_QUESTION_LABEL;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_RADIO_GROUP_HORIZONTAL;
+        .CountryMetadataApi.Question.CONTROL_RADIO_GROUP_HORIZONTAL;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_SWITCH_BUTTON;
+        .CountryMetadataApi.Question.CONTROL_SWITCH_BUTTON;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_AUTOCOMPLETE_TEXT;
+        .CountryMetadataApi.Question.CONTROL_TYPE_AUTOCOMPLETE_TEXT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_DATE;
+        .CountryMetadataApi.Question.CONTROL_TYPE_DATE;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_DROPDOWN_LIST;
+        .CountryMetadataApi.Question.CONTROL_TYPE_DROPDOWN_LIST;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_PHONE;
+        .CountryMetadataApi.Question.CONTROL_TYPE_PHONE;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_SHORT_TEXT;
+        .CountryMetadataApi.Question.CONTROL_TYPE_SHORT_TEXT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.CONTROL_TYPE_YEAR;
+        .CountryMetadataApi.Question.CONTROL_TYPE_YEAR;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.DISPLAY_PRIORITY_IMPORTANT;
+        .CountryMetadataApi.Question.DISPLAY_PRIORITY_IMPORTANT;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.DISPLAY_PRIORITY_INVISIBLE;
+        .CountryMetadataApi.Question.DISPLAY_PRIORITY_INVISIBLE;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.DISPLAY_PRIORITY_VISIBLE;
+        .CountryMetadataApi.Question.DISPLAY_PRIORITY_VISIBLE;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_EQUAL;
+        .CountryMetadataApi.Question.OPERATOR_EQUAL;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_GREATER_OR_EQUAL_THAN;
+        .CountryMetadataApi.Question.OPERATOR_GREATER_OR_EQUAL_THAN;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_GREATER_THAN;
+        .CountryMetadataApi.Question.OPERATOR_GREATER_THAN;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_LESS_OR_EQUAL_THAN;
+        .CountryMetadataApi.Question.OPERATOR_LESS_OR_EQUAL_THAN;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.OPERATOR_LESS_THAN;
+        .CountryMetadataApi.Question.OPERATOR_LESS_THAN;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.TYPE_DATA_POINT_REF;
+        .CountryMetadataApi.Question.TYPE_DATA_POINT_REF;
 import static org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi.Question.TYPE_VALUE;
+        .CountryMetadataApi.Question.TYPE_VALUE;
 import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.IMPORTANT;
 import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.INVISIBLE;
 import static org.eyeseetea.malariacare.domain.entity.Question.Visibility.VISIBLE;
@@ -60,9 +60,8 @@ import org.eyeseetea.malariacare.data.remote.IMetadataConfigurationDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
         .PhoneFormatConvertToDomainVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataCountryVersionApi;
+        .CountriesMetadataVersionsApi;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
 import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
@@ -86,16 +85,20 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class MetadataConfigurationApiClient implements IMetadataConfigurationDataSource {
 
     private IMetadataConfigurationApi configurationApi;
+    private String baseUrl;
+    private String countryExtension;
 
-    public MetadataConfigurationApiClient(String url, BasicAuthInterceptor basicAuthInterceptor)
-            throws Exception {
+    public MetadataConfigurationApiClient(String url, String endpoint, BasicAuthInterceptor basicAuthInterceptor) {
+
+        baseUrl = url;
+        countryExtension = endpoint;
 
         OkHttpClient client = HTTPClientFactory.getHTTPClientWithLoggingWith(basicAuthInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(client)
-                .baseUrl(url)
+                .baseUrl(baseUrl)
                 .build();
 
         configurationApi = retrofit.create(IMetadataConfigurationApi.class);
@@ -107,12 +110,12 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         MetadataConfigurationConverterApiModelToDomain
                 converter = new MetadataConfigurationConverterApiModelToDomain();
 
-        List<MetadataConfigurationsApi.Question> apiQuestions = new ArrayList<>();
+        List<CountryMetadataApi.Question> apiQuestions = new ArrayList<>();
 
-        List<MetadataConfigurationsApi.Rule> apiRules;
+        List<CountryMetadataApi.Rule> apiRules;
 
 
-        MetadataConfigurationsApi metadata = getMetadataConfigurationsApi(countryCode);
+        CountryMetadataApi metadata = getCountryMetadata(countryCode);
 
 
         if (isApiQuestionNotNull(metadata)) {
@@ -127,13 +130,13 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @NonNull
-    private MetadataConfigurationsApi getMetadataConfigurationsApi(@NonNull String countryCode)
+    private CountryMetadataApi getCountryMetadata(@NonNull String countryCode)
             throws Exception {
 
-        Response<MetadataConfigurationsApi> response;
+        Response<CountryMetadataApi> response;
         try {
 
-            response = configurationApi.getConfiguration(countryCode).execute();
+            response = configurationApi.getCountryMetadata(countryCode).execute();
 
         } catch (Exception error) {
             throw new ApiCallException(error);
@@ -144,31 +147,32 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @Override
-    public List<Configuration.CountryVersion> getCountriesVersions() throws Exception {
+    public List<Configuration.CountryVersion> getCountriesCodesAndVersions() throws Exception {
 
-        Response<MetadataCountryVersionApi> response =
-                configurationApi.getCountriesVersions().execute();
+        Response<CountriesMetadataVersionsApi> response =
+                configurationApi.getCountriesMetadataVersions(countryExtension).execute();
 
-        MetadataCountryVersionApi metadata = getResultsOrThrowException(response);
+        CountriesMetadataVersionsApi metadata = getResultsOrThrowException(response);
 
         return convertToDomainCountryVersion(metadata.countriesVersions);
     }
 
     @NonNull
     private List<Configuration.CountryVersion> convertToDomainCountryVersion(
-            @NonNull List<MetadataCountryVersionApi.CountryVersionApi> countriesVersionsApi) {
+            @NonNull List<CountriesMetadataVersionsApi.CountriesMetadataVersion>
+                    countriesVersionsApi) {
 
         List<Configuration.CountryVersion> domainCountriesVersions = new ArrayList<>();
 
-        for (MetadataCountryVersionApi.CountryVersionApi countryVersionApi : countriesVersionsApi) {
+        for (CountriesMetadataVersionsApi.CountriesMetadataVersion countriesMetadataVersion : countriesVersionsApi) {
 
             Configuration.CountryVersion domain =
                     Configuration.CountryVersion.newBuilder()
-                            .country(countryVersionApi.country)
-                            .name(countryVersionApi.name)
-                            .version(countryVersionApi.version)
-                            .reference(countryVersionApi.reference)
-                            .uid(countryVersionApi.uid)
+                            .country(countriesMetadataVersion.country)
+                            .name(countriesMetadataVersion.name)
+                            .version(countriesMetadataVersion.version)
+                            .reference(countriesMetadataVersion.reference)
+                            .uid(countriesMetadataVersion.uid)
                             .lastUpdate(new Date())
                             .build();
 
@@ -178,26 +182,26 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     private void assignRulesToQuestions(
-            @NonNull List<MetadataConfigurationsApi.Rule> apiRules,
-            @NonNull List<MetadataConfigurationsApi.Question> apiQuestions) {
+            @NonNull List<CountryMetadataApi.Rule> apiRules,
+            @NonNull List<CountryMetadataApi.Question> apiQuestions) {
 
-        Map<String, MetadataConfigurationsApi.Question> mapQuestionsByCode =
+        Map<String, CountryMetadataApi.Question> mapQuestionsByCode =
                 mapQuestionsByCode(apiQuestions);
 
-        for (MetadataConfigurationsApi.Rule rule : apiRules) {
+        for (CountryMetadataApi.Rule rule : apiRules) {
 
             assignRuleTo(rule, mapQuestionsByCode);
         }
     }
 
     @NonNull
-    private MetadataConfigurationsApi.Option.Rule newRuleOptionFrom(
-            @NonNull MetadataConfigurationsApi.Condition condition,
-            @NonNull MetadataConfigurationsApi.Question targetQuestion) {
+    private CountryMetadataApi.Option.Rule newRuleOptionFrom(
+            @NonNull CountryMetadataApi.Condition condition,
+            @NonNull CountryMetadataApi.Question targetQuestion) {
 
 
-        MetadataConfigurationsApi.Option.Rule newOptionRule =
-                new MetadataConfigurationsApi.Option.Rule();
+        CountryMetadataApi.Option.Rule newOptionRule =
+                new CountryMetadataApi.Option.Rule();
 
         newOptionRule.action = condition.operator;
         newOptionRule.targetQuestion = targetQuestion;
@@ -206,17 +210,17 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     private void assignRuleTo(
-            @NonNull MetadataConfigurationsApi.Rule apiRule,
-            @NonNull Map<String, MetadataConfigurationsApi.Question> questionsByCode) {
+            @NonNull CountryMetadataApi.Rule apiRule,
+            @NonNull Map<String, CountryMetadataApi.Question> questionsByCode) {
 
-        List<MetadataConfigurationsApi.Condition> conditions = apiRule.conditions;
+        List<CountryMetadataApi.Condition> conditions = apiRule.conditions;
 
         for (int i = 0; i < conditions.size(); i++) {
-            MetadataConfigurationsApi.Condition condition = conditions.get(i);
+            CountryMetadataApi.Condition condition = conditions.get(i);
 
             String questionCodeWithRule = condition.left.value;
 
-            MetadataConfigurationsApi.Question questionWithRule = questionsByCode.get(
+            CountryMetadataApi.Question questionWithRule = questionsByCode.get(
                     questionCodeWithRule);
 
             if (questionWithRule.output.equals(CONTROL_TYPE_DROPDOWN_LIST)
@@ -231,8 +235,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
     }
 
-    private void assignRulesToQuestions(@NonNull MetadataConfigurationsApi.Rule apiRule,
-            MetadataConfigurationsApi.Question questionWithRule) {
+    private void assignRulesToQuestions(@NonNull CountryMetadataApi.Rule apiRule,
+            CountryMetadataApi.Question questionWithRule) {
         if (questionWithRule.rules == null) {
             questionWithRule.rules = new ArrayList<>();
         }
@@ -240,25 +244,25 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         questionWithRule.rules.add(apiRule);
     }
 
-    private void assignRulesToQuestionOptions(@NonNull MetadataConfigurationsApi.Rule apiRule,
-            @NonNull Map<String, MetadataConfigurationsApi.Question> questionsByCode,
-            MetadataConfigurationsApi.Condition condition,
-            MetadataConfigurationsApi.Question questionWithRule) {
+    private void assignRulesToQuestionOptions(@NonNull CountryMetadataApi.Rule apiRule,
+            @NonNull Map<String, CountryMetadataApi.Question> questionsByCode,
+            CountryMetadataApi.Condition condition,
+            CountryMetadataApi.Question questionWithRule) {
 
         String optionCodeWithRule = condition.right.value;
 
-        MetadataConfigurationsApi.Option optionWithoutRule = findOptionBy(
+        CountryMetadataApi.Option optionWithoutRule = findOptionBy(
                 optionCodeWithRule,
                 questionWithRule);
 
 
-        for (MetadataConfigurationsApi.Action action : apiRule.actions) {
+        for (CountryMetadataApi.Action action : apiRule.actions) {
 
             String targetQuestionCode = action.dataPointRef;
 
             if (optionWithoutRule != null) {
 
-                MetadataConfigurationsApi.Question targetQuestion = questionsByCode
+                CountryMetadataApi.Question targetQuestion = questionsByCode
                         .get(targetQuestionCode);
 
                 if (targetQuestion != null) {
@@ -269,11 +273,11 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
     }
 
-    private void assignRuleTo(@NonNull MetadataConfigurationsApi.Option option,
-            @NonNull MetadataConfigurationsApi.Condition condition,
-            @NonNull MetadataConfigurationsApi.Question targetQuestion) {
+    private void assignRuleTo(@NonNull CountryMetadataApi.Option option,
+            @NonNull CountryMetadataApi.Condition condition,
+            @NonNull CountryMetadataApi.Question targetQuestion) {
 
-        MetadataConfigurationsApi.Option.Rule newOptRule = newRuleOptionFrom(condition,
+        CountryMetadataApi.Option.Rule newOptRule = newRuleOptionFrom(condition,
                 targetQuestion);
 
         if (option.rules == null) {
@@ -284,12 +288,12 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
     @Nullable
-    private MetadataConfigurationsApi.Option findOptionBy(@NonNull String optionCode,
-            @NonNull MetadataConfigurationsApi.Question question) {
+    private CountryMetadataApi.Option findOptionBy(@NonNull String optionCode,
+                                                   @NonNull CountryMetadataApi.Question question) {
 
-        MetadataConfigurationsApi.Option foundOption = null;
+        CountryMetadataApi.Option foundOption = null;
         if (question.options != null) {
-            for (MetadataConfigurationsApi.Option option : question.options) {
+            for (CountryMetadataApi.Option option : question.options) {
 
                 if (option.code.equals(optionCode)) {
 
@@ -302,18 +306,18 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     }
 
 
-    private boolean isApiQuestionNotNull(@NonNull MetadataConfigurationsApi metadata) {
+    private boolean isApiQuestionNotNull(@NonNull CountryMetadataApi metadata) {
         return metadata.issuingCapture != null &&
                 metadata.issuingCapture.questions != null;
     }
 
     @NonNull
-    private Map<String, MetadataConfigurationsApi.Question> mapQuestionsByCode(
-            @NonNull List<MetadataConfigurationsApi.Question> questions) {
+    private Map<String, CountryMetadataApi.Question> mapQuestionsByCode(
+            @NonNull List<CountryMetadataApi.Question> questions) {
 
-        Map<String, MetadataConfigurationsApi.Question> map = new HashMap<>();
+        Map<String, CountryMetadataApi.Question> map = new HashMap<>();
 
-        for (MetadataConfigurationsApi.Question question : questions) {
+        for (CountryMetadataApi.Question question : questions) {
             map.put(question.code, question);
         }
 
@@ -328,7 +332,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         if (response.isSuccessful()) {
             return response.body();
         } else {
-            String error = response.errorBody().string() + "Http Code: " + response.code();
+            String error = response.errorBody().string() + "Http Code: " + response.code() + " url: " + response.raw().request().url();
 
             throw new ApiCallException(error);
         }
@@ -340,20 +344,20 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         Map<String, Question> mapDomainQuestionsByCode = new HashMap<>();
         Map<String, List<Option>> mapDomainOptionsWithRuleByQuestionCodes = new HashMap<>();
-        Map<String, List<MetadataConfigurationsApi.Option>> mapApiOptionsWithRulesByQuestionCodes =
+        Map<String, List<CountryMetadataApi.Option>> mapApiOptionsWithRulesByQuestionCodes =
                 new HashMap<>();
 
 
         @NonNull
         private List<Question> convertToDomainQuestionsFrom(
-                @NonNull List<MetadataConfigurationsApi.Question> apiQuestions) {
+                @NonNull List<CountryMetadataApi.Question> apiQuestions) {
 
             List<Question> domainQuestions = new ArrayList<>();
 
             boolean isImportantQuestionSelected = false;
             for (int questionIndex = 0; questionIndex < apiQuestions.size(); questionIndex++) {
 
-                MetadataConfigurationsApi.Question apiQuestion = apiQuestions.get(questionIndex);
+                CountryMetadataApi.Question apiQuestion = apiQuestions.get(questionIndex);
 
                 Question domainQuestion = convertToDomainQuestionFrom(apiQuestion, questionIndex);
 
@@ -387,31 +391,31 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
 
         private List<Question.Rule> convertToDomainRules(
-                List<MetadataConfigurationsApi.Rule> apiRules) {
+                List<CountryMetadataApi.Rule> apiRules) {
 
             if (apiRules == null) return null;
 
             List<Question.Rule> domainRules = new ArrayList<>();
 
-            for (MetadataConfigurationsApi.Rule apiRule : apiRules) {
+            for (CountryMetadataApi.Rule apiRule : apiRules) {
                 domainRules.add(newDomainRule(apiRule));
             }
             return domainRules;
         }
 
-        private Question.Rule newDomainRule(MetadataConfigurationsApi.Rule apiRule) {
+        private Question.Rule newDomainRule(CountryMetadataApi.Rule apiRule) {
             List<Question.Rule.Condition> domainConditions = new ArrayList<>();
             List<Question.Rule.Action> domainActions = new ArrayList<>();
 
 
-            for (MetadataConfigurationsApi.Condition apiCondition : apiRule.conditions) {
+            for (CountryMetadataApi.Condition apiCondition : apiRule.conditions) {
 
                 Question.Rule.Condition domainCondition = convertToDomainCondition(apiCondition);
 
                 domainConditions.add(domainCondition);
             }
 
-            for (MetadataConfigurationsApi.Action apiAction : apiRule.actions) {
+            for (CountryMetadataApi.Action apiAction : apiRule.actions) {
 
                 domainActions.add(convertToDomainAction(apiAction));
             }
@@ -423,7 +427,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
 
         private Question.Rule.Action convertToDomainAction(
-                MetadataConfigurationsApi.Action apiAction) {
+                CountryMetadataApi.Action apiAction) {
             Question.Rule.ActionToPerform domainActionToPerform = null;
 
             switch (apiAction.action) {
@@ -440,7 +444,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Question.Rule.Condition convertToDomainCondition(
-                MetadataConfigurationsApi.Condition apiCondition) {
+                CountryMetadataApi.Condition apiCondition) {
             return Question.Rule.Condition.newBuilder()
                     .left(newDomainOperand(apiCondition.left))
                     .right(newDomainOperand(apiCondition.right))
@@ -480,7 +484,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
 
         private Question.Rule.Operand newDomainOperand(
-                MetadataConfigurationsApi.Operand apiOperand) {
+                CountryMetadataApi.Operand apiOperand) {
 
             return Question.Rule.Operand
                     .newBuilder()
@@ -513,7 +517,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                 List<Option> domainOptions = mapDomainOptionsWithRuleByQuestionCodes.get(
                         questionCode);
 
-                List<MetadataConfigurationsApi.Option> apiOptions =
+                List<CountryMetadataApi.Option> apiOptions =
                         mapApiOptionsWithRulesByQuestionCodes.get(questionCode);
 
                 addDomainRulesTo(domainOptions, apiOptions);
@@ -521,11 +525,11 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
 
         private void addDomainRulesTo(List<Option> domainOptions,
-                List<MetadataConfigurationsApi.Option> apiOptions) {
+                List<CountryMetadataApi.Option> apiOptions) {
             for (int i = 0; i < domainOptions.size(); i++) {
 
                 Option domainOption = domainOptions.get(i);
-                MetadataConfigurationsApi.Option aipOption = apiOptions.get(i);
+                CountryMetadataApi.Option aipOption = apiOptions.get(i);
 
 
                 addDomainRulesTo(domainOption, aipOption);
@@ -533,10 +537,10 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
 
         private void addDomainRulesTo(Option domainOption,
-                MetadataConfigurationsApi.Option aipOption) {
+                CountryMetadataApi.Option aipOption) {
             List<Option.Rule> domainRules = new ArrayList<>();
 
-            for (MetadataConfigurationsApi.Option.Rule ruleOptionApi : aipOption.rules) {
+            for (CountryMetadataApi.Option.Rule ruleOptionApi : aipOption.rules) {
 
                 Question targetQuestion = mapDomainQuestionsByCode.get(
                         ruleOptionApi.targetQuestion.code);
@@ -557,7 +561,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Question convertToDomainQuestionFrom(
-                @NonNull MetadataConfigurationsApi.Question apiQuestion, int index) {
+                @NonNull CountryMetadataApi.Question apiQuestion, int index) {
 
             return Question.newBuilder()
                     .code(apiQuestion.code)
@@ -578,7 +582,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Question.Visibility getVisibilityFrom(
-                @NonNull MetadataConfigurationsApi.Question
+                @NonNull CountryMetadataApi.Question
                         apiQuestion) {
 
             Question.Visibility domainVisibility;
@@ -608,7 +612,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @Nullable
         private PhoneFormat convertToDomainPhoneFormatFrom(
-                MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
+                CountryMetadataApi.PhoneFormat apiPhoneFormat) {
 
             if (apiPhoneFormat != null) {
                 return phoneFormatConverter.visit(apiPhoneFormat);
@@ -684,8 +688,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private List<Option> convertToDomainOptionsFrom(
-                @NonNull List<MetadataConfigurationsApi.Option> apiOptions,
-                @NonNull MetadataConfigurationsApi.Question apiQuestion) {
+                @NonNull List<CountryMetadataApi.Option> apiOptions,
+                @NonNull CountryMetadataApi.Question apiQuestion) {
 
             List<Option> domainOptions = new ArrayList<>();
 
@@ -693,7 +697,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             if (apiOptions == null) return domainOptions;
 
 
-            for (MetadataConfigurationsApi.Option apiOption : apiOptions) {
+            for (CountryMetadataApi.Option apiOption : apiOptions) {
 
                 Option domainOption = convertToDomainOptionFrom(apiOption);
                 domainOptions.add(domainOption);
@@ -709,8 +713,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             return domainOptions;
         }
 
-        private void addToPendingRules(@NonNull MetadataConfigurationsApi.Question apiQuestion,
-                @NonNull MetadataConfigurationsApi.Option apiOption, @NonNull Option domainOption) {
+        private void addToPendingRules(@NonNull CountryMetadataApi.Question apiQuestion,
+                                       @NonNull CountryMetadataApi.Option apiOption, @NonNull Option domainOption) {
 
             addItemToListOf(mapDomainOptionsWithRuleByQuestionCodes, apiQuestion.code,
                     domainOption);
@@ -732,7 +736,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         @NonNull
         private Option convertToDomainOptionFrom(
-                @NonNull MetadataConfigurationsApi.Option apiOption) {
+                @NonNull CountryMetadataApi.Option apiOption) {
 
             return Option.newBuilder()
                     .name(apiOption.name)

@@ -48,7 +48,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer = new CustomMockServer(new FileReader());
 
-        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(),
+        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(), "dcSettings",
                 new BasicAuthInterceptor(""));
     }
 
@@ -165,7 +165,7 @@ public class MetadataConfigurationApiClientShould {
 
         CustomMockServer.enqueueMockResponse(COUNTRIES_VERSION);
 
-        countryVersions = apiClient.getCountriesVersions();
+        countryVersions = apiClient.getCountriesCodesAndVersions();
 
     }
 

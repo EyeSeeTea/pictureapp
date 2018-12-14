@@ -1126,6 +1126,7 @@
 <string name="element_not_installed">"Element SDK is not installed!"</string>
 <string name="check_metadata_title">"Check metadata updates on soft logins"</string>
 <string name="settings_title_program_url_config">"Program configuration URL"</string>
+<string name="settings_title_program_endpoint_config">"Program configuration Endpoint"</string>
 <string name="settings_title_program_username_config">"Program configuration username"</string>
 <string name="settings_title_program_password_config">"Program configuration password"</string>
 <string name="action_bar_connect">Connect</string>
@@ -1135,4 +1136,7 @@
 <string name="zimbabwe_program_eref">Zimbabwe</string>
 <string name="demo_page_text">"You're in demo mode and this is an online module. Please logout and login with a valid user to see this information."</string>
 <string name="erro_page_text">"You're offline and this is an online module. Please connect to a network in order to see this information."</string>
+<string name="production">Production</string>
+<string name="training">Training</string>
+<string name="custom">Custom</string>
 </resources>

@@ -23,7 +23,7 @@ public class MetadataConfigurationDataSourceFactory {
 
         Settings settings = settingsRepository.getSettings();
 
-        return new MetadataConfigurationApiClient(settings.getProgramUrl(),
+        return new MetadataConfigurationApiClient(settings.getProgramUrl(), settings.getProgramEndPoint(),
                 HTTPClientFactory.getAuthenticationInterceptor(settings.getUser(),
                         settings.getPass()));
     }

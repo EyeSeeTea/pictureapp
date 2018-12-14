@@ -4,17 +4,16 @@ package org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.conv
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
 import org.eyeseetea.malariacare.data.sync.importer.IConvertDomainDBVisitor;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 
 public class PhoneFormatConvertToDomainVisitor implements
-        IConvertDomainDBVisitor<MetadataConfigurationsApi.PhoneFormat, PhoneFormat> {
+        IConvertDomainDBVisitor<CountryMetadataApi.PhoneFormat, PhoneFormat> {
 
     @NotNull
     @Override
     public PhoneFormat visit (
-            MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
+            CountryMetadataApi.PhoneFormat apiPhoneFormat) {
 
         String phoneMask = parseToPhoneMask(apiPhoneFormat);
         String trunkPrefix = apiPhoneFormat.details.trunkPrefix;
@@ -23,12 +22,12 @@ public class PhoneFormatConvertToDomainVisitor implements
         return new PhoneFormat(phoneMask, trunkPrefix, prefixToPut);
     }
 
-    public String parseToPhoneMask(MetadataConfigurationsApi.PhoneFormat apiPhoneFormat) {
+    public String parseToPhoneMask(CountryMetadataApi.PhoneFormat apiPhoneFormat) {
         StringBuilder regularExpression = new StringBuilder();
 
         for (int i = 0; i < apiPhoneFormat.accepted.size(); i++) {
 
-            MetadataConfigurationsApi.PhoneFormat.AcceptedFormat acceptedFormat =
+            CountryMetadataApi.PhoneFormat.AcceptedFormat acceptedFormat =
                     apiPhoneFormat.accepted.get(i);
             String regExTemplate = "^(#starts)\\d#length";
 

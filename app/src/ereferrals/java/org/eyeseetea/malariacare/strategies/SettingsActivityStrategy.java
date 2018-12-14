@@ -110,6 +110,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     private void initProgramConfigurationSettings(PreferenceScreen preferenceScreen) {
         EditTextPreference programUrl = (EditTextPreference) preferenceScreen.findPreference(
                 preferenceScreen.getContext().getString(R.string.program_configuration_url));
+        EditTextPreference programEndpoint = (EditTextPreference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getString(R.string.program_configuration_endpoint));
         EditTextPreference programPass = (EditTextPreference) preferenceScreen.findPreference(
                 preferenceScreen.getContext().getString(R.string.program_configuration_pass));
         EditTextPreference programUser = (EditTextPreference) preferenceScreen.findPreference(
@@ -121,6 +123,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         programUrl.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUrl.setText(settingsRepository.getSettings().getProgramUrl());
         programUrl.setSummary(settingsRepository.getSettings().getProgramUrl());
+
+        programEndpoint.setOnPreferenceChangeListener(new onCredentialsChangeListener());
+        programEndpoint.setText(settingsRepository.getSettings().getProgramEndPoint());
+        programEndpoint.setSummary(settingsRepository.getSettings().getProgramEndPoint());
 
         programUser.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUser.setText(settingsRepository.getSettings().getUser());
@@ -223,6 +229,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         settingsActivity.translatePreferenceString(webViewPreference);
         settingsActivity.translatePreferenceString(settingsActivity.findPreference(
                 settingsActivity.getString(R.string.program_configuration_url)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_endpoint)));
         settingsActivity.translatePreferenceString(settingsActivity.findPreference(
                 settingsActivity.getString(R.string.program_configuration_user)));
         settingsActivity.translatePreferenceString(settingsActivity.findPreference(

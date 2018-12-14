@@ -262,10 +262,7 @@ public class LoginActivity extends Activity {
         FieldTextWatcher watcher = new FieldTextWatcher();
         initDataDownloadPeriodDropdown();
         //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.edittext_server_url);
-        serverText.setText(ServerAPIController.getServerUrl());
-        serverText.addTextChangedListener(watcher);
-
+        initServerUrls(watcher);
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
@@ -279,12 +276,27 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
-                        passwordEditText.getText());
+                mLoginActivityStrategy.saveOtherValues(new ALoginActivityStrategy.SettingsCallback() {
+                    @Override
+                    public void onSuccess() {
+                        onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
+                                passwordEditText.getText());
+                    }
+                });
             }
         });
 
         mLoginActivityStrategy.initViews();
+    }
+
+    private void initServerUrls(FieldTextWatcher watcher) {
+        serverText = (EditText) findViewById(R.id.edittext_loginweb_server_url);
+        serverText.setText(ServerAPIController.getServerUrl());
+        serverText.addTextChangedListener(watcher);
+
+        mLoginActivityStrategy.initProgramServer();
+        mLoginActivityStrategy.initWebviewServer();
+        mLoginActivityStrategy.initProgramEndpoint();
     }
 
     public void login(String serverUrl, String username, String password) {
@@ -593,8 +605,13 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(final Exception exception) {
             //Error
-            onFinishLoading(null);
-            init();
+            mLoginActivityStrategy.loadSettings(new ALoginActivityStrategy.SettingsCallback() {
+                @Override
+                public void onSuccess() {
+                    onFinishLoading(null);
+                    init();
+                }
+            });
         }
     }
 

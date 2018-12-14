@@ -38,9 +38,10 @@ public class SettingsDataSource implements ISettingsRepository {
         String webUrl = getWebUrl();
         String fontSize = getFontSize();
         String programUrl = getProgramUrl();
+        String programEndPoint = getProgramEndPoint();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize, getProgramUrl());
+                webUrl, fontSize, programUrl, programEndPoint);
     }
 
     private String loadPass() {
@@ -70,17 +71,10 @@ public class SettingsDataSource implements ISettingsRepository {
 
     @Override
     public void saveSettings(Settings settings) {
-        setMediaPreference(settings.getMediaListMode().toString());
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private Locale getCurrentLocale() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Resources.getSystem().getConfiguration().getLocales().get(0);
-        } else {
-            //noinspection deprecation
-            return Resources.getSystem().getConfiguration().locale;
-        }
+        saveMediaPreference(settings.getMediaListMode().toString());
+        saveProgramUrl(settings.getProgramUrl());
+        saveWebUrl(settings.getWebUrl());
+        saveProgramEndPoint(settings.getProgramEndPoint());
     }
 
     private MediaListMode getMediaListMode() {
@@ -93,40 +87,46 @@ public class SettingsDataSource implements ISettingsRepository {
         return mediaListMode;
     }
 
-    private void setMediaPreference(String listType) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getResources().getString(R.string.media_list_style_preference), listType);
-        editor.commit();
+    private void saveMediaPreference(String listType) {
+        savePreference(context, R.string.media_list_style_preference, listType);
     }
 
     private String getMediaPreference() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getString(
-                context.getResources().getString(R.string.media_list_style_preference),
-                "");
+        return getPreference(context, R.string.media_list_style_preference, R.string.empty_string);
+    }
+
+    private void saveProgramUrl(String programUrl) {
+        savePreference(context, R.string.program_configuration_url, programUrl);
+    }
+
+    private void saveProgramEndPoint(String programUrl) {
+        savePreference(context, R.string.program_configuration_endpoint, programUrl);
+    }
+
+    private void saveWebUrl(String webUrl) {
+        savePreference(context, R.string.web_view_url, webUrl);
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private Locale getCurrentLocale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Resources.getSystem().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return Resources.getSystem().getConfiguration().locale;
+        }
     }
 
     private boolean canDownloadMediaWith3G() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getBoolean(
-                context.getResources().getString(R.string.allow_media_download_3g_key), false);
+        return getBooleanPreference(context, R.string.allow_media_download_3g_key, false);
     }
 
     private boolean isElementActive() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getBoolean(
-                context.getResources().getString(R.string.activate_elements_key), false);
+        return getBooleanPreference(context, R.string.activate_elements_key, false);
     }
 
     public boolean isMetadataUpdateActive() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getBoolean(context.getString(R.string.check_metadata_key), true);
+        return getBooleanPreference(context, R.string.check_metadata_key, true);
     }
 
     private String getFontSize() {
@@ -145,36 +145,54 @@ public class SettingsDataSource implements ISettingsRepository {
     }
 
     private String getWebUrl() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getString(
-                context.getResources().getString(R.string.web_view_name),
-                context.getString(R.string.base_web_view_url));
+        return getPreference(context, R.string.web_view_name, R.string.base_web_view_url);
     }
 
     private String getWSServerUrl() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getString(
-                context.getResources().getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
+        return getPreference(context, R.string.web_service_url, R.string.ws_base_url);
     }
 
     private String getProgramUrl() {
-        return PreferencesEReferral.getProgramUrl(context);
+        return getPreference(context, R.string.program_configuration_url, R.string.PROGRAM_DEFAULT_SERVER);
+    }
+
+
+    private String getProgramEndPoint() {
+        return getPreference(context, R.string.program_configuration_endpoint, R.string.PROGRAM_DEFAULT_ENDPOINT);
     }
 
     private String getProgramUser() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_user),
-                null);
+        return getPreference(context, R.string.program_configuration_user, null);
     }
 
     private String getProgramPassword() {
+        return getPreference(context, R.string.program_configuration_pass, null);
+    }
+
+    private Boolean getBooleanPreference(Context context, int stringId, Boolean defaultBool) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        return sharedPreferences.getString(context.getString(R.string.program_configuration_pass),
-                null);
+        return sharedPreferences.getBoolean(
+                context.getResources().getString(stringId),
+                defaultBool);
+    }
+    private String getPreference(Context context, int stringId, Integer defaultStringId) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        String value = null;
+        if(defaultStringId!=null){
+            value = context.getString(defaultStringId);
+        }
+        return sharedPreferences.getString(
+                context.getResources().getString(stringId),
+                value);
+    }
+
+    private void savePreference(Context context, int stringId, String value) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getResources().getString(stringId), value);
+        editor.commit();
     }
 }

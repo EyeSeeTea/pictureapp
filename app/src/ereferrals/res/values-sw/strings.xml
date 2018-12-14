@@ -37,7 +37,9 @@
     <string name="offline_status_online_tab">programu ni nje ya mtandao, habari hii inaweza kuwa na lawama</string>
     <string name="offline_status">Programu ni nje ya mtandao, tafadhali kwenda online na kuona habari hii</string>
     <string name="ws_conversion_error">"PUSHUSECASE ERROR Kosa limetokea kwa uongofu katika kushinikiza mchakato"</string>
-    <string name="server_url">URL ya seva</string>
+    <string name="server_url">URL ya huduma ya wavuti</string>
+    <string name="program_url">Mpangilio wa Programu URL</string>
+    <string name="webviews_url">URL ya Mtandao</string>
     <string name="log_in">Ingia</string>
     <string name="progress_pull_downloading">"metadata Refreshing (hii inaweza kuchukua dakika chache)"</string>
     <string name="progress_pull_done">"yamekamilika"</string>
@@ -1021,8 +1023,12 @@ Ameahidi kuhudhuria"</string>
 <string name="element_not_installed">"Element SDK är inte installerat!"</string>
 <string name="check_metadata_title">"Kontrollera metadatauppdateringar på mjuka inloggningar"</string>
 <string name="settings_title_program_url_config">"Programkonfigurationsadress"</string>
+<string name="settings_title_program_endpoint_config">"Programkonfiguration Slutpunkt"</string>
 <string name="settings_title_program_username_config">"Programkonfigurations användarnamn"</string>
 <string name="settings_title_program_password_config">"Programkonfigurationslösenord"</string>
 <string name="demo_page_text">"Ukiwa nje ya mtandao na hii ni online moduli. Tafadhali unganisha kwenye mtandao ili kuona habari hii."</string>
 <string name="erro_page_text">"Uko katika hali ya demo na hii ni moduli ya mtandaoni. Tafadhali ingia na usajili na mtumiaji halali ili kuona habari hii."</string>
+<string name="production">Uzalishaji</string>
+<string name="training">Mafunzo</string>
+<string name="custom">Desturi</string>
 </resources>

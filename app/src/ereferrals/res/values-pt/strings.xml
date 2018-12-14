@@ -734,10 +734,12 @@
 <string name="error_exporting_data">"Erro metadata não pôde ser exportado"</string>
 <string name="google_play_required">"Esta aplicação requer serviços do Google play. Por favor instale os serviços Google play e volte a abrir a aplicação"</string>
 <string name="voucher">"Senha"</string>
-    <string name="log_in">Entrar</string>
-    <string name="clear_and_logout">Limpar e sair</string>
-    <string name="server_url">URL do Servidor</string>
-    <string name="forgot_password">"Esqueci meu PIN"</string>
+<string name="log_in">Entrar</string>
+<string name="clear_and_logout">Limpar e sair</string>
+<string name="server_url">URL do serviço da Web</string>
+<string name="program_url">URL de configuração do programa</string>
+<string name="webviews_url">URL da Web</string>
+<string name="forgot_password">"Esqueci meu PIN"</string>
 <string name="forgot_password_sms_sent">"SMS enviada ao telefone para o usuário em causa"</string>
 <string name="forgot_password_wrong_username">"Usuário não combina com nenhum registo no servidor"</string>
 <string name="ws_unknown_exception">"Excepção desconhecida"</string>
@@ -963,8 +965,12 @@
     <string name="element_not_installed">"Element SDK não está instalado!"</string>
     <string name="check_metadata_title">"Verificar atualizações de metadados em logins leves"</string>
     <string name="settings_title_program_url_config">"URL de configuração do programa"</string>
+    <string name="settings_title_program_endpoint_config">"Ponto final da configuração do programa"</string>
     <string name="settings_title_program_username_config">"Nome de usuário da configuração do programa"</string>
     <string name="settings_title_program_password_config">"Senha de configuração do programa"</string>
 <string name="demo_page_text">"Você está no modo de demonstração e este é um módulo on-line. Por favor, faça logout e login com um usuário válido para ver esta informação."</string>
 <string name="erro_page_text">"Você está offline e este é um módulo on-line. Por favor, conecte-se a uma rede para ver esta informação."</string>
+<string name="production">Produção</string>
+<string name="training">Treinamento</string>
+<string name="custom">Personalizado</string>
 </resources>

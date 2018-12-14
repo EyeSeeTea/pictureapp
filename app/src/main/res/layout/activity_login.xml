@@ -78,7 +78,7 @@
                     android:layout_marginBottom="8dp">
 
                     <org.eyeseetea.sdk.presentation.views.CustomEditText
-                        android:id="@+id/edittext_server_url"
+                        android:id="@+id/edittext_loginweb_server_url"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"

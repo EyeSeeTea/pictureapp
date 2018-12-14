@@ -98,7 +98,7 @@ public class MetadataConfigurationDBImporter {
 
     private void fetchContriesVersionsIfRequired() throws Exception {
         if(countryVersions == null || countryVersions.isEmpty()){
-            countryVersions = remoteDataSource.getCountriesVersions();
+            countryVersions = remoteDataSource.getCountriesCodesAndVersions();
         }
     }
 

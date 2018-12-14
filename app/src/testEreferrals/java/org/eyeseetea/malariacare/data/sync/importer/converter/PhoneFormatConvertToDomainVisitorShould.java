@@ -5,8 +5,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.converter
         .PhoneFormatConvertToDomainVisitor;
-import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model
-        .MetadataConfigurationsApi;
+import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration.model.CountryMetadataApi;
 import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.entity.PhoneFormat;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
@@ -43,12 +42,12 @@ public class PhoneFormatConvertToDomainVisitorShould {
     }
 
     private void whenConvertFromApiModelToDomainModel() {
-        MetadataConfigurationsApi.PhoneFormat apiPhoneFormat = givenAAPIPhoneFormat();
+        CountryMetadataApi.PhoneFormat apiPhoneFormat = givenAAPIPhoneFormat();
         domainPhoneFormat = converter.visit(apiPhoneFormat);
     }
 
-    private MetadataConfigurationsApi.PhoneFormat givenAAPIPhoneFormat() {
-        MetadataConfigurationsApi.PhoneFormat phoneFormat = new MetadataConfigurationsApi
+    private CountryMetadataApi.PhoneFormat givenAAPIPhoneFormat() {
+        CountryMetadataApi.PhoneFormat phoneFormat = new CountryMetadataApi
                 .PhoneFormat();
 
         phoneFormat.accepted = new ArrayList<>();
@@ -57,7 +56,7 @@ public class PhoneFormatConvertToDomainVisitorShould {
         phoneFormat.accepted.add(buildAccept("+", null, ""));
         phoneFormat.accepted.add(buildAccept("00", null, "national"));
 
-        phoneFormat.details = new MetadataConfigurationsApi.PhoneFormat.FormatDetails();
+        phoneFormat.details = new CountryMetadataApi.PhoneFormat.FormatDetails();
 
         phoneFormat.details.trunkPrefix = "0";
         phoneFormat.details.dialingCode = "+255";
@@ -66,10 +65,10 @@ public class PhoneFormatConvertToDomainVisitorShould {
         return phoneFormat;
     }
 
-    private MetadataConfigurationsApi.PhoneFormat.AcceptedFormat buildAccept(String starts,
-            String length, String comment) {
-        MetadataConfigurationsApi.PhoneFormat.AcceptedFormat
-                acceptedFormat = new MetadataConfigurationsApi.PhoneFormat.AcceptedFormat();
+    private CountryMetadataApi.PhoneFormat.AcceptedFormat buildAccept(String starts,
+                                                                      String length, String comment) {
+        CountryMetadataApi.PhoneFormat.AcceptedFormat
+                acceptedFormat = new CountryMetadataApi.PhoneFormat.AcceptedFormat();
         acceptedFormat.starts = starts;
         acceptedFormat.length = length;
         acceptedFormat.comment = comment;

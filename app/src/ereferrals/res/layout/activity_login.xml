@@ -81,21 +81,79 @@
                 android:padding="@dimen/login_container_padding">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomSpinner
+                        android:id="@+id/server_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        android:gravity="center_vertical"
+                        android:spinnerMode="dropdown"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/login_dynamic_views_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/text_layout_server_url"
+                    android:id="@+id/text_layout_webservice_server_url"
                     style="@style/TextInputLayout"
                     android:visibility="gone"
                     tools:visibility="visible">
 
                     <org.eyeseetea.sdk.presentation.views.CustomEditText
-                        android:id="@+id/edittext_server_url"
+                        android:id="@+id/edittext_loginweb_server_url"
                         style="@style/CustomEditText"
                         android:hint="@string/server_url"
+                        android:inputType="textUri" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_layout_program_server_url"
+                    style="@style/TextInputLayout"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
+                        android:id="@+id/edittext_program_server_url"
+                        style="@style/CustomEditText"
+                        android:hint="@string/program_url"
+                        android:inputType="textUri" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_layout_program_server_endpoint"
+                    style="@style/TextInputLayout"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
+                        android:id="@+id/edittext_program_server_endpoint"
+                        style="@style/CustomEditText"
+                        android:hint="@string/program_endpoint"
+                        android:inputType="textUri" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_layout_web_server_url"
+                    style="@style/TextInputLayout"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <org.eyeseetea.sdk.presentation.views.CustomEditText
+                        android:id="@+id/edittext_web_server_url"
+                        style="@style/CustomEditText"
+                        android:hint="@string/webviews_url"
                         android:inputType="textUri" />
                 </android.support.design.widget.TextInputLayout>
 

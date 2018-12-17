@@ -21,6 +21,7 @@ import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
@@ -39,6 +40,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
@@ -69,6 +71,7 @@ public class PushServiceShould {
     private Program previousProgram;
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
+    private Long updatedTimePreference = 0l;
 
     private Context mContext;
 
@@ -148,6 +151,12 @@ public class PushServiceShould {
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         previousUserAccount = userAccountDataSource.getLoggedUser();
+        AppInfoDataSource appInfoDataSource = new AppInfoDataSource(mContext);
+        AppInfo appInfo = appInfoDataSource.getAppInfo();
+        if(appInfo.getUpdateMetadataDate() != null)
+        {
+            updatedTimePreference = appInfo.getUpdateMetadataDate().getTime();
+        }
     }
 
     private void saveTestCredentialsAndProgram() {
@@ -157,6 +166,8 @@ public class PushServiceShould {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(context.getString(R.string.web_service_url),
                 context.getString(R.string.ws_base_url));
+        editor.putLong(context.getString(R.string.metadata_update_date),
+                1545047483);
         editor.commit();
 
         Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test", "test");
@@ -176,12 +187,14 @@ public class PushServiceShould {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (previousCredentials != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(context.getString(R.string.web_service_url),
                     previousCredentials.getServerURL());
-            editor.commit();
         }
+        editor.putLong(context.getString(R.string.metadata_update_date),
+                updatedTimePreference);
+        editor.commit();
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
         ProgramRepository programRepository = new ProgramRepository();

@@ -13,6 +13,7 @@ import android.support.test.InstrumentationRegistry;
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -22,6 +23,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
@@ -51,6 +53,7 @@ public class WSPushControllerShould {
     private String serverPreference="";
     private String userPreference ="";
     private String pinPreference ="";
+    private long updatedTimePreference = 0l;
     private long programPreference =-1;
 
     private Context mContext;
@@ -82,6 +85,12 @@ public class WSPushControllerShould {
                 context)).getString(context.getString(R.string.logged_user_pin),"");
         programPreference = (PreferenceManager.getDefaultSharedPreferences(
                 context)).getLong(context.getString(R.string.logged_user_program),-1);
+        AppInfoDataSource appInfoDataSource = new AppInfoDataSource(mContext);
+        AppInfo appInfo = appInfoDataSource.getAppInfo();
+        if(appInfo.getUpdateMetadataDate() != null)
+        {
+            updatedTimePreference = appInfo.getUpdateMetadataDate().getTime();
+        }
     }
 
     private void restorePreferences() {
@@ -94,6 +103,7 @@ public class WSPushControllerShould {
         editor.putString(context.getString(R.string.logged_user_username), userPreference);
         editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
         editor.putLong(context.getString(R.string.logged_user_program), programPreference);
+        editor.putLong(context.getString(R.string.metadata_update_date), updatedTimePreference);
         editor.commit();
     }
 
@@ -106,6 +116,8 @@ public class WSPushControllerShould {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(context.getString(R.string.web_service_url),
                 context.getString(R.string.ws_base_url));
+        editor.putLong(context.getString(R.string.metadata_update_date), 1545047483);
+
         editor.commit();
 
         Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test",

@@ -30,6 +30,7 @@ import com.github.stkent.bugshaker.BugShaker;
 import com.github.stkent.bugshaker.flow.dialog.AlertDialogType;
 import com.github.stkent.bugshaker.github.GitHubConfiguration;
 import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
+import com.raizlabs.android.dbflow.config.DatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -75,10 +76,12 @@ public class EyeSeeTeaApplication extends Application {
             FlowLog.setMinimumLoggingLevel(FlowLog.Level.V);
         }
 
+        DatabaseHolderProviderStrategy databaseStrategy = new DatabaseHolderProviderStrategy();
+
         PreferencesState.getInstance().init(getApplicationContext());
         FlowConfig flowConfig = new FlowConfig
                 .Builder(this)
-                .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
+                .addDatabaseHolder(databaseStrategy.provide())
                 .build();
         FlowManager.init(flowConfig);
         initBugShaker();
@@ -143,5 +146,9 @@ public class EyeSeeTeaApplication extends Application {
                         "master"))
                 .assemble()
                 .start();
+    }
+
+    public static interface IDatabaseHolderProviderStrategy {
+        Class<? extends DatabaseHolder> provide();
     }
 }

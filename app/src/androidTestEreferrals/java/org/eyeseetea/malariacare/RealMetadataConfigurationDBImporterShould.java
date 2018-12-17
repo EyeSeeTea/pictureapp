@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationDataSourceFactory;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.junit.Before;
+import org.junit.Test;
 
 public class RealMetadataConfigurationDBImporterShould {
 
@@ -29,7 +30,7 @@ public class RealMetadataConfigurationDBImporterShould {
 
         MetadataConfigurationDataSourceFactory metadataConfigurationDataSourceFactory =
                 new MetadataConfigurationDataSourceFactory(
-                        InstrumentationRegistry.getTargetContext());
+                        InstrumentationRegistry.getContext());
         IMetadataConfigurationDataSource apiClient =
                 metadataConfigurationDataSourceFactory.getMetadataConfigurationDataSource();
         importer = new MetadataConfigurationDBImporter(

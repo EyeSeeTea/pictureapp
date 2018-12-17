@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.CountryVersionDB;
@@ -60,14 +61,7 @@ public class AppInfoDataSource implements IAppInfoRepository {
     }
 
     private String getAppVersion() {
-        PackageInfo pInfo = null;
-        try {
-            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error getting app version" + e.getMessage());
-        }
-        return String.valueOf(pInfo.versionCode);
+        return String.valueOf(BuildConfig.VERSION_CODE);
     }
 
     private void saveMetadataUpdateDate(Date updateMetadataName) {

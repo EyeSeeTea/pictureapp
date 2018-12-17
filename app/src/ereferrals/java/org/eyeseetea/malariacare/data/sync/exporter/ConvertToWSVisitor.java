@@ -49,9 +49,9 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private Context mContext;
 
     public ConvertToWSVisitor(Context context) {
+        mContext = context;
         IDeviceRepository deviceDataSource = new DeviceDataSource();
         Device device = deviceDataSource.getDevice();
-        mContext = context;
         init(device);
     }
 

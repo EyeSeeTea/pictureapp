@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare;
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
+import static android.support.test.InstrumentationRegistry.getContext;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -13,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -33,7 +36,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class BaseActivityShould {
+public class BaseActivityShould extends CommonActivityTestCode{
 
     private Credentials previousOrganisationCredentials;
     private Credentials previousCredentials;
@@ -42,7 +45,6 @@ public class BaseActivityShould {
     private UserAccount previousUserAccount;
 
     private final Object syncObject = new Object();
-
     @Test
     public void onLoginIntentShowLoginActivity() throws InterruptedException {
         synchronized (syncObject) {
@@ -66,12 +68,15 @@ public class BaseActivityShould {
 
         ComponentName componentInfo = taskInfo.get(0).topActivity;
         String activityName = componentInfo.getClassName();
-        assertThat(activityName, is(LoginActivity.class.getName()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            assertThat(activityName, is(LoginActivity.class.getName()));
+        } else {
+            assertThat(activityName, is(LoginActivity.class.getName()));
+        }
     }
 
     @Before
     public void cleanUp() {
-            grantPermission();
             savePreviousPreferences();
             saveTestCredentialsAndProgram();
             Intent intent = new Intent(PreferencesState.getInstance().getContext(),
@@ -91,25 +96,6 @@ public class BaseActivityShould {
     @After
     public void tearDown() {
         restorePreferences();
-
-    }
-
-    public void grantPermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
-                            + " android.permission.READ_PHONE_STATE");
-            synchronized (syncObject) {
-                try {
-                    syncObject.wait(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
-                            + " android.permission.ACCESS_FINE_LOCATION");
-        }
     }
 
 
@@ -139,15 +125,18 @@ public class BaseActivityShould {
     }
 
     private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
+        //used to avoid override the real app preferences
+        Context context = InstrumentationRegistry.getContext();
+        //real app context, it is necessary to use getString() method
+        Context realAppContext = InstrumentationRegistry.getTargetContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
+        editor.putString(realAppContext.getString(R.string.web_service_url),
+                realAppContext.getString(R.string.ws_base_url));
         editor.commit();
 
-        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url),
+        Credentials credentials = new Credentials(realAppContext.getString(R.string.ws_base_url),
                 "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);

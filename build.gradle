@@ -4,6 +4,10 @@ buildscript {
     repositories {
         maven { url "https://raw.github.com/Raizlabs/maven-releases/master/releases" }
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -19,7 +23,8 @@ allprojects {
         jcenter()
         maven { url "https://www.jitpack.io" }
         maven {
-            url "https://maven.google.com"
+            url 'https://maven.google.com/'
+            name 'Google'
         }
     }
 

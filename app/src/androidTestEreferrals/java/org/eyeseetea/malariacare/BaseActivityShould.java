@@ -36,7 +36,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class BaseActivityShould {
+public class BaseActivityShould extends CommonActivityTestCode{
 
     private Credentials previousOrganisationCredentials;
     private Credentials previousCredentials;
@@ -45,24 +45,6 @@ public class BaseActivityShould {
     private UserAccount previousUserAccount;
 
     private final Object syncObject = new Object();
-    @Before
-    public void grantPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getContext().getPackageName()
-                            + " android.permission.READ_PHONE_STATE");
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getContext().getPackageName()
-                            + " android.permission.ACCESS_FINE_LOCATION");
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getContext().getPackageName()
-                            + " android.permission.INTERNET");
-            getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm grant " + getContext().getPackageName()
-                            + " android.permission.ACCESS_NETWORK_STATE");
-        }
-    }
-
     @Test
     public void onLoginIntentShowLoginActivity() throws InterruptedException {
         synchronized (syncObject) {

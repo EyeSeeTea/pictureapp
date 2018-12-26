@@ -22,7 +22,9 @@ import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.usecase.GetWebAvailableUseCase;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
+import org.eyeseetea.malariacare.presentation.factory.ApiAvailabilityFactory;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -148,24 +150,44 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 showHideWebView(false);
                 mErrorDemoText.setTextTranslation(R.string.demo_page_text);
-                ;
             } else {
-                showHideWebView(true);
-                mWebView.getSettings().setJavaScriptEnabled(true);
-                mWebView.getSettings().setDomStorageEnabled(true);
-                clearCookies(getActivity());
-                mWebView.loadUrl(url);
-                mWebView.setWebViewClient(new WebViewClient() {
+                new ApiAvailabilityFactory().getGetWebViewAvailableUseCase().execute(
+                        new GetWebAvailableUseCase.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                executeOnWebAvailable();
+                            }
 
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        super.onPageFinished(view, url);
-                        loadedFirstTime = true;
-                    }
-                });
+                            @Override
+                            public void onError() {
+                                showError();
+                            }
+                        });
+
             }
 
         }
+    }
+
+    private void showError() {
+        showHideWebView(false);
+        mErrorDemoText.setTextTranslation(R.string.error_no_available_api);
+    }
+
+    private void executeOnWebAvailable() {
+        showHideWebView(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+        clearCookies(getActivity());
+        mWebView.loadUrl(url);
+        mWebView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                loadedFirstTime = true;
+            }
+        });
     }
 
     private void showHideWebView(boolean show) {

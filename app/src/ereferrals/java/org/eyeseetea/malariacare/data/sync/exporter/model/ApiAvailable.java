@@ -4,6 +4,9 @@ public class ApiAvailable {
     private boolean available;
     private  String msg;
 
+    public ApiAvailable() {
+    }
+
     public ApiAvailable(boolean available, String msg) {
         this.available = available;
         this.msg = msg;

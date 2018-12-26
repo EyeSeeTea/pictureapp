@@ -977,4 +977,5 @@
 <string name="production">उत्पादन</string>
 <string name="training">प्रशिक्षण</string>
 <string name="custom">अनुकूलन</string>
+    <string name="error_no_available_api">"सर्भरसँग त्रुटि"</string>
 </resources>

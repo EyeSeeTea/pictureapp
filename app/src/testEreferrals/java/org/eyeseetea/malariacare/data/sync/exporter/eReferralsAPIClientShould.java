@@ -114,6 +114,15 @@ public class eReferralsAPIClientShould {
         eReferralsAPIClient.getIfIsApiAvailable();
     }
 
+    @Test
+    public void throw_exception_availableApis_exception_on_server_error()
+            throws IOException, AvailableApiException {
+        mCustomMockServer.enqueueMockResponse(404);
+        eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
+                mCustomMockServer.getBaseEndpoint());
+        thrown.expect(AvailableApiException.class);
+        eReferralsAPIClient.getIfIsApiAvailable();
+    }
 
     @After
     public void tearDown() throws IOException {

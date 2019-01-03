@@ -57,6 +57,7 @@ import java.io.IOException;
 
 public class PushServiceShould {
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
+    private static final String API_AVAILABLE_OK = "api_available_ok.json";
     private CustomMockServer mCustomMockServer;
     private eReferralsAPIClient mEReferralsAPIClient;
     private WSPushController mWSPushController;
@@ -75,6 +76,7 @@ public class PushServiceShould {
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
         showLogiIntentReceived = false;
+        mCustomMockServer.enqueueMockResponseFileName(209, API_AVAILABLE_OK);
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));

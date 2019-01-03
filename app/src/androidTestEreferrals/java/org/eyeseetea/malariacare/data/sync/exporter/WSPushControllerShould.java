@@ -25,7 +25,9 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +42,8 @@ import okhttp3.mockwebserver.MockWebServer;
 public class WSPushControllerShould {
 
     private static final String PUSH_RESPONSE_CONFLICT = "push_response_conflict.json";
+    private static final String API_AVAILABLE_OK = "api_available_ok.json";
+    private static final String API_AVAILABLE_NO_OK = "api_available_no_ok.json";
     private static final String QUARANTINE_RESPONSE_CONFLICT = "quarantine_response_conflict.json";
 
     private MockWebServer server;
@@ -116,6 +120,40 @@ public class WSPushControllerShould {
         programDB.save();
         ProgramRepository programRepository = new ProgramRepository();
         programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
+    }
+    @Test
+    public void push_callback_return_a_error_when_the_api_is_not_available()
+            throws IOException {
+        givenSomeTestSurveys();
+
+        whenAPushHasNotAvailableApi();
+
+        mWSPushController.push(new IPushController.IPushControllerCallback() {
+            @Override
+            public void onStartPushing() {
+
+            }
+
+            @Override
+            public void onComplete() {
+            }
+
+            @Override
+            public void onInformativeError(Throwable throwable) {
+            }
+
+            @Override
+            public void onInformativeMessage(String message) {
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                deleteTestConflictGeneratedValues();
+                boolean hasError = throwable != null;
+                assertThat(throwable, CoreMatchers.<Throwable>instanceOf(AvailableApiException.class));
+                assertThat(hasError, is(true));
+            }
+        });
     }
 
     @Test
@@ -233,6 +271,11 @@ public class WSPushControllerShould {
     }
 
     private void whenAPushResponseWithSomeConflictsIsReceived() throws IOException{
+        enqueueResponse(API_AVAILABLE_OK);
+        enqueueResponse(PUSH_RESPONSE_CONFLICT);
+    }
+    private void whenAPushHasNotAvailableApi() throws IOException{
+        enqueueResponse(API_AVAILABLE_NO_OK);
         enqueueResponse(PUSH_RESPONSE_CONFLICT);
     }
 

@@ -118,6 +118,7 @@ public class eReferralsAPIClient {
             return;
         } catch (AvailableApiException e) {
             wsClientCallBack.onError(e);
+            return;
         } catch (IOException e) {
             wsClientCallBack.onError(e);
         }

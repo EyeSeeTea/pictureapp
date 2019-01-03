@@ -77,6 +77,9 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     private String getDateString(Date updateMetadataDate) {
+        if(updateMetadataDate==null){
+            return null;
+        }
         return Utils.parseDateToString(updateMetadataDate, "yyyy-MM-dd hh:mm");
     }
 

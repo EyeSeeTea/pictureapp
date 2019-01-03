@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -151,6 +152,8 @@ public class WSPushController implements IPushController {
                             status = Constants.SURVEY_QUARANTINE;
                         } else if (e instanceof ConfigFileObsoleteException) {
                             status = Constants.SURVEY_SENT;
+                        } else if (e instanceof AvailableApiException){
+                            status = Constants.SURVEY_COMPLETED;
                         }
                         changeSurveysStatusTo(status);
                         mCallback.onError(e);

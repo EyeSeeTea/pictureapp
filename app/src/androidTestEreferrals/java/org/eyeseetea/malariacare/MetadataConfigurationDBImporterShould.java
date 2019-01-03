@@ -123,7 +123,7 @@ public class MetadataConfigurationDBImporterShould {
     private void whenConfigFilesAreParsed() throws Exception {
 
         MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(
-                dhis2MockServer.getBaseEndpoint(),
+                dhis2MockServer.getBaseEndpoint(),"",
                 new BasicAuthInterceptor(""));
 
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(

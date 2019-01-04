@@ -89,7 +89,12 @@ public class PushUseCaseShould {
 
             @Override
             public void onPushError() {
-                fail("onPushError");
+                synchronized (syncObject) {
+                    if (countSync == 0) {
+                        syncObject.notify();
+                    }
+                    countSync++;
+                }
             }
 
             @Override
@@ -119,13 +124,7 @@ public class PushUseCaseShould {
 
             @Override
             public void onInformativeMessage(String message) {
-                Assert.assertTrue("Test message".equals(message));
-                synchronized (syncObject) {
-                    if (countSync == 0) {
-                        syncObject.notify();
-                    }
-                    countSync++;
-                }
+                fail("onInformativeMessage" + message);
             }
 
             @Override

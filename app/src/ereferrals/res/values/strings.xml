@@ -866,6 +866,7 @@
 <string name="dynamic_error_number">"Invalid number"</string>
 <string name="date_format_forward_slash">"yyyy/mm/dd"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
+<string name="not_available">"The server is not available."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
 <string name="login_unexpected_error">"An error has occurred, please try again later"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>

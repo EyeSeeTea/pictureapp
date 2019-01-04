@@ -710,6 +710,7 @@
 <string name="dynamic_error_number">"अमान्य संख्या"</string>
 <string name="date_format_forward_slash">"साल-  महिना- गते"</string>
 <string name="network_error">"नेटवर्कमा समस्या छ, कृपया पछि फेरि प्रयास गर्नुहोस्।"</string>
+<string name="not_available">"सर्भर उपलब्ध छैन।"</string>
 <string name="login_invalid_credentials">"अवैध प्रमाणहरू"</string>
 <string name="login_unexpected_error">"त्रुटि देखा परेको छ। पछि फेरि प्रयास गर्नुहोस्"</string>
 <string name="login_invalid_server_url">"अमान्य सर्भर URL"</string>

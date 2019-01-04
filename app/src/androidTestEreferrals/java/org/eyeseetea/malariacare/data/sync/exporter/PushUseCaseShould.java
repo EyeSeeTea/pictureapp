@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,6 +52,7 @@ public class PushUseCaseShould {
 
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
+    private static final String API_AVAILABLE_NO_OK = "api_available_no_ok.json";
     private CustomMockServer mCustomMockServer;
     private eReferralsAPIClient mEReferralsAPIClient;
     private WSPushController mWSPushController;
@@ -62,6 +64,101 @@ public class PushUseCaseShould {
     private boolean previousPushInProgress;
 
     private Context mContext;
+
+    @Test
+    public void call_on_informative_mensaje_when_api_is_not_available_during_push() throws IOException, InterruptedException {
+        final Object syncObject = new Object();
+        countSync = 0;
+        mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_NO_OK);
+        mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
+        final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
+                new UserDB("", ""));
+        surveyDB.setVoucherUid("1323544116");
+        surveyDB.setEventUid("testEventUID");
+        surveyDB.setStatus(Constants.SURVEY_COMPLETED);
+        surveyDB.save();
+        mPushUseCase.execute(new PushUseCase.Callback() {
+            @Override
+            public void onPushStart() {
+            }
+
+            @Override
+            public void onComplete() {
+                fail("onComplete");
+            }
+
+            @Override
+            public void onPushError() {
+                fail("onPushError");
+            }
+
+            @Override
+            public void onPushInProgressError() {
+                fail("onPushInProgressError");
+            }
+
+            @Override
+            public void onSurveysNotFoundError() {
+                fail("onSurveyNotFound");
+            }
+
+            @Override
+            public void onConversionError() {
+                fail("onConversionError");
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onInformativeError(String message) {
+                fail("onInformativeMessage: " + message);
+            }
+
+            @Override
+            public void onInformativeMessage(String message) {
+                Assert.assertTrue("Test message".equals(message));
+                synchronized (syncObject) {
+                    if (countSync == 0) {
+                        syncObject.notify();
+                    }
+                    countSync++;
+                }
+            }
+
+            @Override
+            public void onClosedUser() {
+                fail("onClosedUser");
+            }
+
+            @Override
+            public void onBannedOrgUnit() {
+                fail("onBannedOrgUnit");
+            }
+
+            @Override
+            public void onReOpenOrgUnit() {
+                fail("onReOpenOrgUnit");
+            }
+
+            @Override
+            public void onApiCallError() {
+                fail("onApiCallError");
+            }
+
+            @Override
+            public void onApiCallError(ApiCallException e) {
+                fail("onApiCallError");
+            }
+        });
+
+        synchronized (syncObject) {
+            syncObject.wait();
+        }
+
+    }
 
     @Test
     public void setUserCanAddSurveysToFalseOn209Response() throws IOException, InterruptedException {

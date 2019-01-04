@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
@@ -20,12 +19,14 @@ import java.io.IOException;
 
 public class CommonTestResourcesCalls {
 
-
     private Credentials previousOrganisationCredentials;
     private Credentials previousCredentials;
     private Program previousProgram;
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
+    private String userPreference ="";
+    private String pinPreference ="";
+    private long programPreference =-1;
 
     public void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
@@ -75,6 +76,9 @@ public class CommonTestResourcesCalls {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(context.getString(R.string.web_service_url),
                     previousOrganisationCredentials.getServerURL());
+            editor.putString(context.getString(R.string.logged_user_username), userPreference);
+            editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
+            editor.putLong(context.getString(R.string.logged_user_program), programPreference);
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
@@ -93,6 +97,16 @@ public class CommonTestResourcesCalls {
         if (previousCredentials != null) {
             saveCredentials(previousCredentials);
         }
+    }
+
+    public void savePreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        userPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.logged_user_username),"");
+        pinPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.logged_user_pin),"");
+        programPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getLong(context.getString(R.string.logged_user_program),-1);
     }
 
     private void saveCredentials(Credentials credentials) {

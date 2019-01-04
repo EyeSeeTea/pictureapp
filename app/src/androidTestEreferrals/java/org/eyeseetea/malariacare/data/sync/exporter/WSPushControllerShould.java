@@ -12,20 +12,15 @@ import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.CommonTestResourcesCalls;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
-import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hamcrest.CoreMatchers;
@@ -40,7 +35,7 @@ import java.util.List;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-public class WSPushControllerShould {
+public class WSPushControllerShould extends CommonTestResourcesCalls {
 
     private static final String PUSH_RESPONSE_CONFLICT = "push_response_conflict.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
@@ -52,11 +47,6 @@ public class WSPushControllerShould {
     private WSPushController mWSPushController;
     private String[] eventUIDs = {"LRR4ZZidQ6T", "PHp2WANFHE1", "NDqaWw51WJr", "Ian8YUgm7T3"};
     private List<Long> surveysIDs = new ArrayList<>();
-
-    private String serverPreference="";
-    private String userPreference ="";
-    private String pinPreference ="";
-    private long programPreference =-1;
 
     private Context mContext;
 
@@ -264,50 +254,4 @@ public class WSPushControllerShould {
         mockResponse.setBody(fileContent);
         server.enqueue(mockResponse);
     }
-    private void savePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        serverPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
-        userPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.logged_user_username),"");
-        pinPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.logged_user_pin),"");
-        programPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getLong(context.getString(R.string.logged_user_program),-1);
-    }
-
-    private void restorePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url), serverPreference);
-        editor.putString(context.getString(R.string.logged_user_username), userPreference);
-        editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
-        editor.putLong(context.getString(R.string.logged_user_program), programPreference);
-        editor.commit();
-    }
-
-
-    private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
-        editor.commit();
-
-        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test",
-                "test");
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
-        programDB.save();
-        ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
-    }
-
 }

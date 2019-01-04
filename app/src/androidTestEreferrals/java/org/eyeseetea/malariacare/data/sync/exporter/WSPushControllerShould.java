@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 
 import static junit.framework.Assert.assertTrue;
 
+import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -121,6 +122,7 @@ public class WSPushControllerShould {
         ProgramRepository programRepository = new ProgramRepository();
         programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
     }
+
     @Test
     public void push_callback_return_a_error_when_the_api_is_not_available()
             throws IOException {
@@ -131,19 +133,21 @@ public class WSPushControllerShould {
         mWSPushController.push(new IPushController.IPushControllerCallback() {
             @Override
             public void onStartPushing() {
-
             }
 
             @Override
             public void onComplete() {
+                fail("onSurveyNotFound");
             }
 
             @Override
             public void onInformativeError(Throwable throwable) {
+                fail("onSurveyNotFound");
             }
 
             @Override
             public void onInformativeMessage(String message) {
+                fail("onSurveyNotFound");
             }
 
             @Override

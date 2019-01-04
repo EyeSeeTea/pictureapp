@@ -70,11 +70,11 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         mWebView = (WebView) view.findViewById(R.id.web_view);
         mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
         mWebView.setWebViewClient(new WebViewClient());
-        loadUrlInWebView();
+        loadUrlInWebView(false);
         view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadUrlInWebView();
+                loadUrlInWebView(true);
             }
         });
     }
@@ -129,14 +129,14 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
-    private void loadUrlInWebView() {
+    private void loadUrlInWebView(boolean shouldShowError) {
         if (mWebView != null) {
             ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(
                     Activity.CONNECTIVITY_SERVICE);
             if (cm != null && cm.getActiveNetworkInfo() != null
                     && cm.getActiveNetworkInfo().isConnected()) {
                 showHideWebView(true);
-                    loadValidUrl();
+                    loadValidUrl(shouldShowError);
             } else {
                 showHideWebView(false);
 
@@ -145,7 +145,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
-    private void loadValidUrl() {
+    private void loadValidUrl(final boolean shouldShowError) {
         if (mWebView != null) {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 showHideWebView(false);
@@ -160,7 +160,9 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
                             @Override
                             public void onError() {
-                                showError();
+                                if(shouldShowError) {
+                                    showError();
+                                }
                             }
                         });
 
@@ -200,7 +202,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityStatus.isConnected(getActivity())) {
                 if (!loadedFirstTime) {
-                    loadValidUrl();
+                    loadValidUrl(true);
                 }
             }
         }

@@ -33,14 +33,14 @@ public class GetWebAvailableUseCase implements UseCase {
         ApiStatus apiStatus = null;
         try {
             apiStatus = mApiStatusRepository.getApiStatus();
+            if (apiStatus.isAvailable()) {
+                notifyOnSuccess();
+            } else {
+                notifyOnError();
+            }
         } catch (IOException e) {
             notifyOnError();
         } catch (AvailableApiException e) {
-            notifyOnError();
-        }
-        if (apiStatus.isAvailable()) {
-            notifyOnSuccess();
-        } else {
             notifyOnError();
         }
     }
@@ -49,7 +49,7 @@ public class GetWebAvailableUseCase implements UseCase {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onSuccess();
+                mCallback.onError();
             }
         });
     }
@@ -58,7 +58,7 @@ public class GetWebAvailableUseCase implements UseCase {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onError();
+                mCallback.onSuccess();
             }
         });
     }

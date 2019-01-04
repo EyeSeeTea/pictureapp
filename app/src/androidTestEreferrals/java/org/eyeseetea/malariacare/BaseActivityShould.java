@@ -33,13 +33,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class BaseActivityShould {
-
-    private Credentials previousOrganisationCredentials;
-    private Credentials previousCredentials;
-    private Program previousProgram;
-    private boolean previousPushInProgress;
-    private UserAccount previousUserAccount;
+public class BaseActivityShould extends CommonTestResourcesCalls {
 
     private final Object syncObject = new Object();
 
@@ -120,84 +114,6 @@ public class BaseActivityShould {
         surveysIntent.putExtra(PushServiceStrategy.SHOW_LOGIN, true);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
-    }
-
-    private void savePreviousPreferences() {
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousOrganisationCredentials = credentialsLocalDataSource.getLastValidCredentials();
-        previousCredentials = credentialsLocalDataSource.getCredentials();
-        ProgramRepository programRepository = new ProgramRepository();
-        ProgramDB databaseProgramDB =
-                ProgramDB.getProgram(
-                        PreferencesEReferral.getUserProgramId());
-        if (databaseProgramDB != null) {
-            previousProgram = programRepository.getUserProgram();
-        }
-        previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
-        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-        previousUserAccount = userAccountDataSource.getLoggedUser();
-    }
-
-    private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
-        editor.commit();
-
-        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url),
-                "test", "test");
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
-        programDB.save();
-        ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
-        PreferencesState.getInstance().setPushInProgress(false);
-        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-        userAccountDataSource.saveLoggedUser(
-                new UserAccount("testUsername", "testUserUID", false, true));
-        saveCredentials(credentials);
-    }
-
-    private void restorePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        if (previousOrganisationCredentials != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.web_service_url),
-                    previousOrganisationCredentials.getServerURL());
-            editor.commit();
-        }
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(previousOrganisationCredentials);
-        ProgramRepository programRepository = new ProgramRepository();
-        if (previousProgram != null) {
-            programRepository.saveUserProgramId(previousProgram);
-        } else {
-            PreferencesEReferral.saveUserProgramId(-1l);
-        }
-        PreferencesState.getInstance().setPushInProgress(previousPushInProgress);
-        if (previousUserAccount != null) {
-            UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-            userAccountDataSource.saveLoggedUser(previousUserAccount);
-        }
-        if (previousCredentials != null) {
-            saveCredentials(previousCredentials);
-        }
-    }
-
-    private void saveCredentials(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.server_url_key,
-                credentials.getServerURL());
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user,
-                credentials.getUsername());
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password,
-                credentials.getPassword());
-        PreferencesState.getInstance().reloadPreferences();
     }
 
 }

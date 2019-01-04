@@ -12,6 +12,7 @@ import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.CommonTestResourcesCalls;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
@@ -47,7 +48,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class PushUseCaseShould {
+public class PushUseCaseShould extends CommonTestResourcesCalls {
 
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
@@ -58,10 +59,6 @@ public class PushUseCaseShould {
     private PushUseCase mPushUseCase;
     private int countSync;
 
-    private Credentials previousCredentials;
-    private Program previousProgram;
-    private boolean previousPushInProgress;
-
     private Context mContext;
 
     @Before
@@ -69,6 +66,13 @@ public class PushUseCaseShould {
         mContext = InstrumentationRegistry.getTargetContext();
         mCustomMockServer = new CustomMockServer(new AssetsFileReader());
         savePreviousPreferences();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                mContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(mContext.getString(R.string.web_service_url),
+               mCustomMockServer.getBaseEndpoint());
+        editor.commit();
         saveTestCredentialsAndProgram();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
@@ -90,7 +94,7 @@ public class PushUseCaseShould {
 
 
     @Test
-    public void call_on_informative_message_when_ape_is_not_available_during_push() throws IOException, InterruptedException {
+    public void call_on_push_error_when_ape_is_not_available_during_push() throws IOException, InterruptedException {
         final Object syncObject = new Object();
         countSync = 0;
         mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_NO_OK);
@@ -292,64 +296,6 @@ public class PushUseCaseShould {
     public void tearDown() throws IOException {
         mCustomMockServer.shutdown();
         restorePreferences();
-    }
-
-
-    private void savePreviousPreferences() {
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.getCredentials();
-        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
-        ProgramRepository programRepository = new ProgramRepository();
-        ProgramDB databaseProgramDB =
-                ProgramDB.getProgram(
-                        PreferencesEReferral.getUserProgramId());
-        if (databaseProgramDB != null) {
-            previousProgram = programRepository.getUserProgram();
-        }
-        previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
-    }
-
-    private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
-        editor.commit();
-        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url),
-                "test", "test");
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
-        programDB.save();
-        ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
-        PreferencesState.getInstance().setPushInProgress(false);
-        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-        userAccountDataSource.saveLoggedUser(
-                new UserAccount("testUsername", "testUserUID", false, true));
-    }
-
-    private void restorePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        if (previousCredentials != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.web_service_url),
-                    previousCredentials.getServerURL());
-            editor.commit();
-        }
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
-        ProgramLocalDataSource programLocalDataSource = new ProgramLocalDataSource();
-        if (previousProgram != null) {
-            programLocalDataSource.saveUserProgramId(previousProgram);
-        } else {
-            PreferencesEReferral.saveUserProgramId(-1l);
-        }
-        PreferencesState.getInstance().setPushInProgress(previousPushInProgress);
     }
 
 }

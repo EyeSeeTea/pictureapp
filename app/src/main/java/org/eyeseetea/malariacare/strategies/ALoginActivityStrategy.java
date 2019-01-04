@@ -31,6 +31,11 @@ public abstract class ALoginActivityStrategy {
         loginActivity.showError(loginActivity.getString(R.string.network_error));
     }
 
+    public void onServerNotAvailable() {
+        loginActivity.hideProgressBar();
+        loginActivity.showError(loginActivity.getString(R.string.not_available));
+    }
+
     public void onBadCredentials() {
         loginActivity.hideProgressBar();
         loginActivity.showError(R.string.login_invalid_credentials);

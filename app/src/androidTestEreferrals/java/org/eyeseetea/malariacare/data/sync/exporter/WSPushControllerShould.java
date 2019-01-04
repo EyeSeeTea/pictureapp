@@ -75,6 +75,7 @@ public class WSPushControllerShould {
         ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, mContext);
         mWSPushController = new WSPushController(apiClient, surveyRepository,
                 convertToWSVisitor);
+        SurveyDB.deleteAll();
     }
 
     private void savePreferences() {
@@ -219,16 +220,17 @@ public class WSPushControllerShould {
 
             @Override
             public void onComplete() {
+                fail("onSurveyNotFound");
             }
 
             @Override
             public void onInformativeError(Throwable throwable) {
-                boolean hasError = throwable != null;
-                assertThat(hasError, is(true));
+                fail("onSurveyNotFound");
             }
 
             @Override
             public void onInformativeMessage(String message) {
+                fail("onSurveyNotFound");
             }
 
             @Override

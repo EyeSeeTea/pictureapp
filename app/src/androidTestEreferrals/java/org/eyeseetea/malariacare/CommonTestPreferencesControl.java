@@ -17,7 +17,7 @@ import org.junit.After;
 
 import java.io.IOException;
 
-public class CommonTestResourcesCalls {
+public class CommonTestPreferencesControl {
 
     private Credentials previousOrganisationCredentials;
     private Credentials previousCredentials;

@@ -8,23 +8,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.Program;
-import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.junit.After;
@@ -33,7 +22,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class BaseActivityShould extends CommonTestResourcesCalls {
+public class BaseActivityShould extends CommonTestPreferencesControl {
 
     private final Object syncObject = new Object();
 

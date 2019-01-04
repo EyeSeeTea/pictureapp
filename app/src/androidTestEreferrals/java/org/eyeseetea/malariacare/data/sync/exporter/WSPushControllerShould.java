@@ -7,12 +7,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
-import org.eyeseetea.malariacare.CommonTestResourcesCalls;
+import org.eyeseetea.malariacare.CommonTestPreferencesControl;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -35,7 +33,7 @@ import java.util.List;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-public class WSPushControllerShould extends CommonTestResourcesCalls {
+public class WSPushControllerShould extends CommonTestPreferencesControl {
 
     private static final String PUSH_RESPONSE_CONFLICT = "push_response_conflict.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";

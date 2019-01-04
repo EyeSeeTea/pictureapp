@@ -7,25 +7,11 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
-import org.eyeseetea.malariacare.CommonTestResourcesCalls;
+import org.eyeseetea.malariacare.CommonTestPreferencesControl;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
-import org.eyeseetea.malariacare.data.database.model.ProgramDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.server.CustomMockServer;
-import org.eyeseetea.malariacare.data.sync.exporter.ConvertToWSVisitor;
-import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
-import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.Device;
-import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.junit.Before;
@@ -36,7 +22,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.fail;
 
-public class LoginUseCaseShould extends CommonTestResourcesCalls {
+public class LoginUseCaseShould extends CommonTestPreferencesControl {
 
     private static final String AUTH_OK = "auth_ok.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";

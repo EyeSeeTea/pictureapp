@@ -41,7 +41,6 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,8 +64,33 @@ public class PushUseCaseShould {
 
     private Context mContext;
 
+    @Before
+    public void cleanUp() throws IOException {
+        mContext = InstrumentationRegistry.getTargetContext();
+        mCustomMockServer = new CustomMockServer(new AssetsFileReader());
+        savePreviousPreferences();
+        saveTestCredentialsAndProgram();
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
+                new Device("testPhone", "testIMEI", "test_version"),
+                mContext);
+        mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
+        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
+                convertToWSVisitor);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
+
+        SurveysThresholds surveysThresholds =
+                new SurveysThresholds(BuildConfig.LimitSurveysCount,
+                        BuildConfig.LimitSurveysTimeHours);
+        mPushUseCase = new PushUseCase(mWSPushController, asyncExecutor, mainExecutor,
+                surveysThresholds, surveyRepository, orgUnitRepository);
+    }
+
+
     @Test
-    public void call_on_informative_mensaje_when_api_is_not_available_during_push() throws IOException, InterruptedException {
+    public void call_on_informative_message_when_ape_is_not_available_during_push() throws IOException, InterruptedException {
         final Object syncObject = new Object();
         countSync = 0;
         mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_NO_OK);
@@ -263,31 +287,6 @@ public class PushUseCaseShould {
         }
 
     }
-
-    @Before
-    public void cleanUp() throws IOException {
-        mContext = InstrumentationRegistry.getTargetContext();
-        mCustomMockServer = new CustomMockServer(new AssetsFileReader());
-        savePreviousPreferences();
-        saveTestCredentialsAndProgram();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(
-                new Device("testPhone", "testIMEI", "test_version"),
-                mContext);
-        mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
-                convertToWSVisitor);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
-
-        SurveysThresholds surveysThresholds =
-                new SurveysThresholds(BuildConfig.LimitSurveysCount,
-                        BuildConfig.LimitSurveysTimeHours);
-        mPushUseCase = new PushUseCase(mWSPushController, asyncExecutor, mainExecutor,
-                surveysThresholds, surveyRepository, orgUnitRepository);
-    }
-
 
     @After
     public void tearDown() throws IOException {

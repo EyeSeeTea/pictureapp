@@ -78,52 +78,6 @@ public class WSPushControllerShould {
         SurveyDB.deleteAll();
     }
 
-    private void savePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        serverPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
-        userPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.logged_user_username),"");
-        pinPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getString(context.getString(R.string.logged_user_pin),"");
-        programPreference = (PreferenceManager.getDefaultSharedPreferences(
-                context)).getLong(context.getString(R.string.logged_user_program),-1);
-    }
-
-    private void restorePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url), serverPreference);
-        editor.putString(context.getString(R.string.logged_user_username), userPreference);
-        editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
-        editor.putLong(context.getString(R.string.logged_user_program), programPreference);
-        editor.commit();
-    }
-
-
-    private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
-        editor.commit();
-
-        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test",
-                "test");
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
-        programDB.save();
-        ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
-    }
-
     @Test
     public void push_callback_return_a_error_when_the_api_is_not_available()
             throws IOException {
@@ -310,4 +264,50 @@ public class WSPushControllerShould {
         mockResponse.setBody(fileContent);
         server.enqueue(mockResponse);
     }
+    private void savePreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        serverPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
+        userPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.logged_user_username),"");
+        pinPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getString(context.getString(R.string.logged_user_pin),"");
+        programPreference = (PreferenceManager.getDefaultSharedPreferences(
+                context)).getLong(context.getString(R.string.logged_user_program),-1);
+    }
+
+    private void restorePreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.web_service_url), serverPreference);
+        editor.putString(context.getString(R.string.logged_user_username), userPreference);
+        editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
+        editor.putLong(context.getString(R.string.logged_user_program), programPreference);
+        editor.commit();
+    }
+
+
+    private void saveTestCredentialsAndProgram() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.web_service_url),
+                context.getString(R.string.ws_base_url));
+        editor.commit();
+
+        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test",
+                "test");
+        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+        credentialsLocalDataSource.saveLastValidCredentials(credentials);
+        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
+        programDB.save();
+        ProgramRepository programRepository = new ProgramRepository();
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
+    }
+
 }

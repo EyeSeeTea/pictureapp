@@ -23,11 +23,11 @@ public class AuthenticationManagerStrategy extends AAuthenticationManagerStrateg
     }
 
     @Override
-    public void forgotPassword(final String username,
+    public void forgotPassword(final String wsVersion, final String username,
             final IAuthenticationManager.Callback<ForgotPasswordMessage> callback) {
 
         Settings settings = mSettingsRepository.getSettings();
-        mForgotPasswordDataSource.forgotPassword(username, settings.getLanguage(),
+        mForgotPasswordDataSource.forgotPassword(wsVersion, username, settings.getLanguage(),
                         new IDataSourceCallback<ForgotPasswordMessage>() {
                             @Override
                             public void onSuccess(ForgotPasswordMessage result) {

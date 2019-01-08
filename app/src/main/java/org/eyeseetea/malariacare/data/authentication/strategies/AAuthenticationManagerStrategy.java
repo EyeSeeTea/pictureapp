@@ -5,6 +5,6 @@ import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 
 public abstract class AAuthenticationManagerStrategy {
 
-    public abstract void forgotPassword(String username,
+    public abstract void forgotPassword(String wsVersion, String username,
             final IAuthenticationManager.Callback<ForgotPasswordMessage> callback);
 }

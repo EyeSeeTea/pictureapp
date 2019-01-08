@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.data.authentication;
 
-import android.content.Context;
-
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationManagerStrategy;
@@ -28,11 +26,12 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     public AuthenticationManager(IAuthenticationDataSource userAccountLocalDataSource,
                                  IAuthenticationDataSource userAccountRemoteDataSource,
+                                 IUserRepository userRepository,
                                  IForgotPasswordDataSource forgotPasswordDataSource,
                                  ISettingsRepository settingsRepository) {
         mUserAccountLocalDataSource = userAccountLocalDataSource;
         mUserAccountRemoteDataSource = userAccountRemoteDataSource;
-        mUserRepository = new UserAccountDataSource();
+        mUserRepository = userRepository;
         mForgotPasswordDataSource = forgotPasswordDataSource;
         mSettingsRepository = settingsRepository;
         mAuthenticationManagerStrategy = new  AuthenticationManagerStrategy(forgotPasswordDataSource, settingsRepository);
@@ -72,9 +71,9 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public void forgotPassword(String username,
+    public void forgotPassword(String wsVersion, String username,
             final Callback<ForgotPasswordMessage> callback) {
-        mAuthenticationManagerStrategy.forgotPassword(username, callback);
+        mAuthenticationManagerStrategy.forgotPassword(wsVersion, username, callback);
     }
 
     private void remoteLogout(final IAuthenticationManager.Callback<Void> callback) {

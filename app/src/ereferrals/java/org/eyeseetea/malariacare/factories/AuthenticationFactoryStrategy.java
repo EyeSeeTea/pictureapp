@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.remote.AuthenticationWSDataSource;
@@ -52,6 +53,7 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
                 new AuthenticationWSDataSource(eReferralsAPIClient);
 
         return new AuthenticationManager(userAccountLocalDataSource, userAccountRemoteDataSource,
+                new UserAccountDataSource(),
                 new ForgotPasswordWSDataSource(context),
                 new SettingsDataSource(context));
     }

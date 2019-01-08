@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 
@@ -57,9 +58,10 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
 
     public ForgotPasswordUseCase getForgotPasswordUseCase(Context context) {
         IAuthenticationManager authenticationManager = getAuthenticationManager(context);
+        ISettingsRepository settingsRepository = new SettingsDataSource(context);
 
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
-                asyncExecutor, authenticationManager);
+                asyncExecutor, authenticationManager, settingsRepository);
 
         return forgotPasswordUseCase;
     }

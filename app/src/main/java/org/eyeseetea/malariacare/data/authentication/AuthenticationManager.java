@@ -8,7 +8,9 @@ import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationM
 import org.eyeseetea.malariacare.data.authentication.strategies.AuthenticationManagerStrategy;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.IForgotPasswordDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
@@ -21,14 +23,19 @@ public class AuthenticationManager implements IAuthenticationManager {
     private final IAuthenticationDataSource mUserAccountRemoteDataSource;
     IUserRepository mUserRepository;
     AAuthenticationManagerStrategy mAuthenticationManagerStrategy;
+    IForgotPasswordDataSource mForgotPasswordDataSource;
+    ISettingsRepository mSettingsRepository;
 
-    public AuthenticationManager(Context context,
-            IAuthenticationDataSource userAccountLocalDataSource,
-            IAuthenticationDataSource userAccountRemoteDataSource) {
+    public AuthenticationManager(IAuthenticationDataSource userAccountLocalDataSource,
+                                 IAuthenticationDataSource userAccountRemoteDataSource,
+                                 IForgotPasswordDataSource forgotPasswordDataSource,
+                                 ISettingsRepository settingsRepository) {
         mUserAccountLocalDataSource = userAccountLocalDataSource;
         mUserAccountRemoteDataSource = userAccountRemoteDataSource;
         mUserRepository = new UserAccountDataSource();
-        mAuthenticationManagerStrategy = new AuthenticationManagerStrategy(context);
+        mForgotPasswordDataSource = forgotPasswordDataSource;
+        mSettingsRepository = settingsRepository;
+        mAuthenticationManagerStrategy = new  AuthenticationManagerStrategy(forgotPasswordDataSource, settingsRepository);
     }
 
     @Override

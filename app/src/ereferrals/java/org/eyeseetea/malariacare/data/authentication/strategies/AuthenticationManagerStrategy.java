@@ -16,9 +16,10 @@ public class AuthenticationManagerStrategy extends AAuthenticationManagerStrateg
     IForgotPasswordDataSource mForgotPasswordDataSource;
     ISettingsRepository mSettingsRepository;
 
-    public AuthenticationManagerStrategy(Context context) {
-        mForgotPasswordDataSource = new ForgotPasswordWSDataSource(context);
-        mSettingsRepository = new SettingsDataSource(context);
+    public AuthenticationManagerStrategy(IForgotPasswordDataSource forgotPasswordDataSource,
+                                         ISettingsRepository settingsDataSource) {
+        mForgotPasswordDataSource = forgotPasswordDataSource;
+        mSettingsRepository = settingsDataSource;
     }
 
     @Override

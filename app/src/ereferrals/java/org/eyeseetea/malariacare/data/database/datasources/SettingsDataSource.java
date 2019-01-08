@@ -6,10 +6,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
@@ -39,9 +39,15 @@ public class SettingsDataSource implements ISettingsRepository {
         String fontSize = getFontSize();
         String programUrl = getProgramUrl();
         String programEndPoint = getProgramEndPoint();
+        String wsVersion = getWSVersion();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize, programUrl, programEndPoint);
+                webUrl, fontSize, programUrl, programEndPoint, wsVersion);
+    }
+
+    @NonNull
+    private String getWSVersion() {
+        return getPreference(context, R.string.ws_version, R.string.empty_string);
     }
 
     private String loadPass() {

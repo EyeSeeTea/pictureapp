@@ -91,7 +91,7 @@ public class LoginUseCaseShould {
             }
 
             @Override
-            public void onServerNotAvailable() {
+            public void onServerNotAvailable(String message) {
                 fail("onServerNotAvailable");
             }
 
@@ -147,7 +147,7 @@ public class LoginUseCaseShould {
             }
 
             @Override
-            public void onServerNotAvailable() {
+            public void onServerNotAvailable(String message) {
                 Assert.assertTrue(true);
             }
 

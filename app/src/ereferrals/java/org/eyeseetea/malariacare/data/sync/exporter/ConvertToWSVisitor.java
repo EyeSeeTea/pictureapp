@@ -64,12 +64,13 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         Device device = deviceRepository.getDevice();
         AppInfo appInfo = appInfoRepository.getAppInfo();
         Credentials credentials = credentialsRepository.getLastValidCredentials();
+        Settings settings = settingsRepository.getSettings();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
-                settingsRepository.getSettings().getWsVersion(), device.getAndroidVersion(), credentials.getUsername(),
+                settings.getWsVersion(), device.getAndroidVersion(), credentials.getUsername(),
                 credentials.getPassword(), device.getIMEI(),
                 getConfigFileVersion(), appInfo.getAppVersion(),
                 getDateString(appInfo.getUpdateMetadataDate()),
-                getSettingsSummary(settingsRepository), device.getPhone(), device.getIMEI());
+                getSettingsSummary(settings), device.getPhone(), device.getIMEI());
     }
 
     private String getDateString(Date updateMetadataDate) {
@@ -79,8 +80,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         return Utils.parseDateToString(updateMetadataDate, "yyyy-MM-dd hh:mm");
     }
 
-    private SettingsSummary getSettingsSummary(ISettingsRepository settingsRepository) {
-        Settings settings = settingsRepository.getSettings();
+    private SettingsSummary getSettingsSummary(Settings settings) {
         return new SettingsSummary(settings.getWsServerUrl(),
                 settings.getWebUrl(), settings.isCanDownloadWith3G(), settings.getFontSize(),
                 settings.isElementActive(), settings.getLanguage());

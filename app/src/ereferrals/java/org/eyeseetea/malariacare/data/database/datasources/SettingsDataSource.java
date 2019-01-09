@@ -45,11 +45,6 @@ public class SettingsDataSource implements ISettingsRepository {
                 webUrl, fontSize, programUrl, programEndPoint, wsVersion);
     }
 
-    @NonNull
-    private String getWSVersion() {
-        return getPreference(context, R.string.ws_version, R.string.empty_string);
-    }
-
     private String loadPass() {
         String pass = getProgramPassword();
         if (pass == null) {
@@ -173,6 +168,10 @@ public class SettingsDataSource implements ISettingsRepository {
 
     private String getProgramPassword() {
         return getPreference(context, R.string.program_configuration_pass, null);
+    }
+
+    private String getWSVersion() {
+        return context.getString(R.string.ws_version);
     }
 
     private Boolean getBooleanPreference(Context context, int stringId, Boolean defaultBool) {

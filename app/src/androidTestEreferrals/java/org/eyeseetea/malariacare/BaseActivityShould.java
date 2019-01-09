@@ -31,20 +31,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 public class BaseActivityShould {
 
-    private final Object syncObject = new Object();
     private Credentials previousOrganisationCredentials;
     private Credentials previousCredentials;
     private Program previousProgram;
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
-    private String userPreference ="";
-    private String pinPreference ="";
-    private long programPreference =-1;
+
+    private final Object syncObject = new Object();
 
     @Test
     public void onLoginIntentShowLoginActivity() throws InterruptedException {
@@ -94,6 +91,7 @@ public class BaseActivityShould {
     @After
     public void tearDown() {
         restorePreferences();
+
     }
 
     public void grantPermission(){
@@ -124,7 +122,7 @@ public class BaseActivityShould {
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }
 
-    public void savePreviousPreferences() {
+    private void savePreviousPreferences() {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         previousOrganisationCredentials = credentialsLocalDataSource.getLastValidCredentials();
         previousCredentials = credentialsLocalDataSource.getCredentials();
@@ -140,7 +138,7 @@ public class BaseActivityShould {
         previousUserAccount = userAccountDataSource.getLoggedUser();
     }
 
-    public void saveTestCredentialsAndProgram() {
+    private void saveTestCredentialsAndProgram() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
@@ -164,7 +162,7 @@ public class BaseActivityShould {
         saveCredentials(credentials);
     }
 
-    public void restorePreferences() {
+    private void restorePreferences() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
@@ -172,9 +170,6 @@ public class BaseActivityShould {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(context.getString(R.string.web_service_url),
                     previousOrganisationCredentials.getServerURL());
-            editor.putString(context.getString(R.string.logged_user_username), userPreference);
-            editor.putString(context.getString(R.string.logged_user_pin), pinPreference);
-            editor.putLong(context.getString(R.string.logged_user_program), programPreference);
             editor.commit();
         }
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();

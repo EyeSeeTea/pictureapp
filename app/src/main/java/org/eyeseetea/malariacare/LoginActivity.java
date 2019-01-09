@@ -379,9 +379,9 @@ public class LoginActivity extends Activity {
             }
 
             @Override
-            public void onServerNotAvailable() {
+            public void onServerNotAvailable(String message) {
                 Log.d(TAG, "onServerNotAvailable");
-                mLoginActivityStrategy.onServerNotAvailable();
+                mLoginActivityStrategy.onServerNotAvailable(message);
             }
         });
     }

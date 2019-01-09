@@ -31,9 +31,9 @@ public abstract class ALoginActivityStrategy {
         loginActivity.showError(loginActivity.getString(R.string.network_error));
     }
 
-    public void onServerNotAvailable() {
+    public void onServerNotAvailable(String message) {
         loginActivity.hideProgressBar();
-        loginActivity.showError(loginActivity.getString(R.string.not_available));
+        loginActivity.showError(message);
     }
 
     public void onBadCredentials() {

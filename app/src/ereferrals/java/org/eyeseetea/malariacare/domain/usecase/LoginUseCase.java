@@ -71,7 +71,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                                     } else if (throwable instanceof InvalidCredentialsException) {
                                         notifyInvalidCredentials();
                                     } else if (throwable instanceof AvailableApiException) {
-                                        notifyServerNotAvailable();
+                                        notifyServerNotAvailable(throwable.getMessage());
                                     } else {
                                         throwable.printStackTrace();
                                     }
@@ -207,11 +207,11 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         });
     }
 
-    public void notifyServerNotAvailable() {
+    public void notifyServerNotAvailable(final String message) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onServerNotAvailable();
+                mCallback.onServerNotAvailable(message);
             }
         });
     }

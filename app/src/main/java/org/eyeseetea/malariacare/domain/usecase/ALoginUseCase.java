@@ -23,7 +23,7 @@ public abstract class ALoginUseCase {
 
         void onMaxLoginAttemptsReachedError();
 
-        void onServerNotAvailable();
+        void onServerNotAvailable(String message);
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

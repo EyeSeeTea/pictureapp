@@ -116,7 +116,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
                     }
 
                     @Override
-                    public void onServerNotAvailable() {
+                    public void onServerNotAvailable(String message) {
                         Log.e(TAG, "Error getting user credentials: onServerNotAvailable");
                     }
                 });

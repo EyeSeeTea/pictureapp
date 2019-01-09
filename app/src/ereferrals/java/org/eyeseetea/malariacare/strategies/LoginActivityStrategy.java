@@ -785,7 +785,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             }
 
                             @Override
-                            public void onServerNotAvailable() {
+                            public void onServerNotAvailable(String message) {
                                 Log.e(this.getClass().getSimpleName(), "onServerNotAvailable error");
                             }
                         });

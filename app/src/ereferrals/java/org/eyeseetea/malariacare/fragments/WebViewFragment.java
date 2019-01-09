@@ -19,9 +19,11 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.ApiStatus;
 import org.eyeseetea.malariacare.domain.usecase.GetWebAvailableUseCase;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
 import org.eyeseetea.malariacare.presentation.factory.ApiAvailabilityFactory;
@@ -159,9 +161,9 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(ApiStatus apiStatus) {
                                 if(shouldShowError) {
-                                    showError();
+                                    showApiNotAvailableError(apiStatus.getMessage());
                                 }
                             }
                         });
@@ -171,9 +173,8 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
-    private void showError() {
-        showHideWebView(false);
-        mErrorDemoText.setTextTranslation(R.string.error_no_available_api);
+    private void showApiNotAvailableError(String message) {
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void executeOnWebAvailable() {

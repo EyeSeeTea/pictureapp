@@ -974,5 +974,4 @@
 <string name="production">Produção</string>
 <string name="training">Treinamento</string>
 <string name="custom">Personalizado</string>
-<string name="error_no_available_api">"Erro com o servidor"</string>
 </resources>

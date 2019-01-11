@@ -17,24 +17,20 @@ import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
-import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
+import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyFromIntentUseCase;
-import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
-import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
@@ -140,10 +136,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                         activity);
-                DownloadLanguageTranslationUseCase downloader =
+                DownloadLanguageTranslationUseCase useCase =
                         new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-                downloader.download();
+                String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+
+                useCase.download(currentLanguage);
+                useCase.downloadAsync(new AsyncExecutor());
             }
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());

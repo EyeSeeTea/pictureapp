@@ -5,6 +5,7 @@ import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,10 +32,12 @@ import org.eyeseetea.malariacare.domain.usecase.SaveSurveyFromIntentUseCase;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
+    private CustomTextView progressTextView;
 
     public interface Callback {
         void onSuccess();
@@ -51,6 +54,8 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void setContentView() {
         activity.setContentView(R.layout.activity_splash);
+
+        progressTextView = activity.findViewById(R.id.progress_text);
     }
 
     public void init(final SplashScreenActivity.Callback callback) {
@@ -170,5 +175,8 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         }
     }
 
-
+    @Override
+    public void showProgressMessage(@StringRes int resourceId) {
+        progressTextView.setText(resourceId);
+    }
 }

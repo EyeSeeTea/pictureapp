@@ -977,4 +977,8 @@
 <string name="production">उत्पादन</string>
 <string name="training">प्रशिक्षण</string>
 <string name="custom">अनुकूलन</string>
+
+    <string name="splash_progress_init_db">डेटाबेस सुरू गर्दै ...</string>
+    <string name="splash_progress_downloading_languages">वर्तमान भाषा सर्तहरू डाउनलोड गर्नुहोस् ...</string>
+    <string name="splash_progress_executing_maintenance_task">रखरखाव कार्य कार्यान्वयन गर्दै ...</string>
 </resources>

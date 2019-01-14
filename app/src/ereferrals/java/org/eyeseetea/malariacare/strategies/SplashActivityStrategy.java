@@ -177,6 +177,6 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     @Override
     public void showProgressMessage(@StringRes int resourceId) {
-        progressTextView.setText(resourceId);
+        progressTextView.setTextTranslation(resourceId);
     }
 }

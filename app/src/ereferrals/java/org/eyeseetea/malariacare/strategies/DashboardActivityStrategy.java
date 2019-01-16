@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -87,13 +90,11 @@ import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.SoftLoginDialogFragment;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-
-import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
@@ -186,7 +187,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 launchPush();
             }
         });
+
+        showSoftLoginDialog();
     }
+
+    private void showSoftLoginDialog() {
+        FragmentManager fm = mDashboardActivity.getSupportFragmentManager();
+        SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
+        softLoginDialogFragment.show(fm, "soft_login");
+    }
+
 
     private void enableDisableRefreshButton() {
         mRefreshButton.setEnabled(false);

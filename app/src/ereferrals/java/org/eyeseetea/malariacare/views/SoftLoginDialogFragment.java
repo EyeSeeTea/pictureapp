@@ -10,13 +10,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
-public class SoftLoginDialogFragment extends DialogFragment {
+public class SoftLoginDialogFragment extends DialogFragment implements SoftLoginPresenter.View {
 
     private CustomEditText userNameEditText;
     private CustomEditText passwordEditText;
     private Button loginButton;
+
+    private SoftLoginPresenter presenter;
 
     public static SoftLoginDialogFragment newInstance() {
         SoftLoginDialogFragment fragment = new SoftLoginDialogFragment();
@@ -35,6 +39,11 @@ public class SoftLoginDialogFragment extends DialogFragment {
 
         setCancelable(false);
 
+        initializeViews(view);
+        initializePresenter();
+    }
+
+    private void initializeViews(View view) {
         userNameEditText = view.findViewById(R.id.edittext_username);
         userNameEditText.setEnabled(false);
         passwordEditText = view.findViewById(R.id.edittext_password);
@@ -51,5 +60,17 @@ public class SoftLoginDialogFragment extends DialogFragment {
         passwordEditText.requestFocus();
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+
+    private void initializePresenter() {
+        AuthenticationFactoryStrategy factoryStrategy = new AuthenticationFactoryStrategy();
+
+        presenter = factoryStrategy.getSoftLoginPresenter();
+        presenter.attachView(this);
+    }
+
+    @Override
+    public void showUsername(String username) {
+        userNameEditText.setText(username);
     }
 }

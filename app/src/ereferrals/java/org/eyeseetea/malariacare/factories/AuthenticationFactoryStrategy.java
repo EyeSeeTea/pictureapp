@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.remote.AuthenticationWSDataSource;
@@ -16,8 +17,11 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
 
 public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
 
@@ -35,6 +39,11 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
                 iInvalidLoginAttemptsRepository);
 
         return loginUseCase;
+    }
+
+    public GetUserUserAccountUseCase getUserAccountUseCase() {
+        IUserRepository userRepository = new UserAccountDataSource();
+        return new GetUserUserAccountUseCase(userRepository);
     }
 
     @Override
@@ -64,5 +73,13 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
     @NonNull
     public ICredentialsRepository getCredentialsRepository() {
         return new CredentialsLocalDataSource();
+    }
+
+    public SoftLoginPresenter getSoftLoginPresenter() {
+
+        GetUserUserAccountUseCase getUserAccountUseCase = getUserAccountUseCase();
+        SoftLoginPresenter softLoginPresenter = new SoftLoginPresenter(getUserAccountUseCase);
+
+        return softLoginPresenter;
     }
 }

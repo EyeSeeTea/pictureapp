@@ -1,0 +1,17 @@
+{
+  "country": {
+    "code": "T_TZ",
+    "level": 3,
+    "displayName": "T_Tanzania",
+    "id": "low6qUS2wc9"
+  },
+  "orgUnitGroups": [
+    {
+      "displayName": "TZ - A360 - Group session facilitators",
+      "id": "Zo41oKPsuP1"
+    }
+  ],
+  "authorized": "true",
+  "orgUnitId": "fQaGDRwb9Uu",
+  "orgUnitName": "eRef IPC 8001 [TESTOU]"
+}

@@ -1,12 +1,8 @@
 package org.eyeseetea.malariacare.data.authentication;
 
-import android.content.Context;
-
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationManagerStrategy;
-import org.eyeseetea.malariacare.data.authentication.strategies.AuthenticationManagerStrategy;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
@@ -22,13 +18,13 @@ public class AuthenticationManager implements IAuthenticationManager {
     IUserRepository mUserRepository;
     AAuthenticationManagerStrategy mAuthenticationManagerStrategy;
 
-    public AuthenticationManager(Context context,
+    public AuthenticationManager(
             IAuthenticationDataSource userAccountLocalDataSource,
-            IAuthenticationDataSource userAccountRemoteDataSource) {
+            IAuthenticationDataSource userAccountRemoteDataSource,
+            IUserRepository userRepository) {
         mUserAccountLocalDataSource = userAccountLocalDataSource;
         mUserAccountRemoteDataSource = userAccountRemoteDataSource;
-        mUserRepository = new UserAccountDataSource();
-        mAuthenticationManagerStrategy = new AuthenticationManagerStrategy(context);
+        mUserRepository = userRepository;
     }
 
     @Override

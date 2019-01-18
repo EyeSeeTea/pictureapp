@@ -57,8 +57,9 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
         IAuthenticationDataSource userAccountRemoteDataSource =
                 new AuthenticationWSDataSource(eReferralsAPIClient);
 
-        return new AuthenticationManager(context,
-                userAccountLocalDataSource, userAccountRemoteDataSource);
+        return new AuthenticationManager(
+                userAccountLocalDataSource, userAccountRemoteDataSource,
+                new UserAccountDataSource());
     }
 
     public ForgotPasswordUseCase getForgotPasswordUseCase(Context context) {

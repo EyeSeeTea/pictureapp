@@ -39,7 +39,7 @@ public class SyncFactoryStrategy extends ASyncFactory {
         ISettingsRepository settingsRepository = new SettingsDataSource(
                 PreferencesState.getInstance().getContext());
         IAppInfoRepository appInfoDataSource = new AppInfoDataSource(context);
-        eReferralsAPIClient mEReferralsAPIClient = new eReferralsAPIClient(settingsRepository.getSettings().getWebUrl());
+        eReferralsAPIClient mEReferralsAPIClient = new eReferralsAPIClient(settingsRepository.getSettings().getWsServerUrl());
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IProgramRepository programRepository = new ProgramRepository();
         ICountryVersionRepository countryVersionRepository = new CountryVersionLocalDataSource();

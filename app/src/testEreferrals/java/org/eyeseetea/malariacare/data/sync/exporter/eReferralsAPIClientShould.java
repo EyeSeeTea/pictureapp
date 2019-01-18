@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
+import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,24 +30,20 @@ public class eReferralsAPIClientShould {
     private static final String PUSH_RESPONSE_OK_EXTRA_KEYS = "push_response_ok_extra_keys.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
     private static final String API_AVAILABLE_NO_OK = "api_available_no_ok.json";
-    private CustomMockServer mCustomMockServer;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Before
-    public void cleanUp() throws IOException {
-        mCustomMockServer = new CustomMockServer(new FileReader());
-    }
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule(new FileReader());
 
     @Test
     public void
     throw_exception_configFileObsoleteException_on_209_response_code_and_return_surveys()
             throws IOException {
-        mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
-        mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, API_AVAILABLE_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
-                mCustomMockServer.getBaseEndpoint());
+                mockWebServerRule.getMockServer().getBaseEndpoint());
         eReferralsAPIClient.pushSurveys(new SurveyContainerWSObject("", "",
                         "", "", "", 2, "", "",
                         new SettingsSummary("", "", false, "", false, ""),
@@ -75,10 +72,10 @@ public class eReferralsAPIClientShould {
     @Test
     public void return_success_result_when_api_response_contains_extra_keys()
             throws IOException {
-        mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
-        mCustomMockServer.enqueueMockResponseFileName(200, PUSH_RESPONSE_OK_EXTRA_KEYS);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, API_AVAILABLE_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, PUSH_RESPONSE_OK_EXTRA_KEYS);
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
-                mCustomMockServer.getBaseEndpoint());
+                mockWebServerRule.getMockServer().getBaseEndpoint());
         eReferralsAPIClient.pushSurveys(new SurveyContainerWSObject("", "",
                         "", "", "", 2, "", "", new SettingsSummary("", "", false, "", false, ""), "",""),
                 new eReferralsAPIClient.WSClientCallBack() {
@@ -96,9 +93,9 @@ public class eReferralsAPIClientShould {
 
     @Test
     public void return_correct_apiAvailable() throws IOException, AvailableApiException {
-        mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
-                mCustomMockServer.getBaseEndpoint());
+                mockWebServerRule.getMockServer().getBaseEndpoint());
         ApiAvailable apiAvailable = eReferralsAPIClient.getIfIsApiAvailable();
         assertThat(apiAvailable.isAvailable(), is(true));
         assertThat(apiAvailable.getMsg(),is("Test message"));
@@ -107,9 +104,9 @@ public class eReferralsAPIClientShould {
     @Test
     public void throw_exception_availableApis_exception_if_api_not_available()
             throws IOException, AvailableApiException {
-        mCustomMockServer.enqueueMockResponseFileName(200, API_AVAILABLE_NO_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, API_AVAILABLE_NO_OK);
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
-                mCustomMockServer.getBaseEndpoint());
+                mockWebServerRule.getMockServer().getBaseEndpoint());
         thrown.expect(AvailableApiException.class);
         eReferralsAPIClient.getIfIsApiAvailable();
     }
@@ -117,15 +114,10 @@ public class eReferralsAPIClientShould {
     @Test
     public void throw_exception_availableApis_exception_on_server_error()
             throws IOException, AvailableApiException {
-        mCustomMockServer.enqueueMockResponse(404);
+        mockWebServerRule.getMockServer().enqueueMockResponse(404);
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
-                mCustomMockServer.getBaseEndpoint());
+                mockWebServerRule.getMockServer().getBaseEndpoint());
         thrown.expect(AvailableApiException.class);
         eReferralsAPIClient.getIfIsApiAvailable();
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        mCustomMockServer.shutdown();
     }
 }

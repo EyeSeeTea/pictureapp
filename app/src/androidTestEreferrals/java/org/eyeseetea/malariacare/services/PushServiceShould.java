@@ -57,10 +57,12 @@ import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -73,10 +75,13 @@ import java.util.Date;
 public class PushServiceShould {
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
-    private CustomMockServer mCustomMockServer;
+
     private PushServiceStrategy mPushServiceStrategy;
     private boolean showLogiIntentReceived;
     private final Object syncObject = new Object();
+
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule(new AssetsFileReader());
     @Mock
     IDeviceRepository deviceDataSource;
     @Mock
@@ -94,8 +99,8 @@ public class PushServiceShould {
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
         PushUseCase pushUseCase = givenPushUseCase();
         showLogiIntentReceived = false;
-        mCustomMockServer.enqueueMockResponseFileName(209, API_AVAILABLE_OK);
-        mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, API_AVAILABLE_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
         surveyDB.setEventUid("testEventUID");
@@ -116,14 +121,7 @@ public class PushServiceShould {
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
-        mCustomMockServer = new CustomMockServer(new AssetsFileReader());
         mPushServiceStrategy = new PushServiceStrategy(new PushService("TestPushService"));
-    }
-
-
-    @After
-    public void tearDown() throws IOException {
-        mCustomMockServer.shutdown();
     }
 
     public void grantPhonePermission() {
@@ -157,11 +155,11 @@ public class PushServiceShould {
         when(appInfoDataSource.getAppInfo()).thenReturn(new AppInfo("0", "0", "0", date, date));
         when(deviceDataSource.getDevice()).thenReturn(new Device("phoneNumber", "imei", "version"));
 
-        when(mCredentialsRepository.getLastValidCredentials()).thenReturn(new Credentials(mCustomMockServer.getBaseEndpoint(), "test", "test"));
-        eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
+        when(mCredentialsRepository.getLastValidCredentials()).thenReturn(new Credentials(mockWebServerRule.getMockServer().getBaseEndpoint(), "test", "test"));
+        eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(mockWebServerRule.getMockServer().getBaseEndpoint());
         when(mProgramRepository.getUserProgram()).thenReturn(new Program("code","testProgramId"));
         Settings settings = new Settings("en", "en", null, false, false, false,
-                "test", "test", mCustomMockServer.getBaseEndpoint(), null, null, null, null, "1.0");
+                "test", "test", mockWebServerRule.getMockServer().getBaseEndpoint(), null, null, null, null, "1.0");
         when(mSettingsRepository.getSettings()).thenReturn(settings);
         ConvertToWSVisitor mConvertToWSVisitor = new ConvertToWSVisitor(deviceDataSource, mCredentialsRepository, mSettingsRepository, appInfoDataSource,
                 mProgramRepository, new CountryVersionLocalDataSource());

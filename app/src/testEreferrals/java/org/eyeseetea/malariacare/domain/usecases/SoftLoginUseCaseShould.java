@@ -34,7 +34,8 @@ import java.util.Date;
 @RunWith(MockitoJUnitRunner.class)
 public class SoftLoginUseCaseShould {
     private static final String AUTH_SUCCESS = "authSuccess.json";
-    private static final String AUTH_Fail = "authFail.json";
+    private static final String AUTH_FAIL = "authFail.json";
+    private static final long DISABLE_LOGIN_BY_ATTEMPTS = 30000;
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -60,7 +61,7 @@ public class SoftLoginUseCaseShould {
     public void return_on_soft_login_success_if_exists_connection_and_credentials_are_ok()
             throws IOException {
 
-        SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true, "1234");
+        SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true);
 
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_SUCCESS);
 
@@ -81,14 +82,231 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxLoginAttemptsReachedError() {
+            public void onMaxInvalidLoginAttemptsError() {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
+        });
+    }
+
+    @Test
+    public void return_on_invalid_password_if_exists_connection_and_credentials_are_not_ok()
+            throws IOException {
+
+        SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true);
+
+        mockWebServerRule.enqueueMockResponseFileName(200, AUTH_FAIL);
+
+        softLoginUseCase.execute("1234", new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onInvalidPassword() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError() {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
+        });
+    }
+
+    @Test
+    public void return_on_soft_login_success_if_does_not_exists_connection_and_credentials_are_ok()
+            throws IOException {
+
+        String lastValidPin = "1234";
+
+        SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true, lastValidPin);
+
+        mockWebServerRule.enqueueMockResponseFileName(200, AUTH_SUCCESS);
+
+        softLoginUseCase.execute(lastValidPin, new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void onInvalidPassword() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError() {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
+        });
+    }
+
+    @Test
+    public void return_on_network_error_if_does_not_exists_connection_and_credentials_are_not_ok()
+            throws IOException {
+
+        String lastValidPin = "1234";
+
+        SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true, lastValidPin);
+
+        mockWebServerRule.enqueueMockResponseFileName(200, AUTH_FAIL);
+
+        softLoginUseCase.execute("1234567", new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onInvalidPassword() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError() {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
+        });
+    }
+
+    @Test
+    public void
+    return_on_invalid_password_and_on_max_invalid_login_attempts_error_if_current_attempts_is_2_and_credentials_are_not_ok()
+            throws IOException {
+
+        int invalidLoginAttempts = 2;
+
+        SoftLoginUseCase softLoginUseCase =
+                givenASoftLoginUseCase(invalidLoginAttempts, 0);
+
+        mockWebServerRule.enqueueMockResponseFileName(200, AUTH_FAIL);
+
+        softLoginUseCase.execute("1234567", new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onInvalidPassword() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError() {
+                Assert.assertTrue(true);
+            }
+        });
+    }
+
+    @Test
+    public void
+    return_on_max_invalid_login_attempts_error_if_current_attempts_is_3_and_it_is_not_over_enable_date()
+            throws IOException {
+
+        int invalidLoginAttempts = 3;
+
+        SoftLoginUseCase softLoginUseCase =
+                givenASoftLoginUseCase(invalidLoginAttempts,
+                        new Date().getTime() + DISABLE_LOGIN_BY_ATTEMPTS);
+
+        softLoginUseCase.execute("1234", new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onInvalidPassword() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError() {
+                Assert.assertTrue(true);
+            }
+        });
+    }
+
+    @Test
+    public void
+    return_on_soft_login_success_if_current_attempts_is_3_and_it_is_over_enable_date()
+            throws IOException {
+
+        int invalidLoginAttempts = 3;
+
+        SoftLoginUseCase softLoginUseCase =
+                givenASoftLoginUseCase(invalidLoginAttempts,
+                        new Date().getTime() - DISABLE_LOGIN_BY_ATTEMPTS);
+
+        mockWebServerRule.enqueueMockResponseFileName(200, AUTH_SUCCESS);
+
+        softLoginUseCase.execute("1234", new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void onInvalidPassword() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError() {
                 fail("onMaxLoginAttemptsReachedError");
             }
         });
     }
 
+    private SoftLoginUseCase givenASoftLoginUseCase(boolean withConnection) {
+        return givenASoftLoginUseCase(withConnection, "dummy", 0, new Date().getTime());
+    }
 
     private SoftLoginUseCase givenASoftLoginUseCase(boolean withConnection, String lastValidPin) {
+        return givenASoftLoginUseCase(withConnection, lastValidPin, 0, new Date().getTime());
+    }
+
+    private SoftLoginUseCase givenASoftLoginUseCase(int invalidLoginAttempts,
+            long timeToEnableLogin) {
+        return givenASoftLoginUseCase(true, "dummy",
+                invalidLoginAttempts, timeToEnableLogin);
+    }
+
+
+    private SoftLoginUseCase givenASoftLoginUseCase(boolean withConnection, String lastValidPin,
+            int invalidLoginAttempts, long timeToEnableLogin) {
         IMainExecutor mainExecutor = new IMainExecutor() {
             @Override
             public void run(Runnable runnable) {
@@ -116,12 +334,12 @@ public class SoftLoginUseCaseShould {
         when(connectivityManager.isDeviceOnline()).thenReturn(withConnection);
 
         when(invalidLoginAttemptsRepository.getInvalidLoginAttempts()).thenReturn(
-                new InvalidLoginAttempts(0, new Date().getTime())
+                new InvalidLoginAttempts(invalidLoginAttempts, timeToEnableLogin)
         );
 
         when(credentialsRepository.getLastValidCredentials()).thenReturn(
                 new Credentials(mockWebServerRule.getBaseEndpoint(), "test", lastValidPin));
-        
+
         return new SoftLoginUseCase(connectivityManager, authenticationManager,
                 mainExecutor, asyncExecutor, credentialsRepository, invalidLoginAttemptsRepository);
     }

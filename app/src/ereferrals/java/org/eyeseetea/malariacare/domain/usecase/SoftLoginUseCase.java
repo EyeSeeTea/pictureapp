@@ -144,7 +144,7 @@ public class SoftLoginUseCase implements UseCase {
         mainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onMaxLoginAttemptsReachedError();
+                mCallback.onMaxInvalidLoginAttemptsError();
             }
         });
     }
@@ -165,7 +165,7 @@ public class SoftLoginUseCase implements UseCase {
 
         void onNetworkError();
 
-        void onMaxLoginAttemptsReachedError();
+        void onMaxInvalidLoginAttemptsError();
 
         //TODO: It's necessary here
         //void onServerPinChanged();

@@ -253,7 +253,7 @@ public class WSPushControllerShould {
         when(programRepository.getUserProgram()).thenReturn(new Program("code", "uid"));
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(mockWebServerRule.getMockServer().getBaseEndpoint());
         ConvertToWSVisitor mConvertToWSVisitor = new ConvertToWSVisitor(deviceDataSource, mCredentialsRepository, settingsRepository, appInfoDataSource,
-                new ProgramRepository(), new CountryVersionLocalDataSource());
+                programRepository, new CountryVersionLocalDataSource());
         return new WSPushController(mConvertToWSVisitor, eReferralsAPIClient, surveyRepository);
     }
 }

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -32,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 public class BaseActivityShould {
 
@@ -136,10 +138,13 @@ public class BaseActivityShould {
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         previousUserAccount = userAccountDataSource.getLoggedUser();
+        Context context = InstrumentationRegistry.getTargetContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
     }
 
     private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
+        Context context = InstrumentationRegistry.getTargetContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -151,10 +156,10 @@ public class BaseActivityShould {
                 "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
+        ProgramDB programDB = new ProgramDB("low6qUS2wc9", "T_TZ");
         programDB.save();
         ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
+        programRepository.saveUserProgramId(new Program("T_TZ", "low6qUS2wc9"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(

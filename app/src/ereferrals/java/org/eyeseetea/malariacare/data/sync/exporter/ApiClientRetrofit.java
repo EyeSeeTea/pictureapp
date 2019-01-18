@@ -29,6 +29,6 @@ public interface ApiClientRetrofit {
     @POST("api/forgotpassword")
     Call<ForgotPasswordResponse> forgotPassword(@Body ForgotPasswordPayload forgotPasswordPayload);
 
-    @GET("available")
+    @GET("api/available")
     Call<ApiAvailable> apiAvailable();
 }

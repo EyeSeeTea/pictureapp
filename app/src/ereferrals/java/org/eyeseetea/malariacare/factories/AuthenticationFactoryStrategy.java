@@ -21,24 +21,36 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadDelayedExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
 
 public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
 
     @Override
     public LoginUseCase getLoginUseCase(Context context) {
-        IConnectivityManager connectivityManager = new ConnectivityManager(context);
+        IConnectivityManager connectivityManager = getConnectivityManager(context);
         IAuthenticationManager authenticationManager = getAuthenticationManager(context);
         ICredentialsRepository credentialsLocalDataSource = getCredentialsRepository();
 
         IInvalidLoginAttemptsRepository iInvalidLoginAttemptsRepository =
-                new InvalidLoginAttemptsRepositoryLocalDataSource();
+                getInvalidLoginAttemptsRepository();
 
         LoginUseCase loginUseCase = new LoginUseCase(connectivityManager,
                 authenticationManager, mainExecutor, asyncExecutor, credentialsLocalDataSource,
                 iInvalidLoginAttemptsRepository);
 
         return loginUseCase;
+    }
+
+    @NonNull
+    private InvalidLoginAttemptsRepositoryLocalDataSource getInvalidLoginAttemptsRepository() {
+        return new InvalidLoginAttemptsRepositoryLocalDataSource();
+    }
+
+    @NonNull
+    private ConnectivityManager getConnectivityManager(Context context) {
+        return new ConnectivityManager(context);
     }
 
     public GetUserUserAccountUseCase getUserAccountUseCase() {
@@ -76,10 +88,24 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
         return new CredentialsLocalDataSource();
     }
 
-    public SoftLoginPresenter getSoftLoginPresenter() {
+    public SoftLoginUseCase getSoftLoginUseCase(Context context) {
+        IConnectivityManager connectivityManager = getConnectivityManager(context);
+        IAuthenticationManager authenticationManager = getAuthenticationManager(context);
+        ICredentialsRepository credentialsLocalDataSource = getCredentialsRepository();
+        IInvalidLoginAttemptsRepository invalidLoginAttemptsRepository =
+                getInvalidLoginAttemptsRepository();
+
+        return new SoftLoginUseCase(connectivityManager,
+                authenticationManager, mainExecutor, asyncExecutor, credentialsLocalDataSource,
+                invalidLoginAttemptsRepository);
+    }
+
+    public SoftLoginPresenter getSoftLoginPresenter(Context context) {
 
         GetUserUserAccountUseCase getUserAccountUseCase = getUserAccountUseCase();
-        SoftLoginPresenter softLoginPresenter = new SoftLoginPresenter(getUserAccountUseCase);
+        SoftLoginPresenter softLoginPresenter =
+                new SoftLoginPresenter(getUserAccountUseCase, getSoftLoginUseCase(context),
+                        new UIThreadDelayedExecutor());
 
         return softLoginPresenter;
     }

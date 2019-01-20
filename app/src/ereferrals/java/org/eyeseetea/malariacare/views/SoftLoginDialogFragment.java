@@ -2,16 +2,21 @@ package org.eyeseetea.malariacare.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class SoftLoginDialogFragment extends DialogFragment implements SoftLoginPresenter.View {
@@ -19,6 +24,8 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     private CustomEditText userNameEditText;
     private CustomEditText passwordEditText;
     private Button loginButton;
+    private LinearLayout softLoginContainer;
+    private ProgressBar progressBar;
 
     private SoftLoginPresenter presenter;
 
@@ -44,6 +51,8 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     }
 
     private void initializeViews(View view) {
+        softLoginContainer = view.findViewById(R.id.soft_login_container);
+        progressBar = view.findViewById(R.id.soft_login_progress_bar);
         userNameEditText = view.findViewById(R.id.edittext_username);
         userNameEditText.setEnabled(false);
         passwordEditText = view.findViewById(R.id.edittext_password);
@@ -52,7 +61,7 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDialog().dismiss();
+                presenter.login(passwordEditText.getText().toString());
             }
         });
 
@@ -65,12 +74,60 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     private void initializePresenter() {
         AuthenticationFactoryStrategy factoryStrategy = new AuthenticationFactoryStrategy();
 
-        presenter = factoryStrategy.getSoftLoginPresenter();
+        presenter = factoryStrategy.getSoftLoginPresenter(getActivity());
         presenter.attachView(this);
     }
 
     @Override
     public void showUsername(String username) {
         userNameEditText.setText(username);
+    }
+
+    @Override
+    public void showProgress() {
+        passwordEditText.setEnabled(false);
+        loginButton.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        passwordEditText.setEnabled(true);
+        loginButton.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void loginSuccess() {
+        getDialog().dismiss();
+    }
+
+    @Override
+    public void showInvalidPinError() {
+        showError(R.string.login_invalid_credentials);
+    }
+
+    @Override
+    public void showNetworkError() {
+        showError(R.string.network_error);
+    }
+
+    @Override
+    public void disableLoginAction() {
+        loginButton.setEnabled(false);
+    }
+
+    @Override
+    public void enableLoginAction() {
+        loginButton.setEnabled(true);
+    }
+
+    public void showError(int message) {
+        Toast.makeText(this.getActivity(), translate(message),
+                Toast.LENGTH_LONG).show();
+    }
+
+    public String translate(@StringRes int id) {
+        return Utils.getInternationalizedString(id, this.getActivity());
     }
 }

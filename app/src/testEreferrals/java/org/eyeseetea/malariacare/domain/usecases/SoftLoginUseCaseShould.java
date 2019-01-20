@@ -72,7 +72,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 fail("onInvalidPassword");
             }
 
@@ -82,7 +82,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
         });
@@ -103,7 +103,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 Assert.assertTrue(true);
             }
 
@@ -113,7 +113,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
         });
@@ -136,7 +136,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 fail("onInvalidPassword");
             }
 
@@ -146,7 +146,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
         });
@@ -169,7 +169,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 Assert.assertTrue(true);
             }
 
@@ -179,7 +179,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
         });
@@ -204,7 +204,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 Assert.assertTrue(true);
             }
 
@@ -214,7 +214,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 Assert.assertTrue(true);
             }
         });
@@ -238,7 +238,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 fail("onInvalidPassword");
             }
 
@@ -248,7 +248,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 Assert.assertTrue(true);
             }
         });
@@ -274,7 +274,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onInvalidPassword() {
+            public void onInvalidPin() {
                 fail("onNetworkError");
             }
 
@@ -284,7 +284,7 @@ public class SoftLoginUseCaseShould {
             }
 
             @Override
-            public void onMaxInvalidLoginAttemptsError() {
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxLoginAttemptsReachedError");
             }
         });

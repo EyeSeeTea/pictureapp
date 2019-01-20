@@ -22,6 +22,7 @@ public class SoftLoginUseCase implements UseCase {
 
     private String softLoginPin;
     private Credentials lastValidCredentials = null;
+    private InvalidLoginAttempts invalidLoginAttempts;
 
     private Callback mCallback;
 
@@ -77,13 +78,12 @@ public class SoftLoginUseCase implements UseCase {
             }
 
         } else {
-            notifyMaxLoginAttemptsReached();
+            notifyMaxLoginAttemptsReached(invalidLoginAttempts.getEnableLoginTime());
         }
     }
 
     private boolean isLoginEnable() {
-        InvalidLoginAttempts invalidLoginAttempts =
-                invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        invalidLoginAttempts = invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
         return invalidLoginAttempts.isLoginEnabled();
     }
 
@@ -116,14 +116,13 @@ public class SoftLoginUseCase implements UseCase {
     }
 
     public void notifyInvalidPassword() {
-        InvalidLoginAttempts invalidLoginAttempts =
-                invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        invalidLoginAttempts = invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
 
         try {
             invalidLoginAttempts.addFailedAttempts();
         } catch (ActionNotAllowed actionNotAllowed) {
             actionNotAllowed.printStackTrace();
-            notifyMaxLoginAttemptsReached();
+            notifyMaxLoginAttemptsReached(invalidLoginAttempts.getEnableLoginTime());
         }
 
         invalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
@@ -131,20 +130,20 @@ public class SoftLoginUseCase implements UseCase {
         mainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onInvalidPassword();
+                mCallback.onInvalidPin();
             }
         });
 
         if (!invalidLoginAttempts.isLoginEnabled()) {
-            notifyMaxLoginAttemptsReached();
+            notifyMaxLoginAttemptsReached(invalidLoginAttempts.getEnableLoginTime());
         }
     }
 
-    private void notifyMaxLoginAttemptsReached() {
+    private void notifyMaxLoginAttemptsReached(final long enableLoginTime) {
         mainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onMaxInvalidLoginAttemptsError();
+                mCallback.onMaxInvalidLoginAttemptsError(enableLoginTime);
             }
         });
     }
@@ -161,11 +160,11 @@ public class SoftLoginUseCase implements UseCase {
     public interface Callback {
         void onSoftLoginSuccess();
 
-        void onInvalidPassword();
+        void onInvalidPin();
 
         void onNetworkError();
 
-        void onMaxInvalidLoginAttemptsError();
+        void onMaxInvalidLoginAttemptsError(long enableLoginTime);
 
         //TODO: It's necessary here
         //void onServerPinChanged();

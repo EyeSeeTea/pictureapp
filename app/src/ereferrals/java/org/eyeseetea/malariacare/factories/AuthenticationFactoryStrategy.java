@@ -22,7 +22,7 @@ import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadDelayedExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
 
 public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
@@ -105,7 +105,7 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
         GetUserUserAccountUseCase getUserAccountUseCase = getUserAccountUseCase();
         SoftLoginPresenter softLoginPresenter =
                 new SoftLoginPresenter(getUserAccountUseCase, getSoftLoginUseCase(context),
-                        new UIThreadDelayedExecutor());
+                        new UIThreadExecutor());
 
         return softLoginPresenter;
     }

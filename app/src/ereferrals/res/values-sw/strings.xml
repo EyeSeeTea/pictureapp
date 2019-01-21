@@ -1031,4 +1031,6 @@ Ameahidi kuhudhuria"</string>
 <string name="production">Uzalishaji</string>
 <string name="training">Mafunzo</string>
 <string name="custom">Desturi</string>
+
+    <string name="pull_dialog_progress_generic_message">Inasasisha metadata …</string>
 </resources>

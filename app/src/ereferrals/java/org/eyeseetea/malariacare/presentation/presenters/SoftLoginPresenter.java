@@ -1,7 +1,9 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
 import org.eyeseetea.malariacare.domain.boundary.executors.IDelayedMainExecutor;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
 
@@ -10,12 +12,15 @@ public class SoftLoginPresenter {
     private GetUserUserAccountUseCase getUserUserAccountUseCase;
     private SoftLoginUseCase softLoginUseCase;
     private IDelayedMainExecutor delayedMainExecutor;
+    private GetSettingsUseCase getSettingsUseCase;
 
     public SoftLoginPresenter(GetUserUserAccountUseCase getUserUserAccountUseCase,
-            SoftLoginUseCase softLoginUseCase, IDelayedMainExecutor delayedMainExecutor) {
+            SoftLoginUseCase softLoginUseCase, IDelayedMainExecutor delayedMainExecutor,
+            GetSettingsUseCase getSettingsUseCase) {
         this.getUserUserAccountUseCase = getUserUserAccountUseCase;
         this.softLoginUseCase = softLoginUseCase;
         this.delayedMainExecutor = delayedMainExecutor;
+        this.getSettingsUseCase = getSettingsUseCase;
     }
 
     public void attachView(View view) {
@@ -38,10 +43,7 @@ public class SoftLoginPresenter {
         softLoginUseCase.execute(pin, new SoftLoginUseCase.Callback() {
             @Override
             public void onSoftLoginSuccess() {
-                if (view != null) {
-                    view.hideProgress();
-                    view.loginSuccess();
-                }
+                verifyIfLaunchPull();
             }
 
             @Override
@@ -64,6 +66,22 @@ public class SoftLoginPresenter {
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 disableLoginActionUntilEnableLoginTime(enableLoginTime);
 
+            }
+        });
+    }
+
+    private void verifyIfLaunchPull() {
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                if (view != null) {
+                    if (setting.isMetadataUpdateActive()) {
+                        view.launchPull();
+                    }
+
+                    view.hideProgress();
+                    view.loginSuccess();
+                }
             }
         });
     }
@@ -119,5 +137,7 @@ public class SoftLoginPresenter {
         void disableLoginAction();
 
         void enableLoginAction();
+
+        void launchPull();
     }
 }

@@ -70,7 +70,6 @@ public class WSPullController implements IPullController {
     @Override
     public void pull(PullFilters pullFilters, Callback callback) {
         Log.d(TAG, "Starting PULL process...");
-        callback.onStep(PullStep.METADATA);
 
         try {
 
@@ -89,6 +88,7 @@ public class WSPullController implements IPullController {
         try {
 
             if (isDemo) {
+                callback.onStep(PullStep.METADATA);
                 IProgramRepository programRepository = new ProgramRepository();
                 ProgramDB programDB = ProgramDB.findByUID(
                         PreferencesState.getInstance().getContext().getString(
@@ -134,7 +134,7 @@ public class WSPullController implements IPullController {
             userDataSource.saveLoggedUser(currentUser);
         } else {
             try {
-
+                callback.onStep(PullStep.METADATA);
                 downloadMetadataAndRepopulateDB(userDataSource, currentUser, userProgram);
 
             } catch (IOException e) {

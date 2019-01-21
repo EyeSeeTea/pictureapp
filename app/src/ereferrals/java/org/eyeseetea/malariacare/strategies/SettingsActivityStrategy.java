@@ -19,17 +19,20 @@ import android.widget.EditText;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
-import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Language;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.usecase.GetAllLanguagesUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.factories.LanguagesFactory;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
@@ -66,11 +69,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         LocalBroadcastManager.getInstance(settingsActivity).unregisterReceiver(pushReceiver);
-        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()
+                && !LockScreenStatus.isPatternSet(
                 settingsActivity)) {
             ActivityCompat.finishAffinity(settingsActivity);
         }
     }
+
     public void applicationdidenterbackground() {
         if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
             EyeSeeTeaApplication.getInstance().setAppInBackground(true);
@@ -118,7 +123,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 preferenceScreen.getContext().getString(R.string.program_configuration_user));
 
 
-        ISettingsRepository settingsRepository = new SettingsDataSource(preferenceScreen.getContext());
+        ISettingsRepository settingsRepository = new SettingsDataSource(
+                preferenceScreen.getContext());
 
         programUrl.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUrl.setText(settingsRepository.getSettings().getProgramUrl());
@@ -132,26 +138,29 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         programUser.setText(settingsRepository.getSettings().getUser());
         programUser.setSummary(settingsRepository.getSettings().getUser());
 
-        programPass.setOnPreferenceChangeListener(new onPasswordChangeListener(programPass.getEditText()));
+        programPass.setOnPreferenceChangeListener(
+                new onPasswordChangeListener(programPass.getEditText()));
         programPass.setText(settingsRepository.getSettings().getPass());
         String pass = settingsRepository.getSettings().getPass();
-        String pref = programPass.getEditText().getTransformationMethod().getTransformation(pass.toString(), programPass.getEditText()).toString();
+        String pref = programPass.getEditText().getTransformationMethod().getTransformation(
+                pass.toString(), programPass.getEditText()).toString();
         programPass.setSummary(pref);
     }
 
-    private class onCredentialsChangeListener implements Preference.OnPreferenceChangeListener{
+    private class onCredentialsChangeListener implements Preference.OnPreferenceChangeListener {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             boolean result = isNotEmpty(newValue);
-            if(result){
+            if (result) {
                 preference.setSummary(newValue.toString());
             }
             return result;
         }
     }
 
-    private class onPasswordChangeListener implements Preference.OnPreferenceChangeListener{
+    private class onPasswordChangeListener implements Preference.OnPreferenceChangeListener {
         EditText mEditText;
+
         public onPasswordChangeListener(EditText editText) {
             mEditText = editText;
         }
@@ -159,8 +168,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             boolean result = isNotEmpty(newValue);
-            if(result){
-                String pref = mEditText.getTransformationMethod().getTransformation(newValue.toString(), mEditText).toString();
+            if (result) {
+                String pref = mEditText.getTransformationMethod().getTransformation(
+                        newValue.toString(), mEditText).toString();
                 preference.setSummary(pref);
             }
             return result;
@@ -196,6 +206,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         LocalBroadcastManager.getInstance(settingsActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
     }
+
     private void applicationWillEnterForeground() {
         if (EyeSeeTeaApplication.getInstance().isAppInBackground()) {
             EyeSeeTeaApplication.getInstance().setAppInBackground(false);
@@ -260,10 +271,28 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     private void showLogin() {
         if (!LockScreenStatus.isPatternSet(settingsActivity)) {
-            Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
-            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            settingsActivity.startActivity(loginIntent);
+            markSoftLoginRequiredAndCloseSettings();
         }
+    }
+
+    private void markSoftLoginRequiredAndCloseSettings() {
+        GetSettingsUseCase getSettingsUseCase =
+                new SettingsFactory().getSettingsUseCase(settingsActivity);
+        final SaveSettingsUseCase saveSettingsUseCase =
+                new SettingsFactory().saveSettingsUseCase(settingsActivity);
+
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                settings.changeSoftLoginRequired(true);
+                saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        settingsActivity.onBackPressed();
+                    }
+                }, settings);
+            }
+        });
     }
 
     @Override
@@ -286,14 +315,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void addFontStyleEntries(List<String> entries, List<String> entryValues) {
-        for (CustomFontStyles fontStyle:CustomFontStyles.values()) {
-            entries.add(Utils.getInternationalizedString(fontStyle.getTitle(),settingsActivity));
+        for (CustomFontStyles fontStyle : CustomFontStyles.values()) {
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle(), settingsActivity));
             entryValues.add(String.valueOf(fontStyle.getResId()));
         }
     }
 
     private boolean isNotEmpty(Object newValue) {
-        if(newValue.toString().trim().equals("")) {
+        if (newValue.toString().trim().equals("")) {
             return false;
         } else {
             return true;
@@ -326,8 +355,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         R.array.languages_strings)[0];
         CharSequence systemDefinedCode = settingsActivity.getResources().getStringArray(
                 R.array.languages_codes)[0];
-        CharSequence[] languagesStrings = new CharSequence[languages.size()+1];
-        CharSequence[] languagesCodes = new CharSequence[languages.size()+1];
+        CharSequence[] languagesStrings = new CharSequence[languages.size() + 1];
+        CharSequence[] languagesCodes = new CharSequence[languages.size() + 1];
         languagesStrings[0] = systemDefinedString;
         languagesCodes[0] = systemDefinedCode;
         int languagesPosition = 1;
@@ -355,7 +384,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 R.array.languages_strings)[0];
     }
 
-    private String translate(@StringRes int id){
+    private String translate(@StringRes int id) {
         return Utils.getInternationalizedString(id, settingsActivity);
     }
 }

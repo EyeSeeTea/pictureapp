@@ -11,7 +11,6 @@ import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 import static org.junit.Assert.assertTrue;
 
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
@@ -123,7 +122,7 @@ public class MetadataConfigurationDBImporterShould {
     private void whenConfigFilesAreParsed() throws Exception {
 
         MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(
-                dhis2MockServer.getBaseEndpoint(),
+                dhis2MockServer.getBaseEndpoint(), "dcSettings",
                 new BasicAuthInterceptor(""));
 
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(

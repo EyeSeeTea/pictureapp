@@ -138,9 +138,6 @@ public class BaseActivityShould {
         previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         previousUserAccount = userAccountDataSource.getLoggedUser();
-        Context context = InstrumentationRegistry.getTargetContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
     }
 
     private void saveTestCredentialsAndProgram() {

@@ -79,6 +79,7 @@ import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUse
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
 import org.eyeseetea.malariacare.factories.AppInfoFactory;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -188,7 +189,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         });
 
-        showSoftLoginDialog();
+        showSoftLoginDialogIfRequired();
+    }
+
+    private void showSoftLoginDialogIfRequired() {
+        GetSettingsUseCase getSettingsUseCase =
+                new SettingsFactory().getSettingsUseCase(mDashboardActivity);
+
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings setting) {
+                if (setting.isSoftLoginRequired()) {
+                    showSoftLoginDialog();
+                }
+            }
+        });
     }
 
     private void showSoftLoginDialog() {
@@ -196,7 +211,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
         softLoginDialogFragment.show(fm, "soft_login");
     }
-
 
     private void enableDisableRefreshButton() {
         mRefreshButton.setEnabled(false);
@@ -745,6 +759,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             Session.setHasSurveyToComplete(false);
         }
     }
+
 
     private void waitToEnableRefreshButton(Context context) {
         long pushPeriod = Long.parseLong(context.getString(R.string.ENABLE_MANUAL_PUSH_PERIOD));

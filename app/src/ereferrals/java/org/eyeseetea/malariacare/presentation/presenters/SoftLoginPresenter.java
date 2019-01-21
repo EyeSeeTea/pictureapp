@@ -5,22 +5,25 @@ import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
 
 public class SoftLoginPresenter {
     private View view;
-    private GetUserUserAccountUseCase getUserUserAccountUseCase;
-    private SoftLoginUseCase softLoginUseCase;
-    private IDelayedMainExecutor delayedMainExecutor;
-    private GetSettingsUseCase getSettingsUseCase;
+    private final GetUserUserAccountUseCase getUserUserAccountUseCase;
+    private final SoftLoginUseCase softLoginUseCase;
+    private final IDelayedMainExecutor delayedMainExecutor;
+    private final GetSettingsUseCase getSettingsUseCase;
+    private final SaveSettingsUseCase saveSettingsUseCase;
 
     public SoftLoginPresenter(GetUserUserAccountUseCase getUserUserAccountUseCase,
             SoftLoginUseCase softLoginUseCase, IDelayedMainExecutor delayedMainExecutor,
-            GetSettingsUseCase getSettingsUseCase) {
+            GetSettingsUseCase getSettingsUseCase, SaveSettingsUseCase saveSettingsUseCase) {
         this.getUserUserAccountUseCase = getUserUserAccountUseCase;
         this.softLoginUseCase = softLoginUseCase;
         this.delayedMainExecutor = delayedMainExecutor;
         this.getSettingsUseCase = getSettingsUseCase;
+        this.saveSettingsUseCase = saveSettingsUseCase;
     }
 
     public void attachView(View view) {
@@ -73,17 +76,28 @@ public class SoftLoginPresenter {
     private void verifyIfLaunchPull() {
         getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
             @Override
-            public void onSuccess(Settings setting) {
+            public void onSuccess(Settings settings) {
                 if (view != null) {
-                    if (setting.isMetadataUpdateActive()) {
+                    if (settings.isMetadataUpdateActive()) {
                         view.launchPull();
                     }
 
                     view.hideProgress();
                     view.loginSuccess();
+                    changeSoftLoginToNotRequired(settings);
                 }
             }
         });
+    }
+
+    private void changeSoftLoginToNotRequired(Settings settings) {
+        settings.changeSoftLoginRequired(false);
+        saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess() {
+                System.out.println("Saved - Soft Login is not required");
+            }
+        }, settings);
     }
 
     private void disableLoginActionUntilEnableLoginTime(final long enableLoginTime) {

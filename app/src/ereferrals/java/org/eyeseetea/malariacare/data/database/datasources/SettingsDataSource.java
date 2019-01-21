@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Settings;
@@ -39,9 +38,10 @@ public class SettingsDataSource implements ISettingsRepository {
         String fontSize = getFontSize();
         String programUrl = getProgramUrl();
         String programEndPoint = getProgramEndPoint();
+        boolean isSoftLoginRequired = getSoftLoginRequired();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize, programUrl, programEndPoint);
+                webUrl, fontSize, programUrl, programEndPoint, isSoftLoginRequired);
     }
 
     private String loadPass() {
@@ -75,6 +75,7 @@ public class SettingsDataSource implements ISettingsRepository {
         saveProgramUrl(settings.getProgramUrl());
         saveWebUrl(settings.getWebUrl());
         saveProgramEndPoint(settings.getProgramEndPoint());
+        saveSoftLoginRequired(settings.isSoftLoginRequired());
     }
 
     private MediaListMode getMediaListMode() {
@@ -169,6 +170,14 @@ public class SettingsDataSource implements ISettingsRepository {
         return getPreference(context, R.string.program_configuration_pass, null);
     }
 
+    private boolean getSoftLoginRequired() {
+        return getBooleanPreference(context, R.string.soft_login_required, false);
+    }
+
+    private void saveSoftLoginRequired(boolean isRequired) {
+        saveBooleanPreference(context, R.string.soft_login_required, isRequired);
+    }
+
     private Boolean getBooleanPreference(Context context, int stringId, Boolean defaultBool) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
@@ -176,6 +185,15 @@ public class SettingsDataSource implements ISettingsRepository {
                 context.getResources().getString(stringId),
                 defaultBool);
     }
+
+    private void saveBooleanPreference(Context context, int stringId, boolean value) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(stringId), value);
+        editor.commit();
+    }
+
     private String getPreference(Context context, int stringId, Integer defaultStringId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);

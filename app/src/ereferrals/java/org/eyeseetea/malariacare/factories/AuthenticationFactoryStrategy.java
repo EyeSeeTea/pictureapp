@@ -22,12 +22,13 @@ import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
 
 public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
-    private MetadataFactory metadataFactory = new MetadataFactory();
+    private SettingsFactory settingsFactory = new SettingsFactory();
 
     @Override
     public LoginUseCase getLoginUseCase(Context context) {
@@ -104,11 +105,13 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
 
     public SoftLoginPresenter getSoftLoginPresenter(Context context) {
 
-        GetSettingsUseCase getSettingsUseCase = metadataFactory.getSettingsUseCase(context);
+        GetSettingsUseCase getSettingsUseCase = settingsFactory.getSettingsUseCase(context);
+        SaveSettingsUseCase saveSettingsUseCase = settingsFactory.saveSettingsUseCase(context);
+
         GetUserUserAccountUseCase getUserAccountUseCase = getUserAccountUseCase();
         SoftLoginPresenter softLoginPresenter =
                 new SoftLoginPresenter(getUserAccountUseCase, getSoftLoginUseCase(context),
-                        new UIThreadExecutor(), getSettingsUseCase);
+                        new UIThreadExecutor(), getSettingsUseCase, saveSettingsUseCase);
 
         return softLoginPresenter;
     }

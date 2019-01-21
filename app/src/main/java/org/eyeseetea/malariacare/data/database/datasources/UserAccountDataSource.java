@@ -11,7 +11,7 @@ public class UserAccountDataSource implements IUserRepository {
         UserDB userDB = UserDB.getLoggedUser();
         UserAccount userAccount = null;
         if (userDB != null) {
-            userAccount = new UserAccount(userDB.getName(), userDB.getUid(), false);
+            userAccount = new UserAccount(userDB.getName(), userDB.getUid(), userDB.isDemo());
             userAccount.setCanAddSurveys(userDB.canAddSurveys());
         }
 

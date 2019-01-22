@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import android.app.ActivityManager;
+import android.app.Instrumentation;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
+import android.support.test.rule.ActivityTestRule;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -26,14 +29,15 @@ import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.idling_resources.IntentTaskIdlingResource;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
 
 public class BaseActivityShould {
 
@@ -42,18 +46,26 @@ public class BaseActivityShould {
     private Program previousProgram;
     private boolean previousPushInProgress;
     private UserAccount previousUserAccount;
+    private long loggedUser;
 
-    private final Object syncObject = new Object();
+    private IntentTaskIdlingResource idlingResource;
 
+    @Rule
+    public ActivityTestRule<DashboardActivity> activityActivityTestRule = new ActivityTestRule<DashboardActivity>(DashboardActivity.class);
+
+    @Before
+    public void registerIntentServiceIdlingResource() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        idlingResource = new IntentTaskIdlingResource(instrumentation.getTargetContext(), DashboardActivity.class.getCanonicalName());
+        Espresso.registerIdlingResources(idlingResource);
+    }
+    @After
+    public void unregisterIntentServiceIdlingResource() {
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
     @Test
-    public void onLoginIntentShowLoginActivity() throws InterruptedException {
-        synchronized (syncObject) {
-            syncObject.wait(2000);
-        }
+    public void onLoginIntentShowLoginActivity() {
         sendIntentShowLogin();
-        synchronized (syncObject) {
-            syncObject.wait(1000);
-        }
         isLoginActivityShowing();
     }
 
@@ -76,17 +88,6 @@ public class BaseActivityShould {
             grantPermission();
             savePreviousPreferences();
             saveTestCredentialsAndProgram();
-            Intent intent = new Intent(PreferencesState.getInstance().getContext(),
-                    DashboardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            EyeSeeTeaApplication.getInstance().startActivity(intent);
-        try {
-            synchronized (syncObject) {
-                syncObject.wait(1000);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -101,13 +102,6 @@ public class BaseActivityShould {
             getInstrumentation().getUiAutomation().executeShellCommand(
                     "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
                             + " android.permission.READ_PHONE_STATE");
-            synchronized (syncObject) {
-                try {
-                    syncObject.wait(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             getInstrumentation().getUiAutomation().executeShellCommand(
                     "pm grant " + PreferencesState.getInstance().getContext().getPackageName()
                             + " android.permission.ACCESS_FINE_LOCATION");
@@ -128,6 +122,9 @@ public class BaseActivityShould {
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         previousOrganisationCredentials = credentialsLocalDataSource.getLastValidCredentials();
         previousCredentials = credentialsLocalDataSource.getCredentials();
+        Context context = InstrumentationRegistry.getTargetContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        loggedUser = sharedPreferences.getLong(context.getString(R.string.logged_user_program), -1);
         ProgramRepository programRepository = new ProgramRepository();
         ProgramDB databaseProgramDB =
                 ProgramDB.getProgram(
@@ -141,7 +138,7 @@ public class BaseActivityShould {
     }
 
     private void saveTestCredentialsAndProgram() {
-        Context context = InstrumentationRegistry.getTargetContext();
+        Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -153,10 +150,10 @@ public class BaseActivityShould {
                 "test", "test");
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("low6qUS2wc9", "T_TZ");
+        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
         programDB.save();
         ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("T_TZ", "low6qUS2wc9"));
+        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
         PreferencesState.getInstance().setPushInProgress(false);
         UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
         userAccountDataSource.saveLoggedUser(
@@ -168,19 +165,19 @@ public class BaseActivityShould {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (previousOrganisationCredentials != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(context.getString(R.string.web_service_url),
                     previousOrganisationCredentials.getServerURL());
-            editor.commit();
         }
+        sharedPreferences.getLong(context.getString(R.string.logged_user_program), loggedUser);
+        editor.commit();
+
         CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveLastValidCredentials(previousOrganisationCredentials);
         ProgramRepository programRepository = new ProgramRepository();
         if (previousProgram != null) {
             programRepository.saveUserProgramId(previousProgram);
-        } else {
-            PreferencesEReferral.saveUserProgramId(-1l);
         }
         PreferencesState.getInstance().setPushInProgress(previousPushInProgress);
         if (previousUserAccount != null) {

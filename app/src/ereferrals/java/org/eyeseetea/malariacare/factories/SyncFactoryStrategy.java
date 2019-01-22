@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.presentation.presenters.PullPresenter;
 
 public class SyncFactoryStrategy extends ASyncFactory {
+    private SettingsFactory settingsFactory = new SettingsFactory();
 
     @Override
     protected IPullController getPullController(Context context) {
@@ -22,6 +23,9 @@ public class SyncFactoryStrategy extends ASyncFactory {
     }
 
     public PullPresenter getPullPresenter(Context context) {
-        return new PullPresenter(getPullUseCase(context));
+
+        return new PullPresenter(getPullUseCase(context),
+                settingsFactory.getSettingsUseCase(context),
+                settingsFactory.saveSettingsUseCase(context));
     }
 }

@@ -39,9 +39,10 @@ public class SettingsDataSource implements ISettingsRepository {
         String programUrl = getProgramUrl();
         String programEndPoint = getProgramEndPoint();
         boolean isSoftLoginRequired = getSoftLoginRequired();
+        boolean isPullRequired = getPullRequired();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize, programUrl, programEndPoint, isSoftLoginRequired);
+                webUrl, fontSize, programUrl, programEndPoint, isSoftLoginRequired, isPullRequired);
     }
 
     private String loadPass() {
@@ -76,6 +77,7 @@ public class SettingsDataSource implements ISettingsRepository {
         saveWebUrl(settings.getWebUrl());
         saveProgramEndPoint(settings.getProgramEndPoint());
         saveSoftLoginRequired(settings.isSoftLoginRequired());
+        savePullRequired(settings.isPullRequired());
     }
 
     private MediaListMode getMediaListMode() {
@@ -176,6 +178,14 @@ public class SettingsDataSource implements ISettingsRepository {
 
     private void saveSoftLoginRequired(boolean isRequired) {
         saveBooleanPreference(context, R.string.soft_login_required, isRequired);
+    }
+
+    private boolean getPullRequired() {
+        return getBooleanPreference(context, R.string.pull_required, false);
+    }
+
+    private void savePullRequired(boolean isRequired) {
+        saveBooleanPreference(context, R.string.pull_required, isRequired);
     }
 
     private Boolean getBooleanPreference(Context context, int stringId, Boolean defaultBool) {

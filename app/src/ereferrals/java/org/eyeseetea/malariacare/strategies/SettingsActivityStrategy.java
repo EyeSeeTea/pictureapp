@@ -47,6 +47,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     LogoutAndLoginRequiredOnPreferenceClickListener logoutAndloginRequiredOnPreferenceClickListener;
     LogoutUseCase mLogoutUseCase;
 
+    private enum RequireAction {SOFT_LOGIN, PULL}
+
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
 
@@ -60,7 +62,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
-                showLogin();
+                showSoftLoginIfRequired();
             }
         }
     };
@@ -269,13 +271,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         settingsActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
     }
 
-    private void showLogin() {
+    private void showSoftLoginIfRequired() {
         if (!LockScreenStatus.isPatternSet(settingsActivity)) {
-            markSoftLoginRequiredAndCloseSettings();
+            markRequiredActionAndCloseSettings(RequireAction.SOFT_LOGIN);
         }
     }
 
-    private void markSoftLoginRequiredAndCloseSettings() {
+    private void markRequiredActionAndCloseSettings(final RequireAction requireAction) {
         GetSettingsUseCase getSettingsUseCase =
                 new SettingsFactory().getSettingsUseCase(settingsActivity);
         final SaveSettingsUseCase saveSettingsUseCase =
@@ -284,7 +286,12 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
             @Override
             public void onSuccess(Settings settings) {
-                settings.changeSoftLoginRequired(true);
+                if (requireAction == RequireAction.SOFT_LOGIN) {
+                    settings.changeSoftLoginRequired(true);
+                } else {
+                    settings.changePullRequired(true);
+                }
+
                 saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
                     @Override
                     public void onSuccess() {
@@ -294,6 +301,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             }
         });
     }
+
 
     @Override
     public void onDestroy() {
@@ -307,8 +315,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
 
         private void showLoginIfConfigFileObsolete(Intent intent) {
-            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
-                showLogin();
+            if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
+                markRequiredActionAndCloseSettings(RequireAction.PULL);
             }
         }
     };

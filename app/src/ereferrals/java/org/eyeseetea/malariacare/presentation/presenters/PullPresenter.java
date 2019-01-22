@@ -1,6 +1,9 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -8,10 +11,15 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 public class PullPresenter {
     private View view;
 
-    PullUseCase pullUseCase;
+    private final PullUseCase pullUseCase;
+    private final GetSettingsUseCase getSettingsUseCase;
+    private final SaveSettingsUseCase saveSettingsUseCase;
 
-    public PullPresenter(PullUseCase pullUseCase) {
+    public PullPresenter(PullUseCase pullUseCase,
+            GetSettingsUseCase getSettingsUseCase, SaveSettingsUseCase saveSettingsUseCase) {
         this.pullUseCase = pullUseCase;
+        this.getSettingsUseCase = getSettingsUseCase;
+        this.saveSettingsUseCase = saveSettingsUseCase;
     }
 
     public void attachView(View view) {
@@ -32,12 +40,10 @@ public class PullPresenter {
         pullFilters.setPullMetaData(true);
         pullFilters.setDemo(false);
 
-        System.out.println("!!!!!!Executing pull");
-
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                System.out.println("!!!!!!Finished pull");
+                changePullToNotRequired();
                 if (view != null) {
                     view.pullSuccess();
                 }
@@ -85,6 +91,26 @@ public class PullPresenter {
                 //TODO: has no sense this callback in this context
             }
         });
+    }
+
+    private void changePullToNotRequired() {
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                settings.changePullRequired(false);
+                saveSettings(settings);
+            }
+        });
+    }
+
+    private void saveSettings(Settings settings) {
+
+        saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess() {
+                System.out.println("Saved - Soft Login is not required");
+            }
+        }, settings);
     }
 
     public interface View {

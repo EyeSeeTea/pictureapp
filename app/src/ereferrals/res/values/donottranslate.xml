@@ -83,6 +83,7 @@
         <item>@string/custom</item>
     </string-array>
     <string name="soft_login_required" translatable="false">"soft_login_required"</string>
+    <string name="pull_required" translatable="false">"pull_required"</string>
 
     <!-- default urls -->
     <string name="base_web_view_url" translatable="false">@string/web_url_production</string>

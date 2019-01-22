@@ -38,7 +38,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     public static final String SERVICE_METHOD = "serviceMethod";
     public static final String PUSH_MESSAGE = "PushStart";
     public static final String PUSH_IS_START = "PushIsStart";
-    public static final String SHOW_LOGIN = "ShowLogin";
+    public static final String PULL_REQUIRED = "PullRequired";
 
     private PushUseCase mPushUseCase;
 
@@ -328,7 +328,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     private void sendIntentShowLogin() {
         Intent surveysIntent = new Intent(PushService.class.getName());
         surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
-        surveysIntent.putExtra(SHOW_LOGIN, true);
+        surveysIntent.putExtra(PULL_REQUIRED, true);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }

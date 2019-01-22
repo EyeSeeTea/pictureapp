@@ -62,7 +62,7 @@ public class PushServiceShould {
     private WSPushController mWSPushController;
     private PushUseCase mPushUseCase;
     private PushServiceStrategy mPushServiceStrategy;
-    private boolean showLogiIntentReceived;
+    private boolean pullRequiredIntentReceived;
     private final Object syncObject = new Object();
 
     private Credentials previousCredentials;
@@ -73,8 +73,9 @@ public class PushServiceShould {
     private Context mContext;
 
     @Test
-    public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
-        showLogiIntentReceived = false;
+    public void launchPullRequiredIntentOn209APIResponse()
+            throws IOException, InterruptedException {
+        pullRequiredIntentReceived = false;
         mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
@@ -86,7 +87,7 @@ public class PushServiceShould {
         synchronized (syncObject) {
             syncObject.wait();
         }
-        assertThat(showLogiIntentReceived, is(true));
+        assertThat(pullRequiredIntentReceived, is(true));
     }
 
     @Before
@@ -201,13 +202,13 @@ public class PushServiceShould {
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            showLoginIfConfigFileObsolete(intent);
+            saveIntentReceived(intent);
         }
 
-        private void showLoginIfConfigFileObsolete(Intent intent) {
-            if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+        private void saveIntentReceived(Intent intent) {
+            if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
                 synchronized (syncObject) {
-                    showLogiIntentReceived = true;
+                    pullRequiredIntentReceived = true;
                     syncObject.notify();
                 }
             }

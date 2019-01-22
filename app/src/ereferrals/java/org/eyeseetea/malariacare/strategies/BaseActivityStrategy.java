@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.SpannableString;
@@ -35,11 +36,14 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
@@ -50,6 +54,8 @@ import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.LockScreenStatus;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.PullDialogFragment;
+import org.eyeseetea.malariacare.views.SoftLoginDialogFragment;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
@@ -123,6 +129,36 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         LocalBroadcastManager.getInstance(mBaseActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
         applicationWillEnterForeground();
+
+        showSoftLoginOrPullDialogIfRequired();
+    }
+
+    private void showSoftLoginOrPullDialogIfRequired() {
+        GetSettingsUseCase getSettingsUseCase =
+                new SettingsFactory().getSettingsUseCase(mBaseActivity);
+
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                if (settings.isSoftLoginRequired()) {
+                    showSoftLoginDialog();
+                } else if (settings.isPullRequired()) {
+                    showPullDialog();
+                }
+            }
+        });
+    }
+
+    private void showSoftLoginDialog() {
+        FragmentManager fm = mBaseActivity.getSupportFragmentManager();
+        SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
+        softLoginDialogFragment.show(fm, "soft_login");
+    }
+
+    public void showPullDialog() {
+        FragmentManager fm = mBaseActivity.getSupportFragmentManager();
+        PullDialogFragment pullDialogFragment = PullDialogFragment.newInstance();
+        pullDialogFragment.show(fm, "pull");
     }
 
     public void applicationdidenterbackground() {
@@ -208,8 +244,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
-                if (!LockScreenStatus.isPatternSet(mBaseActivity)) {
-                    checkIfSurveyIsOpenAndShowLogin();
+                if (mBaseActivity.hasWindowFocus() && !LockScreenStatus.isPatternSet(
+                        mBaseActivity)) {
+                    showSoftLoginDialog();
                 }
             }
         }
@@ -349,7 +386,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     };
 
     private void showLoginIfConfigFileObsolete(Intent intent) {
-        if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
+        if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
             SurveyFragment.closeKeyboard();
             showLogin(true);
         }

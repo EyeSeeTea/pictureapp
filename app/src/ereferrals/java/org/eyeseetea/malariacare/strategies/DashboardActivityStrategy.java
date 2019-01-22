@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -79,7 +78,6 @@ import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUse
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
 import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
 import org.eyeseetea.malariacare.factories.AppInfoFactory;
-import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -91,7 +89,6 @@ import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.SoftLoginDialogFragment;
 
 import java.io.File;
 import java.util.Date;
@@ -189,27 +186,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         });
 
-        showSoftLoginDialogIfRequired();
-    }
-
-    private void showSoftLoginDialogIfRequired() {
-        GetSettingsUseCase getSettingsUseCase =
-                new SettingsFactory().getSettingsUseCase(mDashboardActivity);
-
-        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
-            @Override
-            public void onSuccess(Settings setting) {
-                if (setting.isSoftLoginRequired()) {
-                    showSoftLoginDialog();
-                }
-            }
-        });
-    }
-
-    private void showSoftLoginDialog() {
-        FragmentManager fm = mDashboardActivity.getSupportFragmentManager();
-        SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
-        softLoginDialogFragment.show(fm, "soft_login");
     }
 
     private void enableDisableRefreshButton() {

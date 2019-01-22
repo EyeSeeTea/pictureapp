@@ -381,16 +381,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            showLoginIfConfigFileObsolete(intent);
+            if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
+                SurveyFragment.closeKeyboard();
+                showPullDialog();
+            }
         }
     };
-
-    private void showLoginIfConfigFileObsolete(Intent intent) {
-        if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
-            SurveyFragment.closeKeyboard();
-            showLogin(true);
-        }
-    }
 
     public String translate(@StringRes int id){
         return Utils.getInternationalizedString(id, mBaseActivity);

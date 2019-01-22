@@ -18,5 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_margin="16dp" />
 </LinearLayout>

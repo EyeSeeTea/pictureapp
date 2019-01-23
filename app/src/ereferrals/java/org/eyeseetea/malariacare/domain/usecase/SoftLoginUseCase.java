@@ -95,17 +95,6 @@ public class SoftLoginUseCase implements UseCase {
         }
     }
 
-    //TODO: It's necessary here
-    /*private void notifyOnServerPinChanged() {
-
-        mainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onServerPinChanged();
-            }
-        });
-    }*/
-
     public void notifyLoginSuccess() {
         mainExecutor.run(new Runnable() {
             @Override
@@ -165,8 +154,5 @@ public class SoftLoginUseCase implements UseCase {
         void onNetworkError();
 
         void onMaxInvalidLoginAttemptsError(long enableLoginTime);
-
-        //TODO: It's necessary here
-        //void onServerPinChanged();
     }
 }

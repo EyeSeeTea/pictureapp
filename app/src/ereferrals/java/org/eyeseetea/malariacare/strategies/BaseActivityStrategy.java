@@ -388,6 +388,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
                 SurveyFragment.closeKeyboard();
                 showPullDialog();
+            } else if (intent.getBooleanExtra(PushServiceStrategy.INVALID_CREDENTIALS_ON_PUSH,
+                    false)) {
+                showSoftLoginDialog();
             }
         }
     };

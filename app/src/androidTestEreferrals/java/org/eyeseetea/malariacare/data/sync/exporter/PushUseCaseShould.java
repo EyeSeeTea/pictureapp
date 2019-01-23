@@ -158,6 +158,11 @@ public class PushUseCaseShould {
                     countSync++;
                 }
             }
+
+            @Override
+            public void onInvalidCredentials() {
+                fail("onReOpenOrgUnit");
+            }
         });
 
         synchronized (syncObject) {

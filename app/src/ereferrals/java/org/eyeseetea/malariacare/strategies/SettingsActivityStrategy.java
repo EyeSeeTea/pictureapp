@@ -317,6 +317,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         private void showLoginIfConfigFileObsolete(Intent intent) {
             if (intent.getBooleanExtra(PushServiceStrategy.PULL_REQUIRED, false)) {
                 markRequiredActionAndCloseSettings(RequireAction.PULL);
+            } else if (intent.getBooleanExtra(PushServiceStrategy.INVALID_CREDENTIALS_ON_PUSH,
+                    false)) {
+                markRequiredActionAndCloseSettings(RequireAction.SOFT_LOGIN);
             }
         }
     };

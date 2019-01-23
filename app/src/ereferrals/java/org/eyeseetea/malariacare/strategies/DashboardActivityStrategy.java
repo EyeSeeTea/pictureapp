@@ -730,6 +730,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void onStart() {
+        openPendingSurveyIfRequired();
+    }
+
+    private void openPendingSurveyIfRequired() {
         if (Session.hasSurveyToComplete()) {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);

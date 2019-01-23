@@ -69,7 +69,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "AndroidLifeCycle: onCreate");
@@ -451,6 +450,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         mBaseActivityStrategy.onWindowFocusChanged(hasFocus);
         super.onWindowFocusChanged(hasFocus);
@@ -466,5 +470,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
         Context context = LanguageContextWrapper.wrap(newBase, currentLanguage);
         super.attachBaseContext(context);
+    }
+
+    protected void surveyClosed() {
+        mBaseActivityStrategy.surveyClosed();
     }
 }

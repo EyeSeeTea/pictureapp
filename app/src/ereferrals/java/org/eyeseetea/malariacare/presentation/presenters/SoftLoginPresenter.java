@@ -77,20 +77,21 @@ public class SoftLoginPresenter {
         getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
             @Override
             public void onSuccess(Settings settings) {
-                if (view != null) {
-                    if (settings.isMetadataUpdateActive()) {
-                        view.launchPull();
-                    }
+                settings.changeSoftLoginRequired(false);
+                if (settings.isMetadataUpdateActive()) {
+                    settings.changePullRequired(true);
+                }
+                saveSettings(settings);
 
+                if (view != null) {
                     view.hideProgress();
                     view.loginSuccess();
-                    changeSoftLoginToNotRequired(settings);
                 }
             }
         });
     }
 
-    private void changeSoftLoginToNotRequired(Settings settings) {
+    private void saveSettings(Settings settings) {
         settings.changeSoftLoginRequired(false);
         saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
             @Override
@@ -151,7 +152,5 @@ public class SoftLoginPresenter {
         void disableLoginAction();
 
         void enableLoginAction();
-
-        void launchPull();
     }
 }

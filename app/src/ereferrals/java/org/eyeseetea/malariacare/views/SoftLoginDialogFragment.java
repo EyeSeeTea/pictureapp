@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +99,7 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
 
     @Override
     public void loginSuccess() {
-        getDialog().dismiss();
+        dismiss();
     }
 
     @Override
@@ -121,13 +120,6 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     @Override
     public void enableLoginAction() {
         loginButton.setEnabled(true);
-    }
-
-    @Override
-    public void launchPull() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        PullDialogFragment pullDialogFragment = PullDialogFragment.newInstance();
-        pullDialogFragment.show(fm, "pull");
     }
 
 

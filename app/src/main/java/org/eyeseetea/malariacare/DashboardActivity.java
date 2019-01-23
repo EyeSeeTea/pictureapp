@@ -551,6 +551,8 @@ public class DashboardActivity extends BaseActivity {
             showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
         }
+
+        super.surveyClosed();
     }
 
     public void closeReceiptBalanceFragment() {
@@ -760,6 +762,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.completeSurvey();
         closeSurveyFragment();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

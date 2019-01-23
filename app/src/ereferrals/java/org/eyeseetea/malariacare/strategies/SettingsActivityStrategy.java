@@ -56,11 +56,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 new LogoutAndLoginRequiredOnPreferenceClickListener(settingsActivity);
     }
 
-    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 Log.d(TAG, "Screen off");
                 showSoftLoginIfRequired();
             }
@@ -268,7 +268,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        settingsActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
+        settingsActivity.registerReceiver(mScreenOnReceiver, screenStateFilter);
     }
 
     private void showSoftLoginIfRequired() {
@@ -305,7 +305,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void onDestroy() {
-        settingsActivity.unregisterReceiver(mScreenOffReceiver);
+        settingsActivity.unregisterReceiver(mScreenOnReceiver);
     }
 
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {

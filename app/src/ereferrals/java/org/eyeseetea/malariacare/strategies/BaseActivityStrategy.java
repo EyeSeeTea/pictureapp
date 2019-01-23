@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +29,6 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
@@ -91,7 +89,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         translate(notConnectedText),
                         Toast.LENGTH_SHORT).show();
             } else {
-                if(comesFromNotConected){
+                if (comesFromNotConected) {
                     showLoginIfUserReadOnlyMode();
                 }
                 comesFromNotConected = false;
@@ -104,12 +102,13 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     };
 
     private void showLoginIfUserReadOnlyMode() {
-        IUserRepository userRepository=new UserAccountDataSource();
-        GetUserUserAccountUseCase getUserUserAccountUseCase =new GetUserUserAccountUseCase(userRepository);
+        IUserRepository userRepository = new UserAccountDataSource();
+        GetUserUserAccountUseCase getUserUserAccountUseCase = new GetUserUserAccountUseCase(
+                userRepository);
         getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
             @Override
             public void onGetUserAccount(UserAccount userAccount) {
-                if(!userAccount.canAddSurveys()){
+                if (!userAccount.canAddSurveys()) {
                     showLogin(true);
                 }
             }
@@ -133,7 +132,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         showSoftLoginOrPullDialogIfRequired();
     }
 
-    private void showSoftLoginOrPullDialogIfRequired() {
+    protected void showSoftLoginOrPullDialogIfRequired() {
         GetSettingsUseCase getSettingsUseCase =
                 new SettingsFactory().getSettingsUseCase(mBaseActivity);
 
@@ -150,24 +149,40 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private void showSoftLoginDialog() {
+
         FragmentManager fm = mBaseActivity.getSupportFragmentManager();
+
         SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
         softLoginDialogFragment.show(fm, "soft_login");
+
+        mBaseActivity.getSupportFragmentManager().executePendingTransactions();
+        softLoginDialogFragment.getDialog().setOnDismissListener(
+                new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        showSoftLoginOrPullDialogIfRequired();
+                    }
+                });
     }
 
-    public void showPullDialog() {
-        FragmentManager fm = mBaseActivity.getSupportFragmentManager();
-        PullDialogFragment pullDialogFragment = PullDialogFragment.newInstance();
-        pullDialogFragment.show(fm, "pull");
+    @Override
+    public void surveyClosed() {
+        showSoftLoginOrPullDialogIfRequired();
     }
 
-    public void applicationdidenterbackground() {
-        if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
-            EyeSeeTeaApplication.getInstance().setAppInBackground(true);
-            checkHastSurveyToComplete();
+    private void showPullDialog() {
+        if (!isSurveyOpen()) {
+            FragmentManager fm = mBaseActivity.getSupportFragmentManager();
+            PullDialogFragment pullDialogFragment = PullDialogFragment.newInstance();
+            pullDialogFragment.show(fm, "pull");
         }
     }
 
+    private boolean isSurveyOpen() {
+        android.app.Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
+                R.id.dashboard_details_container);
+        return (f instanceof SurveyFragment || f instanceof ReviewFragment);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
@@ -238,12 +253,13 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             EyeSeeTeaApplication.getInstance().setIsWindowFocused(true);
         }
     }
-    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
+
+    private BroadcastReceiver mScreenOnReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                Log.d(TAG, "Screen off");
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                Log.d(TAG, "Screen on");
                 if (mBaseActivity.hasWindowFocus() && !LockScreenStatus.isPatternSet(
                         mBaseActivity)) {
                     showSoftLoginDialog();
@@ -252,19 +268,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         }
     };
 
-    private void checkIfSurveyIsOpenAndShowLogin() {
-      checkHastSurveyToComplete();
-        showLogin(false);
-    }
-    private void checkHastSurveyToComplete(){
-        Fragment f = mBaseActivity.getFragmentManager().findFragmentById(
-                R.id.dashboard_details_container);
-        if (f instanceof SurveyFragment || f instanceof ReviewFragment) {
-            Session.setHasSurveyToComplete(true);
-        }else {
-            Session.setHasSurveyToComplete(false);
-        }
-    }
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);
@@ -283,7 +286,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onStop() {
         LocalBroadcastManager.getInstance(mBaseActivity).unregisterReceiver(pushReceiver);
-        if (EyeSeeTeaApplication.getInstance().isAppInBackground() && !LockScreenStatus.isPatternSet(
+        if (EyeSeeTeaApplication.getInstance().isAppInBackground()
+                && !LockScreenStatus.isPatternSet(
                 mBaseActivity)) {
             ActivityCompat.finishAffinity(mBaseActivity);
         }
@@ -300,7 +304,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        mBaseActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
+        mBaseActivity.registerReceiver(mScreenOnReceiver, screenStateFilter);
     }
 
     public void logout() {
@@ -327,7 +331,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onDestroy() {
-        mBaseActivity.unregisterReceiver(mScreenOffReceiver);
+        mBaseActivity.unregisterReceiver(mScreenOnReceiver);
     }
 
     @Override
@@ -388,7 +392,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         }
     };
 
-    public String translate(@StringRes int id){
+    public String translate(@StringRes int id) {
         return Utils.getInternationalizedString(id, mBaseActivity);
     }
 

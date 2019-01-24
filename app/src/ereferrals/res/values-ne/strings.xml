@@ -979,4 +979,5 @@
 <string name="custom">अनुकूलन</string>
 
     <string name="pull_dialog_progress_generic_message">मेटाडेटा अपडेट गर्दै …</string>
+    <string name="push_invalid_credentials">हामीले फेला पारेको छ कि पिनले सर्भरमा परिवर्तन गरेको छ, कृपया पिन फेरि सम्मिलित गर्नुहोस्</string>
 </resources>

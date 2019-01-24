@@ -1033,4 +1033,5 @@ Ameahidi kuhudhuria"</string>
 <string name="custom">Desturi</string>
 
     <string name="pull_dialog_progress_generic_message">Inasasisha metadata …</string>
+    <string name="push_invalid_credentials">tumegundua kuwa siri imebadilika kwenye seva, tafadhali ingiza tena siri</string>
 </resources>

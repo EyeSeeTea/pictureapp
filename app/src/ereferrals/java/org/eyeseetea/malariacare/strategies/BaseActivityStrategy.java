@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -90,7 +91,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         Toast.LENGTH_SHORT).show();
             } else {
                 if (comesFromNotConected) {
-                    showLoginIfUserReadOnlyMode();
+                    showPullDialogIfUserReadOnlyMode();
                 }
                 comesFromNotConected = false;
                 Toast.makeText(mBaseActivity,
@@ -101,7 +102,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         }
     };
 
-    private void showLoginIfUserReadOnlyMode() {
+    private void showPullDialogIfUserReadOnlyMode() {
         IUserRepository userRepository = new UserAccountDataSource();
         GetUserUserAccountUseCase getUserUserAccountUseCase = new GetUserUserAccountUseCase(
                 userRepository);
@@ -109,7 +110,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             @Override
             public void onGetUserAccount(UserAccount userAccount) {
                 if (!userAccount.canAddSurveys()) {
-                    showLogin(true);
+                    showPullDialog();
                 }
             }
         });
@@ -312,7 +313,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                showLogin(false);
+                showLogin();
             }
 
             @Override
@@ -322,9 +323,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         });
     }
 
-    private void showLogin(boolean pull) {
+    private void showLogin() {
         Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
-        loginIntent.putExtra(LoginActivityStrategy.START_PULL, pull);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mBaseActivity.startActivity(loginIntent);
     }
@@ -390,10 +390,18 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 showPullDialog();
             } else if (intent.getBooleanExtra(PushServiceStrategy.INVALID_CREDENTIALS_ON_PUSH,
                     false)) {
+                showError(R.string.push_invalid_credentials, Gravity.CENTER);
                 showSoftLoginDialog();
             }
         }
     };
+
+    public void showError(@StringRes int message, int gravity) {
+        Toast toast = Toast.makeText(mBaseActivity, translate(message),
+                Toast.LENGTH_LONG);
+        toast.setGravity(gravity, 0, 0);
+        toast.show();
+    }
 
     public String translate(@StringRes int id) {
         return Utils.getInternationalizedString(id, mBaseActivity);

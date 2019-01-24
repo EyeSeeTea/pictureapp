@@ -975,4 +975,6 @@
 <string name="custom">Personalizado</string>
 
     <string name="pull_dialog_progress_generic_message">Atualizando Metadados …</string>
+    <string name="push_invalid_credentials">detectamos que o pino foi alterado no servidor, insira o pino novamente</string>
+
 </resources>

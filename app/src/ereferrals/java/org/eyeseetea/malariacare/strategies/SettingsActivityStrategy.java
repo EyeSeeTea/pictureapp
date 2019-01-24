@@ -15,7 +15,9 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
@@ -319,6 +321,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 markRequiredActionAndCloseSettings(RequireAction.PULL);
             } else if (intent.getBooleanExtra(PushServiceStrategy.INVALID_CREDENTIALS_ON_PUSH,
                     false)) {
+                showError(R.string.push_invalid_credentials, Gravity.CENTER);
                 markRequiredActionAndCloseSettings(RequireAction.SOFT_LOGIN);
             }
         }
@@ -393,6 +396,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
         return settingsActivity.getResources().getStringArray(
                 R.array.languages_strings)[0];
+    }
+
+    public void showError(@StringRes int message, int gravity) {
+        Toast toast = Toast.makeText(settingsActivity, translate(message),
+                Toast.LENGTH_LONG);
+        toast.setGravity(gravity, 0, 0);
+        toast.show();
     }
 
     private String translate(@StringRes int id) {

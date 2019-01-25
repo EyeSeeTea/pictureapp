@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -7,12 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.presentation.presenters.SoftLoginPresenter;
@@ -26,6 +27,8 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     private Button loginButton;
     private LinearLayout softLoginContainer;
     private ProgressBar progressBar;
+    private Button logoutButton;
+    private Button advancedOptions;
 
     private SoftLoginPresenter presenter;
 
@@ -51,11 +54,8 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     }
 
     private void initializeViews(View view) {
-        softLoginContainer = view.findViewById(R.id.soft_login_container);
-        progressBar = view.findViewById(R.id.soft_login_progress_bar);
-        userNameEditText = view.findViewById(R.id.edittext_username);
-        userNameEditText.setEnabled(false);
-        passwordEditText = view.findViewById(R.id.edittext_password);
+        initializeBasicViews(view);
+
         loginButton = view.findViewById(R.id.button_log_in);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -65,10 +65,39 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
             }
         });
 
-        // Show soft keyboard automatically and request focus to field
-        passwordEditText.requestFocus();
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        logoutButton = view.findViewById(R.id.button_log_out);
+
+        advancedOptions = view.findViewById(R.id.advanced_options);
+
+        advancedOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.advancedOptions();
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.login(passwordEditText.getText().toString());
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                presenter.logout();
+            }
+        });
+    }
+
+    private void initializeBasicViews(View view) {
+        softLoginContainer = view.findViewById(R.id.soft_login_container);
+        progressBar = view.findViewById(R.id.soft_login_progress_bar);
+        userNameEditText = view.findViewById(R.id.edittext_username);
+        userNameEditText.setEnabled(false);
+        passwordEditText = view.findViewById(R.id.edittext_password);
     }
 
     private void initializePresenter() {
@@ -120,6 +149,30 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     @Override
     public void enableLoginAction() {
         loginButton.setEnabled(true);
+    }
+
+    @Override
+    public void showAdvancedOptions() {
+        logoutButton.setVisibility(View.VISIBLE);
+        advancedOptions.setText(R.string.simple_options);
+    }
+
+    @Override
+    public void hideAdvancedOptions() {
+        logoutButton.setVisibility(View.GONE);
+        advancedOptions.setText(R.string.advanced_options);
+    }
+
+    @Override
+    public void navigateToLogin() {
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getActivity().startActivity(loginIntent);
+    }
+
+    @Override
+    public void showLogoutError() {
+        showError(R.string.login_unexpected_error);
     }
 
 

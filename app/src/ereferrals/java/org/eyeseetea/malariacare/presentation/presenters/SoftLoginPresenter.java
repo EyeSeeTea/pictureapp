@@ -5,6 +5,7 @@ import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
 
@@ -12,15 +13,21 @@ public class SoftLoginPresenter {
     private View view;
     private final GetUserUserAccountUseCase getUserUserAccountUseCase;
     private final SoftLoginUseCase softLoginUseCase;
+    private final LogoutUseCase logoutUseCase;
     private final IDelayedMainExecutor delayedMainExecutor;
     private final GetSettingsUseCase getSettingsUseCase;
     private final SaveSettingsUseCase saveSettingsUseCase;
 
+    boolean showingAdvancedOptions = false;
+
     public SoftLoginPresenter(GetUserUserAccountUseCase getUserUserAccountUseCase,
-            SoftLoginUseCase softLoginUseCase, IDelayedMainExecutor delayedMainExecutor,
+            SoftLoginUseCase softLoginUseCase,
+            LogoutUseCase logoutUseCase,
+            IDelayedMainExecutor delayedMainExecutor,
             GetSettingsUseCase getSettingsUseCase, SaveSettingsUseCase saveSettingsUseCase) {
         this.getUserUserAccountUseCase = getUserUserAccountUseCase;
         this.softLoginUseCase = softLoginUseCase;
+        this.logoutUseCase = logoutUseCase;
         this.delayedMainExecutor = delayedMainExecutor;
         this.getSettingsUseCase = getSettingsUseCase;
         this.saveSettingsUseCase = saveSettingsUseCase;
@@ -30,6 +37,7 @@ public class SoftLoginPresenter {
         this.view = view;
 
         this.view.hideProgress();
+        this.view.hideAdvancedOptions();
 
         loadCurrentUser();
     }
@@ -136,6 +144,47 @@ public class SoftLoginPresenter {
         });
     }
 
+    public void logout() {
+        logoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                if (view != null) {
+                    changeSoftLoginToNotRequired();
+                    view.navigateToLogin();
+                }
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                if (view != null) {
+                    view.showLogoutError();
+                }
+            }
+        });
+    }
+
+    private void changeSoftLoginToNotRequired() {
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                settings.changeSoftLoginRequired(false);
+                saveSettings(settings);
+            }
+        });
+    }
+
+    public void advancedOptions() {
+        if (view != null) {
+            if (showingAdvancedOptions) {
+                view.hideAdvancedOptions();
+                showingAdvancedOptions = false;
+            } else {
+                view.showAdvancedOptions();
+                showingAdvancedOptions = true;
+            }
+        }
+    }
+
     public interface View {
         void showUsername(String username);
 
@@ -152,5 +201,13 @@ public class SoftLoginPresenter {
         void disableLoginAction();
 
         void enableLoginAction();
+
+        void showAdvancedOptions();
+
+        void hideAdvancedOptions();
+
+        void navigateToLogin();
+
+        void showLogoutError();
     }
 }

@@ -11,6 +11,17 @@
         android:padding="@dimen/dialog_padding_std">
 
         <include layout="@layout/content_login_basic" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomButton
+            android:id="@+id/button_log_out"
+            style="@style/CustomButton"
+            android:background="@drawable/button_selector_red"
+            android:text="@string/clear_and_logout" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomButton
+            android:id="@+id/advanced_options"
+            style="@style/CustomButton.Link"
+            android:text="@string/advanced_options" />
     </LinearLayout>
 
     <ProgressBar

@@ -110,7 +110,8 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
 
         GetUserUserAccountUseCase getUserAccountUseCase = getUserAccountUseCase();
         SoftLoginPresenter softLoginPresenter =
-                new SoftLoginPresenter(getUserAccountUseCase, getSoftLoginUseCase(context),
+                new SoftLoginPresenter(getUserAccountUseCase,
+                        getSoftLoginUseCase(context), getLogoutUseCase(context),
                         new UIThreadExecutor(), getSettingsUseCase, saveSettingsUseCase);
 
         return softLoginPresenter;

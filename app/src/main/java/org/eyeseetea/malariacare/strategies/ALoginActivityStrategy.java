@@ -1,12 +1,9 @@
 package org.eyeseetea.malariacare.strategies;
 
 
-import android.widget.EditText;
-
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.Settings;
 
 public abstract class ALoginActivityStrategy {
     protected LoginActivity loginActivity;
@@ -51,10 +48,6 @@ public abstract class ALoginActivityStrategy {
     }
 
     public abstract void initLoginUseCase();
-
-    public void checkCredentials(Credentials credentials, Callback callback) {
-        callback.onSuccessDoLogin();
-    }
 
     public void initProgramServer(){ }
 

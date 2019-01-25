@@ -75,9 +75,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                                 }
                             });
                 } else {
-                    checkUserCredentialsWithLastValid(
-                            mCredentialsLocalDataSource.getLastValidCredentials(),
-                            true);
+                    notifyNetworkError();
                 }
 
             } else {
@@ -92,7 +90,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
                         mCredentialsLocalDataSource.saveLastValidCredentials(insertedCredentials);
-                        checkUserCredentialsWithLastValid(insertedCredentials, false);
+                        notifyLoginSuccess();
                         }
 
                     @Override
@@ -103,9 +101,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                         } else if (throwable instanceof InvalidCredentialsException) {
                             notifyInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            checkUserCredentialsWithLastValid(
-                                    mCredentialsLocalDataSource.getLastValidCredentials(),
-                                    true);
+                            notifyNetworkError();
                         }
                     }
                 });
@@ -115,41 +111,6 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         InvalidLoginAttempts invalidLoginAttempts =
                 mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
         return invalidLoginAttempts.isLoginEnabled();
-    }
-
-    private void checkUserCredentialsWithLastValid(Credentials lastValidCredentials,
-            boolean fromNetWorkError) {
-        if (lastValidCredentials != null && (insertedCredentials.getUsername().equals(
-                lastValidCredentials.getUsername())
-                && insertedCredentials.getPassword().equals(lastValidCredentials.getPassword())
-                && (fromNetWorkError || insertedCredentials.getServerURL().equals(
-                lastValidCredentials.getServerURL())))) {
-            notifyLoginSuccess();
-        } else {
-            if (fromNetWorkError) {
-                notifyNetworkError();
-            } else {
-                if (insertedCredentials.getUsername().equals(lastValidCredentials.getUsername())
-                        && !insertedCredentials.getPassword().equals(
-                        lastValidCredentials.getPassword())
-                        && (fromNetWorkError || insertedCredentials.getServerURL().equals(
-                        lastValidCredentials.getServerURL()))) {
-                    notifyOnServerPinChanged();
-                }else{
-                    notifyInvalidCredentials();
-                }
-            }
-        }
-    }
-
-    private void notifyOnServerPinChanged() {
-
-        mMainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onServerPinChanged();
-            }
-        });
     }
 
     public void notifyLoginSuccess() {

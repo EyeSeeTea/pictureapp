@@ -1,5 +1,12 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
+import static org.eyeseetea.malariacare.domain.exception.InvalidMetadataException.TypeOfFailure
+        .CONFIGURATION_FILES;
+import static org.eyeseetea.malariacare.domain.exception.InvalidMetadataException.TypeOfFailure
+        .TRANSLATIONS;
+import static org.eyeseetea.malariacare.domain.exception.InvalidMetadataException.TypeOfFailure
+        .TRANSLATIONS_AND_CONFIGURATION_FILES;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,6 +31,8 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
@@ -31,6 +40,7 @@ import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.InvalidMetadataException;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
@@ -49,10 +59,18 @@ public class WSPullController implements IPullController {
     private Context mContext;
     private IAppInfoRepository mAppInfoRepository;
 
-    public WSPullController(Context context) {
+    IConfigurationRepository mIConfigurationRepository;
+    ILanguageRepository mILanguageRepository;
+
+    public WSPullController(Context context,
+            IConfigurationRepository configurationRepository,
+            ILanguageRepository languageRepository) {
         mMetadataUpdater = new MetadataUpdater(context);
         mContext = context;
         mAppInfoRepository = new AppInfoDataSource(context);
+
+        this.mIConfigurationRepository = configurationRepository;
+        this.mILanguageRepository = languageRepository;
     }
 
 /*    @Override
@@ -109,17 +127,40 @@ public class WSPullController implements IPullController {
 
                 Program program = programRepository.getUserProgram();
 
+                boolean isLastVerificationValid = true;
+
                 if (importer.hasToUpdateMetadata(program)) {
                     checkCompletedSurveys(callback, program);
+                    isLastVerificationValid = verifyLanguagesAndMetadataIsDownloaded(callback);
                 }
                 programRepository.saveUserProgramId(program);
 
-                callback.onComplete();
+                if (isLastVerificationValid) {
+                    callback.onComplete();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             callback.onError(e);
         }
+    }
+
+    private boolean verifyLanguagesAndMetadataIsDownloaded(Callback callback) {
+        boolean configFilesWereDownloaded =
+                mIConfigurationRepository.configurationFilesWereDownloaded();
+
+        boolean translationsWereDownloaded = mILanguageRepository.translationsWereDownloaded();
+
+        if (!translationsWereDownloaded && !configFilesWereDownloaded) {
+            callback.onError(
+                    new InvalidMetadataException(TRANSLATIONS_AND_CONFIGURATION_FILES));
+        } else if (!translationsWereDownloaded) {
+            callback.onError(new InvalidMetadataException(TRANSLATIONS));
+        } else if (!configFilesWereDownloaded) {
+            callback.onError(new InvalidMetadataException(CONFIGURATION_FILES));
+        }
+
+        return configFilesWereDownloaded && translationsWereDownloaded;
     }
 
     private void checkCompletedSurveys(final IPullController.Callback callback,

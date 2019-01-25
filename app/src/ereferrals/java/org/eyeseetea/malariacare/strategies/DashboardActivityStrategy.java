@@ -33,8 +33,6 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
@@ -55,9 +53,7 @@ import org.eyeseetea.malariacare.domain.boundary.IExternalVoucherRegistry;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.io.IFileDownloader;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
@@ -76,7 +72,6 @@ import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
-import org.eyeseetea.malariacare.domain.usecase.VerifyLanguagesAndConfigFilesWereDownloadedUseCase;
 import org.eyeseetea.malariacare.factories.AppInfoFactory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -121,43 +116,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void onCreate() {
         ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
         credentials = iCredentialsRepository.getLastValidCredentials();
-        if (credentials != null && !credentials.isDemoCredentials()) {
-            IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
-            ILanguageRepository languageRepository = new LanguagesLocalDataSource();
 
-            VerifyLanguagesAndConfigFilesWereDownloadedUseCase downloadedUseCase =
-                    new VerifyLanguagesAndConfigFilesWereDownloadedUseCase(
-                            configurationRepository, languageRepository,
-                            new VerifyLanguagesAndConfigFilesWereDownloadedUseCase.Callback() {
-                                @Override
-                                public void onSoftLoginStringTranslationFailed() {
-                                    showToast(R.string.warning_strings_download_failed);
-                                }
-
-                                @Override
-                                public void onFullLoginStringTranslationOrConfigFilesFailed(
-                                        TypeOfFailure typeOfFailed) {
-                                    switch (typeOfFailed) {
-                                        case TRANSLATIONS:
-                                            showToast(
-                                                    R.string.error_unable_to_download_translations);
-                                            break;
-                                        case CONFIGURATION_FILES:
-                                            showToast(
-                                                    R.string.error_unable_to_download_configuration_files);
-                                            break;
-                                        case TRANSLATIONS_AND_CONFIGURATION_FILES:
-                                            showToast(
-                                                    R.string.error_unable_to_download_translations_and_configuration_files);
-                                            break;
-                                    }
-
-                                    mDashboardActivity.finishAndGo(LoginActivity.class);
-                                }
-                            });
-
-            downloadedUseCase.run();
-        }
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IConnectivityManager mConnectivity = new ConnectivityManager(mDashboardActivity);

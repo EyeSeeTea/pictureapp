@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttem
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Settings;
+import org.eyeseetea.malariacare.domain.exception.InvalidMetadataException;
 import org.eyeseetea.malariacare.domain.exception.WarningException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
@@ -567,7 +568,44 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onError(Throwable throwable) {
                 loginActivity.onFinishLoading(null);
-                loginActivity.showError(R.string.dialog_pull_error);
+
+                if (throwable instanceof InvalidMetadataException) {
+                    InvalidMetadataException exception = (InvalidMetadataException) throwable;
+
+                    switch (exception.getTypeOfFailure()) {
+                        case TRANSLATIONS:
+                            loginActivity.showError(
+                                    R.string.error_unable_to_download_translations);
+                            break;
+                        case CONFIGURATION_FILES:
+                            loginActivity.showError(
+                                    R.string.error_unable_to_download_configuration_files);
+                            break;
+                        case TRANSLATIONS_AND_CONFIGURATION_FILES:
+                            loginActivity.showError(
+                                    R.string.error_unable_to_download_translations_and_configuration_files);
+                            break;
+                    }
+                } else {
+                    loginActivity.showError(R.string.dialog_pull_error);
+
+                }
+
+                executeLogout();
+            }
+
+            private void executeLogout() {
+                logout(new LogoutUseCase.Callback() {
+                    @Override
+                    public void onLogoutSuccess() {
+                        Log.e(this.getClass().getSimpleName(), "onLogoutSuccess ");
+                    }
+
+                    @Override
+                    public void onLogoutError(String message) {
+                        Log.e(this.getClass().getSimpleName(), "onLogoutError " + message);
+                    }
+                });
             }
 
             @Override

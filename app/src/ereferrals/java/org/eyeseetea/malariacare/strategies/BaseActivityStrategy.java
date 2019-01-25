@@ -69,6 +69,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private int notConnectedText = R.string.offline_status;
     private boolean comesFromNotConected = false;
 
+    private UserAccount currentUser;
+
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
     }
@@ -130,7 +132,18 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 new IntentFilter(PushService.class.getName()));
         applicationWillEnterForeground();
 
-        showSoftLoginOrPullDialogIfRequired();
+        loadCurrentUser();
+    }
+
+    private void loadCurrentUser() {
+        new AuthenticationFactoryStrategy().getUserAccountUseCase().execute(
+                new GetUserUserAccountUseCase.Callback() {
+                    @Override
+                    public void onGetUserAccount(UserAccount userAccount) {
+                        currentUser = userAccount;
+                        showSoftLoginOrPullDialogIfRequired();
+                    }
+                });
     }
 
     protected void showSoftLoginOrPullDialogIfRequired() {
@@ -150,20 +163,21 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private void showSoftLoginDialog() {
+        if (!currentUser.isDemo()) {
+            FragmentManager fm = mBaseActivity.getSupportFragmentManager();
 
-        FragmentManager fm = mBaseActivity.getSupportFragmentManager();
+            SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
+            softLoginDialogFragment.show(fm, "soft_login");
 
-        SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
-        softLoginDialogFragment.show(fm, "soft_login");
-
-        mBaseActivity.getSupportFragmentManager().executePendingTransactions();
-        softLoginDialogFragment.getDialog().setOnDismissListener(
-                new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        showSoftLoginOrPullDialogIfRequired();
-                    }
-                });
+            mBaseActivity.getSupportFragmentManager().executePendingTransactions();
+            softLoginDialogFragment.getDialog().setOnDismissListener(
+                    new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            showSoftLoginOrPullDialogIfRequired();
+                        }
+                    });
+        }
     }
 
     @Override

@@ -28,8 +28,10 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.Language;
 import org.eyeseetea.malariacare.domain.entity.Settings;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.GetAllLanguagesUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
@@ -50,6 +52,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     LogoutUseCase mLogoutUseCase;
 
     private enum RequireAction {SOFT_LOGIN, PULL}
+
+    UserAccount currentUser;
 
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
@@ -203,12 +207,22 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
     }
 
-
     @Override
     public void onStart() {
         applicationWillEnterForeground();
         LocalBroadcastManager.getInstance(settingsActivity).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
+        loadCurrentUser();
+    }
+
+    private void loadCurrentUser() {
+        new AuthenticationFactoryStrategy().getUserAccountUseCase().execute(
+                new GetUserUserAccountUseCase.Callback() {
+                    @Override
+                    public void onGetUserAccount(UserAccount userAccount) {
+                        currentUser = userAccount;
+                    }
+                });
     }
 
     private void applicationWillEnterForeground() {
@@ -274,7 +288,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     private void showSoftLoginIfRequired() {
-        if (!LockScreenStatus.isPatternSet(settingsActivity)) {
+        if (!currentUser.isDemo() && !LockScreenStatus.isPatternSet(settingsActivity)) {
             markRequiredActionAndCloseSettings(RequireAction.SOFT_LOGIN);
         }
     }

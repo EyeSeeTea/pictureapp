@@ -139,10 +139,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                                         TypeOfFailure typeOfFailed) {
                                     switch (typeOfFailed) {
                                         case TRANSLATIONS:
-                                            showToast(R.string.error_unable_to_download_translations);
+                                            showToast(
+                                                    R.string.error_unable_to_download_translations);
                                             break;
                                         case CONFIGURATION_FILES:
-                                            showToast(R.string.error_unable_to_download_configuration_files);
+                                            showToast(
+                                                    R.string.error_unable_to_download_configuration_files);
                                             break;
                                         case TRANSLATIONS_AND_CONFIGURATION_FILES:
                                             showToast(
@@ -171,7 +173,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ISettingsRepository settingsRepository = new SettingsDataSource(mDashboardActivity);
         mDownloadMediaUseCase = new DownloadMediaUseCase(asyncExecutor, mainExecutor,
                 fileDownloader,
-                mConnectivity, programRepository, mediaRepository,settingsRepository);
+                mConnectivity, programRepository, mediaRepository, settingsRepository);
 
         mSettingUseCase = new GetSettingsUseCase(mainExecutor, asyncExecutor, settingsRepository);
 

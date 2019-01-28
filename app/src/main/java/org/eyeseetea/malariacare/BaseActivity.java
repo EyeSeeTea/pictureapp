@@ -475,4 +475,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void surveyClosed() {
         mBaseActivityStrategy.surveyClosed();
     }
+
+    public abstract void openPendingSurveyIfRequired();
 }

@@ -51,6 +51,8 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
 
         initializeViews(view);
         initializePresenter();
+
+        String EXIT = "exit";
     }
 
     private void initializeViews(View view) {
@@ -127,7 +129,7 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
     }
 
     @Override
-    public void loginSuccess() {
+    public void softLoginSuccess() {
         dismiss();
     }
 
@@ -175,6 +177,10 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
         showError(R.string.login_unexpected_error);
     }
 
+    @Override
+    public void showInvalidAuthFromExternalApp() {
+        showError(R.string.different_user_error);
+    }
 
     public void showError(int message) {
         Toast.makeText(this.getActivity(), translate(message),

@@ -245,17 +245,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.initSurvey();
     }
 
-    private void openUncompletedSurvey() {
-        SurveyDB survey;
-        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
-        if (!uncompletedSurveys.isEmpty()) {
-            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
-            Session.setMalariaSurveyDB(survey);
-            //Look for coordinates
-            prepareLocationListener(mDashboardActivity, survey);
-            mDashboardActivity.initSurvey();
-        }
-    }
 
     @Override
     public void sendSurvey() {
@@ -689,15 +678,22 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     }
 
-    @Override
-    public void onStart() {
-        openPendingSurveyIfRequired();
-    }
-
-    private void openPendingSurveyIfRequired() {
+    public void openPendingSurveyIfRequired() {
         if (Session.hasSurveyToComplete()) {
             openUncompletedSurvey();
             Session.setHasSurveyToComplete(false);
+        }
+    }
+
+    private void openUncompletedSurvey() {
+        SurveyDB survey;
+        List<SurveyDB> uncompletedSurveys = SurveyDB.getAllUncompletedSurveys();
+        if (!uncompletedSurveys.isEmpty()) {
+            survey = uncompletedSurveys.get(uncompletedSurveys.size() - 1);
+            Session.setMalariaSurveyDB(survey);
+            //Look for coordinates
+            prepareLocationListener(mDashboardActivity, survey);
+            mDashboardActivity.initSurvey();
         }
     }
 

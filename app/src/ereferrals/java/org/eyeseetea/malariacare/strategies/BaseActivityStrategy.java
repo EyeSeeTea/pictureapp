@@ -175,6 +175,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             showSoftLoginOrPullDialogIfRequired();
+                            mBaseActivity.openPendingSurveyIfRequired();
                         }
                     });
         }

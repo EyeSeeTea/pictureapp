@@ -355,6 +355,11 @@ public class DashboardActivity extends BaseActivity {
         //No call for super(). Bug on API Level > 11.
     }
 
+    @Override
+    public void openPendingSurveyIfRequired() {
+        mDashboardActivityStrategy.openPendingSurveyIfRequired();
+    }
+
     public void replaceListFragment(int layout, ListFragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);

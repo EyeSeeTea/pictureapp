@@ -1,11 +1,15 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IDelayedMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.entity.intent.Auth;
+import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
 
@@ -17,6 +21,8 @@ public class SoftLoginPresenter {
     private final IDelayedMainExecutor delayedMainExecutor;
     private final GetSettingsUseCase getSettingsUseCase;
     private final SaveSettingsUseCase saveSettingsUseCase;
+    private final CheckAuthUseCase checkExternalAuthUseCase;
+    private final SaveAuthUseCase saveAuthUseCase;
 
     boolean showingAdvancedOptions = false;
 
@@ -24,13 +30,18 @@ public class SoftLoginPresenter {
             SoftLoginUseCase softLoginUseCase,
             LogoutUseCase logoutUseCase,
             IDelayedMainExecutor delayedMainExecutor,
-            GetSettingsUseCase getSettingsUseCase, SaveSettingsUseCase saveSettingsUseCase) {
+            GetSettingsUseCase getSettingsUseCase,
+            SaveSettingsUseCase saveSettingsUseCase,
+            CheckAuthUseCase checkExternalAuthUseCase,
+            SaveAuthUseCase saveAuthUseCase) {
         this.getUserUserAccountUseCase = getUserUserAccountUseCase;
         this.softLoginUseCase = softLoginUseCase;
         this.logoutUseCase = logoutUseCase;
         this.delayedMainExecutor = delayedMainExecutor;
         this.getSettingsUseCase = getSettingsUseCase;
         this.saveSettingsUseCase = saveSettingsUseCase;
+        this.checkExternalAuthUseCase = checkExternalAuthUseCase;
+        this.saveAuthUseCase = saveAuthUseCase;
     }
 
     public void attachView(View view) {
@@ -40,6 +51,69 @@ public class SoftLoginPresenter {
         this.view.hideAdvancedOptions();
 
         loadCurrentUser();
+        verifySoftLoginFromOtherApp();
+    }
+
+    private void verifySoftLoginFromOtherApp() {
+        checkExternalAuthUseCase.execute(new CheckAuthUseCase.Callback() {
+
+            @Override
+            public void onEmptyCredentials() {
+                //TODO: this scenario is not possible in soft login, only on full login
+                System.out.println(
+                        "verifyIfSoftLoginFromOtherApp: Survey from other app but empty "
+                                + "credentials");
+            }
+
+            @Override
+            public void onEmptyAuth() {
+                System.out.println(
+                        "verifyIfSoftLoginFromOtherApp: Survey from other app with empty auth");
+                //TODO: We should not use session from here, on the future we should save it on
+                // settings
+                Session.setHasSurveyToComplete(true);
+            }
+
+            @Override
+            public void onValidAuth() {
+                System.out.println(
+                        "verifyIfSoftLoginFromOtherApp: Survey from other app with valid auth");
+
+                //TODO: We should not use session from here, on the future we should save it on
+                // settings
+                Session.setHasSurveyToComplete(true);
+
+                resetAfterValidExternalAuthAndNotifySuccess();
+            }
+
+            @Override
+            public void onInValidAuth() {
+                System.out.println(
+                        "verifyIfSoftLoginFromOtherApp: Survey from other app with invalid auth");
+
+                if (view != null) {
+                    view.showInvalidAuthFromExternalApp();
+                }
+            }
+        });
+    }
+
+    private void resetAfterValidExternalAuthAndNotifySuccess() {
+        saveAuthUseCase.execute(null, new SaveAuthUseCase.Callback() {
+            @Override
+            public void onAuthSaved(Auth auth) {
+                Runnable actionOnSaveSettingsSuccess = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (view != null) {
+                            view.softLoginSuccess();
+                        }
+                    }
+                };
+
+                changeSoftLoginToNotRequired(actionOnSaveSettingsSuccess);
+            }
+        });
     }
 
     public void detachView() {
@@ -89,22 +163,32 @@ public class SoftLoginPresenter {
                 if (settings.isMetadataUpdateActive()) {
                     settings.changePullRequired(true);
                 }
-                saveSettings(settings);
 
-                if (view != null) {
-                    view.hideProgress();
-                    view.loginSuccess();
-                }
+                Runnable actionOnSaveSettingsSuccess = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (view != null) {
+                            view.hideProgress();
+                            view.softLoginSuccess();
+                        }
+                    }
+                };
+
+                saveSettings(settings, actionOnSaveSettingsSuccess);
+
+
             }
         });
     }
 
-    private void saveSettings(Settings settings) {
-        settings.changeSoftLoginRequired(false);
+    private void saveSettings(Settings settings, final Runnable actionOnSaveSettingsSuccess) {
         saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
             @Override
             public void onSuccess() {
                 System.out.println("Saved - Soft Login is not required");
+                if (actionOnSaveSettingsSuccess != null) {
+                    actionOnSaveSettingsSuccess.run();
+                }
             }
         }, settings);
     }
@@ -149,8 +233,17 @@ public class SoftLoginPresenter {
             @Override
             public void onLogoutSuccess() {
                 if (view != null) {
-                    changeSoftLoginToNotRequired();
-                    view.navigateToLogin();
+                    Runnable actionOnSaveSettingsSuccess = new Runnable() {
+                        @Override
+                        public void run() {
+                            if (view != null) {
+                                view.navigateToLogin();
+                            }
+                        }
+                    };
+
+                    changeSoftLoginToNotRequired(actionOnSaveSettingsSuccess);
+
                 }
             }
 
@@ -163,12 +256,12 @@ public class SoftLoginPresenter {
         });
     }
 
-    private void changeSoftLoginToNotRequired() {
+    private void changeSoftLoginToNotRequired(final Runnable actionOnSaveSettingsSuccess) {
         getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
             @Override
             public void onSuccess(Settings settings) {
                 settings.changeSoftLoginRequired(false);
-                saveSettings(settings);
+                saveSettings(settings, actionOnSaveSettingsSuccess);
             }
         });
     }
@@ -192,7 +285,7 @@ public class SoftLoginPresenter {
 
         void hideProgress();
 
-        void loginSuccess();
+        void softLoginSuccess();
 
         void showInvalidPinError();
 
@@ -209,5 +302,7 @@ public class SoftLoginPresenter {
         void navigateToLogin();
 
         void showLogoutError();
+
+        void showInvalidAuthFromExternalApp();
     }
 }

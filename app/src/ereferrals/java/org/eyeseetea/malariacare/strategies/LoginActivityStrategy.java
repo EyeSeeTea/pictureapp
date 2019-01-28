@@ -30,7 +30,6 @@ import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLoc
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -133,23 +132,20 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onEmptyAuth() {
+                //TODO: this scenario is not possible in full login, only on soft login
                 Log.d(TAG, "Survey from other app with empty auth");
-                Session.setHasSurveyToComplete(true);
             }
 
             @Override
             public void onValidAuth() {
+                //TODO: this scenario is not possible in full login, only on soft login
                 Log.d(TAG, "Survey from other app with valid auth");
-                Session.setHasSurveyToComplete(true);
-                finishAndGo(DashboardActivity.class);
-
             }
 
             @Override
             public void onInValidAuth() {
+                //TODO: this scenario is not possible in full login, only on soft login
                 Log.d(TAG, "Survey from other app with invalid auth");
-                showToastAndClose(R.string.different_user_error);
-
             }
         });
     }

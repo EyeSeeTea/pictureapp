@@ -1031,4 +1031,6 @@ Ameahidi kuhudhuria"</string>
 <string name="production">Uzalishaji</string>
 <string name="training">Mafunzo</string>
 <string name="custom">Desturi</string>
+
+<string name="web_view_timeout_error">An timeout error has occurred loading the web page</string>
 </resources>

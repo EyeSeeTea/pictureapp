@@ -67,7 +67,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
         mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
-        mWebView.setWebViewClient(new WebViewClient());
+
         loadUrlInWebView();
         view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,14 +155,21 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                 mWebView.getSettings().setDomStorageEnabled(true);
                 clearCookies(getActivity());
                 mWebView.loadUrl(url);
-                mWebView.setWebViewClient(new WebViewClient() {
 
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        super.onPageFinished(view, url);
-                        loadedFirstTime = true;
-                    }
-                });
+                int timeoutMillis = Integer.parseInt(getString(R.string.web_view_timeout_millis));
+
+                CustomWebViewClient customWebViewClient =
+                        new CustomWebViewClient(getActivity(),timeoutMillis);
+
+                customWebViewClient.setPageFinishedListener(
+                        new CustomWebViewClient.PageFinishedListener() {
+                            @Override
+                            public void onPageFinished(WebView view, String url) {
+                                loadedFirstTime = true;
+                            }
+                        });
+
+                mWebView.setWebViewClient(customWebViewClient);
             }
 
         }

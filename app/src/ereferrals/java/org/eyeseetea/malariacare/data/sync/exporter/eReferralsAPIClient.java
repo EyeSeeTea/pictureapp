@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.model.AuthCountry;
+import org.eyeseetea.malariacare.data.remote.model.AuthOrgUnitGroup;
 import org.eyeseetea.malariacare.data.remote.model.AuthPayload;
 import org.eyeseetea.malariacare.data.remote.model.AuthResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
@@ -28,9 +30,11 @@ import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -89,7 +93,24 @@ public class eReferralsAPIClient {
 
         Response<AuthResponse> authResponse = mApiClientRetrofit.auth(authPayload).execute();
 
-        return authResponse.body();
+        AuthCountry authCountry= new AuthCountry();
+        authCountry.setCode("T_TZ");
+        authCountry.setId( "low6qUS2wc9");
+        authCountry.setLevel(3);
+        authCountry.setDisplayName("T_Tanzania");
+
+        AuthOrgUnitGroup authOrgUnitGroup = new AuthOrgUnitGroup();
+        authOrgUnitGroup.setDisplayName("TZ - A360 - Group session facilitators");
+        authOrgUnitGroup.setDisplayName("TZ - A360 - Group session facilitators");
+
+        AuthResponse authResponseResult = new AuthResponse();
+        authResponseResult.setAuthorized(true);
+        authResponseResult.setCountry(authCountry);
+        authResponseResult.setOrgUnitGroups(Arrays.asList(authOrgUnitGroup));
+        authResponseResult.setOrgUnitId("fQaGDRwb9Uu");
+        authResponseResult.setOrgUnitName("eRef IPC 8001 [TESTOU]");
+
+        return authResponseResult;
     }
 
     public void setTimeoutMillis(int timeoutMillis) {

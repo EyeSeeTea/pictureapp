@@ -21,11 +21,12 @@ public class Settings {
     private String pass;
     private String programUrl;
     private String programEndPoint;
+    private String wsVersion;
 
     public Settings(String systemLanguage, String currentLanguage,
             MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
                     boolean isMetadataUpdateActive, String user, String pass, String wsServerUrl,
-            String webUrl, String fontSize, String programUrl, String programEndPoint) {
+            String webUrl, String fontSize, String programUrl, String programEndPoint, String wsVersion) {
         this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
         this.mediaListMode = mediaListMode;
@@ -39,6 +40,7 @@ public class Settings {
         this.fontSize = fontSize;
         this.programUrl = programUrl;
         this.programEndPoint = programEndPoint;
+        this.wsVersion = wsVersion;
     }
 
     public String getLanguage() {
@@ -97,6 +99,10 @@ public class Settings {
 
     public String getWebUrl() {
         return webUrl;
+    }
+
+    public String getWsVersion() {
+        return wsVersion;
     }
 
     public String getFontSize() {

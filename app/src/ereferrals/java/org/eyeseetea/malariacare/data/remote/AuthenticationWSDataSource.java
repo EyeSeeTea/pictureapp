@@ -6,6 +6,7 @@ import org.eyeseetea.malariacare.data.remote.model.AuthResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 import java.io.IOException;
@@ -32,8 +33,7 @@ public class AuthenticationWSDataSource implements IAuthenticationDataSource {
             } else {
                 callback.onError(new InvalidCredentialsException());
             }
-
-        } catch (IOException e) {
+        } catch (IOException | AvailableApiException e) {
             callback.onError(e);
         }
     }

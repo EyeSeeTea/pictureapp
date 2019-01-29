@@ -63,6 +63,7 @@
     <string name="negative_test_review_title">"Hasi"</string>
     <string name="dynamic_error_number">"Namba batili"</string>
     <string name="network_error">"Kuna tatizo la mtandao, Tafadhali jaribu tena baadaye."</string>
+    <string name="not_available">"Servern är inte tillgänglig."</string>
     <string name="login_invalid_credentials">"Uthibitisho ni batili"</string>
     <string name="login_unexpected_error">"Kosa limetokea, Tafadhali jaribu tena baadaye"</string>
     <string name="login_invalid_server_url">"URL ya seva batili"</string>

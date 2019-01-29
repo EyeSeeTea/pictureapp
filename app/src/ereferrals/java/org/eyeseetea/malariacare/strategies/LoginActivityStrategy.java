@@ -783,6 +783,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             public void onMaxLoginAttemptsReachedError() {
                                 Log.d(TAG, "onMaxLoginAttemptsReachedError");
                             }
+
+                            @Override
+                            public void onServerNotAvailable(String message) {
+                                Log.e(this.getClass().getSimpleName(), "onServerNotAvailable error");
+                            }
                         });
             }
         });

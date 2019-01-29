@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -23,8 +25,11 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
+import org.eyeseetea.malariacare.domain.entity.Language;
+import org.eyeseetea.malariacare.domain.usecase.GetAllLanguagesUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.LanguagesFactory;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
@@ -79,12 +84,18 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                         settingsActivity.getResources().getString(R.string.pref_cat_server));
         preferenceCategory.removePreference(preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.org_unit)));
+
+        Preference drivePreference = preferenceScreen.findPreference(
+                settingsActivity.getResources().getString(R.string.drive_key));
+        Preference metadataPreference = preferenceScreen.findPreference(
+                settingsActivity.getResources().getString(R.string.check_metadata_key));
+        settingsActivity.translatePreferenceString(drivePreference);
+        settingsActivity.translatePreferenceString(metadataPreference);
         if (!PreferencesState.getInstance().isDevelopOptionActive()
                 || !BuildConfig.developerOptions) {
             preferenceCategory.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.drive_key)));
-            preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.check_metadata_key)));
+            preferenceCategory.removePreference(metadataPreference);
         }
 
         Preference serverUrlPreference = (Preference) settingsActivity.findPreference(
@@ -99,6 +110,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     private void initProgramConfigurationSettings(PreferenceScreen preferenceScreen) {
         EditTextPreference programUrl = (EditTextPreference) preferenceScreen.findPreference(
                 preferenceScreen.getContext().getString(R.string.program_configuration_url));
+        EditTextPreference programEndpoint = (EditTextPreference) preferenceScreen.findPreference(
+                preferenceScreen.getContext().getString(R.string.program_configuration_endpoint));
         EditTextPreference programPass = (EditTextPreference) preferenceScreen.findPreference(
                 preferenceScreen.getContext().getString(R.string.program_configuration_pass));
         EditTextPreference programUser = (EditTextPreference) preferenceScreen.findPreference(
@@ -110,6 +123,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         programUrl.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUrl.setText(settingsRepository.getSettings().getProgramUrl());
         programUrl.setSummary(settingsRepository.getSettings().getProgramUrl());
+
+        programEndpoint.setOnPreferenceChangeListener(new onCredentialsChangeListener());
+        programEndpoint.setText(settingsRepository.getSettings().getProgramEndPoint());
+        programEndpoint.setSummary(settingsRepository.getSettings().getProgramEndPoint());
 
         programUser.setOnPreferenceChangeListener(new onCredentialsChangeListener());
         programUser.setText(settingsRepository.getSettings().getUser());
@@ -202,10 +219,34 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void addExtraPreferences() {
-        settingsActivity.bindPreferenceSummaryToValue(settingsActivity.findPreference(
-                settingsActivity.getString(R.string.web_service_url)));
-        settingsActivity.bindPreferenceSummaryToValue(
-                settingsActivity.findPreference(settingsActivity.getString(R.string.web_view_url)));
+        Preference webServiceUrlPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.web_service_url));
+        settingsActivity.bindPreferenceSummaryToValue(webServiceUrlPreference);
+        settingsActivity.translatePreferenceString(webServiceUrlPreference);
+        Preference webViewPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.web_view_url));
+        settingsActivity.bindPreferenceSummaryToValue(webViewPreference);
+        settingsActivity.translatePreferenceString(webViewPreference);
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_url)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_endpoint)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_user)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.program_configuration_pass)));
+        settingsActivity.translatePreferenceString(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.allow_media_download_3g_key)));
+        Preference developerPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.developer_option));
+        settingsActivity.translatePreferenceString(developerPreference);
+        developerPreference.setSummary(
+                translate(R.string.developer_option_summary));
+        Preference elementsPreference = settingsActivity.findPreference(
+                settingsActivity.getString(R.string.activate_elements_key));
+        settingsActivity.translatePreferenceString(elementsPreference);
+        elementsPreference.setSummary(
+                translate(R.string.activate_elements));
     }
 
     @Override
@@ -246,7 +287,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void addFontStyleEntries(List<String> entries, List<String> entryValues) {
         for (CustomFontStyles fontStyle:CustomFontStyles.values()) {
-            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle(),settingsActivity));
             entryValues.add(String.valueOf(fontStyle.getResId()));
         }
     }
@@ -257,5 +298,64 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void setLanguageOptions(final Preference preference) {
+        LanguagesFactory languagesFactory =
+                new LanguagesFactory();
+        GetAllLanguagesUseCase getAllLanguagesUseCase =
+                languagesFactory.getGetLanguagesUseCase();
+        getAllLanguagesUseCase.execute(new GetAllLanguagesUseCase.Callback() {
+            @Override
+            public void onSuccess(List<Language> languages) {
+                ListPreference listPreference = (ListPreference) preference;
+                if (languages.isEmpty()) {
+                    listPreference.setEntries(R.array.languages_strings);
+                    listPreference.setEntryValues(R.array.languages_codes);
+                } else {
+                    setLanguagesFromDB(listPreference, languages);
+                }
+            }
+        });
+    }
+
+    private void setLanguagesFromDB(ListPreference listPreference, List<Language> languages) {
+        CharSequence systemDefinedString =
+                settingsActivity.getResources().getStringArray(
+                        R.array.languages_strings)[0];
+        CharSequence systemDefinedCode = settingsActivity.getResources().getStringArray(
+                R.array.languages_codes)[0];
+        CharSequence[] languagesStrings = new CharSequence[languages.size()+1];
+        CharSequence[] languagesCodes = new CharSequence[languages.size()+1];
+        languagesStrings[0] = systemDefinedString;
+        languagesCodes[0] = systemDefinedCode;
+        int languagesPosition = 1;
+        for (int i = 0; i < languages.size(); i++) {
+            languagesStrings[languagesPosition] = languages.get(i).getName();
+            languagesCodes[languagesPosition] = languages.get(i).getCode();
+            languagesPosition++;
+        }
+        listPreference.setEntries(languagesStrings);
+        listPreference.setEntryValues(languagesCodes);
+        listPreference.setSummary(
+                getPositionOfCode(listPreference.getValue(), languagesCodes, languagesStrings));
+    }
+
+    private CharSequence getPositionOfCode(String value, CharSequence[] languagesCodes,
+            CharSequence[] languagesNames) {
+        if (languagesCodes != null && value != null) {
+            for (int i = 0; i < languagesCodes.length; i++) {
+                if (languagesCodes[i].equals(value)) {
+                    return languagesNames[i];
+                }
+            }
+        }
+        return settingsActivity.getResources().getStringArray(
+                R.array.languages_strings)[0];
+    }
+
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, settingsActivity);
     }
 }

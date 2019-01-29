@@ -2,14 +2,15 @@
 <resources>
 
 <!-- TERMS FROM POEDITOR -->
-    <string name="login_userName">"प्रयोगकर्ता कोड"</string>
-    <string name="login_password">"पिन"</string>
-    <string name="advanced_options">"उन्नत विकल्पहरू"</string>
-    <string name="simple_options">"सरल विकल्पहरू"</string>
-    <string name="server_url">"सर्भर URL"</string>
+<string name="login_userName">"प्रयोगकर्ता कोड"</string>
+<string name="login_password">"पिन"</string>
+<string name="advanced_options">"उन्नत विकल्पहरू"</string>
+<string name="simple_options">"सरल विकल्पहरू"</string>
+<string name="server_url">वेब सेवा URL</string>
+<string name="program_url">कार्यक्रम कन्फिगुरेसन URL</string>
+<string name="webviews_url">वेब URL</string>
 
-
-    <!-- Open Referrals -->
+<!-- Open Referrals -->
 <string name="ipc_menu_openReferrals">"रेफरलहरू खोल्नुहोस्"</string>
 
 <!-- Add + -->
@@ -697,7 +698,6 @@
 <string name="monitor_row_title_positive">"सकारात्मक मुद्दाहरू"</string>
 <string name="monitor_row_title_negative">"नकारात्मक"</string>
 <string name="monitor_row_title_referral">"रेफरल"</string>
-<string name="monitor_row_title_act_stockout">"उपचार नगरिएको संख्या (ACT स्टकआउट)"</string>
 <string name="monitor_row_title_denied">"अस्वीकार गरिएका बिरामीहरू"</string>
 <string name="monitor_row_title_rdt_stockout">"संख्या परीक्षण नगरिएको (RDT स्टकआउट)"</string>
 <string name="monitor_row_title_positivity_rate">"सकारात्मकता दर"</string>
@@ -710,6 +710,7 @@
 <string name="dynamic_error_number">"अमान्य संख्या"</string>
 <string name="date_format_forward_slash">"साल-  महिना- गते"</string>
 <string name="network_error">"नेटवर्कमा समस्या छ, कृपया पछि फेरि प्रयास गर्नुहोस्।"</string>
+<string name="not_available">"सर्भर उपलब्ध छैन।"</string>
 <string name="login_invalid_credentials">"अवैध प्रमाणहरू"</string>
 <string name="login_unexpected_error">"त्रुटि देखा परेको छ। पछि फेरि प्रयास गर्नुहोस्"</string>
 <string name="login_invalid_server_url">"अमान्य सर्भर URL"</string>
@@ -734,8 +735,6 @@
 <string name="ws_conversion_error">"PUSHUSECASE एरर धकेलेर परिवर्तन गर्ने प्रक्रियामा त्रुटि देखा परेको छ । "</string>
 <string name="webservice_url_error_title">"वेबसेवा त्रुटि"</string>
 <string name="webservice_url_error">"वेबसेवा निर्माण गर्दा त्रुटि:% s"</string>
-<string name="error_web">"errorpage.html"</string>
-<string name="demo_web">"demopage.html"</string>
 <string name="error_message_push">"UID :% s को साथ घटना मिति बिना अपलोड गरियो । सञ्चालक/प्रशासकलाई सम्पर्क गर्नुहोस्।"</string>
 <string name="dialog_pull_success">"यो मेटाडाटा सफलतापूर्वक सर्भरबाट निकालियो"</string>
 <string name="db_migration_error">"कृपया व्यवस्थापकलाई सूचित गर्नुहोस्, एप्लिकेसनलाई पुन: स्थापना गर्न आवश्यक पर्दछ"</string>
@@ -971,6 +970,12 @@
     <string name="element_not_installed">"Element SDK स्थापित छैन!"</string>
     <string name="check_metadata_title">"नरम लगिनहरूमा मेटाडाटा अद्यावधिकहरूको जाँच गर्नुहोस्"</string>
     <string name="settings_title_program_url_config">"प्रोग्राम विन्यास URL"</string>
+    <string name="settings_title_program_endpoint_config">"प्रोग्राम कन्फिगरेसन अन्तबिन्दु"</string>
     <string name="settings_title_program_username_config">"प्रोग्राम कन्फिगरेसन प्रयोगकर्ता नाम"</string>
     <string name="settings_title_program_password_config">"प्रोग्राम कन्फिगरेसन पासवर्ड"</string>
+<string name="demo_page_text">"तपाईं डेमो मोडमा हुनुहुन्छ र यो एक अनलाइन मोड्युल हो। यो जानकारी हेर्न लगआउट गर्नुहोस् र मान्य प्रयोगकर्ताको साथ लगइन गर्नुहोस्।"</string>
+<string name="erro_page_text">"तपाईं अफलाइन हुनुहुन्छ र यो एक अनलाइन मोड्युल हो। यो जानकारी हेर्न कृपया नेटवर्कमा जडान गर्नुहोस्।"</string>
+<string name="production">उत्पादन</string>
+<string name="training">प्रशिक्षण</string>
+<string name="custom">अनुकूलन</string>
 </resources>

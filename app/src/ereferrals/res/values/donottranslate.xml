@@ -5,7 +5,6 @@
     <string name="rdtNotTested" translatable="false">Not Tested</string>
     <string name="server_url_key" translatable="false">@string/web_service_url</string>
     <string name="DEFAULT_SERVER_URL" translatable="false">@string/ws_base_url</string>
-    <string name="PROGRAM_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
@@ -38,12 +37,9 @@
     <string name="url_status_fragment">ipcStats</string>
     <string name="url_open_fragment">ipcOpenReferrals</string>
     <string name="url_closed_fragment">ipcRedeemedReferrals</string>
-    <string name="base_web_view_url">https://apps.psi-mis.org/connect/</string>
     <string name="composed_web_view_url">pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s&amp;lang=%4$s</string>
     <string name="ws_version">1.0</string>
     <string name="ws_source">Android v1.1</string>
-    <string name="ws_base_url">https://apps.psi-mis.org/eRefWSProd/</string>
-    <string name="error_web_resource" translatable="false">file:///android_asset/web_view_error/%1$s</string>
     <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
     <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
     <string name="no_phone_oc" translatable="false">NO</string>
@@ -78,6 +74,32 @@
     <string name="metadata_update_date" translatable="false">update_metadata_date</string>
     <string name="activate_elements_key" translatable="false">"activate_elements_key"</string>
     <string name="program_configuration_url" translatable="false">"program_configuration_url"</string>
+    <string name="program_configuration_endpoint" translatable="false">"program_configuration_endpoint"</string>
     <string name="program_configuration_user" translatable="false">"program_configuration_user"</string>
     <string name="program_configuration_pass" translatable="false">"program_configuration_pass"</string>
+    <string-array name="server_list">
+        <item>@string/production</item>
+        <item>@string/training</item>
+        <item>@string/custom</item>
+    </string-array>
+
+    <!-- default urls -->
+    <string name="base_web_view_url" translatable="false">@string/web_url_production</string>
+    <string name="ws_base_url" translatable="false">@string/webservice_url_production</string>
+    <string name="PROGRAM_DEFAULT_SERVER" translatable="false">@string/program_url_production</string>
+    <string name="PROGRAM_DEFAULT_ENDPOINT" translatable="false">@string/program_endpoint_production</string>
+
+    <!-- production urls -->
+    <string name="program_url_production" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
+    <string name="program_endpoint_production" translatable="false">dcSettings</string>
+    <string name="webservice_url_production" translatable="false">https://apps.psi-mis.org/eRefWSProd/</string>
+    <string name="web_url_production" translatable="false">https://apps.psi-mis.org/connect/</string>
+
+    <!-- training urls -->
+    <string name="program_url_training" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
+    <string name="program_endpoint_training" translatable="false">dcSettings-train</string>
+    <string name="webservice_url_training" translatable="false">https://apps.psi-mis.org/eRefWSTrain/</string>
+    <string name="web_url_training" translatable="false">https://apps.psi-mis.org/connect-train/</string>
+    <string name="last_push_date" translatable="false">last_push_date</string>
+    <string name="ENABLE_MANUAL_PUSH_PERIOD" translatable="false">30</string>
 </resources>

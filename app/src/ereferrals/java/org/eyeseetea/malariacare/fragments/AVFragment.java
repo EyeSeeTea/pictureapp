@@ -26,6 +26,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +55,7 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.MediaPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.io.File;
@@ -160,7 +162,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
         if (isThereAnAppThatCanHandleThis(implicitIntent, getActivity())) {
             getActivity().startActivity(Intent.createChooser(implicitIntent,
-                    PreferencesState.getInstance().getContext().getString(
+                    translate(
                             R.string.feedback_view_image)));
         } else {
             showToast(R.string.error_unable_to_find_app_than_can_open_file, getActivity());
@@ -204,7 +206,7 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
         if (mPresenter.canShowErrorMessage()) {
             mErrorMessage.setVisibility(hasError ? View.VISIBLE : View.GONE);
             if (hasError) {
-                mErrorMessage.setText(message);
+                mErrorMessage.setTextTranslation(message);
             }
         }else {
             mErrorMessage.setVisibility(View.GONE);
@@ -214,5 +216,9 @@ public class AVFragment extends Fragment implements MediaPresenter.View {
 
     public void hideHeader() {
         DashboardHeaderStrategy.getInstance().hideHeader(getActivity());
+    }
+
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, getActivity());
     }
 }

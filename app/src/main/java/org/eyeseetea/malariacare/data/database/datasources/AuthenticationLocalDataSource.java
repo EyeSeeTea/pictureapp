@@ -70,7 +70,11 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
 
     public void clearCredentials() {
-        mAuthenticationLocalDataSourceStrategy.clearCredentials(mContext);
+        PreferencesState.getInstance().saveStringPreference(R.string.server_url_key,
+                mAuthenticationLocalDataSourceStrategy.getServerDefaultUrl(mContext));
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
+        PreferencesState.getInstance().reloadPreferences();
     }
 
 

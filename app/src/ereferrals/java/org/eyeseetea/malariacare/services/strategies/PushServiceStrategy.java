@@ -1,41 +1,36 @@
 package org.eyeseetea.malariacare.services.strategies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
-import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
-import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
-import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
+import org.eyeseetea.malariacare.factories.AppInfoFactory;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.utils.Permissions;
+
+import java.util.Date;
 
 public class PushServiceStrategy extends APushServiceStrategy {
 
@@ -119,6 +114,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
                     public void onMaxLoginAttemptsReachedError() {
                         Log.e(TAG, "onMaxLoginAttemptsReachedError");
                     }
+
+                    @Override
+                    public void onServerNotAvailable(String message) {
+                        Log.e(TAG, "Error getting user credentials: onServerNotAvailable");
+                    }
                 });
             }
         } else {
@@ -131,11 +131,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
         IProgramRepository programRepository = new ProgramRepository();
         MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase(
                 programRepository);
-
+        sendIntentStartEndPush(true);
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
                 Log.d(TAG, "onPushMockFinished");
+                sendIntentStartEndPush(false);
                 mPushService.onPushFinished();
             }
         });
@@ -147,6 +148,24 @@ public class PushServiceStrategy extends APushServiceStrategy {
         } else {
             executePush();
         }
+        updateAppInfo(mPushService);
+    }
+
+    private void updateAppInfo(final Context context) {
+        final AppInfoFactory appInfoFactory = new AppInfoFactory();
+        appInfoFactory.getGetAppInfoUseCase(context).execute(new GetAppInfoUseCase.Callback() {
+            @Override
+            public void onAppInfoLoaded(AppInfo appInfo) {
+                SaveAppInfoUseCase saveAppInfoUseCase = appInfoFactory.getSaveAppInfoUseCase(
+                        context);
+                saveAppInfoUseCase.excute(new SaveAppInfoUseCase.Callback() {
+                    @Override
+                    public void onAppInfoSaved() {
+                    }
+                }, new AppInfo(appInfo.getMetadataVersion(), appInfo.getConfigFileVersion(),
+                        appInfo.getAppVersion(), appInfo.getUpdateMetadataDate(), new Date()));
+            }
+        });
     }
 
 

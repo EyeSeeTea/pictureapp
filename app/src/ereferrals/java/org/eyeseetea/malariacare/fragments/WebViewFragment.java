@@ -10,20 +10,26 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.domain.entity.ApiStatus;
+import org.eyeseetea.malariacare.domain.usecase.GetWebAvailableUseCase;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
+import org.eyeseetea.malariacare.presentation.factory.ApiAvailabilityFactory;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 
 public class WebViewFragment extends Fragment implements IDashboardFragment {
@@ -34,6 +40,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private String url;
     private int title;
     private WebView mWebView;
+    private CustomTextView mErrorDemoText;
     private boolean loadedFirstTime;
 
     @Nullable
@@ -63,12 +70,13 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
+        mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
         mWebView.setWebViewClient(new WebViewClient());
-        loadUrlInWebView();
+        loadUrlInWebView(false);
         view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadUrlInWebView();
+                loadUrlInWebView(true);
             }
         });
     }
@@ -123,41 +131,71 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
-    private void loadUrlInWebView() {
+    private void loadUrlInWebView(boolean shouldShowError) {
         if (mWebView != null) {
             ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(
                     Activity.CONNECTIVITY_SERVICE);
             if (cm != null && cm.getActiveNetworkInfo() != null
                     && cm.getActiveNetworkInfo().isConnected()) {
-                    loadValidUrl();
+                showHideWebView(true);
+                    loadValidUrl(shouldShowError);
             } else {
-                mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
-                        getString(R.string.error_web)));
+                showHideWebView(false);
+
+                mErrorDemoText.setTextTranslation(R.string.erro_page_text);
             }
         }
     }
 
-    private void loadValidUrl() {
+    private void loadValidUrl(final boolean shouldShowError) {
         if (mWebView != null) {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
-                mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
-                        getString(R.string.demo_web)));
-                return;
-            }
-            mWebView.getSettings().setJavaScriptEnabled(true);
-            mWebView.getSettings().setDomStorageEnabled(true);
-            clearCookies(getActivity());
-            mWebView.loadUrl(url);
-            mWebView.setWebViewClient(new WebViewClient(){
+                showHideWebView(false);
+                mErrorDemoText.setTextTranslation(R.string.demo_page_text);
+            } else {
+                new ApiAvailabilityFactory().getGetWebViewAvailableUseCase().execute(
+                        new GetWebAvailableUseCase.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                executeOnWebAvailable();
+                            }
 
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
-                    loadedFirstTime = true;
-                }
-            });
+                            @Override
+                            public void onError(ApiStatus apiStatus) {
+                                if(shouldShowError) {
+                                    showApiNotAvailableError(apiStatus.getMessage());
+                                }
+                            }
+                        });
+
+            }
 
         }
+    }
+
+    private void showApiNotAvailableError(String message) {
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void executeOnWebAvailable() {
+        showHideWebView(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+        clearCookies(getActivity());
+        mWebView.loadUrl(url);
+        mWebView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                loadedFirstTime = true;
+            }
+        });
+    }
+
+    private void showHideWebView(boolean show) {
+        mWebView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mErrorDemoText.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
@@ -165,7 +203,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityStatus.isConnected(getActivity())) {
                 if (!loadedFirstTime) {
-                    loadValidUrl();
+                    loadValidUrl(true);
                 }
             }
         }
@@ -182,5 +220,8 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             return true;
         }
         return false;
+    }
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, getActivity());
     }
 }

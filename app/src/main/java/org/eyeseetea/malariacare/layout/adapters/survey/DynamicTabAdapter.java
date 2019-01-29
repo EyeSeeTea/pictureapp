@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -86,7 +88,6 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DatePickerQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.OuTreeMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.NumberSingleQuestionView;
@@ -602,7 +603,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (questionView instanceof IMultiQuestionView) {
                 mMultiQuestionViews.add((IMultiQuestionView) questionView);
                 ((IMultiQuestionView) questionView).setHeader(
-                        Utils.getInternationalizedString(screenQuestionDB.getForm_name()));
+                        translate(screenQuestionDB.getForm_name()));
             }
 
             addTagQuestion(screenQuestionDB, (View) questionView);
@@ -610,7 +611,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
 
             questionView.setHelpText(
-                    Utils.getInternationalizedString(screenQuestionDB.getHelp_text()));
+                    translate(screenQuestionDB.getHelp_text()));
 
             questionView.setEnabled(!readOnly);
 
@@ -619,7 +620,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         screenQuestionDB.getInternationalizedPath());
             }
             mDynamicTabAdapterStrategy.renderParticularSurvey(screenQuestionDB, surveyDB, questionView);
-            if(questionView instanceof CommonQuestionView && requireQuestionOptionValidations(questionView)){
+            if(questionView instanceof CommonQuestionView){
                 ((CommonQuestionView) questionView).setQuestion(QuestionMapper.mapFromDbToDomain(screenQuestionDB));
             }
             if (questionView instanceof AOptionQuestionView) {
@@ -686,11 +687,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((CommonQuestionView) questionView).initContainers(tableRow, tableLayout);
             }
         }
-    }
-
-    //The OuTreeMultiQuestionView question don't required extra validations.
-    private boolean requireQuestionOptionValidations(IQuestionView questionView) {
-        return !(questionView instanceof OuTreeMultiQuestionView);
     }
 
     @Nullable
@@ -1153,10 +1149,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
-                .setTitle(R.string.survey_completed)
-                .setMessage(R.string.survey_completed_text)
+                .setTitle(translate(R.string.survey_completed))
+                .setMessage(
+                        translate(R.string.survey_completed_text))
                 .setCancelable(false)
-                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(translate(R.string.survey_send),
+                        new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
                                 keyboardView);
@@ -1164,7 +1162,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.survey_review,
+        msgConfirmation.setNegativeButton(
+                translate(R.string.survey_review),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         CommonQuestionView.hideKeyboard(PreferencesState.getInstance().getContext(),
@@ -1310,4 +1309,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         questionDB.saveValuesDDL(selectedOptionDB, questionDB.getValueBySession());
         showOrHideChildren(questionDB);
     }
+
+    private String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, context);
+    }
+
+    private String translate(String stringKey){
+        return Utils.getInternationalizedString(stringKey,context);
+    }
+
 }

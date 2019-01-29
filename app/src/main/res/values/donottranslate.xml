@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="server_url">Server URL</string>
+    <string name="server_url">Web service URL</string>
+    <string name="program_url">Program configuration server URL</string>
+    <string name="program_endpoint">Program configuration endpoint</string>
+    <string name="webviews_url">Web URL</string>
     <string name="clear_and_logout">Clear and log out</string>
     <string name="eyeseetea" translatable="false">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
@@ -19,7 +22,7 @@
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
     <item name="language_code" translatable="false" type="string">language_code</item>
 
-    <string name="PUSH_PERIOD" translatable="false">10</string>
+    <string name="PUSH_PERIOD" translatable="false">60</string>
 
     <string name="font_size_system" translatable="false">system</string>
 

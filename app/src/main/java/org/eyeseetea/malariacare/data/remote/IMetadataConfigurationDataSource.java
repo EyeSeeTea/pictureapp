@@ -10,5 +10,5 @@ public interface IMetadataConfigurationDataSource {
 
     List<Question> getQuestionsByCountryCode(String countryCode) throws Exception;
 
-    List<Configuration.CountryVersion> getCountriesVersions() throws Exception;
+    List<Configuration.CountryVersion> getCountriesCodesAndVersions() throws Exception;
 }

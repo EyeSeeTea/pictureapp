@@ -15,7 +15,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.common.FileReader;
-import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
         .MetadataConfigurationApiClient;
 import org.eyeseetea.malariacare.domain.entity.Configuration;
@@ -23,8 +22,9 @@ import org.eyeseetea.malariacare.domain.entity.Option;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
-import org.junit.After;
+import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,24 +37,17 @@ public class MetadataConfigurationApiClientShould {
 
     private MetadataConfigurationApiClient apiClient;
 
-    private CustomMockServer CustomMockServer;
-
     private List<Question> questions;
 
     private List<Configuration.CountryVersion> countryVersions;
 
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule(new FileReader());
+
     @Before
     public void setUp() throws Exception {
-
-        CustomMockServer = new CustomMockServer(new FileReader());
-
-        apiClient = new MetadataConfigurationApiClient(CustomMockServer.getBaseEndpoint(),
+        apiClient = new MetadataConfigurationApiClient(mockWebServerRule.getMockServer().getBaseEndpoint(), "dcSettings",
                 new BasicAuthInterceptor(""));
-    }
-
-    @After
-    public void teardown() throws IOException {
-        CustomMockServer.shutdown();
     }
 
     @Test
@@ -141,7 +134,7 @@ public class MetadataConfigurationApiClientShould {
     }
 
     private void enqueueMalformedJson() throws IOException {
-        CustomMockServer.enqueueMockResponse(200, "{malformedJson}");
+        mockWebServerRule.getMockServer().enqueueMockResponse(200, "{malformedJson}");
 
     }
 
@@ -163,15 +156,15 @@ public class MetadataConfigurationApiClientShould {
 
     private void whenRequestCountryVersions() throws Exception {
 
-        CustomMockServer.enqueueMockResponse(COUNTRIES_VERSION);
+        mockWebServerRule.getMockServer().enqueueMockResponse(COUNTRIES_VERSION);
 
-        countryVersions = apiClient.getCountriesVersions();
+        countryVersions = apiClient.getCountriesCodesAndVersions();
 
     }
 
     private void requestQuestionsFor(String countryFile, String countryCode) throws Exception {
 
-        CustomMockServer.enqueueMockResponse(countryFile);
+        mockWebServerRule.getMockServer().enqueueMockResponse(countryFile);
 
         questions = apiClient.getQuestionsByCountryCode(countryCode);
 
@@ -278,7 +271,7 @@ public class MetadataConfigurationApiClientShould {
     }
 
     private void whenA404ErrorHappen() throws Exception {
-        CustomMockServer.enqueueMockResponse(404);
+        mockWebServerRule.getMockServer().enqueueMockResponse(404);
         apiClient.getQuestionsByCountryCode("mz");
     }
 

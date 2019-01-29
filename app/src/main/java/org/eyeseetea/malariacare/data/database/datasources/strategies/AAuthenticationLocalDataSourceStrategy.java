@@ -67,12 +67,4 @@ public abstract class AAuthenticationLocalDataSourceStrategy {
     public String getServerDefaultUrl(Context mContext) {
         return mContext.getString(R.string.DEFAULT_SERVER_URL);
     }
-
-    public void clearCredentials(Context context) {
-        PreferencesState.getInstance().saveStringPreference(R.string.server_url_key,
-                getServerDefaultUrl(context));
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
-        PreferencesState.getInstance().reloadPreferences();
-    }
 }

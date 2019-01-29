@@ -37,7 +37,9 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.AEyeSeeTeaApplicationStrategy;
 import org.eyeseetea.malariacare.strategies.EyeSeeTeaApplicationStrategy;
+import org.eyeseetea.malariacare.utils.DBTranslator;
 import org.eyeseetea.malariacare.utils.Permissions;
+import org.eyeseetea.sdk.common.EyeSeeTeaSdk;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -82,6 +84,11 @@ public class EyeSeeTeaApplication extends Application {
                 .build();
         FlowManager.init(flowConfig);
         initBugShaker();
+        initEyeSeeTeaSDK();
+    }
+
+    private void initEyeSeeTeaSDK() {
+        EyeSeeTeaSdk.getInstance().init(new DBTranslator());
     }
 
     @Override

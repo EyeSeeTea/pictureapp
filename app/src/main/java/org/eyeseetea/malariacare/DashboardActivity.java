@@ -31,11 +31,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
@@ -48,10 +48,8 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.RemoveSurveysInProgressUseCase;
@@ -61,13 +59,13 @@ import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 
 public class DashboardActivity extends BaseActivity {
@@ -472,10 +470,13 @@ public class DashboardActivity extends BaseActivity {
     public void confirmExitApp() {
         Log.d(TAG, "back pressed");
         new AlertDialog.Builder(this)
-                .setTitle(R.string.confirmation_really_exit_title)
-                .setMessage(R.string.confirmation_really_exit)
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setTitle(translate(R.string.confirmation_really_exit_title))
+                .setMessage(
+                        translate(R.string.confirmation_really_exit))
+                .setNegativeButton(translate(android.R.string.no),
+                        null)
+                .setPositiveButton(translate(android.R.string.yes),
+                        new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface arg0, int arg1) {
                         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -496,8 +497,8 @@ public class DashboardActivity extends BaseActivity {
             int infoMessage = surveyDB.isInProgress() ? R.string.survey_info_exit_delete
                     : R.string.survey_info_exit;
             new AlertDialog.Builder(this)
-                    .setTitle(R.string.survey_info_exit)
-                    .setMessage(infoMessage)
+                    .setTitle(translate(R.string.survey_info_exit))
+                    .setMessage(translate(infoMessage))
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int arg1) {
@@ -652,16 +653,18 @@ public class DashboardActivity extends BaseActivity {
 
     private void showSendSurveyDialog() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
-                .setTitle(R.string.survey_completed)
-                .setMessage(R.string.survey_completed_text)
+                .setTitle(translate(R.string.survey_completed))
+                .setMessage(translate(R.string.survey_completed_text))
                 .setCancelable(false)
-                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(translate(R.string.survey_send),
+                        new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         sendSurvey();
                         DynamicTabAdapter.isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.survey_review,
+        msgConfirmation.setNegativeButton(
+                translate(R.string.survey_review),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         reviewSurvey();
@@ -866,5 +869,9 @@ public class DashboardActivity extends BaseActivity {
 
     public TabHost getTabHost() {
         return tabHost;
+    }
+
+    public String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, this);
     }
 }

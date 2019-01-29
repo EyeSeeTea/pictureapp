@@ -24,6 +24,7 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQuestionView implements
         IQuestionView {
+    CustomEditText numberPicker;
     CustomButton sendButton;
     Boolean isClicked=false;
     APositiveOrZeroNumberSingleQuestionViewStrategy mPositiveOrZeroNumberSingleQuestionViewStrategy;
@@ -38,39 +39,39 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
 
     @Override
     public EditText getAnswerView() {
-        return answer;
+        return numberPicker;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        answer.setEnabled(enabled);
+        numberPicker.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(answer);
+            showKeyboard(numberPicker);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        answer.setHint(helpText);
+        numberPicker.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            answer.setText(valueDB.getValue());
+            numberPicker.setText(valueDB.getValue());
         }
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_positiveint_row, this);
 
-        answer = (CustomEditText) findViewById(R.id.answer);
-        answer.setFocusable(true);
-        answer.setFocusableInTouchMode(true);
+        numberPicker = (CustomEditText) findViewById(R.id.answer);
+        numberPicker.setFocusable(true);
+        numberPicker.setFocusableInTouchMode(true);
 
-        Validation.getInstance().addInput(answer);
+        Validation.getInstance().addInput(numberPicker);
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
@@ -80,7 +81,7 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
             }
         });
 
-        answer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        numberPicker.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -98,19 +99,19 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
             isClicked = true;
             try {
                 PositiveOrZeroNumber positiveNumber = PositiveOrZeroNumber.parse(
-                        answer.getText().toString());
-                if(validateQuestionRegExp(answer)) {
-                    Validation.getInstance().removeInputError(answer);
-                    hideKeyboard(answer);
+                        numberPicker.getText().toString());
+                if(validateQuestionRegExp(numberPicker)) {
+                    Validation.getInstance().removeInputError(numberPicker);
+                    hideKeyboard(numberPicker);
                     notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
                 }
             } catch (InvalidPositiveOrZeroNumberException e) {
-                Validation.getInstance().addinvalidInput(answer,
+                Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
-                answer.setError(context.getString(R.string.dynamic_error_age));
+                numberPicker.setError(context.getString(R.string.dynamic_error_age));
             }
-            if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
-                Validation.getInstance().removeInputError(answer);
+            if(numberPicker.getText().toString().isEmpty() && !question.isCompulsory()){
+                Validation.getInstance().removeInputError(numberPicker);
             }
             isClicked = false;
         }

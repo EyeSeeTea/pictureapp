@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
-    private TextView headerText;
+    private CustomTextView headerText;
 
     private static void setTitle(View view, int keyId, int titleString) {
         CustomTextView title = (CustomTextView) view.findViewById(keyId);
@@ -54,8 +53,8 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         }
         boolean notConnected = !ConnectivityStatus.isConnected(
                 PreferencesState.getInstance().getContext());
-        headerText = (TextView) headerView.findViewById(R.id.header_text);
-        headerText.setText(
+        headerText = (CustomTextView) headerView.findViewById(R.id.header_text);
+        headerText.setTextTranslation(
                 notConnected ? R.string.unsent_dashboard_header_offline : R.string.online_status);
         return headerView;
     }

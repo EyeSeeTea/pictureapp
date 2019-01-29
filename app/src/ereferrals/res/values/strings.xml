@@ -854,7 +854,6 @@
 <string name="monitor_row_title_positive">"Positive cases"</string>
 <string name="monitor_row_title_negative">"Negative"</string>
 <string name="monitor_row_title_referral">"Referral"</string>
-<string name="monitor_row_title_act_stockout">"Number not treated (ACT stockout)"</string>
 <string name="monitor_row_title_denied">"Denied patients"</string>
 <string name="monitor_row_title_rdt_stockout">"Number not tested (RDT stockout)"</string>
 <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
@@ -867,6 +866,7 @@
 <string name="dynamic_error_number">"Invalid number"</string>
 <string name="date_format_forward_slash">"yyyy/mm/dd"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
+<string name="not_available">"The server is not available."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
 <string name="login_unexpected_error">"An error has occurred, please try again later"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>
@@ -891,8 +891,6 @@
 <string name="ws_conversion_error">"PUSHUSECASE ERROR An error has occurred to the conversion in push process"</string>
 <string name="webservice_url_error_title">"Webservice error"</string>
 <string name="webservice_url_error">"Error building webservice: %s"</string>
-<string name="error_web">"errorpage.html"</string>
-<string name="demo_web">"demopage.html"</string>
 <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>
 <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
 <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
@@ -1129,6 +1127,7 @@
 <string name="element_not_installed">"Element SDK is not installed!"</string>
 <string name="check_metadata_title">"Check metadata updates on soft logins"</string>
 <string name="settings_title_program_url_config">"Program configuration URL"</string>
+<string name="settings_title_program_endpoint_config">"Program configuration Endpoint"</string>
 <string name="settings_title_program_username_config">"Program configuration username"</string>
 <string name="settings_title_program_password_config">"Program configuration password"</string>
 <string name="action_bar_connect">Connect</string>
@@ -1136,4 +1135,9 @@
 <string name="nepal_program_eref">Nepal</string>
 <string name="mozambique_program_eref">Mozambique</string>
 <string name="zimbabwe_program_eref">Zimbabwe</string>
+<string name="demo_page_text">"You're in demo mode and this is an online module. Please logout and login with a valid user to see this information."</string>
+<string name="erro_page_text">"You're offline and this is an online module. Please connect to a network in order to see this information."</string>
+<string name="production">Production</string>
+<string name="training">Training</string>
+<string name="custom">Custom</string>
 </resources>

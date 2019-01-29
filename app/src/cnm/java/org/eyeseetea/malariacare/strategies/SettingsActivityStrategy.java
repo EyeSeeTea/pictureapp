@@ -59,17 +59,23 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
         if (!PreferencesState.getInstance().isDevelopOptionActive()) {
+            PreferenceCategory preferenceCategory =
+                    (PreferenceCategory) preferenceScreen.findPreference(
+                            settingsActivity.getResources().getString(R.string.pref_cat_server));
+            preferenceCategory.removePreference(preferenceScreen.findPreference(
+                    settingsActivity.getResources().getString(R.string.server_url_key)));
             PreferenceCategory preferenceVisual =
                     (PreferenceCategory) preferenceScreen.findPreference(
                             settingsActivity.getResources().getString(R.string.pref_visual));
             preferenceVisual.removePreference(preferenceScreen.findPreference(
                     settingsActivity.getResources().getString(R.string.imei_preference)));
-        }
-        Preference serverUrlPreference = preferenceScreen.findPreference(
+        } else {
+            Preference serverUrlPreference = preferenceScreen.findPreference(
                     preferenceScreen.getContext().getResources().getString(
                             R.string.server_url_key));
                 serverUrlPreference.setOnPreferenceClickListener(
                         getOnPreferenceClickListener());
+        }
         Preference autoconfigurePreference = preferenceScreen.findPreference(
                 settingsActivity.getResources().getString(R.string.autoconfigure_preference));
         autoconfigurePreference.setOnPreferenceClickListener(

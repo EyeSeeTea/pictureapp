@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.annotation.NotNull;
 
+import org.eyeseetea.malariacare.utils.Utils;
+
 public class ViewUtils {
 
     public static void toggleVisibility(View view) {
@@ -30,14 +32,14 @@ public class ViewUtils {
         String actualText = textView.getText().toString();
 
         if (actualText.equals(firstText)) {
-            textView.setText(idSecondText);
+            textView.setText(Utils.getInternationalizedString(idSecondText,context));
         } else {
-            textView.setText(idFirstText);
+            textView.setText(Utils.getInternationalizedString(idFirstText,context));
         }
     }
 
     public static void showToast(@StringRes int titleResource, @NotNull Context context) {
-        final String title = context.getResources().getString(titleResource);
+        final String title = Utils.getInternationalizedString(titleResource, context);
         Toast.makeText(context, title, Toast.LENGTH_LONG).show();
     }
 

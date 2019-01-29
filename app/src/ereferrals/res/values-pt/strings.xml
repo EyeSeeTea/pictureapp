@@ -692,7 +692,6 @@
 <string name="monitor_row_title_positive">"Casos positivos"</string>
 <string name="monitor_row_title_negative">"Negativo"</string>
 <string name="monitor_row_title_referral">"Referências"</string>
-<string name="monitor_row_title_act_stockout">"Número não tratado (ACT stockout)"</string>
 <string name="monitor_row_title_denied">"Pacientes recusados"</string>
 <string name="monitor_row_title_rdt_stockout">"Número não testado (RDT stockout)"</string>
 <string name="monitor_row_title_positivity_rate">"Taxa de positividade"</string>
@@ -705,6 +704,7 @@
 <string name="dynamic_error_number">"Número inválido"</string>
 <string name="date_format_forward_slash">"aaaa/mm/dd"</string>
 <string name="network_error">"Há um problema com a rede, tente mais tarde."</string>
+<string name="not_available">"O servidor não está disponível."</string>
 <string name="login_invalid_credentials">"Credencial inválido"</string>
 <string name="login_unexpected_error">"Ocorreu um erro, tente novamente"</string>
 <string name="login_invalid_server_url">"Servidor URL inválido"</string>
@@ -729,18 +729,18 @@
 <string name="ws_conversion_error">"Ocorreu um erro de conversão no processo de nvio"</string>
 <string name="webservice_url_error_title">"Erro dos serviços web"</string>
 <string name="webservice_url_error">"Erro na construção do serviço web:%s"</string>
-<string name="error_web">"página de erro.html"</string>
-<string name="demo_web">"Página de demonstração.html"</string>
 <string name="error_message_push">"O evento com único ID:%s. foi carregado sem data. Por favor contacte o administrador."</string>
 <string name="dialog_pull_success">"Dhis metadata carregado do servidor com sucesso"</string>
 <string name="db_migration_error">"Por favor informe ao administrador, a aplicação pode necessitar de reinstalação"</string>
 <string name="error_exporting_data">"Erro metadata não pôde ser exportado"</string>
 <string name="google_play_required">"Esta aplicação requer serviços do Google play. Por favor instale os serviços Google play e volte a abrir a aplicação"</string>
 <string name="voucher">"Senha"</string>
-    <string name="log_in">Entrar</string>
-    <string name="clear_and_logout">Limpar e sair</string>
-    <string name="server_url">URL do Servidor</string>
-    <string name="forgot_password">"Esqueci meu PIN"</string>
+<string name="log_in">Entrar</string>
+<string name="clear_and_logout">Limpar e sair</string>
+<string name="server_url">URL do serviço da Web</string>
+<string name="program_url">URL de configuração do programa</string>
+<string name="webviews_url">URL da Web</string>
+<string name="forgot_password">"Esqueci meu PIN"</string>
 <string name="forgot_password_sms_sent">"SMS enviada ao telefone para o usuário em causa"</string>
 <string name="forgot_password_wrong_username">"Usuário não combina com nenhum registo no servidor"</string>
 <string name="ws_unknown_exception">"Excepção desconhecida"</string>
@@ -966,6 +966,12 @@
     <string name="element_not_installed">"Element SDK não está instalado!"</string>
     <string name="check_metadata_title">"Verificar atualizações de metadados em logins leves"</string>
     <string name="settings_title_program_url_config">"URL de configuração do programa"</string>
+    <string name="settings_title_program_endpoint_config">"Ponto final da configuração do programa"</string>
     <string name="settings_title_program_username_config">"Nome de usuário da configuração do programa"</string>
     <string name="settings_title_program_password_config">"Senha de configuração do programa"</string>
+<string name="demo_page_text">"Você está no modo de demonstração e este é um módulo on-line. Por favor, faça logout e login com um usuário válido para ver esta informação."</string>
+<string name="erro_page_text">"Você está offline e este é um módulo on-line. Por favor, conecte-se a uma rede para ver esta informação."</string>
+<string name="production">Produção</string>
+<string name="training">Treinamento</string>
+<string name="custom">Personalizado</string>
 </resources>

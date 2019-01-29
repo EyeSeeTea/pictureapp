@@ -30,6 +30,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
@@ -103,6 +105,8 @@ public class LoginActivity extends Activity {
     // Callback which will be triggered when animations are finished
     private OnPostAnimationListener onPostAnimationListener;
 
+    private Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,7 @@ public class LoginActivity extends Activity {
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+        mContext = this;
     }
 
     private void initLoginUseCase() {
@@ -244,7 +249,8 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     public void showError(int message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, translate(message),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -256,10 +262,7 @@ public class LoginActivity extends Activity {
         FieldTextWatcher watcher = new FieldTextWatcher();
         initDataDownloadPeriodDropdown();
         //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.edittext_server_url);
-        serverText.setText(ServerAPIController.getServerUrl());
-        serverText.addTextChangedListener(watcher);
-
+        initServerUrls(watcher);
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
@@ -273,12 +276,27 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
-                        passwordEditText.getText());
+                mLoginActivityStrategy.saveOtherValues(new ALoginActivityStrategy.SettingsCallback() {
+                    @Override
+                    public void onSuccess() {
+                        onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
+                                passwordEditText.getText());
+                    }
+                });
             }
         });
 
         mLoginActivityStrategy.initViews();
+    }
+
+    private void initServerUrls(FieldTextWatcher watcher) {
+        serverText = (EditText) findViewById(R.id.edittext_loginweb_server_url);
+        serverText.setText(ServerAPIController.getServerUrl());
+        serverText.addTextChangedListener(watcher);
+
+        mLoginActivityStrategy.initProgramServer();
+        mLoginActivityStrategy.initWebviewServer();
+        mLoginActivityStrategy.initProgramEndpoint();
     }
 
     public void login(String serverUrl, String username, String password) {
@@ -298,7 +316,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onError() {
                 hideProgressBar();
-                showError(getString(R.string.login_unexpected_error));
+                showError(translate(R.string.login_unexpected_error));
             }
         });
 
@@ -317,8 +335,9 @@ public class LoginActivity extends Activity {
             public void onServerURLNotValid() {
                 Log.d(TAG, "onServerURLNotValid");
                 onFinishLoading(null);
-                serverText.setError(getString(R.string.login_invalid_server_url));
-                showError(getString(R.string.login_invalid_server_url));
+                serverText.setError(
+                        translate(R.string.login_invalid_server_url));
+                showError(translate(R.string.login_invalid_server_url));
             }
 
             @Override
@@ -343,20 +362,26 @@ public class LoginActivity extends Activity {
             public void onConfigJsonInvalid() {
                 Log.d(TAG, "onConfigJsonInvalid");
                 onFinishLoading(null);
-                showError(getString(R.string.login_error_json));
+                showError(translate(R.string.login_error_json));
             }
 
             @Override
             public void onUnexpectedError() {
                 Log.d(TAG, "onUnexpectedError");
                 hideProgressBar();
-                showError(getString(R.string.login_unexpected_error));
+                showError(translate(R.string.login_unexpected_error));
             }
 
             @Override
             public void onMaxLoginAttemptsReachedError() {
                 Log.d(TAG, "onMaxLoginAttemptsReachedError");
                 mLoginActivityStrategy.disableLogin();
+            }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                Log.d(TAG, "onServerNotAvailable");
+                mLoginActivityStrategy.onServerNotAvailable(message);
             }
         });
     }
@@ -586,8 +611,13 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(final Exception exception) {
             //Error
-            onFinishLoading(null);
-            init();
+            mLoginActivityStrategy.loadSettings(new ALoginActivityStrategy.SettingsCallback() {
+                @Override
+                public void onSuccess() {
+                    onFinishLoading(null);
+                    init();
+                }
+            });
         }
     }
 
@@ -713,6 +743,10 @@ public class LoginActivity extends Activity {
     protected void onDestroy() {
         Log.d(TAG, "AndroidLifeCycle: onDestroy");
         super.onDestroy();
+    }
+
+    public String translate(@StringRes int id){
+        return Utils.getInternationalizedString(id, this);
     }
 }
 

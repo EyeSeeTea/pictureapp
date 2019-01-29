@@ -18,6 +18,7 @@ import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
+    CustomEditText mCustomEditText;
     CustomButton sendButton;
 
     public PhoneSingleQuestionView(Context context) {
@@ -28,44 +29,44 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
     @Override
     public EditText getAnswerView() {
-        return answer;
+        return mCustomEditText;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        answer.setEnabled(enabled);
+        mCustomEditText.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(answer);
+            showKeyboard(mCustomEditText);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        answer.setHint(helpText);
+        mCustomEditText.setHint(helpText);
     }
 
     @Override
     public void setValue(ValueDB valueDB) {
         if (valueDB != null) {
-            answer.setText(valueDB.getValue());
+            mCustomEditText.setText(valueDB.getValue());
         }
-        if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(answer);
+        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(mCustomEditText);
         }
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_phone_row, this);
 
-        answer = (CustomEditText) findViewById(R.id.answer);
-        answer.setFocusable(true);
-        answer.setFocusableInTouchMode(true);
+        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
+        mCustomEditText.setFocusable(true);
+        mCustomEditText.setFocusableInTouchMode(true);
 
         sendButton = (CustomButton) findViewById(R.id.row_phone_btn);
 
-        Validation.getInstance().addInput(answer);
+        Validation.getInstance().addInput(mCustomEditText);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +74,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             }
         });
 
-        answer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mCustomEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -89,21 +90,21 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     @Override
     public void validateAnswer(Context context) {
         try {
-            Phone phone = new Phone(answer.getText().toString());
-            hideKeyboard(answer);
+            Phone phone = new Phone(mCustomEditText.getText().toString());
+            hideKeyboard(mCustomEditText);
 
-            if(validateQuestionRegExp(answer)) {
-                Validation.getInstance().removeInputError(answer);
+            if(validateQuestionRegExp(mCustomEditText)) {
+                Validation.getInstance().removeInputError(mCustomEditText);
                 String value = phone.getValue();
                 notifyAnswerChanged(value);
             }
         } catch (InvalidPhoneException e) {
-            Validation.getInstance().addinvalidInput(answer,
+            Validation.getInstance().addinvalidInput(mCustomEditText,
                     context.getString(R.string.dynamic_error_phone_format));
-            answer.setError(context.getString(R.string.dynamic_error_phone_format));
+            mCustomEditText.setError(context.getString(R.string.dynamic_error_phone_format));
         }
-        if(answer.getText().toString().isEmpty() && !question.isCompulsory()){
-            Validation.getInstance().removeInputError(answer);
+        if(mCustomEditText.getText().toString().isEmpty() && !question.isCompulsory()){
+            Validation.getInstance().removeInputError(mCustomEditText);
         }
     }
 }

@@ -187,10 +187,9 @@ public class SurveyService extends IntentService {
             @Override
             public void onSuccess(String uid) {
                 List<SurveyDB> surveyDBs = SurveyServiceStrategy.getUnsentSurveys(uid);
-                List<SurveyDB> unsentSurveyDBs = new ArrayList<SurveyDB>();
 
                 //Since intents does NOT admit NON serializable as values we use Session instead
-                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveyDBs);
+                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, surveyDBs);
 
                 //Returning result to anyone listening
                 Intent resultIntent = new Intent(ALL_UNSENT_SURVEYS_ACTION);

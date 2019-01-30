@@ -114,6 +114,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
                     public void onMaxLoginAttemptsReachedError() {
                         Log.e(TAG, "onMaxLoginAttemptsReachedError");
                     }
+
+                    @Override
+                    public void onServerNotAvailable(String message) {
+                        Log.e(TAG, "Error getting user credentials: onServerNotAvailable");
+                    }
                 });
             }
         } else {

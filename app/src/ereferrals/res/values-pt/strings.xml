@@ -704,6 +704,7 @@
 <string name="dynamic_error_number">"Número inválido"</string>
 <string name="date_format_forward_slash">"aaaa/mm/dd"</string>
 <string name="network_error">"Há um problema com a rede, tente mais tarde."</string>
+<string name="not_available">"O servidor não está disponível."</string>
 <string name="login_invalid_credentials">"Credencial inválido"</string>
 <string name="login_unexpected_error">"Ocorreu um erro, tente novamente"</string>
 <string name="login_invalid_server_url">"Servidor URL inválido"</string>

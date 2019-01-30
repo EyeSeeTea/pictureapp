@@ -29,6 +29,7 @@ import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveSurveyFromIntentUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -146,10 +147,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                         activity);
-                DownloadLanguageTranslationUseCase downloader =
+                DownloadLanguageTranslationUseCase useCase =
                         new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-                downloader.download();
+                String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+
+                useCase.download(currentLanguage);
+                useCase.downloadAsync(new AsyncExecutor());
             }
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());

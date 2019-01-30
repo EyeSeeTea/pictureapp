@@ -5,6 +5,7 @@ import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -39,10 +40,12 @@ import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
+    private CustomTextView progressTextView;
 
     public interface Callback {
         void onSuccess();
@@ -54,6 +57,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+    }
+
+    @Override
+    public void setContentView() {
+        activity.setContentView(R.layout.activity_splash);
+
+        progressTextView = activity.findViewById(R.id.progress_text);
     }
 
     public void init(final SplashScreenActivity.Callback callback) {
@@ -182,10 +192,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                         activity);
-                DownloadLanguageTranslationUseCase downloader =
+                DownloadLanguageTranslationUseCase useCase =
                         new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-                downloader.download();
+                String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+
+                useCase.download(currentLanguage);
+                useCase.downloadAsync(new AsyncExecutor());
             }
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());
@@ -209,5 +222,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         if(activity.getIntent().getExtras()!=null) {
             activity.getIntent().removeExtra(INTENT_JSON_EXTRA_KEY);
         }
+    }
+
+    @Override
+    public void showProgressMessage(@StringRes int resourceId) {
+        progressTextView.setTextTranslation(resourceId);
     }
 }

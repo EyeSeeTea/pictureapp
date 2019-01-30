@@ -3,8 +3,11 @@ package org.eyeseetea.malariacare.data.authentication;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationManagerStrategy;
+import org.eyeseetea.malariacare.data.authentication.strategies.AuthenticationManagerStrategy;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.IForgotPasswordDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
@@ -17,14 +20,21 @@ public class AuthenticationManager implements IAuthenticationManager {
     private final IAuthenticationDataSource mUserAccountRemoteDataSource;
     IUserRepository mUserRepository;
     AAuthenticationManagerStrategy mAuthenticationManagerStrategy;
+    IForgotPasswordDataSource mForgotPasswordDataSource;
+    ISettingsRepository mSettingsRepository;
 
-    public AuthenticationManager(
-            IAuthenticationDataSource userAccountLocalDataSource,
-            IAuthenticationDataSource userAccountRemoteDataSource,
-            IUserRepository userRepository) {
+    public AuthenticationManager(IAuthenticationDataSource userAccountLocalDataSource,
+                                 IAuthenticationDataSource userAccountRemoteDataSource,
+                                 IUserRepository userRepository,
+                                 IForgotPasswordDataSource forgotPasswordDataSource,
+                                 ISettingsRepository settingsRepository) {
         mUserAccountLocalDataSource = userAccountLocalDataSource;
         mUserAccountRemoteDataSource = userAccountRemoteDataSource;
         mUserRepository = userRepository;
+        mForgotPasswordDataSource = forgotPasswordDataSource;
+        mSettingsRepository = settingsRepository;
+        mAuthenticationManagerStrategy = new AuthenticationManagerStrategy(forgotPasswordDataSource,
+                settingsRepository);
     }
 
     @Override
@@ -61,9 +71,9 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public void forgotPassword(String username,
+    public void forgotPassword(String wsVersion, String username,
             final Callback<ForgotPasswordMessage> callback) {
-        mAuthenticationManagerStrategy.forgotPassword(username, callback);
+        mAuthenticationManagerStrategy.forgotPassword(wsVersion, username, callback);
     }
 
     private void remoteLogout(final IAuthenticationManager.Callback<Void> callback) {

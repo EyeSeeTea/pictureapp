@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
@@ -38,11 +39,13 @@ public class SettingsDataSource implements ISettingsRepository {
         String fontSize = getFontSize();
         String programUrl = getProgramUrl();
         String programEndPoint = getProgramEndPoint();
+        String wsVersion = getWSVersion();
         boolean isSoftLoginRequired = getSoftLoginRequired();
         boolean isPullRequired = getPullRequired();
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
-                webUrl, fontSize, programUrl, programEndPoint, isSoftLoginRequired, isPullRequired);
+                webUrl, fontSize, programUrl, programEndPoint, isSoftLoginRequired, isPullRequired,
+                wsVersion);
     }
 
     private String loadPass() {
@@ -170,6 +173,10 @@ public class SettingsDataSource implements ISettingsRepository {
 
     private String getProgramPassword() {
         return getPreference(context, R.string.program_configuration_pass, null);
+    }
+
+    private String getWSVersion() {
+        return context.getString(R.string.ws_version);
     }
 
     private boolean getSoftLoginRequired() {

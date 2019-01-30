@@ -9,16 +9,19 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.remote.AuthenticationWSDataSource;
+import org.eyeseetea.malariacare.data.remote.ForgotPasswordWSDataSource;
 import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.usecase.CheckAuthUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ForgotPasswordUseCase;
@@ -76,16 +79,18 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
         IAuthenticationDataSource userAccountRemoteDataSource =
                 new AuthenticationWSDataSource(eReferralsAPIClient);
 
-        return new AuthenticationManager(
-                userAccountLocalDataSource, userAccountRemoteDataSource,
-                new UserAccountDataSource());
+        return new AuthenticationManager(userAccountLocalDataSource, userAccountRemoteDataSource,
+                new UserAccountDataSource(),
+                new ForgotPasswordWSDataSource(context),
+                new SettingsDataSource(context));
     }
 
     public ForgotPasswordUseCase getForgotPasswordUseCase(Context context) {
         IAuthenticationManager authenticationManager = getAuthenticationManager(context);
+        ISettingsRepository settingsRepository = new SettingsDataSource(context);
 
         ForgotPasswordUseCase forgotPasswordUseCase = new ForgotPasswordUseCase(mainExecutor,
-                asyncExecutor, authenticationManager);
+                asyncExecutor, authenticationManager, settingsRepository);
 
         return forgotPasswordUseCase;
     }

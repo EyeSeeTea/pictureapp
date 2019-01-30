@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
@@ -69,6 +70,8 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                                         notifyServerURLNotValid();
                                     } else if (throwable instanceof InvalidCredentialsException) {
                                         notifyInvalidCredentials();
+                                    } else if (throwable instanceof AvailableApiException) {
+                                        notifyServerNotAvailable(throwable.getMessage());
                                     } else {
                                         throwable.printStackTrace();
                                     }
@@ -161,6 +164,15 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             @Override
             public void run() {
                 mCallback.onNetworkError();
+            }
+        });
+    }
+
+    public void notifyServerNotAvailable(final String message) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onServerNotAvailable(message);
             }
         });
     }

@@ -20,6 +20,8 @@ public abstract class ALoginUseCase {
         void onUnexpectedError();
 
         void onMaxLoginAttemptsReachedError();
+
+        void onServerNotAvailable(String message);
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

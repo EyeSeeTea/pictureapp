@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.ForgotPasswordMessage;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
@@ -11,19 +12,22 @@ public class ForgotPasswordUseCase implements UseCase {
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
     private IAuthenticationManager mAuthenticationManager;
+    private ISettingsRepository mSettingsRepository;
     private java.lang.String mUsername;
     private Callback mCallback;
 
     public ForgotPasswordUseCase(
             IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor,
-            IAuthenticationManager authenticationManager) {
+            IAuthenticationManager authenticationManager,
+            ISettingsRepository settingsRepository ) {
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
         mAuthenticationManager = authenticationManager;
+        mSettingsRepository = settingsRepository;
     }
 
-    public void execute(java.lang.String username, Callback callback) {
+    public void execute(String username, Callback callback) {
         mUsername = username;
         mCallback = callback;
         mAsyncExecutor.run(this);
@@ -31,7 +35,8 @@ public class ForgotPasswordUseCase implements UseCase {
 
     @Override
     public void run() {
-        mAuthenticationManager.forgotPassword(mUsername,
+        mAuthenticationManager.forgotPassword(mSettingsRepository.getSettings().getWsVersion(),
+                mUsername,
                 new IAuthenticationManager.Callback<ForgotPasswordMessage>() {
                     @Override
                     public void onSuccess(final ForgotPasswordMessage forgotPasswordMessage) {

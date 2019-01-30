@@ -353,6 +353,12 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "onMaxLoginAttemptsReachedError");
                 mLoginActivityStrategy.disableLogin();
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                Log.d(TAG, "onServerNotAvailable");
+                mLoginActivityStrategy.onServerNotAvailable(message);
+            }
         });
     }
 

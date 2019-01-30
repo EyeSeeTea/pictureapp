@@ -19,15 +19,15 @@ public class DownloadLanguageTranslationUseCase implements UseCase {
         this.credentialsReader = credentialsReader;
     }
 
-    public void downloadAsync(IAsyncExecutor mAsyncExecutor) throws Exception {
+    public void downloadAsync(IAsyncExecutor mAsyncExecutor) {
         mAsyncExecutor.run(this);
     }
 
-    public void download() throws Exception {
+    public void download(String languageCode) throws Exception {
 
         LanguageDownloader downloader = LanguageFactory.getLanguageDownloader(getClient(),
                 connectivity);
-        downloader.start();
+        downloader.start(languageCode);
 
     }
 
@@ -40,7 +40,7 @@ public class DownloadLanguageTranslationUseCase implements UseCase {
     @Override
     public void run() {
         try {
-            download();
+            download("");
         } catch (Exception e) {
             e.printStackTrace();
         }

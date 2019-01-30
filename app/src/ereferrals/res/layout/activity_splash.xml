@@ -49,4 +49,12 @@
         android:paddingTop="0dp"
         android:progress="0" />
 
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/progress_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:gravity="center" />
+
 </RelativeLayout>

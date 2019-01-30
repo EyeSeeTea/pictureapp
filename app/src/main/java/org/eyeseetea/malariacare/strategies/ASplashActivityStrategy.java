@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.SplashScreenActivity;
@@ -104,5 +105,9 @@ public abstract class ASplashActivityStrategy {
     }
 
     public void setContentView() {
+    }
+
+    public void showProgressMessage(@IdRes int resourceId) {
+
     }
 }

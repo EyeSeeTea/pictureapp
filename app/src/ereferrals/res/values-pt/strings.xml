@@ -974,4 +974,9 @@
 <string name="production">Produção</string>
 <string name="training">Treinamento</string>
 <string name="custom">Personalizado</string>
+
+
+    <string name="splash_progress_init_db">Inicializando banco de dados …</string>
+    <string name="splash_progress_downloading_languages">Baixe os termos do idioma atual …</string>
+    <string name="splash_progress_executing_maintenance_task">Executando tarefa de manutenção …</string>
 </resources>

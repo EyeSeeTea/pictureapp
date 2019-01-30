@@ -104,5 +104,5 @@
     <string name="ENABLE_MANUAL_PUSH_PERIOD" translatable="false">30</string>
 
 
-    <string name="web_view_timeout_millis" translatable="false">2000</string>
+    <string name="web_view_timeout_millis" translatable="false">15000</string>
 </resources>

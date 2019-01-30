@@ -1032,5 +1032,6 @@ Ameahidi kuhudhuria"</string>
 <string name="training">Mafunzo</string>
 <string name="custom">Desturi</string>
 
-    <string name="web_view_timeout_error">Hitilafu ya wakati wa kutosha imetokea kupakia ukurasa wa wavuti</string>
+    <string name="web_view_network_error">Kuna matatizo ya mtandao kupakia mtandao wa pag</string>
+    <string name="push_network_error">Kuna matatizo ya mtandao kwenye mchakato wa kushinikiza</string>
 </resources>

@@ -38,6 +38,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     public static final String SERVICE_METHOD = "serviceMethod";
     public static final String PUSH_MESSAGE = "PushStart";
     public static final String PUSH_IS_START = "PushIsStart";
+    public static final String PUSH_NETWORK_ERROR = "PushNetworkError";
     public static final String SHOW_LOGIN = "ShowLogin";
 
     private PushUseCase mPushUseCase;
@@ -249,6 +250,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onNetworkError() {
+                sendIntentNetwokError();
                 onError("PUSHUSECASE ERROR Network not available");
             }
 
@@ -315,6 +317,14 @@ public class PushServiceStrategy extends APushServiceStrategy {
         Intent surveysIntent = new Intent(PushService.class.getName());
         surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
         surveysIntent.putExtra(PUSH_IS_START, start);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
+    }
+
+    private void sendIntentNetwokError() {
+        Intent surveysIntent = new Intent(PushService.class.getName());
+        surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
+        surveysIntent.putExtra(PUSH_NETWORK_ERROR, true);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }

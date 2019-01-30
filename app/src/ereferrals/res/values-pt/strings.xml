@@ -974,6 +974,6 @@
 <string name="training">Treinamento</string>
 <string name="custom">Personalizado</string>
 
-    <string name="web_view_timeout_error">Ocorreu um erro de tempo esgotado ao carregar a página da web</string>
-
+    <string name="web_view_network_error">Há problemas de rede ao carregar a página da web</string>
+    <string name="push_network_error">Há problemas de rede no processo de envio</string>
 </resources>

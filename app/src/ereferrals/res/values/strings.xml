@@ -1140,7 +1140,6 @@
 <string name="training">Training</string>
 <string name="custom">Custom</string>
 
-<string name="web_view_timeout_error">An timeout error has occurred loading the web page</string>
-
-
+    <string name="web_view_network_error">There is network problems loading the web page</string>
+    <string name="push_network_error">There is network problems on push process</string>
 </resources>

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -87,13 +89,10 @@ import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-
-import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
@@ -703,12 +702,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            showHideProgressPush(intent);
+            managePushIntent(intent);
             mDashboardUnsentFragment.reloadData();
         }
     };
 
-    private void showHideProgressPush(Intent intent) {
+    private void managePushIntent(Intent intent) {
         if (intent.getBooleanExtra(PushServiceStrategy.PUSH_IS_START, false)) {
             mRefreshButton.setEnabled(false);
             mRefreshButton.startAnimation(
@@ -717,6 +716,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             waitToEnableRefreshButton(mDashboardActivity);
         } else {
             mRefreshButton.clearAnimation();
+        }
+
+        if (intent.getBooleanExtra(PushServiceStrategy.PUSH_NETWORK_ERROR, false)) {
+            showError(R.string.push_network_error);
         }
     }
 
@@ -745,6 +748,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         };
         new Handler().postDelayed(runnable, pushPeriod * SECONDS);
+    }
+
+    public void showError(int message) {
+        Toast.makeText(mDashboardActivity, translate(message),
+                Toast.LENGTH_LONG).show();
     }
 
     private String translate(@StringRes int resourceId) {

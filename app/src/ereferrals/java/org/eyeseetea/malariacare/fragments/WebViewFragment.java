@@ -165,7 +165,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                     @Override
                     public void onTimeoutError() {
                         // do what you want
-                        showError(R.string.web_view_timeout_error);
+                        showError(R.string.web_view_network_error);
                     }
                 });
 

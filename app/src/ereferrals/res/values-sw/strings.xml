@@ -1032,5 +1032,5 @@ Ameahidi kuhudhuria"</string>
 <string name="training">Mafunzo</string>
 <string name="custom">Desturi</string>
 
-<string name="web_view_timeout_error">An timeout error has occurred loading the web page</string>
+    <string name="web_view_timeout_error">Hitilafu ya wakati wa kutosha imetokea kupakia ukurasa wa wavuti</string>
 </resources>

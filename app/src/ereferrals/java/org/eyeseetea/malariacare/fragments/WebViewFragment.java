@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -159,7 +159,15 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                 int timeoutMillis = Integer.parseInt(getString(R.string.web_view_timeout_millis));
 
                 CustomWebViewClient customWebViewClient =
-                        new CustomWebViewClient(getActivity(),timeoutMillis);
+                        new CustomWebViewClient(timeoutMillis);
+
+                customWebViewClient.setErrorListener(new CustomWebViewClient.ErrorListener() {
+                    @Override
+                    public void onTimeoutError() {
+                        // do what you want
+                        showError(R.string.web_view_timeout_error);
+                    }
+                });
 
                 customWebViewClient.setPageFinishedListener(
                         new CustomWebViewClient.PageFinishedListener() {
@@ -203,6 +211,12 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
         return false;
     }
+
+    public void showError(int message) {
+        Toast.makeText(getActivity(), translate(message),
+                Toast.LENGTH_LONG).show();
+    }
+
     private String translate(@StringRes int id){
         return Utils.getInternationalizedString(id, getActivity());
     }

@@ -978,5 +978,6 @@
 <string name="training">प्रशिक्षण</string>
 <string name="custom">अनुकूलन</string>
 
-<string name="web_view_timeout_error">An timeout error has occurred loading the web page</string>
+    <string name="web_view_timeout_error">वेब पेज लोड गर्दा एक टाइमआउट त्रुटि भयो</string>
+
 </resources>

@@ -974,5 +974,6 @@
 <string name="training">Treinamento</string>
 <string name="custom">Personalizado</string>
 
-<string name="web_view_timeout_error">An timeout error has occurred loading the web page</string>
+    <string name="web_view_timeout_error">Ocorreu um erro de tempo esgotado ao carregar a página da web</string>
+
 </resources>

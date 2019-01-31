@@ -4,7 +4,9 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.net.ConnectivityManager;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -27,7 +29,8 @@ public abstract class ASyncFactory {
 
     public PullUseCase getPullUseCase(Context context) {
         IPullController pullController = getPullController(context);
-        return new PullUseCase(pullController, asyncExecutor, mainExecutor);
+        IConnectivityManager connectivityManager = new ConnectivityManager(context);
+        return new PullUseCase(pullController, asyncExecutor, mainExecutor, connectivityManager);
     }
 
     public PushUseCase getPushUseCase(Context context) {

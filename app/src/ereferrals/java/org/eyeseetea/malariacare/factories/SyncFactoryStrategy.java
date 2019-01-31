@@ -1,8 +1,9 @@
 package org.eyeseetea.malariacare.factories;
 
-
 import android.content.Context;
 
+import org.eyeseetea.malariacare.data.database.datasources.ConfigurationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
@@ -24,12 +25,19 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IConfigurationRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
+import org.eyeseetea.malariacare.presentation.presenters.PullPresenter;
 
 public class SyncFactoryStrategy extends ASyncFactory {
+    private SettingsFactory settingsFactory = new SettingsFactory();
 
     @Override
     protected IPullController getPullController(Context context) {
-        return new WSPullController(context);
+        IConfigurationRepository configurationRepository = new ConfigurationLocalDataSource();
+        ILanguageRepository languageRepository = new LanguagesLocalDataSource();
+
+        return new WSPullController(context, configurationRepository, languageRepository);
     }
 
     @Override
@@ -49,4 +57,10 @@ public class SyncFactoryStrategy extends ASyncFactory {
         return new WSPushController(mConvertToWSVisitor, mEReferralsAPIClient, surveyRepository);
     }
 
+    public PullPresenter getPullPresenter(Context context) {
+
+        return new PullPresenter(getPullUseCase(context),
+                settingsFactory.getSettingsUseCase(context),
+                settingsFactory.saveSettingsUseCase(context));
+    }
 }

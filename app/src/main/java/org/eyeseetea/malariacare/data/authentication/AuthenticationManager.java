@@ -4,7 +4,6 @@ import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.authentication.strategies.AAuthenticationManagerStrategy;
 import org.eyeseetea.malariacare.data.authentication.strategies.AuthenticationManagerStrategy;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.IForgotPasswordDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -34,7 +33,8 @@ public class AuthenticationManager implements IAuthenticationManager {
         mUserRepository = userRepository;
         mForgotPasswordDataSource = forgotPasswordDataSource;
         mSettingsRepository = settingsRepository;
-        mAuthenticationManagerStrategy = new  AuthenticationManagerStrategy(forgotPasswordDataSource, settingsRepository);
+        mAuthenticationManagerStrategy = new AuthenticationManagerStrategy(forgotPasswordDataSource,
+                settingsRepository);
     }
 
     @Override

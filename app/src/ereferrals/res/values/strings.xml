@@ -1146,4 +1146,9 @@
     <string name="splash_progress_downloading_languages">Download current language terms …</string>
     <string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
 
+
+
+    <string name="pull_dialog_progress_generic_message">Updating metadata …</string>
+    <string name="push_invalid_credentials">we have detected that the pin has changed on the server, please insert the pin again</string>
+
 </resources>

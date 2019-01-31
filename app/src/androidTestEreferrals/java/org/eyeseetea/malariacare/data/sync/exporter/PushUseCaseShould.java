@@ -238,6 +238,11 @@ public class PushUseCaseShould {
                 UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
                 assertThat(userAccountDataSource.getLoggedUser().canAddSurveys(), is(false));
             }
+
+            @Override
+            public void onInvalidCredentials() {
+                fail("onReOpenOrgUnit");
+            }
         });
 
     }

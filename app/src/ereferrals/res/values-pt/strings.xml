@@ -979,4 +979,8 @@
     <string name="splash_progress_init_db">Inicializando banco de dados …</string>
     <string name="splash_progress_downloading_languages">Baixe os termos do idioma atual …</string>
     <string name="splash_progress_executing_maintenance_task">Executando tarefa de manutenção …</string>
+
+    <string name="pull_dialog_progress_generic_message">Atualizando Metadados …</string>
+    <string name="push_invalid_credentials">detectamos que o pino foi alterado no servidor, insira o pino novamente</string>
+
 </resources>

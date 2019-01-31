@@ -11,7 +11,6 @@ import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 import static org.junit.Assert.assertTrue;
 
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;

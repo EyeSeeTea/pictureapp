@@ -31,7 +31,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
@@ -302,24 +301,7 @@ public class LoginActivity extends Activity {
     public void login(String serverUrl, String username, String password) {
         final Credentials credentials = new Credentials(serverUrl, username, password);
         onStartLoading();
-        mLoginActivityStrategy.checkCredentials(credentials, new ALoginActivityStrategy.Callback() {
-            @Override
-            public void onSuccess() {
-                mLoginActivityStrategy.onLoginSuccess(credentials);
-            }
-
-            @Override
-            public void onSuccessDoLogin() {
-                executeLoginUseCase(credentials);
-            }
-
-            @Override
-            public void onError() {
-                hideProgressBar();
-                showError(translate(R.string.login_unexpected_error));
-            }
-        });
-
+        executeLoginUseCase(credentials);
     }
 
 
@@ -343,12 +325,6 @@ public class LoginActivity extends Activity {
             @Override
             public void onInvalidCredentials() {
                 Log.d(TAG, "onInvalidCredentials");
-                mLoginActivityStrategy.onBadCredentials();
-            }
-
-            @Override
-            public void onServerPinChanged() {
-                Log.d(TAG, "onServerPinChanged");
                 mLoginActivityStrategy.onBadCredentials();
             }
 

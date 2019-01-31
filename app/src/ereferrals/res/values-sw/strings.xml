@@ -1036,4 +1036,7 @@ Ameahidi kuhudhuria"</string>
     <string name="splash_progress_init_db">Initializing database …</string>
     <string name="splash_progress_downloading_languages">Download current language terms …</string>
     <string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
+
+    <string name="pull_dialog_progress_generic_message">Inasasisha metadata …</string>
+    <string name="push_invalid_credentials">tumegundua kuwa siri imebadilika kwenye seva, tafadhali ingiza tena siri</string>
 </resources>

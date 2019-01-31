@@ -38,6 +38,7 @@ public class LanguageShould {
     @Test
     public void return_language_code_and_name_correctly() {
         Language language = new Language("es", "Spanish");
+
         assertThat(language.getCode(), is("es"));
         assertThat(language.getName(),is("Spanish"));
     }

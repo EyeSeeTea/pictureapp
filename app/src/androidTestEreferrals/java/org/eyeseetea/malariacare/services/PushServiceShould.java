@@ -77,7 +77,7 @@ public class PushServiceShould {
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
 
     private PushServiceStrategy mPushServiceStrategy;
-    private boolean showLogiIntentReceived;
+    private boolean pullRequiredIntentReceived;
     private final Object syncObject = new Object();
 
     @Rule
@@ -98,7 +98,7 @@ public class PushServiceShould {
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
         PushUseCase pushUseCase = givenPushUseCase();
-        showLogiIntentReceived = false;
+        pullRequiredIntentReceived = false;
         mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, API_AVAILABLE_OK);
         mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
@@ -111,7 +111,7 @@ public class PushServiceShould {
         synchronized (syncObject) {
             syncObject.wait();
         }
-        assertThat(showLogiIntentReceived, is(true));
+        assertThat(pullRequiredIntentReceived, is(true));
     }
 
     @Before
@@ -142,7 +142,7 @@ public class PushServiceShould {
         private void showLoginIfConfigFileObsolete(Intent intent) {
             if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
                 synchronized (syncObject) {
-                    showLogiIntentReceived = true;
+                    pullRequiredIntentReceived = true;
                     syncObject.notify();
                 }
             }

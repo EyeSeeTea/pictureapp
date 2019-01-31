@@ -56,6 +56,8 @@ public class UserDB extends BaseModel {
     Date last_updated;
     @Column
     boolean canAddSurveys;
+    @Column
+    boolean isDemo;
 
 
     /**
@@ -198,6 +200,14 @@ public class UserDB extends BaseModel {
 
     public void setCanAddSurveys(boolean canAddSurveys) {
         this.canAddSurveys = canAddSurveys;
+    }
+
+    public boolean isDemo() {
+        return isDemo;
+    }
+
+    public void setIsDemo(boolean value) {
+        this.isDemo = value;
     }
 
     public List<SurveyDB> getSurveyDBs() {

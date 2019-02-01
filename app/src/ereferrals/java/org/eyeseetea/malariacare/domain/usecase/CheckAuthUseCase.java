@@ -11,8 +11,11 @@ public class CheckAuthUseCase implements UseCase {
 
     public interface Callback {
         void onEmptyCredentials();
+
         void onEmptyAuth();
+
         void onValidAuth();
+
         void onInValidAuth();
 
     }
@@ -41,34 +44,29 @@ public class CheckAuthUseCase implements UseCase {
 
     @Override
     public void run() {
-        mMainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                Auth auth = mAuthRepository.getAuth();
+        Auth auth = mAuthRepository.getAuth();
 
-                if(auth==null){
-                    //auth voucher from other app doesn't exist.
-                    return;
-                }
+        if (auth == null) {
+            //auth voucher from other app doesn't exist.
+            return;
+        }
 
-                Credentials credentials = mCredentialsRepository.getLastValidCredentials();
-                if(!hasCredentials(credentials)){
-                    notifyEmptyCredentials();
-                    return;
-                }
+        Credentials credentials = mCredentialsRepository.getLastValidCredentials();
+        if (!hasCredentials(credentials)) {
+            notifyEmptyCredentials();
+            return;
+        }
 
-                if(auth.hasAuth()){
-                    if(isValidUserAndPassword(credentials, auth)){
-                        notifyValidAuth();
-                        return;
-                    }else {
-                        notifyInValidAuth();
-                        return;
-                    }
-                }
-                notifyEmptyAuth();
+        if (auth.hasAuth()) {
+            if (isValidUserAndPassword(credentials, auth)) {
+                notifyValidAuth();
+                return;
+            } else {
+                notifyInValidAuth();
+                return;
             }
-        });
+        }
+        notifyEmptyAuth();
     }
 
     private boolean hasCredentials(Credentials credentials) {
@@ -115,7 +113,6 @@ public class CheckAuthUseCase implements UseCase {
             }
         });
     }
-
 
 
 }

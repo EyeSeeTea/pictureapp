@@ -24,7 +24,11 @@ public class SoftLoginPresenter {
     private final CheckAuthUseCase checkExternalAuthUseCase;
     private final SaveAuthUseCase saveAuthUseCase;
 
-    boolean showingAdvancedOptions = false;
+    private boolean showingAdvancedOptions = false;
+
+    private boolean isLoginDisabledByMaxInvalidLoginAttempts = false;
+    private boolean isLoginDisabledByEmptyPin = false;
+
 
     public SoftLoginPresenter(GetUserUserAccountUseCase getUserUserAccountUseCase,
             SoftLoginUseCase softLoginUseCase,
@@ -50,6 +54,7 @@ public class SoftLoginPresenter {
         this.view.hideProgress();
         this.view.hideAdvancedOptions();
 
+        disableLoginAction();
         loadCurrentUser();
         verifySoftLoginFromOtherApp();
     }
@@ -193,13 +198,31 @@ public class SoftLoginPresenter {
         }, settings);
     }
 
+    public void onPinChanged(String pin) {
+        if (pin == null || pin.isEmpty()) {
+            isLoginDisabledByEmptyPin = true;
+            disableLoginAction();
+        } else {
+            isLoginDisabledByEmptyPin = false;
+
+            if (isLoginDisabledByMaxInvalidLoginAttempts == false) {
+                enableLoginAction();
+            }
+        }
+    }
+
     private void disableLoginActionUntilEnableLoginTime(final long enableLoginTime) {
+        disableLoginAction();
+        isLoginDisabledByMaxInvalidLoginAttempts = true;
+
+        verifyEnableLogin(enableLoginTime);
+    }
+
+    private void disableLoginAction() {
         if (view != null) {
             view.hideProgress();
             view.disableLoginAction();
         }
-
-        verifyEnableLogin(enableLoginTime);
     }
 
     private void verifyEnableLogin(final long enableLoginTime) {
@@ -207,14 +230,21 @@ public class SoftLoginPresenter {
             @Override
             public void run() {
                 if (System.currentTimeMillis() >= enableLoginTime) {
-                    if (view != null) {
-                        view.enableLoginAction();
-                    }
+                    isLoginDisabledByMaxInvalidLoginAttempts = false;
+
+                    enableLoginAction();
                 } else {
                     verifyEnableLogin(enableLoginTime);
                 }
             }
         }, 1000);
+    }
+
+    private void enableLoginAction() {
+        if (view != null && !isLoginDisabledByEmptyPin &&
+                !isLoginDisabledByMaxInvalidLoginAttempts) {
+            view.enableLoginAction();
+        }
     }
 
     private void loadCurrentUser() {

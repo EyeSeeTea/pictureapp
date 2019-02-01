@@ -53,20 +53,20 @@ public class CheckAuthUseCase implements UseCase {
 
                 Credentials credentials = mCredentialsRepository.getLastValidCredentials();
                 if(!hasCredentials(credentials)){
-                    mCallback.onEmptyCredentials();
+                    notifyEmptyCredentials();
                     return;
                 }
 
                 if(auth.hasAuth()){
                     if(isValidUserAndPassword(credentials, auth)){
-                        mCallback.onValidAuth();
+                        notifyValidAuth();
                         return;
                     }else {
-                        mCallback.onInValidAuth();
+                        notifyInValidAuth();
                         return;
                     }
                 }
-                mCallback.onEmptyAuth();
+                notifyEmptyAuth();
             }
         });
     }
@@ -79,4 +79,43 @@ public class CheckAuthUseCase implements UseCase {
         return auth.getUserName().equals(credentials.getUsername())
                 && auth.getPassword().equals(credentials.getPassword());
     }
+
+    private void notifyEmptyAuth() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onEmptyAuth();
+            }
+        });
+    }
+
+    private void notifyInValidAuth() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInValidAuth();
+            }
+        });
+    }
+
+    private void notifyValidAuth() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onValidAuth();
+            }
+        });
+    }
+
+    private void notifyEmptyCredentials() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onEmptyCredentials();
+            }
+        });
+    }
+
+
+
 }

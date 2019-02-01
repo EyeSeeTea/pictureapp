@@ -61,9 +61,14 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     @Override
     public void setContentView() {
-        activity.setContentView(R.layout.activity_splash);
+        try {
+            activity.setContentView(R.layout.activity_splash);
 
-        progressTextView = activity.findViewById(R.id.progress_text);
+            progressTextView = activity.findViewById(R.id.progress_text);
+        } catch (Exception e) {
+            Log.d("", "");
+        }
+
     }
 
     public void init(final SplashScreenActivity.Callback callback) {

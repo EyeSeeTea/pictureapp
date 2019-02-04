@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
@@ -191,7 +192,30 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             FragmentManager fm = mBaseActivity.getSupportFragmentManager();
             PullDialogFragment pullDialogFragment = PullDialogFragment.newInstance();
             pullDialogFragment.show(fm, "pull");
+        } else {
+            markPullAsRequired();
         }
+    }
+
+    private void markPullAsRequired() {
+        GetSettingsUseCase getSettingsUseCase =
+                new SettingsFactory().getSettingsUseCase(mBaseActivity);
+        final SaveSettingsUseCase saveSettingsUseCase =
+                new SettingsFactory().saveSettingsUseCase(mBaseActivity);
+
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                settings.changePullRequired(true);
+
+                saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "Pull marked as required");
+                    }
+                }, settings);
+            }
+        });
     }
 
     private boolean isSurveyOpen() {

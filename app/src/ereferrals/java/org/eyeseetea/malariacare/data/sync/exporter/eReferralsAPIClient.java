@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.model.AuthPayload;
 import org.eyeseetea.malariacare.data.remote.model.AuthResponse;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ApiAvailable;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Id;
@@ -22,6 +23,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -84,8 +86,11 @@ public class eReferralsAPIClient {
         mApiClientRetrofit = mRetrofit.create(ApiClientRetrofit.class);
     }
 
-    public AuthResponse auth(String userCode, String pin) throws IOException {
+    public AuthResponse auth(String userCode, String pin) throws IOException,
+            AvailableApiException {
         AuthPayload authPayload = new AuthPayload(userCode, pin);
+
+        getIfIsApiAvailable();
 
         Response<AuthResponse> authResponse = mApiClientRetrofit.auth(authPayload).execute();
 
@@ -102,6 +107,7 @@ public class eReferralsAPIClient {
         Response<SurveyWSResult> response = null;
 
         try {
+            getIfIsApiAvailable();
             response = mApiClientRetrofit.pushSurveys(
                     surveyContainerWSObject).execute();
         } catch (UnrecognizedPropertyException e) {
@@ -109,6 +115,9 @@ public class eReferralsAPIClient {
             wsClientCallBack.onError(conversionException);
         } catch (SocketTimeoutException | UnknownHostException e) {
             wsClientCallBack.onError(new NetworkException());
+            return;
+        } catch (AvailableApiException e) {
+            wsClientCallBack.onError(e);
             return;
         } catch (IOException e) {
             wsClientCallBack.onError(e);
@@ -189,6 +198,17 @@ public class eReferralsAPIClient {
             }
         }
         wsClientCallBack.onSuccess(existOnServer);
+    }
+
+    public ApiAvailable getIfIsApiAvailable()
+            throws IOException, AvailableApiException {
+        Response<ApiAvailable> response = mApiClientRetrofit.apiAvailable().execute();
+        if (!response.isSuccessful()) {
+            throw new AvailableApiException();
+        } else if (!response.body().isAvailable()) {
+            throw new AvailableApiException(response.body().getMsg());
+        }
+        return response.body();
     }
 
     public interface WSClientCallBack<T> {

@@ -67,4 +67,6 @@ public abstract class ABaseActivityStrategy {
                     mBaseActivity.getResources().getString(R.string.malaria_case_based_reporting));
         }
     }
+
+    public abstract void surveyClosed();
 }

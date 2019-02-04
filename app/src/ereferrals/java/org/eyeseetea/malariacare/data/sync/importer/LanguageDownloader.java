@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.data.sync.importer;
 
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -13,8 +14,6 @@ import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Language;
 import org.eyeseetea.malariacare.data.sync.importer.poeditor.models.Term;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ILanguagesClient;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
-import org.eyeseetea.malariacare.domain.entity.Settings;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LanguageDownloader {
-
+    private static String TAG = "LanguageDownloader";
 
     private ILanguagesClient client;
     private IConnectivityManager connectivity;
@@ -35,13 +34,24 @@ public class LanguageDownloader {
     }
 
 
-    public void start() throws Exception {
+    public void start(String languageCodeFilter) throws Exception {
         if (connectivity.isDeviceOnline()) {
+
+
+            Log.d(TAG, "Starting download languages and terms by filter:" + languageCodeFilter);
+
             Date downloadedDate = new Date();
+
+            Log.d(TAG, "Retrieving languages from server");
+
             List<Language> languagesFromServer = client.getLanguages();
 
-            List<Language> languagesToDownload = getLanguagesToDownload(languagesFromServer, downloadedDate);
+            Log.d(TAG, "getLanguagesToDownload");
+            List<Language> languagesToDownload = getLanguagesToDownload(languageCodeFilter,
+                    languagesFromServer, downloadedDate);
+
             updateLocalTranslations(languagesToDownload, client);
+            Log.d(TAG, "Finished download languagesand terms");
         }
     }
 
@@ -49,12 +59,16 @@ public class LanguageDownloader {
             throws Exception {
 
         for (Language language : toUpdate) {
+            Log.d(TAG, "Download terms of " + language.name);
             List<Term> terms = client.getTranslationBy(language.code);
 
+            Log.d(TAG, "Delete previous  terms of " + language.name);
             deletePreviousTranslations(language.code);
             for (Term term : terms) {
                 save(term, language.code);
             }
+
+            Log.d(TAG, "Saving terms of " + language.name);
             save(language);
         }
     }
@@ -77,7 +91,8 @@ public class LanguageDownloader {
     }
 
     @NonNull
-    private List<Language> getLanguagesToDownload(List<Language> languagesFromServer, Date downloadDateTime) {
+    private List<Language> getLanguagesToDownload(String languageCodeFilter,
+            List<Language> languagesFromServer, Date downloadDateTime) {
 
         List<Language> languagesToDownload = new ArrayList<>();
         List<TranslationLanguageDB> languagesFromDB = SQLite.select().
@@ -87,11 +102,18 @@ public class LanguageDownloader {
                 languagesFromDB);
 
         for (Language languageServer : languagesFromServer) {
-            if(languageServer.updated == null){
-                languageServer.updated = downloadDateTime;
-            }
-            if (requiresToBeDownloaded(languageServer, mapLanguagesByCodesInDB)) {
-                languagesToDownload.add(languageServer);
+            if (languageCodeFilter != null && !languageCodeFilter.isEmpty()) {
+                if (languageCodeFilter.equals(languageServer.code)) {
+                    languagesToDownload.add(languageServer);
+                    break;
+                }
+            } else {
+                if (languageServer.updated == null) {
+                    languageServer.updated = downloadDateTime;
+                }
+                if (requiresToBeDownloaded(languageServer, mapLanguagesByCodesInDB)) {
+                    languagesToDownload.add(languageServer);
+                }
             }
         }
 

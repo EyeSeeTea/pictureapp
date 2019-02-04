@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.entity.intent.Auth;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
+import org.eyeseetea.malariacare.domain.entity.intent.Auth;
 
 public class AuthDataSource implements IAuthRepository{
 
@@ -37,8 +37,8 @@ public class AuthDataSource implements IAuthRepository{
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if(auth==null){
-            editor.putString(context.getString(R.string.intent_credentials_user), "");
-            editor.putString(context.getString(R.string.intent_credentials_password), "");
+            editor.putString(context.getString(R.string.intent_credentials_user), null);
+            editor.putString(context.getString(R.string.intent_credentials_password), null);
         }else {
             editor.putString(context.getString(R.string.intent_credentials_user), auth.getUserName());
             editor.putString(context.getString(R.string.intent_credentials_password), auth.getPassword());

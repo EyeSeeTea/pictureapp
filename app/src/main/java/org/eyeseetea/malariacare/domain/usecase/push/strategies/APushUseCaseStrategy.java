@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
@@ -141,10 +142,11 @@ public abstract class APushUseCaseStrategy {
                     notifyClosedUser();
                 } else if (throwable instanceof ApiCallException) {
                     notifyApiCallError((ApiCallException) throwable);
+                } else if (throwable instanceof InvalidCredentialsException) {
+                    notifyInvalidCredentialsError();
                 } else {
                     notifyPushError();
                 }
-
             }
         });
     }
@@ -282,6 +284,15 @@ public abstract class APushUseCaseStrategy {
             @Override
             public void run() {
                 mCallback.onApiCallError(e);
+            }
+        });
+    }
+
+    private void notifyInvalidCredentialsError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInvalidCredentials();
             }
         });
     }

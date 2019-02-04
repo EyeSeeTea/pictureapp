@@ -20,7 +20,6 @@ import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 
 public class SplashScreenActivity extends Activity {
 
-
     public interface Callback {
         void onSuccess(boolean canEnterApp);
     }
@@ -49,6 +48,7 @@ public class SplashScreenActivity extends Activity {
     private void init() {
         //Added to execute a query in DB, because DBFLow doesn't do any migration until a query
         // is executed
+        splashActivityStrategy.showProgressMessage(R.string.splash_progress_init_db);
         PopulateDB.initDBQuery();
         try {
             PostMigration.launchPostMigration();
@@ -72,10 +72,14 @@ public class SplashScreenActivity extends Activity {
         }
 
         if (BuildConfig.downloadLanguagesFromServer) {
+            splashActivityStrategy.showProgressMessage(
+                    R.string.splash_progress_downloading_languages);
             splashActivityStrategy.downloadLanguagesFromServer();
         }
 
         if (BuildConfig.performMaintenanceTasks) {
+            splashActivityStrategy.showProgressMessage(
+                    R.string.splash_progress_executing_maintenance_task);
             performMaintenanceTasks();
         }
 

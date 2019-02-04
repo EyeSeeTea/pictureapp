@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
@@ -69,15 +70,15 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                                         notifyServerURLNotValid();
                                     } else if (throwable instanceof InvalidCredentialsException) {
                                         notifyInvalidCredentials();
+                                    } else if (throwable instanceof AvailableApiException) {
+                                        notifyServerNotAvailable(throwable.getMessage());
                                     } else {
                                         throwable.printStackTrace();
                                     }
                                 }
                             });
                 } else {
-                    checkUserCredentialsWithLastValid(
-                            mCredentialsLocalDataSource.getLastValidCredentials(),
-                            true);
+                    notifyNetworkError();
                 }
 
             } else {
@@ -92,7 +93,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
                         mCredentialsLocalDataSource.saveLastValidCredentials(insertedCredentials);
-                        checkUserCredentialsWithLastValid(insertedCredentials, false);
+                        notifyLoginSuccess();
                         }
 
                     @Override
@@ -103,9 +104,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                         } else if (throwable instanceof InvalidCredentialsException) {
                             notifyInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            checkUserCredentialsWithLastValid(
-                                    mCredentialsLocalDataSource.getLastValidCredentials(),
-                                    true);
+                            notifyNetworkError();
                         }
                     }
                 });
@@ -115,41 +114,6 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         InvalidLoginAttempts invalidLoginAttempts =
                 mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
         return invalidLoginAttempts.isLoginEnabled();
-    }
-
-    private void checkUserCredentialsWithLastValid(Credentials lastValidCredentials,
-            boolean fromNetWorkError) {
-        if (lastValidCredentials != null && (insertedCredentials.getUsername().equals(
-                lastValidCredentials.getUsername())
-                && insertedCredentials.getPassword().equals(lastValidCredentials.getPassword())
-                && (fromNetWorkError || insertedCredentials.getServerURL().equals(
-                lastValidCredentials.getServerURL())))) {
-            notifyLoginSuccess();
-        } else {
-            if (fromNetWorkError) {
-                notifyNetworkError();
-            } else {
-                if (insertedCredentials.getUsername().equals(lastValidCredentials.getUsername())
-                        && !insertedCredentials.getPassword().equals(
-                        lastValidCredentials.getPassword())
-                        && (fromNetWorkError || insertedCredentials.getServerURL().equals(
-                        lastValidCredentials.getServerURL()))) {
-                    notifyOnServerPinChanged();
-                }else{
-                    notifyInvalidCredentials();
-                }
-            }
-        }
-    }
-
-    private void notifyOnServerPinChanged() {
-
-        mMainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onServerPinChanged();
-            }
-        });
     }
 
     public void notifyLoginSuccess() {
@@ -200,6 +164,15 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             @Override
             public void run() {
                 mCallback.onNetworkError();
+            }
+        });
+    }
+
+    public void notifyServerNotAvailable(final String message) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onServerNotAvailable(message);
             }
         });
     }

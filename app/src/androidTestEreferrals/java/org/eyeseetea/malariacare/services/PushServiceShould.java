@@ -5,6 +5,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,6 +22,8 @@ import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
@@ -37,56 +40,78 @@ import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
 import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Device;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Date;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PushServiceShould {
     private static final String PUSH_RESPONSE_OK_ONE_SURVEY = "push_response_ok_one_survey.json";
-    private CustomMockServer mCustomMockServer;
-    private eReferralsAPIClient mEReferralsAPIClient;
-    private WSPushController mWSPushController;
-    private PushUseCase mPushUseCase;
+    private static final String API_AVAILABLE_OK = "api_available_ok.json";
+
     private PushServiceStrategy mPushServiceStrategy;
-    private boolean showLogiIntentReceived;
+    private boolean pullRequiredIntentReceived;
     private final Object syncObject = new Object();
 
-    private Credentials previousCredentials;
-    private Program previousProgram;
-    private boolean previousPushInProgress;
-    private UserAccount previousUserAccount;
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule(new AssetsFileReader());
+    @Mock
+    IDeviceRepository deviceDataSource;
+    @Mock
+    IAppInfoRepository appInfoDataSource;
+    @Mock
+    ICredentialsRepository mCredentialsRepository;
+    @Mock
+    ISettingsRepository mSettingsRepository;
+    @Mock
+    IProgramRepository mProgramRepository;
 
     private Context mContext;
 
     @Test
     public void launchLoginIntentOn209APIResponse() throws IOException, InterruptedException {
-        showLogiIntentReceived = false;
-        mCustomMockServer.enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
+        PushUseCase pushUseCase = givenPushUseCase();
+        pullRequiredIntentReceived = false;
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, API_AVAILABLE_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(209, PUSH_RESPONSE_OK_ONE_SURVEY);
         final SurveyDB surveyDB = new SurveyDB(new OrgUnitDB(""), new ProgramDB(""),
                 new UserDB("", ""));
         surveyDB.setEventUid("testEventUID");
         surveyDB.setStatus(Constants.SURVEY_COMPLETED);
         surveyDB.save();
-        mPushServiceStrategy.executePush(mPushUseCase);
+        mPushServiceStrategy.executePush(pushUseCase);
         Log.d("Executing push service strategy test", "testing 209");
         synchronized (syncObject) {
             syncObject.wait();
         }
-        assertThat(showLogiIntentReceived, is(true));
+        assertThat(pullRequiredIntentReceived, is(true));
     }
 
     @Before
@@ -96,32 +121,7 @@ public class PushServiceShould {
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
-        mCustomMockServer = new CustomMockServer(new AssetsFileReader());
-        savePreviousPreferences();
-        saveTestCredentialsAndProgram();
-        mEReferralsAPIClient = new eReferralsAPIClient(mCustomMockServer.getBaseEndpoint());
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        Device device = new Device("test", "test", "test");
-        ConvertToWSVisitor convertToWSVisitor = new ConvertToWSVisitor(device, mContext);
-        mWSPushController = new WSPushController(mEReferralsAPIClient, surveyRepository,
-                convertToWSVisitor);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
-
-        SurveysThresholds surveysThresholds =
-                new SurveysThresholds(BuildConfig.LimitSurveysCount,
-                        BuildConfig.LimitSurveysTimeHours);
-        mPushUseCase = new PushUseCase(mWSPushController, asyncExecutor, mainExecutor,
-                surveysThresholds, surveyRepository, orgUnitRepository);
         mPushServiceStrategy = new PushServiceStrategy(new PushService("TestPushService"));
-    }
-
-
-    @After
-    public void tearDown() throws IOException {
-        mCustomMockServer.shutdown();
-        restorePreferences();
     }
 
     public void grantPhonePermission() {
@@ -134,85 +134,57 @@ public class PushServiceShould {
         }
     }
 
-
-    private void savePreviousPreferences() {
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        previousCredentials = credentialsLocalDataSource.getLastValidCredentials();
-        ProgramRepository programRepository = new ProgramRepository();
-        ProgramDB databaseProgramDB =
-                ProgramDB.getProgram(
-                        PreferencesEReferral.getUserProgramId());
-        if (databaseProgramDB != null) {
-            previousProgram = programRepository.getUserProgram();
-        }
-        previousPushInProgress = PreferencesState.getInstance().isPushInProgress();
-        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-        previousUserAccount = userAccountDataSource.getLoggedUser();
-    }
-
-    private void saveTestCredentialsAndProgram() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.web_service_url),
-                context.getString(R.string.ws_base_url));
-        editor.commit();
-
-        Credentials credentials = new Credentials(context.getString(R.string.ws_base_url), "test", "test");
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(credentials);
-        ProgramDB programDB = new ProgramDB("testProgramId", "testProgram");
-        programDB.save();
-        ProgramRepository programRepository = new ProgramRepository();
-        programRepository.saveUserProgramId(new Program("testProgram", "testProgramId"));
-        PreferencesState.getInstance().setPushInProgress(false);
-        UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-        userAccountDataSource.saveLoggedUser(
-                new UserAccount("testUsername", "testUserUID", false, true));
-    }
-
-    private void restorePreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        if (previousCredentials != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(context.getString(R.string.web_service_url),
-                    previousCredentials.getServerURL());
-            editor.commit();
-        }
-        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveLastValidCredentials(previousCredentials);
-        ProgramRepository programRepository = new ProgramRepository();
-        if (previousProgram != null) {
-            programRepository.saveUserProgramId(previousProgram);
-        } else {
-            PreferencesEReferral.saveUserProgramId(-1l);
-        }
-        PreferencesState.getInstance().setPushInProgress(previousPushInProgress);
-        if (previousUserAccount != null) {
-            UserAccountDataSource userAccountDataSource = new UserAccountDataSource();
-            userAccountDataSource.saveLoggedUser(previousUserAccount);
-        }
-    }
-
-
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             showLoginIfConfigFileObsolete(intent);
         }
-
         private void showLoginIfConfigFileObsolete(Intent intent) {
             if (intent.getBooleanExtra(PushServiceStrategy.SHOW_LOGIN, false)) {
                 synchronized (syncObject) {
-                    showLogiIntentReceived = true;
+                    pullRequiredIntentReceived = true;
                     syncObject.notify();
                 }
             }
         }
     };
 
+    private WSPushController givenWSPushController() {
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        Date date = new Date();
+        when(appInfoDataSource.getAppInfo()).thenReturn(new AppInfo("0", "0", "0", date, date));
+        when(deviceDataSource.getDevice()).thenReturn(new Device("phoneNumber", "imei", "version"));
+
+        when(mCredentialsRepository.getLastValidCredentials()).thenReturn(new Credentials(mockWebServerRule.getMockServer().getBaseEndpoint(), "test", "test"));
+        eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(mockWebServerRule.getMockServer().getBaseEndpoint());
+        when(mProgramRepository.getUserProgram()).thenReturn(new Program("code","testProgramId"));
+        Settings settings = new Settings("en", "en", null, false, false, false,
+                "test", "test", mockWebServerRule.getMockServer().getBaseEndpoint(), null, null, null, null, "1.0");
+        when(mSettingsRepository.getSettings()).thenReturn(settings);
+        ConvertToWSVisitor mConvertToWSVisitor = new ConvertToWSVisitor(deviceDataSource, mCredentialsRepository, mSettingsRepository, appInfoDataSource,
+                mProgramRepository, new CountryVersionLocalDataSource());
+        return new WSPushController(mConvertToWSVisitor, eReferralsAPIClient, surveyRepository);
+    }
+
+    private PushUseCase givenPushUseCase() {
+
+        WSPushController mWSPushController = givenWSPushController();
+
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        IAsyncExecutor asyncExecutor = new IAsyncExecutor() {
+            @Override
+            public void run(Runnable runnable) {
+                runnable.run();
+            }
+        };
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
+
+        SurveysThresholds surveysThresholds =
+                new SurveysThresholds(BuildConfig.LimitSurveysCount,
+                        BuildConfig.LimitSurveysTimeHours);
+        return new PushUseCase(mWSPushController, asyncExecutor, mainExecutor,
+                surveysThresholds, surveyRepository, orgUnitRepository);
+    }
 
 }

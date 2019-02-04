@@ -22,7 +22,7 @@ public class ForgotPasswordWSDataSource implements IForgotPasswordDataSource {
     }
 
     @Override
-    public void forgotPassword(String username, String language,
+    public void forgotPassword(String wsVersion, String username, String language,
             final IDataSourceCallback<ForgotPasswordMessage> callback) {
         {
             if (!isNetworkAvailable()) {
@@ -30,8 +30,7 @@ public class ForgotPasswordWSDataSource implements IForgotPasswordDataSource {
             }
 
             ForgotPasswordPayload forgotPasswordPayload = new ForgotPasswordPayload(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.ws_version), username, language);
+                    wsVersion, username, language);
 
             eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
                     PreferencesEReferral.getWSURL());

@@ -46,6 +46,8 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
             userDB.setCanAddSurveys(true);
         }
 
+        userDB.setIsDemo(credentials.isDemoCredentials());
+
         UserDB.insertLoggedUser(userDB);
 
         Session.setUserDB(userDB);

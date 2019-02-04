@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase.pull;
 
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -15,6 +16,7 @@ public class PullUseCase implements UseCase {
     private IPullController mPullController;
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
+    private IConnectivityManager mConnectivityManager;
 
     private PullFilters mPullFilters;
     private Callback mCallback;
@@ -22,10 +24,12 @@ public class PullUseCase implements UseCase {
     private APullUseCaseStrategy mPullUseCaseStrategy;
 
     public PullUseCase(IPullController pullController, IAsyncExecutor asyncExecutor,
-            IMainExecutor mainExecutor) {
+            IMainExecutor mainExecutor, IConnectivityManager connectivityManager) {
         mPullController = pullController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
+        mConnectivityManager = connectivityManager;
+
         mPullUseCaseStrategy = new PullUseCaseStrategies(this);
     }
 
@@ -38,41 +42,47 @@ public class PullUseCase implements UseCase {
 
     @Override
     public void run() {
-        mPullController.pull(mPullFilters, new IPullController.Callback() {
-            @Override
-            public void onComplete() {
-                //TODO jsanchez create OrgUnitRepository and when pull finish
-                //invoke remove current OrgUnitDB from here (only laos and cambodia)
+        boolean isNetworkAvailable = mConnectivityManager.isDeviceOnline();
 
-                mPullUseCaseStrategy.onPullComplete();
-            }
+        if (isNetworkAvailable) {
+            mPullController.pull(mPullFilters, new IPullController.Callback() {
+                @Override
+                public void onComplete() {
+                    //TODO jsanchez create OrgUnitRepository and when pull finish
+                    //invoke remove current OrgUnitDB from here (only laos and cambodia)
 
-            @Override
-            public void onStep(PullStep step) {
-                notifyStep(step);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                if (throwable instanceof NetworkException) {
-                    mPullUseCaseStrategy.onOnNetworkError();
-                } else if (throwable instanceof PullConversionException) {
-                    notifyPullConversionError();
-                } else {
-                    notifyError(throwable);
+                    mPullUseCaseStrategy.onPullComplete();
                 }
-            }
 
-            @Override
-            public void onWarning(WarningException warning) {
-                notifyWarning(warning);
-            }
+                @Override
+                public void onStep(PullStep step) {
+                    notifyStep(step);
+                }
 
-            @Override
-            public void onCancel() {
-                mCallback.onCancel();
-            }
-        });
+                @Override
+                public void onError(Throwable throwable) {
+                    if (throwable instanceof NetworkException) {
+                        mPullUseCaseStrategy.onOnNetworkError();
+                    } else if (throwable instanceof PullConversionException) {
+                        notifyPullConversionError();
+                    } else {
+                        notifyError(throwable);
+                    }
+                }
+
+                @Override
+                public void onWarning(WarningException warning) {
+                    notifyWarning(warning);
+                }
+
+                @Override
+                public void onCancel() {
+                    mCallback.onCancel();
+                }
+            });
+        } else {
+            notifyOnNetworkError();
+        }
     }
 
     public void notifyError(final Throwable throwable) {

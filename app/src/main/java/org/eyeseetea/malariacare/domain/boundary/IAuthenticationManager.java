@@ -19,5 +19,5 @@ public interface IAuthenticationManager {
 
     void logout(Callback<Void> callback);
 
-    void forgotPassword(String username, Callback<ForgotPasswordMessage> callback);
+    void forgotPassword(String wsVersion, String username, Callback<ForgotPasswordMessage> callback);
 }

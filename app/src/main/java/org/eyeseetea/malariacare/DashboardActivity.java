@@ -355,6 +355,11 @@ public class DashboardActivity extends BaseActivity {
         //No call for super(). Bug on API Level > 11.
     }
 
+    @Override
+    public void openPendingSurveyIfRequired() {
+        mDashboardActivityStrategy.openPendingSurveyIfRequired();
+    }
+
     public void replaceListFragment(int layout, ListFragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);
@@ -551,6 +556,8 @@ public class DashboardActivity extends BaseActivity {
             showUnsentFragment();
             mDashboardActivityStrategy.reloadFirstFragment();
         }
+
+        super.surveyClosed();
     }
 
     public void closeReceiptBalanceFragment() {
@@ -760,6 +767,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.completeSurvey();
         closeSurveyFragment();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

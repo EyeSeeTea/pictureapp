@@ -4,12 +4,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import org.eyeseetea.malariacare.data.file.ResourcesFileReader;
-import org.eyeseetea.malariacare.data.server.CustomMockServer;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordPayload;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ForgotPasswordResponse;
+import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -26,25 +27,19 @@ public class ForgotPasswordAPIClientTest {
     private static final String FORGOT_PASSWORD_SUCCESS =
             "forgot_password_success.json";
 
-    private CustomMockServer CustomMockServer;
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule(new ResourcesFileReader());
 
     @Before
     public void setUp() throws Exception {
-        CustomMockServer = new CustomMockServer(new ResourcesFileReader());
-
         apiClient = initializeApiClient();
-    }
-
-    @After
-    public void teardown() throws IOException {
-        CustomMockServer.shutdown();
     }
 
     @Test
     public void shouldParseForgotPasswordSuccessResponse()
             throws IOException, InterruptedException {
 
-        CustomMockServer.enqueueMockResponse(FORGOT_PASSWORD_SUCCESS);
+        mockWebServerRule.getMockServer().enqueueMockResponse(FORGOT_PASSWORD_SUCCESS);
 
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -73,7 +68,7 @@ public class ForgotPasswordAPIClientTest {
 
     @Test
     public void shouldParseForgotPasswordDeniedResponse() throws IOException, InterruptedException {
-        CustomMockServer.enqueueMockResponse(FORGOT_PASSWORD_DENIED);
+        mockWebServerRule.getMockServer().enqueueMockResponse(FORGOT_PASSWORD_DENIED);
 
         final CountDownLatch signal = new CountDownLatch(1);
 
@@ -100,7 +95,7 @@ public class ForgotPasswordAPIClientTest {
     }
 
     private eReferralsAPIClient initializeApiClient() {
-        return new eReferralsAPIClient(CustomMockServer.getBaseEndpoint());
+        return new eReferralsAPIClient(mockWebServerRule.getMockServer().getBaseEndpoint());
     }
 
     private ForgotPasswordPayload givenAForgotPasswordRequest() {

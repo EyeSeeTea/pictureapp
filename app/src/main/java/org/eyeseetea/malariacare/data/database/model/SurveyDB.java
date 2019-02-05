@@ -363,6 +363,7 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                         .eq(ProgramDB_Table.id_program.withTable(programAlias)))
                 .where(ProgramDB_Table.uid_program.withTable(programAlias)
                         .is(malariaProgramUid))
+                .and(SurveyDB_Table.status.withTable(surveyAlias).isNot(Constants.SURVEY_IN_PROGRESS))
                 .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date.withTable(surveyAlias)))
                 .orderBy(OrderBy.fromProperty(
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();

@@ -63,6 +63,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private static final int MENU_ITEM_LOGOUT = 99;
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
     private static final int SETTINGS_LOGOUT = 107;
+    private static final String SOFT_LOGIN_DIALOG_TAG = "soft_login_dialog";
 
     LogoutUseCase mLogoutUseCase;
 
@@ -163,11 +164,19 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private void showSoftLoginDialog() {
+
         if (!currentUser.isDemo()) {
             FragmentManager fm = mBaseActivity.getSupportFragmentManager();
 
+            SoftLoginDialogFragment prev =
+                    (SoftLoginDialogFragment)fm.findFragmentByTag(SOFT_LOGIN_DIALOG_TAG);
+
+            if (prev != null) {
+                return;
+            }
+
             SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
-            softLoginDialogFragment.show(fm, "soft_login");
+            softLoginDialogFragment.show(fm, SOFT_LOGIN_DIALOG_TAG);
 
             mBaseActivity.getSupportFragmentManager().executePendingTransactions();
             softLoginDialogFragment.getDialog().setOnDismissListener(

@@ -5,11 +5,13 @@ import static org.eyeseetea.malariacare.services.strategies.APushServiceStrategy
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BuildConfig;
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SplashScreenActivity;
@@ -17,28 +19,33 @@ import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
-import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAuthRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.Survey;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
-import org.eyeseetea.malariacare.domain.usecase.SaveSurveyFromIntentUseCase;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.usecase.ClearAuthUseCase;
+import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSurveyFromIntentUseCase;
+import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
-import org.eyeseetea.malariacare.domain.usecase.DownloadLanguageTranslationUseCase;
-import org.eyeseetea.malariacare.network.factory.NetworkManagerFactory;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
+    private CustomTextView progressTextView;
 
     public interface Callback {
         void onSuccess();
@@ -50,6 +57,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+    }
+
+    @Override
+    public void setContentView() {
+        activity.setContentView(R.layout.activity_splash);
+
+        progressTextView = activity.findViewById(R.id.progress_text);
     }
 
     public void init(final SplashScreenActivity.Callback callback) {
@@ -89,6 +103,8 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 callback.onSuccess(canEnterApp());
             }
         });
+
+
     }
 
     private void clearAuth(final SplashScreenActivity.Callback callback) {
@@ -103,7 +119,43 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        super.finishAndGo(LoginActivity.class);
+        GetUserUserAccountUseCase getUserUserAccountUseCase =
+                new AuthenticationFactoryStrategy().getUserAccountUseCase();
+
+        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
+            @Override
+            public void onGetUserAccount(UserAccount userAccount) {
+                if (userAccount == null) {
+                    SplashActivityStrategy.super.finishAndGo(LoginActivity.class);
+                } else {
+                    if (!userAccount.isDemo()) {
+                        markSoftLoginRequired();
+                    }
+
+                    SplashActivityStrategy.super.finishAndGo(DashboardActivity.class);
+                }
+            }
+        });
+    }
+
+    private void markSoftLoginRequired() {
+        GetSettingsUseCase getSettingsUseCase =
+                new SettingsFactory().getSettingsUseCase(activity);
+        final SaveSettingsUseCase saveSettingsUseCase =
+                new SettingsFactory().saveSettingsUseCase(activity);
+
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                settings.changeSoftLoginRequired(true);
+                saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "Changed SoftLoginRequired to true");
+                    }
+                }, settings);
+            }
+        });
     }
 
     @Override
@@ -140,10 +192,13 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
                         activity);
-                DownloadLanguageTranslationUseCase downloader =
+                DownloadLanguageTranslationUseCase useCase =
                         new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-                downloader.download();
+                String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+
+                useCase.download(currentLanguage);
+                useCase.downloadAsync(new AsyncExecutor());
             }
         } catch (Exception e) {
             Log.e(TAG, "Unable to download Languages From Server" + e.getMessage());
@@ -167,5 +222,10 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         if(activity.getIntent().getExtras()!=null) {
             activity.getIntent().removeExtra(INTENT_JSON_EXTRA_KEY);
         }
+    }
+
+    @Override
+    public void showProgressMessage(@StringRes int resourceId) {
+        progressTextView.setTextTranslation(resourceId);
     }
 }

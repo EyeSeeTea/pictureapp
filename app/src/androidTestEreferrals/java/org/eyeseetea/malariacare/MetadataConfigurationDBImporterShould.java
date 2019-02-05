@@ -11,7 +11,6 @@ import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.TZ_CONFIG_ANDROID_2_0_JSON;
 import static org.junit.Assert.assertTrue;
 
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
@@ -33,8 +32,10 @@ import org.eyeseetea.malariacare.data.sync.importer.metadata.configuration
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.network.retrofit.BasicAuthInterceptor;
+import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,7 +44,8 @@ import java.io.IOException;
 public class MetadataConfigurationDBImporterShould {
 
 
-    private CustomMockServer dhis2MockServer;
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule(new AssetsFileReader());
 
     private final Program program = new Program("T_TZ", "low6qUS2wc9");
 
@@ -56,13 +58,6 @@ public class MetadataConfigurationDBImporterShould {
                 new Credentials(context.getString(R.string.web_service_url), credentialsReader.getUser(),
                         credentialsReader.getPassword()));
 
-        dhis2MockServer = new CustomMockServer(new AssetsFileReader());
-
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        dhis2MockServer.shutdown();
     }
 
     @Test
@@ -100,13 +95,13 @@ public class MetadataConfigurationDBImporterShould {
 
 
     private void whenCountryConfigFilesAreReceived() throws Exception {
-        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION);
-        dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
+        mockWebServerRule.getMockServer().enqueueMockResponse(COUNTRIES_VERSION);
+        mockWebServerRule.getMockServer().enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
     }
 
     private void whenCountryConfigFilesVersionTwoAreReceived() throws Exception {
-        dhis2MockServer.enqueueMockResponse(COUNTRIES_VERSION_V2);
-        dhis2MockServer.enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
+        mockWebServerRule.getMockServer().enqueueMockResponse(COUNTRIES_VERSION_V2);
+        mockWebServerRule.getMockServer().enqueueMockResponse(TZ_CONFIG_ANDROID_2_0_JSON);
     }
 
     private void thenAssertMetadataIsInsertedInTheDB() {
@@ -123,7 +118,7 @@ public class MetadataConfigurationDBImporterShould {
     private void whenConfigFilesAreParsed() throws Exception {
 
         MetadataConfigurationApiClient apiClient = new MetadataConfigurationApiClient(
-                dhis2MockServer.getBaseEndpoint(),
+                mockWebServerRule.getMockServer().getBaseEndpoint(),"",
                 new BasicAuthInterceptor(""));
 
         MetadataConfigurationDBImporter importer = new MetadataConfigurationDBImporter(

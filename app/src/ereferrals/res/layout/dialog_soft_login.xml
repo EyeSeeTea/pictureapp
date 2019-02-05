@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/soft_login_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dialog_padding_std">
+
+        <include layout="@layout/content_login_basic" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomButton
+            android:id="@+id/button_log_out"
+            style="@style/CustomButton"
+            android:background="@drawable/button_selector_red"
+            android:text="@string/clear_and_logout" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomButton
+            android:id="@+id/advanced_options"
+            style="@style/CustomButton.Link"
+            android:text="@string/advanced_options" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/soft_login_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

@@ -29,10 +29,10 @@ import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -44,7 +44,6 @@ import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 
 public abstract class ADashboardActivityStrategy {
@@ -207,6 +206,9 @@ public abstract class ADashboardActivityStrategy {
     }
 
     public void showAVFragment() {
+    }
+
+    public void openPendingSurveyIfRequired() {
     }
 
     public int getSurveyContainer() {

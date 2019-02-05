@@ -4,18 +4,11 @@ import android.content.Context;
 import android.location.Location;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.AppInfoDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.DeviceDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.LanguagesLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.SettingsDataSource;
 import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.Coordinate;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SettingsSummary;
@@ -26,7 +19,6 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICountryVersionRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IDeviceRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ILanguageRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
@@ -46,51 +38,56 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private static final String SURVEY_ACTION_ID = "issueReferral";
 
     private SurveyContainerWSObject mSurveyContainerWSObject;
-    private Context mContext;
+    private IDeviceRepository deviceRepository;
+    ICredentialsRepository credentialsRepository;
+    ISettingsRepository settingsRepository;
+    IAppInfoRepository appInfoRepository;
+    IProgramRepository programRepository;
+    ICountryVersionRepository countryVersionRepository;
 
-    public ConvertToWSVisitor(Context context) {
-        IDeviceRepository deviceDataSource = new DeviceDataSource();
-        Device device = deviceDataSource.getDevice();
-        mContext = context;
-        init(device);
+    public ConvertToWSVisitor(IDeviceRepository deviceRepository,
+                              ICredentialsRepository credentialsRepository,
+                              ISettingsRepository settingsRepository,
+                              IAppInfoRepository appInfoRepository,
+                              IProgramRepository programRepository,
+                              ICountryVersionRepository countryVersionRepository) {
+        this.deviceRepository = deviceRepository;
+        this.credentialsRepository = credentialsRepository;
+        this.settingsRepository  = settingsRepository;
+        this.appInfoRepository = appInfoRepository;
+        this.programRepository = programRepository;;
+        this.countryVersionRepository = countryVersionRepository;
+        init();
     }
 
-    public ConvertToWSVisitor(Device device, Context context) {
-        mContext = context;
-        init(device);
-    }
-
-    private void init(Device device) {
-        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
-        ISettingsRepository settingsRepository = new SettingsDataSource(
-                PreferencesState.getInstance().getContext());
-        IAppInfoRepository appInfoDataSource = new AppInfoDataSource(mContext);
-        AppInfo appInfo = appInfoDataSource.getAppInfo();
+    private void init() {
+        Device device = deviceRepository.getDevice();
+        AppInfo appInfo = appInfoRepository.getAppInfo();
         Credentials credentials = credentialsRepository.getLastValidCredentials();
+        Settings settings = settingsRepository.getSettings();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.ws_version), device.getAndroidVersion(), credentials.getUsername(),
+                settings.getWsVersion(), device.getAndroidVersion(), credentials.getUsername(),
                 credentials.getPassword(), device.getIMEI(),
                 getConfigFileVersion(), appInfo.getAppVersion(),
                 getDateString(appInfo.getUpdateMetadataDate()),
-                getSettingsSummary(settingsRepository), device.getPhone(), device.getIMEI());
+                getSettingsSummary(settings), device.getPhone(), device.getIMEI());
     }
 
     private String getDateString(Date updateMetadataDate) {
+        if(updateMetadataDate==null){
+            return null;
+        }
         return Utils.parseDateToString(updateMetadataDate, "yyyy-MM-dd hh:mm");
     }
 
-    private SettingsSummary getSettingsSummary(ISettingsRepository settingsRepository) {
-        Settings settings = settingsRepository.getSettings();
+    private SettingsSummary getSettingsSummary(Settings settings) {
         return new SettingsSummary(settings.getWsServerUrl(),
                 settings.getWebUrl(), settings.isCanDownloadWith3G(), settings.getFontSize(),
                 settings.isElementActive(), settings.getLanguage());
     }
 
     private int getConfigFileVersion() {
-        IProgramRepository programRepository = new ProgramRepository();
         String uid = programRepository.getUserProgram().getId();
-        ICountryVersionRepository countryVersionRepository = new CountryVersionLocalDataSource();
         Configuration.CountryVersion countryVersion =
                 countryVersionRepository.getCountryVersionForUID(uid);
         if (countryVersion != null) {
@@ -125,7 +122,6 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         surveySendAction.setType(SURVEY_ACTION_ID);
         surveySendAction.setDataValues(getValuesWSFromSurvey(survey));
         surveySendAction.setVoucher(new Voucher(survey.getVoucherUid(), getVoucherType(survey)));
-        ProgramRepository programRepository = new ProgramRepository();
         surveySendAction.setProgram(programRepository.getUserProgram().getCode());
         surveySendAction.setSourceAddedDateTime(getEventDateTimeString(survey.getEventDate()));
         Location location = LocationMemory.get(survey.getId_survey());

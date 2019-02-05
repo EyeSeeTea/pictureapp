@@ -21,11 +21,15 @@ public class Settings {
     private String pass;
     private String programUrl;
     private String programEndPoint;
+    private boolean softLoginRequired;
+    private boolean pullRequired;
+    private String wsVersion;
 
     public Settings(String systemLanguage, String currentLanguage,
             MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
                     boolean isMetadataUpdateActive, String user, String pass, String wsServerUrl,
-            String webUrl, String fontSize, String programUrl, String programEndPoint) {
+            String webUrl, String fontSize, String programUrl, String programEndPoint,
+            boolean softLoginRequired, boolean pullRequired, String wsVersion) {
         this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
         this.mediaListMode = mediaListMode;
@@ -39,6 +43,9 @@ public class Settings {
         this.fontSize = fontSize;
         this.programUrl = programUrl;
         this.programEndPoint = programEndPoint;
+        this.wsVersion = wsVersion;
+        this.softLoginRequired = softLoginRequired;
+        this.pullRequired = pullRequired;
     }
 
     public String getLanguage() {
@@ -99,6 +106,10 @@ public class Settings {
         return webUrl;
     }
 
+    public String getWsVersion() {
+        return wsVersion;
+    }
+
     public String getFontSize() {
         return fontSize;
     }
@@ -121,5 +132,21 @@ public class Settings {
 
     public void setWebUrl(String value) {
         webUrl = value;
+    }
+
+    public boolean isSoftLoginRequired() {
+        return softLoginRequired;
+    }
+
+    public void changeSoftLoginRequired(boolean isRequired) {
+        softLoginRequired = isRequired;
+    }
+
+    public boolean isPullRequired() {
+        return pullRequired;
+    }
+
+    public void changePullRequired(boolean isRequired) {
+        pullRequired = isRequired;
     }
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
@@ -14,6 +13,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -31,21 +31,14 @@ public class WSPushController implements IPushController {
     private ConvertToWSVisitor mConvertToWSVisitor;
     private List<SurveyDB> mSurveys;
     private eReferralsAPIClient mEReferralsAPIClient;
-    private ISurveyRepository surveyRepository;
+    private ISurveyRepository mSurveyRepository;
     private IPushControllerCallback mCallback;
 
 
-    public WSPushController(Context context, ISurveyRepository surveyRepository) throws IllegalArgumentException {
-        mEReferralsAPIClient = new eReferralsAPIClient(PreferencesEReferral.getWSURL());
-        this.surveyRepository = surveyRepository;
-        mConvertToWSVisitor = new ConvertToWSVisitor(context);
-    }
-
-    public WSPushController(eReferralsAPIClient eReferralsAPIClient, ISurveyRepository surveyRepository,
-                            ConvertToWSVisitor convertToWSVisitor) {
-        mEReferralsAPIClient = eReferralsAPIClient;
-        this.surveyRepository = surveyRepository;
+    public WSPushController(ConvertToWSVisitor convertToWSVisitor, eReferralsAPIClient eReferralsAPIClient, ISurveyRepository surveyRepository) throws IllegalArgumentException {
         mConvertToWSVisitor = convertToWSVisitor;
+        mEReferralsAPIClient = eReferralsAPIClient;
+        mSurveyRepository = surveyRepository;
     }
 
     @Override
@@ -93,7 +86,7 @@ public class WSPushController implements IPushController {
 
 
     private void checkQuarantine() {
-        final List<Survey> surveys = surveyRepository.getAllQuarantineSurveys();
+        final List<Survey> surveys = mSurveyRepository.getAllQuarantineSurveys();
         mEReferralsAPIClient.getExistOnServer(surveys, new eReferralsAPIClient.WSClientCallBack() {
             @Override
             public void onSuccess(Object result) {
@@ -104,7 +97,7 @@ public class WSPushController implements IPushController {
                     }else{
                         survey.setStatus(Constants.SURVEY_COMPLETED);
                     }
-                    surveyRepository.save(survey);
+                    mSurveyRepository.save(survey);
                 }
             }
 
@@ -151,6 +144,8 @@ public class WSPushController implements IPushController {
                             status = Constants.SURVEY_QUARANTINE;
                         } else if (e instanceof ConfigFileObsoleteException) {
                             status = Constants.SURVEY_SENT;
+                        } else if (e instanceof AvailableApiException){
+                            status = Constants.SURVEY_COMPLETED;
                         }
                         changeSurveysStatusTo(status);
                         mCallback.onError(e);

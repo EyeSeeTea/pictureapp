@@ -18,11 +18,15 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.ApiStatus;
+import org.eyeseetea.malariacare.domain.usecase.GetWebAvailableUseCase;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
+import org.eyeseetea.malariacare.presentation.factory.ApiAvailabilityFactory;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -67,12 +71,11 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
         mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
-
-        loadUrlInWebView();
+        loadUrlInWebView(false);
         view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadUrlInWebView();
+                loadUrlInWebView(true);
             }
         });
     }
@@ -127,14 +130,14 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
-    private void loadUrlInWebView() {
+    private void loadUrlInWebView(boolean shouldShowError) {
         if (mWebView != null) {
             ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(
                     Activity.CONNECTIVITY_SERVICE);
             if (cm != null && cm.getActiveNetworkInfo() != null
                     && cm.getActiveNetworkInfo().isConnected()) {
                 showHideWebView(true);
-                    loadValidUrl();
+                    loadValidUrl(shouldShowError);
             } else {
                 showHideWebView(false);
 
@@ -143,44 +146,63 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
-    private void loadValidUrl() {
+    private void loadValidUrl(final boolean shouldShowError) {
         if (mWebView != null) {
             if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
                 showHideWebView(false);
                 mErrorDemoText.setTextTranslation(R.string.demo_page_text);
-                ;
             } else {
-                showHideWebView(true);
-                mWebView.getSettings().setJavaScriptEnabled(true);
-                mWebView.getSettings().setDomStorageEnabled(true);
-                clearCookies(getActivity());
-                mWebView.loadUrl(url);
-
-                int timeoutMillis = Integer.parseInt(getString(R.string.web_view_timeout_millis));
-
-                CustomWebViewClient customWebViewClient =
-                        new CustomWebViewClient(timeoutMillis);
-
-                customWebViewClient.setErrorListener(new CustomWebViewClient.ErrorListener() {
-                    @Override
-                    public void onTimeoutError() {
-                        // do what you want
-                        showError(R.string.web_view_network_error);
-                    }
-                });
-
-                customWebViewClient.setPageFinishedListener(
-                        new CustomWebViewClient.PageFinishedListener() {
+                new ApiAvailabilityFactory().getGetWebViewAvailableUseCase().execute(
+                        new GetWebAvailableUseCase.Callback() {
                             @Override
-                            public void onPageFinished(WebView view, String url) {
-                                loadedFirstTime = true;
+                            public void onSuccess() {
+                                executeOnWebAvailable();
+                            }
+
+                            @Override
+                            public void onError(ApiStatus apiStatus) {
+                                if(shouldShowError) {
+                                    showApiNotAvailableError(apiStatus.getMessage());
+                                }
                             }
                         });
 
-                mWebView.setWebViewClient(customWebViewClient);
             }
 
         }
+    }
+
+    private void showApiNotAvailableError(String message) {
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void executeOnWebAvailable() {
+        showHideWebView(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+        clearCookies(getActivity());
+        mWebView.loadUrl(url);
+
+        int timeoutMillis = Integer.parseInt(getString(R.string.web_view_timeout_millis));
+
+        CustomWebViewClient customWebViewClient =
+                new CustomWebViewClient(timeoutMillis) {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        loadedFirstTime = true;
+                        super.onPageFinished(view, url);
+                    }
+                };
+
+        customWebViewClient.setErrorListener(new CustomWebViewClient.ErrorListener() {
+            @Override
+            public void onTimeoutError() {
+                // do what you want
+                showError(R.string.web_view_network_error);
+            }
+        });
+
+        mWebView.setWebViewClient(customWebViewClient);
     }
 
     private void showHideWebView(boolean show) {
@@ -193,7 +215,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityStatus.isConnected(getActivity())) {
                 if (!loadedFirstTime) {
-                    loadValidUrl();
+                    loadValidUrl(true);
                 }
             }
         }

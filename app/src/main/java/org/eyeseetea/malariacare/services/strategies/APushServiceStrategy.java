@@ -93,6 +93,11 @@ public abstract class APushServiceStrategy {
             }
 
             @Override
+            public void onInvalidCredentials() {
+                onError("PUSHUSECASE ERROR onInvalidCredentials");
+            }
+
+            @Override
             public void onClosedUser() {
                 onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
                 if(DashboardActivity.dashboardActivity != null && DashboardActivity.dashboardActivity.isInForeground()) {

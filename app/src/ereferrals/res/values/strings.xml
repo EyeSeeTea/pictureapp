@@ -866,6 +866,7 @@
 <string name="dynamic_error_number">"Invalid number"</string>
 <string name="date_format_forward_slash">"yyyy/mm/dd"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
+<string name="not_available">"The server is not available."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
 <string name="login_unexpected_error">"An error has occurred, please try again later"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>
@@ -1140,6 +1141,17 @@
 <string name="training">Training</string>
 <string name="custom">Custom</string>
 
-    <string name="web_view_network_error">There is network problems loading the web page</string>
-    <string name="push_network_error">There is network problems on push process</string>
+
+    <string name="splash_progress_init_db">Initializing database …</string>
+    <string name="splash_progress_downloading_languages">Download current language terms …</string>
+    <string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
+
+
+
+    <string name="pull_dialog_progress_generic_message">Updating metadata …</string>
+    <string name="push_invalid_credentials">we have detected that the pin has changed on the server, please insert the pin again</string>
+
+
+    <string name="web_view_network_error">There were network problems while loading the web page</string>
+    <string name="push_network_error">There were network problems while sending vouchers to the server</string>
 </resources>

@@ -40,6 +40,8 @@ public class PushUseCase implements UseCase {
         void onApiCallError();
 
         void onApiCallError(ApiCallException e);
+
+        void onInvalidCredentials();
     }
 
     private IAsyncExecutor mAsyncExecutor;

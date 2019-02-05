@@ -16,9 +16,7 @@ import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigFileObsoleteException;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SaveAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
@@ -26,7 +24,6 @@ import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.factories.AppInfoFactory;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.factories.SyncFactoryStrategy;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.utils.Permissions;
 
@@ -38,8 +35,9 @@ public class PushServiceStrategy extends APushServiceStrategy {
     public static final String SERVICE_METHOD = "serviceMethod";
     public static final String PUSH_MESSAGE = "PushStart";
     public static final String PUSH_IS_START = "PushIsStart";
+    public static final String PULL_REQUIRED = "PullRequired";
+    public static final String INVALID_CREDENTIALS_ON_PUSH = "InvalidCredentialsOnPush";
     public static final String PUSH_NETWORK_ERROR = "PushNetworkError";
-    public static final String SHOW_LOGIN = "ShowLogin";
 
     private PushUseCase mPushUseCase;
 
@@ -61,62 +59,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
         Credentials credentials = credentialsRepository.getCredentials();
 
         if (credentials != null) {
-            if (credentials.isDemoCredentials()) {
-                PushServiceStrategy.this.onCorrectCredentials();
+            if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
+                executeMockedPush();
             } else {
-                LoginUseCase loginUseCase = new AuthenticationFactoryStrategy()
-                        .getLoginUseCase(mPushService);
-
-                final Credentials oldCredentials =
-                        credentialsRepository.getLastValidCredentials();
-
-                loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
-                    @Override
-                    public void onLoginSuccess() {
-                        Log.e(TAG, "onLoginSuccess");
-                        PushServiceStrategy.this.onCorrectCredentials();
-                    }
-
-                    @Override
-                    public void onServerURLNotValid() {
-                        Log.e(TAG, "Error getting user credentials: URL not valid ");
-                    }
-
-                    @Override
-                    public void onServerPinChanged() {
-                        Log.e(TAG, "Error onServerPinChanged");
-                        AlarmPushReceiver.cancelPushAlarm(mPushService);
-                        moveToLoginActivity();
-                    }
-
-                    @Override
-                    public void onInvalidCredentials() {
-                        Log.e(TAG, "Error credentials not valid.");
-                        AlarmPushReceiver.cancelPushAlarm(mPushService);
-                        logout();
-                    }
-
-                    @Override
-                    public void onNetworkError() {
-                        Log.e(TAG, "Error getting user credentials: NetworkError");
-                    }
-
-                    @Override
-                    public void onConfigJsonInvalid() {
-                        Log.e(TAG, "Error getting user credentials: JsonInvalid");
-                    }
-
-                    @Override
-                    public void onUnexpectedError() {
-                        Log.e(TAG, "Error getting user credentials: unexpectedError ");
-                    }
-
-                    @Override
-                    public void onMaxLoginAttemptsReachedError() {
-                        Log.e(TAG, "onMaxLoginAttemptsReachedError");
-                    }
-                });
+                executePush();
             }
+            updateAppInfo(mPushService);
         } else {
             Log.w(TAG, "Push cancelled because does not exist user credentials, possible logout");
         }
@@ -136,15 +84,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 mPushService.onPushFinished();
             }
         });
-    }
-
-    private void onCorrectCredentials() {
-        if (PreferencesState.getCredentialsFromPreferences().isDemoCredentials()) {
-            executeMockedPush();
-        } else {
-            executePush();
-        }
-        updateAppInfo(mPushService);
     }
 
     private void updateAppInfo(final Context context) {
@@ -293,6 +232,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
 
             @Override
+            public void onInvalidCredentials() {
+                sendInvalidcredentialsOnPush();
+            }
+
+            @Override
             public void onClosedUser() {
                 onError("PUSHUSECASE ERROR on closedUser "
                         + PreferencesState.getInstance().isPushInProgress());
@@ -331,14 +275,22 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     private void handleAPIException(Exception e) {
         if (e instanceof ConfigFileObsoleteException) {
-            sendIntentShowLogin();
+            sendPullRequired();
         }
     }
 
-    private void sendIntentShowLogin() {
+    private void sendPullRequired() {
         Intent surveysIntent = new Intent(PushService.class.getName());
         surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
-        surveysIntent.putExtra(SHOW_LOGIN, true);
+        surveysIntent.putExtra(PULL_REQUIRED, true);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
+    }
+
+    private void sendInvalidcredentialsOnPush() {
+        Intent surveysIntent = new Intent(PushService.class.getName());
+        surveysIntent.putExtra(SERVICE_METHOD, PUSH_MESSAGE);
+        surveysIntent.putExtra(INVALID_CREDENTIALS_ON_PUSH, true);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(surveysIntent);
     }

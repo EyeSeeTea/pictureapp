@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 public class SoftLoginUseCase implements UseCase {
@@ -68,6 +69,8 @@ public class SoftLoginUseCase implements UseCase {
                             public void onError(Throwable throwable) {
                                 if (throwable instanceof InvalidCredentialsException) {
                                     notifyInvalidPassword();
+                                } else if (throwable instanceof AvailableApiException) {
+                                    notifyServerNotAvailable(throwable.getMessage());
                                 } else {
                                     notifyNetworkError();
                                 }
@@ -146,6 +149,15 @@ public class SoftLoginUseCase implements UseCase {
         });
     }
 
+    public void notifyServerNotAvailable(final String message) {
+        mainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onServerNotAvailable(message);
+            }
+        });
+    }
+
     public interface Callback {
         void onSoftLoginSuccess();
 
@@ -154,5 +166,7 @@ public class SoftLoginUseCase implements UseCase {
         void onNetworkError();
 
         void onMaxInvalidLoginAttemptsError(long enableLoginTime);
+
+        void onServerNotAvailable(String message);
     }
 }

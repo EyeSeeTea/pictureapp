@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.SaveSettingsUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
@@ -63,6 +64,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private static final int MENU_ITEM_LOGOUT = 99;
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
     private static final int SETTINGS_LOGOUT = 107;
+    private static final String SOFT_LOGIN_DIALOG_TAG = "soft_login_dialog";
 
     LogoutUseCase mLogoutUseCase;
 
@@ -163,11 +165,19 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private void showSoftLoginDialog() {
+
         if (!currentUser.isDemo()) {
             FragmentManager fm = mBaseActivity.getSupportFragmentManager();
 
+            SoftLoginDialogFragment prev =
+                    (SoftLoginDialogFragment)fm.findFragmentByTag(SOFT_LOGIN_DIALOG_TAG);
+
+            if (prev != null) {
+                return;
+            }
+
             SoftLoginDialogFragment softLoginDialogFragment = SoftLoginDialogFragment.newInstance();
-            softLoginDialogFragment.show(fm, "soft_login");
+            softLoginDialogFragment.show(fm, SOFT_LOGIN_DIALOG_TAG);
 
             mBaseActivity.getSupportFragmentManager().executePendingTransactions();
             softLoginDialogFragment.getDialog().setOnDismissListener(
@@ -191,7 +201,30 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             FragmentManager fm = mBaseActivity.getSupportFragmentManager();
             PullDialogFragment pullDialogFragment = PullDialogFragment.newInstance();
             pullDialogFragment.show(fm, "pull");
+        } else {
+            markPullAsRequired();
         }
+    }
+
+    private void markPullAsRequired() {
+        GetSettingsUseCase getSettingsUseCase =
+                new SettingsFactory().getSettingsUseCase(mBaseActivity);
+        final SaveSettingsUseCase saveSettingsUseCase =
+                new SettingsFactory().saveSettingsUseCase(mBaseActivity);
+
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                settings.changePullRequired(true);
+
+                saveSettingsUseCase.execute(new SaveSettingsUseCase.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "Pull marked as required");
+                    }
+                }, settings);
+            }
+        });
     }
 
     private boolean isSurveyOpen() {

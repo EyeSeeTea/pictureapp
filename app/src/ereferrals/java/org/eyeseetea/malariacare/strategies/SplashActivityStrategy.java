@@ -46,6 +46,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
     private CustomTextView progressTextView;
+    private IMainExecutor mainExecutor;
 
     public interface Callback {
         void onSuccess();
@@ -54,6 +55,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
         super(mActivity);
         this.activity = mActivity;
+        this.mainExecutor = new UIThreadExecutor();
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
@@ -225,7 +227,12 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     }
 
     @Override
-    public void showProgressMessage(@StringRes int resourceId) {
-        progressTextView.setTextTranslation(resourceId);
+    public void showProgressMessage(@StringRes final int resourceId) {
+        mainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                progressTextView.setTextTranslation(resourceId);
+            }
+        });
     }
 }

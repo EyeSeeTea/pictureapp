@@ -157,6 +157,14 @@ public class SoftLoginPresenter {
                 disableLoginActionUntilEnableLoginTime(enableLoginTime);
 
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                if (view != null) {
+                    view.hideProgress();
+                    view.showServerNotAvailable(message);
+                }
+            }
         });
     }
 
@@ -334,5 +342,7 @@ public class SoftLoginPresenter {
         void showLogoutError();
 
         void showInvalidAuthFromExternalApp();
+
+        void showServerNotAvailable(String message);
     }
 }

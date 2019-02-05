@@ -201,8 +201,18 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
         showError(R.string.different_user_error);
     }
 
+    @Override
+    public void showServerNotAvailable(String message) {
+        showError(message);
+    }
+
     public void showError(int message) {
         Toast.makeText(this.getActivity(), translate(message),
+                Toast.LENGTH_LONG).show();
+    }
+
+    public void showError(String message) {
+        Toast.makeText(this.getActivity(), message,
                 Toast.LENGTH_LONG).show();
     }
 

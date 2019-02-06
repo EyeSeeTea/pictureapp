@@ -197,7 +197,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void downloadLanguagesFromServer() {
         try {
-            if (BuildConfig.downloadLanguagesFromServer && currentUserAccount == null) {
+            if (BuildConfig.downloadLanguagesFromServer) {
                 Log.i(TAG, "Starting to download Languages From Server");
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
@@ -205,9 +205,12 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
                 DownloadLanguageTranslationUseCase useCase =
                         new DownloadLanguageTranslationUseCase(credentialsReader, connectivity);
 
-                String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
+                if (currentUserAccount == null) {
+                    String currentLanguage = PreferencesState.getInstance().getCurrentLocale();
 
-                useCase.download(currentLanguage);
+                    useCase.download(currentLanguage);
+                }
+
                 useCase.downloadAsync(new AsyncExecutor());
             }
         } catch (Exception e) {

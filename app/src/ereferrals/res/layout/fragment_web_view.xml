@@ -25,26 +25,38 @@
         android:layout_margin="30dp"
         android:visibility="gone"/>
 
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true">
 
-        <android.support.design.widget.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/refresh_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
             android:src="@drawable/ic_refresh_webview"
-            app:backgroundTint="@color/create_button_background"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="center_horizontal|right"
-            android:layout_marginRight="16dp"
+            app:backgroundTint="@drawable/refresh_web_view_background"
             android:onClick="newSurvey"
             app:fabSize="normal"
-            app:layout_anchorGravity="bottom|right|end" />
+            android:layout_marginBottom="32dp"
+            android:layout_marginRight="16dp"
+            app:layout_anchorGravity="bottom|right|end"
+            android:layout_gravity="center_horizontal|right" />
+
+        <TextView
+            android:id="@+id/countdown_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="60"
+            android:elevation="16dp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="8dp"
+            android:visibility="gone"/>
     </FrameLayout>
 
 </RelativeLayout>

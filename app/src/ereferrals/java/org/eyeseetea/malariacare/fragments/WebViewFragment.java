@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +21,16 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.executors.IDelayedMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.ApiStatus;
 import org.eyeseetea.malariacare.domain.usecase.GetWebAvailableUseCase;
 import org.eyeseetea.malariacare.network.ConnectivityStatus;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.factory.ApiAvailabilityFactory;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -36,12 +41,19 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     public static final String TAG = ".WebViewFragment";
     public static final String WEB_VIEW_URL = "webViewUrl";
     public static final String TITLE = "title";
+    public static final int COOL_DOWN_TIME = 60;
 
     private String url;
     private int title;
     private WebView mWebView;
     private CustomTextView mErrorDemoText;
     private boolean loadedFirstTime;
+
+    private IDelayedMainExecutor delayedMainExecutor;
+
+    private FloatingActionButton refreshButton;
+    private TextView countdownTextView;
+    private int activateRefreshTimeLeft = COOL_DOWN_TIME;
 
     @Nullable
     @Override
@@ -50,6 +62,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_web_view,
                 container, false);
+        delayedMainExecutor = new UIThreadExecutor();
         manageBundle(savedInstanceState);
         initViews(view);
         return view;
@@ -73,12 +86,54 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
         mWebView.setWebViewClient(new WebViewClient());
         loadUrlInWebView(false);
-        view.findViewById(R.id.refresh_button).setOnClickListener(new View.OnClickListener() {
+
+        countdownTextView =  view.findViewById(R.id.countdown_text_view);
+        refreshButton = view.findViewById(R.id.refresh_button);
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadUrlInWebView(true);
+                refreshWebView();
             }
         });
+    }
+
+    private void refreshWebView() {
+        loadUrlInWebView(true);
+
+        disableRefreshWebView();
+    }
+
+    private void disableRefreshWebView() {
+
+        refreshButton.setEnabled(false);
+        refreshButton.setImageDrawable(null);
+
+        activateRefreshTimeLeft = COOL_DOWN_TIME;
+        countdownTextView.setText(String.valueOf(activateRefreshTimeLeft));
+        countdownTextView.setVisibility(View.VISIBLE);
+
+        executeCountdown();
+    }
+
+    private void executeCountdown() {
+        delayedMainExecutor.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                activateRefreshTimeLeft -= 1;
+                countdownTextView.setText(String.valueOf(activateRefreshTimeLeft));
+
+                if (activateRefreshTimeLeft <= 0) {
+                    countdownTextView.setVisibility(View.GONE);
+                    refreshButton.setEnabled(true);
+                    refreshButton.setImageDrawable(
+                            ContextCompat.getDrawable(getActivity(), R.drawable.ic_refresh_webview));
+                } else {
+                    executeCountdown();
+                }
+            }
+        }, 1000);
     }
 
     private void manageBundle(Bundle savedInstanceState) {

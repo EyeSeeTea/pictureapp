@@ -1039,4 +1039,7 @@ Ameahidi kuhudhuria"</string>
 
     <string name="pull_dialog_progress_generic_message">Inasasisha metadata …</string>
     <string name="push_invalid_credentials">tumegundua kuwa siri imebadilika kwenye seva, tafadhali ingiza tena siri</string>
+
+    <string name="web_view_network_error">Kuna matatizo ya mtandao kupakia mtandao wa pag</string>
+    <string name="push_network_error">Kuna matatizo ya mtandao kwenye mchakato wa kushinikiza</string>
 </resources>

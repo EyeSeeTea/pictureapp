@@ -983,4 +983,7 @@
     <string name="pull_dialog_progress_generic_message">Atualizando Metadados …</string>
     <string name="push_invalid_credentials">detectamos que o pino foi alterado no servidor, insira o pino novamente</string>
 
+
+    <string name="web_view_network_error">Há problemas de rede ao carregar a página da web</string>
+    <string name="push_network_error">Há problemas de rede no processo de envio</string>
 </resources>

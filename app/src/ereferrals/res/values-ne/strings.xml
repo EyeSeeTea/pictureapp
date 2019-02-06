@@ -985,4 +985,7 @@
 
     <string name="pull_dialog_progress_generic_message">मेटाडेटा अपडेट गर्दै …</string>
     <string name="push_invalid_credentials">हामीले फेला पारेको छ कि पिनले सर्भरमा परिवर्तन गरेको छ, कृपया पिन फेरि सम्मिलित गर्नुहोस्</string>
+
+    <string name="web_view_network_error">वेब पेज लोड गर्दा नेटवर्क समस्याहरू छन्</string>
+    <string name="push_network_error">प्रक्रिया प्रक्रियामा सञ्जाल समस्याहरू छन्</string>
 </resources>

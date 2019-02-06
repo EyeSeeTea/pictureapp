@@ -653,12 +653,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private BroadcastReceiver pushReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            showHideProgressPush(intent);
+            managePushIntent(intent);
             mDashboardUnsentFragment.reloadData();
         }
     };
 
-    private void showHideProgressPush(Intent intent) {
+    private void managePushIntent(Intent intent) {
         if (intent.getBooleanExtra(PushServiceStrategy.PUSH_IS_START, false)) {
             mRefreshButton.setEnabled(false);
             mRefreshButton.startAnimation(
@@ -667,6 +667,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             waitToEnableRefreshButton(mDashboardActivity);
         } else {
             mRefreshButton.clearAnimation();
+        }
+
+        if (intent.getBooleanExtra(PushServiceStrategy.PUSH_NETWORK_ERROR, false)) {
+            showError(R.string.push_network_error);
         }
     }
 
@@ -707,6 +711,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             }
         };
         new Handler().postDelayed(runnable, pushPeriod * SECONDS);
+    }
+
+    public void showError(int message) {
+        Toast.makeText(mDashboardActivity, translate(message),
+                Toast.LENGTH_LONG).show();
     }
 
     private String translate(@StringRes int resourceId) {

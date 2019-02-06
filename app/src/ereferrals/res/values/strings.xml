@@ -1151,4 +1151,7 @@
     <string name="pull_dialog_progress_generic_message">Updating metadata …</string>
     <string name="push_invalid_credentials">we have detected that the pin has changed on the server, please insert the pin again</string>
 
+
+    <string name="web_view_network_error">There were network problems while loading the web page</string>
+    <string name="push_network_error">There were network problems while sending vouchers to the server</string>
 </resources>

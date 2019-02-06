@@ -84,7 +84,6 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
         mErrorDemoText = (CustomTextView) view.findViewById(R.id.error_demo_text);
-        mWebView.setWebViewClient(new WebViewClient());
         loadUrlInWebView(false);
 
         countdownTextView =  view.findViewById(R.id.countdown_text_view);
@@ -238,14 +237,27 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         mWebView.getSettings().setDomStorageEnabled(true);
         clearCookies(getActivity());
         mWebView.loadUrl(url);
-        mWebView.setWebViewClient(new WebViewClient() {
 
+        int timeoutMillis = Integer.parseInt(getString(R.string.web_view_timeout_millis));
+
+        CustomWebViewClient customWebViewClient =
+                new CustomWebViewClient(timeoutMillis) {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        loadedFirstTime = true;
+                        super.onPageFinished(view, url);
+                    }
+                };
+
+        customWebViewClient.setErrorListener(new CustomWebViewClient.ErrorListener() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                loadedFirstTime = true;
+            public void onTimeoutError() {
+                // do what you want
+                showError(R.string.web_view_network_error);
             }
         });
+
+        mWebView.setWebViewClient(customWebViewClient);
     }
 
     private void showHideWebView(boolean show) {
@@ -276,6 +288,12 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
         return false;
     }
+
+    public void showError(int message) {
+        Toast.makeText(getActivity(), translate(message),
+                Toast.LENGTH_LONG).show();
+    }
+
     private String translate(@StringRes int id){
         return Utils.getInternationalizedString(id, getActivity());
     }

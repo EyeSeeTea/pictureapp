@@ -20,10 +20,11 @@ public class CustomWebViewClient extends WebViewClient {
     }
 
     @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+    public void onPageStarted(final WebView view, String url, Bitmap favicon) {
         Runnable run = new Runnable() {
             public void run() {
                 if (timeout && errorListener != null) {
+                    view.stopLoading();
                     errorListener.onTimeoutError();
                 }
             }

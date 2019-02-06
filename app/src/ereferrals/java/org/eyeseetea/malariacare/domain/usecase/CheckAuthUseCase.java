@@ -11,8 +11,11 @@ public class CheckAuthUseCase implements UseCase {
 
     public interface Callback {
         void onEmptyCredentials();
+
         void onEmptyAuth();
+
         void onValidAuth();
+
         void onInValidAuth();
 
     }
@@ -41,34 +44,29 @@ public class CheckAuthUseCase implements UseCase {
 
     @Override
     public void run() {
-        mMainExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                Auth auth = mAuthRepository.getAuth();
+        Auth auth = mAuthRepository.getAuth();
 
-                if(auth==null){
-                    //auth voucher from other app doesn't exist.
-                    return;
-                }
+        if (auth == null) {
+            //auth voucher from other app doesn't exist.
+            return;
+        }
 
-                Credentials credentials = mCredentialsRepository.getLastValidCredentials();
-                if(!hasCredentials(credentials)){
-                    mCallback.onEmptyCredentials();
-                    return;
-                }
+        Credentials credentials = mCredentialsRepository.getLastValidCredentials();
+        if (!hasCredentials(credentials)) {
+            notifyEmptyCredentials();
+            return;
+        }
 
-                if(auth.hasAuth()){
-                    if(isValidUserAndPassword(credentials, auth)){
-                        mCallback.onValidAuth();
-                        return;
-                    }else {
-                        mCallback.onInValidAuth();
-                        return;
-                    }
-                }
-                mCallback.onEmptyAuth();
+        if (auth.hasAuth()) {
+            if (isValidUserAndPassword(credentials, auth)) {
+                notifyValidAuth();
+                return;
+            } else {
+                notifyInValidAuth();
+                return;
             }
-        });
+        }
+        notifyEmptyAuth();
     }
 
     private boolean hasCredentials(Credentials credentials) {
@@ -79,4 +77,42 @@ public class CheckAuthUseCase implements UseCase {
         return auth.getUserName().equals(credentials.getUsername())
                 && auth.getPassword().equals(credentials.getPassword());
     }
+
+    private void notifyEmptyAuth() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onEmptyAuth();
+            }
+        });
+    }
+
+    private void notifyInValidAuth() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInValidAuth();
+            }
+        });
+    }
+
+    private void notifyValidAuth() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onValidAuth();
+            }
+        });
+    }
+
+    private void notifyEmptyCredentials() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onEmptyCredentials();
+            }
+        });
+    }
+
+
 }

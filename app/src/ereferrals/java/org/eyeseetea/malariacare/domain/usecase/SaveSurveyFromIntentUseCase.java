@@ -52,26 +52,25 @@ public class SaveSurveyFromIntentUseCase implements UseCase {
 
     public void execute(Callback callback) {
         mCallback = callback;
-        mMainExecutor.run(this);
+        mAsyncExecutor.run(this);
     }
 
 
     @Override
     public void run() {
         if(mConnectVoucherJson == null || mConnectVoucherJson.isEmpty()){
-            mCallback.onEmptySurvey();
+            notifyEmptySurvey();
             return;
         }
         try{
             mConnectVoucher = ConnectVoucherMapper.parseJson(mConnectVoucherJson);
         } catch (IOException e) {
-            e.printStackTrace();
-            mCallback.onInvalidIntentJson();
+            notifyInvalidIntentJson();
             return;
         }
 
         if(mConnectVoucher.getValues()==null || mConnectVoucher.getValues().size()==0) {
-            mCallback.onEmptySurvey();
+            notifyEmptySurvey();
             return;
         }
         Auth auth = mConnectVoucher.getAuth();
@@ -83,20 +82,11 @@ public class SaveSurveyFromIntentUseCase implements UseCase {
         mSurveyRepository.removeInProgress();
         mSurvey = mSurveyRepository.createNewSurvey();
         if(mSurvey==null){
-            mCallback.onInvalidProgramOrUser();
+            notifyInvalidProgramOrUser();
             return;
         }
         mSurvey.setId(mSurveyRepository.save(mSurvey));
         saveValuesFromIntent(mSurvey);
-    }
-
-    private void notifySurveySaved() {
-        mAsyncExecutor.run(new Runnable() {
-            @Override
-            public void run() {
-                mCallback.onSurveySaved(mSurvey);
-            }
-        });
     }
 
     private void saveValuesFromIntent(Survey survey) {
@@ -106,11 +96,47 @@ public class SaveSurveyFromIntentUseCase implements UseCase {
         }
     }
 
-
     private void saveValues(Survey survey, List<Value> values) {
         for(Value value : values) {
             mValueRepository.saveValue(value, survey.getId());
         }
         notifySurveySaved();
     }
+
+    private void notifySurveySaved() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onSurveySaved(mSurvey);
+            }
+        });
+    }
+
+    private void notifyEmptySurvey() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onEmptySurvey();
+            }
+        });
+    }
+
+    private void notifyInvalidIntentJson() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInvalidIntentJson();
+            }
+        });
+    }
+
+    private void notifyInvalidProgramOrUser() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInvalidProgramOrUser();
+            }
+        });
+    }
+
 }

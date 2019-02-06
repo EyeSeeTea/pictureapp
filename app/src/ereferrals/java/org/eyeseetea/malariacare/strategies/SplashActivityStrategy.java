@@ -46,6 +46,9 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public static final String INTENT_JSON_EXTRA_KEY = "ConnectVoucher";
     private Activity activity;
     private CustomTextView progressTextView;
+    private IMainExecutor mainExecutor;
+
+    private UserAccount currentUserAccount;
 
     public interface Callback {
         void onSuccess();
@@ -54,9 +57,12 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     public SplashActivityStrategy(Activity mActivity) {
         super(mActivity);
         this.activity = mActivity;
+        this.mainExecutor = new UIThreadExecutor();
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
         }
+
+        loadCurrentUser();
     }
 
     @Override
@@ -107,6 +113,18 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     }
 
+    private void loadCurrentUser() {
+        GetUserUserAccountUseCase getUserUserAccountUseCase =
+                new AuthenticationFactoryStrategy().getUserAccountUseCase();
+
+        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
+            @Override
+            public void onGetUserAccount(UserAccount userAccount) {
+                currentUserAccount = userAccount;
+            }
+        });
+    }
+
     private void clearAuth(final SplashScreenActivity.Callback callback) {
         ClearAuthUseCase clearAuthUseCase = new ClearAuthUseCase(new UIThreadExecutor(), new AsyncExecutor(), new AuthDataSource(activity.getBaseContext()));
         clearAuthUseCase.execute(new ClearAuthUseCase.Callback() {
@@ -119,23 +137,15 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        GetUserUserAccountUseCase getUserUserAccountUseCase =
-                new AuthenticationFactoryStrategy().getUserAccountUseCase();
-
-        getUserUserAccountUseCase.execute(new GetUserUserAccountUseCase.Callback() {
-            @Override
-            public void onGetUserAccount(UserAccount userAccount) {
-                if (userAccount == null) {
-                    SplashActivityStrategy.super.finishAndGo(LoginActivity.class);
-                } else {
-                    if (!userAccount.isDemo()) {
-                        markSoftLoginRequired();
-                    }
-
-                    SplashActivityStrategy.super.finishAndGo(DashboardActivity.class);
-                }
+        if (currentUserAccount == null) {
+            SplashActivityStrategy.super.finishAndGo(LoginActivity.class);
+        } else {
+            if (!currentUserAccount.isDemo()) {
+                markSoftLoginRequired();
             }
-        });
+
+            SplashActivityStrategy.super.finishAndGo(DashboardActivity.class);
+        }
     }
 
     private void markSoftLoginRequired() {
@@ -187,7 +197,7 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     @Override
     public void downloadLanguagesFromServer() {
         try {
-            if (BuildConfig.downloadLanguagesFromServer) {
+            if (BuildConfig.downloadLanguagesFromServer && currentUserAccount == null) {
                 Log.i(TAG, "Starting to download Languages From Server");
                 CredentialsReader credentialsReader = CredentialsReader.getInstance();
                 IConnectivityManager connectivity = NetworkManagerFactory.getConnectivityManager(
@@ -225,7 +235,12 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
     }
 
     @Override
-    public void showProgressMessage(@StringRes int resourceId) {
-        progressTextView.setTextTranslation(resourceId);
+    public void showProgressMessage(@StringRes final int resourceId) {
+        mainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                progressTextView.setTextTranslation(resourceId);
+            }
+        });
     }
 }

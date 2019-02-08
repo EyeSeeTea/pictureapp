@@ -915,7 +915,7 @@
 <string name="common_option_method_depo">"Depo"</string>
 <string name="common_option_eventType_HHV">"Household Visit"</string>
 <string name="common_option_eventType_BHA">"Bhalakusari"</string>
-<string name="common_option_eventType_MME">"Mid Media Events"</string>
+<string name="common_option_eventType_MME">"Mass Media Events"</string>
 <string name="common_option_heardAbout_HHV">"Household Visit"</string>
 <string name="common_option_heardAbout_BHA">"Bhalakusari"</string>
 <string name="common_option_heardAbout_PROV">"Provider"</string>

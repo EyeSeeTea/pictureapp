@@ -7,8 +7,8 @@
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/questionHeader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_margin="10dp"
         android:gravity="left"
@@ -16,8 +16,8 @@
         android:singleLine="true"
         android:textColor="@color/intColor"
         android:text="edededede"
-        android:textSize="?attr/font_medium"
-        app:font_name="@string/normal_font"
+        android:textSize="?attr/font_large"
+        app:font_name="@string/bold_font"
         android:lines="1" />
 
     <org.eyeseetea.sdk.presentation.views.CustomEditText

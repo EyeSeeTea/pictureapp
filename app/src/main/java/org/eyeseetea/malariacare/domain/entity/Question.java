@@ -1,9 +1,9 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 
-import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
-
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
+import org.eyeseetea.malariacare.domain.exception.RegExpValidationException;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ public class Question {
     private PhoneFormat phoneFormat;
     private Type type;
     private boolean compulsory;
+    private boolean disabled;
     private List<Option> options;
     private Header header;
     private int index;
@@ -27,7 +28,7 @@ public class Question {
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
-            List<Option> options, Header header, int index,
+            boolean disabled, List<Option> options, Header header, int index,
             Visibility visibility,
             List<Rule> rules, Value value, String regExp,
             String regExpError, String defaultValue) {
@@ -39,6 +40,7 @@ public class Question {
         this.phoneFormat = phoneFormat;
         this.type = required(type, "type is required");
         this.compulsory = compulsory;
+        this.disabled = disabled;
         this.options = options;
         this.header = header;
         this.index = index;
@@ -68,6 +70,10 @@ public class Question {
 
     public boolean isCompulsory() {
         return compulsory;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
     }
 
     public List<Option> getOptions() {
@@ -229,6 +235,7 @@ public class Question {
         private String regExp;
         private String regExpError;
         private String defaultValue;
+        private boolean disabled;
 
         public Builder() {
         }
@@ -260,6 +267,11 @@ public class Question {
 
         public Builder compulsory(boolean val) {
             compulsory = val;
+            return this;
+        }
+
+        public Builder disabled(boolean val) {
+            disabled = val;
             return this;
         }
 
@@ -316,6 +328,7 @@ public class Question {
                     this.phoneFormat,
                     this.type,
                     this.compulsory,
+                    this.disabled,
                     this.options,
                     this.header,
                     this.index,

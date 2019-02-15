@@ -573,6 +573,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .visibility(getVisibilityFrom(apiQuestion))
                     .options(convertToDomainOptionsFrom(apiQuestion.options, apiQuestion))
                     .compulsory(apiQuestion.compulsory)
+                    .disabled(apiQuestion.disabled)
                     .rules(convertToDomainRules(apiQuestion.rules))
                     .regExp(apiQuestion.validationRegex)
                     .regExpError(apiQuestion.validationPoTerm)

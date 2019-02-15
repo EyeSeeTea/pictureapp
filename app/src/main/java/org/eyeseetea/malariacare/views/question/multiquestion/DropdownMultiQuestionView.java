@@ -66,6 +66,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
+        spinnerOptions.setPrompt(headerValue);
     }
 
     @Override

@@ -188,6 +188,9 @@ public class QuestionDB extends BaseModel {
     @Column
     Integer compulsory;
 
+    @Column
+    boolean disabled;
+
     public List<OptionDB> getOptionDBS() {
         return optionDBS;
     }
@@ -735,6 +738,14 @@ public class QuestionDB extends BaseModel {
 
     public void setCompulsory(Integer compulsory) {
         this.compulsory = compulsory;
+    }
+
+    public Boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 
     public String getPath() {
@@ -2042,6 +2053,7 @@ public class QuestionDB extends BaseModel {
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
         result = 31 * result + (compulsory != null ? compulsory.hashCode() : 0);
+        result = 31 * result + (disabled ? 1 : 0);
         return result;
     }
 
@@ -2060,6 +2072,7 @@ public class QuestionDB extends BaseModel {
                 ", denominator_w=" + denominator_w +
                 ", id_header=" + id_header_fk +
                 ", id_answer=" + id_answer_fk +
+                ", disabled=" + disabled +
                 ", compulsory=" + compulsory +
                 ", output=" + output +
                 ", id_question_parent=" + id_question_parent +

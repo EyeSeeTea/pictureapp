@@ -22,6 +22,9 @@ import java.util.List;
 
 public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
+    //TODO: a refactor from connect is started, this DashboardAdapterStrategy
+    // be refactored to SurveyViewHolder in all variants
+
     private AssessmentAdapter mAssessmentAdapter;
     private Context mContext;
 

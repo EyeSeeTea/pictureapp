@@ -34,7 +34,8 @@ import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
-import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
+import org.eyeseetea.malariacare.domain.entity.Program;
+import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUseCase;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -288,13 +289,13 @@ public class SurveyService extends IntentService {
             IProgramRepository programRepository = new ProgramRepository();
             IMainExecutor mainExecutor = new UIThreadExecutor();
             IAsyncExecutor asyncExecutor = new AsyncExecutor();
-            GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+            GetUserProgramUseCase getUserProgramUseCase = new GetUserProgramUseCase(
                     programRepository, mainExecutor, asyncExecutor);
-            getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+            getUserProgramUseCase.execute(new GetUserProgramUseCase.Callback() {
                 @Override
-                public void onSuccess(String uid) {
-                    mProgramUID = uid;
-                    callback.onSuccess(uid);
+                public void onSuccess(Program program) {
+                    mProgramUID = program.getId();
+                    callback.onSuccess(mProgramUID);
                 }
 
                 @Override

@@ -1,8 +1,7 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.datasources.strategies
-        .ASurveyLocalDataSourceStrategy;
+import org.eyeseetea.malariacare.data.database.datasources.strategies.ASurveyLocalDataSourceStrategy;
 import org.eyeseetea.malariacare.data.database.datasources.strategies.SurveyLocalDataSourceStrategy;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
@@ -126,7 +125,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
 
     public List<Survey> getSurveysByProgram(String uid) {
-        List<SurveyDB> surveysDB = SurveyDB.getSurveysWithProgram(uid);
+        List<SurveyDB> surveysDB = SurveyDB.getAllSurveysByProgram(uid);
         List<Survey> surveys = new ArrayList<>();
 
         for (SurveyDB surveyDB : surveysDB) {

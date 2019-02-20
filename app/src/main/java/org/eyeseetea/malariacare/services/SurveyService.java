@@ -40,7 +40,6 @@ import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.strategies.SurveyServiceStrategy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -312,7 +311,7 @@ public class SurveyService extends IntentService {
 
     private void getSurveysFromProgram(Intent intent) {
         String programUID = intent.getExtras().getString(PROGRAM_UID);
-        List<SurveyDB> surveys = SurveyDB.getSurveysWithProgram(programUID);
+        List<SurveyDB> surveys = SurveyDB.getAllSurveysByProgram(programUID);
 
         Session.putServiceValue(GET_SURVEYS_FROM_PROGRAM, surveys);
 

@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
-
     public interface OnSurveyClickListener {
         void onSurveyClick(View view, SurveyDB surveyDB);
     }
@@ -59,6 +58,10 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.onSurveyClickListener = listener;
     }
 
+    public SurveyDB getSurvey(int position) {
+        return items.get(position);
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -72,7 +75,7 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         SurveyViewHolder surveyViewHolder = (SurveyViewHolder) viewHolder;
         final SurveyDB surveyDB = items.get(i);
 
-        surveyViewHolder.bindView(items.get(i), i);
+        surveyViewHolder.bindView(getSurvey(i), i);
 
         surveyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

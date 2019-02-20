@@ -11,21 +11,21 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.layout.SwipeRecyclerViewSurveysCallback;
 import org.eyeseetea.malariacare.layout.adapters.survey.SurveysAdapter;
-import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
-import org.eyeseetea.malariacare.strategies.DashboardUnsentFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,6 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
     private SurveyReceiver surveyReceiver;
     private List<SurveyDB> mSurveyDBs;
 
-    private boolean viewCreated = false;
     RecyclerView mRecyclerView;
 
     private View rootView;
@@ -64,7 +63,6 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
         if (container == null) {
             return null;
         }
-        viewCreated = true;
 
         rootView = inflater.inflate(R.layout.survey_list_fragment, container, false);
 
@@ -119,83 +117,72 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewCreated = false;
     }
 
     /**
      * Initializes the listview component, adding a listener for swiping right
      */
     private void initRecyclerView() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View header = DashboardHeaderStrategy.getInstance().loadHeader(R.layout.assessment_header,
-                inflater);
-        final View footer = inflater.inflate(R.layout.assessment_footer, null, false);
-
         mRecyclerView = rootView.findViewById(R.id.surveyList);
         adapter = new SurveysAdapter(this.mSurveyDBs);
         mRecyclerView.setAdapter(adapter);
 
-       /* if (header != null) {
-            listView.addHeaderView(header);
-        }
-        listView.addFooterView(footer);
+        adapter.setOnSurveyClickListener(new SurveysAdapter.OnSurveyClickListener() {
+            @Override
+            public void onSurveyClick(View view, SurveyDB surveyDB) {
+                Session.setMalariaSurveyDB(surveyDB);
+                DashboardActivity.dashboardActivity.openSentSurvey();
+            }
+        });
 
-        LayoutUtils.setRowDivider(listView);*/
+        SwipeRecyclerViewSurveysCallback swipeRecyclerViewSurveysCallback = new
+                SwipeRecyclerViewSurveysCallback(getActivity(), adapter);
 
+        swipeRecyclerViewSurveysCallback.setOnSurveySwipeListener(
+                new SwipeRecyclerViewSurveysCallback.OnSurveySwipeListener() {
+                    @Override
+                    public void onSurveySwipe(final SurveyDB surveyDB) {
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                .setTitle(getActivity().getString(
+                                        R.string.dialog_title_delete_survey))
+                                .setMessage(getActivity().getString(
+                                        R.string.dialog_info_delete_survey))
+                                .setPositiveButton(android.R.string.yes,
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface arg0,
+                                                    int arg1) {
+                                                deleteSurvey(surveyDB);
 
-        // Create a ListView-specific touch listener. ListViews are given special treatment because
-        // by default they handle touches for their list items... i.e. they're in charge of drawing
-        // the pressed state (the list selector), handling list item clicks, etc.
-/*        SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(
-                        listView,
-                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                                            }
+                                        })
+                                .setNegativeButton(android.R.string.no,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                refreshRecyclerView();
+                                            }
+                                        }).create();
+
+                        dialog.show();
+
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
-                            public boolean canDismiss(int position) {
-                                return position > 0 && position <= mSurveyDBs.size();
-                            }
-
-                            @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                                for (final int position : reverseSortedPositions) {
-                                    new AlertDialog.Builder(getActivity())
-                                            .setTitle(getActivity().getString(
-                                                    R.string.dialog_title_delete_survey))
-                                            .setMessage(getActivity().getString(
-                                                    R.string.dialog_info_delete_survey))
-                                            .setPositiveButton(android.R.string.yes,
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface arg0,
-                                                                int arg1) {
-                                                            DashboardUnsentFragmentStrategy
-                                                                    .deleteSurvey(
-                                                                            ((SurveyDB) adapter.getItem(
-                                                                                    position - 1)));
-
-                                                            //Reload data using service
-                                                            Intent surveysIntent = new Intent(
-                                                                    getActivity(),
-                                                                    SurveyService.class);
-                                                            surveysIntent.putExtra(
-                                                                    SurveyService.SERVICE_METHOD,
-                                                                    SurveyService
-                                                                            .RELOAD_DASHBOARD_ACTION);
-                                                            getActivity().startService(
-                                                                    surveysIntent);
-                                                        }
-                                                    })
-                                            .setNegativeButton(android.R.string.no,
-                                                    null).create().show();
-                                }
-
+                            public void onDismiss(DialogInterface dialog) {
+                                refreshRecyclerView();
                             }
                         });
-        listView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
-        listView.setOnScrollListener(touchListener.makeScrollListener());*/
+                    }
+                });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeRecyclerViewSurveysCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
+    private void deleteSurvey(SurveyDB surveyDB) {
+        surveyDB.delete();
+        mSurveyDBs.remove(mSurveyDBs.indexOf(surveyDB));
+        refreshRecyclerView();
+    }
 
     /**
      * Register a survey receiver to load surveys into the listadapter
@@ -245,6 +232,11 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
         this.mSurveyDBs.clear();
         this.mSurveyDBs.addAll(newListSurveyDBs);
 
+        this.adapter.setItems(mSurveyDBs);
+
+    }
+
+    public void refreshRecyclerView() {
         this.adapter.setItems(mSurveyDBs);
 
     }

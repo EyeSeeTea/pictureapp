@@ -1,5 +1,8 @@
 package org.eyeseetea.malariacare.data;
 
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+
 import android.support.test.InstrumentationRegistry;
 
 import org.eyeseetea.malariacare.AssetsFileReader;
@@ -29,9 +32,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoginUseCaseShould {
@@ -84,11 +84,6 @@ public class LoginUseCaseShould {
             }
 
             @Override
-            public void onServerPinChanged() {
-                fail("onLoginSuccess");
-            }
-
-            @Override
             public void onNetworkError() {
                 fail("onNetworkError");
             }
@@ -135,11 +130,6 @@ public class LoginUseCaseShould {
 
             @Override
             public void onInvalidCredentials() {
-                fail("onLoginSuccess");
-            }
-
-            @Override
-            public void onServerPinChanged() {
                 fail("onLoginSuccess");
             }
 

@@ -7,6 +7,7 @@ import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.remote.AuthenticationWSDataSource;
+import org.eyeseetea.malariacare.data.remote.IForgotPasswordDataSource;
 import org.eyeseetea.malariacare.data.rules.MockWebServerRule;
 import org.eyeseetea.malariacare.data.sync.exporter.eReferralsAPIClient;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -15,6 +16,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
@@ -35,6 +37,7 @@ import java.util.Date;
 public class SoftLoginUseCaseShould {
     private static final String AUTH_SUCCESS = "authSuccess.json";
     private static final String AUTH_FAIL = "authFail.json";
+    private static final String API_AVAILABLE_OK = "api_available_ok.json";
     private static final long DISABLE_LOGIN_BY_ATTEMPTS = 30000;
 
     @Rule
@@ -57,12 +60,19 @@ public class SoftLoginUseCaseShould {
     @Mock
     IUserRepository userRepository;
 
+    @Mock
+    ISettingsRepository settingsRepository;
+
+    @Mock
+    IForgotPasswordDataSource forgotPasswordDataSource;
+
     @Test
     public void return_on_soft_login_success_if_exists_connection_and_credentials_are_ok()
             throws IOException {
 
         SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true);
 
+        mockWebServerRule.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_SUCCESS);
 
         softLoginUseCase.execute("1234", new SoftLoginUseCase.Callback() {
@@ -85,6 +95,11 @@ public class SoftLoginUseCaseShould {
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onServerNotAvailable");
+            }
         });
     }
 
@@ -94,6 +109,7 @@ public class SoftLoginUseCaseShould {
 
         SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true);
 
+        mockWebServerRule.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_FAIL);
 
         softLoginUseCase.execute("1234", new SoftLoginUseCase.Callback() {
@@ -116,6 +132,11 @@ public class SoftLoginUseCaseShould {
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onServerNotAvailable");
+            }
         });
     }
 
@@ -127,6 +148,7 @@ public class SoftLoginUseCaseShould {
 
         SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true, lastValidPin);
 
+        mockWebServerRule.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_SUCCESS);
 
         softLoginUseCase.execute(lastValidPin, new SoftLoginUseCase.Callback() {
@@ -149,6 +171,11 @@ public class SoftLoginUseCaseShould {
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
         });
     }
 
@@ -160,6 +187,7 @@ public class SoftLoginUseCaseShould {
 
         SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCase(true, lastValidPin);
 
+        mockWebServerRule.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_FAIL);
 
         softLoginUseCase.execute("1234567", new SoftLoginUseCase.Callback() {
@@ -182,6 +210,11 @@ public class SoftLoginUseCaseShould {
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxInvalidLoginAttemptsError");
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
         });
     }
 
@@ -195,6 +228,7 @@ public class SoftLoginUseCaseShould {
         SoftLoginUseCase softLoginUseCase =
                 givenASoftLoginUseCase(invalidLoginAttempts, 0);
 
+        mockWebServerRule.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_FAIL);
 
         softLoginUseCase.execute("1234567", new SoftLoginUseCase.Callback() {
@@ -216,6 +250,12 @@ public class SoftLoginUseCaseShould {
             @Override
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 Assert.assertTrue(true);
+            }
+
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onMaxInvalidLoginAttemptsError");
             }
         });
     }
@@ -251,6 +291,11 @@ public class SoftLoginUseCaseShould {
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 Assert.assertTrue(true);
             }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
         });
     }
 
@@ -265,6 +310,7 @@ public class SoftLoginUseCaseShould {
                 givenASoftLoginUseCase(invalidLoginAttempts,
                         new Date().getTime() - DISABLE_LOGIN_BY_ATTEMPTS);
 
+        mockWebServerRule.enqueueMockResponseFileName(200, API_AVAILABLE_OK);
         mockWebServerRule.enqueueMockResponseFileName(200, AUTH_SUCCESS);
 
         softLoginUseCase.execute("1234", new SoftLoginUseCase.Callback() {
@@ -286,6 +332,12 @@ public class SoftLoginUseCaseShould {
             @Override
             public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
                 fail("onMaxLoginAttemptsReachedError");
+            }
+
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onMaxInvalidLoginAttemptsError");
             }
         });
     }
@@ -327,9 +379,9 @@ public class SoftLoginUseCaseShould {
         IAuthenticationDataSource userAccountRemoteDataSource =
                 new AuthenticationWSDataSource(eReferralsAPIClient);
 
-
         IAuthenticationManager authenticationManager = new AuthenticationManager(
-                userAccountLocalDataSource, userAccountRemoteDataSource, userRepository);
+                userAccountLocalDataSource, userAccountRemoteDataSource, userRepository,
+                forgotPasswordDataSource, settingsRepository);
 
         when(connectivityManager.isDeviceOnline()).thenReturn(withConnection);
 

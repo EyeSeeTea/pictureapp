@@ -119,6 +119,13 @@ public class SurveysFragment extends Fragment implements IDashboardFragment, Sur
     }
 
     @Override
+    public void reloadData() {
+        if (presenter != null) {
+            presenter.refresh();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
@@ -214,11 +221,6 @@ public class SurveysFragment extends Fragment implements IDashboardFragment, Sur
 
     @Override
     public void unregisterFragmentReceiver() {
-
-    }
-
-    @Override
-    public void reloadData() {
 
     }
 }

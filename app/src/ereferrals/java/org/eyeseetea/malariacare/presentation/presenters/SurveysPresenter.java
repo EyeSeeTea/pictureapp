@@ -51,6 +51,16 @@ public class SurveysPresenter {
         view = null;
     }
 
+    public void selectSurvey(String surveyUid) {
+        if (view != null) {
+            view.navigateToSurvey(surveyUid);
+        }
+    }
+
+    public void refresh() {
+        loadSurveys();
+    }
+
     public void deleteSurvey(String surveyUid) {
         deleteSurveyUseCase.execute(new DeleteSurveyByUidUseCase.Callback() {
             @Override
@@ -170,12 +180,6 @@ public class SurveysPresenter {
         }
 
         return textValue;
-    }
-
-    public void selectSurvey(String surveyUid) {
-        if (view != null) {
-            view.navigateToSurvey(surveyUid);
-        }
     }
 
     public interface View {

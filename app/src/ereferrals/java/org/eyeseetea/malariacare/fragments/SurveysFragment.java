@@ -3,13 +3,8 @@ package org.eyeseetea.malariacare.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -20,25 +15,31 @@ import android.view.ViewGroup;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.DeleteSurveyByUidUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetQuestionsByProgramUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
+import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUseCase;
+import org.eyeseetea.malariacare.factories.MetadataFactory;
+import org.eyeseetea.malariacare.factories.SurveyFactory;
 import org.eyeseetea.malariacare.layout.SwipeRecyclerViewSurveysCallback;
 import org.eyeseetea.malariacare.layout.adapters.survey.SurveysAdapter;
-import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.presentation.models.SurveyViewModel;
+import org.eyeseetea.malariacare.presentation.presenters.SurveysPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SurveysFragment extends Fragment implements IDashboardFragment {
+public class SurveysFragment extends Fragment implements IDashboardFragment, SurveysPresenter.View {
     public static final String TAG = ".UnsentFragment";
 
     protected SurveysAdapter adapter;
-    private SurveyReceiver surveyReceiver;
-    private List<SurveyDB> mSurveyDBs;
-
+    private List<SurveyViewModel> mSurveyDBs;
     RecyclerView mRecyclerView;
 
+
+    private SurveysPresenter presenter;
     private View rootView;
 
     public SurveysFragment() {
@@ -75,9 +76,30 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
         super.onActivityCreated(savedInstanceState);
 
         initRecyclerView();
+        initPresenter();
         registerForContextMenu(mRecyclerView);
     }
 
+    private void initPresenter() {
+        MetadataFactory metadataFactory = new MetadataFactory();
+        SurveyFactory surveyFactory = new SurveyFactory();
+
+        GetUserProgramUseCase getUserProgramUseCase = metadataFactory.getUserProgramUseCase();
+
+        GetSurveysByProgram getSurveysByProgram = surveyFactory.getSurveysUseCaseByprogram();
+
+        GetQuestionsByProgramUseCase getQuestionsByProgramUseCase =
+                metadataFactory.getQuestionsByProgramUseCase();
+
+        DeleteSurveyByUidUseCase deleteSurveyByUidUseCase =
+                surveyFactory.deleteSurveyByUidUseCase();
+
+        presenter = new
+                SurveysPresenter(getUserProgramUseCase, getSurveysByProgram,
+                getQuestionsByProgramUseCase, deleteSurveyByUidUseCase);
+
+        presenter.attachView(this);
+    }
 
     @Override
     public void onResume() {
@@ -88,26 +110,8 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
     }
 
     @Override
-    public void onDestroy() {
-        Log.d(TAG, "AndroidLifeCycle: onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStart() {
-        Log.d(TAG, "AndroidLifeCycle: onStart");
-        super.onStart();
-    }
-
-    @Override
-    public void onPause() {
-        Log.d(TAG, "AndroidLifeCycle: onPause");
-        super.onPause();
-    }
-
-
-    @Override
     public void onStop() {
+        presenter.detachView();
         Log.d(TAG, "AndroidLifeCycle: onStop");
         unregisterFragmentReceiver();
 
@@ -129,9 +133,8 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
 
         adapter.setOnSurveyClickListener(new SurveysAdapter.OnSurveyClickListener() {
             @Override
-            public void onSurveyClick(View view, SurveyDB surveyDB) {
-                Session.setMalariaSurveyDB(surveyDB);
-                DashboardActivity.dashboardActivity.openSentSurvey();
+            public void onSurveyClick(View view, SurveyViewModel surveyViewModel) {
+                presenter.selectSurvey(surveyViewModel.getUid());
             }
         });
 
@@ -141,7 +144,7 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
         swipeRecyclerViewSurveysCallback.setOnSurveySwipeListener(
                 new SwipeRecyclerViewSurveysCallback.OnSurveySwipeListener() {
                     @Override
-                    public void onSurveySwipe(final SurveyDB surveyDB) {
+                    public void onSurveySwipe(final SurveyViewModel surveyViewModel) {
                         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                                 .setTitle(getActivity().getString(
                                         R.string.dialog_title_delete_survey))
@@ -151,7 +154,7 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface arg0,
                                                     int arg1) {
-                                                deleteSurvey(surveyDB);
+                                                presenter.deleteSurvey(surveyViewModel.getUid());
 
                                             }
                                         })
@@ -178,38 +181,6 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
-    private void deleteSurvey(SurveyDB surveyDB) {
-        surveyDB.delete();
-        mSurveyDBs.remove(mSurveyDBs.indexOf(surveyDB));
-        refreshRecyclerView();
-    }
-
-    /**
-     * Register a survey receiver to load surveys into the listadapter
-     */
-    public void registerFragmentReceiver() {
-        Log.d(TAG, "initializeSurvey");
-
-        if (surveyReceiver == null) {
-            surveyReceiver = new SurveyReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
-                    new IntentFilter(SurveyService.ALL_UNSENT_SURVEYS_ACTION));
-        }
-    }
-
-
-    /**
-     * Unregisters the survey receiver.
-     * It really important to do this, otherwise each receiver will invoke its code.
-     */
-    public void unregisterFragmentReceiver() {
-        Log.d(TAG, "unregisterFragmentReceiver");
-        if (surveyReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
-            surveyReceiver = null;
-        }
-    }
-
     public void reloadHeader(Activity activity) {
         reloadHeader(activity, R.string.tab_tag_assess);
     }
@@ -218,55 +189,36 @@ public class SurveysFragment extends Fragment implements IDashboardFragment {
         DashboardHeaderStrategy.getInstance().init(activity, id);
     }
 
-
-    public void reloadData() {
-        Intent surveysIntent = new Intent(
-                PreferencesState.getInstance().getContext().getApplicationContext(),
-                SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        PreferencesState.getInstance().getContext().getApplicationContext().startService(
-                surveysIntent);
-    }
-
-    public void reloadSurveys(List<SurveyDB> newListSurveyDBs) {
-        this.mSurveyDBs.clear();
-        this.mSurveyDBs.addAll(newListSurveyDBs);
-
-        this.adapter.setItems(mSurveyDBs);
-
-    }
-
     public void refreshRecyclerView() {
         this.adapter.setItems(mSurveyDBs);
 
     }
 
-    public void reloadSurveysFromService(List<SurveyDB> surveysUnsentFromService) {
-        reloadSurveys(surveysUnsentFromService);
+    @Override
+    public void showSurveys(List<SurveyViewModel> surveyViewModels) {
+        adapter.setItems(surveyViewModels);
     }
 
-    /**
-     * Inner private class that receives the result from the service
-     */
-    public class SurveyReceiver extends BroadcastReceiver {
-        private SurveyReceiver() {
-        }
+    @Override
+    public void navigateToSurvey(String surveyUid) {
+        //TODO: To navigate a survey should not be coupled to SurveyDB
+        Session.setMalariaSurveyDB(SurveyDB.findByUid(surveyUid));
+        DashboardActivity.dashboardActivity.openSentSurvey();
+    }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive");
-            //Listening only intents from this method
-            if (SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<SurveyDB> surveysUnsentFromService;
-                Session.valuesLock.readLock().lock();
-                try {
-                    surveysUnsentFromService = (List<SurveyDB>) Session.popServiceValue(
-                            SurveyService.ALL_UNSENT_SURVEYS_ACTION);
-                } finally {
-                    Session.valuesLock.readLock().unlock();
-                }
-                reloadSurveysFromService(surveysUnsentFromService);
-            }
-        }
+    //This methods is not used but be here because dashboard fragments must to have it
+    @Override
+    public void registerFragmentReceiver() {
+
+    }
+
+    @Override
+    public void unregisterFragmentReceiver() {
+
+    }
+
+    @Override
+    public void reloadData() {
+
     }
 }

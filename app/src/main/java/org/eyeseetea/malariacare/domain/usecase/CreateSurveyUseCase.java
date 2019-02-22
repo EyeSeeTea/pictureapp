@@ -8,7 +8,6 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
-import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
@@ -51,12 +50,12 @@ public class CreateSurveyUseCase implements UseCase {
     @Override
     public void run() {
         try {
-            Program program = mProgramRepository.getProgramWithId(mProgramUID);
             UserAccount userAccount = mUserRepository.getLoggedUser();
             OrganisationUnit organisationUnit =
                     mOrganisationUnitRepository.getCurrentOrganisationUnit(
                             ReadPolicy.CACHE);
-            Survey survey = new Survey(program, organisationUnit, userAccount,
+            Survey survey = new Survey(mProgramUID, organisationUnit.getUid(),
+                    userAccount.getUserUid(),
                     mSurveyType);
             long idSurvey = mSurveyRepository.save(survey);
             survey.setId(idSurvey);

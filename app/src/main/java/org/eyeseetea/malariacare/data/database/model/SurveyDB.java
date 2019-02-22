@@ -244,6 +244,18 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
+    public Long getId_program_fk() {
+        return id_program_fk;
+    }
+
+    public Long getId_org_unit_fk() {
+        return id_org_unit_fk;
+    }
+
+    public Long getId_user_fk() {
+        return id_user_fk;
+    }
+
     public UserDB getUserDB() {
         if (mUserDB == null) {
             if (id_user_fk == null) return null;

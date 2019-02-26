@@ -381,10 +381,10 @@ dependencies {
     compile "com.squareup:javapoet:${libs.javapoetVersion}"
 
     //DBFlow
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${libs.dbFlowVersion}"
-    compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
+    apt "com.github.agrosner.dbflow:dbflow-processor:${libs.dbFlowVersion}"
+    compile "com.github.agrosner.dbflow:dbflow:${libs.dbFlowVersion}"
+    compile "com.github.agrosner.dbflow:dbflow-core:${libs.dbFlowVersion}"
+    compile "com.github.agrosner.dbflow:dbflow-sqlcipher:${libs.dbFlowVersion}"
     compile(project(path: ':bugshaker')) {
         exclude group: "com.google.android.gms"
     }

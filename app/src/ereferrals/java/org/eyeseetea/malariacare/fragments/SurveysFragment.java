@@ -67,6 +67,9 @@ public class SurveysFragment extends Fragment implements IDashboardFragment, Sur
 
         rootView = inflater.inflate(R.layout.survey_list_fragment, container, false);
 
+        initRecyclerView();
+        initPresenter();
+
         return rootView;
     }
 
@@ -75,8 +78,6 @@ public class SurveysFragment extends Fragment implements IDashboardFragment, Sur
         Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        initRecyclerView();
-        initPresenter();
         registerForContextMenu(mRecyclerView);
     }
 
@@ -203,6 +204,7 @@ public class SurveysFragment extends Fragment implements IDashboardFragment, Sur
 
     @Override
     public void showSurveys(List<SurveyViewModel> surveyViewModels) {
+        mSurveyDBs = surveyViewModels;
         adapter.setItems(surveyViewModels);
     }
 

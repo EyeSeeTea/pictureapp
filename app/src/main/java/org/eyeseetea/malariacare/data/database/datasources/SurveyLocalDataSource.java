@@ -30,26 +30,36 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     private final Map<Long, OrgUnitDB> orgUnitDBS = new HashMap<>();
     private final Map<Long, QuestionDB> questionsDBs = new HashMap<>();
     private final Map<Long, OptionDB> optionDBs = new HashMap<>();
-    private final UserDB userDB;
+    private UserDB userDB;
 
-    public SurveyLocalDataSource() {
-        for (ProgramDB programDB : ProgramDB.getAllPrograms()) {
-            programDBS.put(programDB.getId_program(), programDB);
+    private void loadDependencies() {
+        if (programDBS.size() == 0) {
+            for (ProgramDB programDB : ProgramDB.getAllPrograms()) {
+                programDBS.put(programDB.getId_program(), programDB);
+            }
         }
 
-        for (OrgUnitDB orgUnitDB : OrgUnitDB.getAllOrgUnit()) {
-            orgUnitDBS.put(orgUnitDB.getId_org_unit(), orgUnitDB);
+        if (orgUnitDBS.size() == 0) {
+            for (OrgUnitDB orgUnitDB : OrgUnitDB.getAllOrgUnit()) {
+                orgUnitDBS.put(orgUnitDB.getId_org_unit(), orgUnitDB);
+            }
         }
 
-        for (QuestionDB questionDB : QuestionDB.getAllQuestions()) {
-            questionsDBs.put(questionDB.getId_question(), questionDB);
+        if (questionsDBs.size() == 0) {
+            for (QuestionDB questionDB : QuestionDB.getAllQuestions()) {
+                questionsDBs.put(questionDB.getId_question(), questionDB);
+            }
         }
 
-        for (OptionDB optionDB : OptionDB.getAllOptions()) {
-            optionDBs.put(optionDB.getId_option(), optionDB);
+        if (optionDBs.size() == 0) {
+            for (OptionDB optionDB : OptionDB.getAllOptions()) {
+                optionDBs.put(optionDB.getId_option(), optionDB);
+            }
         }
 
-        userDB = UserDB.getLoggedUser();
+        if (userDB == null) {
+            userDB = UserDB.getLoggedUser();
+        }
     }
 
     @Override
@@ -182,6 +192,8 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     }
 
     private Survey mapSurvey(SurveyDB surveyDB) {
+        loadDependencies();
+
         List<Value> values = getValuesFromSurvey(surveyDB);
 
         Survey survey = new Survey(
@@ -192,7 +204,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
                 null,
                 surveyDB.getEventDate(),
                 programDBS.get(surveyDB.getId_program_fk()).getUid(),
-                programDBS.get(surveyDB.getId_program_fk()).getUid(),
+                orgUnitDBS.get(surveyDB.getId_org_unit_fk()).getUid(),
                 userDB.getUid(),
                 surveyDB.getType(),
                 values);

@@ -196,6 +196,17 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
         List<Value> values = getValuesFromSurvey(surveyDB);
 
+        String programUid = null;
+        String orgUnitUid = null;
+
+        if (programDBS.size() > 0){
+            programUid = programDBS.get(surveyDB.getId_program_fk()).getUid();
+        }
+
+        if (orgUnitDBS.size() > 0){
+            orgUnitUid = orgUnitDBS.get(surveyDB.getId_org_unit_fk()).getUid();
+        }
+
         Survey survey = new Survey(
                 surveyDB.getId_survey(),
                 surveyDB.getEventUid(),
@@ -203,8 +214,8 @@ public class SurveyLocalDataSource implements ISurveyRepository {
                 surveyDB.getStatus(),
                 null,
                 surveyDB.getEventDate(),
-                programDBS.get(surveyDB.getId_program_fk()).getUid(),
-                orgUnitDBS.get(surveyDB.getId_org_unit_fk()).getUid(),
+                programUid,
+                orgUnitUid,
                 userDB.getUid(),
                 surveyDB.getType(),
                 values);

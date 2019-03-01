@@ -612,7 +612,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             questionView.setHelpText(
                     translate(screenQuestionDB.getHelp_text()));
 
-            questionView.setEnabled(!readOnly && !screenQuestionDB.isDisabled());
+            boolean enabled = !readOnly && !screenQuestionDB.isDisabled();
+
+            questionView.setEnabled(enabled);
+
+            if (!enabled){
+                tableRow.setBackground(context.getResources().getDrawable(R.color.disabled_color));
+            }
 
             if (questionView instanceof IImageQuestionView) {
                 ((IImageQuestionView) questionView).setImage(

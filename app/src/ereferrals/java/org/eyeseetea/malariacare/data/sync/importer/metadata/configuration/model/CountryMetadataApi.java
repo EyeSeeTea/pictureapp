@@ -65,6 +65,9 @@ public class CountryMetadataApi {
         @JsonProperty("mandatory")
         public boolean compulsory = true;
 
+        @JsonProperty("disabled")
+        public boolean disabled = false;
+
         @JsonProperty("options")
         public List<Option> options;
 

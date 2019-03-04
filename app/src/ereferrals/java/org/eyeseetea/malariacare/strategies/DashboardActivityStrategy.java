@@ -74,7 +74,7 @@ import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUse
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
 import org.eyeseetea.malariacare.factories.AppInfoFactory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.fragments.SurveysFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -97,13 +97,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     static final int REQUEST_AUTHORIZATION = 101;
 
-    private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
     private GetSettingsUseCase mSettingUseCase;
     private DownloadMediaUseCase mDownloadMediaUseCase;
     private Credentials credentials;
     public AVFragment avFragment;
     private ImageView mRefreshButton;
+    private SurveysFragment surveysFragment;
     private static final long SECONDS = 1000;
     private static AlarmManager alarmManagerInstance;
     private static final int ENABLE_MANUAL_PUSH_REQUEST_CODE = 1;
@@ -294,16 +294,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showFirstFragment() {
-        mDashboardUnsentFragment = new DashboardUnsentFragment();
-        mDashboardUnsentFragment.setArguments(mDashboardActivity.getIntent().getExtras());
-        mDashboardUnsentFragment.reloadData();
-        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+        surveysFragment = new SurveysFragment();
+        surveysFragment.setArguments(mDashboardActivity.getIntent().getExtras());
+        surveysFragment.reloadData();
+        surveysFragment.reloadHeader(mDashboardActivity);
 
         FragmentTransaction ft = mDashboardActivity.getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.animator.anim_slide_in_left, R.animator.anim_slide_out_left);
 
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.dashboard_details_container, mDashboardUnsentFragment);
+        ft.replace(R.id.dashboard_details_container, surveysFragment);
 
         ft.commit();
         if (BuildConfig.translations) {
@@ -314,8 +314,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadFirstFragment() {
-        if (mDashboardUnsentFragment.isAdded()) {
-            mDashboardUnsentFragment.reloadData();
+        if (surveysFragment.isAdded()) {
+            surveysFragment.reloadData();
         } else {
             showFirstFragment();
         }
@@ -324,7 +324,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadFirstFragmentHeader() {
         if(!DashboardActivity.dashboardActivity.isSurveyFragmentActive()) {
-            mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+            surveysFragment.reloadHeader(mDashboardActivity);
         }
     }
 
@@ -415,8 +415,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void showUnsentFragment() {
         mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
-                mDashboardUnsentFragment);
-        mDashboardUnsentFragment.reloadHeader(mDashboardActivity);
+                surveysFragment);
+        surveysFragment.reloadHeader(mDashboardActivity);
     }
 
     @Override
@@ -654,7 +654,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         @Override
         public void onReceive(Context context, Intent intent) {
             managePushIntent(intent);
-            mDashboardUnsentFragment.reloadData();
+            surveysFragment.reloadData();
         }
     };
 

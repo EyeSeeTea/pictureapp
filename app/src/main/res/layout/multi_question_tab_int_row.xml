@@ -20,7 +20,6 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="@dimen/input_edit_text_margin"
         android:layout_marginRight="@dimen/input_edit_text_margin"
-        android:background="@drawable/edit_text_bottom_border"
         android:gravity="left"
         android:inputType="number"
         android:paddingLeft="@dimen/question_padding_all"

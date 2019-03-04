@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.eyeseetea.sdk.presentation.views.CustomTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    style="@style/SpinnerStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:gravity="left"
+    android:textColor="@color/text_first_color"
+    android:singleLine="true"
+    android:textAlignment="gravity"/>

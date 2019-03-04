@@ -197,7 +197,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             return;
         }
         ArrayAdapter serversListAdapter = new ArrayAdapter<>(loginActivity.getBaseContext(),
-                android.R.layout.simple_spinner_item, serverList);
+                R.layout.item_server, serverList);
         serverSpinner.setAdapter(serversListAdapter);
         serverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

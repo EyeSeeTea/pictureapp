@@ -20,10 +20,10 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.executors.IDelayedMainExecutor;
@@ -185,6 +185,10 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         }
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     private void loadUrlInWebView(boolean shouldShowError) {
         if (mWebView != null) {
             ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(
@@ -252,12 +256,29 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         customWebViewClient.setErrorListener(new CustomWebViewClient.ErrorListener() {
             @Override
             public void onTimeoutError() {
-                // do what you want
-                showError(R.string.web_view_network_error);
+                if (isFragmentVisible()) {
+                    // do what you want
+                    showError(R.string.web_view_network_error);
+                }
             }
         });
 
         mWebView.setWebViewClient(customWebViewClient);
+    }
+
+    private boolean isFragmentVisible() {
+        boolean isVisible = false;
+
+        Fragment fragment = DashboardActivity.dashboardActivity.getCurrentFragment();
+
+        if (fragment != null && fragment instanceof WebViewFragment){
+            WebViewFragment webViewFragment = (WebViewFragment) fragment;
+
+            isVisible = webViewFragment.getUrl().equals(url);
+
+        }
+
+        return isVisible;
     }
 
     private void showHideWebView(boolean show) {

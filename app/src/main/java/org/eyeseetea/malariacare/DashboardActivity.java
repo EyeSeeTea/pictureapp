@@ -342,12 +342,20 @@ public class DashboardActivity extends BaseActivity {
     }
 
 
+    private Fragment currentFragment;
+
+    public Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
     // Add the fragment to the activity, pushing this transaction
     // on to the back stack.
     public void replaceFragment(int layout, Fragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);
         ft.commit();
+
+        currentFragment = fragment;
     }
 
     @Override

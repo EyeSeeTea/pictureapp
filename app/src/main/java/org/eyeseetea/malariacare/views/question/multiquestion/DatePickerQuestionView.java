@@ -28,6 +28,8 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     private String TAG = "DatePickerQuestionView";
     private boolean enabled;
 
+    private DatePickerFragment datePickerFragment;
+
 
     public DatePickerQuestionView(Context context) {
         super(context);
@@ -43,6 +45,7 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
+        datePickerFragment.setTitle(headerValue);
     }
 
     @Override
@@ -115,7 +118,8 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
         inflate(context, R.layout.multi_question_tab_year_selector, this);
         header = (TextView) findViewById(R.id.row_header_text);
         dateText = (TextView) findViewById(R.id.answer);
-        final DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setTitle(header.getText().toString());
         datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

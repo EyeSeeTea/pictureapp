@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/date_title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_margin="10dp"
+        android:gravity="left"
+        android:cursorVisible="true"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="?attr/font_large"
+        app:font_name="@string/bold_font"
+        android:lines="1" />
+
+
+    <DatePicker
+        android:id="@+id/date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></DatePicker>
+
+</LinearLayout>

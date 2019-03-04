@@ -88,6 +88,7 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
             public void onClick(View view) {
                 if (enabled) {
                     YearPicker yearPicker = new YearPicker();
+                    yearPicker.setTitle(header.getText().toString());
                     yearPicker.setInterval(context.getResources().getInteger(R.integer.year_interval));
                     yearPicker.setOnYearSelectedListener(new YearPicker.OnYearSelectedListener() {
                         @Override

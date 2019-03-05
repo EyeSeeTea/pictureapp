@@ -32,7 +32,6 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.surveyName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -245,6 +244,18 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.id_program_fk = (programDB != null) ? programDB.getId_program() : null;
     }
 
+    public Long getId_program_fk() {
+        return id_program_fk;
+    }
+
+    public Long getId_org_unit_fk() {
+        return id_org_unit_fk;
+    }
+
+    public Long getId_user_fk() {
+        return id_user_fk;
+    }
+
     public UserDB getUserDB() {
         if (mUserDB == null) {
             if (id_user_fk == null) return null;
@@ -356,18 +367,6 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                         SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
     }
 
-    public static List<SurveyDB> getAllSurveysByProgram(String malariaProgramUid) {
-        return new Select().from(SurveyDB.class).as(surveyName).join(ProgramDB.class,
-                Join.JoinType.LEFT_OUTER).as(programName)
-                .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)
-                        .eq(ProgramDB_Table.id_program.withTable(programAlias)))
-                .where(ProgramDB_Table.uid_program.withTable(programAlias)
-                        .is(malariaProgramUid))
-                .and(SurveyDB_Table.status.withTable(surveyAlias).isNot(Constants.SURVEY_IN_PROGRESS))
-                .orderBy(OrderBy.fromProperty(SurveyDB_Table.event_date.withTable(surveyAlias)))
-                .orderBy(OrderBy.fromProperty(
-                        SurveyDB_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
-    }
     /**
      * Returns all the malaria surveys with status put to "Sent"
      */
@@ -583,7 +582,8 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
                 .and(SurveyDB_Table.type.withTable(surveyAlias).is(type)).queryList();
     }
 
-    public static List<SurveyDB> getSurveysWithProgram(String programUID) {
+
+    public static List<SurveyDB> getAllSurveysByProgram(String programUID) {
         return new Select().from(SurveyDB.class).as(surveyName)
                 .join(ProgramDB.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(SurveyDB_Table.id_program_fk.withTable(surveyAlias)

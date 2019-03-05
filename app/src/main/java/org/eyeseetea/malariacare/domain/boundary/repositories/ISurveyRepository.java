@@ -28,4 +28,6 @@ public interface ISurveyRepository {
     Survey createNewSurvey();
 
     void removeInProgress();
+
+    void deleteSurveyByUid(String surveyUid);
 }

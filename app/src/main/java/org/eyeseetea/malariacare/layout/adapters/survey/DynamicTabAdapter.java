@@ -45,7 +45,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -613,7 +612,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             questionView.setHelpText(
                     translate(screenQuestionDB.getHelp_text()));
 
-            questionView.setEnabled(!readOnly);
+            boolean enabled = !readOnly && !screenQuestionDB.isDisabled();
+
+            questionView.setEnabled(enabled);
+
+            if (!enabled){
+                tableRow.setBackground(context.getResources().getDrawable(R.color.disabled_color));
+            }
 
             if (questionView instanceof IImageQuestionView) {
                 ((IImageQuestionView) questionView).setImage(

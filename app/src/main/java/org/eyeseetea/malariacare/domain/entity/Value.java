@@ -8,6 +8,7 @@ public class Value {
     String backgroundColor;
     String questionUId;
     String optionCode;
+    private Question.Visibility visibility;
 
     public Value(String value) {
         this.value = value;
@@ -58,5 +59,13 @@ public class Value {
 
     public void setOptionCode(String optionCode) {
         this.optionCode = optionCode;
+    }
+
+    public Question.Visibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Question.Visibility visibility) {
+        this.visibility = visibility;
     }
 }

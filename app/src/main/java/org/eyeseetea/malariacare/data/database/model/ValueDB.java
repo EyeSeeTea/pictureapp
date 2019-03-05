@@ -170,6 +170,14 @@ public class ValueDB extends BaseModel {
         this.mQuestionDB = null;
     }
 
+    public Long getId_question_fk() {
+        return id_question_fk;
+    }
+
+    public Long getId_option_fk() {
+        return id_option_fk;
+    }
+
     public String getValue() {
         return value;
     }

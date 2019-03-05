@@ -11,8 +11,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.SurveysAdapter;
+import org.eyeseetea.malariacare.presentation.models.SurveyViewModel;
 
 public class SwipeRecyclerViewSurveysCallback extends ItemTouchHelper.SimpleCallback {
 
@@ -22,7 +22,7 @@ public class SwipeRecyclerViewSurveysCallback extends ItemTouchHelper.SimpleCall
     private final ColorDrawable background;
 
     public interface OnSurveySwipeListener {
-        void onSurveySwipe(SurveyDB surveyDB);
+        void onSurveySwipe(SurveyViewModel surveyViewModel);
     }
 
     private OnSurveySwipeListener onSurveySwipeListener;
@@ -49,10 +49,10 @@ public class SwipeRecyclerViewSurveysCallback extends ItemTouchHelper.SimpleCall
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        SurveyDB surveyDB = surveysAdapter.getSurvey(viewHolder.getAdapterPosition());
+        SurveyViewModel surveyViewModel = surveysAdapter.getSurvey(viewHolder.getAdapterPosition());
 
         if (onSurveySwipeListener != null) {
-            onSurveySwipeListener.onSurveySwipe(surveyDB);
+            onSurveySwipeListener.onSurveySwipe(surveyViewModel);
         }
     }
 

@@ -6,9 +6,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-
 import org.eyeseetea.malariacare.AssetsFileReader;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.data.database.datasources.CountryVersionLocalDataSource;
@@ -21,7 +18,6 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
-import org.eyeseetea.malariacare.data.repositories.ProgramRepository;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IAppInfoRepository;
@@ -42,7 +38,6 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.rules.MockWebServerRule;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -151,6 +146,11 @@ public class PushUseCaseShould {
             @Override
             public void onApiCallError(ApiCallException e) {
                 fail("onApiCallError");
+            }
+
+            @Override
+            public void onInvalidCredentials() {
+                fail("onInvalidCredentials");
             }
         });
     }

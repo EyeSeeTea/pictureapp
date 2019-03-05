@@ -1,9 +1,9 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.datasources.strategies
-        .ASurveyLocalDataSourceStrategy;
+import org.eyeseetea.malariacare.data.database.datasources.strategies.ASurveyLocalDataSourceStrategy;
 import org.eyeseetea.malariacare.data.database.datasources.strategies.SurveyLocalDataSourceStrategy;
+import org.eyeseetea.malariacare.data.database.model.OptionDB;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitDB;
 import org.eyeseetea.malariacare.data.database.model.ProgramDB;
 import org.eyeseetea.malariacare.data.database.model.QuestionDB;
@@ -11,20 +11,56 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.UserDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.mappers.QuestionMapper;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
-import org.eyeseetea.malariacare.domain.entity.Program;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SurveyLocalDataSource implements ISurveyRepository {
 
     private ASurveyLocalDataSourceStrategy mSurveyLocalDataSourceStrategy;
+
+    private final Map<Long, ProgramDB> programDBS = new HashMap<>();
+    private final Map<Long, OrgUnitDB> orgUnitDBS = new HashMap<>();
+    private final Map<Long, QuestionDB> questionsDBs = new HashMap<>();
+    private final Map<Long, OptionDB> optionDBs = new HashMap<>();
+    private UserDB userDB;
+
+    private void loadDependencies() {
+        if (programDBS.size() == 0) {
+            for (ProgramDB programDB : ProgramDB.getAllPrograms()) {
+                programDBS.put(programDB.getId_program(), programDB);
+            }
+        }
+
+        if (orgUnitDBS.size() == 0) {
+            for (OrgUnitDB orgUnitDB : OrgUnitDB.getAllOrgUnit()) {
+                orgUnitDBS.put(orgUnitDB.getId_org_unit(), orgUnitDB);
+            }
+        }
+
+        if (questionsDBs.size() == 0) {
+            for (QuestionDB questionDB : QuestionDB.getAllQuestions()) {
+                questionsDBs.put(questionDB.getId_question(), questionDB);
+            }
+        }
+
+        if (optionDBs.size() == 0) {
+            for (OptionDB optionDB : OptionDB.getAllOptions()) {
+                optionDBs.put(optionDB.getId_option(), optionDB);
+            }
+        }
+
+        if (userDB == null) {
+            userDB = UserDB.getLoggedUser();
+        }
+    }
 
     @Override
     public List<Survey> getLastSentSurveys(int count) {
@@ -73,7 +109,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         List<SurveyDB> surveyDBs = SurveyDB.getAllQuarantineSurveys();
         List<Survey> surveys = new ArrayList<>();
         for(SurveyDB surveyDB : surveyDBs){
-            surveys.add(buildSurvey(surveyDB));
+            surveys.add(mapSurvey(surveyDB));
         }
         return surveys;
     }
@@ -82,7 +118,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     public List<Survey> getAllCompletedSurveys() {
         List<Survey> completedSurveys = new ArrayList<>();
         for (SurveyDB surveyDB : SurveyDB.getAllCompletedSentSurveys()) {
-            completedSurveys.add(buildSurvey(surveyDB));
+            completedSurveys.add(mapSurvey(surveyDB));
         }
         return completedSurveys;
     }
@@ -91,7 +127,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
     public List<Survey> getAllCompletedSentSurveys() {
         List<Survey> completedSurveys = new ArrayList<>();
         for (SurveyDB surveyDB : SurveyDB.getAllCompletedSentSurveys()) {
-            completedSurveys.add(buildSurvey(surveyDB));
+            completedSurveys.add(mapSurvey(surveyDB));
         }
         return completedSurveys;
     }
@@ -101,14 +137,14 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         SurveyDB surveyDB = SurveyDB.findById(survey.getId());
         if (surveyDB == null) {
             OrgUnitDB orgUnitDB = null;
-            if (survey.getOrganisationUnit() != null) {
-                orgUnitDB = OrgUnitDB.findByUID(survey.getOrganisationUnit().getUid());
+            if (survey.getOrgUnitUid() != null) {
+                orgUnitDB = OrgUnitDB.findByUID(survey.getOrgUnitUid());
             }
             UserDB userDB = null;
-            if (survey.getUserAccount() != null) {
-                userDB = UserDB.findByUID(survey.getUserAccount().getUserUid());
+            if (survey.getUserUid() != null) {
+                userDB = UserDB.findByUID(survey.getUserUid());
             }
-            surveyDB = new SurveyDB(orgUnitDB, ProgramDB.getProgram(survey.getProgram().getId()),
+            surveyDB = new SurveyDB(orgUnitDB, ProgramDB.getProgram(survey.getProgramUid()),
                     userDB, survey.getType());
             surveyDB.save();
         }
@@ -126,11 +162,11 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
 
     public List<Survey> getSurveysByProgram(String uid) {
-        List<SurveyDB> surveysDB = SurveyDB.getSurveysWithProgram(uid);
+        List<SurveyDB> surveysDB = SurveyDB.getAllSurveysByProgram(uid);
         List<Survey> surveys = new ArrayList<>();
 
         for (SurveyDB surveyDB : surveysDB) {
-            surveys.add(buildSurvey(surveyDB));
+            surveys.add(mapSurvey(surveyDB));
         }
         return surveys;
     }
@@ -146,32 +182,77 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         SurveyDB.removeInProgress();
     }
 
-    private List<Question> getQuestionsBySurvey(SurveyDB surveyDB) {
-        List<QuestionDB> questionsDB = surveyDB.getQuestionsFromValues();
-        List<Question> questions = new ArrayList<>();
-        for (QuestionDB questionDB : questionsDB) {
-            ValueDB valueDB = questionDB.getValueBySurvey(surveyDB);
-            Value value = new Value(valueDB.getValue());
-            Question question = QuestionMapper.mapFromDbToDomainWithValue(questionDB, value);
-            questions.add(question);
+    @Override
+    public void deleteSurveyByUid(String surveyUid) {
+        SurveyDB surveyDB = SurveyDB.findByUid(surveyUid);
+
+        if (surveyDB != null) {
+            surveyDB.delete();
         }
-        return questions;
     }
 
-    private Survey buildSurvey(SurveyDB surveyDB) {
-        List<Question> questions = getQuestionsBySurvey(surveyDB);
-        ProgramDB programDB = surveyDB.getProgramDB();
-        Program program = new Program(programDB.getName(), programDB.getUid());
+    private Survey mapSurvey(SurveyDB surveyDB) {
+        loadDependencies();
 
-        Survey survey = new Survey.Builder()
-                .id(surveyDB.getId_survey())
-                .uid(surveyDB.getEventUid())
-                .program(program)
-                .type(surveyDB.getType())
-                .questions(questions)
-                .surveyDate(surveyDB.getEventDate())
-                .status(surveyDB.getStatus())
-                .build();
+        List<Value> values = getValuesFromSurvey(surveyDB);
+
+        String programUid = null;
+        String orgUnitUid = null;
+
+        if (programDBS.size() > 0){
+            programUid = programDBS.get(surveyDB.getId_program_fk()).getUid();
+        }
+
+        if (orgUnitDBS.size() > 0){
+            orgUnitUid = orgUnitDBS.get(surveyDB.getId_org_unit_fk()).getUid();
+        }
+
+        Survey survey = new Survey(
+                surveyDB.getId_survey(),
+                surveyDB.getEventUid(),
+                surveyDB.getVoucherUid(),
+                surveyDB.getStatus(),
+                null,
+                surveyDB.getEventDate(),
+                programUid,
+                orgUnitUid,
+                userDB.getUid(),
+                surveyDB.getType(),
+                values);
+
         return survey;
     }
+
+    private List<Value> getValuesFromSurvey(SurveyDB surveyDB) {
+        List<Value> values = new ArrayList<>();
+        List<ValueDB> valueDBS = ValueDB.listAllBySurvey(surveyDB);
+
+        for (ValueDB valueDB : valueDBS) {
+            QuestionDB questionDB = questionsDBs.get(valueDB.getId_question_fk());
+
+            String questionUid = questionDB.getUid();
+            String optionCode;
+
+            Value value;
+
+            if (valueDB.getId_option_fk() != null) {
+                optionCode = optionDBs.get(valueDB.getId_option_fk()).getCode();
+                value = new Value(valueDB.getValue(), questionUid, optionCode);
+            } else {
+                value = new Value(valueDB.getValue(), questionUid);
+            }
+
+            if (questionDB.isImportant()) {
+                value.setVisibility(Question.Visibility.IMPORTANT);
+            } else if (questionDB.isVisible()) {
+                value.setVisibility(Question.Visibility.VISIBLE);
+            } else {
+                value.setVisibility(Question.Visibility.INVISIBLE);
+            }
+
+            values.add(value);
+        }
+        return values;
+    }
+
 }

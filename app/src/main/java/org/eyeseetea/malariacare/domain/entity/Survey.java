@@ -1,8 +1,9 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import org.eyeseetea.malariacare.utils.Constants;
-
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
+import org.eyeseetea.malariacare.domain.UidsAndCodes;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -13,41 +14,39 @@ public class Survey {
     private int status;
     private SurveyAnsweredRatio mSurveyAnsweredRatio;
     private Date mSurveyDate;
-    private Program mProgram;
-    private OrganisationUnit mOrganisationUnit;
-    private UserAccount mUserAccount;
+    private String programUid;
+    private String orgUnitUid;
+    private String userUid;
     private int mType;
-    private List<Question> questions;
+    private List<Value> values;
+    private String voucherUid;
 
-    public Survey(long id, String uid, int status,
+    public Survey(long id, String uid, String voucherUid, int status,
             SurveyAnsweredRatio surveyAnsweredRatio, Date surveyDate,
-            Program program, OrganisationUnit organisationUnit,
-            UserAccount userAccount, int type,
-            List<Question> questions) {
+            String programUid, String orgUnitUid, String userUid, int type,
+            List<Value> values) {
         this.id = id;
         this.uid = uid;
+        this.voucherUid = voucherUid;
         this.status = status;
-        mSurveyAnsweredRatio = surveyAnsweredRatio;
-        mSurveyDate = surveyDate;
-        mProgram = required(program, "Program is required");
-        mOrganisationUnit = organisationUnit;
-        mUserAccount = userAccount;
-        mType = required(type, "Type is required");
-        this.questions = questions;
+        this.mSurveyAnsweredRatio = surveyAnsweredRatio;
+        this.mSurveyDate = surveyDate;
+        this.programUid = required(programUid, "programUid is required");
+        this.orgUnitUid = orgUnitUid;
+        this.userUid = userUid;
+        this.mType = required(type, "Type is required");
+        this.values = values;
     }
 
-    public Survey(Program program,
-            OrganisationUnit organisationUnit,
-            UserAccount userAccount, int type) {
-        mProgram = required(program, "Program is required");
-        mOrganisationUnit = organisationUnit;
-        mUserAccount = userAccount;
-        mType = required(type, "Type is required");
+    public Survey(String programUid, String orgUnitUid, String userUid, int type) {
+        this.programUid = required(programUid, "programUid is required");
+        this.orgUnitUid = orgUnitUid;
+        this.userUid = userUid;
+        this.mType = required(type, "Type is required");
     }
 
-    public static Survey createNewSurvey(Program program,
-                                                UserAccount userAccount) {
-        Survey survey = new Survey(program, null, userAccount, Constants.SURVEY_NO_TYPE);
+    public static Survey createNewSurvey(String programUid, String userUid) {
+        Survey survey = new Survey(programUid, null, userUid, Constants.SURVEY_NO_TYPE);
         survey.setStatus(Constants.SURVEY_IN_PROGRESS);
         return survey;
     }
@@ -75,6 +74,27 @@ public class Survey {
         this.id = id;
     }
 
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getProgramUid() {
+        return programUid;
+    }
+
+    public String getOrgUnitUid() {
+        return orgUnitUid;
+    }
+
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public List<Value> getValues() {
+        return values;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -87,24 +107,52 @@ public class Survey {
         return mSurveyAnsweredRatio;
     }
 
-    public Program getProgram() {
-        return mProgram;
-    }
-
-    public OrganisationUnit getOrganisationUnit() {
-        return mOrganisationUnit;
-    }
-
-    public UserAccount getUserAccount() {
-        return mUserAccount;
-    }
 
     public int getType() {
         return mType;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
+
+    public Date getSurveyDate() {
+        return mSurveyDate;
+    }
+
+    public String getUId() {
+        return uid;
+    }
+
+    public String getVoucherUid() {
+        return voucherUid;
+    }
+
+    public boolean isCompleted() {
+        return this.status == Constants.SURVEY_COMPLETED;
+    }
+
+    public boolean hasPhone() {
+        boolean hasPhone = false;
+
+        for (Value value : values) {
+            if (value.questionUId.equals(UidsAndCodes.PHONE_QUESTION_UID)) {
+                hasPhone = true;
+            }
+        }
+
+        return hasPhone;
+    }
+
+    public boolean noIssueVoucher() {
+        boolean noIssueVoucher = false;
+
+        for (Value value : values) {
+            if (value.optionCode != null &&
+                    value.questionUId.equals(UidsAndCodes.NO_VOUCHER_QUESTION_UID) &&
+                    value.optionCode.equals(UidsAndCodes.NO_VOUCHER_OPTION_CODE)) {
+                noIssueVoucher = true;
+            }
+        }
+
+        return noIssueVoucher;
     }
 
     @Override
@@ -115,16 +163,12 @@ public class Survey {
                 ", status=" + status +
                 ", mSurveyAnsweredRatio=" + mSurveyAnsweredRatio +
                 ", mSurveyDate=" + mSurveyDate +
-                ", mProgram=" + mProgram +
-                ", mOrganisationUnit=" + mOrganisationUnit +
-                ", mUserAccount=" + mUserAccount +
+                ", programUid=" + programUid +
+                ", orgUnitUid=" + orgUnitUid +
+                ", userUid=" + userUid +
                 ", mType=" + mType +
-                ", questions=" + questions +
+                ", values =" + values +
                 '}';
-    }
-
-    public Date getSurveyDate() {
-        return mSurveyDate;
     }
 
     @Override
@@ -149,18 +193,20 @@ public class Survey {
                 : survey.uid != null) {
             return false;
         }
-        if (mProgram != null ? !mProgram.equals(survey.mProgram) : survey.mProgram != null) {
+        if (orgUnitUid != null ? !orgUnitUid.equals(survey.orgUnitUid)
+                : survey.orgUnitUid != null) {
             return false;
         }
-        if (mOrganisationUnit != null ? !mOrganisationUnit.equals(survey.mOrganisationUnit)
-                : survey.mOrganisationUnit != null) {
+        if (orgUnitUid != null ? !orgUnitUid.equals(survey.orgUnitUid)
+                : survey.orgUnitUid != null) {
             return false;
         }
-        if (mUserAccount != null ? !mUserAccount.equals(survey.mUserAccount)
-                : survey.mUserAccount != null) {
+        if (userUid != null ? !userUid.equals(survey.userUid)
+                : survey.userUid != null) {
             return false;
         }
-        return questions != null ? questions.equals(survey.questions) : survey.questions == null;
+
+        return values != null ? values.equals(survey.values) : survey.values == null;
     }
 
     @Override
@@ -170,94 +216,11 @@ public class Survey {
         result = 31 * result + (mSurveyAnsweredRatio != null ? mSurveyAnsweredRatio.hashCode() : 0);
         result = 31 * result + (mSurveyDate != null ? mSurveyDate.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (mProgram != null ? mProgram.hashCode() : 0);
-        result = 31 * result + (mOrganisationUnit != null ? mOrganisationUnit.hashCode() : 0);
-        result = 31 * result + (mUserAccount != null ? mUserAccount.hashCode() : 0);
+        result = 31 * result + (programUid != null ? programUid.hashCode() : 0);
+        result = 31 * result + (orgUnitUid != null ? orgUnitUid.hashCode() : 0);
+        result = 31 * result + (userUid != null ? userUid.hashCode() : 0);
         result = 31 * result + mType;
-        result = 31 * result + (questions != null ? questions.hashCode() : 0);
+        result = 31 * result + (values != null ? values.hashCode() : 0);
         return result;
-    }
-
-    public String getUId() {
-        return uid;
-    }
-
-    public static final class Builder {
-        private long id;
-        private String uid;
-        private int status;
-        private SurveyAnsweredRatio mSurveyAnsweredRatio;
-        private Date mSurveyDate;
-        private Program mProgram;
-        private OrganisationUnit mOrganisationUnit;
-        private UserAccount mUserAccount;
-        private int mType;
-        private List<Question> questions;
-
-        public Builder() {
-        }
-
-        public Builder id(long id) {
-            this.id = id;
-            return this;
-        }
-        public Builder uid(String uid) {
-            this.uid = uid;
-            return this;
-        }
-
-
-        public Builder status(int status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder surveyAnsweredRatio(SurveyAnsweredRatio surveyAnsweredRatio) {
-            mSurveyAnsweredRatio = surveyAnsweredRatio;
-            return this;
-        }
-
-        public Builder surveyDate(Date surveyDate) {
-            mSurveyDate = surveyDate;
-            return this;
-        }
-
-        public Builder program(Program program) {
-            mProgram = program;
-            return this;
-        }
-
-        public Builder organisationUnit(OrganisationUnit organisationUnit) {
-            mOrganisationUnit = organisationUnit;
-            return this;
-        }
-
-        public Builder usserAccount(UserAccount userAccount) {
-            mUserAccount = userAccount;
-            return this;
-        }
-
-        public Builder type(int type) {
-            mType = type;
-            return this;
-        }
-
-        public Builder questions(List<Question> questions) {
-            this.questions = questions;
-            return this;
-        }
-
-        public Survey build() {
-            return new Survey(id,
-                    uid,
-                    status,
-                    mSurveyAnsweredRatio,
-                    mSurveyDate,
-                    mProgram,
-                    mOrganisationUnit,
-                    mUserAccount,
-                    mType,
-                    questions);
-        }
     }
 }

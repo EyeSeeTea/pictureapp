@@ -136,7 +136,7 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
     }
 
     public SoftLoginUseCase getSoftLoginUseCase(Context context) {
-        int remoteTimeoutSoftLogin = 10;
+        int remoteTimeoutSoftLogin = 5000;
 
         IConnectivityManager connectivityManager = getConnectivityManager(context);
         IAuthenticationManager authenticationManager =

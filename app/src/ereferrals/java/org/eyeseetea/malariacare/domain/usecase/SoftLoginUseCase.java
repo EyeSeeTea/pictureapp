@@ -13,6 +13,8 @@ import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
 import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
+import java.net.SocketTimeoutException;
+
 public class SoftLoginUseCase implements UseCase {
     private final IConnectivityManager connectivityManager;
     private final IAuthenticationManager authenticationManager;
@@ -71,6 +73,8 @@ public class SoftLoginUseCase implements UseCase {
                                     notifyInvalidPassword();
                                 } else if (throwable instanceof AvailableApiException) {
                                     notifyServerNotAvailable(throwable.getMessage());
+                                } else if (throwable instanceof SocketTimeoutException) {
+                                    verifyAgainstLastValidCredentials(lastValidCredentials);
                                 } else {
                                     notifyNetworkError();
                                 }

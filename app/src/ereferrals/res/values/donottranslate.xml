@@ -41,14 +41,15 @@
     <string name="ws_version">1.0</string>
     <string name="ws_source">Android v1.1</string>
     <string name="can_add_new_surveys" translatable="false">canAddNewSurveys</string>
-    <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
     <string name="no_phone_oc" translatable="false">NO</string>
     <string name="no_phone_on" translatable="false">common_option_ownershipOfPhone_noMobile</string>
     <string name="last_username_inserted_preference">last_username_inserted_preference</string>
-    <string name="issue_voucher_qc" translatable="false">generateVoucher</string>
     <string name="no_voucher_on" translatable="false">common_btn_no</string>
     <string name="demo_program_uid" translatable="false">demoProgram</string>
     <string name="default_language" translatable="false">en</string>
+
+    <string name="phone_ownership_qc" translatable="false">phoneOwnership</string>
+    <string name="issue_voucher_qc" translatable="false">generateVoucher</string>
 
     <string name="lastcommit_unavailable" translatable="false"><![CDATA[
     <p>This option requires some changes in the git repository.</p>

@@ -198,6 +198,8 @@ public class WSPushControllerShould {
     }
 
     private void givenSomeQuarantineTestSurveys() {
+        UserDB userDB = new UserDB("test","test");
+        userDB.save();
         ProgramDB programDB = new ProgramDB("test", "uid");
         programDB.save();
         OrgUnitDB orgUnitDB = new OrgUnitDB("test");

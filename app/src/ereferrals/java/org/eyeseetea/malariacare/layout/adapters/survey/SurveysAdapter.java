@@ -28,29 +28,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OptionDB;
-import org.eyeseetea.malariacare.data.database.model.QuestionDB;
-import org.eyeseetea.malariacare.data.database.model.SurveyDB;
-import org.eyeseetea.malariacare.data.database.model.ValueDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.presentation.models.SurveyViewModel;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     public interface OnSurveyClickListener {
-        void onSurveyClick(View view, SurveyDB surveyDB);
+        void onSurveyClick(View view, SurveyViewModel surveyViewModel);
     }
 
     private OnSurveyClickListener onSurveyClickListener;
 
-    List<SurveyDB> items;
+    List<SurveyViewModel> items;
 
-    public SurveysAdapter(List<SurveyDB> items) {
+    public SurveysAdapter(List<SurveyViewModel> items) {
         this.items = items;
     }
 
@@ -58,7 +52,7 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.onSurveyClickListener = listener;
     }
 
-    public SurveyDB getSurvey(int position) {
+    public SurveyViewModel getSurvey(int position) {
         return items.get(position);
     }
 
@@ -73,7 +67,7 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         SurveyViewHolder surveyViewHolder = (SurveyViewHolder) viewHolder;
-        final SurveyDB surveyDB = items.get(i);
+        final SurveyViewModel surveyViewModel = items.get(i);
 
         surveyViewHolder.bindView(getSurvey(i), i);
 
@@ -81,7 +75,7 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View view) {
                 if (onSurveyClickListener!= null) {
-                    onSurveyClickListener.onSurveyClick(view, surveyDB);
+                    onSurveyClickListener.onSurveyClick(view, surveyViewModel);
                 }
             }
         });
@@ -92,8 +86,8 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return items.size();
     }
 
-    public void setItems(List items) {
-        this.items = (List<SurveyDB>) items;
+    public void setItems(List<SurveyViewModel> items) {
+        this.items = items;
         super.notifyDataSetChanged();
     }
 
@@ -130,27 +124,22 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return super.toString();
         }
 
-        public void bindView(SurveyDB survey, int position) {
+        public void bindView(SurveyViewModel survey, int position) {
             LayoutUtils.fixRowViewBackground(itemView, position);
             LayoutUtils.setListRowBackgroundColor(itemView);
-
 
             String asterisk="";
             if(survey.isCompleted()){
                 asterisk="*";
             }
 
-            String uid = context.getString(R.string.voucher) +
-                    ":" +
-                    survey.getVoucherUid();
-            if (noIssueVoucher(survey)) {
+            String uid = context.getString(R.string.voucher) + ":" + survey.getVoucherUid();
+
+            if (survey.noIssueVoucher()) {
                 uid = context.getString(R.string.no_voucher);
-            } else if (hasPhone(survey)) {
+            } else if (survey.hasPhone()) {
                 uid = context.getString(R.string.e_voucher);
             }
-
-
-            String firstImportant = "", secondImportant = "", visibleValues = "";
 
             dateText.setText(Utils.parseDateToString(survey.getEventDate(),
                     context.getString(R.string.date_survey_format)));
@@ -158,42 +147,32 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     context.getString(R.string.hour_survey_format)));
             uidText.setText(uid);
 
-            List<QuestionDB> important = new ArrayList<>();
-            List<QuestionDB> visible = new ArrayList<>();
 
-            for (ValueDB value : survey.getValueDBs()) {
-                if (value.getQuestionDB().isImportant()) {
-                    important.add(value.getQuestionDB());
-                } else if (value.getQuestionDB().isVisible()) {
-                    visible.add(value.getQuestionDB());
+            String firstImportant = "";
+            String secondImportant = "";
+            String visibleValues = "";
+
+            if (survey.getImportantValues().size() > 0) {
+                firstImportant =
+                        Utils.getInternationalizedString(survey.getImportantValues().get(0));
+
+                if (survey.getImportantValues().size() > 1) {
+                    secondImportant =
+                            Utils.getInternationalizedString(survey.getImportantValues().get(0));
                 }
             }
-            Collections.sort(important, new QuestionDB.QuestionOrderComparator());
-            Collections.sort(visible, new QuestionDB.QuestionOrderComparator());
 
-            if (important.size() > 1) {
-                firstImportant = important.get(0).getValueBySurvey(survey).getValue();
-                secondImportant = important.get(1).getValueBySurvey(survey).getValue();
-            } else if (!important.isEmpty()) {
-                firstImportant = important.get(0).getValueBySurvey(survey).getValue();
-            }
             boolean first = true;
-            for (QuestionDB question : visible) {
-                OptionDB optionSelected = OptionDB.findByCode(question.getValueBySurvey(
-                        survey).getValue());
-                String valueToShow;
-                if (optionSelected != null) {
-                    valueToShow = optionSelected.getInternationalizedName();
-                } else {
-                    valueToShow = question.getValueBySurvey(survey).getValue();
-                }
+
+            for (String value : survey.getVisibleValues()) {
                 if (first) {
-                    visibleValues = valueToShow;
+                    visibleValues = Utils.getInternationalizedString(value);
                     first = false;
                 } else {
-                    visibleValues += ", " + valueToShow;
+                    visibleValues += ", " + Utils.getInternationalizedString(value);
                 }
             }
+
             importantText.setText(asterisk + firstImportant + " " + secondImportant);
             visibleValuesText.setText(visibleValues);
 
@@ -218,24 +197,6 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     return R.color.blue_survey_sending;
             }
             return R.color.grey_tab_unselected_ereferrals;
-        }
-
-        private boolean noIssueVoucher(SurveyDB survey) {
-            OptionDB noIssueOption = survey.getOptionSelectedForQuestionCode(
-                    context.getString(R.string.issue_voucher_qc));
-            if (noIssueOption == null) {
-                return false;
-            }
-            return noIssueOption.getName().equals(
-                    context.getString(R.string.no_voucher_on));
-        }
-
-        private boolean hasPhone(SurveyDB survey) {
-            Context context = PreferencesState.getInstance().getContext();
-            OptionDB optionDB = (survey.getOptionSelectedForQuestionCode(
-                    context.getString(R.string.phone_ownership_qc)));
-            return optionDB != null && !optionDB.getName().equals(
-                    context.getString(R.string.no_phone_on));
         }
     }
 }

@@ -3,14 +3,15 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.Program;
 
-public class GetUserProgramUIDUseCase implements UseCase {
+public class GetUserProgramUseCase implements UseCase {
     private IProgramRepository mProgramRepository;
     private Callback mCallback;
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
 
-    public GetUserProgramUIDUseCase(
+    public GetUserProgramUseCase(
             IProgramRepository programRepository,
             IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor) {
@@ -26,12 +27,12 @@ public class GetUserProgramUIDUseCase implements UseCase {
 
     @Override
     public void run() {
-        final String uid = mProgramRepository.getUserProgram().getId();
-        if (uid != null && !uid.isEmpty()) {
+        final Program program = mProgramRepository.getUserProgram();
+        if (program != null) {
             mMainExecutor.run(new Runnable() {
                 @Override
                 public void run() {
-                    mCallback.onSuccess(uid);
+                    mCallback.onSuccess(program);
                 }
             });
         } else {
@@ -45,7 +46,7 @@ public class GetUserProgramUIDUseCase implements UseCase {
     }
 
     public interface Callback {
-        void onSuccess(String uid);
+        void onSuccess(Program program);
 
         void onError();
     }

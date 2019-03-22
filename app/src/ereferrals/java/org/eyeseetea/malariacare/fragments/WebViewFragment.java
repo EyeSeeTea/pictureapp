@@ -42,7 +42,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     public static final String TITLE = "title";
     public static final int COOL_DOWN_TIME = 60;
 
-    private enum WebViewStatus {NO_LOADED, SUCCESS, TIMEOUT}
+    private enum WebViewStatus {NOT_LOADED, SUCCESS, TIMEOUT}
 
     private String url;
     private int title;
@@ -63,7 +63,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             Bundle savedInstanceState) {
 
-        webViewStatus = WebViewStatus.NO_LOADED;
+        webViewStatus = WebViewStatus.NOT_LOADED;
 
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_web_view,
@@ -120,7 +120,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     }
 
     private void refreshWebView() {
-        webViewStatus = WebViewStatus.NO_LOADED;
+        webViewStatus = WebViewStatus.NOT_LOADED;
         mWebView.loadUrl("about:blank");
         loadUrlInWebView(true);
 
@@ -276,7 +276,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                     public void onPageFinished(WebView view, String url) {
                         Log.d(TAG, "onPageFinished url: " + url);
 
-                        if (webViewStatus == WebViewStatus.NO_LOADED) {
+                        if (webViewStatus == WebViewStatus.NOT_LOADED) {
                             webViewStatus = WebViewStatus.SUCCESS;
                         }
 

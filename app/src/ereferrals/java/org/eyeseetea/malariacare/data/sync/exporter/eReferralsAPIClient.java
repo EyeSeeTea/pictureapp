@@ -50,21 +50,23 @@ public class eReferralsAPIClient {
     private ApiClientRetrofit mApiClientRetrofit;
     private OkHttpClient mOkHttpClient;
     public String mBaseAddress;
-    private final int DEFAULT_TIMEOUT = 50000;
+    private static final int DEFAULT_TIMEOUT = 50000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
+        this(baseAddress,DEFAULT_TIMEOUT);
+    }
+
+    public eReferralsAPIClient(String baseAddress, int timeoutMillis) throws IllegalArgumentException {
         if(baseAddress.equals(Credentials.createDemoCredentials().getServerURL())){
             return;
         }
         mBaseAddress = baseAddress;
         mContext = PreferencesState.getInstance().getContext();
 
-        initializeDependencies(DEFAULT_TIMEOUT);
+        initializeDependencies(timeoutMillis);
     }
 
     private void initializeDependencies(int timeoutMillis) {
-        timeoutMillis += DEFAULT_TIMEOUT;
-
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 

@@ -62,7 +62,8 @@ public class AlarmPushReceiver extends BroadcastReceiver {
 
         Intent pushIntent = new Intent(context, PushService.class);
         pushIntent.putExtra(SurveyService.SERVICE_METHOD, PushService.PENDING_SURVEYS_ACTION);
-        context.startService(pushIntent);
+
+        PushService.enqueueWork(context, pushIntent);
     }
 
     public static void setPushAlarm(Context context) {

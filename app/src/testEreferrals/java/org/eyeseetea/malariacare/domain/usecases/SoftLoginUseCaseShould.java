@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.usecases;
 
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.eyeseetea.malariacare.common.FileReader;
@@ -20,6 +22,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISettingsRepositor
 import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
+import org.eyeseetea.malariacare.domain.exception.AvailableApiException;
 import org.eyeseetea.malariacare.domain.usecase.SoftLoginUseCase;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -31,6 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Date;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,6 +66,9 @@ public class SoftLoginUseCaseShould {
 
     @Mock
     ISettingsRepository settingsRepository;
+
+    @Mock
+    eReferralsAPIClient mockEReferralsAPIClient;
 
     @Mock
     IForgotPasswordDataSource forgotPasswordDataSource;
@@ -178,6 +185,43 @@ public class SoftLoginUseCaseShould {
             }
         });
     }
+
+    @Test
+    public void return_on_soft_login_success_if_remote_throw_timeout_and_credentials_are_ok()
+            throws IOException, AvailableApiException {
+
+        String lastValidPin = "1234";
+
+        SoftLoginUseCase softLoginUseCase = givenASoftLoginUseCaseWithTimeout(true, lastValidPin);
+
+        softLoginUseCase.execute(lastValidPin, new SoftLoginUseCase.Callback() {
+            @Override
+            public void onSoftLoginSuccess() {
+                Assert.assertTrue(true);
+            }
+
+            @Override
+            public void onInvalidPin() {
+                fail("onInvalidPassword");
+            }
+
+            @Override
+            public void onNetworkError() {
+                fail("onNetworkError");
+            }
+
+            @Override
+            public void onMaxInvalidLoginAttemptsError(long enableLoginTime) {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
+
+            @Override
+            public void onServerNotAvailable(String message) {
+                fail("onMaxInvalidLoginAttemptsError");
+            }
+        });
+    }
+
 
     @Test
     public void return_on_network_error_if_does_not_exists_connection_and_credentials_are_not_ok()
@@ -343,22 +387,33 @@ public class SoftLoginUseCaseShould {
     }
 
     private SoftLoginUseCase givenASoftLoginUseCase(boolean withConnection) {
-        return givenASoftLoginUseCase(withConnection, "dummy", 0, new Date().getTime());
+        return givenASoftLoginUseCase(withConnection, "dummy", 0, new Date().getTime(), null);
     }
 
     private SoftLoginUseCase givenASoftLoginUseCase(boolean withConnection, String lastValidPin) {
-        return givenASoftLoginUseCase(withConnection, lastValidPin, 0, new Date().getTime());
+        return givenASoftLoginUseCase(withConnection, lastValidPin, 0, new Date().getTime(), null);
+    }
+
+    private SoftLoginUseCase givenASoftLoginUseCaseWithTimeout(boolean withConnection,
+            String lastValidPin) throws IOException, AvailableApiException {
+        when(mockEReferralsAPIClient.auth(anyString(), anyString())).thenThrow(
+                new SocketTimeoutException());
+
+        return givenASoftLoginUseCase(withConnection, lastValidPin, 0, new Date().getTime(),
+                mockEReferralsAPIClient);
     }
 
     private SoftLoginUseCase givenASoftLoginUseCase(int invalidLoginAttempts,
             long timeToEnableLogin) {
         return givenASoftLoginUseCase(true, "dummy",
-                invalidLoginAttempts, timeToEnableLogin);
+                invalidLoginAttempts, timeToEnableLogin, null);
     }
 
 
     private SoftLoginUseCase givenASoftLoginUseCase(boolean withConnection, String lastValidPin,
-            int invalidLoginAttempts, long timeToEnableLogin) {
+            int invalidLoginAttempts, long timeToEnableLogin,
+            eReferralsAPIClient mockEReferralsAPIClient) {
+
         IMainExecutor mainExecutor = new IMainExecutor() {
             @Override
             public void run(Runnable runnable) {
@@ -373,8 +428,13 @@ public class SoftLoginUseCaseShould {
             }
         };
 
-        eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
-                mockWebServerRule.getBaseEndpoint());
+        eReferralsAPIClient eReferralsAPIClient;
+
+        if (mockEReferralsAPIClient == null) {
+            eReferralsAPIClient = new eReferralsAPIClient(mockWebServerRule.getBaseEndpoint());
+        } else {
+            eReferralsAPIClient = mockEReferralsAPIClient;
+        }
 
         IAuthenticationDataSource userAccountRemoteDataSource =
                 new AuthenticationWSDataSource(eReferralsAPIClient);

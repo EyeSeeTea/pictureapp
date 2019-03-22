@@ -199,6 +199,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         } else {
             showStockFragment(activity, false);
         }
+
+        mDashboardActivity.setCurrentFragment(closeFragment);
     }
 
     @Override
@@ -319,6 +321,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         } else {
             showFirstFragment();
         }
+
+        mDashboardActivity.setCurrentFragment(surveysFragment);
     }
 
     @Override
@@ -349,6 +353,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         } else {
             showSecondFragment();
         }
+
+        mDashboardActivity.setCurrentFragment(openFragment);
     }
 
     @Override
@@ -405,6 +411,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         }
         mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, avFragment);
         avFragment.hideHeader();
+
+        mDashboardActivity.setCurrentFragment(avFragment);
     }
 
     @Override
@@ -555,6 +563,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         } else {
             showAVFragment();
         }
+
+        mDashboardActivity.setCurrentFragment(statusFragment);
     }
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {

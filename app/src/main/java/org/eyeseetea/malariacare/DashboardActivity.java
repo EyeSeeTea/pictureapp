@@ -56,6 +56,7 @@ import org.eyeseetea.malariacare.domain.usecase.RemoveSurveysInProgressUseCase;
 import org.eyeseetea.malariacare.factories.AuthenticationFactoryStrategy;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
+import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -342,12 +343,33 @@ public class DashboardActivity extends BaseActivity {
     }
 
 
+    private Fragment currentFragment;
+
+    public Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public void setCurrentFragment(Fragment fragment) {
+        //TODO: with view pager this manual management of visibility would be no necessary
+        changeFragmentVisibilityFlag(currentFragment, false);
+        currentFragment = fragment;
+        changeFragmentVisibilityFlag(currentFragment, true);
+    }
+
     // Add the fragment to the activity, pushing this transaction
     // on to the back stack.
     public void replaceFragment(int layout, Fragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);
         ft.commit();
+    }
+
+    private void changeFragmentVisibilityFlag(Fragment fragment, boolean isVisible) {
+        if (fragment != null && fragment instanceof WebViewFragment) {
+            WebViewFragment webViewFragment = (WebViewFragment) fragment;
+
+            webViewFragment.changeVisibility(isVisible);
+        }
     }
 
     @Override

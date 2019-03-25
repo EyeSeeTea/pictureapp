@@ -85,6 +85,22 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
                 new SettingsDataSource(context));
     }
 
+    private IAuthenticationManager getAuthenticationManager(Context context, int remoteTimeoutMillis) {
+        IAuthenticationDataSource userAccountLocalDataSource =
+                new AuthenticationLocalDataSource(context);
+
+        eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
+                PreferencesEReferral.getWSURL(), remoteTimeoutMillis);
+
+        IAuthenticationDataSource userAccountRemoteDataSource =
+                new AuthenticationWSDataSource(eReferralsAPIClient);
+
+        return new AuthenticationManager(userAccountLocalDataSource, userAccountRemoteDataSource,
+                new UserAccountDataSource(),
+                new ForgotPasswordWSDataSource(context),
+                new SettingsDataSource(context));
+    }
+
     public ForgotPasswordUseCase getForgotPasswordUseCase(Context context) {
         IAuthenticationManager authenticationManager = getAuthenticationManager(context);
         ISettingsRepository settingsRepository = new SettingsDataSource(context);
@@ -120,8 +136,11 @@ public class AuthenticationFactoryStrategy extends AAuthenticationFactory {
     }
 
     public SoftLoginUseCase getSoftLoginUseCase(Context context) {
+        int remoteTimeoutSoftLogin = 5000;
+
         IConnectivityManager connectivityManager = getConnectivityManager(context);
-        IAuthenticationManager authenticationManager = getAuthenticationManager(context);
+        IAuthenticationManager authenticationManager =
+                getAuthenticationManager(context,remoteTimeoutSoftLogin);
         ICredentialsRepository credentialsLocalDataSource = getCredentialsRepository();
         IInvalidLoginAttemptsRepository invalidLoginAttemptsRepository =
                 getInvalidLoginAttemptsRepository();

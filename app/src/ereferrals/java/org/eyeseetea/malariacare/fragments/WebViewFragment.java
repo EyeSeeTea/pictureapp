@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,11 +42,13 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     public static final String TITLE = "title";
     public static final int COOL_DOWN_TIME = 60;
 
+    private enum WebViewStatus {NOT_LOADED, SUCCESS, TIMEOUT}
+
     private String url;
     private int title;
     private WebView mWebView;
     private CustomTextView mErrorDemoText;
-    private boolean loadedFirstTime;
+    private WebViewStatus webViewStatus;
 
     private IDelayedMainExecutor delayedMainExecutor;
 
@@ -55,16 +56,22 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     private TextView countdownTextView;
     private int activateRefreshTimeLeft = COOL_DOWN_TIME;
 
+    private boolean isVisible = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             Bundle savedInstanceState) {
+
+        webViewStatus = WebViewStatus.NOT_LOADED;
+
         Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_web_view,
                 container, false);
         delayedMainExecutor = new UIThreadExecutor();
         manageBundle(savedInstanceState);
         initViews(view);
+
         return view;
     }
 
@@ -73,6 +80,21 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         getActivity().registerReceiver(connectionReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         super.onStart();
+
+        Log.d(TAG, "onStart url: " + url);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d(TAG, "onResume url: " + url);
+    }
+
+    public void changeVisibility(boolean isVisible) {
+        Log.d(TAG, "changeVisibility to " + isVisible + " onResume url: " + url);
+        this.isVisible = isVisible;
     }
 
     @Override
@@ -98,6 +120,8 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     }
 
     private void refreshWebView() {
+        webViewStatus = WebViewStatus.NOT_LOADED;
+        mWebView.loadUrl("about:blank");
         loadUrlInWebView(true);
 
         disableRefreshWebView();
@@ -143,6 +167,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     @Override
     public void reloadData() {
+
     }
 
 
@@ -183,6 +208,10 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
             cookieSyncMngr.stopSync();
             cookieSyncMngr.sync();
         }
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     private void loadUrlInWebView(boolean shouldShowError) {
@@ -232,6 +261,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     }
 
     private void executeOnWebAvailable() {
+        Log.d(TAG, "loading url: " + url);
         showHideWebView(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
@@ -244,7 +274,12 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
                 new CustomWebViewClient(timeoutMillis) {
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        loadedFirstTime = true;
+                        Log.d(TAG, "onPageFinished url: " + url);
+
+                        if (webViewStatus == WebViewStatus.NOT_LOADED) {
+                            webViewStatus = WebViewStatus.SUCCESS;
+                        }
+
                         super.onPageFinished(view, url);
                     }
                 };
@@ -252,8 +287,15 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         customWebViewClient.setErrorListener(new CustomWebViewClient.ErrorListener() {
             @Override
             public void onTimeoutError() {
-                // do what you want
-                showError(R.string.web_view_network_error);
+                webViewStatus = WebViewStatus.TIMEOUT;
+                Log.d(TAG, "onTimeoutError url: " + url);
+                if (isVisible) {
+                    // do what you want
+                    showError(R.string.web_view_network_error);
+                    Log.d(TAG, "showing onTimeoutError url: " + url);
+                } else {
+                    Log.d(TAG, "does not show onTimeoutError because fragment is not visible url: " + url);
+                }
             }
         });
 
@@ -269,7 +311,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityStatus.isConnected(getActivity())) {
-                if (!loadedFirstTime) {
+                if (webViewStatus != WebViewStatus.SUCCESS ) {
                     loadValidUrl(true);
                 }
             }

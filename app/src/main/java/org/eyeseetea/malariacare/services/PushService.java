@@ -89,14 +89,21 @@ public class PushService extends JobIntentService {
     }
 
     public static void reloadDashboard() {
-        Intent surveysIntent = new Intent(PreferencesState.getInstance().getContext(),
-                SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        PreferencesState.getInstance().getContext().startService(surveysIntent);
+        try{
+            Intent surveysIntent = new Intent(PreferencesState.getInstance().getContext(),
+                    SurveyService.class);
+            surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+            PreferencesState.getInstance().getContext().startService(surveysIntent);
+        } catch (Exception e){
+            //From Android 8 versions, start services in background has limitations and
+            //can throw errors. How SurveyService only has sense in foreground
+            //simply catch error. On the future we should not use spervice to load surveys
+
+            Log.d(TAG, "Error to start service to load surveys from background");
+        }
+
         Intent broadcastIntent = new Intent(SurveyService.RELOAD_DASHBOARD_ACTION);
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).sendBroadcast(broadcastIntent);
     }
-
-
 }

@@ -50,7 +50,7 @@ public class eReferralsAPIClient {
     private ApiClientRetrofit mApiClientRetrofit;
     private OkHttpClient mOkHttpClient;
     public String mBaseAddress;
-    private static final int DEFAULT_TIMEOUT = 50000;
+    public static final int DEFAULT_TIMEOUT = 50000;
 
     public eReferralsAPIClient(String baseAddress) throws IllegalArgumentException {
         this(baseAddress,DEFAULT_TIMEOUT);
@@ -100,7 +100,7 @@ public class eReferralsAPIClient {
     }
 
     public void setTimeoutMillis(int timeoutMillis) {
-        initializeDependencies(timeoutMillis);
+        initializeDependencies( timeoutMillis);
     }
 
     public void pushSurveys(SurveyContainerWSObject surveyContainerWSObject,

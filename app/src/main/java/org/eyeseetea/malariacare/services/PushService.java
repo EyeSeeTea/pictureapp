@@ -20,8 +20,10 @@
 
 package org.eyeseetea.malariacare.services;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -31,7 +33,7 @@ import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 /**
  * A service that runs pushing process for pending surveys.
  */
-public class PushService extends IntentService {
+public class PushService extends JobIntentService {
 
     /**
      * Constant added to the intent in order to reuse the service for different 'methods'
@@ -51,42 +53,14 @@ public class PushService extends IntentService {
 
     PushServiceStrategy mPushServiceStrategy = new PushServiceStrategy(this);
 
-    /**
-     * Constructor required due to a error message in AndroidManifest.xml if it is not present
-     */
-    public PushService() {
-        super(PushService.class.getSimpleName());
-        Log.d(TAG, "PushService() register in Dhis2Application bus");
-    }
+    public static final int JOB_ID = 1;
 
-    /**
-     * Creates an IntentService. Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public PushService(String name) {
-        super(name);
-        Log.d(TAG, "PushService(name) constructor");
-    }
-
-    public static void reloadDashboard() {
-        Intent surveysIntent = new Intent(PreferencesState.getInstance().getContext(),
-                SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        PreferencesState.getInstance().getContext().startService(surveysIntent);
-        Intent broadcastIntent = new Intent(SurveyService.RELOAD_DASHBOARD_ACTION);
-        LocalBroadcastManager.getInstance(
-                PreferencesState.getInstance().getContext()).sendBroadcast(broadcastIntent);
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, PushService.class, JOB_ID, work);
     }
 
     @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         //Ignore wrong actions
         if (!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))) {
             return;
@@ -99,6 +73,12 @@ public class PushService extends IntentService {
         mPushServiceStrategy.push();
     }
 
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
     public void onPushFinished() {
         reloadDashboard();
     }
@@ -108,4 +88,22 @@ public class PushService extends IntentService {
         Log.e(TAG, "onPushFinished error: " + message);
     }
 
+    public static void reloadDashboard() {
+        try{
+            Intent surveysIntent = new Intent(PreferencesState.getInstance().getContext(),
+                    SurveyService.class);
+            surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+            PreferencesState.getInstance().getContext().startService(surveysIntent);
+        } catch (Exception e){
+            //From Android 8 versions, start services in background has limitations and
+            //can throw errors. How SurveyService only has sense in foreground
+            //simply catch error. On the future we should not use spervice to load surveys
+
+            Log.d(TAG, "Error to start service to load surveys from background");
+        }
+
+        Intent broadcastIntent = new Intent(SurveyService.RELOAD_DASHBOARD_ACTION);
+        LocalBroadcastManager.getInstance(
+                PreferencesState.getInstance().getContext()).sendBroadcast(broadcastIntent);
+    }
 }

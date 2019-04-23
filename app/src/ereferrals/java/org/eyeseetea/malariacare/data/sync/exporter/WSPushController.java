@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
+
 import android.content.Context;
 import android.util.Log;
 
@@ -118,7 +119,9 @@ public class WSPushController implements IPushController {
     }
 
     private void pushSurveys() {
-        mEReferralsAPIClient.setTimeoutMillis(getTimeout(mSurveys.size()));
+        mEReferralsAPIClient.setTimeoutMillis(
+                eReferralsAPIClient.DEFAULT_TIMEOUT + getTimeout(mSurveys.size()));
+
         SurveyContainerWSObject surveyContainerWSObject =
                 mConvertToWSVisitor.getSurveyContainerWSObject();
         mEReferralsAPIClient.pushSurveys(surveyContainerWSObject,

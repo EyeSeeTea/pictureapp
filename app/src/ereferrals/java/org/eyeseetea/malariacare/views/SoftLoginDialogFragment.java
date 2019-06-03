@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,8 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
         userNameEditText = view.findViewById(R.id.edittext_username);
         userNameEditText.setEnabled(false);
         passwordEditText = view.findViewById(R.id.edittext_password);
+
+        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override

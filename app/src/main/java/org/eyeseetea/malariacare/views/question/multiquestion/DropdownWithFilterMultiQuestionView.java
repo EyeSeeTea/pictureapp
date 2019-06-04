@@ -56,6 +56,7 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
 
     @Override
     public void requestAnswerFocus() {
+        showDialog(getContext());
     }
 
     @Override
@@ -93,6 +94,7 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
         inflate(context, R.layout.multi_question_tab_spinner_with_filter_row, this);
         header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerAsButton = (Spinner) findViewById(R.id.answer);
+
         if(isEnabled()){
             spinnerAsButton.setOnTouchListener(new OnTouchListener(context));
         }

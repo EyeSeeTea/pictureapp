@@ -47,12 +47,6 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView implement
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-
-                IQuestionView nextQuestionView = getNextQuestionView();
-                if (nextQuestionView == null || nextQuestionView instanceof AKeyboardQuestionView
-                        || !(nextQuestionView instanceof IMultiQuestionView)) {
-                    return false;
-                }
                 if (actionId == EditorInfo.IME_ACTION_NEXT
                         || actionId == EditorInfo.IME_ACTION_DONE) {
                     CommonQuestionView.hideKeyboard(textView.getContext(), textView);

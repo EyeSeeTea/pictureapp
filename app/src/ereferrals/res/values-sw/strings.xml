@@ -1032,14 +1032,13 @@ Ameahidi kuhudhuria"</string>
 <string name="production">Uzalishaji</string>
 <string name="training">Mafunzo</string>
 <string name="custom">Desturi</string>
-
-    <string name="splash_progress_init_db">Initializing database …</string>
-    <string name="splash_progress_downloading_languages">Download current language terms …</string>
-    <string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
-
-    <string name="pull_dialog_progress_generic_message">Inasasisha metadata …</string>
-    <string name="push_invalid_credentials">tumegundua kuwa siri imebadilika kwenye seva, tafadhali ingiza tena siri</string>
-
-    <string name="web_view_network_error">Kuna matatizo ya mtandao kupakia mtandao wa pag</string>
-    <string name="push_network_error">Kuna matatizo ya mtandao kwenye mchakato wa kushinikiza</string>
+<string name="splash_progress_init_db">Initializing database …</string>
+<string name="splash_progress_downloading_languages">Download current language terms …</string>
+<string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
+<string name="pull_dialog_progress_generic_message">Inasasisha metadata …</string>
+<string name="push_invalid_credentials">tumegundua kuwa siri imebadilika kwenye seva, tafadhali ingiza tena siri</string>
+<string name="web_view_network_error">Kuna matatizo ya mtandao kupakia mtandao wa pag</string>
+<string name="push_network_error">Kuna matatizo ya mtandao kwenye mchakato wa kushinikiza</string>
+<string name="preference_jumping_survey_views_title">Kuruka katika Utafiti</string>
+<string name="preference_jumping_survey_views_summary">Wezesha kuruka kati ya maoni katika utafiti</string>
 </resources>

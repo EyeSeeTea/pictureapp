@@ -159,6 +159,11 @@
             android:key="@string/activate_elements_key"
             android:summary="@string/activate_elements"
             android:title="@string/elements" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/preference_jumping_survey_views_key"
+            android:summary="@string/preference_jumping_survey_views_summary"
+            android:title="@string/preference_jumping_survey_views_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

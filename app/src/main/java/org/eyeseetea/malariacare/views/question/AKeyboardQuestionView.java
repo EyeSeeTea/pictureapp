@@ -19,6 +19,17 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView implement
         super(context);
     }
 
+    @Override
+    public void setJumpingNextQuestionActive(boolean jumpingNextQuestionActive) {
+        super.setJumpingNextQuestionActive(jumpingNextQuestionActive);
+
+        if (jumpingNextQuestionActive){
+            answer.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        } else {
+            answer.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        }
+    }
+
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
         initEditTextActionListener();

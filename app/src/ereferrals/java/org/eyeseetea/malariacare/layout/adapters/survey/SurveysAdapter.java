@@ -158,7 +158,7 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 if (survey.getImportantValues().size() > 1) {
                     secondImportant =
-                            Utils.getInternationalizedString(survey.getImportantValues().get(0));
+                            Utils.getInternationalizedString(survey.getImportantValues().get(1));
                 }
             }
 

@@ -1147,6 +1147,6 @@
 <string name="push_invalid_credentials">we have detected that the pin has changed on the server, please insert the pin again</string>
 <string name="web_view_network_error">There were network problems while loading the web page</string>
 <string name="push_network_error">There were network problems while sending vouchers to the server</string>
-<string name="preference_jumping_survey_views_title">Jumping in Survey</string>
-<string name="preference_jumping_survey_views_summary">Activate jumping between the views in the survey</string>
+<string name="preference_jumping_survey_views_title">Question jumping</string>
+<string name="preference_jumping_survey_views_summary">Activate jumping to the next question when previous one is finished</string>
 </resources>

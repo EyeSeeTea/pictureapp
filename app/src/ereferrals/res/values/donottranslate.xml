@@ -78,6 +78,7 @@
     <string name="program_configuration_endpoint" translatable="false">"program_configuration_endpoint"</string>
     <string name="program_configuration_user" translatable="false">"program_configuration_user"</string>
     <string name="program_configuration_pass" translatable="false">"program_configuration_pass"</string>
+    <string name="preference_jumping_survey_views_key" translatable="false">"preference_jumping_survey_views_key"</string>
     <string-array name="server_list">
         <item>@string/production</item>
         <item>@string/training</item>

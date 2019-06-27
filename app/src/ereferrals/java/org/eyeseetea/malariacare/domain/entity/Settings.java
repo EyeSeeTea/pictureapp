@@ -24,12 +24,14 @@ public class Settings {
     private boolean softLoginRequired;
     private boolean pullRequired;
     private String wsVersion;
+    private boolean surveyJumpingActive;
 
     public Settings(String systemLanguage, String currentLanguage,
             MediaListMode mediaListMode, boolean canDownloadWith3G, boolean isElementActive,
                     boolean isMetadataUpdateActive, String user, String pass, String wsServerUrl,
             String webUrl, String fontSize, String programUrl, String programEndPoint,
-            boolean softLoginRequired, boolean pullRequired, String wsVersion) {
+            boolean softLoginRequired, boolean pullRequired, String wsVersion,
+            boolean surveyJumpingActive) {
         this.systemLanguage = required(systemLanguage, "systemLanguage is required");
         this.currentLanguage = currentLanguage;
         this.mediaListMode = mediaListMode;
@@ -46,6 +48,7 @@ public class Settings {
         this.wsVersion = wsVersion;
         this.softLoginRequired = softLoginRequired;
         this.pullRequired = pullRequired;
+        this.surveyJumpingActive = surveyJumpingActive;
     }
 
     public String getLanguage() {
@@ -148,5 +151,13 @@ public class Settings {
 
     public void changePullRequired(boolean isRequired) {
         pullRequired = isRequired;
+    }
+
+    public boolean isSurveyJumpingActive() {
+        return surveyJumpingActive;
+    }
+
+    public void setSurveyJumpingActive(boolean surveyJumpingActive) {
+        this.surveyJumpingActive = surveyJumpingActive;
     }
 }

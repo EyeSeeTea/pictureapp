@@ -114,7 +114,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static int failedValidations;
 
     public static View navigationButtonHolder;
-    private final Context context;
+    public final Context context;
     public NavigationController navigationController;
     public boolean reloadingQuestionFromInvalidOption;
     TabDB mTabDB;
@@ -143,7 +143,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean isBackward = true;
     private boolean isASurveyCreatedInOtherApp;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode, boolean isASurveyCreatedInOtherApp) throws NullPointerException {
+    public DynamicTabAdapter(Context context, boolean reviewMode,
+            boolean isASurveyCreatedInOtherApp, boolean jumpingActive) throws NullPointerException {
+
         this.isASurveyCreatedInOtherApp = isASurveyCreatedInOtherApp;
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
@@ -175,7 +177,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.setTotalPages(totalPages);
         isClicked = false;
 
-        mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this);
+        mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this, jumpingActive);
         mDynamicTabAdapterStrategy.initSurveys(readOnly);
     }
 
@@ -306,11 +308,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
-        questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
-        executeTabLogic(questionDB, null);
+
+        if (!mReviewMode){
+            questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
+            executeTabLogic(questionDB, null);
+        }
+
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
             finishOrNext();
@@ -318,6 +323,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             showOrHideChildren(questionDB);
         }
     }
+    
 
     public void saveOptionValue(View view, OptionDB selectedOptionDB, QuestionDB questionDB,
             boolean moveToNextQuestion) {
@@ -329,8 +335,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             isBackward = false;
         }
 
-        questionDB.saveValuesDDL(selectedOptionDB, valueDB);
-
+        if (!mReviewMode) {
+            questionDB.saveValuesDDL(selectedOptionDB, valueDB);
+        }
 
         if (questionDB.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 questionDB.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
@@ -568,6 +575,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             renderQuestion(rowView, tabType, screenQuestionDB);
         }
 
+        if (TabDB.isMultiQuestionTab(tabType)){
+            mReviewMode = false;
+        }
+
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
         return rowView;
@@ -603,6 +614,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 mMultiQuestionViews.add((IMultiQuestionView) questionView);
                 ((IMultiQuestionView) questionView).setHeader(
                         translate(screenQuestionDB.getForm_name()));
+
+                mDynamicTabAdapterStrategy.setJumpingNextQuestionActive(
+                        (CommonQuestionView)questionView);
             }
 
             addTagQuestion(screenQuestionDB, (View) questionView);

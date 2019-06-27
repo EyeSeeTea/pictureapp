@@ -148,7 +148,7 @@ public class PushServiceShould {
         when(mProgramRepository.getUserProgram()).thenReturn(new Program("code","testProgramId"));
         Settings settings = new Settings("en", "en", null, false, false, false,
                 "test", "test", mockWebServerRule.getMockServer().getBaseEndpoint(), null, null,
-                null, null, false, false, "1.0");
+                null, null, false, false, "1.0",true);
         when(mSettingsRepository.getSettings()).thenReturn(settings);
         ConvertToWSVisitor mConvertToWSVisitor = new ConvertToWSVisitor(deviceDataSource, mCredentialsRepository, mSettingsRepository, appInfoDataSource,
                 mProgramRepository, new CountryVersionLocalDataSource());

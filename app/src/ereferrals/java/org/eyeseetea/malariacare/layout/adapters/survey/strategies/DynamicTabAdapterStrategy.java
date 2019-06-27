@@ -13,7 +13,10 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -24,8 +27,19 @@ import java.util.List;
 
 public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
 
-    public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter) {
+    private boolean jumpingActive;
+
+
+    public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter, boolean jumpingActive) {
         super(dynamicTabAdapter);
+
+        this.jumpingActive = jumpingActive;
+    }
+
+
+    @Override
+    public void setJumpingNextQuestionActive( CommonQuestionView questionView) {
+        questionView.setJumpingNextQuestionActive(jumpingActive);
     }
 
     @Override

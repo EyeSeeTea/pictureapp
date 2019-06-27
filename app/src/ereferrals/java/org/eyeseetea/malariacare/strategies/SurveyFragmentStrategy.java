@@ -10,8 +10,11 @@ import org.eyeseetea.malariacare.data.database.model.QuestionDB;
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.model.ValueDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Settings;
 import org.eyeseetea.malariacare.domain.entity.intent.Auth;
 import org.eyeseetea.malariacare.domain.usecase.GetAuthUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -102,6 +105,18 @@ public class SurveyFragmentStrategy {
             @Override
             public void onGetAuth(Auth auth) {
                 callback.loadIsSurveyCreatedInOtherApp(auth!=null);
+            }
+        });
+    }
+
+    public static void isSurveyJumpingActive (
+            final ASurveyFragmentStrategy.GetSurveyJumpingCallback callback,
+            Context context){
+        GetSettingsUseCase getSettingsUseCase = new SettingsFactory().getSettingsUseCase(context);
+        getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
+            @Override
+            public void onSuccess(Settings settings) {
+                callback.onSuccess(settings.isSurveyJumpingActive());
             }
         });
     }

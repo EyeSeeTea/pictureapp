@@ -151,7 +151,7 @@ public class SettingsDataSource implements ISettingsRepository {
     }
 
     private String getWebUrl() {
-        return getPreference(context, R.string.web_view_name, R.string.base_web_view_url);
+        return getPreference(context, R.string.web_view_url, R.string.base_web_view_url);
     }
 
     private String getWSServerUrl() {

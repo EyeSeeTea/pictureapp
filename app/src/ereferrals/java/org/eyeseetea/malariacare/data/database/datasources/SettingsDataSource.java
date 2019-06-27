@@ -42,10 +42,12 @@ public class SettingsDataSource implements ISettingsRepository {
         String wsVersion = getWSVersion();
         boolean isSoftLoginRequired = getSoftLoginRequired();
         boolean isPullRequired = getPullRequired();
+        boolean isSurveyJumpingActive = getSurveyJumping();
+
         return new Settings(systemLanguage, currentLanguage, getMediaListMode(), canDownloadMedia,
                 isElementActive, isMetadataUpdateActive, user, pass, wsServerUrl,
                 webUrl, fontSize, programUrl, programEndPoint, isSoftLoginRequired, isPullRequired,
-                wsVersion);
+                wsVersion,isSurveyJumpingActive);
     }
 
     private String loadPass() {
@@ -81,6 +83,7 @@ public class SettingsDataSource implements ISettingsRepository {
         saveProgramEndPoint(settings.getProgramEndPoint());
         saveSoftLoginRequired(settings.isSoftLoginRequired());
         savePullRequired(settings.isPullRequired());
+        saveSurveyJumping(settings.isSurveyJumpingActive());
     }
 
     private MediaListMode getMediaListMode() {
@@ -191,8 +194,16 @@ public class SettingsDataSource implements ISettingsRepository {
         return getBooleanPreference(context, R.string.pull_required, false);
     }
 
+    private boolean getSurveyJumping() {
+        return getBooleanPreference(context, R.string.preference_jumping_survey_views_key, true);
+    }
+
     private void savePullRequired(boolean isRequired) {
         saveBooleanPreference(context, R.string.pull_required, isRequired);
+    }
+
+    private void saveSurveyJumping(boolean isActive) {
+        saveBooleanPreference(context, R.string.preference_jumping_survey_views_key, isActive);
     }
 
     private Boolean getBooleanPreference(Context context, int stringId, Boolean defaultBool) {

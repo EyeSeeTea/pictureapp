@@ -114,7 +114,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static int failedValidations;
 
     public static View navigationButtonHolder;
-    private final Context context;
+    public final Context context;
     public NavigationController navigationController;
     public boolean reloadingQuestionFromInvalidOption;
     TabDB mTabDB;
@@ -143,7 +143,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean isBackward = true;
     private boolean isASurveyCreatedInOtherApp;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode, boolean isASurveyCreatedInOtherApp) throws NullPointerException {
+    public DynamicTabAdapter(Context context, boolean reviewMode,
+            boolean isASurveyCreatedInOtherApp, boolean jumpingActive) throws NullPointerException {
+
         this.isASurveyCreatedInOtherApp = isASurveyCreatedInOtherApp;
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
@@ -175,7 +177,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.setTotalPages(totalPages);
         isClicked = false;
 
-        mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this);
+        mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this, jumpingActive);
         mDynamicTabAdapterStrategy.initSurveys(readOnly);
     }
 
@@ -603,6 +605,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 mMultiQuestionViews.add((IMultiQuestionView) questionView);
                 ((IMultiQuestionView) questionView).setHeader(
                         translate(screenQuestionDB.getForm_name()));
+
+                mDynamicTabAdapterStrategy.setJumpingNextQuestionActive(
+                        (CommonQuestionView)questionView);
             }
 
             addTagQuestion(screenQuestionDB, (View) questionView);

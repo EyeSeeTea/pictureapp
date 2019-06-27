@@ -978,14 +978,13 @@
 <string name="production">उत्पादन</string>
 <string name="training">प्रशिक्षण</string>
 <string name="custom">अनुकूलन</string>
-
-    <string name="splash_progress_init_db">डेटाबेस सुरू गर्दै ...</string>
-    <string name="splash_progress_downloading_languages">वर्तमान भाषा सर्तहरू डाउनलोड गर्नुहोस् ...</string>
-    <string name="splash_progress_executing_maintenance_task">रखरखाव कार्य कार्यान्वयन गर्दै ...</string>
-
-    <string name="pull_dialog_progress_generic_message">मेटाडेटा अपडेट गर्दै …</string>
-    <string name="push_invalid_credentials">हामीले फेला पारेको छ कि पिनले सर्भरमा परिवर्तन गरेको छ, कृपया पिन फेरि सम्मिलित गर्नुहोस्</string>
-
-    <string name="web_view_network_error">वेब पेज लोड गर्दा नेटवर्क समस्याहरू छन्</string>
-    <string name="push_network_error">प्रक्रिया प्रक्रियामा सञ्जाल समस्याहरू छन्</string>
+<string name="splash_progress_init_db">डेटाबेस सुरू गर्दै ...</string>
+<string name="splash_progress_downloading_languages">वर्तमान भाषा सर्तहरू डाउनलोड गर्नुहोस् ...</string>
+<string name="splash_progress_executing_maintenance_task">रखरखाव कार्य कार्यान्वयन गर्दै ...</string>
+<string name="pull_dialog_progress_generic_message">मेटाडेटा अपडेट गर्दै …</string>
+<string name="push_invalid_credentials">हामीले फेला पारेको छ कि पिनले सर्भरमा परिवर्तन गरेको छ, कृपया पिन फेरि सम्मिलित गर्नुहोस्</string>
+<string name="web_view_network_error">वेब पेज लोड गर्दा नेटवर्क समस्याहरू छन्</string>
+<string name="push_network_error">प्रक्रिया प्रक्रियामा सञ्जाल समस्याहरू छन्</string>
+<string name="preference_jumping_survey_views_title">सर्वेक्षणमा जम्पिङ</string>
+<string name="preference_jumping_survey_views_summary">सर्वेक्षणमा हेराइहरू बीचमा जम्पिङ सक्रिय गर्नुहोस्</string>
 </resources>

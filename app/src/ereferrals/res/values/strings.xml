@@ -1140,18 +1140,13 @@
 <string name="production">Production</string>
 <string name="training">Training</string>
 <string name="custom">Custom</string>
-
-
-    <string name="splash_progress_init_db">Initializing database …</string>
-    <string name="splash_progress_downloading_languages">Download current language terms …</string>
-    <string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
-
-
-
-    <string name="pull_dialog_progress_generic_message">Updating metadata …</string>
-    <string name="push_invalid_credentials">we have detected that the pin has changed on the server, please insert the pin again</string>
-
-
-    <string name="web_view_network_error">There were network problems while loading the web page</string>
-    <string name="push_network_error">There were network problems while sending vouchers to the server</string>
+<string name="splash_progress_init_db">Initializing database …</string>
+<string name="splash_progress_downloading_languages">Download current language terms …</string>
+<string name="splash_progress_executing_maintenance_task">Executing maintenance task …</string>
+<string name="pull_dialog_progress_generic_message">Updating metadata …</string>
+<string name="push_invalid_credentials">we have detected that the pin has changed on the server, please insert the pin again</string>
+<string name="web_view_network_error">There were network problems while loading the web page</string>
+<string name="push_network_error">There were network problems while sending vouchers to the server</string>
+<string name="preference_jumping_survey_views_title">Question jumping</string>
+<string name="preference_jumping_survey_views_summary">Activate jumping to the next question when previous one is finished</string>
 </resources>

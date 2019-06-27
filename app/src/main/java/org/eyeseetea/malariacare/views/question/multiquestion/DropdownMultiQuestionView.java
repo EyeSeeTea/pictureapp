@@ -123,6 +123,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     @Override
     public void requestAnswerFocus() {
         spinnerOptions.requestFocusFromTouch();
+        spinnerOptions.performClick();
     }
 
     @Override

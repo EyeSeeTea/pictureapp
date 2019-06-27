@@ -36,6 +36,8 @@ import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.LoadingSurveyException;
+import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
+import org.eyeseetea.malariacare.factories.SettingsFactory;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.strategies.ASurveyFragmentStrategy;
@@ -148,9 +150,9 @@ public class SurveyFragment extends Fragment {
         DashboardActivity.dashboardActivity.beforeExit();
     }
 
-    public static void  closeKeyboard(){
+    public static void closeKeyboard() {
         Log.d(TAG, "close keyboard");
-        if(listView!=null) {
+        if (listView != null) {
             CommonQuestionView.hideKeyboard(listView.getContext(), listView);
         }
     }
@@ -222,29 +224,44 @@ public class SurveyFragment extends Fragment {
 
     private void showSurvey() {
         try {
-            SurveyFragmentStrategy.isSurveyCreatedFromOtherApp(new ASurveyFragmentStrategy.Callback() {
 
-                @Override
-                public void loadIsSurveyCreatedInOtherApp(boolean isSurveyCreatedInOtherApp) {
-                    LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+            SurveyFragmentStrategy.isSurveyCreatedFromOtherApp(
+                    new ASurveyFragmentStrategy.Callback() {
 
-                    dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode, isSurveyCreatedInOtherApp);
+                        @Override
+                        public void loadIsSurveyCreatedInOtherApp(
+                                final boolean isSurveyCreatedInOtherApp) {
 
-                    View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
+                            SurveyFragmentStrategy.isSurveyJumpingActive(
+                                    new ASurveyFragmentStrategy.GetSurveyJumpingCallback() {
+                                        @Override
+                                        public void onSuccess(boolean jumpingActive) {
+                                            LayoutInflater inflater = LayoutInflater.from(
+                                                    getActivity().getApplicationContext());
 
-                    content.removeAllViews();
-                    content.addView(viewContent);
+                                            dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode,
+                                                    isSurveyCreatedInOtherApp, jumpingActive);
 
-            listView = (ListView) llLayout.findViewById(R.id.listView);
+                                            View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(),
+                                                    content, false);
 
-            dynamicTabAdapter.addOnSwipeListener(listView);
+                                            content.removeAllViews();
+                                            content.addView(viewContent);
 
-            listView.setAdapter(dynamicTabAdapter);
+                                            listView = (ListView) llLayout.findViewById(R.id.listView);
 
-                    hideProgress();
-                }
-            }, getActivity().getApplicationContext());
-        }catch (NullPointerException e){
+                                            dynamicTabAdapter.addOnSwipeListener(listView);
+
+                                            listView.setAdapter(dynamicTabAdapter);
+
+                                            hideProgress();
+                                        }
+                                    }, getActivity().getApplicationContext());
+
+
+                        }
+                    }, getActivity().getApplicationContext());
+        } catch (NullPointerException e) {
             new LoadingSurveyException(e);
         }
     }

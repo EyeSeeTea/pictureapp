@@ -114,4 +114,8 @@ public abstract class ADynamicTabAdapterStrategy {
 
     public void showValidationErrors() {
     }
+
+    public void setJumpingNextQuestionActive(CommonQuestionView questionView) {
+        questionView.setJumpingNextQuestionActive(false);
+    }
 }

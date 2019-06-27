@@ -60,7 +60,7 @@ public class LabelMultiQuestionView extends CommonQuestionView implements IQuest
 
     @Override
     public void requestAnswerFocus() {
-        helpTextView.requestFocus();
+        focusNextQuestion();
     }
 
     private void init(Context context) {

@@ -82,6 +82,7 @@
     <string-array name="server_list">
         <item>@string/production</item>
         <item>@string/training</item>
+        <item>@string/staging</item>
         <item>@string/custom</item>
     </string-array>
     <string name="soft_login_required" translatable="false">"soft_login_required"</string>
@@ -104,9 +105,15 @@
     <string name="program_endpoint_training" translatable="false">dcSettings-train</string>
     <string name="webservice_url_training" translatable="false">https://apps.psi-mis.org/eRefWSTrain/</string>
     <string name="web_url_training" translatable="false">https://apps.psi-mis.org/connect-train/</string>
+
+    <!-- staging urls -->
+    <string name="program_url_staging" translatable="false">https://data.psi-mis.org/api/dataStore/Connect_config/</string>
+    <string name="program_endpoint_staging" translatable="false">dcSettings-stage</string>
+    <string name="webservice_url_staging" translatable="false">https://apps.psi-mis.org/eRefWSStage/</string>
+    <string name="web_url_staging" translatable="false">https://apps.psi-mis.org/connect-stage/</string>
+
+
     <string name="last_push_date" translatable="false">last_push_date</string>
     <string name="ENABLE_MANUAL_PUSH_PERIOD" translatable="false">30</string>
-
-
     <string name="web_view_timeout_millis" translatable="false">15000</string>
 </resources>

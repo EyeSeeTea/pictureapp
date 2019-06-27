@@ -308,11 +308,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         QuestionDB questionDB = (QuestionDB) view.getTag();
-        questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
-        executeTabLogic(questionDB, null);
+
+        if (!mReviewMode){
+            questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
+            executeTabLogic(questionDB, null);
+        }
+
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
             finishOrNext();
@@ -320,6 +323,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             showOrHideChildren(questionDB);
         }
     }
+    
 
     public void saveOptionValue(View view, OptionDB selectedOptionDB, QuestionDB questionDB,
             boolean moveToNextQuestion) {
@@ -331,8 +335,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             isBackward = false;
         }
 
-        questionDB.saveValuesDDL(selectedOptionDB, valueDB);
-
+        if (!mReviewMode) {
+            questionDB.saveValuesDDL(selectedOptionDB, valueDB);
+        }
 
         if (questionDB.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 questionDB.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
@@ -568,6 +573,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.clearClickableViews();
         for (QuestionDB screenQuestionDB : screenQuestionDBs) {
             renderQuestion(rowView, tabType, screenQuestionDB);
+        }
+
+        if (TabDB.isMultiQuestionTab(tabType)){
+            mReviewMode = false;
         }
 
         rowView.requestLayout();

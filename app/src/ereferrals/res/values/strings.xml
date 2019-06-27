@@ -1139,6 +1139,7 @@
 <string name="erro_page_text">"You're offline and this is an online module. Please connect to a network in order to see this information."</string>
 <string name="production">Production</string>
 <string name="training">Training</string>
+<string name="staging">Staging</string>
 <string name="custom">Custom</string>
 <string name="splash_progress_init_db">Initializing database …</string>
 <string name="splash_progress_downloading_languages">Download current language terms …</string>

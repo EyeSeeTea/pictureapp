@@ -214,6 +214,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             R.string.program_endpoint_training, R.string.web_url_training,
                             R.string.webservice_url_training, false);
                 } else if (value.equals(
+                        parent.getContext().getResources().getString(R.string.staging))) {
+                    setConfiguration(R.string.program_url_staging,
+                            R.string.program_endpoint_staging, R.string.web_url_staging,
+                            R.string.webservice_url_staging, false);
+                } else if (value.equals(
                         parent.getContext().getResources().getString(R.string.custom))) {
                     setConfiguration(R.string.program_url_production,
                             R.string.program_endpoint_production, R.string.web_url_production,

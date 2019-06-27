@@ -1031,6 +1031,7 @@ Ameahidi kuhudhuria"</string>
 <string name="erro_page_text">"Uko katika hali ya demo na hii ni moduli ya mtandaoni. Tafadhali ingia na usajili na mtumiaji halali ili kuona habari hii."</string>
 <string name="production">Uzalishaji</string>
 <string name="training">Mafunzo</string>
+<string name="staging">Staging</string>
 <string name="custom">Desturi</string>
 <string name="splash_progress_init_db">Initializing database …</string>
 <string name="splash_progress_downloading_languages">Download current language terms …</string>

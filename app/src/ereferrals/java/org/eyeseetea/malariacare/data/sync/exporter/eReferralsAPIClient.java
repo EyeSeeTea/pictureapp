@@ -115,15 +115,14 @@ public class eReferralsAPIClient {
         } catch (UnrecognizedPropertyException e) {
             ConversionException conversionException = new ConversionException(e);
             wsClientCallBack.onError(conversionException);
-        } catch (SocketTimeoutException | UnknownHostException e) {
+        } catch (IOException e) {
             wsClientCallBack.onError(new NetworkException());
             return;
         } catch (AvailableApiException e) {
             wsClientCallBack.onError(e);
             return;
-        } catch (IOException e) {
-            wsClientCallBack.onError(e);
         }
+
         if (response != null && response.code() == 401) {
             ConversionException conversionException = new ConversionException(null);
             wsClientCallBack.onError(conversionException);

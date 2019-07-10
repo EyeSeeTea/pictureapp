@@ -1,5 +1,8 @@
 package org.eyeseetea.malariacare.views;
 
+import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -104,7 +107,7 @@ public class SoftLoginDialogFragment extends DialogFragment implements SoftLogin
         userNameEditText.setEnabled(false);
         passwordEditText = view.findViewById(R.id.edittext_password);
 
-        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        passwordEditText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_VARIATION_PASSWORD);
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override

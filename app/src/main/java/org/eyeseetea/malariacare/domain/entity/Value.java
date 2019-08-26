@@ -15,14 +15,14 @@ public class Value {
     }
 
     public Value(String value, String questionUId) {
-        this.value = required(value, "Program is required");
-        this.questionUId = required(questionUId, "Program is required");
+        this.value = value;
+        this.questionUId = required(questionUId, "questionUId is required");
     }
 
     public Value(String value, String questionUId, String optionCode) {
-        this.value = required(value, "Program is required");
-        this.questionUId = required(questionUId, "Program is required");
-        this.optionCode = required(optionCode, "Program is required");
+        this.value = value;
+        this.questionUId = required(questionUId, "questionUId is required");
+        this.optionCode = required(optionCode, "optionCode is required");
     }
 
     public String getValue() {

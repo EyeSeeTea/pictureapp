@@ -124,7 +124,7 @@ public class DashboardActivity extends BaseActivity {
                 .setCancelable(false)
                 .setTitle(dialogTitle)
                 .setMessage(dialogMessage)
-                .setNeutralButton(android.R.string.ok, listener)
+                .setNeutralButton(R.string.action_ok, listener)
                 .create().show();
     }
 

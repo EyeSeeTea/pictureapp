@@ -109,7 +109,7 @@ public class PushServiceShould {
         LocalBroadcastManager.getInstance(
                 PreferencesState.getInstance().getContext()).registerReceiver(pushReceiver,
                 new IntentFilter(PushService.class.getName()));
-        mPushServiceStrategy = new PushServiceStrategy(new PushService("TestPushService"));
+        mPushServiceStrategy = new PushServiceStrategy(new PushService());
     }
 
     public void grantPhonePermission() {

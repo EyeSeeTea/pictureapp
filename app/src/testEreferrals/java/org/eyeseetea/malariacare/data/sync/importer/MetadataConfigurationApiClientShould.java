@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.data.sync.importer;
 
 import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.COUNTRIES_VERSION;
+import static org.eyeseetea.malariacare.configurationimporter.ConstantsMetadataConfigurationImporterTest.HN_CONFIG_FILE_JSON;
 import static org.eyeseetea.malariacare.configurationimporter
         .ConstantsMetadataConfigurationImporterTest.MZ_CONFIG_FILE_JSON;
 import static org.eyeseetea.malariacare.configurationimporter
@@ -59,6 +60,14 @@ public class MetadataConfigurationApiClientShould {
     }
 
     @Test
+    public void parse_hn_configuration_response() throws Exception {
+
+        whenRequestQuestionsForHNCountry();
+
+        thenAssertThatResponseParseSuccessfullyForHNCountry();
+    }
+
+    @Test
     public void parse_tz_configuration_response() throws Exception {
 
         whenRequestQuestionsForTZCountry();
@@ -107,6 +116,10 @@ public class MetadataConfigurationApiClientShould {
     }
 
 
+    private void thenAssertThatResponseParseSuccessfullyForHNCountry() {
+        validateQuestion(questions.get(20), givenAValidQuestionForHN());
+    }
+
     private void thenAssertThatResponseParseSuccessfullyForMZCountry() {
         validateQuestion(questions.get(0), givenAValidQuestionForMZ());
     }
@@ -136,6 +149,10 @@ public class MetadataConfigurationApiClientShould {
     private void enqueueMalformedJson() throws IOException {
         mockWebServerRule.getMockServer().enqueueMockResponse(200, "{malformedJson}");
 
+    }
+
+    private void whenRequestQuestionsForHNCountry() throws Exception {
+        requestQuestionsFor(HN_CONFIG_FILE_JSON, "hn@MZ@v1");
     }
 
     private void whenRequestQuestionsForMZCountry() throws Exception {
@@ -181,6 +198,8 @@ public class MetadataConfigurationApiClientShould {
 
         assertThat(questionToValidate.isCompulsory(), is(expectedQuestion.isCompulsory()));
 
+        assertThat(questionToValidate.getVoucherCodeSuffix(), is(expectedQuestion.getVoucherCodeSuffix()));
+
         if (expectedQuestion.getOptions() != null) {
             assertThat(questionToValidate.getOptions(), is(notNullValue()));
 
@@ -193,6 +212,30 @@ public class MetadataConfigurationApiClientShould {
                 assertThat(toValidateOption.getName(), is(validOption.getName()));
             }
         }
+    }
+
+    private Question givenAValidQuestionForHN() {
+
+        Question mzQuestion = Question.
+                newBuilder()
+                .uid("uid")
+                .code("serviceDesired_medcons")
+                .name("common_option_serviceDesired_medcons")
+                .type(Question.Type.RADIO_GROUP_HORIZONTAL)
+                .compulsory(false)
+                .options(new ArrayList<Option>(1))
+                .voucherCodeSuffix(new Question.VoucherCodeSuffix("SSR", "YES"))
+                .build();
+
+        Option firstOption = Option
+                .newBuilder()
+                .code("YES")
+                .name("ipc_issueEntry_q_blank")
+                .build();
+
+        mzQuestion.getOptions().add(firstOption);
+
+        return mzQuestion;
     }
 
     private Question givenAValidQuestionForMZ() {

@@ -25,13 +25,14 @@ public class Question {
     private String regExp;
     private String regExpError;
     private String defaultValue;
+    private VoucherCodeSuffix voucherCodeSuffix;
 
     public Question(long id, String code, String name, String uid,
             PhoneFormat phoneFormat, Type type, boolean compulsory,
             boolean disabled, List<Option> options, Header header, int index,
             Visibility visibility,
             List<Rule> rules, Value value, String regExp,
-            String regExpError, String defaultValue) {
+            String regExpError, String defaultValue, VoucherCodeSuffix voucherCodeSuffix) {
 
         this.id = required(id, "id is required");
         this.code = required(code, "code is required");
@@ -50,6 +51,7 @@ public class Question {
         this.regExp = regExp;
         this.regExpError = regExpError;
         this.defaultValue = defaultValue;
+        this.voucherCodeSuffix = voucherCodeSuffix;
     }
 
     public static Builder newBuilder() {
@@ -130,6 +132,10 @@ public class Question {
 
     public String getDefaultValue(){ return defaultValue;}
 
+    public VoucherCodeSuffix getVoucherCodeSuffix() {
+        return voucherCodeSuffix;
+    }
+
     public void match(String value) throws RegExpValidationException {
         if (!value.matches(regExp)){
             throw new RegExpValidationException(value);
@@ -164,6 +170,11 @@ public class Question {
             return false;
         }
         if (visibility != question.visibility) return false;
+
+        if (voucherCodeSuffix != null ? !voucherCodeSuffix.equals(question.voucherCodeSuffix) : question.voucherCodeSuffix != null) {
+            return false;
+        }
+
         return rules != null ? rules.equals(question.rules) : question.rules == null;
     }
 
@@ -184,6 +195,7 @@ public class Question {
         result = 31 * result + index;
         result = 31 * result + (visibility != null ? visibility.hashCode() : 0);
         result = 31 * result + (rules != null ? rules.hashCode() : 0);
+        result = 31 * result + (voucherCodeSuffix != null ? voucherCodeSuffix.hashCode() : 0);
         return result;
     }
 
@@ -205,6 +217,7 @@ public class Question {
                 ", regExp=" + regExp +
                 ", regExpError=" + regExpError +
                 ", defaultValue=" + defaultValue +
+                ", voucherCodeSuffix=" + voucherCodeSuffix +
                 '}';
     }
 
@@ -236,6 +249,7 @@ public class Question {
         private String regExpError;
         private String defaultValue;
         private boolean disabled;
+        private VoucherCodeSuffix voucherCodeSuffix;
 
         public Builder() {
         }
@@ -319,6 +333,12 @@ public class Question {
             defaultValue = val;
             return this;
         }
+
+        public Builder voucherCodeSuffix(VoucherCodeSuffix voucherCodeSuffix) {
+            this.voucherCodeSuffix = voucherCodeSuffix;
+            return this;
+        }
+
         public Question build() {
             return new Question(
                     this.id,
@@ -337,13 +357,43 @@ public class Question {
                     mValue,
                     this.regExp,
                     this.regExpError,
-                    this.defaultValue
+                    this.defaultValue,
+                    this.voucherCodeSuffix
             );
         }
 
         public Builder id(long val) {
             id = val;
             return this;
+        }
+    }
+
+    public static class VoucherCodeSuffix {
+        public String suffix;
+        public String valueCondition;
+
+        public VoucherCodeSuffix(String suffix, String valueCondition) {
+            this.suffix = suffix;
+            this.valueCondition = valueCondition;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            VoucherCodeSuffix that = (VoucherCodeSuffix) o;
+
+            if (suffix != null ? !suffix.equals(that.suffix) : that.suffix != null) return false;
+            return valueCondition != null ? valueCondition.equals(that.valueCondition)
+                    : that.valueCondition == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = suffix != null ? suffix.hashCode() : 0;
+            result = 31 * result + (valueCondition != null ? valueCondition.hashCode() : 0);
+            return result;
         }
     }
 

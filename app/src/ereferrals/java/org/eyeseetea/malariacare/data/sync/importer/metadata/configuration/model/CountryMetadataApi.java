@@ -78,6 +78,14 @@ public class CountryMetadataApi {
 
         public List<Rule> rules;
 
+        public VoucherCodeSuffix voucherCodeSuffix;
+
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class VoucherCodeSuffix {
+        public String suffix;
+        public String valueCondition;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

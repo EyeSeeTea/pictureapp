@@ -88,7 +88,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
     private String baseUrl;
     private String countryExtension;
 
-    public MetadataConfigurationApiClient(String url, String endpoint, BasicAuthInterceptor basicAuthInterceptor) {
+    public MetadataConfigurationApiClient(String url, String endpoint,
+            BasicAuthInterceptor basicAuthInterceptor) {
 
         baseUrl = url;
         countryExtension = endpoint;
@@ -164,7 +165,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
         List<Configuration.CountryVersion> domainCountriesVersions = new ArrayList<>();
 
-        for (CountriesMetadataVersionsApi.CountriesMetadataVersion countriesMetadataVersion : countriesVersionsApi) {
+        for (CountriesMetadataVersionsApi.CountriesMetadataVersion countriesMetadataVersion :
+                countriesVersionsApi) {
 
             Configuration.CountryVersion domain =
                     Configuration.CountryVersion.newBuilder()
@@ -289,7 +291,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
     @Nullable
     private CountryMetadataApi.Option findOptionBy(@NonNull String optionCode,
-                                                   @NonNull CountryMetadataApi.Question question) {
+            @NonNull CountryMetadataApi.Question question) {
 
         CountryMetadataApi.Option foundOption = null;
         if (question.options != null) {
@@ -332,7 +334,9 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         if (response.isSuccessful()) {
             return response.body();
         } else {
-            String error = response.errorBody().string() + "Http Code: " + response.code() + " url: " + response.raw().request().url();
+            String error =
+                    response.errorBody().string() + "Http Code: " + response.code() + " url: "
+                            + response.raw().request().url();
 
             throw new ApiCallException(error);
         }
@@ -364,7 +368,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                 domainQuestions.add(domainQuestion);
                 mapDomainQuestionsByCode.put(domainQuestion.getCode(), domainQuestion);
 
-                if(!isImportantQuestionSelected) {
+                if (!isImportantQuestionSelected) {
                     isImportantQuestionSelected = isImportantQuestion(domainQuestion);
                 }
             }
@@ -379,8 +383,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         private void setImportantDomainQuestion(List<Question> domainQuestions,
                 boolean isImportantQuestionSelected) {
 
-            if(!isImportantQuestionSelected && domainQuestions.size() >=1){
-                Question domainQuestion  = domainQuestions.get(0);
+            if (!isImportantQuestionSelected && domainQuestions.size() >= 1) {
+                Question domainQuestion = domainQuestions.get(0);
                 domainQuestion.setVisibility(IMPORTANT);
             }
         }
@@ -578,6 +582,8 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
                     .regExp(apiQuestion.validationRegex)
                     .regExpError(apiQuestion.validationPoTerm)
                     .defaultValue(apiQuestion.defaultValue)
+                    .voucherCodeSuffix(
+                            convertToDomainVoucherCodeSuffixFrom(apiQuestion.voucherCodeSuffix))
                     .build();
         }
 
@@ -588,19 +594,19 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
 
             Question.Visibility domainVisibility;
 
-            switch (apiQuestion.queueDisplayPriority){
+            switch (apiQuestion.queueDisplayPriority) {
 
-                case DISPLAY_PRIORITY_VISIBLE:{
+                case DISPLAY_PRIORITY_VISIBLE: {
                     domainVisibility = VISIBLE;
                     break;
                 }
 
-                case DISPLAY_PRIORITY_INVISIBLE:{
+                case DISPLAY_PRIORITY_INVISIBLE: {
                     domainVisibility = INVISIBLE;
                     break;
                 }
 
-                case DISPLAY_PRIORITY_IMPORTANT:{
+                case DISPLAY_PRIORITY_IMPORTANT: {
                     domainVisibility = IMPORTANT;
                     break;
                 }
@@ -609,6 +615,18 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
             }
 
             return domainVisibility;
+        }
+
+        @Nullable
+        private Question.VoucherCodeSuffix convertToDomainVoucherCodeSuffixFrom(
+                CountryMetadataApi.VoucherCodeSuffix voucherCodeSuffix) {
+
+            if (voucherCodeSuffix != null) {
+                return new Question.VoucherCodeSuffix(voucherCodeSuffix.suffix,
+                        voucherCodeSuffix.valueCondition);
+            }
+
+            return null;
         }
 
         @Nullable
@@ -715,7 +733,7 @@ public class MetadataConfigurationApiClient implements IMetadataConfigurationDat
         }
 
         private void addToPendingRules(@NonNull CountryMetadataApi.Question apiQuestion,
-                                       @NonNull CountryMetadataApi.Option apiOption, @NonNull Option domainOption) {
+                @NonNull CountryMetadataApi.Option apiOption, @NonNull Option domainOption) {
 
             addItemToListOf(mapDomainOptionsWithRuleByQuestionCodes, apiQuestion.code,
                     domainOption);

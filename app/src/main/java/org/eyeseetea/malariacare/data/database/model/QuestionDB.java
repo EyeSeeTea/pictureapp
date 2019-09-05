@@ -191,6 +191,12 @@ public class QuestionDB extends BaseModel {
     @Column
     boolean disabled;
 
+    @Column
+    String voucher_suffix;
+
+    @Column
+    String voucher_suffix_value_condition;
+
     public List<OptionDB> getOptionDBS() {
         return optionDBS;
     }
@@ -908,6 +914,23 @@ public class QuestionDB extends BaseModel {
         this.mCompositeScoreDB = compositeScoreDB;
         this.id_composite_score_fk =
                 (compositeScoreDB != null) ? compositeScoreDB.getId_composite_score() : null;
+    }
+
+
+    public String getVoucher_suffix() {
+        return voucher_suffix;
+    }
+
+    public void setVoucher_suffix(String voucher_suffix) {
+        this.voucher_suffix = voucher_suffix;
+    }
+
+    public String getVoucher_suffix_value_condition() {
+        return voucher_suffix_value_condition;
+    }
+
+    public void setVoucher_suffix_value_condition(String voucher_suffix_value_condition) {
+        this.voucher_suffix_value_condition = voucher_suffix_value_condition;
     }
 
     public List<QuestionRelationDB> getQuestionRelationDBs() {

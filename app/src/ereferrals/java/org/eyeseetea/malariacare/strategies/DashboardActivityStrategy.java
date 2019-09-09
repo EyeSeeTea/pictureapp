@@ -60,12 +60,14 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.AppInfo;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Settings;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.NoFilesException;
 import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
 import org.eyeseetea.malariacare.domain.identifiers.UIDGenerator;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.DownloadMediaUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetAppInfoUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSettingsUseCase;
@@ -73,6 +75,7 @@ import org.eyeseetea.malariacare.domain.usecase.GetUserUserAccountUseCase;
 import org.eyeseetea.malariacare.domain.usecase.SendToExternalAppPaperVoucherUseCase;
 import org.eyeseetea.malariacare.domain.usecase.TreatExternalAppResultUseCase;
 import org.eyeseetea.malariacare.factories.AppInfoFactory;
+import org.eyeseetea.malariacare.factories.SurveyFactory;
 import org.eyeseetea.malariacare.fragments.AVFragment;
 import org.eyeseetea.malariacare.fragments.SurveysFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
@@ -253,15 +256,33 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+
+        //TODO: This should be realized in the use case but
+        // require uncouple SurveyAnsweredCalculation from DB and UI
         malariaSurvey.updateSurveyStatus();
-        if (malariaSurvey.isCompleted() && malariaSurvey.getEventUid() == null) {
-            UIDGenerator uidGenerator = new UIDGenerator();
-            malariaSurvey.setEventUid(CodeGenerator.generateCode());
-            malariaSurvey.setVoucherUid(String.valueOf(uidGenerator.generateUID()));
-            malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
-            malariaSurvey.save();
-            showEndSurveyMessage(malariaSurvey);
-        }
+
+        CompletionSurveyUseCase completionSurveyUseCase =
+                new SurveyFactory().getCompletionSurveyUseCase();
+
+
+        completionSurveyUseCase.execute(malariaSurvey.getEventUid(),
+                new CompletionSurveyUseCase.CompletionSurveyCallback() {
+                    @Override
+                    public void CompletionSurveySuccess(
+                            Survey survey) {
+                        //TODO: Should be used the domain survey but require refactors in
+                        //showEndSurveyMessage method
+                        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
+                        showEndSurveyMessage(malariaSurvey);
+                    }
+
+                    @Override
+                    public void CompletionSurveyError(Exception e) {
+                        Log.e(
+                                DashboardActivityStrategy.this.getClass().getSimpleName(),
+                                e.getMessage());
+                    }
+                });
     }
 
     @Override
@@ -577,7 +598,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     public void showEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
-            final String voucherUId = surveyDB.getVoucherUid();
+            final String voucherUId = surveyDB.getVisbleVoucherUid();
 
             GetSettingsUseCase getSettingsUseCase = new GetSettingsUseCase(new UIThreadExecutor(),
                     new AsyncExecutor(),

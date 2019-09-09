@@ -137,6 +137,7 @@ public class SurveysPresenter {
         Date eventDate = survey.getSurveyDate();
         String uid = survey.getUId();
         String voucherUid = survey.getVoucherUid();
+        String visibleVoucherUid = survey.getVisibleVoucherUid();
         boolean isCompleted = survey.isCompleted();
         boolean hasPhone = survey.hasPhone();
         boolean noIssueVoucher = survey.noIssueVoucher();
@@ -154,7 +155,7 @@ public class SurveysPresenter {
         }
 
         SurveyViewModel surveyViewModel =
-                new SurveyViewModel(eventDate, uid, voucherUid, isCompleted,
+                new SurveyViewModel(eventDate, uid, voucherUid, visibleVoucherUid, isCompleted,
                         hasPhone, noIssueVoucher, importantValues, visibleValues, status);
 
         return surveyViewModel;

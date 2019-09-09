@@ -343,15 +343,16 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     public String getVoucherUid() {
         return voucher_uid;
     }
-    public void setVoucherUid(String eventuid) {
-        this.voucher_uid = eventuid;
+
+    public void setVoucherUid(String value) {
+        this.voucher_uid = value;
     }
 
-    public String getVisbleVoucherUid() {
+    public String getVisibleVoucherUid() {
         return visible_voucher_uid;
     }
-    public void setVisibleVoucherUid(String eventuid) {
-        this.visible_voucher_uid = eventuid;
+    public void setVisibleVoucherUid(String value) {
+        this.visible_voucher_uid = value;
     }
     /**
      * Returns a concrete survey, if it exists

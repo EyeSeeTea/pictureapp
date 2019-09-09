@@ -8,6 +8,7 @@ public class SurveyViewModel {
     private final Date eventDate;
     private final String uid;
     private final String voucherUid;
+    private final String visibleVoucherUid;
     private final boolean isCompleted;
     private final boolean hasPhone;
     private final boolean noIssueVoucher;
@@ -15,12 +16,13 @@ public class SurveyViewModel {
     private final List<String> visibleValues;
     private final int status;
 
-    public SurveyViewModel(Date eventDate, String uid, String voucherUid,
+    public SurveyViewModel(Date eventDate, String uid, String voucherUid,String visibleVoucherUid,
             boolean isCompleted, boolean hasPhone, boolean noIssueVoucher,
             List<String> importantValues, List<String> visibleValues, int status) {
         this.eventDate = eventDate;
         this.uid = uid;
         this.voucherUid = voucherUid;
+        this.visibleVoucherUid = visibleVoucherUid;
         this.isCompleted = isCompleted;
         this.hasPhone = hasPhone;
         this.noIssueVoucher = noIssueVoucher;
@@ -39,6 +41,10 @@ public class SurveyViewModel {
 
     public String getVoucherUid() {
         return voucherUid;
+    }
+
+    public String getVisibleVoucherUid() {
+        return visibleVoucherUid;
     }
 
     public boolean isCompleted() {

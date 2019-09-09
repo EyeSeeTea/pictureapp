@@ -54,7 +54,7 @@ public class CompletionSurveyUseCase implements UseCase  {
                 UIDGenerator uidGenerator = new UIDGenerator();
 
                 survey.assignVoucherUid(String.valueOf(uidGenerator.generateUID()));
-                survey.assignVisibleVoucherUid(survey.getOrgUnitUid() + voucherSuffix);
+                survey.assignVisibleVoucherUid(survey.getVoucherUid() + voucherSuffix);
                 survey.changeEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
 
                 surveyRepository.save(survey);

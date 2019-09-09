@@ -15,11 +15,9 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +155,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
         surveyDB.setEventUid(survey.getUid());
         surveyDB.setStatus(survey.getStatus());
 
+
         surveyDB.update();
         setSurveyOnSession(surveyDB);
         return surveyDB.getId_survey();
@@ -234,7 +233,7 @@ public class SurveyLocalDataSource implements ISurveyRepository {
                 userDB.getUid(),
                 surveyDB.getType(),
                 values,
-                surveyDB.getVisbleVoucherUid());
+                surveyDB.getVisibleVoucherUid());
 
         return survey;
     }

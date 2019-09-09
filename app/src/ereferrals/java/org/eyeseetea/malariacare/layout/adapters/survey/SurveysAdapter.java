@@ -133,7 +133,7 @@ public class SurveysAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 asterisk="*";
             }
 
-            String uid = context.getString(R.string.voucher) + ":" + survey.getVoucherUid();
+            String uid = context.getString(R.string.voucher) + ":" + survey.getVisibleVoucherUid();
 
             if (survey.noIssueVoucher()) {
                 uid = context.getString(R.string.no_voucher);

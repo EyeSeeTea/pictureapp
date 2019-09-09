@@ -15,9 +15,11 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Question;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +150,13 @@ public class SurveyLocalDataSource implements ISurveyRepository {
                     userDB, survey.getType());
             surveyDB.save();
         }
+
+        surveyDB.setEventDate(survey.getSurveyDate());
+        surveyDB.setVoucherUid(survey.getVoucherUid());
+        surveyDB.setVisibleVoucherUid(survey.getVisibleVoucherUid());
+        surveyDB.setEventUid(survey.getUid());
         surveyDB.setStatus(survey.getStatus());
+
         surveyDB.update();
         setSurveyOnSession(surveyDB);
         return surveyDB.getId_survey();
@@ -169,6 +177,13 @@ public class SurveyLocalDataSource implements ISurveyRepository {
             surveys.add(mapSurvey(surveyDB));
         }
         return surveys;
+    }
+
+    @Override
+    public Survey getSurveyByUid(String uid) {
+        SurveyDB surveyDB = SurveyDB.findByUid(uid);
+
+        return mapSurvey(surveyDB);
     }
 
     @Override
@@ -218,7 +233,8 @@ public class SurveyLocalDataSource implements ISurveyRepository {
                 orgUnitUid,
                 userDB.getUid(),
                 surveyDB.getType(),
-                values);
+                values,
+                surveyDB.getVisbleVoucherUid());
 
         return survey;
     }

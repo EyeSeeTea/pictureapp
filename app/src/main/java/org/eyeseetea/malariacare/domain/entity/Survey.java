@@ -20,11 +20,12 @@ public class Survey {
     private int mType;
     private List<Value> values;
     private String voucherUid;
+    private String visibleVoucherUid;
 
     public Survey(long id, String uid, String voucherUid, int status,
             SurveyAnsweredRatio surveyAnsweredRatio, Date surveyDate,
             String programUid, String orgUnitUid, String userUid, int type,
-            List<Value> values) {
+            List<Value> values, String visibleVoucherUid) {
         this.id = id;
         this.uid = uid;
         this.voucherUid = voucherUid;
@@ -36,6 +37,7 @@ public class Survey {
         this.userUid = userUid;
         this.mType = required(type, "Type is required");
         this.values = values;
+        this.visibleVoucherUid = visibleVoucherUid;
     }
 
     public Survey(String programUid, String orgUnitUid, String userUid, int type) {
@@ -79,6 +81,10 @@ public class Survey {
         return uid;
     }
 
+    public void assignUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getProgramUid() {
         return programUid;
     }
@@ -117,12 +123,27 @@ public class Survey {
         return mSurveyDate;
     }
 
+    public void changeEventDate(Date date) {
+        mSurveyDate = date;
+    }
+
     public String getUId() {
         return uid;
     }
 
     public String getVoucherUid() {
         return voucherUid;
+    }
+
+    public void assignVoucherUid(String voucherUid) {
+        this.voucherUid = voucherUid;
+    }
+
+    public String getVisibleVoucherUid() {
+        return visibleVoucherUid;
+    }
+    public void assignVisibleVoucherUid(String visibleVoucherUid) {
+        this.visibleVoucherUid = visibleVoucherUid;
     }
 
     public boolean isCompleted() {

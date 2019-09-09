@@ -42,27 +42,27 @@ public class CompletionSurveyUseCase implements UseCase  {
 
     @Override
     public void run() {
-        Survey survey = surveyRepository.getSurveyByUid(surveyUid);
+        try{
+            Survey survey = surveyRepository.getSurveyByUid(surveyUid);
 
-        if (survey.isCompleted() && survey.getUId() == null) {
-            List<Question> questions =
-                    questionRepository.getQuestionsByProgram(survey.getProgramUid());
+            if (survey.isCompleted()) {
+                List<Question> questions =
+                        questionRepository.getQuestionsByProgram(survey.getProgramUid());
 
-            String voucherSuffix = new VoucherSuffixDomainService().calculate(survey, questions);
+                String voucherSuffix = new VoucherSuffixDomainService().calculate(survey, questions);
 
-            UIDGenerator uidGenerator = new UIDGenerator();
+                UIDGenerator uidGenerator = new UIDGenerator();
 
-            //TODO: Uid should be assigned the first time the survey is created
-            //is created
-            survey.assignUid(CodeGenerator.generateCode());
+                survey.assignVoucherUid(String.valueOf(uidGenerator.generateUID()));
+                survey.assignVisibleVoucherUid(survey.getOrgUnitUid() + voucherSuffix);
+                survey.changeEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
 
-            survey.assignVoucherUid(String.valueOf(uidGenerator.generateUID()));
-            survey.assignVisibleVoucherUid(survey.getOrgUnitUid() + voucherSuffix);
-            survey.changeEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
+                surveyRepository.save(survey);
 
-            surveyRepository.save(survey);
-
-            notifyCompletionSuccess(survey);
+                notifyCompletionSuccess(survey);
+            }
+        } catch (Exception e){
+            notifyCompletionError(e);
         }
     }
 

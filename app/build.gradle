@@ -384,7 +384,6 @@ dependencies {
     apt "com.github.agrosner.dbflow:dbflow-processor:${libs.dbFlowVersion}"
     compile "com.github.agrosner.dbflow:dbflow:${libs.dbFlowVersion}"
     compile "com.github.agrosner.dbflow:dbflow-core:${libs.dbFlowVersion}"
-    compile "com.github.agrosner.dbflow:dbflow-sqlcipher:${libs.dbFlowVersion}"
     compile(project(path: ':bugshaker')) {
         exclude group: "com.google.android.gms"
     }

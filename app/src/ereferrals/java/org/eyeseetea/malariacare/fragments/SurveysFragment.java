@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -27,6 +28,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.SurveysAdapter;
 import org.eyeseetea.malariacare.presentation.models.SurveyViewModel;
 import org.eyeseetea.malariacare.presentation.presenters.SurveysPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,6 +208,13 @@ public class SurveysFragment extends Fragment implements IDashboardFragment, Sur
     public void showSurveys(List<SurveyViewModel> surveyViewModels) {
         mSurveyDBs = surveyViewModels;
         adapter.setItems(surveyViewModels);
+    }
+
+    @Override
+    public void showErrorLoadingSurveys() {
+        Toast.makeText(getActivity(),
+                Utils.getInternationalizedString(R.string.surveys_error_loading, getActivity()),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override

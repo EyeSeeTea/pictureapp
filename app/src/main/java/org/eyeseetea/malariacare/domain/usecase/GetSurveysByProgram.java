@@ -32,21 +32,35 @@ public class GetSurveysByProgram implements UseCase {
 
     @Override
     public void run() {
-        List<Survey> surveys = mSurveyRepository.getSurveysByProgram(mIdProgram);
-        notifyGetSurveys(surveys);
+        try{
+            List<Survey> surveys = mSurveyRepository.getSurveysByProgram(mIdProgram);
+            notifyGetSurveysSuccess(surveys);
+        } catch (Exception e){
+            notifyGetSurveysError(e);
+        }
+
     }
 
-    private void notifyGetSurveys(final List<Survey> surveys) {
+    private void notifyGetSurveysSuccess(final List<Survey> surveys) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onGetSurveys(surveys);
+                mCallback.onGetSurveysSuccess(surveys);
+            }
+        });
+    }
+
+    private void notifyGetSurveysError(final Exception e) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+               mCallback.onGetSurveysError(e);
             }
         });
     }
 
     public interface Callback {
-        void onGetSurveys(List<Survey> surveys);
+        void onGetSurveysSuccess(List<Survey> surveys);
+        void onGetSurveysError(Exception e);
     }
-
 }

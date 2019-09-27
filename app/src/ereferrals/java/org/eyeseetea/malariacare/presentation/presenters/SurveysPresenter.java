@@ -104,11 +104,18 @@ public class SurveysPresenter {
     private void loadSurveys() {
         getSurveysByProgram.execute(new GetSurveysByProgram.Callback() {
             @Override
-            public void onGetSurveys(List<Survey> surveys) {
+            public void onGetSurveysSuccess(List<Survey> surveys) {
                 SurveysPresenter.this.surveys = surveys;
 
                 showSurveys();
 
+            }
+
+            @Override
+            public void onGetSurveysError(Exception e) {
+                if (view != null) {
+                    view.showErrorLoadingSurveys();
+                }
             }
         }, programUid);
     }
@@ -185,6 +192,7 @@ public class SurveysPresenter {
 
     public interface View {
         void showSurveys(List<SurveyViewModel> surveyViewModels);
+        void showErrorLoadingSurveys();
 
         void navigateToSurvey(String surveyUid);
     }

@@ -1042,4 +1042,9 @@ Ameahidi kuhudhuria"</string>
 <string name="push_network_error">Kuna matatizo ya mtandao kwenye mchakato wa kushinikiza</string>
 <string name="preference_jumping_survey_views_title">Kuruka katika Utafiti</string>
 <string name="preference_jumping_survey_views_summary">Wezesha kuruka kati ya maoni katika utafiti</string>
+<string name="surveys_error_loading">Kosa limetokea kwenye upakiaji uchunguzi</string>
+
+<string name="action_ok">sawa</string>
+<string name="action_copy">nakala</string>
+<string name="action_share">kushiriki</string>
 </resources>

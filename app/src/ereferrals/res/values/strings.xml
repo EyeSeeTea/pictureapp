@@ -1150,4 +1150,10 @@
 <string name="push_network_error">There were network problems while sending vouchers to the server</string>
 <string name="preference_jumping_survey_views_title">Question jumping</string>
 <string name="preference_jumping_survey_views_summary">Activate jumping to the next question when previous one is finished</string>
+<string name="surveys_error_loading">An error has occurred loading surveys</string>
+
+<string name="action_ok">OK</string>
+<string name="action_copy">COPY</string>
+<string name="action_share">SHARE</string>
+
 </resources>

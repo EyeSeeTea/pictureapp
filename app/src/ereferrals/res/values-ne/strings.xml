@@ -988,4 +988,9 @@
 <string name="push_network_error">प्रक्रिया प्रक्रियामा सञ्जाल समस्याहरू छन्</string>
 <string name="preference_jumping_survey_views_title">सर्वेक्षणमा जम्पिङ</string>
 <string name="preference_jumping_survey_views_summary">सर्वेक्षणमा हेराइहरू बीचमा जम्पिङ सक्रिय गर्नुहोस्</string>
+<string name="surveys_error_loading">सर्वेक्षण लोड गर्दा त्रुटि देखा पर्‍यो</string>
+
+<string name="action_ok">ठीक छ</string>
+<string name="action_copy">प्रतिलिपि</string>
+<string name="action_share">सेयर</string>
 </resources>

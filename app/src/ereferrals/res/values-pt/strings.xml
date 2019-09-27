@@ -985,4 +985,8 @@
 <string name="preference_jumping_survey_views_title">Saltando no Inquérito</string>
 <string name="preference_jumping_survey_views_summary">Ative pulando entre as vistas na pesquisa</string>
 <string name="surveys_error_loading">Ocorreu um erro ao carregar pesquisas</string>
+
+<string name="action_ok">ok</string>
+<string name="action_copy">copiar</string>
+<string name="action_share">partilhar</string>
 </resources>

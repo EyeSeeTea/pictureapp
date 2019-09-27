@@ -4,9 +4,12 @@ import static org.eyeseetea.malariacare.utils.Utils.getUserLanguageOrDefault;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -260,7 +263,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             malariaSurvey.setVoucherUid(String.valueOf(uidGenerator.generateUID()));
             malariaSurvey.setEventDate(new Date(uidGenerator.getTimeGeneratedUID()));
             malariaSurvey.save();
-            showEndSurveyMessage(malariaSurvey);
+            verifyFinalActionsAndShowEndSurveyMessage(malariaSurvey);
         }
     }
 
@@ -575,7 +578,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.setCurrentFragment(statusFragment);
     }
 
-    public void showEndSurveyMessage(SurveyDB surveyDB) {
+    public void verifyFinalActionsAndShowEndSurveyMessage(SurveyDB surveyDB) {
         if (surveyDB != null && !noIssueVoucher(surveyDB) && !hasPhone(surveyDB)) {
             final String voucherUId = surveyDB.getVoucherUid();
 
@@ -585,17 +588,61 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             getSettingsUseCase.execute(new GetSettingsUseCase.Callback() {
                 @Override
                 public void onSuccess(Settings setting) {
-                    DialogInterface.OnClickListener onClickListener = null;
+                    DialogInterface.OnClickListener onClickOKListener = null;
+
                     if (setting.isElementActive()) {
-                        onClickListener = createOnClickListenerToSendVoucherToExternalApp(
+                        onClickOKListener = createOnClickListenerToSendVoucherToExternalApp(
                                 voucherUId, mDashboardActivity);
                     }
 
-                    mDashboardActivity.showException(mDashboardActivity, "", String.format(
-                            translate(R.string.give_voucher),
-                            voucherUId), onClickListener);
+                    showEndSurveyMessage(voucherUId, onClickOKListener);
                 }
             });
+        }
+    }
+
+
+    public void showEndSurveyMessage(final String voucherUId,
+            DialogInterface.OnClickListener onClickOKListener) {
+        final String dialogMessage = String.format(translate(R.string.give_voucher),voucherUId);
+
+        new AlertDialog.Builder(mDashboardActivity)
+                .setCancelable(false)
+                .setTitle("")
+                .setMessage(dialogMessage)
+                .setNeutralButton(R.string.action_ok, onClickOKListener)
+                .setNegativeButton(R.string.action_copy, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        copyVoucherUID(voucherUId);
+                    }
+                })
+                .setPositiveButton(R.string.action_share, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        shareVoucherUID(voucherUId);
+                    }
+                })
+
+                .create().show();
+    }
+
+    private void shareVoucherUID(String voucherUId) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, voucherUId);
+        sendIntent.setType("text/plain");
+        mDashboardActivity.startActivity(sendIntent);
+    }
+
+    public void copyVoucherUID(String voucherUId) {
+        ClipboardManager clipboard = (ClipboardManager)
+                mDashboardActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        ClipData clip = ClipData.newPlainText("",voucherUId);
+
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
         }
     }
 

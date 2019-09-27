@@ -62,6 +62,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.identifiers.CodeGenerator;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.joda.time.DateTime;
@@ -127,6 +128,9 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     @Column
     String voucher_uid;
 
+    @Column
+    String visible_voucher_uid;
+
     /**
      * List of values for this survey
      */
@@ -154,6 +158,10 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
         this.event_date = new Date();
         this.scheduled_date = null;
         this.type = Constants.SURVEY_NO_TYPE; //to avoid NullPointerExceptions
+
+        // TODO: This action should be make on survey entity creation when create a new survey
+        //but domain entity is not used the first time
+        this.uid_event_fk = CodeGenerator.generateCode();
     }
 
     public SurveyDB(OrgUnitDB orgUnitDB, ProgramDB programDB, UserDB userDB) {
@@ -335,8 +343,16 @@ public class SurveyDB extends BaseModel implements VisitableToSDK {
     public String getVoucherUid() {
         return voucher_uid;
     }
-    public void setVoucherUid(String eventuid) {
-        this.voucher_uid = eventuid;
+
+    public void setVoucherUid(String value) {
+        this.voucher_uid = value;
+    }
+
+    public String getVisibleVoucherUid() {
+        return visible_voucher_uid;
+    }
+    public void setVisibleVoucherUid(String value) {
+        this.visible_voucher_uid = value;
     }
     /**
      * Returns a concrete survey, if it exists

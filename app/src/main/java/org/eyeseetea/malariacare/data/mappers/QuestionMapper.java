@@ -49,6 +49,9 @@ public class QuestionMapper {
                     .regExp(questionDB.getValidationRegExp())
                     .regExpError(questionDB.getValidationMessage())
                     .compulsory(questionDB.isCompulsory())
+                    .voucherCodeSuffix(new Question.VoucherCodeSuffix(
+                            questionDB.getVoucher_suffix(),
+                            questionDB.getVoucher_suffix_value_condition()))
                     .build();
         }else{
             return Question.newBuilder()
@@ -62,6 +65,9 @@ public class QuestionMapper {
                     .regExpError(questionDB.getValidationMessage())
                     .compulsory(questionDB.isCompulsory())
                     .value(value)
+                    .voucherCodeSuffix(new Question.VoucherCodeSuffix(
+                            questionDB.getVoucher_suffix(),
+                            questionDB.getVoucher_suffix_value_condition()))
                     .build();
         }
     }

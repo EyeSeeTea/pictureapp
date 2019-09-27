@@ -53,6 +53,13 @@ public class QuestionConvertFromDomainVisitor implements
         dbModel.setValidationMessage(domainModel.getRegExpError());
         dbModel.setPhoneFormatDB(getPhoneFormat(domainModel.getPhoneFormat()));
         dbModel.setDefaultValue(domainModel.getDefaultValue());
+
+        if (domainModel.getVoucherCodeSuffix() != null) {
+            dbModel.setVoucher_suffix(domainModel.getVoucherCodeSuffix().suffix);
+            dbModel.setVoucher_suffix_value_condition(
+                    domainModel.getVoucherCodeSuffix().valueCondition);
+        }
+
         return dbModel;
     }
 
@@ -138,7 +145,7 @@ public class QuestionConvertFromDomainVisitor implements
                 break;
 
             case AUTOCOMPLETE_TEXT:
-                finalOutput=Constants.AUTOCOMPLETE_TEXT;
+                finalOutput = Constants.AUTOCOMPLETE_TEXT;
                 break;
 
         }

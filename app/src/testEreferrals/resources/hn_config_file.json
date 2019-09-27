@@ -1,0 +1,952 @@
+{
+  "countryCode": "HN",
+  "program": "FPL",
+  "actionType": "issueReferral",
+  "version": "2",
+  "updateDate": "2019-06-12 12:00",
+  "updateUser": "BR",
+  "languages": [
+    "en"
+  ],
+  "issuing_capture": {
+    "payloadSpecs": [
+      {
+        "dataPointRef": "url"
+      },
+      {
+        "dataPointRef": "version"
+      },
+      {
+        "dataPointRef": "csvVersion",
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "source"
+      },
+      {
+        "dataPointRef": "androidInfo",
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "language"
+      },
+      {
+        "dataPointRef": "userName"
+      },
+      {
+        "dataPointRef": "password"
+      },
+      {
+        "dataPointRef": "settings",
+        "mandatory": "false"
+      }
+    ],
+    "actionsSpecs": [
+      {
+        "dataPointRef": "type"
+      },
+      {
+        "dataPointRef": "actionId"
+      },
+      {
+        "dataPointRef": "sourceAddedDateTime"
+      },
+      {
+        "dataPointRef": "voucher"
+      },
+      {
+        "dataPointRef": "coordinates"
+      }
+    ],
+    "dataValuesSpecs": [
+      {
+        "dataPointRef": "program",
+        "poTerm": "ipc_issueEntry_q_program",
+        "defaultName": "Program",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "FPL-J30",
+            "poTerm": "common_option_program_familyPlanning_jovenes30",
+            "defaultName": "Jovenes 3.0"
+          },
+          {
+            "value": "FPL-Zika",
+            "poTerm": "common_option_program_familyPlanning_zika",
+            "defaultName": "Zika"
+          }
+        ],
+        "program:Jovenes": "true",
+        "program:Zika": "true"
+      },
+      {
+        "dataPointRef": "sessionDetails",
+        "poTerm": "ipc_issueEntry_q_sessionDetails",
+        "defaultName": "Session details:",
+        "controlType": "QUESTION_LABEL",
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "contactSource",
+        "poTerm": "ipc_issueEntry_q_contactSource",
+        "defaultName": "Contact source",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "POSTER",
+            "poTerm": "common_option_contactSource_poster",
+            "defaultName": "Poster / Presentation card"
+          },
+          {
+            "value": "FRIEND",
+            "poTerm": "common_option_contactSource_friend",
+            "defaultName": "Referred by a friend"
+          },
+          {
+            "value": "FB-FP-UsalaBien",
+            "poTerm": "common_option_contactSource_fbFpUsalaBien",
+            "defaultName": "Fanpage FB: Usala Bien"
+          },
+          {
+            "value": "FB-FP-MiZonaH",
+            "poTerm": "common_option_contactSource_fbFpMiZonaH",
+            "defaultName": "Fanpage FB: Mi Zona H"
+          },
+          {
+            "value": "FB-FP-ClubEnConexion",
+            "poTerm": "common_option_contactSource_fbFpClubEnConexion",
+            "defaultName": "Fanpage FB: Club en Conexion"
+          },
+          {
+            "value": "FB-FP-GeneracionCero",
+            "poTerm": "common_option_contactSource_fbFpGeneracionCero",
+            "defaultName": "Fanpage FB: Generacion Cero"
+          },
+          {
+            "value": "FB-Ad",
+            "poTerm": "common_option_contactSource_fbAd",
+            "defaultName": "Ad FB"
+          },
+          {
+            "value": "FB-Ad-WA",
+            "poTerm": "common_option_contactSource_fbAdToWhatsapp",
+            "defaultName": "Ad FB to WhatsApp"
+          },
+          {
+            "value": "IG-Ad",
+            "poTerm": "common_option_contactSource_igAd",
+            "defaultName": "Insta Ad"
+          },
+          {
+            "value": "FB-INF",
+            "poTerm": "common_option_contactSource_fbInfluencer",
+            "defaultName": "Fanpage FB: Refered via influencer"
+          },
+          {
+            "value": "REG",
+            "poTerm": "common_option_contactSource_regularReach",
+            "defaultName": "Regular reach"
+          }
+        ],
+        "program:Jovenes": "true",
+        "program:Zika": "true"
+      },
+      {
+        "dataPointRef": "contactSite",
+        "poTerm": "ipc_issueEntry_q_contactSite",
+        "defaultName": "Contact site",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "FB-profile",
+            "poTerm": "common_option_contactSite_fbProfile",
+            "defaultName": "FB: Profile"
+          },
+          {
+            "value": "FB-FP-intern",
+            "poTerm": "common_option_contactSite_fbFpIntern",
+            "defaultName": "FB: Fanpage - Intern"
+          },
+          {
+            "value": "FB-FP-extern",
+            "poTerm": "common_option_contactSite_fbFpExtern",
+            "defaultName": "FB: Fanpage - Extern"
+          },
+          {
+            "value": "WA",
+            "poTerm": "common_option_contactSite_whatsapp",
+            "defaultName": "WhatsApp"
+          },
+          {
+            "value": "IG",
+            "poTerm": "common_option_contactSite_instagram",
+            "defaultName": "Instagram"
+          },
+          {
+            "value": "TT",
+            "poTerm": "common_option_contactSite_twitter",
+            "defaultName": "Twitter"
+          },
+          {
+            "value": "TD",
+            "poTerm": "common_option_contactSite_tinder",
+            "defaultName": "Tinder"
+          }
+        ],
+        "program:Jovenes": "true",
+        "program:Zika": "true"
+      },
+      {
+        "dataPointRef": "contactType",
+        "poTerm": "ipc_issueEntry_q_contactType",
+        "defaultName": "Contact type",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "OUTR",
+            "poTerm": "common_option_contactType_outreach",
+            "defaultName": "Online outreach"
+          },
+          {
+            "value": "REQU",
+            "poTerm": "common_option_contactType_directRequest",
+            "defaultName": "Direct request online"
+          },
+          {
+            "value": "CONS",
+            "poTerm": "common_option_contactType_onlineConsultation",
+            "defaultName": "Online consultation"
+          }
+        ],
+        "program:Jovenes": "true",
+        "program:Zika": "true"
+      },
+      {
+        "dataPointRef": "clientDetails",
+        "poTerm": "ipc_issueEntry_q_clientDetails",
+        "defaultName": "Client details:",
+        "controlType": "QUESTION_LABEL",
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "fullDetailsAvailable",
+        "poTerm": "ipc_issueEntry_q_fullDetailsAvailable",
+        "defaultName": "Full details available",
+        "defaultValue": "YES",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "common_btn_yes",
+            "defaultName": "Yes"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_btn_no",
+            "defaultName": "No"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "firstName",
+        "poTerm": "ipc_issueEntry_q_firstName",
+        "defaultName": "First name",
+        "controlType": "SHORT_TEXT",
+        "queueDisplayPriority": "IMPORTANT",
+        "validationRegex": "^[ÑñA-Za-z][ÑñA-Za-z ]*[ÑñA-Za-z]$",
+        "validationPoTerm": "ipc_issueEntry_q_firstName_invalid"
+      },
+      {
+        "dataPointRef": "lastName",
+        "poTerm": "ipc_issueEntry_q_lastNameFirstTwoLetters",
+        "defaultName": "Last name",
+        "controlType": "SHORT_TEXT",
+        "queueDisplayPriority": "IMPORTANT",
+        "validationRegex": "^[ÑñA-Za-z][ÑñA-Za-z ]*[ÑñA-Za-z]$",
+        "validationPoTerm": "ipc_issueEntry_q_lastNameFirstTwoLetters_invalid"
+      },
+      {
+        "dataPointRef": "gender",
+        "poTerm": "ipc_issueEntry_q_gender",
+        "defaultName": "Gender",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "F",
+            "poTerm": "common_option_gender_female",
+            "defaultName": "Female"
+          },
+          {
+            "value": "M",
+            "poTerm": "common_option_gender_male",
+            "defaultName": "Male"
+          },
+          {
+            "value": "U",
+            "poTerm": "common_option_gender_unknown",
+            "defaultName": "Unknown"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "birthDate",
+        "poTerm": "ipc_issueEntry_q_birthDate",
+        "defaultName": "Birth date",
+        "controlType": "DATE"
+      },
+      {
+        "dataPointRef": "age",
+        "poTerm": "ipc_issueEntry_q_age",
+        "defaultName": "Age",
+        "controlType": "INT",
+        "validationRegex": "^(\\d{1,2})$",
+        "validationPoTerm": "ipc_issueEntry_q_age_invalid"
+      },
+      {
+        "dataPointRef": "motherFirstName",
+        "poTerm": "ipc_issueEntry_q_motherFirstNameFirstLetter",
+        "defaultName": "First name of mother",
+        "controlType": "SHORT_TEXT",
+        "validationRegex": "^[ÑñA-Za-z][ÑñA-Za-z]*$",
+        "validationPoTerm": "ipc_issueEntry_q_motherFirstNameFirstLetter_invalid"
+      },
+      {
+        "dataPointRef": "motherLastName",
+        "poTerm": "ipc_issueEntry_q_motherLastNameFirstLetter",
+        "defaultName": "Last name of mother",
+        "controlType": "SHORT_TEXT",
+        "validationRegex": "^[ÑñA-Za-z][ÑñA-Za-z]*$",
+        "validationPoTerm": "ipc_issueEntry_q_motherLastNameFirstLetter_invalid"
+      },
+      {
+        "dataPointRef": "educationLevel",
+        "poTerm": "ipc_issueEntry_q_educationLevel",
+        "defaultName": "Education level",
+        "controlType": "DROPDOWN_LIST",
+        "mandatory": "false",
+        "options": [
+          {
+            "value": "None",
+            "poTerm": "common_option_educationLevel_none",
+            "defaultName": "None"
+          },
+          {
+            "value": "Primary",
+            "poTerm": "common_option_educationLevel_primary",
+            "defaultName": "Primary"
+          },
+          {
+            "value": "Secondary",
+            "poTerm": "common_option_educationLevel_secondary",
+            "defaultName": "Secondary"
+          },
+          {
+            "value": "Diversified",
+            "poTerm": "common_option_educationLevel_diversified",
+            "defaultName": "Diversified"
+          },
+          {
+            "value": "Technical",
+            "poTerm": "common_option_educationLevel_technical",
+            "defaultName": "Technical"
+          },
+          {
+            "value": "University",
+            "poTerm": "common_option_educationLevel_university",
+            "defaultName": "University"
+          },
+          {
+            "value": "Master",
+            "poTerm": "common_option_educationLevel_master",
+            "defaultName": "Master"
+          },
+          {
+            "value": "PostGraduate",
+            "poTerm": "common_option_educationLevel_postGraduate",
+            "defaultName": "Post-graduate"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "healthyBehaviorPromoted_zika",
+        "poTerm": "ipc_issueEntry_q_healthyBehaviorPromoted",
+        "defaultName": "Healthy behavior promoted",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "B-Z-CON",
+            "poTerm": "common_option_healthyBehaviorPromoted_bzcon",
+            "defaultName": "Zika and condom use"
+          },
+          {
+            "value": "B-Z-FPL",
+            "poTerm": "common_option_healthyBehaviorPromoted_bzfpl",
+            "defaultName": "Zika and family planning methods"
+          },
+          {
+            "value": "Z-PRO",
+            "poTerm": "common_option_healthyBehaviorPromoted_zpro",
+            "defaultName": "Zika, general protection methods"
+          },
+          {
+            "value": "Z-RSK",
+            "poTerm": "common_option_healthyBehaviorPromoted_zrsk",
+            "defaultName": "Zika, risk perception"
+          },
+          {
+            "value": "B-COMP-FU",
+            "poTerm": "common_option_healthyBehaviorPromoted_bcompfu",
+            "defaultName": "Comprehensive follow-up"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "healthyBehaviorPromoted_j30",
+        "poTerm": "ipc_issueEntry_q_healthyBehaviorPromoted",
+        "defaultName": "Healthy behavior promoted",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "B-Z-CON",
+            "poTerm": "common_option_healthyBehaviorPromoted_bzcon",
+            "defaultName": "Zika and condom use"
+          },
+          {
+            "value": "B-Z-FPL",
+            "poTerm": "common_option_healthyBehaviorPromoted_bzfpl",
+            "defaultName": "Zika and family planning methods"
+          },
+          {
+            "value": "J-FPL",
+            "poTerm": "common_option_healthyBehaviorPromoted_jfpl",
+            "defaultName": "Contraceptive methods use"
+          },
+          {
+            "value": "J-SPE",
+            "poTerm": "common_option_healthyBehaviorPromoted_jspe",
+            "defaultName": "Seeking specialized care"
+          },
+          {
+            "value": "J-CON",
+            "poTerm": "common_option_healthyBehaviorPromoted_jcon",
+            "defaultName": "Correct and consistent use of condom"
+          },
+          {
+            "value": "J-SSR",
+            "poTerm": "common_option_healthyBehaviorPromoted_jssr",
+            "defaultName": "General medical consultation"
+          },
+          {
+            "value": "J-VIO",
+            "poTerm": "common_option_healthyBehaviorPromoted_jvio",
+            "defaultName": "Victim of violence seeking support"
+          },
+          {
+            "value": "B-COMP-FU",
+            "poTerm": "common_option_healthyBehaviorPromoted_bcompfu",
+            "defaultName": "Comprehensive follow-up"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "voucherDetails",
+        "poTerm": "ipc_issueEntry_q_voucherDetails",
+        "defaultName": "Voucher details:",
+        "controlType": "QUESTION_LABEL",
+        "mandatory": "false"
+      },
+      {
+        "dataPointRef": "generateVoucher",
+        "poTerm": "ipc_issueEntry_q_isClientReferred",
+        "defaultName": "Would you like to issue a voucher?",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "common_btn_yes",
+            "defaultName": "Yes"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_btn_no",
+            "defaultName": "No"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "serviceDesired_fplcoun",
+        "poTerm": "common_option_serviceDesired_fplcoun",
+        "defaultName": "Contraceptive methods counselling",
+        "controlType": "RADIO_GROUP_HORIZONTAL",
+        "mandatory": "false",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "ipc_issueEntry_q_blank",
+            "defaultName": "YES"
+          }
+        ],
+        "voucherCodeSuffix": {
+          "suffix": "MAC",
+          "valueCondition": "YES"
+        }
+      },
+      {
+        "dataPointRef": "serviceDesired_medcons",
+        "poTerm": "common_option_serviceDesired_medcons",
+        "defaultName": "Medical consultation",
+        "controlType": "RADIO_GROUP_HORIZONTAL",
+        "mandatory": "false",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "ipc_issueEntry_q_blank",
+            "defaultName": "YES"
+          }
+        ],
+        "voucherCodeSuffix": {
+          "suffix": "SSR",
+          "valueCondition": "YES"
+        }
+
+      },
+      {
+        "dataPointRef": "serviceDesired_hivtest",
+        "poTerm": "common_option_serviceDesired_hivtest",
+        "defaultName": "HIV testing",
+        "controlType": "RADIO_GROUP_HORIZONTAL",
+        "mandatory": "false",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "ipc_issueEntry_q_blank",
+            "defaultName": "YES"
+          }
+        ],
+        "voucherCodeSuffix": {
+          "suffix": "PVC",
+          "valueCondition": "YES"
+        }
+      },
+      {
+        "dataPointRef": "serviceDesired_cito",
+        "poTerm": "common_option_serviceDesired_cito",
+        "defaultName": "Citology",
+        "controlType": "RADIO_GROUP_HORIZONTAL",
+        "mandatory": "false",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "ipc_issueEntry_q_blank",
+            "defaultName": "YES"
+          }
+        ],
+        "voucherCodeSuffix": {
+          "suffix": "CIT",
+          "valueCondition": "YES"
+        }
+      },
+      {
+        "dataPointRef": "serviceDesired_osti",
+        "poTerm": "common_option_serviceDesired_osti",
+        "defaultName": "Other STI",
+        "controlType": "RADIO_GROUP_HORIZONTAL",
+        "mandatory": "false",
+        "options": [
+          {
+            "value": "YES",
+            "poTerm": "ipc_issueEntry_q_blank",
+            "defaultName": "YES"
+          }
+        ],
+        "voucherCodeSuffix": {
+          "suffix": "ITS",
+          "valueCondition": "YES"
+        }
+      },
+      {
+        "dataPointRef": "healthFacility",
+        "poTerm": "ipc_issueEntry_q_healthFacility",
+        "defaultName": "Health facility",
+        "controlType": "AUTOCOMPLETE",
+        "options": [
+          {
+            "value": "0801-SSIAA-VC",
+            "poTerm": "SSIAA Central Vicente Caceres (0801-SSIAA-VC)",
+            "defaultName": "SSIAA Central Vicente Caceres (0801-SSIAA-VC)"
+          },
+          {
+            "value": "0801-CM-RS",
+            "poTerm": "Clinicas Medica Red Segura (0801-CM-RS)",
+            "defaultName": "Clinicas Medica Red Segura (0801-CM-RS)"
+          },
+          {
+            "value": "0801-CS-AS",
+            "poTerm": "Centro de Salud Alonso Suazo (0801-CS-AS)",
+            "defaultName": "Centro de Salud Alonso Suazo (0801-CS-AS)"
+          },
+          {
+            "value": "0801-CS-SM",
+            "poTerm": "Centro de Salud San Miguel (0801-CS-SM)",
+            "defaultName": "Centro de Salud San Miguel (0801-CS-SM)"
+          },
+          {
+            "value": "0801-CS-CA",
+            "poTerm": "Centro de Salud Carrizal (0801-CS-CA)",
+            "defaultName": "Centro de Salud Carrizal (0801-CS-CA)"
+          },
+          {
+            "value": "0801-CS-FC",
+            "poTerm": "Centro de Salud Flor del Campo (0801-CS-FC)",
+            "defaultName": "Centro de Salud Flor del Campo (0801-CS-FC)"
+          },
+          {
+            "value": "0501-CS-MP",
+            "poTerm": "Miguel Paz Barahona(Centra de Salud) (0501-CS-MP)",
+            "defaultName": "Miguel Paz Barahona(Centra de Salud) (0501-CS-MP)"
+          },
+          {
+            "value": "0501-CS-LP",
+            "poTerm": "Centro de Salud Las Palmas (0501-CS-LP)",
+            "defaultName": "Centro de Salud Las Palmas (0501-CS-LP)"
+          },
+          {
+            "value": "0501-HOSP-MC",
+            "poTerm": "Hospital Mario Catarino Rivas (0501-HOSP-MC)",
+            "defaultName": "Hospital Mario Catarino Rivas (0501-HOSP-MC)"
+          },
+          {
+            "value": "0501-SSIAA-JT",
+            "poTerm": "SSIAA Jose Trinidad Reyes (0501-SSIAA-JT)",
+            "defaultName": "SSIAA Jose Trinidad Reyes (0501-SSIAA-JT)"
+          },
+          {
+            "value": "0502-CMI-CH",
+            "poTerm": "Clinica Materno Infantil de Choloma (0502-CMI-CH)",
+            "defaultName": "Clinica Materno Infantil de Choloma (0502-CMI-CH)"
+          },
+          {
+            "value": "0502-CS-PI",
+            "poTerm": "Centro de Salud Pascual Izaguirre (0502-CS-PI)",
+            "defaultName": "Centro de Salud Pascual Izaguirre (0502-CS-PI)"
+          },
+          {
+            "value": "0502-SSIAA-MP",
+            "poTerm": "SSIAA Manuel Pagan Losano (0502-SSIAA-MP)",
+            "defaultName": "SSIAA Manuel Pagan Losano (0502-SSIAA-MP)"
+          },
+          {
+            "value": "0101-SSIAA-MB",
+            "poTerm": "SSIAA Manuel Banilla (0101-SSIAA-MB)",
+            "defaultName": "SSIAA Manuel Banilla (0101-SSIAA-MB)"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "phoneOwnership",
+        "poTerm": "ipc_issueEntry_q_ownershipOfPhone",
+        "defaultName": "Phone ownership",
+        "controlType": "DROPDOWN_LIST",
+        "options": [
+          {
+            "value": "NO",
+            "poTerm": "common_option_ownershipOfPhone_noMobile",
+            "defaultName": "No Number"
+          },
+          {
+            "value": "HER",
+            "poTerm": "common_option_ownershipOfPhone_herNumber",
+            "defaultName": "Her Number"
+          },
+          {
+            "value": "PAR",
+            "poTerm": "common_option_ownershipOfPhone_husbandPartner",
+            "defaultName": "Husband/Partner"
+          },
+          {
+            "value": "SHA",
+            "poTerm": "common_option_ownershipOfPhone_shared",
+            "defaultName": "Shared"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "phoneNumber",
+        "poTerm": "ipc_issueEntry_q_phoneNumber",
+        "defaultName": "Phone number",
+        "controlType": "PHONE_NUMBER",
+        "validationRegex": "^(\\+[^504]\\d*|00[^504]\\d*|\\d{8}|\\+504\\d{8}|00504\\d{8})$",
+        "validationPoTerm": "ipc_issueEntry_q_ownershipOfPhone_invalid",
+        "samples": [
+          {
+            "value": "undefined",
+            "provider": "undefined"
+          }
+        ],
+        "format": {
+          "accepted": [
+            {
+              "starts": "",
+              "length": "8",
+              "comment": "national"
+            },
+            {
+              "starts": "+",
+              "comment": "international"
+            },
+            {
+              "starts": "00",
+              "comment": "international"
+            }
+          ],
+          "details": {
+            "trunkPrefix": "",
+            "dialingCode": "+504"
+          }
+        }
+      },
+      {
+        "dataPointRef": "phoneContactConsent",
+        "poTerm": "ipc_issueEntry_q_phoneContactConsent_service",
+        "defaultName": "Consent to service-related calls/texts",
+        "controlType": "DROPDOWN_LIST",
+        "defaultValue": "YESP",
+        "options": [
+          {
+            "value": "YESP",
+            "poTerm": "common_option_furtherInformationConsent_yes",
+            "defaultName": "Yes"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_option_furtherInformationConsent_no",
+            "defaultName": "No"
+          }
+        ]
+      },
+      {
+        "dataPointRef": "phoneContactConsent_feedback",
+        "poTerm": "ipc_issueEntry_q_phoneContactConsent_feedback",
+        "defaultName": "Consent to feedback calls/texts",
+        "controlType": "DROPDOWN_LIST",
+        "defaultValue": "YESP",
+        "options": [
+          {
+            "value": "YESP",
+            "poTerm": "common_option_furtherInformationConsent_yes",
+            "defaultName": "Yes"
+          },
+          {
+            "value": "NO",
+            "poTerm": "common_option_furtherInformationConsent_no",
+            "defaultName": "No"
+          }
+        ]
+      }
+    ],
+    "rulesSpecs": [
+      {
+        "ruleRef": "in:program",
+        "conditions": [
+          {
+            "left": {
+              "value": "program",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "FPL-Zika",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "healthyBehaviorPromoted_zika",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "ruleRef": "in:program",
+        "conditions": [
+          {
+            "left": {
+              "value": "program",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "FPL-J30",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "healthyBehaviorPromoted_j30",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "ruleRef": "in:fullDetailsAvailable",
+        "conditions": [
+          {
+            "left": {
+              "value": "fullDetailsAvailable",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "firstName",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "lastName",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "birthDate",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "motherFirstName",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "motherLastName",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "ruleRef": "in:fullDetailsAvailable",
+        "conditions": [
+          {
+            "left": {
+              "value": "fullDetailsAvailable",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "NO",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "age",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "ruleRef": "in:generateVoucher",
+        "conditions": [
+          {
+            "left": {
+              "value": "generateVoucher",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "YES",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "serviceDesired_fplcoun",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "serviceDesired_medcons",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "serviceDesired_hivtest",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "serviceDesired_cito",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "serviceDesired_osti",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "healthFacility",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneOwnership",
+            "do": "SHOW"
+          }
+        ]
+      },
+      {
+        "ruleRef": "in:phoneOwnership",
+        "conditions": [
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "HER",
+              "type": "value"
+            }
+          },
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "PAR",
+              "type": "value"
+            }
+          },
+          {
+            "left": {
+              "value": "phoneOwnership",
+              "type": "dataPointRef"
+            },
+            "operator": "==",
+            "right": {
+              "value": "SHA",
+              "type": "value"
+            }
+          }
+        ],
+        "actions": [
+          {
+            "dataPointRef": "phoneNumber",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent",
+            "do": "SHOW"
+          },
+          {
+            "dataPointRef": "phoneContactConsent_feedback",
+            "do": "SHOW"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -105,6 +105,11 @@ public class DatePickerQuestionView extends CommonQuestionView implements IQuest
     }
 
     @Override
+    public boolean isEnabled(){
+        return this.enabled;
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.enabled = enabled;

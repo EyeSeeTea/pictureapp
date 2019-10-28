@@ -41,6 +41,11 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
     }
 
     @Override
+    public boolean isEnabled(){
+        return numberPicker.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         numberPicker.setEnabled(enabled);
         sendButton.setEnabled(enabled);

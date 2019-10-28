@@ -86,6 +86,11 @@ public class DatePickerSingleQuestionView extends AKeyboardSingleQuestionView im
     }
 
     @Override
+    public boolean isEnabled(){
+        return this.enabled;
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.enabled = enabled;

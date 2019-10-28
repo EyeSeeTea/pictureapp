@@ -33,6 +33,11 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     }
 
     @Override
+    public boolean isEnabled(){
+        return mCustomEditText.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         mCustomEditText.setEnabled(enabled);
         sendButton.setEnabled(enabled);

@@ -41,6 +41,11 @@ public class LabelMultiQuestionView extends CommonQuestionView implements IQuest
     }
 
     @Override
+    public boolean isEnabled(){
+        return true;
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
     }
 

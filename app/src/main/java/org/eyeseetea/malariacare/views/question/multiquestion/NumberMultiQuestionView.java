@@ -36,6 +36,11 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     }
 
     @Override
+    public boolean isEnabled(){
+        return answer.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         answer.setEnabled(enabled);
     }

@@ -13,17 +13,12 @@ import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
-import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSurveyByUidUseCase;
+import org.eyeseetea.malariacare.factories.SurveyFactory;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.ReviewPresenter;
 import org.eyeseetea.malariacare.strategies.AReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
@@ -74,13 +69,6 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
 
         String surveyUid = getArguments().getString(SURVEY_UID);
 
-
-        if (Session.getMalariaSurveyDB().getEventUid() != surveyUid) {
-            Log.d("Error chungo", "Ahora pasaria el error. Survey en session: "
-                    + Session.getMalariaSurveyDB().getEventUid() + " Survey actual: " + surveyUid);
-        }
-
-
         initializePresenter(surveyUid);
         initReviewButton(mView);
         return mView;
@@ -90,13 +78,10 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         view.findViewById(R.id.review_image_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mOnEndReviewListener != null) {
-                    mOnEndReviewListener.onEndReview();
-                }
+                mReviewPresenter.ok();
             }
         });
     }
-
 
     @Override
     public void onResume() {
@@ -135,12 +120,12 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     }
 
     private void initializePresenter(String surveyUid) {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        GetSurveyByUidUseCase getSurveyByUidUseCase =
-                new GetSurveyByUidUseCase(mainExecutor, asyncExecutor, surveyRepository);
-        mReviewPresenter = new ReviewPresenter(getSurveyByUidUseCase);
+        GetSurveyByUidUseCase getSurveyByUidUseCase = new SurveyFactory().getSurveyByUidUseCase();
+
+        CompletionSurveyUseCase completionSurveyUseCase =
+                new SurveyFactory().getCompletionSurveyUseCase();
+
+        mReviewPresenter = new ReviewPresenter(getSurveyByUidUseCase, completionSurveyUseCase);
         mReviewPresenter.attachView(this, surveyUid);
     }
 
@@ -167,17 +152,23 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     }
 
 
-    public void setOnEndReviewListener(
-            OnEndReviewListener onEndReviewListener) {
+    public void setOnEndReviewListener(OnEndReviewListener onEndReviewListener) {
         mOnEndReviewListener = onEndReviewListener;
     }
 
     public interface OnEndReviewListener {
-        void onEndReview();
+        void onEndReview(String surveyUid, boolean afterCompletion);
     }
 
     @Override
     public void navigateToQuestion(String uId) {
         DashboardActivity.dashboardActivity.hideReview(uId);
+    }
+
+    @Override
+    public void exit(String surveyUid, boolean afterCompletion) {
+        if (mOnEndReviewListener != null){
+            mOnEndReviewListener.onEndReview(surveyUid, afterCompletion);
+        }
     }
 }

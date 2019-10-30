@@ -94,6 +94,7 @@ public class Session {
     }
 
     public static synchronized void setMalariaSurveyDB(SurveyDB malariaSurveyDB) {
+        Log.d("Session", "Update malaria survey in session to: " + malariaSurveyDB.getEventUid());
         Session.sMalariaSurveyDB = malariaSurveyDB;
     }
 

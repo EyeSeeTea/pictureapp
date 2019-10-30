@@ -73,8 +73,6 @@ public abstract class ADashboardActivityStrategy {
 
     public abstract void newSurvey(Activity activity);
 
-    public abstract void sendSurvey();
-
     public abstract boolean beforeExit(boolean isBackPressed);
 
     public abstract void completeSurvey();
@@ -257,7 +255,7 @@ public abstract class ADashboardActivityStrategy {
 
     }
 
-    public void exitReview(boolean fromSurveysList) {
+    public void exitReview(boolean fromSurveysList, String surveyUid, boolean afterCompletion) {
         if (!DynamicTabAdapter.isClicked || fromSurveysList) {
             DynamicTabAdapter.isClicked = true;
             mDashboardActivity.reviewShowDone(fromSurveysList);

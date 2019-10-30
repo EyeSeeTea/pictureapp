@@ -253,37 +253,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
 
-    @Override
-    public void sendSurvey() {
-        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
-
-        //TODO: This should be realized in the use case but
-        // require uncouple SurveyAnsweredCalculation from DB and UI
-        malariaSurvey.updateSurveyStatus();
-
-        CompletionSurveyUseCase completionSurveyUseCase =
-                new SurveyFactory().getCompletionSurveyUseCase();
-
-
-        completionSurveyUseCase.execute(malariaSurvey.getEventUid(),
-                new CompletionSurveyUseCase.CompletionSurveyCallback() {
-                    @Override
-                    public void CompletionSurveySuccess(
-                            Survey survey) {
-                        //TODO: Should be used the domain survey but require refactors in
-                        //showEndSurveyMessage method
-                        SurveyDB malariaSurvey = Session.getMalariaSurveyDB();
-                        verifyFinalActionsAndShowEndSurveyMessage(malariaSurvey);
-                    }
-
-                    @Override
-                    public void CompletionSurveyError(Exception e) {
-                        Log.e(
-                                DashboardActivityStrategy.this.getClass().getSimpleName(),
-                                e.getMessage());
-                    }
-                });
-    }
 
     @Override
     public boolean beforeExit(boolean isBackPressed) {
@@ -729,10 +698,13 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void exitReview(boolean fromSurveyList) {
+    public void exitReview(boolean fromSurveyList, String surveyUid, boolean afterCompletion) {
         if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
-            sendSurvey();
+            if (afterCompletion){
+                SurveyDB surveyDB = SurveyDB.findByUid(surveyUid);
+                verifyFinalActionsAndShowEndSurveyMessage(surveyDB);
+            }
             mDashboardActivity.closeSurveyFragment();
             DynamicTabAdapter.isClicked = false;
         }

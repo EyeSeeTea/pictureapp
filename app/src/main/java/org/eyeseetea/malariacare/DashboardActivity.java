@@ -281,8 +281,8 @@ public class DashboardActivity extends BaseActivity {
         reviewFragment.reloadHeader(dashboardActivity);
         reviewFragment.setOnEndReviewListener(new ReviewFragment.OnEndReviewListener() {
             @Override
-            public void onEndReview() {
-                exitReview(fromReviewList);
+            public void onEndReview(String surveyUid, boolean afterCompletion) {
+                exitReview(fromReviewList, surveyUid, afterCompletion);
             }
         });
     }
@@ -555,6 +555,7 @@ public class DashboardActivity extends BaseActivity {
      * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
      */
     public void closeSurveyFragment() {
+        surveyFragment.mReviewMode = false;
         boolean isSent = false;
         isReadOnly = false;
         isLoadingReview = false;
@@ -630,28 +631,17 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Called when the user clicks the exit Review button
      * @param fromReviewList
+     * @param surveyUid
+     * @param afterCompletion
      */
-    public void exitReview(boolean fromReviewList) {
-        mDashboardActivityStrategy.exitReview(fromReviewList);
-    }
-
-    public void sendSurvey(View view) {
-        surveyFragment.mReviewMode = false;
-        if (!isReadOnly) {
-            sendSurvey();
-        } else {
-            closeSurveyFragment();
-        }
+    public void exitReview(boolean fromReviewList, String surveyUid, boolean afterCompletion) {
+        mDashboardActivityStrategy.exitReview(fromReviewList, surveyUid, afterCompletion);
     }
 
     public void reviewSurvey(View view) {
         reviewSurvey();
     }
 
-    private void sendSurvey() {
-        mDashboardActivityStrategy.sendSurvey();
-        closeSurveyFragment();
-    }
 
     private void reviewSurvey() {
         DashboardActivity.moveToThisUId = (Session.getMalariaSurveyDB().getValuesFromDB().get(
@@ -689,7 +679,7 @@ public class DashboardActivity extends BaseActivity {
                 .setPositiveButton(translate(R.string.survey_send),
                         new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        sendSurvey();
+                        //sendSurvey();
                         DynamicTabAdapter.isClicked = false;
                     }
                 });

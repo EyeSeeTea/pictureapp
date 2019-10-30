@@ -1,8 +1,13 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
+import static org.eyeseetea.malariacare.utils.Constants.SURVEY_IN_PROGRESS;
+
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSurveyByUidUseCase;
+import org.eyeseetea.malariacare.factories.SurveyFactory;
 
 import java.util.List;
 
@@ -14,13 +19,20 @@ public class ReviewPresenter {
         void initListView();
 
         void navigateToQuestion(String uId);
+
+        void exit(String surveyUid,boolean afterCompletion);
     }
 
     ReviewView view;
     private GetSurveyByUidUseCase getSurveyByUidUseCase;
+    private CompletionSurveyUseCase completionSurveyUseCase;
 
-    public ReviewPresenter(GetSurveyByUidUseCase getSurveyByUidUseCase) {
+    private Survey survey;
+
+    public ReviewPresenter(GetSurveyByUidUseCase getSurveyByUidUseCase,
+            CompletionSurveyUseCase completionSurveyUseCase) {
         this.getSurveyByUidUseCase = getSurveyByUidUseCase;
+        this.completionSurveyUseCase = completionSurveyUseCase;
     }
 
     public void attachView(ReviewView reviewView, String surveyUId) {
@@ -29,6 +41,7 @@ public class ReviewPresenter {
                 new GetSurveyByUidUseCase.Callback() {
                     @Override
                     public void onSuccess(Survey survey) {
+                        ReviewPresenter.this.survey = survey;
                         if (view != null) {
                             view.showValues(survey.getValues());
                             view.initListView();
@@ -48,5 +61,40 @@ public class ReviewPresenter {
 
     public void onClickOnValue(String UId) {
         view.navigateToQuestion(UId);
+    }
+
+    public void ok() {
+        if (survey.getStatus() == SURVEY_IN_PROGRESS) {
+            sendSurvey();
+        } else {
+            if (view != null) {
+                view.exit(survey.getUid(), false);
+            }
+        }
+    }
+
+    private void sendSurvey() {
+        //TODO: This should be realized in the use case but
+        // require uncouple SurveyAnsweredCalculation from DB and UI
+        SurveyDB surveyDB = SurveyDB.findByUid(survey.getUid());
+        surveyDB.updateSurveyStatus();
+
+        CompletionSurveyUseCase completionSurveyUseCase =
+                new SurveyFactory().getCompletionSurveyUseCase();
+
+        completionSurveyUseCase.execute(survey.getUid(),
+                new CompletionSurveyUseCase.CompletionSurveyCallback() {
+                    @Override
+                    public void CompletionSurveySuccess(Survey survey) {
+                        if (view != null) {
+                            view.exit(survey.getUid(), true);
+                        }
+                    }
+
+                    @Override
+                    public void CompletionSurveyError(Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                });
     }
 }

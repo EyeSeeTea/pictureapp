@@ -270,13 +270,13 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the reviewFragment
      * @param fromReviewList
      */
-    public void initReview(final boolean fromReviewList) {
+    public void initReview(final boolean fromReviewList, String surveyUid) {
         if (surveyFragment != null) {
             surveyFragment.mReviewMode = true;
         }
-        if (reviewFragment == null) {
-            reviewFragment = new ReviewFragment();
-        }
+
+        reviewFragment = ReviewFragment.newInstance(surveyUid);
+
         replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), reviewFragment);
         reviewFragment.reloadHeader(dashboardActivity);
         reviewFragment.setOnEndReviewListener(new ReviewFragment.OnEndReviewListener() {
@@ -314,7 +314,8 @@ public class DashboardActivity extends BaseActivity {
     public void initSurvey() {
         isBackPressed = false;
         tabHost.getTabWidget().setVisibility(View.GONE);
-        if (Session.getMalariaSurveyDB().isInProgress()
+        SurveyDB surveyDB = Session.getMalariaSurveyDB();
+        if (surveyDB.isInProgress()
                 || !BuildConfig.openReviewCompletedSurveys) {
             if (surveyFragment == null) {
                 surveyFragment = new SurveyFragment();
@@ -325,7 +326,7 @@ public class DashboardActivity extends BaseActivity {
             LayoutUtils.setSurveyActionBar(actionBar);
         } else {
             findViewById(R.id.common_header).setVisibility(View.GONE);
-            initReview(true);
+            initReview(true, surveyDB.getEventUid());
         }
 
     }
@@ -542,9 +543,9 @@ public class DashboardActivity extends BaseActivity {
     /**
      * This method shows the review fragment to te user before decides if send the survey.
      */
-    public void showReviewFragment() {
+    public void showReviewFragment(String surveyUid) {
         isLoadingReview = true;
-        initReview(false);
+        initReview(false, surveyUid);
     }
 
 

@@ -13,13 +13,13 @@ import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyByUidUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -44,6 +44,18 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     private OnEndReviewListener mOnEndReviewListener;
     private AReviewFragmentStrategy mReviewFragmentStrategy;
 
+    private static String SURVEY_UID = "sureveyUid";
+
+    public static ReviewFragment newInstance(String surveyUid) {
+        ReviewFragment reviewFragment = new ReviewFragment();
+
+        Bundle args = new Bundle();
+        args.putString(SURVEY_UID, surveyUid);
+        reviewFragment.setArguments(args);
+
+        return reviewFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -59,7 +71,17 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         mView = inflater.inflate(R.layout.review_layout,
                 container, false);
         listView = (ListView) mView.findViewById(R.id.review_list);
-        initializePresenter();
+
+        String surveyUid = getArguments().getString(SURVEY_UID);
+
+
+        if (Session.getMalariaSurveyDB().getEventUid() != surveyUid) {
+            Log.d("Error chungo", "Ahora pasaria el error. Survey en session: "
+                    + Session.getMalariaSurveyDB().getEventUid() + " Survey actual: " + surveyUid);
+        }
+
+
+        initializePresenter(surveyUid);
         initReviewButton(mView);
         return mView;
     }
@@ -112,15 +134,14 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
-    private void initializePresenter() {
+    private void initializePresenter(String surveyUid) {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IValueRepository valueLocalDataSource = new ValueLocalDataSource();
-        GetReviewValuesBySurveyIdUseCase getReviewValuesBySurveyIdUseCase =
-                new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
-                        valueLocalDataSource);
-        mReviewPresenter = new ReviewPresenter(getReviewValuesBySurveyIdUseCase);
-        mReviewPresenter.attachView(this, Session.getMalariaSurveyDB().getId_survey());
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
+        GetSurveyByUidUseCase getSurveyByUidUseCase =
+                new GetSurveyByUidUseCase(mainExecutor, asyncExecutor, surveyRepository);
+        mReviewPresenter = new ReviewPresenter(getSurveyByUidUseCase);
+        mReviewPresenter.attachView(this, surveyUid);
     }
 
     @Override

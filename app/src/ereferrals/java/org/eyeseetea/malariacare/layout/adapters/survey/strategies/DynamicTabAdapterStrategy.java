@@ -121,7 +121,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
                 if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                     mDynamicTabAdapter.surveyShowDone();
                 } else {
-                    DashboardActivity.dashboardActivity.showReviewFragment();
+                    DashboardActivity.dashboardActivity.showReviewFragment(mDynamicTabAdapter.getCurrentSurveyUid());
                     CommonQuestionView.hideKeyboard(
                             PreferencesState.getInstance().getContext(), mDynamicTabAdapter.getKeyboardView());
                     DynamicTabAdapter.setIsClicked(false);

@@ -1,7 +1,8 @@
 package org.eyeseetea.malariacare.presentation.presenters;
 
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyByUidUseCase;
 
 import java.util.List;
 
@@ -16,25 +17,29 @@ public class ReviewPresenter {
     }
 
     ReviewView view;
-    private GetReviewValuesBySurveyIdUseCase mGetReviewValuesBySurveyIdUseCase;
+    private GetSurveyByUidUseCase getSurveyByUidUseCase;
 
-    public ReviewPresenter(
-            GetReviewValuesBySurveyIdUseCase getReviewValuesBySurveyIdUseCase) {
-        mGetReviewValuesBySurveyIdUseCase = getReviewValuesBySurveyIdUseCase;
+    public ReviewPresenter(GetSurveyByUidUseCase getSurveyByUidUseCase) {
+        this.getSurveyByUidUseCase = getSurveyByUidUseCase;
     }
 
-    public void attachView(ReviewView reviewView, Long surveyId) {
+    public void attachView(ReviewView reviewView, String surveyUId) {
         this.view = reviewView;
-        mGetReviewValuesBySurveyIdUseCase.execute(
-                new GetReviewValuesBySurveyIdUseCase.Callback() {
-            @Override
-            public void onGetValues(List<Value> values) {
-                if (view != null) {
-                    view.showValues(values);
-                    view.initListView();
-                }
-            }
-                }, surveyId);
+        getSurveyByUidUseCase.execute(surveyUId,
+                new GetSurveyByUidUseCase.Callback() {
+                    @Override
+                    public void onSuccess(Survey survey) {
+                        if (view != null) {
+                            view.showValues(survey.getValues());
+                            view.initListView();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                });
     }
 
     public void detachView() {

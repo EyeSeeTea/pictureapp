@@ -143,6 +143,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean isBackward = true;
     private boolean isASurveyCreatedInOtherApp;
 
+    private String currentSurveyUid;
+
     public DynamicTabAdapter(Context context, boolean reviewMode,
             boolean isASurveyCreatedInOtherApp, boolean jumpingActive) throws NullPointerException {
 
@@ -153,6 +155,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.id_layout = R.layout.form_without_score;
 
         this.navigationController = initNavigationController();
+
+        this.currentSurveyUid =  getMalariaSurveyDB().getEventUid();
+
         this.readOnly = getMalariaSurveyDB() != null && !getMalariaSurveyDB().isInProgress();
 
             QuestionDB questionDB = navigationController.getCurrentQuestion();
@@ -179,6 +184,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this, jumpingActive);
         mDynamicTabAdapterStrategy.initSurveys(readOnly);
+    }
+
+    public String getCurrentSurveyUid() {
+        return currentSurveyUid;
     }
 
     /**

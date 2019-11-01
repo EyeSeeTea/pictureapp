@@ -94,7 +94,13 @@ public class Session {
     }
 
     public static synchronized void setMalariaSurveyDB(SurveyDB malariaSurveyDB) {
-        Log.d("Session", "Update malaria survey in session to: " + malariaSurveyDB.getEventUid());
+        String surveyUidInSession = "null";
+
+        if (malariaSurveyDB != null){
+            surveyUidInSession = malariaSurveyDB.getEventUid();
+        }
+
+        Log.d("Session", "Attention!!! Update malaria survey in session has changed to: " + surveyUidInSession);
         Session.sMalariaSurveyDB = malariaSurveyDB;
     }
 

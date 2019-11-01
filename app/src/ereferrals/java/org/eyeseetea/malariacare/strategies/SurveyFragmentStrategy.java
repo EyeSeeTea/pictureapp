@@ -49,7 +49,7 @@ public class SurveyFragmentStrategy {
             for (QuestionDB propagateQuestion : question.getPropagationQuestions()) {
                 propagateQuestion.createOrSaveValue(answer,
                         ValueDB.findValueFromDatabase(propagateQuestion.getId_question(),
-                                Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
+                                survey), survey);
             }
         }
     }

@@ -75,7 +75,7 @@ public abstract class ADynamicTabAdapterStrategy {
 
         QuestionDB questionDB = mDynamicTabAdapter.navigationController.getCurrentQuestion();
         ValueDB valueDB = questionDB.getValueBySession();
-        String surveyUid = mDynamicTabAdapter.getCurrentSurveyUid();
+        String surveyUid = mDynamicTabAdapter.getCurrentSurvey().getEventUid();
         if (mDynamicTabAdapter.isDone(valueDB)) {
             mDynamicTabAdapter.navigationController.isMovingToForward = false;
             if (readOnly) {

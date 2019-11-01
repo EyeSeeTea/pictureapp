@@ -19,7 +19,9 @@ import org.eyeseetea.malariacare.data.authentication.CredentialsReader;
 import org.eyeseetea.malariacare.data.database.datasources.AuthDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
+import org.eyeseetea.malariacare.data.database.model.SurveyDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -86,6 +88,9 @@ public class SplashActivityStrategy extends ASplashActivityStrategy {
         saveSurveyFromIntentUseCase.execute(new SaveSurveyFromIntentUseCase.Callback() {
             @Override
             public void onSurveySaved(Survey survey) {
+                //TODO: on the future when does not exists session reads, remove this
+                SurveyDB surveyDB = SurveyDB.findByUid(survey.getUid());
+                Session.setMalariaSurveyDB(surveyDB);
                 Log.d(TAG, "Survey from other app saved");
                 callback.onSuccess(canEnterApp());
             }

@@ -157,16 +157,8 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
 
         surveyDB.update();
-        setSurveyOnSession(surveyDB);
         return surveyDB.getId_survey();
     }
-
-    private void setSurveyOnSession(SurveyDB surveyDB) {
-        if(surveyDB.getType() == Constants.SURVEY_NO_TYPE){
-            Session.setMalariaSurveyDB(surveyDB);
-        }
-    }
-
 
     public List<Survey> getSurveysByProgram(String uid) {
         List<SurveyDB> surveysDB = SurveyDB.getAllSurveysByProgram(uid);

@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.presentation.presenters;
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_IN_PROGRESS;
 
 import org.eyeseetea.malariacare.data.database.model.SurveyDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
@@ -86,6 +87,10 @@ public class ReviewPresenter {
                 new CompletionSurveyUseCase.CompletionSurveyCallback() {
                     @Override
                     public void CompletionSurveySuccess(Survey survey) {
+                        //TODO: on the future when does not exists session reads, remove this
+                        SurveyDB surveyDB = SurveyDB.findByUid(survey.getUid());
+                        Session.setMalariaSurveyDB(surveyDB);
+
                         if (view != null) {
                             view.exit(survey.getUid(), true);
                         }

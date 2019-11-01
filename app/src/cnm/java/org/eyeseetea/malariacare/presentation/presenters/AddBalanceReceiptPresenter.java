@@ -43,6 +43,11 @@ public class AddBalanceReceiptPresenter {
             @Override
             public void onCreateSurvey(Survey survey) {
                 mSurvey = survey;
+
+                //TODO: on the future when does not exists session reads, remove this
+                SurveyDB surveyDB = SurveyDB.findByUid(survey.getUid());
+                Session.setMalariaSurveyDB(surveyDB);
+
                 mGetQuestionsByProgramUseCase.execute(
                         new GetQuestionsByProgramUseCase.Callback() {
 

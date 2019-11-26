@@ -7,6 +7,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.DeleteSurveyByUidUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyByUidUseCase;
 import org.eyeseetea.malariacare.domain.usecase.GetSurveysByProgram;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -22,6 +23,13 @@ public class SurveyFactory {
                 new GetSurveysByProgram(asyncExecutor, mainExecutor, surveyRepository);
 
         return getSurveysByProgram;
+    }
+
+    public GetSurveyByUidUseCase getSurveyByUidUseCase() {
+        GetSurveyByUidUseCase getSurveyByUidUseCase =
+                new GetSurveyByUidUseCase(mainExecutor, asyncExecutor, surveyRepository);
+
+        return getSurveyByUidUseCase;
     }
 
     public DeleteSurveyByUidUseCase deleteSurveyByUidUseCase() {

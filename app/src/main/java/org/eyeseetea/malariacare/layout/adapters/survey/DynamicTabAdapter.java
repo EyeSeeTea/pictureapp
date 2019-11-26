@@ -22,7 +22,6 @@ package org.eyeseetea.malariacare.layout.adapters.survey;
 import static org.eyeseetea.malariacare.R.id.question;
 import static org.eyeseetea.malariacare.data.database.model.OptionDB.DOESNT_MATCH_POSITION;
 import static org.eyeseetea.malariacare.data.database.model.OptionDB.MATCH_POSITION;
-import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurveyDB;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -143,6 +142,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean isBackward = true;
     private boolean isASurveyCreatedInOtherApp;
 
+    private SurveyDB currentSurvey;
+
     public DynamicTabAdapter(Context context, boolean reviewMode,
             boolean isASurveyCreatedInOtherApp, boolean jumpingActive) throws NullPointerException {
 
@@ -153,10 +154,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.id_layout = R.layout.form_without_score;
 
         this.navigationController = initNavigationController();
-        this.readOnly = getMalariaSurveyDB() != null && !getMalariaSurveyDB().isInProgress();
+
+        this.currentSurvey =  Session.getMalariaSurveyDB();
+
+        this.readOnly = currentSurvey != null && !currentSurvey.isInProgress();
 
             QuestionDB questionDB = navigationController.getCurrentQuestion();
-            if (questionDB.getValueBySession() != null) {
+            if (questionDB.getValueBySurvey(currentSurvey) != null) {
                 if (DashboardActivity.moveToThisUId != null) {
                     goToQuestion(DashboardActivity.moveToThisUId);
                     DashboardActivity.moveToThisUId = null;
@@ -167,8 +171,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
 
         int totalPages = 0;
-        if (getMalariaSurveyDB() != null) {
-            totalPages = getMalariaSurveyDB().getMaxTotalPages();
+        if (currentSurvey != null) {
+            totalPages = currentSurvey.getMaxTotalPages();
         }
         if (totalPages == 0) {
             totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
@@ -179,6 +183,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this, jumpingActive);
         mDynamicTabAdapterStrategy.initSurveys(readOnly);
+    }
+
+    public SurveyDB getCurrentSurvey() {
+        return currentSurvey;
     }
 
     /**
@@ -193,8 +201,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Returns the boolean selected for the given questionDB (by boolean value or position option,
      * position 1=true 0=false)
      */
-    public static Boolean findSwitchBoolean(QuestionDB questionDB) {
-        ValueDB valueDB = questionDB.getValueBySession();
+    private Boolean findSwitchBoolean(QuestionDB questionDB) {
+        ValueDB valueDB = questionDB.getValueBySurvey(currentSurvey);
         if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(0).getCode())) {
             return true;
         } else if (valueDB.getValue().equals(questionDB.getAnswerDB().getOptionDBs().get(1).getCode())) {
@@ -293,15 +301,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         for (QuestionDB questionInTab : questionsInTab) {
             if (!questionInTab.getId_question().equals(question.getId_question())
                     && !(question.getOutput() == Constants.HIDDEN)) {
-                ValueDB valueDB = questionInTab.getValueBySurvey(getMalariaSurveyDB());
-                questionInTab.deleteValues(valueDB);
+                ValueDB valueDB = questionInTab.getValueBySurvey(currentSurvey);
+                questionInTab.deleteValues(valueDB, currentSurvey);
             }
             //TODO remove this if when doing relation with question relations
             if (questionInTab.getOutput() == Constants.HIDDEN) {
                 if (selectedOptionDB != null) {
                     OptionAttributeDB optionAttributeDB = selectedOptionDB.getOptionAttributeDB();
                     ValueDB valueDB = new ValueDB(optionAttributeDB.getPath(), questionInTab,
-                            getMalariaSurveyDB());
+                            currentSurvey);
                     valueDB.save();
                 }
             }
@@ -312,7 +320,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         QuestionDB questionDB = (QuestionDB) view.getTag();
 
         if (!mReviewMode){
-            questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp);
+            questionDB.saveValuesText(newValue, isASurveyCreatedInOtherApp, currentSurvey);
             executeTabLogic(questionDB, null);
         }
 
@@ -328,7 +336,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void saveOptionValue(View view, OptionDB selectedOptionDB, QuestionDB questionDB,
             boolean moveToNextQuestion) {
         OptionDB answeredOptionDB = (questionDB != null) ? questionDB.getAnsweredOption() : null;
-        ValueDB valueDB = questionDB.getValueBySession();
+        ValueDB valueDB = questionDB.getValueBySurvey(currentSurvey);
 
         if (goingBackwardAndModifiedValues(valueDB, answeredOptionDB, selectedOptionDB)) {
             navigationController.setTotalPages(questionDB.getTotalQuestions());
@@ -336,7 +344,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         if (!mReviewMode) {
-            questionDB.saveValuesDDL(selectedOptionDB, valueDB);
+            questionDB.saveValuesDDL(selectedOptionDB, valueDB, currentSurvey);
         }
 
         if (questionDB.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
@@ -381,7 +389,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             QuestionRelationDB questionRelation) {
         QuestionDB questionToSaveValue = questionRelation.getQuestionDB();
         OptionAttributeDB attributeWithValueToSave = selectedOptionDB.getOptionAttributeDB();
-        questionToSaveValue.saveValuesText(attributeWithValueToSave.getPath());
+        questionToSaveValue.saveValuesText(attributeWithValueToSave.getPath(), currentSurvey);
     }
 
     private boolean goingBackwardAndModifiedValues(ValueDB valueDB, OptionDB answeredOptionDB,
@@ -434,7 +442,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         matchQuestionDB.saveValuesDDL(
                 matchQuestionDB.getAnswerDB().getOptionDBs().get(optionPosition),
-                matchQuestionDB.getValueBySession());
+                matchQuestionDB.getValueBySurvey(currentSurvey), currentSurvey);
     }
 
 
@@ -491,11 +499,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         QuestionDB questionDBItem = (QuestionDB) this.getItem(position);
 
         // We get values from DB and put them in Session
-        if (getMalariaSurveyDB() != null) {
+        if (currentSurvey != null) {
             if (Session.getStockSurveyDB() != null) {
                 Session.getStockSurveyDB().getValuesFromDB();
             }
-            getMalariaSurveyDB().getValuesFromDB();
+            currentSurvey.getValuesFromDB();
         } else {
             //The survey in session is null when the user closes the surveyFragment, but the
             // getView is called.
@@ -601,7 +609,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 || !TabDB.isMultiQuestionTab(tabType)) {
             visibility = View.VISIBLE;
         }
-        ValueDB valueDB = screenQuestionDB.getValueBySession();
+        ValueDB valueDB = screenQuestionDB.getValueBySurvey(currentSurvey);
 
         tableRow = new TableRow(context);
 
@@ -784,7 +792,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         QuestionThresholdDB questionThresholdDB = questionOptionDB.getQuestionThreshold();
         QuestionDB thresholdQuestion = questionThresholdDB.getQuestionDB();
         if (questionThresholdDB.isInThreshold(
-                Integer.parseInt(thresholdQuestion.getValueBySession().getValue()))) {
+                Integer.parseInt(thresholdQuestion.getValueBySurvey(currentSurvey).getValue()))) {
             for (OptionDB optionDB : optionDBs) {
                 if (optionDB.equals(questionOptionDB.getOptionDB())) {
                     valueDB = removeValueOfQuestionIfEqualsOption(valueDB, optionDB);
@@ -972,10 +980,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private boolean isCounterValueEqualToMax(QuestionDB questionDB, OptionDB selectedOptionDB) {
-
-        SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(questionDB);
-
-        Float counterValue = surveyDB.getCounterValue(questionDB, selectedOptionDB);
+        Float counterValue = currentSurvey.getCounterValue(questionDB, selectedOptionDB);
 
         Float maxCounter = selectedOptionDB.getFactor();
 
@@ -1043,9 +1048,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean toggleChild(TableRow row, QuestionDB rowQuestionDB, QuestionDB childQuestionDB,
             QuestionDB parentQuestionDB) {
         if (childQuestionDB.getId_question().equals(rowQuestionDB.getId_question())) {
-            SurveyDB surveyDB = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestionDB);
             CommonQuestionView commonQuestionView = ((CommonQuestionView) row.getChildAt(0));
-            if (rowQuestionDB.isHiddenBySurveyAndHeader(surveyDB)) {
+            if (rowQuestionDB.isHiddenBySurveyAndHeader(currentSurvey)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
                 commonQuestionView.deactivateQuestion();
@@ -1058,8 +1062,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     checkInitialCompulsoryValidationError(commonQuestionView);
                 }
 
-                fillDefaultValueForHiddenQuestion(childQuestionDB, surveyDB,
-                        childQuestionDB.getValueBySurvey(surveyDB),
+                fillDefaultValueForHiddenQuestion(childQuestionDB, currentSurvey,
+                        childQuestionDB.getValueBySurvey(currentSurvey),
                         (IQuestionView) commonQuestionView);
             }
             return true;
@@ -1090,7 +1094,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.SHORT_TEXT:
             case Constants.DROPDOWN_LIST:
             case Constants.DROPDOWN_OU_LIST:
-                rowQuestionDB.deleteValueBySession();
+                ValueDB valueDB = rowQuestionDB.getValueBySurvey(currentSurvey);
+                rowQuestionDB.deleteValues(valueDB, currentSurvey);
                 break;
             case Constants.SWITCH_BUTTON:
                 //the 0 option is the left option and is false in the switch, the 1 option is the
@@ -1106,7 +1111,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void showDefaultValue(TableRow tableRow, QuestionDB rowQuestionDB) {
-        if (rowQuestionDB.getValueBySession() != null) {
+        if (rowQuestionDB.getValueBySurvey(currentSurvey) != null) {
             return;
         }
         switch (rowQuestionDB.getOutput()) {
@@ -1272,7 +1277,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         do {
             next();
             QuestionDB questionDB = navigationController.getCurrentQuestion();
-            valueDB = questionDB.getValueBySession();
+            valueDB = questionDB.getValueBySurvey(currentSurvey);
             skipReminder();
         } while (valueDB != null && !isDone(valueDB));
         notifyDataSetChanged();
@@ -1293,7 +1298,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void next() {
         QuestionDB questionDB = navigationController.getCurrentQuestion();
 
-        ValueDB valueDB = questionDB.getValueBySession();
+        ValueDB valueDB = questionDB.getValueBySurvey(currentSurvey);
 
         if (isDone(valueDB)) {
             navigationController.isMovingToForward = false;
@@ -1325,7 +1330,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (selectedOptionDB == null) {
             return;
         }
-        questionDB.saveValuesDDL(selectedOptionDB, questionDB.getValueBySession());
+        questionDB.saveValuesDDL(selectedOptionDB, questionDB.getValueBySurvey(currentSurvey),currentSurvey);
         showOrHideChildren(questionDB);
     }
 

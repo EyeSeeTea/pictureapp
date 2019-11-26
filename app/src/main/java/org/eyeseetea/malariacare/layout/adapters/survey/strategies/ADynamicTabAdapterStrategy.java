@@ -75,14 +75,15 @@ public abstract class ADynamicTabAdapterStrategy {
 
         QuestionDB questionDB = mDynamicTabAdapter.navigationController.getCurrentQuestion();
         ValueDB valueDB = questionDB.getValueBySession();
+        String surveyUid = mDynamicTabAdapter.getCurrentSurvey().getEventUid();
         if (mDynamicTabAdapter.isDone(valueDB)) {
             mDynamicTabAdapter.navigationController.isMovingToForward = false;
             if (readOnly) {
-                DashboardActivity.dashboardActivity.initReview(readOnly);
+                DashboardActivity.dashboardActivity.initReview(readOnly, surveyUid);
             } else if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                 mDynamicTabAdapter.surveyShowDone();
             } else {
-                DashboardActivity.dashboardActivity.showReviewFragment();
+                DashboardActivity.dashboardActivity.showReviewFragment(surveyUid);
                 CommonQuestionView.hideKeyboard(
                         PreferencesState.getInstance().getContext(),
                         mDynamicTabAdapter.getKeyboardView());

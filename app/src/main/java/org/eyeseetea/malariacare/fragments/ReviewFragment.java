@@ -13,17 +13,12 @@ import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
-import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyByUidUseCase;
+import org.eyeseetea.malariacare.factories.SurveyFactory;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presentation.presenters.ReviewPresenter;
 import org.eyeseetea.malariacare.strategies.AReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
@@ -44,6 +39,18 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     private OnEndReviewListener mOnEndReviewListener;
     private AReviewFragmentStrategy mReviewFragmentStrategy;
 
+    private static String SURVEY_UID = "sureveyUid";
+
+    public static ReviewFragment newInstance(String surveyUid) {
+        ReviewFragment reviewFragment = new ReviewFragment();
+
+        Bundle args = new Bundle();
+        args.putString(SURVEY_UID, surveyUid);
+        reviewFragment.setArguments(args);
+
+        return reviewFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -59,7 +66,10 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         mView = inflater.inflate(R.layout.review_layout,
                 container, false);
         listView = (ListView) mView.findViewById(R.id.review_list);
-        initializePresenter();
+
+        String surveyUid = getArguments().getString(SURVEY_UID);
+
+        initializePresenter(surveyUid);
         initReviewButton(mView);
         return mView;
     }
@@ -68,13 +78,10 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         view.findViewById(R.id.review_image_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mOnEndReviewListener != null) {
-                    mOnEndReviewListener.onEndReview();
-                }
+                mReviewPresenter.ok();
             }
         });
     }
-
 
     @Override
     public void onResume() {
@@ -112,15 +119,14 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
-    private void initializePresenter() {
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IValueRepository valueLocalDataSource = new ValueLocalDataSource();
-        GetReviewValuesBySurveyIdUseCase getReviewValuesBySurveyIdUseCase =
-                new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
-                        valueLocalDataSource);
-        mReviewPresenter = new ReviewPresenter(getReviewValuesBySurveyIdUseCase);
-        mReviewPresenter.attachView(this, Session.getMalariaSurveyDB().getId_survey());
+    private void initializePresenter(String surveyUid) {
+        GetSurveyByUidUseCase getSurveyByUidUseCase = new SurveyFactory().getSurveyByUidUseCase();
+
+        CompletionSurveyUseCase completionSurveyUseCase =
+                new SurveyFactory().getCompletionSurveyUseCase();
+
+        mReviewPresenter = new ReviewPresenter(getSurveyByUidUseCase, completionSurveyUseCase);
+        mReviewPresenter.attachView(this, surveyUid);
     }
 
     @Override
@@ -146,17 +152,23 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     }
 
 
-    public void setOnEndReviewListener(
-            OnEndReviewListener onEndReviewListener) {
+    public void setOnEndReviewListener(OnEndReviewListener onEndReviewListener) {
         mOnEndReviewListener = onEndReviewListener;
     }
 
     public interface OnEndReviewListener {
-        void onEndReview();
+        void onEndReview(String surveyUid, boolean afterCompletion);
     }
 
     @Override
     public void navigateToQuestion(String uId) {
         DashboardActivity.dashboardActivity.hideReview(uId);
+    }
+
+    @Override
+    public void exit(String surveyUid, boolean afterCompletion) {
+        if (mOnEndReviewListener != null){
+            mOnEndReviewListener.onEndReview(surveyUid, afterCompletion);
+        }
     }
 }

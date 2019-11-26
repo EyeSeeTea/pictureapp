@@ -38,7 +38,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
 
 
     @Override
-    public void setJumpingNextQuestionActive( CommonQuestionView questionView) {
+    public void setJumpingNextQuestionActive(CommonQuestionView questionView) {
         questionView.setJumpingNextQuestionActive(jumpingActive);
     }
 
@@ -48,6 +48,7 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
                 && output != Constants.RADIO_GROUP_HORIZONTAL && output != Constants.REMINDER
                 && output != Constants.WARNING;
     }
+
     @Override
     public void initSurveys(boolean readOnly) {
         return;
@@ -93,7 +94,6 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     }
 
 
-
     @Override
     public void finishOrNext(final boolean readOnly) {
         try {
@@ -114,16 +114,18 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             return;
         }
         final Handler handler = new Handler();
-        handler.postDelayed( new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mDynamicTabAdapter.navigationController.isMovingToForward = false;
                 if (!shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                     mDynamicTabAdapter.surveyShowDone();
                 } else {
-                    DashboardActivity.dashboardActivity.showReviewFragment();
+                    DashboardActivity.dashboardActivity.showReviewFragment(
+                            mDynamicTabAdapter.getCurrentSurvey().getEventUid());
                     CommonQuestionView.hideKeyboard(
-                            PreferencesState.getInstance().getContext(), mDynamicTabAdapter.getKeyboardView());
+                            PreferencesState.getInstance().getContext(),
+                            mDynamicTabAdapter.getKeyboardView());
                     DynamicTabAdapter.setIsClicked(false);
                 }
                 return;

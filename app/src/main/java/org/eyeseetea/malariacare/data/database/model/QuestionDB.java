@@ -59,6 +59,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -1416,7 +1417,7 @@ public class QuestionDB extends BaseModel {
         return Arrays.asList(num, denum);
     }
 
-    public void saveValuesDDL(OptionDB optionDB, ValueDB valueDB) {
+    public void saveValuesDDL(OptionDB optionDB, ValueDB valueDB, SurveyDB surveyDB) {
         //No mOptionDB, nothing to save
         if (optionDB == null) {
             return;
@@ -1424,30 +1425,32 @@ public class QuestionDB extends BaseModel {
         SurveyFragmentStrategy.saveValueDDlExtraOperations(valueDB, optionDB, getUid());
 
         if (!optionDB.getCode().equals(Constants.DEFAULT_SELECT_OPTION)) {
-            SurveyDB surveyDB = SurveyFragmentStrategy.getSaveValuesDDLSurvey(this);
-
             createOrSaveDDLValue(optionDB, valueDB, surveyDB);
             for (QuestionDB propagateQuestionDB : this.getPropagationQuestions()) {
                 propagateQuestionDB.createOrSaveDDLValue(optionDB,
                         ValueDB.findValue(propagateQuestionDB.getId_question(),
-                                Session.getMalariaSurveyDB()), Session.getMalariaSurveyDB());
+                                surveyDB), surveyDB);
             }
         } else {
-            deleteValues(valueDB);
+            deleteValues(valueDB, surveyDB);
         }
     }
 
-    public void saveValuesText(String answer, boolean isValueLoadedFromOtherApp) {
-        ValueDB valueDB = getValueBySession();
+    public void saveValuesText(String answer, boolean isValueLoadedFromOtherApp, SurveyDB surveyDB) {
+        ValueDB valueDB = getValueBySurvey(surveyDB);
         if (valueDB != null && valueDB.getQuestionDB().hasQuestionThresholds()
                 && !isValueLoadedFromOtherApp) {
             valueDB.getQuestionDB().deleteThresholdValues(valueDB);
         }
-        SurveyDB surveyDB = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
+
         SurveyFragmentStrategy.saveValuesText(valueDB, answer, this, surveyDB);
     }
+    public void saveValuesText(String answer, SurveyDB surveyDB) {
+        saveValuesText(answer, false, surveyDB);
+    }
+
     public void saveValuesText(String answer) {
-        saveValuesText(answer, false);
+        saveValuesText(answer, false, Session.getMalariaSurveyDB());
     }
 
     private void deleteThresholdValues(ValueDB valueDB) {
@@ -1460,12 +1463,11 @@ public class QuestionDB extends BaseModel {
     }
 
 
-    public void deleteValues(ValueDB valueDB) {
+    public void deleteValues(ValueDB valueDB, SurveyDB surveyDB) {
         if (valueDB != null) {
             for (QuestionDB propagateQuestionDB : this.getPropagationQuestions()) {
                 ValueDB propagateValueDB = ValueDB.findValueFromDatabase(
-                        propagateQuestionDB.getId_question(),
-                        Session.getMalariaSurveyDB());
+                        propagateQuestionDB.getId_question(), surveyDB);
                 if (propagateValueDB != null) {
                     propagateValueDB.delete();
                 }
@@ -1501,9 +1503,10 @@ public class QuestionDB extends BaseModel {
 
     public void deleteValueBySession() {
         ValueDB valueDB = getValueBySession();
+        SurveyDB surveyDB = Session.getMalariaSurveyDB();
 
         if (valueDB != null) {
-            deleteValues(valueDB);
+            deleteValues(valueDB, surveyDB);
         }
     }
 

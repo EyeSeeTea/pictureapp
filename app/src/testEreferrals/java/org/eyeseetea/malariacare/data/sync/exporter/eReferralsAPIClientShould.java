@@ -30,6 +30,7 @@ public class eReferralsAPIClientShould {
     private static final String PUSH_RESPONSE_OK_EXTRA_KEYS = "push_response_ok_extra_keys.json";
     private static final String API_AVAILABLE_OK = "api_available_ok.json";
     private static final String API_AVAILABLE_NO_OK = "api_available_no_ok.json";
+    private static final String API_AVAILABLE_OK_EXTRA_KEYS = "api_available_ok_extra_keys.json";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -72,7 +73,7 @@ public class eReferralsAPIClientShould {
     @Test
     public void return_success_result_when_api_response_contains_extra_keys()
             throws IOException {
-        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, API_AVAILABLE_OK);
+        mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, API_AVAILABLE_OK_EXTRA_KEYS);
         mockWebServerRule.getMockServer().enqueueMockResponseFileName(200, PUSH_RESPONSE_OK_EXTRA_KEYS);
         eReferralsAPIClient eReferralsAPIClient = new eReferralsAPIClient(
                 mockWebServerRule.getMockServer().getBaseEndpoint());

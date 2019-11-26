@@ -149,6 +149,11 @@ public class DropdownWithFilterMultiQuestionView extends AOptionQuestionView imp
     }
 
     @Override
+    public boolean isEnabled(){
+        return spinnerAsButton.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         spinnerAsButton.setEnabled(enabled);
     }

@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views.question;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -103,7 +104,7 @@ public class CommonQuestionView extends LinearLayout {
     }
 
     public void focusNextQuestion() {
-        if (jumpingNextQuestionActive){
+        if (jumpingNextQuestionActive) {
             View nextView = getNextView();
             if (nextView == null) {
                 return;
@@ -114,16 +115,22 @@ public class CommonQuestionView extends LinearLayout {
                 nextView = mLayout.getChildAt(
                         mLayout.indexOfChild(nextView) + 1);
             }
+
             if (nextView.getVisibility() != View.GONE) {
                 IQuestionView nextQuestionView =
                         (IQuestionView) ((TableRow) nextView).getChildAt(
                                 0);
 
-                if (thisAndNextQuestionAreAKeyboardQuestionView(nextQuestionView)) {
-                    // use standard Android requestFocus only between keyboard questions
-                    nextView.requestFocus();
+                if (nextQuestionView.isEnabled()) {
+                    if (thisAndNextQuestionAreAKeyboardQuestionView(nextQuestionView)) {
+                        // use standard Android requestFocus only between keyboard questions
+                        nextView.requestFocus();
+                    } else {
+                        ((IMultiQuestionView) nextQuestionView).requestAnswerFocus();
+                    }
                 } else {
-                    ((IMultiQuestionView) nextQuestionView).requestAnswerFocus();
+                    Log.d(this.getClass().getSimpleName(),
+                            "No jump because the nextQuestionView is disabled");
                 }
             }
         }
@@ -147,20 +154,22 @@ public class CommonQuestionView extends LinearLayout {
         return (IQuestionView) ((ViewGroup) nextView).getChildAt(0);
     }
 
-    public void setQuestion(Question question){
+    public void setQuestion(Question question) {
         this.question = question;
     }
 
     public boolean validateQuestionRegExp(TextView view) {
         try {
-            if(question == null || question.getRegExp()==null || question.getRegExp().isEmpty()) {
+            if (question == null || question.getRegExp() == null
+                    || question.getRegExp().isEmpty()) {
                 return true;
             }
             question.match(view.getText().toString());
             return true;
         } catch (RegExpValidationException e) {
             e.printStackTrace();
-            String errorMessage = Utils.getInternationalizedString(question.getRegExpError(), getContext());
+            String errorMessage = Utils.getInternationalizedString(question.getRegExpError(),
+                    getContext());
             Validation.getInstance().addinvalidInput(view,
                     errorMessage);
             view.setError(errorMessage);

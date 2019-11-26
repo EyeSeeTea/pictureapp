@@ -42,6 +42,11 @@ public class TextSingleQuestionView extends AKeyboardSingleQuestionView implemen
     }
 
     @Override
+    public boolean isEnabled(){
+        return mEditText.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         mEditText.setEnabled(enabled);
         sendButton.setEnabled(enabled);

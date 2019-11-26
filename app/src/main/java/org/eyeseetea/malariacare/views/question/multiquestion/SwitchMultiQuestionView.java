@@ -63,6 +63,11 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     }
 
     @Override
+    public boolean isEnabled(){
+        return switchView.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         switchView.setEnabled(enabled);
     }

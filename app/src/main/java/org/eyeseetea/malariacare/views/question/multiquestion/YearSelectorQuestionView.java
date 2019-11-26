@@ -135,6 +135,11 @@ public class YearSelectorQuestionView extends CommonQuestionView implements IQue
     }
 
     @Override
+    public boolean isEnabled(){
+        return super.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         this.enabled = enabled;

@@ -70,6 +70,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
+    public boolean isEnabled(){
+        return spinnerOptions.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         spinnerOptions.setEnabled(enabled);
     }

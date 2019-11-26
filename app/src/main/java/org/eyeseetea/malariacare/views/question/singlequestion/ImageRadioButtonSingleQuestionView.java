@@ -49,6 +49,11 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @Override
+    public boolean isEnabled(){
+        return answersContainer.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         answersContainer.setEnabled(enabled);

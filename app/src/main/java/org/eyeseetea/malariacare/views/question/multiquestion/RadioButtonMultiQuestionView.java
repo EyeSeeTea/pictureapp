@@ -82,6 +82,11 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
     @Override
+    public boolean isEnabled(){
+        return radioGroup.isEnabled();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         radioGroup.setEnabled(enabled);
     }

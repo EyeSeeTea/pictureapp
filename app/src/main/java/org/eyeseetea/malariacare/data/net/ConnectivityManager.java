@@ -5,13 +5,14 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.domain.boundary.IConnectivityManager;
 
-public class ConnectivityManager implements IConnectivityManager{
+public class ConnectivityManager implements IConnectivityManager {
 
     private Context mContext;
 
     public ConnectivityManager(Context context) {
         this.mContext = context;
     }
+
     /**
      * Checks whether the device currently has a network connection.
      *
@@ -27,18 +28,24 @@ public class ConnectivityManager implements IConnectivityManager{
 
     @Override
     public ConnectivityType getConnectivityType() {
-        android.net.ConnectivityManager connMgr =
-                (android.net.ConnectivityManager) mContext.getSystemService(
-                                Context.CONNECTIVITY_SERVICE);
+        try {
+            android.net.ConnectivityManager connMgr =
+                    (android.net.ConnectivityManager) mContext.getSystemService(
+                            Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_WIFI);
-        if (networkInfo.isConnected()) {
-            return ConnectivityType.WIFI;
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(
+                    android.net.ConnectivityManager.TYPE_WIFI);
+            if (networkInfo != null && networkInfo.isConnected()) {
+                return ConnectivityType.WIFI;
+            }
+            networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_MOBILE);
+            if (networkInfo != null && networkInfo.isConnected()) {
+                return ConnectivityType.MOBILE;
+            }
+
+            return ConnectivityType.NONE;
+        } catch (Exception e) {
+            return ConnectivityType.NONE;
         }
-        networkInfo = connMgr.getNetworkInfo(android.net.ConnectivityManager.TYPE_MOBILE);
-        if (networkInfo.isConnected()) {
-            return ConnectivityType.MOBILE;
-        }
-        return ConnectivityType.NONE;
     }
 }

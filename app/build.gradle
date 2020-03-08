@@ -11,12 +11,10 @@ buildscript {
     dependencies {
         classpath 'io.fabric.tools:gradle:1.27.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 def cfg = rootProject.ext.configuration
@@ -30,6 +28,8 @@ android {
     signingConfigs {
         config {}
     }
+
+    flavorDimensions "default"
 
     sourceSets {
         String sharedTestDir = 'src/sharedTest/java'
@@ -54,6 +54,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     compileSdkVersion cfg.compileSdkVersion
     buildToolsVersion cfg.buildToolsVersion
 
@@ -72,6 +77,11 @@ android {
         buildConfigField "String", "poEditorApiUrl", "\"https://api.poeditor.com/\""
         buildConfigField "boolean", "downloadLanguagesFromServer", "false"
         vectorDrawables.useSupportLibrary = true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ['targetModuleName': 'EyeSeeTea']
+            }
+        }
     }
     buildTypes {
 
@@ -273,11 +283,7 @@ android {
         disable 'RtlSymmetry', 'RtlHardcoded'
         checkReleaseBuilds false
     }
-    apt {
-        arguments {
-            targetModuleName 'EyeSeeTea'
-        }
-    }
+
     configurations.all {
         resolutionStrategy.force "com.google.code.findbugs:jsr305:${libs.jsr305Version}"
     }
@@ -289,102 +295,101 @@ configurations {
 
 dependencies {
     // SDK submodules
-    cambodiaCompile project(":ui-bindings")
-    cnmCompile project(":ui-bindings")
-    laosCompile project(":ui-bindings")
-    myanmarCompile project(":ui-bindings")
+    cambodiaImplementation project(":ui-bindings")
+    cnmImplementation project(":ui-bindings")
+    laosImplementation project(":ui-bindings")
+    myanmarImplementation project(":ui-bindings")
 
-    compile project(":EyeSeeTea-sdk")
-    compile project(":bugshaker")
+    implementation project(":EyeSeeTea-sdk")
+    implementation project(":bugshaker")
 
     //Element sdk
-    ereferralsCompile project(path: ':orbitlite')
+    ereferralsImplementation project(path: ':orbitlite')
 
     // App dependencies
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    apply plugin: 'android-apt'
     apply plugin: 'com.github.dcendents.android-maven'
 
     //Support Libraries
 
 
     //Android support
-    compile "com.android.support:support-annotations:${libs.supportVersion}"
-    compile "com.android.support:support-v4:${libs.supportVersion}"
-    compile "com.android.support:appcompat-v7:${libs.supportVersion}"
+    implementation "com.android.support:support-annotations:${libs.supportVersion}"
+    implementation "com.android.support:support-v4:${libs.supportVersion}"
+    implementation "com.android.support:appcompat-v7:${libs.supportVersion}"
 
-    compile "com.android.support:support-annotations:${libs.supportVersion}"
-    compile "com.android.support:multidex:${libs.multidex}"
-    compile "com.android.support:recyclerview-v7:${libs.supportVersion}"
-    compile "com.android.support:design:${libs.supportVersion}"
-    compile "com.android.support:cardview-v7:${libs.supportVersion}"
+    implementation "com.android.support:support-annotations:${libs.supportVersion}"
+    implementation "com.android.support:multidex:${libs.multidex}"
+    implementation "com.android.support:recyclerview-v7:${libs.supportVersion}"
+    implementation "com.android.support:design:${libs.supportVersion}"
+    implementation "com.android.support:cardview-v7:${libs.supportVersion}"
 
     //3rd party dependencies
-    compile "com.opencsv:opencsv:${libs.opencsvVersion}"
-    compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
-    compile "com.google.guava:guava:${libs.guavaVersion}"
-    compile "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
-    compile "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
-    compile "com.squareup.retrofit2:retrofit:${libs.retrofitVersion}"
-    compile "com.squareup.retrofit2:converter-jackson:${libs.retrofitVersion}"
-    compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
-    compile "com.github.castorflex.smoothprogressbar:library-circular:${libs.progressBarVersion}"
-    compile "joda-time:joda-time:${libs.jodaTimeVersion}"
+    implementation "com.opencsv:opencsv:${libs.opencsvVersion}"
+    implementation "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
+    implementation "com.google.guava:guava:${libs.guavaVersion}"
+    implementation "com.squareup.okhttp3:okhttp:${libs.okhttpVersion}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${libs.okhttpVersion}"
+    implementation "com.squareup.retrofit2:retrofit:${libs.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-jackson:${libs.retrofitVersion}"
+    implementation "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
+    implementation "com.github.castorflex.smoothprogressbar:library-circular:${libs.progressBarVersion}"
+    implementation "joda-time:joda-time:${libs.jodaTimeVersion}"
 
     // Fasterxml libraries.
-    compile "com.fasterxml.jackson.core:jackson-annotations:${libs.jacksonVersion}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${libs.jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${libs.jacksonVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:${libs.jacksonVersion}"
 
 
     //Drive dependencies
-    compile "com.google.android.gms:play-services-identity:${libs.gmsPlayVersion}"
-    compile("com.google.api-client:google-api-client-android:${libs.googleApiClientAndroidVersion}") {
+    implementation "com.google.android.gms:play-services-identity:${libs.gmsPlayVersion}"
+    implementation("com.google.api-client:google-api-client-android:${libs.googleApiClientAndroidVersion}") {
         exclude group: 'org.apache.httpcomponents'
         exclude group: 'com.google.code.findbugs'
     }
-    compile("com.google.apis:google-api-services-drive:${libs.googleApiServicesDriveVersion}") {
+    implementation("com.google.apis:google-api-services-drive:${libs.googleApiServicesDriveVersion}") {
         exclude group: 'org.apache.httpcomponents'
     }
 
-    compile "com.google.code.findbugs:jsr305:${libs.jsr305Version}"
+    implementation "com.google.code.findbugs:jsr305:${libs.jsr305Version}"
 
     // Unit testing dependencies
-    testCompile "junit:junit:${libs.jUnitVersion}"
-    testCompile "org.mockito:mockito-core:${libs.mockitoVersion}"
-    testCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
+    testImplementation "junit:junit:${libs.jUnitVersion}"
+    testImplementation "org.mockito:mockito-core:${libs.mockitoVersion}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
 
     // Instrumented tests dependencies
     // Android Testing Support Library's runner and rules
 
-    androidTestCompile "com.android.support.test:runner:${libs.runnerVersion}"
-    androidTestCompile "com.android.support.test:rules:${libs.runnerVersion}"
+    androidTestImplementation "com.android.support.test:runner:${libs.runnerVersion}"
+    androidTestImplementation "com.android.support.test:rules:${libs.runnerVersion}"
 
     // Espresso UI Testing dependencies.
-    androidTestCompile "com.android.support.test.espresso:espresso-core:${libs.espressoVersion}"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:${libs.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${libs.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:${libs.espressoVersion}"
     // Espresso-idling-resource for synchronization with background jobs
-    androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
     // Espresso-web for WebView support
-    androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
-    androidTestCompile "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
-    androidTestCompile "org.mockito:mockito-core:${libs.mockitoVersion}"
-    androidTestCompile "com.linkedin.dexmaker:dexmaker-mockito:${libs.dexmakerMockitoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${libs.mockwebserverVersion}"
+    androidTestImplementation "org.mockito:mockito-core:${libs.mockitoVersion}"
+    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:${libs.dexmakerMockitoVersion}"
 
 
     //Tracking crashes
-    compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {
+    implementation("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {
         transitive = true;
     }
 
     // JavaPoet (sucessor to JavaWriter)
-    compile "com.squareup:javapoet:${libs.javapoetVersion}"
+    implementation "com.squareup:javapoet:${libs.javapoetVersion}"
 
     //DBFlow
-    apt "com.github.agrosner.dbflow:dbflow-processor:${libs.dbFlowVersion}"
-    compile "com.github.agrosner.dbflow:dbflow:${libs.dbFlowVersion}"
-    compile "com.github.agrosner.dbflow:dbflow-core:${libs.dbFlowVersion}"
-    compile(project(path: ':bugshaker')) {
+    annotationProcessor "com.github.agrosner.dbflow:dbflow-processor:${libs.dbFlowVersion}"
+    implementation "com.github.agrosner.dbflow:dbflow:${libs.dbFlowVersion}"
+    implementation "com.github.agrosner.dbflow:dbflow-core:${libs.dbFlowVersion}"
+    implementation(project(path: ':bugshaker')) {
         exclude group: "com.google.android.gms"
     }
 }

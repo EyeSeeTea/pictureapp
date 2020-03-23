@@ -238,13 +238,17 @@ public class SurveyLocalDataSource implements ISurveyRepository {
             QuestionDB questionDB = questionsDBs.get(valueDB.getId_question_fk());
 
             String questionUid = questionDB.getUid();
-            String optionCode;
 
             Value value;
 
             if (valueDB.getId_option_fk() != null) {
-                optionCode = optionDBs.get(valueDB.getId_option_fk()).getCode();
+                OptionDB optionDB = optionDBs.get(valueDB.getId_option_fk());
+                String optionCode = optionDB.getCode();
+
                 value = new Value(valueDB.getValue(), questionUid, optionCode);
+
+                String internationalizedName = optionDB.getInternationalizedName();
+                value.setInternationalizedName(internationalizedName);
             } else {
                 value = new Value(valueDB.getValue(), questionUid);
             }
